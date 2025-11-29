@@ -1,5 +1,64 @@
 # Changelog
 
+## [3.4.0] - 2025-11-29
+
+### Complete Authentication & Payment System
+
+#### Authentication Modal System
+- Single modal with 3 panels (signin/signup/forgot password)
+- Firebase Auth integration (email/password + Google OAuth)
+- Role-based redirects (admin → admin dashboard, principal/executor/heir → portals)
+- Password validation (12+ chars, uppercase, lowercase, numbers)
+- Promo code capture from URL (`?promo=CODE`) and localStorage
+- Subscription tier selection at signup (free/concierge/whiteglove)
+
+#### New Pages
+| Page | Path | Purpose |
+|------|------|----------|
+| Promo Landing | `/public/auth/promo.html` | Campaign landing with countdown, price comparison, code display |
+| Subscription Mgmt | `/public/auth/unsubscribe.html` | Auth-gated plan management, cancel flow |
+| Principal Portal | `/public/portals/principal/dashboard.html` | Estate planning dashboard |
+| Executor Portal | `/public/portals/executor/dashboard.html` | Estate administration dashboard |
+| Heir Portal | `/public/portals/heir/dashboard.html` | Inheritance tracking dashboard |
+
+#### Firestore User Schema
+```javascript
+{
+  email, displayName, role, photoURL,
+  subscription: { plan, status, createdAt },
+  promoCode, promoDiscount,
+  profile: { firstName, lastName },
+  mfaEnabled, emailVerified,
+  createdAt, lastLoginAt
+}
+```
+
+#### Test Accounts Created
+| Role | Email | Plan |
+|------|-------|------|
+| Admin | admin@legacy.estate | whiteglove |
+| Principal | principal@legacy.estate | concierge |
+| Executor | executor@legacy.estate | concierge |
+| Heir | heir@legacy.estate | free |
+
+#### Stripe Integration (Stubbed)
+- `redirectToStripeCheckout()` function ready
+- Price IDs configured for concierge/whiteglove tiers
+- Requires Firebase Function backend for production
+
+#### Sirsi-Backportable Components
+- `sm-card`, `sm-card-header`, `sm-card-body`, `sm-card-footer`
+- `sm-btn`, `sm-btn-primary`, `sm-btn-secondary`, `sm-btn-danger`
+- `sm-badge`, `sm-badge-success`, `sm-badge-warning`, `sm-badge-danger`
+- `sm-alert`, `sm-alert-success`, `sm-alert-danger`
+- `sm-loading`, `sm-spinner`
+
+#### Removed
+- `/public/auth/login.html` (replaced by modal)
+- `/public/auth/register.html` (replaced by modal)
+
+---
+
 ## [3.3.0] - 2025-11-26
 
 ### Domain-Specific Multi-Agent Architecture

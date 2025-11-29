@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Account Settings — Legacy Estate OS</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --color-gold: #D4AF37;
+            --color-gold-bright: #FCD34D;
+            --color-blue-deep: #0f172a;
+            --color-blue-royal: #1e3a8a;
+            --glass-surface: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--color-blue-deep) 0%, var(--color-blue-royal) 50%, var(--color-blue-deep) 100%);
+            min-height: 100vh;
+        }
+        
+        .account-nav {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .account-card {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+        }
+        
+        .account-tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 8px;
+        }
+        
+        .account-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+        }
+        
+        .account-tab:hover {
+            color: white;
+        }
+        
+        .account-tab.active {
+            background: var(--color-gold);
+            color: var(--color-blue-deep);
+        }
+        
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+        
+        .btn-gold {
+            background: var(--color-gold);
+            color: var(--color-blue-deep);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        
+        .btn-gold:hover {
+            background: var(--color-gold-bright);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .toggle-switch.active {
+            background: var(--color-gold);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+        
+        .panel { display: none; }
+        .panel.active { display: block; }
+        
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--color-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-gold);
+            background: rgba(200, 169, 81, 0.2);
+        }
+        
+        .subscription-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .subscription-badge.free {
+            background: rgba(100, 116, 139, 0.3);
+            color: #94a3b8;
+        }
+        
+        .subscription-badge.concierge {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--color-gold);
+        }
+        
+        .subscription-badge.whiteglove {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+            color: white;
+        }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .alert.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+        
+        .alert.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Navigation -->
+    <nav class="account-nav fixed top-0 w-full z-50">
+        <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 text-[var(--color-gold)]">
+                    <svg viewBox="0 0 100 100" class="w-full h-full fill-current" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                    </svg>
+                </div>
+                <span class="text-base font-bold tracking-[0.2em] text-white" style="font-family: 'Cinzel', serif;">LEGACY</span>
+            </a>
+            
+            <div class="flex items-center gap-4">
+                <a href="#" id="dashboard-link" class="text-xs font-bold tracking-[0.15em] text-white/70 hover:text-white transition-colors uppercase">Dashboard</a>
+                <button onclick="handleSignOut()" class="text-xs font-bold tracking-[0.15em] text-white/50 hover:text-red-400 transition-colors uppercase flex items-center gap-1" title="Sign Out">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="pt-20 pb-12 px-6">
+        <div class="max-w-3xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-2xl text-white mb-2" style="font-family: 'Cinzel', serif;">Account Settings</h1>
+                <p class="text-white/60 text-sm">Manage your profile, security, and preferences</p>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="account-tabs mb-6">
+                <button class="account-tab active" data-panel="profile">Profile</button>
+                <button class="account-tab" data-panel="security">Security</button>
+                <button class="account-tab" data-panel="subscription">Subscription</button>
+                <button class="account-tab" data-panel="notifications">Notifications</button>
+            </div>
+            
+            <!-- Alert Messages -->
+            <div id="alert-success" class="alert success"></div>
+            <div id="alert-error" class="alert error"></div>
+            
+            <!-- Profile Panel -->
+            <div id="panel-profile" class="panel active">
+                <div class="account-card p-6 mb-6">
+                    <div class="flex items-start gap-6 mb-6">
+                        <div class="user-avatar-large" id="avatar-display">—</div>
+                        <div class="flex-1">
+                            <h3 class="text-white font-semibold mb-1" id="display-name">Loading...</h3>
+                            <p class="text-white/60 text-sm mb-3" id="display-email">—</p>
+                            <div class="subscription-badge free" id="plan-badge">
+                                <span>Free Plan</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="profile-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="form-label">First Name</label>
+                                <input type="text" id="profile-firstname" class="form-input" placeholder="John">
+                            </div>
+                            <div>
+                                <label class="form-label">Last Name</label>
+                                <input type="text" id="profile-lastname" class="form-input" placeholder="Smith">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="profile-email" class="form-input" disabled>
+                            <p class="text-white/40 text-xs mt-1">Contact support to change your email address</p>
+                        </div>
+                        <div>
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="profile-phone" class="form-input" placeholder="+1 (555) 123-4567">
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" class="btn-gold">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Security Panel -->
+            <div id="panel-security" class="panel">
+                <div class="account-card p-6 mb-6">
+                    <h3 class="text-white font-semibold mb-4">Change Password</h3>
+                    <form id="password-form" class="space-y-4">
+                        <div>
+                            <label class="form-label">Current Password</label>
+                            <input type="password" id="current-password" class="form-input" placeholder="••••••••••••">
+                        </div>
+                        <div>
+                            <label class="form-label">New Password</label>
+                            <input type="password" id="new-password" class="form-input" placeholder="Min 12 characters">
+                            <p class="text-white/40 text-xs mt-1">Must include uppercase, lowercase, and numbers</p>
+                        </div>
+                        <div>
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" id="confirm-password" class="form-input" placeholder="••••••••••••">
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" class="btn-gold">Update Password</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="account-card p-6 mb-6">
+                    <h3 class="text-white font-semibold mb-4">Two-Factor Authentication</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white/80 text-sm">Add an extra layer of security to your account</p>
+                            <p class="text-white/40 text-xs mt-1" id="mfa-status">Currently disabled</p>
+                        </div>
+                        <div class="toggle-switch" id="mfa-toggle" onclick="toggleMFA()"></div>
+                    </div>
+                </div>
+                
+                <div class="account-card p-6">
+                    <h3 class="text-white font-semibold mb-4">Active Sessions</h3>
+                    <div class="space-y-3" id="sessions-list">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                <div>
+                                    <p class="text-white text-sm">Current Session</p>
+                                    <p class="text-white/40 text-xs">This device • Active now</p>
+                                </div>
+                            </div>
+                            <span class="text-green-400 text-xs font-medium">Active</span>
+                        </div>
+                    </div>
+                    <button class="btn-secondary mt-4 w-full" onclick="signOutAllDevices()">Sign Out All Other Devices</button>
+                </div>
+            </div>
+            
+            <!-- Subscription Panel -->
+            <div id="panel-subscription" class="panel">
+                <div class="account-card p-6 mb-6">
+                    <h3 class="text-white font-semibold mb-4">Current Plan</h3>
+                    <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg mb-4">
+                        <div>
+                            <div class="subscription-badge free" id="current-plan-badge">
+                                <span id="current-plan-name">Free</span>
+                            </div>
+                            <p class="text-white/60 text-sm mt-2" id="plan-description">Basic estate planning tools</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-2xl font-bold text-white" id="plan-price">$0</p>
+                            <p class="text-white/40 text-xs">per month</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 mb-6" id="plan-features">
+                        <div class="flex items-center gap-2 text-white/70 text-sm">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Up to 10 assets</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-white/70 text-sm">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>3 beneficiaries</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-white/70 text-sm">
+                            <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Basic document storage</span>
+                        </div>
+                    </div>
+                    
+                    <a href="/#pricing" class="btn-gold inline-block">Upgrade Plan</a>
+                </div>
+                
+                <div class="account-card p-6">
+                    <h3 class="text-white font-semibold mb-4">Billing History</h3>
+                    <div id="billing-history" class="space-y-3">
+                        <p class="text-white/40 text-sm text-center py-4">No billing history yet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notifications Panel -->
+            <div id="panel-notifications" class="panel">
+                <div class="account-card p-6 mb-6">
+                    <h3 class="text-white font-semibold mb-4">Email Notifications</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white text-sm">Estate Updates</p>
+                                <p class="text-white/40 text-xs">Get notified when your estate status changes</p>
+                            </div>
+                            <div class="toggle-switch active" data-pref="estate_updates" onclick="togglePref(this)"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white text-sm">Document Reminders</p>
+                                <p class="text-white/40 text-xs">Reminders to update expiring documents</p>
+                            </div>
+                            <div class="toggle-switch active" data-pref="doc_reminders" onclick="togglePref(this)"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white text-sm">Security Alerts</p>
+                                <p class="text-white/40 text-xs">Important security notifications</p>
+                            </div>
+                            <div class="toggle-switch active" data-pref="security_alerts" onclick="togglePref(this)"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white text-sm">Marketing & Tips</p>
+                                <p class="text-white/40 text-xs">Estate planning tips and product updates</p>
+                            </div>
+                            <div class="toggle-switch" data-pref="marketing" onclick="togglePref(this)"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="account-card p-6">
+                    <h3 class="text-white font-semibold mb-4">Push Notifications</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-white text-sm">Enable Push Notifications</p>
+                            <p class="text-white/40 text-xs">Receive notifications on this device</p>
+                        </div>
+                        <div class="toggle-switch" data-pref="push_enabled" onclick="togglePref(this)"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Danger Zone -->
+            <div class="account-card p-6 mt-6 border-red-500/30">
+                <h3 class="text-red-400 font-semibold mb-4">Danger Zone</h3>
+                <p class="text-white/60 text-sm mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+                <button class="btn-danger" onclick="confirmDeleteAccount()">Delete Account</button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut,
+            updatePassword,
+            reauthenticateWithCredential,
+            EmailAuthProvider,
+            updateProfile
+        } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc,
+            updateDoc,
+            serverTimestamp,
+            deleteDoc
+        } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyANMDZXcdn2eI8JN8FxXlAkCt-f4BONuiU",
+            authDomain: "legacy-estate-os.firebaseapp.com",
+            projectId: "legacy-estate-os",
+            storageBucket: "legacy-estate-os.firebasestorage.app",
+            messagingSenderId: "1002875213628",
+            appId: "1:1002875213628:web:59d3f4b04345f3f7abb039"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Role-based dashboard URLs
+        const roleRedirects = {
+            admin: '/admin/dashboard.html',
+            principal: '/portals/principal/dashboard.html',
+            executor: '/portals/executor/dashboard.html',
+            heir: '/portals/heir/dashboard.html'
+        };
+
+        let currentUserData = null;
+
+        // Check auth state
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                currentUserData = userDoc.exists() ? userDoc.data() : {};
+                
+                // Set dashboard link
+                const role = currentUserData.role || 'principal';
+                document.getElementById('dashboard-link').href = roleRedirects[role] || roleRedirects.principal;
+                
+                // Populate profile
+                populateProfile(user, currentUserData);
+            } catch (err) {
+                console.error('Error loading user data:', err);
+            }
+        });
+
+        function populateProfile(user, data) {
+            const displayName = user.displayName || data.displayName || 'User';
+            const nameParts = displayName.split(' ');
+            const initial = displayName[0]?.toUpperCase() || 'U';
+            
+            document.getElementById('avatar-display').textContent = initial;
+            document.getElementById('display-name').textContent = displayName;
+            document.getElementById('display-email').textContent = user.email;
+            
+            document.getElementById('profile-firstname').value = nameParts[0] || '';
+            document.getElementById('profile-lastname').value = nameParts.slice(1).join(' ') || '';
+            document.getElementById('profile-email').value = user.email;
+            document.getElementById('profile-phone').value = data.profile?.phone || '';
+            
+            // Plan badge
+            const plan = data.subscription?.plan || 'free';
+            const planBadge = document.getElementById('plan-badge');
+            const currentPlanBadge = document.getElementById('current-plan-badge');
+            const planName = document.getElementById('current-plan-name');
+            const planPrice = document.getElementById('plan-price');
+            const planDesc = document.getElementById('plan-description');
+            
+            planBadge.className = `subscription-badge ${plan}`;
+            currentPlanBadge.className = `subscription-badge ${plan}`;
+            
+            if (plan === 'concierge') {
+                planBadge.innerHTML = '<span>Concierge</span>';
+                planName.textContent = 'Concierge';
+                planPrice.textContent = '$29.97';
+                planDesc.textContent = 'Full estate planning suite with priority support';
+            } else if (plan === 'whiteglove') {
+                planBadge.innerHTML = '<span>White Glove</span>';
+                planName.textContent = 'White Glove';
+                planPrice.textContent = '$99.97';
+                planDesc.textContent = 'Dedicated estate planning concierge service';
+            } else {
+                planBadge.innerHTML = '<span>Free Plan</span>';
+                planName.textContent = 'Free';
+                planPrice.textContent = '$0';
+                planDesc.textContent = 'Basic estate planning tools';
+            }
+            
+            // MFA status
+            const mfaToggle = document.getElementById('mfa-toggle');
+            const mfaStatus = document.getElementById('mfa-status');
+            if (data.mfaEnabled) {
+                mfaToggle.classList.add('active');
+                mfaStatus.textContent = 'Currently enabled';
+            }
+        }
+
+        // Sign out handler
+        window.handleSignOut = async function() {
+            try {
+                await signOut(auth);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Sign out error:', error);
+            }
+        };
+
+        // Profile form handler
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById('profile-firstname').value.trim();
+            const lastName = document.getElementById('profile-lastname').value.trim();
+            const phone = document.getElementById('profile-phone').value.trim();
+            const displayName = `${firstName} ${lastName}`.trim();
+            
+            try {
+                const user = auth.currentUser;
+                await updateProfile(user, { displayName });
+                await updateDoc(doc(db, 'users', user.uid), {
+                    displayName,
+                    'profile.phone': phone,
+                    updatedAt: serverTimestamp()
+                });
+                
+                showAlert('success', 'Profile updated successfully');
+                document.getElementById('display-name').textContent = displayName;
+                document.getElementById('avatar-display').textContent = displayName[0]?.toUpperCase() || 'U';
+            } catch (error) {
+                console.error('Profile update error:', error);
+                showAlert('error', 'Failed to update profile');
+            }
+        });
+
+        // Password form handler
+        document.getElementById('password-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (newPassword !== confirmPassword) {
+                showAlert('error', 'New passwords do not match');
+                return;
+            }
+            
+            if (newPassword.length < 12) {
+                showAlert('error', 'Password must be at least 12 characters');
+                return;
+            }
+            
+            try {
+                const user = auth.currentUser;
+                const credential = EmailAuthProvider.credential(user.email, currentPassword);
+                await reauthenticateWithCredential(user, credential);
+                await updatePassword(user, newPassword);
+                
+                showAlert('success', 'Password updated successfully');
+                document.getElementById('password-form').reset();
+            } catch (error) {
+                console.error('Password update error:', error);
+                if (error.code === 'auth/wrong-password') {
+                    showAlert('error', 'Current password is incorrect');
+                } else {
+                    showAlert('error', 'Failed to update password');
+                }
+            }
+        });
+
+        // Toggle MFA (placeholder)
+        window.toggleMFA = function() {
+            const toggle = document.getElementById('mfa-toggle');
+            const status = document.getElementById('mfa-status');
+            
+            if (toggle.classList.contains('active')) {
+                toggle.classList.remove('active');
+                status.textContent = 'Currently disabled';
+                showAlert('success', 'Two-factor authentication disabled');
+            } else {
+                // In production, this would open MFA setup flow
+                toggle.classList.add('active');
+                status.textContent = 'Currently enabled';
+                showAlert('success', 'Two-factor authentication enabled');
+            }
+        };
+
+        // Toggle notification preferences
+        window.togglePref = function(el) {
+            el.classList.toggle('active');
+            // In production, save to Firestore
+        };
+
+        // Sign out all devices (placeholder)
+        window.signOutAllDevices = function() {
+            showAlert('success', 'Signed out of all other devices');
+        };
+
+        // Delete account
+        window.confirmDeleteAccount = function() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                if (confirm('This will permanently delete all your data. Type "DELETE" to confirm.')) {
+                    const confirmation = prompt('Type DELETE to confirm account deletion:');
+                    if (confirmation === 'DELETE') {
+                        deleteAccount();
+                    }
+                }
+            }
+        };
+
+        async function deleteAccount() {
+            try {
+                const user = auth.currentUser;
+                await deleteDoc(doc(db, 'users', user.uid));
+                await user.delete();
+                window.location.href = '/?deleted=true';
+            } catch (error) {
+                console.error('Delete account error:', error);
+                showAlert('error', 'Failed to delete account. You may need to sign in again.');
+            }
+        }
+
+        // Alert helper
+        function showAlert(type, message) {
+            const alert = document.getElementById(`alert-${type}`);
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        window.showAlert = showAlert;
+    </script>
+    
+    <!-- Tab switching -->
+    <script>
+        document.querySelectorAll('.account-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update tabs
+                document.querySelectorAll('.account-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update panels
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(`panel-${tab.dataset.panel}`).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

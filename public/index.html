@@ -1570,10 +1570,9 @@
                 const dashboardUrl = roleRedirects[role] || roleRedirects.principal;
                 
                 navRight.outerHTML = `
-                    <div class="flex items-center gap-4">
-                        <a href="${dashboardUrl}" class="text-xs font-bold tracking-[0.15em] text-white/70 hover:text-white transition-colors uppercase">Dashboard</a>
-                        <a href="/account/" class="user-avatar" title="Account Settings">${initial}</a>
-                        <button onclick="handleSignOut()" class="text-xs font-bold tracking-[0.15em] text-white/50 hover:text-red-400 transition-colors uppercase flex items-center gap-1" title="Sign Out">
+                    <div class="flex items-center gap-3">
+                        <a href="${dashboardUrl}" class="user-avatar" title="Go to Dashboard">${initial}</a>
+                        <button onclick="handleSignOut()" class="text-xs font-bold tracking-[0.15em] text-white/50 hover:text-red-400 transition-colors uppercase" title="Sign Out">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                             </svg>

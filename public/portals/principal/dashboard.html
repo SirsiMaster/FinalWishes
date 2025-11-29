@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" data-auth-protect="principal">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>My Estate — Legacy</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Legacy Design System -->
+    <link rel="stylesheet" href="../../legacy.css">
+    <link rel="stylesheet" href="../../assets/css/admin-layout.css">
+    
+    <style>
+        /* Portal-specific overrides */
+        .sidebar { --sidebar-accent: var(--gold); }
+        
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+        }
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+        .progress-ring .bg { stroke: var(--glass-border); }
+        .progress-ring .progress { 
+            stroke: var(--gold); 
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--gold);
+        }
+        
+        .phase-tracker {
+            display: flex;
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+        }
+        .phase-item {
+            flex: 1;
+            padding: var(--space-md);
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            text-align: center;
+            position: relative;
+        }
+        .phase-item.active {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .phase-item.completed {
+            border-color: var(--success);
+        }
+        .phase-item.completed::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .phase-number {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+        .phase-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .quick-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+        .quick-action-card {
+            padding: var(--space-lg);
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: var(--space-sm);
+        }
+        .quick-action-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        .quick-action-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--navy);
+        }
+        .quick-action-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .quick-action-desc {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .checklist-item:last-child { border-bottom: none; }
+        .checklist-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .checklist-checkbox.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .checklist-content { flex: 1; }
+        .checklist-title { font-weight: 500; color: var(--text-primary); }
+        .checklist-desc { font-size: var(--text-sm); color: var(--text-secondary); }
+        
+        .beneficiary-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
+        }
+        .beneficiary-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--royal-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        .beneficiary-info { flex: 1; }
+        .beneficiary-name { font-weight: 500; color: var(--text-primary); }
+        .beneficiary-role { font-size: var(--text-sm); color: var(--text-secondary); }
+        .beneficiary-share { font-weight: 600; color: var(--gold); }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span>LEGACY</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="9"></rect>
+                        <rect x="14" y="3" width="7" height="5"></rect>
+                        <rect x="14" y="12" width="7" height="9"></rect>
+                        <rect x="3" y="16" width="7" height="5"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="assets.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    My Assets
+                </a>
+                <a href="beneficiaries.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Beneficiaries
+                </a>
+                <a href="documents.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Document Vault
+                </a>
+                <a href="executors.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    My Executors
+                </a>
+                
+                <div class="nav-section">Settings</div>
+                <a href="profile.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="handleLogout()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Sign Out
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="page-header">
+                <div class="header-left">
+                    <h1 class="page-title">Welcome, <span id="userName">—</span></h1>
+                    <p class="page-subtitle">Your estate plan at a glance</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" onclick="showGuideModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        Get Help
+                    </button>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Estate Progress -->
+                <div class="card mb-xl">
+                    <div class="card-header">
+                        <h3 class="card-title">Estate Plan Progress</h3>
+                        <span class="badge badge-gold" id="estateName">Loading...</span>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; align-items: center; gap: var(--space-2xl);">
+                            <div style="position: relative;">
+                                <svg class="progress-ring" viewBox="0 0 120 120">
+                                    <circle class="bg" cx="60" cy="60" r="52"/>
+                                    <circle class="progress" cx="60" cy="60" r="52" 
+                                            stroke-dasharray="326.7" 
+                                            stroke-dashoffset="196" id="progressCircle"/>
+                                </svg>
+                                <span class="progress-text" id="progressPercent">40%</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="phase-tracker">
+                                    <div class="phase-item completed">
+                                        <div class="phase-number">Phase 1</div>
+                                        <div class="phase-name">Intake</div>
+                                    </div>
+                                    <div class="phase-item active">
+                                        <div class="phase-number">Phase 2</div>
+                                        <div class="phase-name">Verify</div>
+                                    </div>
+                                    <div class="phase-item">
+                                        <div class="phase-number">Phase 3</div>
+                                        <div class="phase-name">Notify</div>
+                                    </div>
+                                    <div class="phase-item">
+                                        <div class="phase-number">Phase 4</div>
+                                        <div class="phase-name">Distribute</div>
+                                    </div>
+                                </div>
+                                <p style="color: var(--text-secondary); font-size: var(--text-sm);">
+                                    You're in the <strong>Verify</strong> phase. Complete your identity verification and designate your executors to proceed.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="mb-xl">
+                    <h3 style="margin-bottom: var(--space-md); color: var(--text-primary);">Quick Actions</h3>
+                    <div class="quick-action-grid">
+                        <a href="assets.html" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                            </div>
+                            <div class="quick-action-title">Add Asset</div>
+                            <div class="quick-action-desc">Register property, accounts, or valuables</div>
+                        </a>
+                        <a href="beneficiaries.html" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="8.5" cy="7" r="4"/>
+                                    <line x1="20" y1="8" x2="20" y2="14"/>
+                                    <line x1="23" y1="11" x2="17" y2="11"/>
+                                </svg>
+                            </div>
+                            <div class="quick-action-title">Add Beneficiary</div>
+                            <div class="quick-action-desc">Designate heirs for your assets</div>
+                        </a>
+                        <a href="documents.html" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <div class="quick-action-title">Upload Document</div>
+                            <div class="quick-action-desc">Store wills, trusts, and legal docs</div>
+                        </a>
+                        <a href="executors.html" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <div class="quick-action-title">Manage Executors</div>
+                            <div class="quick-action-desc">Assign trusted administrators</div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Stats & Content Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+                    <!-- Estate Summary -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Estate Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+                                <div class="stat-card mini">
+                                    <div class="stat-value" id="assetCount">0</div>
+                                    <div class="stat-label">Assets</div>
+                                </div>
+                                <div class="stat-card mini">
+                                    <div class="stat-value" id="documentCount">0</div>
+                                    <div class="stat-label">Documents</div>
+                                </div>
+                                <div class="stat-card mini">
+                                    <div class="stat-value" id="beneficiaryCount">0</div>
+                                    <div class="stat-label">Beneficiaries</div>
+                                </div>
+                                <div class="stat-card mini">
+                                    <div class="stat-value" id="executorCount">0</div>
+                                    <div class="stat-label">Executors</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: var(--space-lg); padding-top: var(--space-lg); border-top: 1px solid var(--glass-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: var(--text-secondary);">Estimated Value</span>
+                                    <span style="font-size: var(--text-xl); font-weight: 700; color: var(--gold);" id="estateValue">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Beneficiaries Preview -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Beneficiaries</h3>
+                            <a href="beneficiaries.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body" id="beneficiaryList">
+                            <p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No beneficiaries added yet</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Checklist -->
+                <div class="card mt-xl">
+                    <div class="card-header">
+                        <h3 class="card-title">Getting Started Checklist</h3>
+                        <span class="badge badge-info" id="checklistProgress">0/6 Complete</span>
+                    </div>
+                    <div class="card-body" id="checklist">
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox" id="check-profile">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="checklist-content">
+                                <div class="checklist-title">Complete your profile</div>
+                                <div class="checklist-desc">Add your legal name, address, and contact information</div>
+                            </div>
+                            <a href="profile.html" class="btn btn-sm btn-secondary">Edit</a>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox" id="check-identity"></div>
+                            <div class="checklist-content">
+                                <div class="checklist-title">Verify your identity</div>
+                                <div class="checklist-desc">Upload government-issued ID for security</div>
+                            </div>
+                            <a href="profile.html#verification" class="btn btn-sm btn-secondary">Verify</a>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox" id="check-asset"></div>
+                            <div class="checklist-content">
+                                <div class="checklist-title">Add your first asset</div>
+                                <div class="checklist-desc">Start building your asset inventory</div>
+                            </div>
+                            <a href="assets.html" class="btn btn-sm btn-secondary">Add</a>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox" id="check-document"></div>
+                            <div class="checklist-content">
+                                <div class="checklist-title">Upload a key document</div>
+                                <div class="checklist-desc">Store your will, trust, or other legal documents</div>
+                            </div>
+                            <a href="documents.html" class="btn btn-sm btn-secondary">Upload</a>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox" id="check-beneficiary"></div>
+                            <div class="checklist-content">
+                                <div class="checklist-title">Designate a beneficiary</div>
+                                <div class="checklist-desc">Specify who will inherit your assets</div>
+                            </div>
+                            <a href="beneficiaries.html" class="btn btn-sm btn-secondary">Add</a>
+                        </div>
+                        <div class="checklist-item">
+                            <div class="checklist-checkbox" id="check-executor"></div>
+                            <div class="checklist-content">
+                                <div class="checklist-title">Assign an executor</div>
+                                <div class="checklist-desc">Choose who will manage your estate</div>
+                            </div>
+                            <a href="executors.html" class="btn btn-sm btn-secondary">Assign</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script type="module">
+        import { AuthService, DatabaseService } from '../../assets/js/firebase-init.js';
+        
+        window.AuthService = AuthService;
+        window.DatabaseService = DatabaseService;
+        
+        let currentUser = null;
+        let userProfile = null;
+        let estate = null;
+        
+        async function init() {
+            console.log('🏛️ Legacy Estate OS - Principal Portal');
+            
+            // Check auth
+            currentUser = AuthService.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            
+            await loadUserData();
+            await loadEstateData();
+            updateUI();
+        }
+        
+        async function loadUserData() {
+            try {
+                const users = await DatabaseService.getDocuments('users');
+                userProfile = users.find(u => u.id === currentUser.uid) || {};
+                document.getElementById('userName').textContent = userProfile.displayName || userProfile.email?.split('@')[0] || 'User';
+            } catch (error) {
+                console.error('Error loading user:', error);
+            }
+        }
+        
+        async function loadEstateData() {
+            try {
+                const estates = await DatabaseService.getDocuments('estates');
+                estate = estates.find(e => e.principalId === currentUser.uid) || estates[0];
+                
+                if (estate) {
+                    document.getElementById('estateName').textContent = estate.name || 'My Estate';
+                    
+                    // Load related data
+                    const [assets, documents, beneficiaries] = await Promise.all([
+                        DatabaseService.getDocuments('assets'),
+                        DatabaseService.getDocuments('documents'),
+                        DatabaseService.getDocuments('beneficiaries')
+                    ]);
+                    
+                    const myAssets = assets.filter(a => a.estateId === estate.id);
+                    const myDocs = documents.filter(d => d.estateId === estate.id);
+                    const myBeneficiaries = beneficiaries.filter(b => b.estateId === estate.id);
+                    
+                    document.getElementById('assetCount').textContent = myAssets.length;
+                    document.getElementById('documentCount').textContent = myDocs.length;
+                    document.getElementById('beneficiaryCount').textContent = myBeneficiaries.length;
+                    document.getElementById('executorCount').textContent = estate.executors?.length || 0;
+                    
+                    // Calculate estate value
+                    const totalValue = myAssets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
+                    document.getElementById('estateValue').textContent = '$' + totalValue.toLocaleString();
+                    
+                    // Render beneficiaries
+                    renderBeneficiaries(myBeneficiaries.slice(0, 3));
+                    
+                    // Update checklist
+                    updateChecklist({
+                        profile: !!userProfile.profile?.address,
+                        identity: userProfile.identityVerified,
+                        asset: myAssets.length > 0,
+                        document: myDocs.length > 0,
+                        beneficiary: myBeneficiaries.length > 0,
+                        executor: (estate.executors?.length || 0) > 0
+                    });
+                    
+                    // Update progress
+                    updateProgress(estate.phase || 'intake');
+                }
+            } catch (error) {
+                console.error('Error loading estate:', error);
+            }
+        }
+        
+        function renderBeneficiaries(beneficiaries) {
+            const container = document.getElementById('beneficiaryList');
+            if (beneficiaries.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No beneficiaries added yet</p>';
+                return;
+            }
+            
+            container.innerHTML = beneficiaries.map(b => `
+                <div class="beneficiary-card">
+                    <div class="beneficiary-avatar">${(b.name || 'U')[0].toUpperCase()}</div>
+                    <div class="beneficiary-info">
+                        <div class="beneficiary-name">${b.name || 'Unnamed'}</div>
+                        <div class="beneficiary-role">${b.relationship || 'Beneficiary'}</div>
+                    </div>
+                    <div class="beneficiary-share">${b.share || 0}%</div>
+                </div>
+            `).join('');
+        }
+        
+        function updateChecklist(status) {
+            let completed = 0;
+            Object.entries(status).forEach(([key, done]) => {
+                const el = document.getElementById(`check-${key}`);
+                if (el) {
+                    if (done) {
+                        el.classList.add('completed');
+                        completed++;
+                    } else {
+                        el.classList.remove('completed');
+                    }
+                }
+            });
+            document.getElementById('checklistProgress').textContent = `${completed}/6 Complete`;
+        }
+        
+        function updateProgress(phase) {
+            const phases = ['intake', 'verify', 'notify', 'distribute'];
+            const currentIndex = phases.indexOf(phase);
+            const percent = Math.round(((currentIndex + 1) / phases.length) * 100);
+            
+            document.getElementById('progressPercent').textContent = percent + '%';
+            const circle = document.getElementById('progressCircle');
+            const circumference = 326.7;
+            circle.style.strokeDashoffset = circumference - (circumference * percent / 100);
+            
+            document.querySelectorAll('.phase-item').forEach((el, i) => {
+                el.classList.remove('active', 'completed');
+                if (i < currentIndex) el.classList.add('completed');
+                if (i === currentIndex) el.classList.add('active');
+            });
+        }
+        
+        function updateUI() {
+            // Any additional UI updates
+        }
+        
+        window.handleLogout = async function() {
+            await AuthService.signOut();
+            window.location.href = '/auth/login.html';
+        };
+        
+        window.showGuideModal = function() {
+            showToast('Help guide coming soon!', 'info');
+        };
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

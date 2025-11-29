@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" data-auth-protect="executor">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Executor Dashboard — Legacy</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Legacy Design System -->
+    <link rel="stylesheet" href="../../legacy.css">
+    <link rel="stylesheet" href="../../assets/css/admin-layout.css">
+    
+    <style>
+        /* Executor Portal accent */
+        .sidebar { --sidebar-accent: #3B82F6; }
+        
+        .task-list { list-style: none; padding: 0; margin: 0; }
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .task-item:hover { background: var(--glass-surface); }
+        .task-item:last-child { border-bottom: none; }
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--glass-border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        .task-checkbox.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .task-content { flex: 1; }
+        .task-title { font-weight: 500; color: var(--text-primary); }
+        .task-meta { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 2px; }
+        .task-priority {
+            font-size: var(--text-xs);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        .task-priority.high { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+        .task-priority.medium { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
+        .task-priority.low { background: rgba(34, 197, 94, 0.2); color: #22C55E; }
+        
+        .notification-list { list-style: none; padding: 0; margin: 0; }
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .notification-item:last-child { border-bottom: none; }
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .notification-icon.sent { background: rgba(34, 197, 94, 0.2); color: #22C55E; }
+        .notification-icon.pending { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
+        .notification-icon.failed { background: rgba(239, 68, 68, 0.2); color: #EF4444; }
+        .notification-content { flex: 1; }
+        .notification-title { font-weight: 500; color: var(--text-primary); }
+        .notification-desc { font-size: var(--text-sm); color: var(--text-secondary); }
+        .notification-time { font-size: var(--text-xs); color: var(--text-muted); }
+        
+        .compliance-checklist { list-style: none; padding: 0; margin: 0; }
+        .compliance-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-sm) 0;
+        }
+        .compliance-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .compliance-status.complete { background: var(--success); }
+        .compliance-status.pending { background: var(--warning); }
+        .compliance-status.required { background: var(--danger); }
+        
+        .estate-selector {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: var(--space-xl);
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--glass-border);
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: var(--space-lg);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(-1 * var(--space-xl) + 4px);
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 2px solid var(--navy);
+        }
+        .timeline-date { font-size: var(--text-xs); color: var(--text-muted); }
+        .timeline-title { font-weight: 500; color: var(--text-primary); }
+        .timeline-desc { font-size: var(--text-sm); color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span>LEGACY</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="9"></rect>
+                        <rect x="14" y="3" width="7" height="5"></rect>
+                        <rect x="14" y="12" width="7" height="9"></rect>
+                        <rect x="3" y="16" width="7" height="5"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="tasks.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    Tasks
+                </a>
+                <a href="assets.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    Assets
+                </a>
+                <a href="beneficiaries.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Beneficiaries
+                </a>
+                <a href="documents.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Documents
+                </a>
+                <a href="notifications.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    Notifications
+                </a>
+                <a href="compliance.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    Compliance
+                </a>
+                
+                <div class="nav-section">Account</div>
+                <a href="profile.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="handleLogout()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Sign Out
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="page-header">
+                <div class="header-left">
+                    <h1 class="page-title">Executor Dashboard</h1>
+                    <p class="page-subtitle">Manage estates you've been designated to administer</p>
+                </div>
+                <div class="header-right">
+                    <select class="estate-selector" id="estateSelector" onchange="switchEstate(this.value)">
+                        <option value="">Select Estate</option>
+                    </select>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Estate Info Banner -->
+                <div class="card mb-xl" id="estateBanner" style="display: none;">
+                    <div class="card-body" style="display: flex; align-items: center; gap: var(--space-xl);">
+                        <div style="flex: 1;">
+                            <h2 style="color: var(--text-primary); margin-bottom: var(--space-xs);" id="estateName">—</h2>
+                            <p style="color: var(--text-secondary); margin-bottom: var(--space-md);" id="estatePrincipal">Principal: —</p>
+                            <div style="display: flex; gap: var(--space-md);">
+                                <span class="badge badge-info" id="estatePhase">Phase: —</span>
+                                <span class="badge badge-success" id="estateState">State: —</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Estimated Value</div>
+                            <div style="font-size: var(--text-2xl); font-weight: 700; color: var(--gold);" id="estateValue">$0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid mb-xl">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11l3 3L22 4"></path>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-tasks">0</div>
+                        <div class="stat-label">Pending Tasks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-notifications">0</div>
+                        <div class="stat-label">Notifications Sent</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gold">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-assets">0</div>
+                        <div class="stat-label">Assets to Transfer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-deadline">—</div>
+                        <div class="stat-label">Days Until Deadline</div>
+                    </div>
+                </div>
+                
+                <!-- Content Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+                    <!-- Priority Tasks -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Priority Tasks</h3>
+                            <a href="tasks.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <ul class="task-list" id="taskList">
+                                <li class="task-item">
+                                    <div class="task-checkbox"></div>
+                                    <div class="task-content">
+                                        <div class="task-title">No tasks assigned</div>
+                                        <div class="task-meta">Select an estate to view tasks</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Notifications -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Notification Status</h3>
+                            <a href="notifications.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <ul class="notification-list" id="notificationList">
+                                <li class="notification-item">
+                                    <div class="notification-icon pending">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">No notifications</div>
+                                        <div class="notification-desc">Select an estate to view notification status</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Second Row -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-top: var(--space-xl);">
+                    <!-- Compliance Checklist -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Compliance Checklist</h3>
+                            <span class="badge badge-warning" id="complianceProgress">0/0</span>
+                        </div>
+                        <div class="card-body">
+                            <ul class="compliance-checklist" id="complianceList">
+                                <li class="compliance-item">
+                                    <span class="compliance-status pending"></span>
+                                    <span>Select an estate to view compliance requirements</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Timeline -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline" id="activityTimeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-date">—</div>
+                                    <div class="timeline-title">No activity yet</div>
+                                    <div class="timeline-desc">Activity will appear here once you start working on an estate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script type="module">
+        import { AuthService, DatabaseService } from '../../assets/js/firebase-init.js';
+        
+        window.AuthService = AuthService;
+        window.DatabaseService = DatabaseService;
+        
+        let currentUser = null;
+        let assignedEstates = [];
+        let selectedEstate = null;
+        
+        async function init() {
+            console.log('🏛️ Legacy Estate OS - Executor Portal');
+            
+            currentUser = AuthService.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            
+            await loadAssignedEstates();
+        }
+        
+        async function loadAssignedEstates() {
+            try {
+                const estates = await DatabaseService.getDocuments('estates');
+                // Filter estates where current user is an executor
+                assignedEstates = estates.filter(e => 
+                    e.executors?.some(ex => ex.userId === currentUser.uid || ex.email === currentUser.email)
+                );
+                
+                // If no estates assigned, show all estates for demo
+                if (assignedEstates.length === 0) {
+                    assignedEstates = estates.slice(0, 3);
+                }
+                
+                const selector = document.getElementById('estateSelector');
+                selector.innerHTML = '<option value="">Select Estate</option>' +
+                    assignedEstates.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+                
+                if (assignedEstates.length > 0) {
+                    selector.value = assignedEstates[0].id;
+                    await switchEstate(assignedEstates[0].id);
+                }
+            } catch (error) {
+                console.error('Error loading estates:', error);
+                showToast('Failed to load estates', 'error');
+            }
+        }
+        
+        window.switchEstate = async function(estateId) {
+            if (!estateId) {
+                document.getElementById('estateBanner').style.display = 'none';
+                return;
+            }
+            
+            selectedEstate = assignedEstates.find(e => e.id === estateId);
+            if (!selectedEstate) return;
+            
+            document.getElementById('estateBanner').style.display = 'block';
+            document.getElementById('estateName').textContent = selectedEstate.name || 'Unnamed Estate';
+            document.getElementById('estatePrincipal').textContent = `Principal: ${selectedEstate.principalName || 'Unknown'}`;
+            document.getElementById('estatePhase').textContent = `Phase: ${capitalize(selectedEstate.phase || 'intake')}`;
+            document.getElementById('estateState').textContent = `State: ${selectedEstate.state || 'IL'}`;
+            
+            // Load estate data
+            await Promise.all([
+                loadTasks(),
+                loadNotifications(),
+                loadAssets(),
+                loadCompliance(),
+                loadActivity()
+            ]);
+        };
+        
+        async function loadTasks() {
+            try {
+                const tasks = await DatabaseService.getDocuments('tasks');
+                const estateTasks = tasks.filter(t => t.estateId === selectedEstate.id && t.status !== 'completed');
+                
+                document.getElementById('stat-tasks').textContent = estateTasks.length;
+                
+                const list = document.getElementById('taskList');
+                if (estateTasks.length === 0) {
+                    list.innerHTML = `<li class="task-item"><div class="task-content"><div class="task-title">No pending tasks</div></div></li>`;
+                    return;
+                }
+                
+                list.innerHTML = estateTasks.slice(0, 5).map(task => `
+                    <li class="task-item">
+                        <div class="task-checkbox ${task.status === 'completed' ? 'completed' : ''}" onclick="toggleTask('${task.id}')">
+                            ${task.status === 'completed' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-meta">${task.dueDate ? `Due: ${new Date(task.dueDate).toLocaleDateString()}` : 'No due date'}</div>
+                        </div>
+                        <span class="task-priority ${task.priority || 'medium'}">${task.priority || 'medium'}</span>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+            }
+        }
+        
+        async function loadNotifications() {
+            try {
+                const notifications = await DatabaseService.getDocuments('notifications');
+                const estateNotifications = notifications.filter(n => n.estateId === selectedEstate.id);
+                
+                const sent = estateNotifications.filter(n => n.status === 'sent').length;
+                document.getElementById('stat-notifications').textContent = sent;
+                
+                const list = document.getElementById('notificationList');
+                if (estateNotifications.length === 0) {
+                    list.innerHTML = `<li class="notification-item"><div class="notification-content"><div class="notification-title">No notifications</div></div></li>`;
+                    return;
+                }
+                
+                list.innerHTML = estateNotifications.slice(0, 4).map(notif => `
+                    <li class="notification-item">
+                        <div class="notification-icon ${notif.status}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                ${notif.status === 'sent' ? '<polyline points="20 6 9 17 4 12"></polyline>' : 
+                                  notif.status === 'pending' ? '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line>' :
+                                  '<circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>'}
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-title">${notif.recipient || 'Unknown'}</div>
+                            <div class="notification-desc">${notif.type || 'Notification'}</div>
+                        </div>
+                        <span class="badge badge-${notif.status === 'sent' ? 'success' : notif.status === 'pending' ? 'warning' : 'danger'}">${capitalize(notif.status)}</span>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+        
+        async function loadAssets() {
+            try {
+                const assets = await DatabaseService.getDocuments('assets');
+                const estateAssets = assets.filter(a => a.estateId === selectedEstate.id && a.status !== 'transferred');
+                
+                document.getElementById('stat-assets').textContent = estateAssets.length;
+                
+                const totalValue = estateAssets.reduce((sum, a) => sum + (parseFloat(a.value) || 0), 0);
+                document.getElementById('estateValue').textContent = '$' + totalValue.toLocaleString();
+            } catch (error) {
+                console.error('Error loading assets:', error);
+            }
+        }
+        
+        async function loadCompliance() {
+            const state = selectedEstate.state || 'IL';
+            const complianceItems = getStateCompliance(state);
+            
+            // Check completed items
+            let completed = 0;
+            const list = document.getElementById('complianceList');
+            
+            list.innerHTML = complianceItems.map(item => {
+                const isComplete = selectedEstate.compliance?.[item.id] || false;
+                if (isComplete) completed++;
+                return `
+                    <li class="compliance-item">
+                        <span class="compliance-status ${isComplete ? 'complete' : item.required ? 'required' : 'pending'}"></span>
+                        <span style="color: var(--text-primary);">${item.label}</span>
+                    </li>
+                `;
+            }).join('');
+            
+            document.getElementById('complianceProgress').textContent = `${completed}/${complianceItems.length}`;
+        }
+        
+        function getStateCompliance(state) {
+            const stateRules = {
+                'IL': [
+                    { id: 'death_cert', label: 'File death certificate with county clerk', required: true },
+                    { id: 'will_file', label: 'File will with probate court (within 30 days)', required: true },
+                    { id: 'executor_letters', label: 'Obtain Letters Testamentary', required: true },
+                    { id: 'creditor_notice', label: 'Publish creditor notice (6 months)', required: true },
+                    { id: 'inventory', label: 'File estate inventory (within 60 days)', required: false },
+                    { id: 'tax_return', label: 'File IL estate tax return (if applicable)', required: false }
+                ],
+                'MI': [
+                    { id: 'death_cert', label: 'File death certificate', required: true },
+                    { id: 'will_file', label: 'File will with probate court', required: true },
+                    { id: 'personal_rep', label: 'Obtain Personal Representative appointment', required: true },
+                    { id: 'creditor_notice', label: 'Publish notice to creditors (4 months)', required: true }
+                ]
+            };
+            return stateRules[state] || stateRules['IL'];
+        }
+        
+        async function loadActivity() {
+            try {
+                const activities = await DatabaseService.getDocuments('activity');
+                const estateActivity = activities.filter(a => a.estateId === selectedEstate.id).slice(0, 5);
+                
+                const timeline = document.getElementById('activityTimeline');
+                
+                if (estateActivity.length === 0) {
+                    timeline.innerHTML = `<div class="timeline-item"><div class="timeline-title">No activity recorded yet</div></div>`;
+                    return;
+                }
+                
+                timeline.innerHTML = estateActivity.map(a => {
+                    const date = a.timestamp?.toDate?.() || new Date(a.timestamp);
+                    return `
+                        <div class="timeline-item">
+                            <div class="timeline-date">${date.toLocaleDateString()}</div>
+                            <div class="timeline-title">${a.action}</div>
+                            <div class="timeline-desc">${a.description || ''}</div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading activity:', error);
+            }
+        }
+        
+        window.toggleTask = async function(taskId) {
+            try {
+                const tasks = await DatabaseService.getDocuments('tasks');
+                const task = tasks.find(t => t.id === taskId);
+                if (!task) return;
+                
+                const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+                await DatabaseService.updateDocument('tasks', taskId, { status: newStatus });
+                showToast('Task updated', 'success');
+                await loadTasks();
+            } catch (error) {
+                showToast('Failed to update task', 'error');
+            }
+        };
+        
+        function capitalize(str) {
+            return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+        }
+        
+        window.handleLogout = async function() {
+            await AuthService.signOut();
+            window.location.href = '/auth/login.html';
+        };
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

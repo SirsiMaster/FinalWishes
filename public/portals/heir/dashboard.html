@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en" data-auth-protect="heir">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Inheritance Dashboard — Legacy</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Legacy Design System -->
+    <link rel="stylesheet" href="../../legacy.css">
+    <link rel="stylesheet" href="../../assets/css/admin-layout.css">
+    
+    <style>
+        /* Heir Portal accent - warm green */
+        .sidebar { --sidebar-accent: #059669; }
+        
+        .inheritance-card {
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            transition: var(--transition);
+        }
+        .inheritance-card:hover {
+            border-color: var(--gold);
+        }
+        .inheritance-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        .inheritance-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .inheritance-icon.financial { background: rgba(59, 130, 246, 0.2); color: #3B82F6; }
+        .inheritance-icon.property { background: rgba(16, 185, 129, 0.2); color: #10B981; }
+        .inheritance-icon.vehicle { background: rgba(245, 158, 11, 0.2); color: #F59E0B; }
+        .inheritance-icon.personal { background: rgba(139, 92, 246, 0.2); color: #8B5CF6; }
+        .inheritance-icon.digital { background: rgba(236, 72, 153, 0.2); color: #EC4899; }
+        .inheritance-title { font-weight: 600; color: var(--text-primary); }
+        .inheritance-estate { font-size: var(--text-sm); color: var(--text-secondary); }
+        .inheritance-value {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--gold);
+            text-align: right;
+        }
+        .inheritance-share {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+        .inheritance-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--glass-border);
+            margin-top: var(--space-md);
+        }
+        
+        .status-timeline {
+            display: flex;
+            gap: var(--space-xs);
+            flex: 1;
+        }
+        .status-step {
+            flex: 1;
+            height: 4px;
+            background: var(--glass-border);
+            border-radius: 2px;
+            position: relative;
+        }
+        .status-step.complete { background: var(--success); }
+        .status-step.active { background: var(--gold); }
+        
+        .document-list { list-style: none; padding: 0; margin: 0; }
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .document-item:hover { background: var(--glass-surface); }
+        .document-item:last-child { border-bottom: none; }
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #DC2626;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .document-info { flex: 1; }
+        .document-name { font-weight: 500; color: var(--text-primary); }
+        .document-meta { font-size: var(--text-sm); color: var(--text-secondary); }
+        
+        .message-list { list-style: none; padding: 0; margin: 0; }
+        .message-item {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .message-item:last-child { border-bottom: none; }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-xs);
+        }
+        .message-from { font-weight: 500; color: var(--text-primary); }
+        .message-time { font-size: var(--text-xs); color: var(--text-muted); }
+        .message-preview { font-size: var(--text-sm); color: var(--text-secondary); }
+        .message-item.unread { background: rgba(212, 175, 55, 0.05); }
+        .message-item.unread .message-from::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            margin-left: var(--space-xs);
+        }
+        
+        .welcome-banner {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+        .welcome-banner h2 {
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            margin-bottom: var(--space-sm);
+        }
+        .welcome-banner p {
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+        
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: var(--glass-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-sm);
+        }
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--royal-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        .contact-info { flex: 1; }
+        .contact-name { font-weight: 500; color: var(--text-primary); }
+        .contact-role { font-size: var(--text-sm); color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span>LEGACY</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="9"></rect>
+                        <rect x="14" y="3" width="7" height="5"></rect>
+                        <rect x="14" y="12" width="7" height="9"></rect>
+                        <rect x="3" y="16" width="7" height="5"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="inheritance.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                        <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                        <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                    </svg>
+                    My Inheritance
+                </a>
+                <a href="documents.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Documents
+                </a>
+                <a href="messages.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Messages
+                    <span class="nav-badge" id="unreadCount" style="display: none;">0</span>
+                </a>
+                
+                <div class="nav-section">Account</div>
+                <a href="profile.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+                <a href="help.html" class="nav-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Help & Support
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="handleLogout()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Sign Out
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="page-header">
+                <div class="header-left">
+                    <h1 class="page-title">Welcome, <span id="userName">—</span></h1>
+                    <p class="page-subtitle">Your inheritance status at a glance</p>
+                </div>
+            </header>
+            
+            <div class="page-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner" id="welcomeBanner">
+                    <h2>You've Been Named as a Beneficiary</h2>
+                    <p>Someone has designated you to receive a portion of their estate. This dashboard will help you track the status of your inheritance and stay informed throughout the process.</p>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid mb-xl">
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                                <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                                <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-estates">0</div>
+                        <div class="stat-label">Estates</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gold">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-value">$0</div>
+                        <div class="stat-label">Total Inheritance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-assets">0</div>
+                        <div class="stat-label">Assets Assigned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="stat-documents">0</div>
+                        <div class="stat-label">Documents</div>
+                    </div>
+                </div>
+                
+                <!-- Content Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl);">
+                    <!-- Inheritance Overview -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Your Inheritance</h3>
+                            <a href="inheritance.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body" id="inheritanceList">
+                            <p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No inheritance assigned yet</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Executor Contact -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Estate Contacts</h3>
+                        </div>
+                        <div class="card-body" id="contactList">
+                            <p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No contacts available</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Second Row -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-top: var(--space-xl);">
+                    <!-- Recent Documents -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Shared Documents</h3>
+                            <a href="documents.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <ul class="document-list" id="documentList">
+                                <li class="document-item">
+                                    <div class="document-info">
+                                        <div class="document-name" style="color: var(--text-secondary);">No documents shared yet</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Messages -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Messages</h3>
+                            <a href="messages.html" class="btn btn-sm btn-secondary">View All</a>
+                        </div>
+                        <div class="card-body">
+                            <ul class="message-list" id="messageList">
+                                <li class="message-item">
+                                    <div class="message-header">
+                                        <span class="message-from" style="color: var(--text-secondary);">No messages yet</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Section -->
+                <div class="card mt-xl">
+                    <div class="card-header">
+                        <h3 class="card-title">Frequently Asked Questions</h3>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+                            <div>
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--space-xs);">How long does the inheritance process take?</h4>
+                                <p style="color: var(--text-secondary); font-size: var(--text-sm);">The timeline varies by state and estate complexity, typically ranging from 6-18 months. Your executor will keep you updated on progress.</p>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--space-xs);">What documents will I need to provide?</h4>
+                                <p style="color: var(--text-secondary); font-size: var(--text-sm);">You'll need to verify your identity with a government-issued ID. The executor may request additional documentation depending on the assets.</p>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--space-xs);">Are there taxes on inherited assets?</h4>
+                                <p style="color: var(--text-secondary); font-size: var(--text-sm);">It depends on your state and the type of assets. We recommend consulting a tax professional for your specific situation.</p>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--space-xs);">Can I decline an inheritance?</h4>
+                                <p style="color: var(--text-secondary); font-size: var(--text-sm);">Yes, you can disclaim (refuse) an inheritance. This must typically be done within 9 months and requires a written statement.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script type="module">
+        import { AuthService, DatabaseService } from '../../assets/js/firebase-init.js';
+        
+        window.AuthService = AuthService;
+        window.DatabaseService = DatabaseService;
+        
+        let currentUser = null;
+        let beneficiaryRecords = [];
+        
+        async function init() {
+            console.log('🏛️ Legacy Estate OS - Heir Portal');
+            
+            currentUser = AuthService.getCurrentUser();
+            if (!currentUser) {
+                window.location.href = '/auth/login.html';
+                return;
+            }
+            
+            await loadUserData();
+            await loadInheritanceData();
+        }
+        
+        async function loadUserData() {
+            try {
+                const users = await DatabaseService.getDocuments('users');
+                const userProfile = users.find(u => u.id === currentUser.uid) || {};
+                document.getElementById('userName').textContent = userProfile.displayName || userProfile.email?.split('@')[0] || 'User';
+            } catch (error) {
+                console.error('Error loading user:', error);
+            }
+        }
+        
+        async function loadInheritanceData() {
+            try {
+                // Load beneficiary records where current user is the heir
+                const beneficiaries = await DatabaseService.getDocuments('beneficiaries');
+                beneficiaryRecords = beneficiaries.filter(b => 
+                    b.userId === currentUser.uid || b.email === currentUser.email
+                );
+                
+                // For demo, show some data if no records found
+                if (beneficiaryRecords.length === 0) {
+                    beneficiaryRecords = beneficiaries.slice(0, 2);
+                }
+                
+                // Get unique estate IDs
+                const estateIds = [...new Set(beneficiaryRecords.map(b => b.estateId))];
+                
+                // Load estates
+                const estates = await DatabaseService.getDocuments('estates');
+                const myEstates = estates.filter(e => estateIds.includes(e.id));
+                
+                // Load assets assigned to this heir
+                const assets = await DatabaseService.getDocuments('assets');
+                const myAssets = assets.filter(a => 
+                    beneficiaryRecords.some(b => b.id === a.beneficiaryId) ||
+                    estateIds.includes(a.estateId)
+                );
+                
+                // Update stats
+                document.getElementById('stat-estates').textContent = myEstates.length || beneficiaryRecords.length;
+                document.getElementById('stat-assets').textContent = myAssets.length;
+                
+                // Calculate total value
+                let totalValue = 0;
+                beneficiaryRecords.forEach(b => {
+                    const estate = myEstates.find(e => e.id === b.estateId);
+                    if (estate?.totalValue && b.share) {
+                        totalValue += (estate.totalValue * b.share / 100);
+                    }
+                });
+                myAssets.forEach(a => totalValue += (parseFloat(a.value) || 0));
+                document.getElementById('stat-value').textContent = '$' + totalValue.toLocaleString();
+                
+                // Render inheritance cards
+                renderInheritance(beneficiaryRecords, myEstates, myAssets);
+                
+                // Load contacts (executors)
+                await loadContacts(myEstates);
+                
+                // Load documents
+                await loadDocuments(estateIds);
+                
+                // Load messages
+                await loadMessages();
+                
+            } catch (error) {
+                console.error('Error loading inheritance data:', error);
+            }
+        }
+        
+        function renderInheritance(beneficiaries, estates, assets) {
+            const container = document.getElementById('inheritanceList');
+            
+            if (beneficiaries.length === 0 && assets.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No inheritance assigned yet</p>';
+                return;
+            }
+            
+            // Group by estate
+            const estateMap = new Map();
+            beneficiaries.forEach(b => {
+                const estate = estates.find(e => e.id === b.estateId);
+                if (!estateMap.has(b.estateId)) {
+                    estateMap.set(b.estateId, {
+                        estate: estate || { name: 'Estate' },
+                        share: b.share || 0,
+                        status: estate?.phase || 'intake'
+                    });
+                }
+            });
+            
+            container.innerHTML = Array.from(estateMap.values()).slice(0, 3).map(item => {
+                const statusSteps = getStatusSteps(item.status);
+                const estimatedValue = item.estate.totalValue ? 
+                    '$' + Math.round(item.estate.totalValue * item.share / 100).toLocaleString() : 'TBD';
+                
+                return `
+                    <div class="inheritance-card">
+                        <div class="inheritance-header">
+                            <div class="inheritance-icon property">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </div>
+                            <div style="flex: 1;">
+                                <div class="inheritance-title">${item.estate.name || 'Unnamed Estate'}</div>
+                                <div class="inheritance-estate">Your share: ${item.share}%</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="inheritance-value">${estimatedValue}</div>
+                                <div class="inheritance-share">Estimated value</div>
+                            </div>
+                        </div>
+                        <div class="inheritance-status">
+                            <div class="status-timeline">
+                                ${statusSteps.map((step, i) => `
+                                    <div class="status-step ${step}" title="${['Intake', 'Verify', 'Notify', 'Distribute'][i]}"></div>
+                                `).join('')}
+                            </div>
+                            <span class="badge badge-info">${capitalize(item.status)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function getStatusSteps(phase) {
+            const phases = ['intake', 'verify', 'notify', 'distribute'];
+            const currentIndex = phases.indexOf(phase);
+            return phases.map((p, i) => {
+                if (i < currentIndex) return 'complete';
+                if (i === currentIndex) return 'active';
+                return '';
+            });
+        }
+        
+        async function loadContacts(estates) {
+            const container = document.getElementById('contactList');
+            const contacts = [];
+            
+            estates.forEach(estate => {
+                if (estate.executors) {
+                    estate.executors.forEach(ex => {
+                        contacts.push({
+                            name: ex.name || ex.email,
+                            role: 'Executor',
+                            estate: estate.name
+                        });
+                    });
+                }
+            });
+            
+            if (contacts.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No contacts available</p>';
+                return;
+            }
+            
+            container.innerHTML = contacts.slice(0, 3).map(c => `
+                <div class="contact-card">
+                    <div class="contact-avatar">${(c.name || 'E')[0].toUpperCase()}</div>
+                    <div class="contact-info">
+                        <div class="contact-name">${c.name}</div>
+                        <div class="contact-role">${c.role} • ${c.estate}</div>
+                    </div>
+                    <button class="btn btn-sm btn-secondary" onclick="sendMessage('${c.name}')">Message</button>
+                </div>
+            `).join('');
+        }
+        
+        async function loadDocuments(estateIds) {
+            try {
+                const documents = await DatabaseService.getDocuments('documents');
+                const sharedDocs = documents.filter(d => 
+                    estateIds.includes(d.estateId) && d.sharedWithHeirs
+                );
+                
+                document.getElementById('stat-documents').textContent = sharedDocs.length;
+                
+                const list = document.getElementById('documentList');
+                if (sharedDocs.length === 0) {
+                    list.innerHTML = '<li class="document-item"><div class="document-info"><div class="document-name" style="color: var(--text-secondary);">No documents shared yet</div></div></li>';
+                    return;
+                }
+                
+                list.innerHTML = sharedDocs.slice(0, 4).map(doc => `
+                    <li class="document-item">
+                        <div class="document-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                        <div class="document-info">
+                            <div class="document-name">${doc.name}</div>
+                            <div class="document-meta">${capitalize(doc.type || 'document')}</div>
+                        </div>
+                        <a href="${doc.downloadURL || '#'}" class="btn btn-sm btn-secondary" target="_blank">View</a>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading documents:', error);
+            }
+        }
+        
+        async function loadMessages() {
+            try {
+                const messages = await DatabaseService.getDocuments('messages');
+                const myMessages = messages.filter(m => 
+                    m.recipientId === currentUser.uid || m.recipientEmail === currentUser.email
+                ).slice(0, 4);
+                
+                const unread = myMessages.filter(m => !m.read).length;
+                const badge = document.getElementById('unreadCount');
+                if (unread > 0) {
+                    badge.textContent = unread;
+                    badge.style.display = 'inline-flex';
+                }
+                
+                const list = document.getElementById('messageList');
+                if (myMessages.length === 0) {
+                    list.innerHTML = '<li class="message-item"><div class="message-header"><span class="message-from" style="color: var(--text-secondary);">No messages yet</span></div></li>';
+                    return;
+                }
+                
+                list.innerHTML = myMessages.map(msg => {
+                    const date = msg.sentAt?.toDate?.() || new Date(msg.sentAt);
+                    return `
+                        <li class="message-item ${!msg.read ? 'unread' : ''}">
+                            <div class="message-header">
+                                <span class="message-from">${msg.senderName || 'System'}</span>
+                                <span class="message-time">${date.toLocaleDateString()}</span>
+                            </div>
+                            <div class="message-preview">${msg.preview || msg.content?.substring(0, 100) || 'No content'}</div>
+                        </li>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+        
+        function capitalize(str) {
+            return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+        }
+        
+        window.sendMessage = function(recipientName) {
+            showToast(`Messaging ${recipientName}...`, 'info');
+            // Would open message compose modal
+        };
+        
+        window.handleLogout = async function() {
+            await AuthService.signOut();
+            window.location.href = '/auth/login.html';
+        };
+        
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>

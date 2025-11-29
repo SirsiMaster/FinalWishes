@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Subscription - Legacy Estate OS</title>
+    <meta name="robots" content="noindex">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /**
+         * Subscription Management Component Styles
+         * Backportable to Sirsi: sm-subscription-*
+         */
+        :root {
+            --sm-color-navy: #0f172a;
+            --sm-color-royal: #1e3a8a;
+            --sm-color-gold: #C8A951;
+            --sm-color-gold-bright: #D4B85A;
+            --sm-color-emerald: #10B981;
+            --sm-color-red: #EF4444;
+            --sm-color-gray-100: #f3f4f6;
+            --sm-color-gray-500: #6b7280;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            min-height: 100vh;
+        }
+        h1, h2, h3 { font-family: 'Cinzel', serif; }
+        
+        /* sm-card - Sirsi backport */
+        .sm-card {
+            background: rgba(30, 58, 138, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+        }
+        .sm-card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .sm-card-body { padding: 1.5rem; }
+        .sm-card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,0,0,0.1);
+        }
+        
+        /* sm-btn - Sirsi backport */
+        .sm-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .sm-btn-primary {
+            background: var(--sm-color-gold);
+            color: #000;
+        }
+        .sm-btn-primary:hover {
+            background: var(--sm-color-gold-bright);
+            box-shadow: 0 0 20px rgba(200, 169, 81, 0.4);
+        }
+        .sm-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+        }
+        .sm-btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+        .sm-btn-danger {
+            background: transparent;
+            border: 1px solid var(--sm-color-red);
+            color: var(--sm-color-red);
+        }
+        .sm-btn-danger:hover {
+            background: var(--sm-color-red);
+            color: white;
+        }
+        .sm-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* sm-badge - Sirsi backport */
+        .sm-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 9999px;
+        }
+        .sm-badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--sm-color-emerald);
+        }
+        .sm-badge-warning {
+            background: rgba(200, 169, 81, 0.2);
+            color: var(--sm-color-gold);
+        }
+        .sm-badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--sm-color-red);
+        }
+        
+        /* sm-plan-card - Subscription-specific */
+        .sm-plan-card {
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+        .sm-plan-card.active {
+            border-color: var(--sm-color-gold);
+            background: rgba(200, 169, 81, 0.1);
+        }
+        .sm-plan-card:hover:not(.active) {
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        /* sm-alert - Sirsi backport */
+        .sm-alert {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .sm-alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+        .sm-alert-danger {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        
+        /* Loading state */
+        .sm-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        .sm-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: var(--sm-color-gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Decorative */
+        .deco-corner {
+            position: absolute;
+            width: 24px; height: 24px;
+            border-color: var(--sm-color-gold);
+            opacity: 0.5;
+        }
+        .deco-corner.top-left { top: 8px; left: 8px; border-top: 2px solid; border-left: 2px solid; }
+        .deco-corner.top-right { top: 8px; right: 8px; border-top: 2px solid; border-right: 2px solid; }
+        .deco-corner.bottom-left { bottom: 8px; left: 8px; border-bottom: 2px solid; border-left: 2px solid; }
+        .deco-corner.bottom-right { bottom: 8px; right: 8px; border-bottom: 2px solid; border-right: 2px solid; }
+        
+        /* Auth gate */
+        #auth-gate { display: flex; }
+        #subscription-content { display: none; }
+        body.authenticated #auth-gate { display: none; }
+        body.authenticated #subscription-content { display: block; }
+    </style>
+</head>
+<body class="p-4">
+    <!-- Auth Gate - shown when not logged in -->
+    <div id="auth-gate" class="min-h-screen items-center justify-center">
+        <div class="sm-card max-w-md w-full relative">
+            <div class="deco-corner top-left"></div>
+            <div class="deco-corner top-right"></div>
+            <div class="deco-corner bottom-left"></div>
+            <div class="deco-corner bottom-right"></div>
+            
+            <div class="sm-card-body text-center">
+                <div class="w-12 h-12 mx-auto mb-4 text-[var(--sm-color-gold)]">
+                    <svg viewBox="0 0 100 100" class="w-full h-full fill-current">
+                        <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl text-white mb-2">Sign In Required</h2>
+                <p class="text-white/60 text-sm mb-6">Please sign in to manage your subscription.</p>
+                <a href="/" class="sm-btn sm-btn-primary">Sign In</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subscription Management Content -->
+    <div id="subscription-content" class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <a href="/" class="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm mb-4 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Legacy
+            </a>
+            <h1 class="text-2xl text-white">Manage Subscription</h1>
+        </div>
+        
+        <!-- Alert Container -->
+        <div id="alert-container" class="mb-6 hidden"></div>
+        
+        <!-- Current Plan Card -->
+        <div class="sm-card mb-6 relative">
+            <div class="deco-corner top-left"></div>
+            <div class="deco-corner top-right"></div>
+            <div class="deco-corner bottom-left"></div>
+            <div class="deco-corner bottom-right"></div>
+            
+            <div class="sm-card-header flex items-center justify-between">
+                <div>
+                    <h3 class="text-white text-lg">Current Plan</h3>
+                    <p class="text-white/50 text-xs">Manage your Legacy membership</p>
+                </div>
+                <span id="plan-badge" class="sm-badge sm-badge-success">
+                    <span class="w-2 h-2 bg-current rounded-full"></span>
+                    Active
+                </span>
+            </div>
+            
+            <div class="sm-card-body">
+                <div id="plan-loading" class="sm-loading">
+                    <div class="sm-spinner"></div>
+                </div>
+                
+                <div id="plan-details" class="hidden">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <div id="plan-name" class="text-2xl text-white font-semibold">Concierge</div>
+                            <div id="plan-price" class="text-[var(--sm-color-gold)] text-lg">$2,997</div>
+                            <div id="plan-interval" class="text-white/40 text-sm">One-time payment</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-white/40 text-xs uppercase tracking-wider">Member since</div>
+                            <div id="member-since" class="text-white">Nov 2025</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Plan Features -->
+                    <div class="border-t border-white/10 pt-4">
+                        <div class="text-white/50 text-xs uppercase tracking-wider mb-3">Your Benefits</div>
+                        <ul id="plan-features" class="space-y-2 text-white/80 text-sm">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Free tier message -->
+                <div id="free-tier-message" class="hidden text-center py-6">
+                    <div class="text-white/60 text-sm mb-4">You're on the free tier.</div>
+                    <button onclick="upgradePlan()" class="sm-btn sm-btn-primary">Upgrade to Concierge</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Billing Actions -->
+        <div class="sm-card mb-6 relative" id="billing-actions">
+            <div class="sm-card-header">
+                <h3 class="text-white text-lg">Billing & Payments</h3>
+            </div>
+            <div class="sm-card-body space-y-4">
+                <button onclick="openBillingPortal()" class="sm-btn sm-btn-secondary w-full">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    Update Payment Method
+                </button>
+                <button onclick="downloadInvoices()" class="sm-btn sm-btn-secondary w-full">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Download Invoices
+                </button>
+            </div>
+        </div>
+        
+        <!-- Cancel Section -->
+        <div class="sm-card relative" id="cancel-section">
+            <div class="sm-card-header">
+                <h3 class="text-white text-lg">Cancel Subscription</h3>
+            </div>
+            <div class="sm-card-body">
+                <p class="text-white/60 text-sm mb-4">
+                    We'd hate to see you go. If you cancel, your access will remain active until the end of your current period.
+                </p>
+                <button onclick="showCancelConfirm()" class="sm-btn sm-btn-danger">
+                    Cancel Membership
+                </button>
+            </div>
+        </div>
+        
+        <!-- Cancel Confirmation Modal -->
+        <div id="cancel-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="hideCancelConfirm()"></div>
+            <div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[400px]">
+                <div class="sm-card">
+                    <div class="sm-card-body text-center">
+                        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-white text-xl mb-2">Cancel Membership?</h3>
+                        <p class="text-white/60 text-sm mb-6">
+                            Your estate protection will end when your current period expires. This action cannot be undone.
+                        </p>
+                        <div class="flex gap-3">
+                            <button onclick="hideCancelConfirm()" class="sm-btn sm-btn-secondary flex-1">Keep Plan</button>
+                            <button onclick="confirmCancel()" class="sm-btn sm-btn-danger flex-1">Yes, Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyANMDZXcdn2eI8JN8FxXlAkCt-f4BONuiU",
+            authDomain: "legacy-estate-os.firebaseapp.com",
+            projectId: "legacy-estate-os",
+            storageBucket: "legacy-estate-os.firebasestorage.app",
+            messagingSenderId: "1002875213628",
+            appId: "1:1002875213628:web:59d3f4b04345f3f7abb039"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Plan configurations
+        const planConfigs = {
+            free: {
+                name: 'Free',
+                price: '$0',
+                interval: 'Forever',
+                features: ['Basic estate roadmap', 'Document checklist', 'Email support']
+            },
+            concierge: {
+                name: 'Concierge',
+                price: '$2,997',
+                interval: 'One-time payment',
+                features: ['10 Certified Death Certificates', 'Auto-Filing Service', 'Priority Support', 'Asset Discovery Scan', 'Dedicated Estate Coordinator']
+            },
+            whiteglove: {
+                name: 'White Glove',
+                price: '$9,997',
+                interval: 'One-time payment',
+                features: ['Everything in Concierge', 'Personal Estate Agent', 'Complex Asset Handling', 'Legal Document Review', 'Family Meeting Facilitation', 'VIP Phone Support']
+            }
+        };
+
+        let currentUser = null;
+        let userData = null;
+
+        // Auth state listener
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.body.classList.add('authenticated');
+                await loadSubscriptionData(user.uid);
+            } else {
+                document.body.classList.remove('authenticated');
+            }
+        });
+
+        // Load subscription data
+        async function loadSubscriptionData(uid) {
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
+                if (userDoc.exists()) {
+                    userData = userDoc.data();
+                    renderSubscription(userData);
+                }
+            } catch (error) {
+                console.error('Error loading subscription:', error);
+                showAlert('Failed to load subscription data.', 'danger');
+            }
+        }
+
+        // Render subscription UI
+        function renderSubscription(data) {
+            document.getElementById('plan-loading').classList.add('hidden');
+            
+            const subscription = data.subscription || { plan: 'free', status: 'active' };
+            const plan = planConfigs[subscription.plan] || planConfigs.free;
+            
+            // Update badge
+            const badge = document.getElementById('plan-badge');
+            if (subscription.status === 'active') {
+                badge.className = 'sm-badge sm-badge-success';
+                badge.innerHTML = '<span class="w-2 h-2 bg-current rounded-full"></span> Active';
+            } else if (subscription.status === 'cancelled') {
+                badge.className = 'sm-badge sm-badge-warning';
+                badge.innerHTML = '<span class="w-2 h-2 bg-current rounded-full"></span> Cancelled';
+            } else {
+                badge.className = 'sm-badge sm-badge-danger';
+                badge.innerHTML = '<span class="w-2 h-2 bg-current rounded-full"></span> Inactive';
+            }
+            
+            // Show appropriate content
+            if (subscription.plan === 'free') {
+                document.getElementById('free-tier-message').classList.remove('hidden');
+                document.getElementById('plan-details').classList.add('hidden');
+                document.getElementById('billing-actions').classList.add('hidden');
+                document.getElementById('cancel-section').classList.add('hidden');
+            } else {
+                document.getElementById('free-tier-message').classList.add('hidden');
+                document.getElementById('plan-details').classList.remove('hidden');
+                
+                document.getElementById('plan-name').textContent = plan.name;
+                document.getElementById('plan-price').textContent = plan.price;
+                document.getElementById('plan-interval').textContent = plan.interval;
+                
+                // Member since
+                const createdAt = data.createdAt?.toDate?.() || new Date();
+                document.getElementById('member-since').textContent = createdAt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                
+                // Features
+                const featuresEl = document.getElementById('plan-features');
+                featuresEl.innerHTML = plan.features.map(f => `
+                    <li class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-[var(--sm-color-emerald)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        ${f}
+                    </li>
+                `).join('');
+            }
+        }
+
+        // Alert helper
+        function showAlert(message, type = 'success') {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `<div class="sm-alert sm-alert-${type}">${message}</div>`;
+            container.classList.remove('hidden');
+            setTimeout(() => container.classList.add('hidden'), 5000);
+        }
+        window.showAlert = showAlert;
+
+        // Stripe Billing Portal
+        window.openBillingPortal = async function() {
+            // In production, this would call a Firebase Function to create a Stripe portal session
+            // For now, show placeholder
+            showAlert('Billing portal coming soon. Contact support@legacy.estate for billing changes.', 'success');
+        };
+
+        // Download invoices
+        window.downloadInvoices = async function() {
+            showAlert('Invoice download coming soon. Contact support@legacy.estate for invoices.', 'success');
+        };
+
+        // Upgrade plan
+        window.upgradePlan = function() {
+            window.location.href = '/?promo=UPGRADE#signup';
+        };
+
+        // Cancel flow
+        window.showCancelConfirm = function() {
+            document.getElementById('cancel-modal').classList.remove('hidden');
+        };
+        
+        window.hideCancelConfirm = function() {
+            document.getElementById('cancel-modal').classList.add('hidden');
+        };
+        
+        window.confirmCancel = async function() {
+            if (!currentUser) return;
+            
+            try {
+                await updateDoc(doc(db, 'users', currentUser.uid), {
+                    'subscription.status': 'cancelled',
+                    'subscription.cancelledAt': serverTimestamp()
+                });
+                
+                hideCancelConfirm();
+                showAlert('Your subscription has been cancelled. You\'ll retain access until your period ends.', 'success');
+                
+                // Reload data
+                await loadSubscriptionData(currentUser.uid);
+            } catch (error) {
+                console.error('Cancel error:', error);
+                showAlert('Failed to cancel subscription. Please contact support.', 'danger');
+            }
+        };
+    </script>
+</body>
+</html>

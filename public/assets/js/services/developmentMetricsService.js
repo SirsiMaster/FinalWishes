@@ -2,17 +2,24 @@
  * Development Metrics Service
  * Legacy Estate OS - Real-time development analytics
  * 
- * IMPROVEMENTS OVER ASSIDUOUS:
- * - Local caching with IndexedDB fallback
- * - GitHub API integration for commit data
- * - Better aggregation algorithms
- * - Specification compliance tracking
- * - Resource usage monitoring
- * - Cost projection calculations
- * - Export functionality
+ * Uses Firebase Modular SDK
  * 
- * @version 2.0.0
+ * @version 2.1.0
  */
+
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    addDoc,
+    setDoc,
+    updateDoc,
+    query,
+    orderBy,
+    limit,
+    onSnapshot,
+} from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 
 class DevelopmentMetricsService {
     constructor() {
@@ -79,6 +86,136 @@ class DevelopmentMetricsService {
     }
     
     /**
+     * Get project totals - main API method called by dashboard
+     */
+    async getProjectTotals() {
+        if (!this.db) await this.initialize();
+        
+        try {
+            const metricsRef = collection(this.db, 'development_metrics');
+            const q = query(metricsRef, orderBy('date', 'desc'), limit(90));
+            const snapshot = await getDocs(q);
+            const metrics = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            return this.calculateProjectTotals(metrics);
+        } catch (error) {
+            console.error('Error getting project totals:', error);
+            return this.getEmptyProjectTotals();
+        }
+    }
+    
+    /**
+     * Get today's metrics - main API method called by dashboard
+     */
+    async getTodayMetrics() {
+        if (!this.db) await this.initialize();
+        
+        try {
+            const today = new Date().toISOString().split('T')[0];
+            const docRef = doc(this.db, 'development_metrics', today);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                return {
+                    date: today,
+                    hours: data.hours || 0,
+                    commits: data.commits || 0,
+                    files: data.filesChanged || 0,
+                    lines: (data.additions || 0) - (data.deletions || 0),
+                    cost: ((data.hours || 0) * this.config.hourlyRate).toFixed(0),
+                };
+            }
+            return { date: today, hours: 0, commits: 0, files: 0, lines: 0, cost: '0' };
+        } catch (error) {
+            console.error('Error getting today metrics:', error);
+            return { date: new Date().toISOString().split('T')[0], hours: 0, commits: 0, files: 0, lines: 0, cost: '0' };
+        }
+    }
+    
+    /**
+     * Get all development sessions
+     */
+    async getAllSessions(limitCount = 10) {
+        if (!this.db) await this.initialize();
+        
+        try {
+            const sessionsRef = collection(this.db, 'development_sessions');
+            const q = query(sessionsRef, orderBy('date', 'desc'), limit(limitCount));
+            const snapshot = await getDocs(q);
+            return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        } catch (error) {
+            console.error('Error getting sessions:', error);
+            return [];
+        }
+    }
+    
+    /**
+     * Log a development session
+     */
+    async logSession(sessionData) {
+        if (!this.db) await this.initialize();
+        
+        try {
+            const date = sessionData.date || new Date().toISOString().split('T')[0];
+            await addDoc(collection(this.db, 'development_sessions'), {
+                ...sessionData,
+                date,
+                createdAt: new Date(),
+            });
+            
+            // Update daily metrics
+            await this.updateDailyMetrics(date, {
+                hours: sessionData.hours || 0,
+                commits: sessionData.commits || 0,
+                filesChanged: sessionData.files || 0,
+            });
+            
+            return { success: true };
+        } catch (error) {
+            console.error('Error logging session:', error);
+            return { success: false, error: error.message };
+        }
+    }
+    
+    /**
+     * Update daily metrics (uses modular SDK)
+     */
+    async updateDailyMetrics(date, updates) {
+        if (!this.db) return;
+        
+        try {
+            const docRef = doc(this.db, 'development_metrics', date);
+            const docSnap = await getDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const current = docSnap.data();
+                await updateDoc(docRef, {
+                    hours: (current.hours || 0) + (updates.hours || 0),
+                    commits: (current.commits || 0) + (updates.commits || 0),
+                    filesChanged: (current.filesChanged || 0) + (updates.filesChanged || 0),
+                    additions: (current.additions || 0) + (updates.additions || 0),
+                    deletions: (current.deletions || 0) + (updates.deletions || 0),
+                    updatedAt: new Date(),
+                });
+            } else {
+                await setDoc(docRef, {
+                    date,
+                    hours: updates.hours || 0,
+                    commits: updates.commits || 0,
+                    filesChanged: updates.filesChanged || 0,
+                    additions: updates.additions || 0,
+                    deletions: updates.deletions || 0,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                });
+            }
+        } catch (error) {
+            console.error('Error updating daily metrics:', error);
+        }
+    }
+    
+    /**
      * Load metrics from local JSON file (fallback)
      */
     async loadLocalMetrics() {
@@ -95,7 +232,7 @@ class DevelopmentMetricsService {
     }
     
     /**
-     * Subscribe to real-time metrics updates
+     * Subscribe to real-time metrics updates (uses modular SDK)
      * @param {Function} callback - Called with updated metrics
      * @returns {Function} Unsubscribe function
      */
@@ -107,81 +244,21 @@ class DevelopmentMetricsService {
         
         const unsubscribers = [];
         
-        // Subscribe to development_metrics (daily aggregates)
         if (this.db) {
-            const metricsUnsub = this.db.collection('development_metrics')
-                .orderBy('date', 'desc')
-                .limit(90) // Last 90 days
-                .onSnapshot((snapshot) => {
-                    const metrics = [];
-                    snapshot.forEach(doc => metrics.push({ id: doc.id, ...doc.data() }));
-                    this.metrics.project = this.calculateProjectTotals(metrics);
-                    this.metrics.today = this.getTodayMetrics(metrics);
-                    this.metrics.thisWeek = this.getWeekMetrics(metrics);
-                    this.metrics.thisMonth = this.getMonthMetrics(metrics);
-                    callback(this.metrics);
-                });
+            // Subscribe to development_metrics using modular SDK
+            const metricsRef = collection(this.db, 'development_metrics');
+            const metricsQuery = query(metricsRef, orderBy('date', 'desc'), limit(90));
+            const metricsUnsub = onSnapshot(metricsQuery, (snapshot) => {
+                const metrics = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                this.metrics.project = this.calculateProjectTotals(metrics);
+                this.metrics.today = this._getTodayFromMetrics(metrics);
+                this.metrics.thisWeek = this.getWeekMetrics(metrics);
+                this.metrics.thisMonth = this.getMonthMetrics(metrics);
+                callback(this.metrics);
+            });
             unsubscribers.push(metricsUnsub);
-            
-            // Subscribe to git_commits
-            const commitsUnsub = this.db.collection('git_commits')
-                .orderBy('timestamp', 'desc')
-                .limit(50)
-                .onSnapshot((snapshot) => {
-                    this.metrics.recentActivity = [];
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        this.metrics.recentActivity.push({
-                            id: doc.id,
-                            hash: data.hash,
-                            message: data.message,
-                            author: data.author,
-                            date: data.timestamp?.toDate?.() || new Date(data.timestamp),
-                            filesChanged: data.filesChanged || 0,
-                            additions: data.additions || 0,
-                            deletions: data.deletions || 0,
-                            timeAgo: this.getTimeAgo(data.timestamp?.toDate?.() || new Date(data.timestamp)),
-                        });
-                    });
-                    callback(this.metrics);
-                });
-            unsubscribers.push(commitsUnsub);
-            
-            // Subscribe to feature_progress
-            const featuresUnsub = this.db.collection('feature_progress')
-                .onSnapshot((snapshot) => {
-                    this.metrics.features = {};
-                    snapshot.forEach(doc => {
-                        this.metrics.features[doc.id] = doc.data();
-                    });
-                    callback(this.metrics);
-                });
-            unsubscribers.push(featuresUnsub);
-            
-            // Subscribe to resource_usage
-            const resourcesUnsub = this.db.collection('resource_usage')
-                .orderBy('timestamp', 'desc')
-                .limit(1)
-                .onSnapshot((snapshot) => {
-                    snapshot.forEach(doc => {
-                        this.metrics.resources = doc.data();
-                    });
-                    callback(this.metrics);
-                });
-            unsubscribers.push(resourcesUnsub);
-            
-            // Subscribe to specification_compliance
-            const specsUnsub = this.db.collection('specification_compliance').doc('current')
-                .onSnapshot((doc) => {
-                    if (doc.exists) {
-                        this.metrics.specifications = doc.data();
-                    }
-                    callback(this.metrics);
-                });
-            unsubscribers.push(specsUnsub);
         }
         
-        // Store unsubscribers
         const id = Date.now().toString();
         this.listeners.set(id, unsubscribers);
         
@@ -191,6 +268,21 @@ class DevelopmentMetricsService {
                 unsubs.forEach(unsub => unsub());
                 this.listeners.delete(id);
             }
+        };
+    }
+    
+    /**
+     * Helper to get today's metrics from array (used by subscribeToMetrics)
+     */
+    _getTodayFromMetrics(metrics) {
+        const today = new Date().toISOString().split('T')[0];
+        const todayMetric = metrics.find(m => m.date === today);
+        return {
+            date: today,
+            hours: todayMetric?.hours || 0,
+            commits: todayMetric?.commits || 0,
+            files: todayMetric?.filesChanged || 0,
+            cost: ((todayMetric?.hours || 0) * this.config.hourlyRate).toFixed(0),
         };
     }
     
@@ -347,140 +439,18 @@ class DevelopmentMetricsService {
     }
     
     // =========================================================================
-    // WRITE OPERATIONS
+    // ADDITIONAL WRITE OPERATIONS (use modular SDK)
     // =========================================================================
     
     /**
-     * Log a development session
-     */
-    async logSession(sessionData) {
-        if (!this.db) return { success: false, error: 'No database connection' };
-        
-        try {
-            const date = new Date().toISOString().split('T')[0];
-            await this.db.collection('development_sessions').add({
-                ...sessionData,
-                date,
-                createdAt: new Date(),
-            });
-            
-            // Update daily metrics
-            await this.updateDailyMetrics(date, {
-                hours: (sessionData.duration || 0) / 60, // minutes to hours
-            });
-            
-            return { success: true };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    }
-    
-    /**
-     * Log a git commit
+     * Log a git commit (modular SDK)
      */
     async logCommit(commitData) {
-        if (!this.db) return { success: false, error: 'No database connection' };
+        if (!this.db) await this.initialize();
         
         try {
-            await this.db.collection('git_commits').add({
+            await addDoc(collection(this.db, 'git_commits'), {
                 ...commitData,
-                timestamp: new Date(),
-            });
-            
-            // Update daily metrics
-            const date = new Date().toISOString().split('T')[0];
-            await this.incrementDailyCommits(date, commitData);
-            
-            return { success: true };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    }
-    
-    /**
-     * Update daily metrics
-     */
-    async updateDailyMetrics(date, updates) {
-        if (!this.db) return;
-        
-        const docRef = this.db.collection('development_metrics').doc(date);
-        const doc = await docRef.get();
-        
-        if (doc.exists) {
-            const current = doc.data();
-            await docRef.update({
-                hours: (current.hours || 0) + (updates.hours || 0),
-                commits: (current.commits || 0) + (updates.commits || 0),
-                filesChanged: (current.filesChanged || 0) + (updates.filesChanged || 0),
-                additions: (current.additions || 0) + (updates.additions || 0),
-                deletions: (current.deletions || 0) + (updates.deletions || 0),
-                updatedAt: new Date(),
-            });
-        } else {
-            await docRef.set({
-                date,
-                ...updates,
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
-        }
-    }
-    
-    /**
-     * Increment daily commit count
-     */
-    async incrementDailyCommits(date, commitData) {
-        await this.updateDailyMetrics(date, {
-            commits: 1,
-            filesChanged: commitData.filesChanged || 0,
-            additions: commitData.additions || 0,
-            deletions: commitData.deletions || 0,
-        });
-    }
-    
-    /**
-     * Update feature progress
-     */
-    async updateFeatureProgress(featureId, progressData) {
-        if (!this.db) return { success: false, error: 'No database connection' };
-        
-        try {
-            await this.db.collection('feature_progress').doc(featureId).set({
-                ...progressData,
-                updatedAt: new Date(),
-            }, { merge: true });
-            return { success: true };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    }
-    
-    /**
-     * Update specification compliance
-     */
-    async updateSpecCompliance(complianceData) {
-        if (!this.db) return { success: false, error: 'No database connection' };
-        
-        try {
-            await this.db.collection('specification_compliance').doc('current').set({
-                ...complianceData,
-                calculatedAt: new Date(),
-            });
-            return { success: true };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    }
-    
-    /**
-     * Log resource usage
-     */
-    async logResourceUsage(resourceData) {
-        if (!this.db) return { success: false, error: 'No database connection' };
-        
-        try {
-            await this.db.collection('resource_usage').add({
-                ...resourceData,
                 timestamp: new Date(),
             });
             return { success: true };
@@ -599,8 +569,16 @@ class DevelopmentMetricsService {
     }
 }
 
-// Make globally available
-window.DevelopmentMetricsService = DevelopmentMetricsService;
+// Create singleton instance
+const developmentMetricsService = new DevelopmentMetricsService();
 
-// Export for ES modules
-export default DevelopmentMetricsService;
+// Auto-initialize when Firebase is ready
+window.addEventListener('firebase-ready', () => {
+    developmentMetricsService.initialize();
+});
+
+// Make globally available as instance
+window.DevelopmentMetricsService = developmentMetricsService;
+
+// Export singleton instance for ES modules
+export default developmentMetricsService;

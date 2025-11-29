@@ -248,7 +248,7 @@
             if (user) {
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 if (userDoc.exists() && userDoc.data().subscription?.status === 'active') {
-                    window.location.href = '/public/portals/principal/dashboard.html';
+                    window.location.href = '/portals/principal/dashboard.html';
                 }
             }
         });

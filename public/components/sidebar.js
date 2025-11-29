@@ -131,12 +131,9 @@
         // Get active item from data attribute if available
         activeItem = root.dataset.active || activeItem;
         
-        // Determine base path
+        // Determine base path (no longer needed - public is root)
         const path = window.location.pathname;
         let basePath = '';
-        if (path.includes('/public/')) {
-            basePath = '/public';
-        }
         
         // Generate nav items HTML
         const renderNavItem = (item) => {

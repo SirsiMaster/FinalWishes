@@ -43,7 +43,6 @@ import {
     limit,
     onSnapshot,
     serverTimestamp,
-    enableIndexedDbPersistence,
     connectFirestoreEmulator,
 } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 import {
@@ -110,17 +109,9 @@ async function initializeFirebase(maxRetries = 3) {
             // Set auth persistence
             await setPersistence(auth, browserLocalPersistence);
             
-            // Enable offline persistence for Firestore
-            try {
-                await enableIndexedDbPersistence(db);
-                console.log('✅ Firestore offline persistence enabled');
-            } catch (err) {
-                if (err.code === 'failed-precondition') {
-                    console.warn('⚠️ Persistence unavailable: multiple tabs open');
-                } else if (err.code === 'unimplemented') {
-                    console.warn('⚠️ Persistence not supported in this browser');
-                }
-            }
+            // Offline persistence disabled to prevent cross-project conflicts
+            // Data is always fetched fresh from Firestore servers
+            console.log('ℹ️ Firestore offline persistence disabled (server-only mode)');
             
             // Initialize Analytics (production only)
             if (ENV.isProduction) {

@@ -135,32 +135,26 @@ To work on a specific domain, say:
 ## File Structure
 ```
 Legacy/
-├── agents/                 # Domain agent contexts
-│   ├── auth/AGENT.md       # Authentication domain
-│   ├── estate/AGENT.md     # Estate management domain
-│   ├── vault/AGENT.md      # Document storage domain
-│   ├── compliance/AGENT.md # State-specific rules (6 states)
-│   ├── notify/AGENT.md     # Communications domain
-│   └── llm/AGENT.md        # AI/LLM domain
-├── public/                 # Firebase Hosting (deployed)
+├── public/                 # ⚠️ DEPLOY TARGET - Firebase Hosting
+│   ├── index.html          # Marketing site (edit here!)
+│   ├── images/             # Marketing images
 │   ├── admin/              # Admin dashboard
-│   ├── auth/               # Login, register, etc.
+│   ├── auth/               # Promo/unsubscribe pages
 │   ├── portals/            # Principal, Executor, Heir dashboards
-│   ├── vault/              # Document management
+│   ├── components/         # Shared UI components
+│   ├── assets/             # Static assets
 │   └── legacy.css          # Design system
-├── functions/              # Firebase Cloud Functions
-│   └── src/
-│       ├── auth/
-│       ├── estate/
-│       ├── vault/
-│       ├── compliance/
-│       ├── notify/
-│       └── llm/
-├── docs/                   # Platform documentation
-├── proposals/              # Business proposals
-│   ├── SOW.md
-│   └── COST_PROPOSAL.md    # $80K-$100K (AI-agentic)
-├── index.html              # Marketing site (GitHub Pages)
+├── agents/                 # Domain agent contexts (not deployed)
+│   ├── auth/AGENT.md
+│   ├── estate/AGENT.md
+│   ├── vault/AGENT.md
+│   ├── compliance/AGENT.md
+│   ├── notify/AGENT.md
+│   └── llm/AGENT.md
+├── functions/              # Firebase Cloud Functions (separate deploy)
+├── docs/                   # Platform documentation (not deployed)
+├── proposals/              # Business proposals (not deployed)
+├── scripts/                # Dev/test scripts (not deployed)
 ├── WARP.md
 ├── CHANGELOG.md
 └── firebase.json
@@ -168,15 +162,20 @@ Legacy/
 
 ## Development Workflow
 
-### Marketing Site Preview
+### Local Preview
 ```bash
-cd "/Users/thekryptodragon/Development/111 Venture Studio/Legacy"
+cd "/Users/thekryptodragon/Development/111 Venture Studio/Legacy/public"
 python3 -m http.server 8000
 ```
 Then visit: http://localhost:8000
 
 ### Deployment
-Marketing site deploys automatically via GitHub Pages from the `main` branch.
+```bash
+cd "/Users/thekryptodragon/Development/111 Venture Studio/Legacy"
+git add -A && git commit -m "message" && git push origin main
+firebase deploy --only hosting
+```
+Live site: https://legacy-estate-os.web.app
 
 ## Design Tokens (CSS Variables)
 ```css

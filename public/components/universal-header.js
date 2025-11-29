@@ -143,6 +143,16 @@
                 position: relative;
             }
             
+            .user-menu .user-avatar {
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            
+            .user-menu .user-avatar:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 2px var(--color-gold);
+            }
+            
             .user-dropdown {
                 position: absolute;
                 top: calc(100% + 8px);

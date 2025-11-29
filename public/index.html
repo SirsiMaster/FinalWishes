@@ -1706,15 +1706,23 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
                 
-                // Get user role from Firestore
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                const userData = userDoc.exists() ? userDoc.data() : {};
-                
-                // Update last login
-                if (userDoc.exists()) {
-                    await updateDoc(doc(db, 'users', user.uid), {
-                        lastLoginAt: serverTimestamp()
-                    }).catch(() => {});
+                // Get user role from Firestore (with timeout)
+                let userData = {};
+                try {
+                    const userDoc = await Promise.race([
+                        getDoc(doc(db, 'users', user.uid)),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+                    ]);
+                    userData = userDoc.exists() ? userDoc.data() : {};
+                    
+                    // Update last login (fire and forget - don't block)
+                    if (userDoc.exists()) {
+                        updateDoc(doc(db, 'users', user.uid), {
+                            lastLoginAt: serverTimestamp()
+                        }).catch(e => console.warn('Could not update last login:', e));
+                    }
+                } catch (firestoreErr) {
+                    console.warn('Firestore fetch failed, using defaults:', firestoreErr);
                 }
                 
                 successDiv.textContent = 'Success! Redirecting...';
@@ -1724,7 +1732,7 @@
                 const role = userData.role || 'principal';
                 setTimeout(() => {
                     window.location.href = roleRedirects[role] || roleRedirects.principal;
-                }, 1000);
+                }, 500);
                 
             } catch (error) {
                 console.error('Sign in error:', error);

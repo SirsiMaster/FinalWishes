@@ -413,7 +413,7 @@
             
             currentUser = AuthService.getCurrentUser();
             if (!currentUser) {
-                window.location.href = '/auth/login.html';
+                window.location.href = '/';
                 return;
             }
             
@@ -641,7 +641,7 @@
         
         window.handleLogout = async function() {
             await AuthService.signOut();
-            window.location.href = '/auth/login.html';
+            window.location.href = '/';
         };
         
         function showToast(message, type = 'info') {

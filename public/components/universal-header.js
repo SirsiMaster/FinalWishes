@@ -291,7 +291,7 @@
                     if (window.Firebase?.AuthService) {
                         await window.Firebase.AuthService.signOut();
                     }
-                    window.location.href = '/auth/login.html';
+                    window.location.href = '/';
                 } catch (error) {
                     console.error('Logout error:', error);
                 }

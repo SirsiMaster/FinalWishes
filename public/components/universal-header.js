@@ -158,23 +158,25 @@
                 top: calc(100% + 8px);
                 right: 0;
                 min-width: 200px;
-                background: #FFFFFF;
-                border: 1px solid #E5E7EB;
-                border-radius: 8px;
-                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-                z-index: 100;
+                background: var(--color-white, #FFFFFF);
+                border: 1px solid var(--color-gray-200, #E5E7EB);
+                border-radius: var(--radius-md, 8px);
+                box-shadow: var(--shadow-lg, 0 10px 15px rgba(0, 0, 0, 0.1));
+                z-index: var(--z-dropdown, 100);
                 overflow: hidden;
+                /* Reset color context for light dropdown */
+                color: var(--color-gray-900, #111827);
             }
             
             .dropdown-item {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                padding: 8px 16px;
-                color: #1F2937;
+                gap: var(--space-sm, 8px);
+                padding: var(--space-sm, 8px) var(--space-md, 16px);
+                color: var(--color-gray-900, #1F2937);
                 text-decoration: none;
                 font-size: 14px;
-                transition: background 150ms ease;
+                transition: background var(--transition-fast, 150ms ease);
                 border: none;
                 background: none;
                 width: 100%;
@@ -183,19 +185,19 @@
             }
             
             .dropdown-item:hover {
-                background: #F3F4F6;
+                background: var(--color-gray-50, #F9FAFB);
             }
             
             .dropdown-item.text-danger {
-                color: #DC2626;
+                color: var(--color-danger, #DC2626);
             }
             
             .dropdown-item svg {
-                color: #6B7280;
+                color: var(--color-gray-500, #6B7280);
             }
             
             .dropdown-item.text-danger svg {
-                color: #DC2626;
+                color: var(--color-danger, #DC2626);
             }
             
             .dropdown-divider {

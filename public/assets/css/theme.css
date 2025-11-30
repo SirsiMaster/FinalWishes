@@ -20,8 +20,9 @@
     --color-royal: #1e3a8a;
     --color-royal-bright: #2563eb;
     
-    /* Main Background */
-    --body-bg: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+    /* Main Background - separate color and image for theme switching */
+    --body-bg-color: #0f172a;
+    --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
     --body-color: #FFFFFF;
     
     /* Section Backgrounds */
@@ -106,8 +107,9 @@
     --color-gold-bright: #C8A951;
     --color-gold-deep: #9A7B1E;
     
-    /* Main Background */
-    --body-bg: #FFFFFF;
+    /* Main Background - solid white, no gradient */
+    --body-bg-color: #FFFFFF;
+    --body-bg-image: none;
     --body-color: #0f172a;
     
     /* Section Backgrounds */

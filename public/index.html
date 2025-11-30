@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Theme System -->
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <script src="assets/js/theme-toggle.js"></script>
     
     <style>
         /* ================================================
@@ -396,6 +400,168 @@
         img {
             image-rendering: -webkit-optimize-contrast;
         }
+        
+        /* ================================================
+           LIGHT THEME OVERRIDES
+           ================================================ */
+        [data-theme="light"] body {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
+            color: #0f172a;
+        }
+        
+        [data-theme="light"] .glass-card {
+            background: #FFFFFF;
+            border-color: #E5E7EB;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="light"] .glass-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="light"] .glass-panel {
+            background: #FFFFFF;
+            border-color: #E5E7EB;
+        }
+        
+        /* Nav in light mode */
+        [data-theme="light"] #main-nav {
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        [data-theme="light"] .nav-link,
+        [data-theme="light"] #main-nav a:not(.btn-gold) {
+            color: #4B5563;
+        }
+        
+        [data-theme="light"] .nav-link:hover,
+        [data-theme="light"] #main-nav a:not(.btn-gold):hover {
+            color: #0f172a;
+        }
+        
+        [data-theme="light"] #main-nav .text-base {
+            color: #0f172a;
+        }
+        
+        /* Section backgrounds */
+        [data-theme="light"] #problem > div:last-child,
+        [data-theme="light"] #stories,
+        [data-theme="light"] #value {
+            background: #F9FAFB;
+        }
+        
+        [data-theme="light"] #problem > div:last-child {
+            background: rgba(249, 250, 251, 0.95);
+        }
+        
+        /* Text colors in light mode */
+        [data-theme="light"] h2,
+        [data-theme="light"] h3 {
+            color: #0f172a;
+        }
+        
+        [data-theme="light"] p {
+            color: #4B5563;
+        }
+        
+        [data-theme="light"] .text-white {
+            color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .text-white\/80 {
+            color: #374151 !important;
+        }
+        
+        [data-theme="light"] .text-white\/70 {
+            color: #4B5563 !important;
+        }
+        
+        [data-theme="light"] .text-white\/60 {
+            color: #6B7280 !important;
+        }
+        
+        [data-theme="light"] .text-white\/40 {
+            color: #9CA3AF !important;
+        }
+        
+        /* Keep gold colors */
+        [data-theme="light"] .text-\[var\(--color-gold\)\] {
+            color: #B8962E !important;
+        }
+        
+        /* Modal in light mode */
+        [data-theme="light"] #auth-modal .rounded-xl {
+            background: #FFFFFF;
+            border-color: #E5E7EB;
+        }
+        
+        [data-theme="light"] #auth-modal h3 {
+            color: #0f172a;
+        }
+        
+        [data-theme="light"] #auth-modal p,
+        [data-theme="light"] #auth-modal label {
+            color: #4B5563;
+        }
+        
+        [data-theme="light"] #auth-modal input {
+            background: #F9FAFB;
+            border-color: #D1D5DB;
+            color: #0f172a;
+        }
+        
+        [data-theme="light"] #auth-modal input::placeholder {
+            color: #9CA3AF;
+        }
+        
+        [data-theme="light"] #auth-modal .role-option div {
+            border-color: #E5E7EB;
+            color: #4B5563;
+        }
+        
+        [data-theme="light"] #auth-modal .role-option div svg {
+            color: #6B7280;
+        }
+        
+        [data-theme="light"] #auth-modal button[type="button"]:not(.btn-gold) {
+            border-color: #E5E7EB;
+            color: #374151;
+        }
+        
+        [data-theme="light"] #auth-modal button[type="button"]:not(.btn-gold):hover {
+            background: #F3F4F6;
+        }
+        
+        [data-theme="light"] #auth-modal .bg-white\/20 {
+            background: #E5E7EB;
+        }
+        
+        /* Footer in light mode */
+        [data-theme="light"] footer {
+            background: #F9FAFB;
+            border-top: 1px solid #E5E7EB;
+        }
+        
+        /* Pricing cards */
+        [data-theme="light"] .pricing-card {
+            background: #FFFFFF;
+            border-color: #E5E7EB;
+        }
+        
+        /* Theme toggle styling */
+        .theme-toggle svg {
+            stroke-width: 2;
+        }
+        
+        [data-theme="light"] .theme-toggle {
+            background: #F3F4F6;
+            color: #4B5563;
+        }
+        
+        [data-theme="light"] .theme-toggle:hover {
+            background: var(--color-gold);
+            color: #0f172a;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -420,7 +586,17 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <a href="#" class="text-xs font-bold tracking-[0.15em] text-white/70 hover:text-white transition-colors uppercase" onclick="event.preventDefault(); openAuthModal('signin');">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                    </svg>
+                    <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <a href="#" class="nav-link text-xs font-bold tracking-[0.15em] transition-colors uppercase" onclick="event.preventDefault(); openAuthModal('signin');">
                     Sign In
                 </a>
                 <a href="#pricing" class="btn-gold" onclick="event.preventDefault(); openAuthModal('signup');">

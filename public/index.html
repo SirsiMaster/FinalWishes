@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEGACY | The Estate Operating System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
+    <link rel="stylesheet" href="assets/css/tailwind.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -15,29 +16,9 @@
     
     <style>
         /* ================================================
-           LEGACY v2.2 - RICH ROYAL BLUE + GOLD
-           Cinematic | Full-Bleed Photography | Premium
+           LEGACY - Variable-based theming
+           All colors come from theme.css variables
            ================================================ */
-        
-        :root {
-            /* Royal Blue Palette - RICH, not light */
-            --color-navy: #0f172a;
-            --color-navy-light: #1e293b;
-            --color-royal: #1e3a8a;
-            --color-royal-bright: #2563eb;
-            
-            /* Pantone-Inspired Gold - True metallic gold, not yellow */
-            --color-gold: #C8A951;         /* Warm rich gold */
-            --color-gold-bright: #D4B85A;  /* Highlight gold */
-            --color-gold-deep: #B8942A;    /* Shadow gold */
-            
-            /* Status */
-            --color-emerald: #10B981;
-            
-            /* Glass */
-            --glass-surface: rgba(15, 23, 42, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.15);
-        }
 
         * {
             -webkit-font-smoothing: antialiased;
@@ -46,9 +27,9 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            background: var(--body-bg);
             background-attachment: fixed;
-            color: white;
+            color: var(--body-color);
             overflow-x: hidden;
         }
 
@@ -56,6 +37,7 @@
             font-family: 'Cinzel', serif;
             font-weight: 600;
             letter-spacing: 0.02em;
+            color: var(--text-primary);
         }
 
         /* Art Deco Decorative Elements */
@@ -156,27 +138,23 @@
 
         /* --- GLASS CARDS with depth --- */
         .glass-card {
-            background: rgba(30, 58, 138, 0.5);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
-                0 4px 30px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
+            backdrop-filter: var(--card-backdrop);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glass-card:hover {
             border-color: var(--color-gold);
             transform: translateY(-4px);
-            box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            box-shadow: var(--card-shadow-hover);
         }
 
         .glass-panel {
-            background: rgba(30, 58, 138, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--panel-bg);
+            backdrop-filter: var(--card-backdrop);
+            border: 1px solid var(--panel-border);
         }
 
         /* --- BUTTONS --- */
@@ -198,8 +176,8 @@
         }
 
         .btn-outline {
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            color: white;
+            border: 2px solid var(--btn-outline-border);
+            color: var(--btn-outline-text);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.12em;
@@ -209,8 +187,8 @@
         }
 
         .btn-outline:hover {
-            border-color: white;
-            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-strong);
+            background: var(--btn-outline-hover-bg);
         }
 
         /* --- STATUS DOT --- */
@@ -402,172 +380,98 @@
         }
         
         /* ================================================
-           LIGHT THEME OVERRIDES
+           TAILWIND OVERRIDES - Make text classes respect theme
            ================================================ */
-        [data-theme="light"] body {
-            background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
-            color: #0f172a;
+        
+        /* Override Tailwind's white text classes in light mode */
+        [data-theme="light"] .text-white { color: var(--text-primary) !important; }
+        [data-theme="light"] .text-white\/90 { color: var(--text-primary) !important; }
+        [data-theme="light"] .text-white\/80 { color: var(--text-secondary) !important; }
+        [data-theme="light"] .text-white\/70 { color: var(--text-secondary) !important; }
+        [data-theme="light"] .text-white\/60 { color: var(--text-muted) !important; }
+        [data-theme="light"] .text-white\/50 { color: var(--text-muted) !important; }
+        [data-theme="light"] .text-white\/40 { color: var(--text-faint) !important; }
+        [data-theme="light"] .text-white\/20 { color: var(--text-faint) !important; }
+        
+        /* Override Tailwind bg classes for sections in light mode */
+        [data-theme="light"] .bg-\[\#1e3a8a\]\/60,
+        [data-theme="light"] .bg-\[\#1e3a8a\]\/50 {
+            background: var(--section-bg-alt) !important;
         }
         
-        [data-theme="light"] .glass-card {
-            background: #FFFFFF;
-            border-color: #E5E7EB;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        /* ================================================
+           TEXT & NAV UTILITIES (using CSS variables)
+           ================================================ */
+        
+        /* Primary text - respects theme */
+        .t-primary { color: var(--text-primary); }
+        .t-secondary { color: var(--text-secondary); }
+        .t-muted { color: var(--text-muted); }
+        .t-faint { color: var(--text-faint); }
+        
+        /* Nav styling */
+        #main-nav {
+            background: var(--nav-bg);
         }
         
-        [data-theme="light"] .glass-card:hover {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        .nav-link {
+            color: var(--nav-text);
         }
         
-        [data-theme="light"] .glass-panel {
-            background: #FFFFFF;
-            border-color: #E5E7EB;
+        .nav-link:hover {
+            color: var(--nav-text-hover);
         }
         
-        /* Nav in light mode */
-        [data-theme="light"] #main-nav {
-            background: rgba(255, 255, 255, 0.9);
-        }
-        
-        [data-theme="light"] .nav-link,
-        [data-theme="light"] #main-nav a:not(.btn-gold) {
-            color: #4B5563;
-        }
-        
-        [data-theme="light"] .nav-link:hover,
-        [data-theme="light"] #main-nav a:not(.btn-gold):hover {
-            color: #0f172a;
-        }
-        
-        [data-theme="light"] #main-nav .text-base {
-            color: #0f172a;
+        .logo-text {
+            color: var(--nav-logo-text);
         }
         
         /* Section backgrounds */
-        [data-theme="light"] #problem > div:last-child,
-        [data-theme="light"] #stories,
-        [data-theme="light"] #value {
-            background: #F9FAFB;
+        .section-bg {
+            background: var(--section-bg);
         }
         
-        [data-theme="light"] #problem > div:last-child {
-            background: rgba(249, 250, 251, 0.95);
+        .section-bg-alt {
+            background: var(--section-bg-alt);
         }
         
-        /* Text colors in light mode */
-        [data-theme="light"] h2,
-        [data-theme="light"] h3 {
-            color: #0f172a;
+        /* Modal */
+        .modal-panel {
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
         }
         
-        [data-theme="light"] p {
-            color: #4B5563;
+        .modal-panel h3 { color: var(--text-primary); }
+        .modal-panel p,
+        .modal-panel label { color: var(--text-secondary); }
+        
+        .modal-panel input {
+            background: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--input-text);
         }
         
-        [data-theme="light"] .text-white {
-            color: #0f172a !important;
+        .modal-panel input::placeholder {
+            color: var(--input-placeholder);
         }
         
-        [data-theme="light"] .text-white\/80 {
-            color: #374151 !important;
-        }
-        
-        [data-theme="light"] .text-white\/70 {
-            color: #4B5563 !important;
-        }
-        
-        [data-theme="light"] .text-white\/60 {
-            color: #6B7280 !important;
-        }
-        
-        [data-theme="light"] .text-white\/40 {
-            color: #9CA3AF !important;
-        }
-        
-        /* Keep gold colors */
-        [data-theme="light"] .text-\[var\(--color-gold\)\] {
-            color: #B8962E !important;
-        }
-        
-        /* Modal in light mode */
-        [data-theme="light"] #auth-modal .rounded-xl {
-            background: #FFFFFF;
-            border-color: #E5E7EB;
-        }
-        
-        [data-theme="light"] #auth-modal h3 {
-            color: #0f172a;
-        }
-        
-        [data-theme="light"] #auth-modal p,
-        [data-theme="light"] #auth-modal label {
-            color: #4B5563;
-        }
-        
-        [data-theme="light"] #auth-modal input {
-            background: #F9FAFB;
-            border-color: #D1D5DB;
-            color: #0f172a;
-        }
-        
-        [data-theme="light"] #auth-modal input::placeholder {
-            color: #9CA3AF;
-        }
-        
-        [data-theme="light"] #auth-modal .role-option div {
-            border-color: #E5E7EB;
-            color: #4B5563;
-        }
-        
-        [data-theme="light"] #auth-modal .role-option div svg {
-            color: #6B7280;
-        }
-        
-        [data-theme="light"] #auth-modal button[type="button"]:not(.btn-gold) {
-            border-color: #E5E7EB;
-            color: #374151;
-        }
-        
-        [data-theme="light"] #auth-modal button[type="button"]:not(.btn-gold):hover {
-            background: #F3F4F6;
-        }
-        
-        [data-theme="light"] #auth-modal .bg-white\/20 {
-            background: #E5E7EB;
-        }
-        
-        /* Footer in light mode */
-        [data-theme="light"] footer {
-            background: #F9FAFB;
-            border-top: 1px solid #E5E7EB;
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            border-top: 1px solid var(--footer-border);
         }
         
         /* Pricing cards */
-        [data-theme="light"] .pricing-card {
-            background: #FFFFFF;
-            border-color: #E5E7EB;
-        }
-        
-        /* Theme toggle styling */
-        .theme-toggle svg {
-            stroke-width: 2;
-        }
-        
-        [data-theme="light"] .theme-toggle {
-            background: #F3F4F6;
-            color: #4B5563;
-        }
-        
-        [data-theme="light"] .theme-toggle:hover {
-            background: var(--color-gold);
-            color: #0f172a;
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
         }
     </style>
 </head>
 <body class="antialiased">
 
     <!-- NAV -->
-    <nav class="fixed top-0 w-full z-50 transition-all duration-300 bg-black/20 backdrop-blur-sm" id="main-nav">
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm" id="main-nav">
         <div class="max-w-7xl mx-auto px-5 h-14 flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <div class="w-8 h-8 text-[var(--color-gold)]">
@@ -575,14 +479,14 @@
                         <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
                     </svg>
                 </div>
-                <span class="text-base font-bold tracking-[0.2em] text-white" style="font-family: 'Cinzel', serif;">LEGACY</span>
+                <span class="logo-text text-base font-bold tracking-[0.2em]" style="font-family: 'Cinzel', serif;">LEGACY</span>
             </div>
             
             <div class="hidden md:flex items-center gap-8">
-                <a href="#problem" class="text-xs font-bold tracking-[0.2em] text-white/70 hover:text-white transition-colors uppercase">Problem</a>
-                <a href="#protocol" class="text-xs font-bold tracking-[0.2em] text-white/70 hover:text-white transition-colors uppercase">Protocol</a>
-                <a href="#security" class="text-xs font-bold tracking-[0.2em] text-white/70 hover:text-white transition-colors uppercase">Security</a>
-                <a href="#stories" class="text-xs font-bold tracking-[0.2em] text-white/70 hover:text-white transition-colors uppercase">Stories</a>
+                <a href="#problem" class="nav-link text-xs font-bold tracking-[0.2em] transition-colors uppercase">Problem</a>
+                <a href="#protocol" class="nav-link text-xs font-bold tracking-[0.2em] transition-colors uppercase">Protocol</a>
+                <a href="#security" class="nav-link text-xs font-bold tracking-[0.2em] transition-colors uppercase">Security</a>
+                <a href="#stories" class="nav-link text-xs font-bold tracking-[0.2em] transition-colors uppercase">Stories</a>
             </div>
 
             <div class="flex items-center gap-4">
@@ -666,34 +570,34 @@
             <!-- Floating stat on photo -->
             <div class="absolute bottom-6 left-6 glass-panel p-3 reveal-left">
                 <div class="text-2xl font-bold text-[var(--color-gold)] stat-counter" style="font-family: 'Cinzel', serif;" data-target="570">570+</div>
-                <div class="text-[0.6rem] text-white/70 uppercase tracking-[0.15em] mt-1">Hours of Administration</div>
+                <div class="text-[0.6rem] t-muted uppercase tracking-[0.15em] mt-1">Hours of Administration</div>
             </div>
         </div>
         
         <!-- Right: Content - balanced -->
-        <div class="flex flex-col justify-center px-6 md:px-8 py-8 bg-[#1e3a8a]/60">
+        <div class="flex flex-col justify-center px-6 md:px-8 py-8 section-bg-alt">
             <div class="max-w-md reveal">
-                <h2 class="text-2xl md:text-3xl lg:text-4xl text-white mb-4 leading-tight" style="font-family: 'Cinzel', serif;">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl t-primary mb-4 leading-tight" style="font-family: 'Cinzel', serif;">
                     The 500-Hour<br>
                     <span class="text-[var(--color-gold)]">Problem</span>
                 </h2>
                 
-                <p class="text-sm text-white/80 leading-relaxed mb-4">
+                <p class="text-sm t-secondary leading-relaxed mb-4">
                     The average estate takes <strong class="text-[var(--color-gold)]">18 months</strong> to settle. That's 18 months of probate courts, lost keys, and fighting bureaucracy—while you're supposed to be grieving.
                 </p>
                 
-                <p class="text-sm text-white/60 leading-relaxed mb-5">
+                <p class="text-sm t-muted leading-relaxed mb-5">
                     We step in as your <strong class="text-[var(--color-emerald)]">Digital Executor</strong>. We automate the notifications, secure the assets, and shepherd your wealth to the next generation.
                 </p>
                 
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-2 gap-3">
                     <div class="glass-card p-3 reveal delay-1">
-                        <div class="text-2xl font-bold text-white stat-counter" style="font-family: 'Cinzel', serif;" data-target="18">18</div>
+                        <div class="text-2xl font-bold t-primary stat-counter" style="font-family: 'Cinzel', serif;" data-target="18">18</div>
                         <div class="text-[0.6rem] text-[var(--color-gold)] uppercase tracking-[0.1em] mt-1">Months Average</div>
                     </div>
                     <div class="glass-card p-3 reveal delay-2">
-                        <div class="text-2xl font-bold text-white stat-counter" style="font-family: 'Cinzel', serif;" data-target="147">147</div>
+                        <div class="text-2xl font-bold t-primary stat-counter" style="font-family: 'Cinzel', serif;" data-target="147">147</div>
                         <div class="text-[0.6rem] text-[var(--color-gold)] uppercase tracking-[0.1em] mt-1">Tasks Required</div>
                     </div>
                     <div class="glass-card p-3 reveal delay-3">
@@ -701,7 +605,7 @@
                         <div class="text-[0.6rem] text-[var(--color-gold)] uppercase tracking-[0.1em] mt-1">Feel Overwhelmed</div>
                     </div>
                     <div class="glass-card p-3 reveal delay-4">
-                        <div class="text-2xl font-bold text-white" style="font-family: 'Cinzel', serif;">$1.2M</div>
+                        <div class="text-2xl font-bold t-primary" style="font-family: 'Cinzel', serif;">$1.2M</div>
                         <div class="text-[0.6rem] text-[var(--color-gold)] uppercase tracking-[0.1em] mt-1">Lost Assets/Year</div>
                     </div>
                 </div>

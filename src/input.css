@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+/* Source paths for Tailwind to scan */
+@source "../public/**/*.html";
+@source "../public/**/*.js";

@@ -1,0 +1,31 @@
+{
+  "name": "legacy",
+  "version": "1.0.0",
+  "description": "**The Estate Operating System** — A guardian for your life's work.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/tailwind.css --watch",
+    "build": "npm run build:css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SirsiMaster/111-Venture-Projects.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SirsiMaster/111-Venture-Projects/issues"
+  },
+  "homepage": "https://github.com/SirsiMaster/111-Venture-Projects#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.17",
+    "tailwindcss": "^4.1.17"
+  }
+}

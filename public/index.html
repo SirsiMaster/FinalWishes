@@ -121,6 +121,14 @@
             color: var(--body-color);
             overflow-x: hidden;
         }
+        
+        /* Force light theme body styles */
+        [data-theme="light"] body,
+        html[data-theme="light"] body {
+            background-color: #FFFFFF !important;
+            background-image: none !important;
+            color: #0f172a !important;
+        }
 
         h1, h2, h3, h4, h5 {
             font-family: 'Cinzel', serif;

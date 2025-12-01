@@ -189,8 +189,17 @@
         .photo-section h2,
         .photo-section h3,
         .photo-section p,
-        .photo-section span {
+        .photo-section span,
+        .photo-section .text-white,
+        .photo-section .hero-text,
+        .photo-section [class*="text-white"] {
             color: #FFFFFF !important;
+        }
+        
+        /* Preserve gold accent text in photo sections */
+        .photo-section .text-\[var\(--color-gold\)\],
+        .photo-section .hero-text-gold {
+            color: var(--color-gold) !important;
         }
         
         .photo-section .btn-outline {

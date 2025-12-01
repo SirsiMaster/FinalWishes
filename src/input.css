@@ -3,3 +3,66 @@
 /* Source paths for Tailwind to scan */
 @source "../public/**/*.html";
 @source "../public/**/*.js";
+
+/* ============================================
+   LEGACY THEME SYSTEM
+   Dark/Light mode via data-theme attribute
+   ============================================ */
+
+@theme {
+    /* Base colors that don't change */
+    --color-gold: #C8A951;
+    --color-gold-bright: #D4B85A;
+    --color-emerald: #10B981;
+    --color-royal: #1e3a8a;
+    --color-deep: #0f172a;
+}
+
+/* Dark theme (default) */
+@layer base {
+    :root,
+    [data-theme="dark"] {
+        --body-bg-color: #0f172a;
+        --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+        --body-color: #FFFFFF;
+        --text-primary: #FFFFFF;
+        --text-secondary: rgba(255, 255, 255, 0.8);
+        --text-muted: rgba(255, 255, 255, 0.6);
+        --nav-bg: rgba(0, 0, 0, 0.2);
+        --nav-text: rgba(255, 255, 255, 0.7);
+        --nav-text-hover: #FFFFFF;
+        --nav-logo-text: #FFFFFF;
+        --card-bg: rgba(30, 58, 138, 0.5);
+        --card-border: rgba(255, 255, 255, 0.1);
+        --section-bg-alt: rgba(30, 58, 138, 0.6);
+        --toggle-bg: rgba(255, 255, 255, 0.15);
+        --toggle-text: #FFFFFF;
+    }
+    
+    /* Light theme */
+    [data-theme="light"] {
+        --body-bg-color: #FFFFFF;
+        --body-bg-image: none;
+        --body-color: #0f172a;
+        --text-primary: #0f172a;
+        --text-secondary: #374151;
+        --text-muted: #6B7280;
+        --nav-bg: rgba(255, 255, 255, 0.95);
+        --nav-text: #4B5563;
+        --nav-text-hover: #0f172a;
+        --nav-logo-text: #0f172a;
+        --card-bg: #FFFFFF;
+        --card-border: #E5E7EB;
+        --section-bg-alt: #F9FAFB;
+        --toggle-bg: #F3F4F6;
+        --toggle-text: #4B5563;
+    }
+    
+    body {
+        background-color: var(--body-bg-color);
+        background-image: var(--body-bg-image);
+        background-attachment: fixed;
+        color: var(--body-color);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+}

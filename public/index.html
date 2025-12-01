@@ -115,41 +115,8 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--body-bg-color);
-            background-image: var(--body-bg-image);
-            background-attachment: fixed;
-            color: var(--body-color);
             overflow-x: hidden;
-        }
-        
-        /* Force light theme styles */
-        html[data-theme="light"],
-        html[data-theme="light"] body {
-            background-color: #FFFFFF !important;
-            background-image: none !important;
-            background: #FFFFFF !important;
-        }
-        html[data-theme="light"] body {
-            color: #0f172a !important;
-        }
-        /* Class-based theme selectors (more reliable) */
-        html.theme-light,
-        html.theme-light body {
-            background-color: #FFFFFF !important;
-            background-image: none !important;
-            background: #FFFFFF !important;
-        }
-        html.theme-light body {
-            color: #0f172a !important;
-        }
-        html.theme-light #main-nav {
-            background: rgba(255, 255, 255, 0.95) !important;
-        }
-        html.theme-light .nav-link {
-            color: #4B5563 !important;
-        }
-        html.theme-light .logo-text {
-            color: #0f172a !important;
+            /* Theme colors applied by CSS variables in tailwind.css and JS backup */
         }
 
         h1, h2, h3, h4, h5 {

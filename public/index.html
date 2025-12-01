@@ -132,9 +132,24 @@
         html[data-theme="light"] body {
             color: #0f172a !important;
         }
-        /* DEBUG: Make nav red in light mode to verify CSS is applying */
-        html[data-theme="light"] #main-nav {
-            background: red !important;
+        /* Class-based theme selectors (more reliable) */
+        html.theme-light,
+        html.theme-light body {
+            background-color: #FFFFFF !important;
+            background-image: none !important;
+            background: #FFFFFF !important;
+        }
+        html.theme-light body {
+            color: #0f172a !important;
+        }
+        html.theme-light #main-nav {
+            background: rgba(255, 255, 255, 0.95) !important;
+        }
+        html.theme-light .nav-link {
+            color: #4B5563 !important;
+        }
+        html.theme-light .logo-text {
+            color: #0f172a !important;
         }
 
         h1, h2, h3, h4, h5 {

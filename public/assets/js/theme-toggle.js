@@ -40,8 +40,10 @@
             return;
         }
         
-        // Update HTML attribute
+        // Update HTML attribute AND class
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.classList.remove('theme-dark', 'theme-light');
+        document.documentElement.classList.add('theme-' + theme);
         
         // Store preference
         localStorage.setItem(STORAGE_KEY, theme);

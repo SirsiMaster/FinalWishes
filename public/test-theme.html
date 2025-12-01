@@ -2,10 +2,13 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Theme Test</title>
+    <title>Theme Test WITH Tailwind</title>
+    <!-- Load Tailwind FIRST like main page -->
+    <link rel="stylesheet" href="assets/css/tailwind.css">
     <style>
-        :root,
-        [data-theme="dark"] {
+        /* Same selectors as main page */
+        [data-theme="dark"],
+        html:not([data-theme="light"]) {
             --body-bg-color: #0f172a;
             --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
             --body-color: #FFFFFF;
@@ -42,8 +45,9 @@
     </style>
 </head>
 <body>
-    <h1>Theme Test</h1>
-    <p>Current theme: <span id="current">dark</span></p>
+    <h1 class="text-white">Theme Test WITH Tailwind</h1>
+    <p class="text-white/80">Current theme: <span id="current">dark</span></p>
+    <p class="text-white/60">This tests if Tailwind breaks theming</p>
     <button onclick="toggleTheme()">Toggle Theme</button>
     
     <script>

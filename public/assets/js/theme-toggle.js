@@ -30,6 +30,32 @@
         return DARK;
     }
     
+    // Theme color definitions
+    const THEMES = {
+        dark: {
+            bodyBg: '#0f172a',
+            bodyBgImage: 'radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%)',
+            textColor: '#FFFFFF',
+            navBg: 'rgba(0, 0, 0, 0.2)',
+            navText: 'rgba(255, 255, 255, 0.7)',
+            logoText: '#FFFFFF',
+            cardBg: 'rgba(30, 58, 138, 0.5)',
+            cardBorder: 'rgba(255, 255, 255, 0.1)',
+            sectionBgAlt: 'rgba(30, 58, 138, 0.6)',
+        },
+        light: {
+            bodyBg: '#FFFFFF',
+            bodyBgImage: 'none',
+            textColor: '#0f172a',
+            navBg: 'rgba(255, 255, 255, 0.95)',
+            navText: '#4B5563',
+            logoText: '#0f172a',
+            cardBg: '#FFFFFF',
+            cardBorder: '#E5E7EB',
+            sectionBgAlt: '#F9FAFB',
+        }
+    };
+
     /**
      * Set the theme
      * @param {string} theme - 'dark' or 'light'
@@ -40,10 +66,38 @@
             return;
         }
         
+        const colors = THEMES[theme];
+        
         // Update HTML attribute AND class
         document.documentElement.setAttribute('data-theme', theme);
         document.documentElement.classList.remove('theme-dark', 'theme-light');
         document.documentElement.classList.add('theme-' + theme);
+        
+        // Apply body styles directly
+        document.body.style.backgroundColor = colors.bodyBg;
+        document.body.style.backgroundImage = colors.bodyBgImage;
+        document.body.style.color = colors.textColor;
+        
+        // Apply nav styles directly
+        const nav = document.getElementById('main-nav');
+        if (nav) {
+            nav.style.background = colors.navBg;
+        }
+        
+        // Apply nav link styles
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.style.color = colors.navText;
+        });
+        
+        // Apply logo text
+        document.querySelectorAll('.logo-text').forEach(el => {
+            el.style.color = colors.logoText;
+        });
+        
+        // Apply section backgrounds
+        document.querySelectorAll('.section-bg-alt').forEach(el => {
+            el.style.background = colors.sectionBgAlt;
+        });
         
         // Store preference
         localStorage.setItem(STORAGE_KEY, theme);
@@ -56,7 +110,7 @@
             detail: { theme } 
         }));
         
-        console.log('🎨 Theme set to:', theme);
+        console.log('🎨 Theme set to:', theme, '- Applied direct styles');
     }
     
     /**
@@ -97,20 +151,58 @@
     }
     
     /**
+     * Apply theme styles (for initial load before setTheme is called)
+     * @param {string} theme - 'dark' or 'light'
+     */
+    function applyThemeStyles(theme) {
+        const colors = THEMES[theme];
+        if (!colors || !document.body) return;
+        
+        // Apply body styles directly
+        document.body.style.backgroundColor = colors.bodyBg;
+        document.body.style.backgroundImage = colors.bodyBgImage;
+        document.body.style.color = colors.textColor;
+        
+        // Apply nav styles directly
+        const nav = document.getElementById('main-nav');
+        if (nav) {
+            nav.style.background = colors.navBg;
+        }
+        
+        // Apply nav link styles
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.style.color = colors.navText;
+        });
+        
+        // Apply logo text
+        document.querySelectorAll('.logo-text').forEach(el => {
+            el.style.color = colors.logoText;
+        });
+        
+        // Apply section backgrounds
+        document.querySelectorAll('.section-bg-alt').forEach(el => {
+            el.style.background = colors.sectionBgAlt;
+        });
+    }
+
+    /**
      * Initialize theme on page load
      */
     function init() {
-        // Set initial theme
+        // Set initial theme attribute immediately
         const theme = getTheme();
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.classList.add('theme-' + theme);
         
-        // Wait for DOM to be ready
+        // Wait for DOM to be ready to apply styles
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
+                applyThemeStyles(theme);
                 updateToggleButtons(theme);
                 setupToggleButtons();
             });
         } else {
+            applyThemeStyles(theme);
             updateToggleButtons(theme);
             setupToggleButtons();
         }

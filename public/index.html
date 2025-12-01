@@ -78,6 +78,36 @@
             --section-bg-alt: #F9FAFB;
         }
 
+        /* Theme Toggle Button */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle:hover {
+            background: var(--color-gold);
+            color: #000;
+        }
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
+        [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+        [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+        [data-theme="light"] .theme-toggle .icon-sun { display: none; }
+        [data-theme="light"] .theme-toggle .icon-moon { display: block; }
+        .theme-toggle .icon-sun { display: block; }
+        .theme-toggle .icon-moon { display: none; }
+
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;

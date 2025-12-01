@@ -1,5 +1,5 @@
 /**
- * Legacy Theme Toggle - Simplified & Bulletproof
+ * Legacy Theme Toggle - Fixed for photo sections
  */
 (function() {
     'use strict';
@@ -10,7 +10,6 @@
         dark: {
             bodyBg: '#0f172a',
             bodyBgImage: 'radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%)',
-            bodyColor: '#FFFFFF',
             navBg: 'rgba(0, 0, 0, 0.2)',
             navLink: 'rgba(255, 255, 255, 0.7)',
             logo: '#FFFFFF'
@@ -18,7 +17,6 @@
         light: {
             bodyBg: '#FFFFFF',
             bodyBgImage: 'none',
-            bodyColor: '#0f172a',
             navBg: 'rgba(255, 255, 255, 0.95)',
             navLink: '#4B5563',
             logo: '#0f172a'
@@ -27,6 +25,16 @@
     
     function getTheme() {
         return localStorage.getItem(STORAGE_KEY) || 'dark';
+    }
+    
+    function isInPhotoSection(el) {
+        while (el) {
+            if (el.classList && el.classList.contains('photo-section')) {
+                return true;
+            }
+            el = el.parentElement;
+        }
+        return false;
     }
     
     function applyTheme(theme) {
@@ -38,12 +46,11 @@
         // Set data attribute
         document.documentElement.setAttribute('data-theme', theme);
         
-        // Apply to body
+        // Apply to body - background only, NOT color (let CSS handle text)
         if (document.body) {
             document.body.style.backgroundColor = t.bodyBg;
             document.body.style.backgroundImage = t.bodyBgImage;
-            document.body.style.color = t.bodyColor;
-            console.log('Body styles applied');
+            // DO NOT set body color - it cascades incorrectly to photo sections
         }
         
         // Apply to nav
@@ -52,7 +59,7 @@
             nav.style.background = t.navBg;
         }
         
-        // Apply to nav links
+        // Apply to nav links (not in photo sections)
         var links = document.querySelectorAll('.nav-link');
         for (var i = 0; i < links.length; i++) {
             links[i].style.color = t.navLink;
@@ -64,6 +71,27 @@
             logos[j].style.color = t.logo;
         }
         
+        // Apply text color ONLY to non-photo-section content
+        var sections = document.querySelectorAll('section:not(.photo-section), #problem, #protocol, #security, #stories, #pricing, footer');
+        for (var s = 0; s < sections.length; s++) {
+            var sec = sections[s];
+            // Skip if this is or is inside a photo section
+            if (sec.classList.contains('photo-section') || isInPhotoSection(sec)) continue;
+            
+            // Apply theme color to text elements
+            var textColor = (theme === 'light') ? '#0f172a' : '#FFFFFF';
+            var textEls = sec.querySelectorAll('h1, h2, h3, h4, p');
+            for (var te = 0; te < textEls.length; te++) {
+                // Skip elements with explicit color classes
+                if (textEls[te].className.indexOf('text-white') > -1 ||
+                    textEls[te].className.indexOf('color-gold') > -1 ||
+                    textEls[te].className.indexOf('color-emerald') > -1) {
+                    continue;
+                }
+                textEls[te].style.color = textColor;
+            }
+        }
+        
         // Update toggle icons
         var toggles = document.querySelectorAll('.theme-toggle');
         for (var k = 0; k < toggles.length; k++) {
@@ -73,35 +101,9 @@
             if (moon) moon.style.display = (theme === 'light') ? 'block' : 'none';
         }
         
-        // ALWAYS keep photo sections with white text (they have dark image backgrounds)
-        var photoSections = document.querySelectorAll('.photo-section');
-        for (var p = 0; p < photoSections.length; p++) {
-            var section = photoSections[p];
-            section.style.color = '#FFFFFF';
-            
-            // Force white on all text elements inside
-            var textEls = section.querySelectorAll('h1, h2, h3, p, span');
-            for (var q = 0; q < textEls.length; q++) {
-                var el = textEls[q];
-                // Skip gold accent text
-                if (el.classList.contains('hero-text-gold') || 
-                    el.className.indexOf('color-gold') > -1) {
-                    continue;
-                }
-                el.style.color = '#FFFFFF';
-            }
-            
-            // Force white on outline buttons in photo sections
-            var outlineBtns = section.querySelectorAll('.btn-outline');
-            for (var r = 0; r < outlineBtns.length; r++) {
-                outlineBtns[r].style.color = '#FFFFFF';
-                outlineBtns[r].style.borderColor = 'rgba(255, 255, 255, 0.4)';
-            }
-        }
-        
         // Save
         localStorage.setItem(STORAGE_KEY, theme);
-        console.log('Theme applied successfully:', theme);
+        console.log('Theme applied:', theme);
     }
     
     function toggleTheme() {

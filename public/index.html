@@ -16,9 +16,68 @@
     
     <style>
         /* ================================================
-           LEGACY - Variable-based theming
-           All colors come from theme.css variables
+           THEME VARIABLES - Inline for reliable switching
            ================================================ */
+        [data-theme="dark"],
+        html:not([data-theme="light"]) {
+            --body-bg-color: #0f172a;
+            --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            --body-color: #FFFFFF;
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --color-gold: #C8A951;
+            --color-gold-bright: #D4B85A;
+            --color-emerald: #10B981;
+            --nav-bg: rgba(0, 0, 0, 0.2);
+            --nav-text: rgba(255, 255, 255, 0.7);
+            --nav-text-hover: #FFFFFF;
+            --nav-logo-text: #FFFFFF;
+            --card-bg: rgba(30, 58, 138, 0.5);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            --card-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --card-backdrop: blur(20px);
+            --panel-bg: rgba(30, 58, 138, 0.6);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --btn-outline-border: rgba(255, 255, 255, 0.4);
+            --btn-outline-text: #FFFFFF;
+            --btn-outline-hover-bg: rgba(255, 255, 255, 0.1);
+            --border-strong: rgba(255, 255, 255, 0.25);
+            --toggle-bg: rgba(255, 255, 255, 0.15);
+            --toggle-text: #FFFFFF;
+            --section-bg-alt: rgba(30, 58, 138, 0.6);
+        }
+        
+        [data-theme="light"] {
+            --body-bg-color: #FFFFFF;
+            --body-bg-image: none;
+            --body-color: #0f172a;
+            --text-primary: #0f172a;
+            --text-secondary: #374151;
+            --text-muted: #6B7280;
+            --color-gold: #B8962A;
+            --color-gold-bright: #C8A951;
+            --color-emerald: #059669;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --nav-text: #4B5563;
+            --nav-text-hover: #0f172a;
+            --nav-logo-text: #0f172a;
+            --card-bg: #FFFFFF;
+            --card-border: #E5E7EB;
+            --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --card-shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --card-backdrop: none;
+            --panel-bg: #FFFFFF;
+            --panel-border: #E5E7EB;
+            --btn-outline-border: #D1D5DB;
+            --btn-outline-text: #374151;
+            --btn-outline-hover-bg: #F3F4F6;
+            --border-strong: #D1D5DB;
+            --toggle-bg: #F3F4F6;
+            --toggle-text: #4B5563;
+            --section-bg-alt: #F9FAFB;
+        }
 
         * {
             -webkit-font-smoothing: antialiased;

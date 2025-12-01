@@ -124,13 +124,53 @@ To work on a specific domain, say:
 - **CI/CD:** GitHub Actions → Firebase
 
 ## Design Aesthetic: "Opulent, Permanent, Guardian-Like"
-- Deep Royal Blue Gradient background (NOT black)
-- Solid Metallic Gold (`#D4AF37`) buttons with hover brightening (NO gradients on buttons)
+- Deep Royal Blue Gradient background (NOT black) - Dark theme default
+- Light theme available via toggle (white background)
+- Solid Metallic Gold (`#C8A951`) buttons with hover brightening (NO gradients on buttons)
 - High-contrast text (`text-gray-100` or white)
 - Compact footer (`py-8`)
 - "Alive UI" with green pulse dots on cards
 - Tech borders/glowing frames
-- `bg-grain` film overlay for texture
+
+## Theme System (Light/Dark)
+
+### How It Works
+- Theme toggle button in nav (sun/moon icon)
+- Preference stored in `localStorage` key `legacy-theme`
+- Falls back to system preference (`prefers-color-scheme`)
+- Default: dark theme
+
+### Key Files
+- `public/assets/js/theme-toggle.js` - Theme application logic
+- `src/input.css` - Tailwind theme variables in `@layer base`
+- Build CSS: `npm run build:css`
+
+### ⚠️ CRITICAL: Photo Sections Must Stay White
+Photo sections (`.photo-section`) have image backgrounds. Text MUST remain white regardless of theme.
+
+**DO NOT:**
+- Set `body.style.color` in JavaScript (cascades to children)
+- Apply theme text colors to elements inside `.photo-section`
+
+**DO:**
+- Use inline `style="color: #FFFFFF !important"` on photo section text
+- Check `isInPhotoSection()` before applying text colors
+- Only modify: body background, nav, logo, non-photo content
+
+### Theme Colors
+```javascript
+// Dark theme
+bodyBg: '#0f172a'
+bodyBgImage: 'radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%)'
+navBg: 'rgba(0, 0, 0, 0.2)'
+navLink: 'rgba(255, 255, 255, 0.7)'
+
+// Light theme  
+bodyBg: '#FFFFFF'
+bodyBgImage: 'none'
+navBg: 'rgba(255, 255, 255, 0.95)'
+navLink: '#4B5563'
+```
 
 ## File Structure
 ```

@@ -1,5 +1,41 @@
 # Changelog
 
+## [3.5.0] - 2025-12-01
+
+### Light/Dark Theme Toggle System
+
+#### Features
+- Added theme toggle button (sun/moon icon) in navigation bar
+- Dark theme: Royal blue gradient background, white text
+- Light theme: White background, dark text
+- Theme preference persisted in localStorage
+- Respects system preference (prefers-color-scheme) as fallback
+
+#### Implementation
+- **JavaScript-based theming** (`public/assets/js/theme-toggle.js`)
+- Tailwind CSS v4 with theme variables in `@layer base` (`src/input.css`)
+- Theme applies: body background, nav styling, content sections
+- Photo sections (hero, CTA) always maintain white text for readability on image backgrounds
+
+#### Key Technical Decisions
+- **DO NOT set `body.style.color`** - It cascades to child elements and overrides photo section text
+- Photo sections use inline `style="color: #FFFFFF !important"` for guaranteed white text
+- Theme toggle only modifies: body background, nav, logo, nav links, non-photo content
+
+#### Files Modified
+- `public/index.html` - Theme toggle button, inline color styles on photo sections
+- `public/assets/js/theme-toggle.js` - Theme application logic
+- `src/input.css` - Tailwind theme variables
+- `public/assets/css/tailwind.css` - Compiled CSS with theme support
+
+#### Tailwind CLI Setup
+- Installed Tailwind v4 via npm
+- Build: `npm run build:css`
+- Watch: `npm run watch:css`
+- Input: `src/input.css` → Output: `public/assets/css/tailwind.css`
+
+---
+
 ## [3.4.0] - 2025-11-29
 
 ### Complete Authentication & Payment System

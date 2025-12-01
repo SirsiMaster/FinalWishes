@@ -6,9 +6,10 @@
 
 /* ========================================
    DARK THEME (Blue/Gold) - Default
+   Applied when data-theme="dark" or not set
    ======================================== */
-:root,
-[data-theme="dark"] {
+[data-theme="dark"],
+html:not([data-theme="light"]) {
     /* Gold Accent */
     --color-gold: #C8A951;
     --color-gold-bright: #D4B85A;

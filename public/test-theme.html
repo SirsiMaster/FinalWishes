@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Theme Test</title>
+    <style>
+        :root,
+        [data-theme="dark"] {
+            --body-bg-color: #0f172a;
+            --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            --body-color: #FFFFFF;
+            --text-primary: #FFFFFF;
+        }
+        
+        [data-theme="light"] {
+            --body-bg-color: #FFFFFF;
+            --body-bg-image: none;
+            --body-color: #0f172a;
+            --text-primary: #0f172a;
+        }
+        
+        body {
+            margin: 0;
+            padding: 40px;
+            font-family: sans-serif;
+            background-color: var(--body-bg-color);
+            background-image: var(--body-bg-image);
+            background-attachment: fixed;
+            color: var(--body-color);
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: var(--text-primary);
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Theme Test</h1>
+    <p>Current theme: <span id="current">dark</span></p>
+    <button onclick="toggleTheme()">Toggle Theme</button>
+    
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            document.getElementById('current').textContent = newTheme;
+            console.log('Theme set to:', newTheme);
+        }
+    </script>
+</body>
+</html>

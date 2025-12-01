@@ -173,6 +173,7 @@
         }
 
         /* --- PHOTO SECTIONS --- */
+        /* Photo sections ALWAYS have white text regardless of theme */
         .photo-section {
             position: relative;
             min-height: 70vh;
@@ -181,6 +182,25 @@
             justify-content: center;
             overflow: hidden;
             padding-top: 64px; /* Prevent hero from going under nav */
+            color: #FFFFFF !important;
+        }
+        
+        .photo-section h1,
+        .photo-section h2,
+        .photo-section h3,
+        .photo-section p,
+        .photo-section span {
+            color: #FFFFFF !important;
+        }
+        
+        .photo-section .btn-outline {
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            color: #FFFFFF !important;
+        }
+        
+        .photo-section .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
         }
 
         /* Hero-specific - slightly taller */

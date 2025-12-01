@@ -73,6 +73,32 @@
             if (moon) moon.style.display = (theme === 'light') ? 'block' : 'none';
         }
         
+        // ALWAYS keep photo sections with white text (they have dark image backgrounds)
+        var photoSections = document.querySelectorAll('.photo-section');
+        for (var p = 0; p < photoSections.length; p++) {
+            var section = photoSections[p];
+            section.style.color = '#FFFFFF';
+            
+            // Force white on all text elements inside
+            var textEls = section.querySelectorAll('h1, h2, h3, p, span');
+            for (var q = 0; q < textEls.length; q++) {
+                var el = textEls[q];
+                // Skip gold accent text
+                if (el.classList.contains('hero-text-gold') || 
+                    el.className.indexOf('color-gold') > -1) {
+                    continue;
+                }
+                el.style.color = '#FFFFFF';
+            }
+            
+            // Force white on outline buttons in photo sections
+            var outlineBtns = section.querySelectorAll('.btn-outline');
+            for (var r = 0; r < outlineBtns.length; r++) {
+                outlineBtns[r].style.color = '#FFFFFF';
+                outlineBtns[r].style.borderColor = 'rgba(255, 255, 255, 0.4)';
+            }
+        }
+        
         // Save
         localStorage.setItem(STORAGE_KEY, theme);
         console.log('Theme applied successfully:', theme);

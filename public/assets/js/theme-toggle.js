@@ -1,245 +1,107 @@
 /**
- * Legacy Theme Toggle
- * Handles switching between dark (blue/gold) and light (white/gold) themes
+ * Legacy Theme Toggle - Simplified & Bulletproof
  */
-
 (function() {
     'use strict';
     
-    const STORAGE_KEY = 'legacy-theme';
-    const DARK = 'dark';
-    const LIGHT = 'light';
+    var STORAGE_KEY = 'legacy-theme';
     
-    /**
-     * Get the current theme
-     * @returns {string} 'dark' or 'light'
-     */
-    function getTheme() {
-        // Check localStorage first
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored === DARK || stored === LIGHT) {
-            return stored;
-        }
-        
-        // Fall back to system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-            return LIGHT;
-        }
-        
-        // Default to dark (the original theme)
-        return DARK;
-    }
-    
-    // Theme color definitions
-    const THEMES = {
+    var themes = {
         dark: {
             bodyBg: '#0f172a',
             bodyBgImage: 'radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%)',
-            textColor: '#FFFFFF',
+            bodyColor: '#FFFFFF',
             navBg: 'rgba(0, 0, 0, 0.2)',
-            navText: 'rgba(255, 255, 255, 0.7)',
-            logoText: '#FFFFFF',
-            cardBg: 'rgba(30, 58, 138, 0.5)',
-            cardBorder: 'rgba(255, 255, 255, 0.1)',
-            sectionBgAlt: 'rgba(30, 58, 138, 0.6)',
+            navLink: 'rgba(255, 255, 255, 0.7)',
+            logo: '#FFFFFF'
         },
         light: {
             bodyBg: '#FFFFFF',
             bodyBgImage: 'none',
-            textColor: '#0f172a',
+            bodyColor: '#0f172a',
             navBg: 'rgba(255, 255, 255, 0.95)',
-            navText: '#4B5563',
-            logoText: '#0f172a',
-            cardBg: '#FFFFFF',
-            cardBorder: '#E5E7EB',
-            sectionBgAlt: '#F9FAFB',
+            navLink: '#4B5563',
+            logo: '#0f172a'
         }
     };
-
-    /**
-     * Set the theme
-     * @param {string} theme - 'dark' or 'light'
-     */
-    function setTheme(theme) {
-        if (theme !== DARK && theme !== LIGHT) {
-            console.warn('Invalid theme:', theme);
-            return;
-        }
+    
+    function getTheme() {
+        return localStorage.getItem(STORAGE_KEY) || 'dark';
+    }
+    
+    function applyTheme(theme) {
+        var t = themes[theme];
+        if (!t) { console.error('Invalid theme:', theme); return; }
         
-        const colors = THEMES[theme];
+        console.log('Applying theme:', theme);
         
-        // Update HTML attribute AND class
+        // Set data attribute
         document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.classList.remove('theme-dark', 'theme-light');
-        document.documentElement.classList.add('theme-' + theme);
         
-        // Apply body styles directly
-        document.body.style.backgroundColor = colors.bodyBg;
-        document.body.style.backgroundImage = colors.bodyBgImage;
-        document.body.style.color = colors.textColor;
-        
-        // Apply nav styles directly
-        const nav = document.getElementById('main-nav');
-        if (nav) {
-            nav.style.background = colors.navBg;
+        // Apply to body
+        if (document.body) {
+            document.body.style.backgroundColor = t.bodyBg;
+            document.body.style.backgroundImage = t.bodyBgImage;
+            document.body.style.color = t.bodyColor;
+            console.log('Body styles applied');
         }
         
-        // Apply nav link styles
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.style.color = colors.navText;
-        });
+        // Apply to nav
+        var nav = document.getElementById('main-nav');
+        if (nav) {
+            nav.style.background = t.navBg;
+        }
         
-        // Apply logo text
-        document.querySelectorAll('.logo-text').forEach(el => {
-            el.style.color = colors.logoText;
-        });
+        // Apply to nav links
+        var links = document.querySelectorAll('.nav-link');
+        for (var i = 0; i < links.length; i++) {
+            links[i].style.color = t.navLink;
+        }
         
-        // Apply section backgrounds
-        document.querySelectorAll('.section-bg-alt').forEach(el => {
-            el.style.background = colors.sectionBgAlt;
-        });
+        // Apply to logo
+        var logos = document.querySelectorAll('.logo-text');
+        for (var j = 0; j < logos.length; j++) {
+            logos[j].style.color = t.logo;
+        }
         
-        // Store preference
+        // Update toggle icons
+        var toggles = document.querySelectorAll('.theme-toggle');
+        for (var k = 0; k < toggles.length; k++) {
+            var sun = toggles[k].querySelector('.icon-sun');
+            var moon = toggles[k].querySelector('.icon-moon');
+            if (sun) sun.style.display = (theme === 'dark') ? 'block' : 'none';
+            if (moon) moon.style.display = (theme === 'light') ? 'block' : 'none';
+        }
+        
+        // Save
         localStorage.setItem(STORAGE_KEY, theme);
-        
-        // Update any toggle buttons
-        updateToggleButtons(theme);
-        
-        // Dispatch event for other scripts
-        window.dispatchEvent(new CustomEvent('theme-change', { 
-            detail: { theme } 
-        }));
-        
-        console.log('🎨 Theme set to:', theme, '- Applied direct styles');
+        console.log('Theme applied successfully:', theme);
     }
     
-    /**
-     * Toggle between dark and light themes
-     * @returns {string} The new theme
-     */
     function toggleTheme() {
-        const current = getTheme();
-        const newTheme = current === DARK ? LIGHT : DARK;
-        setTheme(newTheme);
-        return newTheme;
+        var current = getTheme();
+        var next = (current === 'dark') ? 'light' : 'dark';
+        applyTheme(next);
+        return next;
     }
     
-    /**
-     * Update toggle button icons
-     * @param {string} theme - Current theme
-     */
-    function updateToggleButtons(theme) {
-        document.querySelectorAll('.theme-toggle').forEach(btn => {
-            const sunIcon = btn.querySelector('.icon-sun');
-            const moonIcon = btn.querySelector('.icon-moon');
-            
-            if (sunIcon && moonIcon) {
-                if (theme === DARK) {
-                    sunIcon.style.display = 'block';
-                    moonIcon.style.display = 'none';
-                } else {
-                    sunIcon.style.display = 'none';
-                    moonIcon.style.display = 'block';
-                }
-            }
-            
-            // Update aria-label
-            btn.setAttribute('aria-label', 
-                theme === DARK ? 'Switch to light theme' : 'Switch to dark theme'
-            );
-        });
-    }
-    
-    /**
-     * Apply theme styles (for initial load before setTheme is called)
-     * @param {string} theme - 'dark' or 'light'
-     */
-    function applyThemeStyles(theme) {
-        const colors = THEMES[theme];
-        if (!colors || !document.body) return;
-        
-        // Apply body styles directly
-        document.body.style.backgroundColor = colors.bodyBg;
-        document.body.style.backgroundImage = colors.bodyBgImage;
-        document.body.style.color = colors.textColor;
-        
-        // Apply nav styles directly
-        const nav = document.getElementById('main-nav');
-        if (nav) {
-            nav.style.background = colors.navBg;
-        }
-        
-        // Apply nav link styles
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.style.color = colors.navText;
-        });
-        
-        // Apply logo text
-        document.querySelectorAll('.logo-text').forEach(el => {
-            el.style.color = colors.logoText;
-        });
-        
-        // Apply section backgrounds
-        document.querySelectorAll('.section-bg-alt').forEach(el => {
-            el.style.background = colors.sectionBgAlt;
-        });
-    }
-
-    /**
-     * Initialize theme on page load
-     */
+    // Initialize on DOM ready
     function init() {
-        // Set initial theme attribute immediately
-        const theme = getTheme();
+        var theme = getTheme();
         document.documentElement.setAttribute('data-theme', theme);
-        document.documentElement.classList.add('theme-' + theme);
         
-        // Wait for DOM to be ready to apply styles
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                applyThemeStyles(theme);
-                updateToggleButtons(theme);
-                setupToggleButtons();
+            document.addEventListener('DOMContentLoaded', function() {
+                applyTheme(theme);
             });
         } else {
-            applyThemeStyles(theme);
-            updateToggleButtons(theme);
-            setupToggleButtons();
-        }
-        
-        // Listen for system preference changes
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-                // Only auto-switch if user hasn't manually set a preference
-                if (!localStorage.getItem(STORAGE_KEY)) {
-                    setTheme(e.matches ? LIGHT : DARK);
-                }
-            });
+            applyTheme(theme);
         }
     }
     
-    /**
-     * Setup click handlers for toggle buttons
-     */
-    function setupToggleButtons() {
-        document.querySelectorAll('.theme-toggle').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleTheme();
-            });
-        });
-    }
-    
-    // Initialize immediately
     init();
     
-    // Expose API globally
-    window.LegacyTheme = {
-        get: getTheme,
-        set: setTheme,
-        toggle: toggleTheme
-    };
-    
-    // Also expose toggleTheme directly for onclick handlers
+    // Expose globally
     window.toggleTheme = toggleTheme;
+    window.LegacyTheme = { toggle: toggleTheme, apply: applyTheme, get: getTheme };
 })();

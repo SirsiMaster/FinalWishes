@@ -266,23 +266,11 @@
         
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Header -->
-            <header class="page-header">
-                <div class="header-left">
-                    <h1 class="page-title">Welcome, <span id="userName">—</span></h1>
-                    <p class="page-subtitle">Your estate plan at a glance</p>
-                </div>
-                <div class="header-right">
-                    <button class="btn btn-primary" onclick="showGuideModal()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                        Get Help
-                    </button>
-                </div>
-            </header>
+            <!-- Header Component -->
+            <header id="universal-header-root" 
+                    data-title="Welcome" 
+                    data-subtitle="Your estate plan at a glance"
+                    data-show-search="false"></header>
             
             <div class="page-content">
                 <!-- Estate Progress -->
@@ -491,6 +479,9 @@
     
     <div class="toast" id="toast"></div>
     
+    <!-- Load Component Scripts -->
+    <script src="../../components/universal-header.js"></script>
+    
     <script type="module">
         import { AuthService, DatabaseService } from '../../assets/js/firebase-init.js';
         
@@ -525,7 +516,12 @@
             try {
                 const users = await DatabaseService.getDocuments('users');
                 userProfile = users.find(u => u.id === currentUser.uid) || {};
-                document.getElementById('userName').textContent = userProfile.displayName || userProfile.email?.split('@')[0] || 'User';
+                const userName = userProfile.displayName || userProfile.email?.split('@')[0] || 'User';
+                
+                // Update header title with user name
+                if (window.LegacyHeader?.setTitle) {
+                    window.LegacyHeader.setTitle(`Welcome, ${userName}`);
+                }
             } catch (error) {
                 console.error('Error loading user:', error);
             }

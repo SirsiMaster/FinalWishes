@@ -260,13 +260,12 @@
         
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Header -->
-            <header class="page-header">
-                <div class="header-left">
-                    <h1 class="page-title">Welcome, <span id="userName">—</span></h1>
-                    <p class="page-subtitle">Your inheritance status at a glance</p>
-                </div>
-            </header>
+            <!-- Header Component -->
+            <header id="universal-header-root" 
+                    data-title="Welcome" 
+                    data-subtitle="Your inheritance status at a glance"
+                    data-search-placeholder="Search inheritance, documents..."
+                    data-show-search="false"></header>
             
             <div class="page-content">
                 <!-- Welcome Banner -->
@@ -413,6 +412,9 @@
     
     <div class="toast" id="toast"></div>
     
+    <!-- Load Component Scripts -->
+    <script src="../../components/universal-header.js"></script>
+    
     <script type="module">
         import { AuthService, DatabaseService } from '../../assets/js/firebase-init.js';
         
@@ -445,7 +447,12 @@
             try {
                 const users = await DatabaseService.getDocuments('users');
                 const userProfile = users.find(u => u.id === currentUser.uid) || {};
-                document.getElementById('userName').textContent = userProfile.displayName || userProfile.email?.split('@')[0] || 'User';
+                const userName = userProfile.displayName || userProfile.email?.split('@')[0] || 'User';
+                
+                // Update header title with user name
+                if (window.LegacyHeader?.setTitle) {
+                    window.LegacyHeader.setTitle(`Welcome, ${userName}`);
+                }
             } catch (error) {
                 console.error('Error loading user:', error);
             }

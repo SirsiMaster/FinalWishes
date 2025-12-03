@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposals | FINALWISH</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --body-bg-color: #0f172a;
+            --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --color-gold: #C8A951;
+            --color-gold-bright: #D4B85A;
+            --color-emerald: #10B981;
+            --nav-bg: rgba(0, 0, 0, 0.2);
+            --card-bg: rgba(30, 58, 138, 0.5);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --panel-bg: rgba(30, 58, 138, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--body-bg-color);
+            background-image: var(--body-bg-image);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--color-gold);
+        }
+
+        .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: white;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 span {
+            color: var(--color-gold);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .doc-meta-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-emerald);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Tabs */
+        .tabs-container {
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Cinzel', serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab.active {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Document Styling */
+        .document {
+            background: var(--panel-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .document h2 {
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+
+        .document h2:first-child {
+            margin-top: 0;
+        }
+
+        .document h3 {
+            font-size: 1.125rem;
+            color: white;
+            margin: 24px 0 12px;
+        }
+
+        .document h4 {
+            font-size: 0.875rem;
+            color: var(--color-gold);
+            margin: 16px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .document p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .document strong {
+            color: white;
+        }
+
+        .document ul, .document ol {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .document li {
+            margin-bottom: 6px;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: rgba(200, 169, 81, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-card.highlight {
+            border-color: var(--color-gold);
+            background: rgba(200, 169, 81, 0.1);
+        }
+
+        .summary-card .value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .summary-card.highlight .value {
+            color: var(--color-gold);
+        }
+
+        .summary-card .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Code/Architecture Block */
+        .arch-block {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+
+        /* Comparison Highlight */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 640px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-card.savings {
+            border-color: var(--color-emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+        }
+
+        .comparison-card .price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .comparison-card.savings .price {
+            color: var(--color-emerald);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-gold {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .badge-emerald {
+            background: var(--color-emerald);
+            color: #000;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 60px;
+            padding: 24px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        /* Print styles */
+        @media print {
+            nav, .tabs-container { display: none; }
+            .document { box-shadow: none; border: none; }
+            body { background: white; color: black; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                </svg>
+                <span class="logo-text">FINALWISH</span>
+            </a>
+            <a href="/" class="nav-link">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main-container">
+        <!-- Header -->
+        <header class="page-header">
+            <h1>Project <span>Proposals</span></h1>
+            <p>FinalWish Platform - MVP Development</p>
+            <div class="doc-meta">
+                <div class="doc-meta-item">
+                    <span class="dot"></span>
+                    <span>Version 3.1.0</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="dot"></span>
+                    <span>December 2025</span>
+                </div>
+                <div class="doc-meta-item">
+                    <span class="dot"></span>
+                    <span>AI-Agentic Model</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('cost')">Cost Proposal</button>
+                <button class="tab" onclick="showTab('sow')">Statement of Work</button>
+            </div>
+        </div>
+
+        <!-- Cost Proposal Tab -->
+        <div id="cost-tab" class="tab-content active">
+            <div class="document">
+                <h2>1. Executive Summary</h2>
+                
+                <p>This Cost Proposal provides a comprehensive breakdown for developing the <strong>FinalWish Estate OS</strong> platform using an <strong>AI-Agentic Development Model</strong> compared against traditional development studio costs.</p>
+
+                <div class="summary-grid">
+                    <div class="summary-card highlight">
+                        <div class="value">$80K</div>
+                        <div class="label">MVP Investment</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">$100K</div>
+                        <div class="label">With Native Mobile</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">4 Mo</div>
+                        <div class="label">Timeline</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">77-82%</div>
+                        <div class="label">Cost Savings</div>
+                    </div>
+                </div>
+
+                <div class="comparison">
+                    <div class="comparison-card">
+                        <h4>Traditional Agency</h4>
+                        <div class="price">$350K - $450K</div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted);">5-6 developers, 4 months, standard PMO overhead</p>
+                    </div>
+                    <div class="comparison-card savings">
+                        <h4>AI-Agentic (This Proposal)</h4>
+                        <div class="price">$80K - $100K</div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted);">AI performs development, human oversight only</p>
+                    </div>
+                </div>
+
+                <h2>2. Traditional Development Costs</h2>
+                
+                <h3>2.1 Required Team (Traditional)</h3>
+                <p>A financial-grade application handling estate data, PII, and death certificates requires:</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Role</th>
+                            <th>Count</th>
+                            <th>Rate</th>
+                            <th>Duration</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td>Project Manager</td>
+                            <td>1</td>
+                            <td>$125/hr</td>
+                            <td>5 months</td>
+                            <td>$100,000</td>
+                        </tr>
+                        <tr>
+                            <td>Technical Architect</td>
+                            <td>1</td>
+                            <td>$175/hr</td>
+                            <td>3 months</td>
+                            <td>$84,000</td>
+                        </tr>
+                        <tr>
+                            <td>Senior Backend Developer</td>
+                            <td>2</td>
+                            <td>$150/hr</td>
+                            <td>5 months</td>
+                            <td>$240,000</td>
+                        </tr>
+                        <tr>
+                            <td>Senior Frontend Developer</td>
+                            <td>1</td>
+                            <td>$140/hr</td>
+                            <td>5 months</td>
+                            <td>$112,000</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile Developer (Flutter)</td>
+                            <td>1</td>
+                            <td>$145/hr</td>
+                            <td>3 months</td>
+                            <td>$69,600</td>
+                        </tr>
+                        <tr>
+                            <td>DevOps Engineer</td>
+                            <td>1</td>
+                            <td>$140/hr</td>
+                            <td>4 months</td>
+                            <td>$89,600</td>
+                        </tr>
+                        <tr>
+                            <td>QA Lead + Engineer</td>
+                            <td>2</td>
+                            <td>$107/hr avg</td>
+                            <td>4 months</td>
+                            <td>$137,600</td>
+                        </tr>
+                        <tr>
+                            <td>UI/UX Designer</td>
+                            <td>1</td>
+                            <td>$130/hr</td>
+                            <td>2 months</td>
+                            <td>$41,600</td>
+                        </tr>
+                        <tr>
+                            <td>Security Engineer</td>
+                            <td>1</td>
+                            <td>$165/hr</td>
+                            <td>2 months</td>
+                            <td>$52,800</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subtotal Labor</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>$940,800</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>2.2 Realistic Agency Quote</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Cost Range</th>
+                        </tr>
+                        <tr>
+                            <td>Development (5-6 devs, 4 months)</td>
+                            <td>$200,000 - $280,000</td>
+                        </tr>
+                        <tr>
+                            <td>PM + Design</td>
+                            <td>$40,000 - $60,000</td>
+                        </tr>
+                        <tr>
+                            <td>QA + Testing</td>
+                            <td>$30,000 - $50,000</td>
+                        </tr>
+                        <tr>
+                            <td>Security (pen test + audit prep)</td>
+                            <td>$25,000 - $40,000</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure + DevOps</td>
+                            <td>$20,000 - $30,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong>$350,000 - $450,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>3. AI-Agentic Development Model</h2>
+
+                <h3>3.1 Architecture Overview</h3>
+                <p>FinalWish employs a <strong>domain-specific multi-agent architecture</strong> that represents the cutting edge of AI-assisted software development.</p>
+
+                <div class="arch-block">                    ┌─────────────┐
+                    │ Stack Leader│ (Claude - Orchestrator)
+                    └──────┬──────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+   ┌────▼────┐       ┌─────▼─────┐      ┌─────▼─────┐
+   │  Auth   │       │  Estate   │      │Compliance │
+   │  Agent  │       │   Agent   │      │   Agent   │
+   └────┬────┘       └─────┬─────┘      └─────┬─────┘
+        │                  │                  │
+   ┌────▼────┐       ┌─────▼─────┐            │
+   │  Vault  │◄──────│  Notify   │◄───────────┘
+   │  Agent  │       │   Agent   │
+   └────┬────┘       └─────┬─────┘
+        │                  │
+        └────────┬─────────┘
+                 ▼
+           ┌─────────┐
+           │   LLM   │ (Vertex AI Integration)
+           │  Agent  │
+           └─────────┘</div>
+
+                <h3>3.2 Domain-Specific Agent System</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Domain</th>
+                            <th>Firestore Collections</th>
+                            <th>Cloud Functions</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Auth</strong></td>
+                            <td>Identity & Access</td>
+                            <td>/users, /sessions</td>
+                            <td>onUserCreate, verifyMFA</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estate</strong></td>
+                            <td>Core Business Logic</td>
+                            <td>/estates, /assets, /heirs</td>
+                            <td>onEstateCreate, onPhaseChange</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vault</strong></td>
+                            <td>Document Management</td>
+                            <td>/documents, /shares</td>
+                            <td>onUpload, processOCR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Compliance</strong></td>
+                            <td>State-Specific Rules</td>
+                            <td>/states, /templates</td>
+                            <td>getStateRules, fillTemplate</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Notify</strong></td>
+                            <td>Communications</td>
+                            <td>/notifications, /letters</td>
+                            <td>sendEmail, generateLetter</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LLM</strong></td>
+                            <td>AI Intelligence</td>
+                            <td>/conversations</td>
+                            <td>generateResponse, analyze</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>3.3 Why AI-Agentic Reduces Costs</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Traditional Cost</th>
+                            <th>AI-Agentic Cost</th>
+                            <th>Savings</th>
+                            <th>Reason</th>
+                        </tr>
+                        <tr>
+                            <td>$940,800 Labor</td>
+                            <td>~$0</td>
+                            <td><span class="badge badge-emerald">100%</span></td>
+                            <td>AI performs development work</td>
+                        </tr>
+                        <tr>
+                            <td>$80,000 PMO</td>
+                            <td>~$0</td>
+                            <td><span class="badge badge-emerald">100%</span></td>
+                            <td>AI self-coordinates</td>
+                        </tr>
+                        <tr>
+                            <td>$193,000 Testing</td>
+                            <td>$15,000</td>
+                            <td><span class="badge badge-emerald">92%</span></td>
+                            <td>AI generates tests</td>
+                        </tr>
+                        <tr>
+                            <td>$190,000 Security</td>
+                            <td>$35,000</td>
+                            <td><span class="badge badge-emerald">82%</span></td>
+                            <td>External audit still required</td>
+                        </tr>
+                        <tr>
+                            <td>$78,000 Copywriting</td>
+                            <td>$5,000</td>
+                            <td><span class="badge badge-emerald">94%</span></td>
+                            <td>Legal review only</td>
+                        </tr>
+                        <tr>
+                            <td>$88,500 Infrastructure</td>
+                            <td>$30,000</td>
+                            <td><span class="badge badge-emerald">66%</span></td>
+                            <td>Firebase reduces complexity</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>4. Detailed AI-Agentic Budget</h2>
+
+                <h3>4.1 Development Phase (4 Months)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Monthly</th>
+                            <th>Duration</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td>Claude API (Pro + API)</td>
+                            <td>$800</td>
+                            <td>4 mo</td>
+                            <td>$3,200</td>
+                        </tr>
+                        <tr>
+                            <td>Cursor Pro</td>
+                            <td>$20</td>
+                            <td>4 mo</td>
+                            <td>$80</td>
+                        </tr>
+                        <tr>
+                            <td>Warp Team</td>
+                            <td>$20</td>
+                            <td>4 mo</td>
+                            <td>$80</td>
+                        </tr>
+                        <tr>
+                            <td>GitHub Copilot</td>
+                            <td>$19</td>
+                            <td>4 mo</td>
+                            <td>$76</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subtotal AI Tools</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>$3,436</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Monthly</th>
+                            <th>Duration</th>
+                            <th>Total</th>
+                        </tr>
+                        <tr>
+                            <td>Firebase (Blaze Plan)</td>
+                            <td>$500</td>
+                            <td>4 mo</td>
+                            <td>$2,000</td>
+                        </tr>
+                        <tr>
+                            <td>Vertex AI</td>
+                            <td>$300</td>
+                            <td>4 mo</td>
+                            <td>$1,200</td>
+                        </tr>
+                        <tr>
+                            <td>SendGrid</td>
+                            <td>$50</td>
+                            <td>4 mo</td>
+                            <td>$200</td>
+                        </tr>
+                        <tr>
+                            <td>Sentry</td>
+                            <td>$30</td>
+                            <td>4 mo</td>
+                            <td>$120</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subtotal Infrastructure</strong></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>$3,520</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>4.2 Security & Compliance</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Cost</th>
+                        </tr>
+                        <tr>
+                            <td>External Penetration Test</td>
+                            <td>$15,000</td>
+                        </tr>
+                        <tr>
+                            <td>SOC 2 Readiness Assessment</td>
+                            <td>$12,000</td>
+                        </tr>
+                        <tr>
+                            <td>Legal Review</td>
+                            <td>$8,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subtotal Security</strong></td>
+                            <td><strong>$35,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>5. Total Investment Summary</h2>
+
+                <h3>5.1 MVP (Web + PWA) - Recommended</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Cost</th>
+                        </tr>
+                        <tr>
+                            <td>AI Development Tools (4 mo)</td>
+                            <td>$3,436</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure (4 months)</td>
+                            <td>$3,520</td>
+                        </tr>
+                        <tr>
+                            <td>LLM Knowledge Base</td>
+                            <td>$15,000</td>
+                        </tr>
+                        <tr>
+                            <td>Security & Compliance</td>
+                            <td>$35,000</td>
+                        </tr>
+                        <tr>
+                            <td>Third-Party Services</td>
+                            <td>$3,625</td>
+                        </tr>
+                        <tr>
+                            <td>Contingency (25%)</td>
+                            <td>$15,000</td>
+                        </tr>
+                        <tr style="background: rgba(200, 169, 81, 0.15);">
+                            <td><strong>Total MVP</strong></td>
+                            <td><strong style="color: var(--color-gold);">$80,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>5.2 With Native Mobile Apps</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Cost</th>
+                        </tr>
+                        <tr>
+                            <td>MVP (Web + PWA)</td>
+                            <td>$80,000</td>
+                        </tr>
+                        <tr>
+                            <td>Native Mobile Add-On</td>
+                            <td>$20,000</td>
+                        </tr>
+                        <tr style="background: rgba(200, 169, 81, 0.15);">
+                            <td><strong>Total with Mobile</strong></td>
+                            <td><strong style="color: var(--color-gold);">$100,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>6. Payment Schedule</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>%</th>
+                            <th>Amount</th>
+                            <th>Deliverable</th>
+                        </tr>
+                        <tr>
+                            <td>Project Kickoff</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>Firebase setup, architecture approved</td>
+                        </tr>
+                        <tr>
+                            <td>Alpha Release</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>Core features functional, admin dashboard</td>
+                        </tr>
+                        <tr>
+                            <td>Beta Release</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>Full features, security implementation</td>
+                        </tr>
+                        <tr>
+                            <td>Production Launch</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>Testing complete, live deployment</td>
+                        </tr>
+                        <tr style="background: rgba(200, 169, 81, 0.15);">
+                            <td><strong>Total</strong></td>
+                            <td><strong>100%</strong></td>
+                            <td><strong style="color: var(--color-gold);">$80,000</strong></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>7. Exclusions</h2>
+                <ul>
+                    <li>SOC 2 Type I/II full audit ($30,000-$50,000)</li>
+                    <li>HIPAA certification (if required, $20,000+)</li>
+                    <li>Marketing and user acquisition</li>
+                    <li>Ongoing legal counsel beyond initial review</li>
+                    <li>Custom integrations with specific financial institutions</li>
+                    <li>White-label licensing fees</li>
+                    <li>International expansion (localization, compliance)</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <!-- SOW Tab -->
+        <div id="sow-tab" class="tab-content">
+            <div class="document">
+                <h2>1. Executive Summary</h2>
+                
+                <p>This Statement of Work (SOW) defines the scope, deliverables, timeline, and terms for the development of the <strong>FinalWish Platform MVP</strong> — a cross-platform estate management application serving web, iOS, and Android users.</p>
+
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="value">FinalWish</div>
+                        <div class="label">Product</div>
+                    </div>
+                    <div class="summary-card highlight">
+                        <div class="value">16 Weeks</div>
+                        <div class="label">Duration</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">Firebase</div>
+                        <div class="label">Infrastructure</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">AI-Agentic</div>
+                        <div class="label">Dev Model</div>
+                    </div>
+                </div>
+
+                <h3>Technology Stack</h3>
+                <ul>
+                    <li><strong>Platforms:</strong> Web (Static HTML/Tailwind), PWA, iOS/Android (Flutter optional)</li>
+                    <li><strong>Backend:</strong> Firebase (Firestore, Cloud Functions, Authentication)</li>
+                    <li><strong>Infrastructure:</strong> Google Cloud Platform (Firebase Hosting)</li>
+                    <li><strong>AI/LLM:</strong> Vertex AI for process intelligence</li>
+                </ul>
+
+                <h2>2. Project Objectives</h2>
+
+                <h3>2.1 Business Objectives</h3>
+                <ol>
+                    <li>Launch a minimum viable product (MVP) within 4 months</li>
+                    <li>Enable users to organize estate information across web and mobile</li>
+                    <li>Automate the estate settlement notification process</li>
+                    <li>Achieve initial market validation with early adopters</li>
+                    <li>Establish foundation for future feature expansion</li>
+                </ol>
+
+                <h3>2.2 Technical Objectives</h3>
+                <ol>
+                    <li>Build secure, scalable backend infrastructure on Firebase/GCP</li>
+                    <li>Deliver responsive web application with modern UX</li>
+                    <li>Deploy Progressive Web App (PWA) with optional native apps</li>
+                    <li>Implement end-to-end encryption for sensitive data</li>
+                    <li>Achieve SOC 2 readiness</li>
+                </ol>
+
+                <h2>3. Scope of Work</h2>
+
+                <h3>3.1 Included in Scope (MVP Features)</h3>
+
+                <h4>Backend Development</h4>
+                <ul>
+                    <li>Firebase Cloud Functions for serverless API</li>
+                    <li>Firestore (NoSQL) database design and implementation</li>
+                    <li>Firebase Authentication with MFA support</li>
+                    <li>Firebase Hosting with CDN</li>
+                    <li>Cloud Storage for Firebase (encrypted documents)</li>
+                    <li>Stripe integration for payments</li>
+                    <li>SendGrid integration for email notifications</li>
+                    <li>Google Cloud Vision API for OCR</li>
+                    <li>CI/CD pipeline (GitHub Actions → Firebase)</li>
+                </ul>
+
+                <h4>Web Application (Static HTML/Tailwind + Firebase)</h4>
+                <ul>
+                    <li>User registration and authentication (Firebase Auth)</li>
+                    <li>Multi-factor authentication (MFA)</li>
+                    <li>User profile management</li>
+                    <li>Estate creation and management</li>
+                    <li>Asset inventory (5 categories)</li>
+                    <li>Document vault with upload/download (Cloud Storage)</li>
+                    <li>Beneficiary designation (executors, heirs)</li>
+                    <li>Principal dashboard with progress tracking</li>
+                    <li>Executor dashboard with task management</li>
+                    <li>Notification letter generation (50 institutions)</li>
+                    <li>Payment processing (Stripe checkout)</li>
+                    <li>Responsive design (desktop, tablet, mobile)</li>
+                    <li>WCAG 2.1 AA accessibility</li>
+                    <li>Progressive Web App (PWA) support</li>
+                </ul>
+
+                <h4>Security & Compliance</h4>
+                <ul>
+                    <li>AES-256 encryption at rest</li>
+                    <li>TLS 1.3 encryption in transit</li>
+                    <li>Role-based access control (RBAC)</li>
+                    <li>Comprehensive audit logging</li>
+                    <li>SOC 2 Type I readiness documentation</li>
+                    <li>GDPR/CCPA compliance features</li>
+                </ul>
+
+                <h3>3.2 Excluded from Scope (Post-MVP)</h3>
+                <ul>
+                    <li>Plaid integration for automated asset discovery</li>
+                    <li>Lob integration for certified mail delivery</li>
+                    <li>Full AI Assistant ("Shepherd") with ML capabilities</li>
+                    <li>Spanish language localization</li>
+                    <li>Complete Distribution Phase features</li>
+                    <li>Cryptocurrency wallet integration</li>
+                    <li>White Glove tier human agent workflows</li>
+                    <li>HIPAA compliance certification</li>
+                    <li>Public API for third-party developers</li>
+                </ul>
+
+                <h2>4. Deliverables</h2>
+
+                <h3>4.1 Software Deliverables</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Deliverable</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>D1</td>
+                            <td>FinalWish API</td>
+                            <td>Firebase Cloud Functions backend</td>
+                        </tr>
+                        <tr>
+                            <td>D2</td>
+                            <td>FinalWish Web</td>
+                            <td>Static HTML/Tailwind web application on Firebase Hosting</td>
+                        </tr>
+                        <tr>
+                            <td>D3</td>
+                            <td>FinalWish PWA</td>
+                            <td>Progressive Web App (installable, offline-capable)</td>
+                        </tr>
+                        <tr>
+                            <td>D4</td>
+                            <td>FinalWish iOS (Optional)</td>
+                            <td>Flutter iOS application</td>
+                        </tr>
+                        <tr>
+                            <td>D5</td>
+                            <td>FinalWish Android (Optional)</td>
+                            <td>Flutter Android application</td>
+                        </tr>
+                        <tr>
+                            <td>D6</td>
+                            <td>Admin Dashboard</td>
+                            <td>Internal administration interface</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>4.2 Documentation Deliverables</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Deliverable</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>D7</td>
+                            <td>API Documentation</td>
+                            <td>OpenAPI 3.0 specification with examples</td>
+                        </tr>
+                        <tr>
+                            <td>D8</td>
+                            <td>User Guide</td>
+                            <td>End-user documentation for all features</td>
+                        </tr>
+                        <tr>
+                            <td>D9</td>
+                            <td>Admin Guide</td>
+                            <td>Internal operations and support guide</td>
+                        </tr>
+                        <tr>
+                            <td>D10</td>
+                            <td>Deployment Guide</td>
+                            <td>Infrastructure setup and deployment procedures</td>
+                        </tr>
+                        <tr>
+                            <td>D11</td>
+                            <td>Architecture Decision Records</td>
+                            <td>Documentation of technical decisions</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>5. Timeline & Milestones</h2>
+
+                <p><strong>Project Duration:</strong> 4 months (16 weeks)<br>
+                <strong>Start Date:</strong> Upon contract execution<br>
+                <strong>Target Completion:</strong> Start Date + 16 weeks</p>
+
+                <h3>5.1 Phase Schedule</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Duration</th>
+                            <th>Focus Areas</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase 1: Foundation</strong></td>
+                            <td>Weeks 1-4</td>
+                            <td>Firebase setup, authentication, core Firestore models</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase 2: Core Features</strong></td>
+                            <td>Weeks 5-8</td>
+                            <td>Estate management, document vault, settlement workflow</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase 3: PWA & Mobile</strong></td>
+                            <td>Weeks 9-12</td>
+                            <td>PWA optimization, optional Flutter apps</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phase 4: Polish & Launch</strong></td>
+                            <td>Weeks 13-16</td>
+                            <td>Testing, accessibility, performance, go-live</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>5.2 Key Milestones</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Target</th>
+                            <th>Deliverable</th>
+                            <th>Exit Criteria</th>
+                        </tr>
+                        <tr>
+                            <td><strong>M1</strong></td>
+                            <td>Week 2</td>
+                            <td>Infrastructure Ready</td>
+                            <td>Firebase deployed, CI/CD operational</td>
+                        </tr>
+                        <tr>
+                            <td><strong>M2</strong></td>
+                            <td>Week 4</td>
+                            <td>API Alpha</td>
+                            <td>Core Cloud Functions functional (80% P0)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>M3</strong></td>
+                            <td>Week 8</td>
+                            <td>Web Beta</td>
+                            <td>Web app feature complete</td>
+                        </tr>
+                        <tr>
+                            <td><strong>M4</strong></td>
+                            <td>Week 12</td>
+                            <td>PWA Ready</td>
+                            <td>PWA installable, offline-capable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>M5</strong></td>
+                            <td>Week 14</td>
+                            <td>Launch Ready</td>
+                            <td>All testing complete, zero P0 bugs</td>
+                        </tr>
+                        <tr>
+                            <td><strong>M6</strong></td>
+                            <td>Week 16</td>
+                            <td>Public Launch</td>
+                            <td>Live on Firebase Hosting</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>6. Development Model: AI-Agentic</h2>
+
+                <p>This project uses an <strong>AI-Agentic Development Model</strong> where AI tools (Claude, Warp, Cursor) perform the majority of development work under human oversight. This dramatically reduces cost while maintaining quality.</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Role</th>
+                            <th>Model</th>
+                            <th>Responsibilities</th>
+                        </tr>
+                        <tr>
+                            <td>Human Oversight</td>
+                            <td>Part-time</td>
+                            <td>Architecture review, acceptance testing, domain expertise, go/no-go decisions</td>
+                        </tr>
+                        <tr>
+                            <td>AI Stack Leader (Claude)</td>
+                            <td>Full-time</td>
+                            <td>All implementation, testing, documentation, cross-agent coordination</td>
+                        </tr>
+                        <tr>
+                            <td>AI Development Tools</td>
+                            <td>Full-time</td>
+                            <td>Cursor Pro, Warp, GitHub Copilot for code generation</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2>7. Commercial Terms</h2>
+
+                <h3>7.1 Pricing</h3>
+                <p><strong>Total Project Cost:</strong> <span style="color: var(--color-gold); font-size: 1.25rem;">$80,000 - $100,000 USD</span> (AI-Agentic model)</p>
+                <p><em>Traditional agency comparison: $350,000 - $450,000 (77-82% savings)</em></p>
+
+                <h3>7.2 Payment Schedule</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>%</th>
+                            <th>Amount</th>
+                            <th>Due Date</th>
+                        </tr>
+                        <tr>
+                            <td>Contract Execution</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>Upon signing</td>
+                        </tr>
+                        <tr>
+                            <td>M2: API Alpha</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>End of Week 4</td>
+                        </tr>
+                        <tr>
+                            <td>M4: PWA Ready</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>End of Week 12</td>
+                        </tr>
+                        <tr>
+                            <td>M6: Launch</td>
+                            <td>25%</td>
+                            <td>$20,000</td>
+                            <td>Upon launch</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>7.3 Payment Terms</h3>
+                <ul>
+                    <li>Invoices due Net 15 from invoice date</li>
+                    <li>Payments via wire transfer or ACH</li>
+                    <li>Late payments subject to 1.5% monthly interest</li>
+                    <li>Work may be paused if payment is >15 days overdue</li>
+                </ul>
+
+                <h2>8. Terms & Conditions</h2>
+
+                <h3>8.1 Intellectual Property</h3>
+                <ul>
+                    <li>All custom code developed under this SOW shall be owned by the Client upon final payment</li>
+                    <li>Contractor retains rights to pre-existing libraries and frameworks</li>
+                    <li>Open-source components remain under their respective licenses</li>
+                </ul>
+
+                <h3>8.2 Warranties</h3>
+                <ul>
+                    <li>Contractor warrants deliverables will be free of material defects for 30 days post-launch</li>
+                    <li>Bug fixes during warranty period included at no additional cost</li>
+                    <li>Warranty excludes issues caused by Client modifications</li>
+                </ul>
+
+                <h3>8.3 Change Management</h3>
+                <ul>
+                    <li>Scope changes require written Change Request</li>
+                    <li>Changes >8 hours require updated cost estimate</li>
+                    <li>Changes >40 hours require SOW amendment</li>
+                </ul>
+
+                <h2>9. Assumptions</h2>
+                <ol>
+                    <li>Client has or will obtain required Firebase/GCP, Apple Developer and Google Play Console accounts</li>
+                    <li>Client will provide timely legal review (within 5 business days)</li>
+                    <li>Third-party APIs (Firebase, Stripe, SendGrid) remain available and stable</li>
+                    <li>No significant changes to App Store or Play Store guidelines during development</li>
+                    <li>Human oversight available for review/approval decisions</li>
+                    <li>Requirements are final after Week 8 (scope freeze)</li>
+                    <li>PWA acceptable for mobile MVP (native apps as optional add-on)</li>
+                </ol>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2025 FinalWish Inc. All rights reserved. | Document Version 3.1.0</p>
+        </footer>
+    </main>
+
+    <script>
+        function showTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            // Scroll to top of document
+            window.scrollTo({ top: 200, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

@@ -1317,8 +1317,9 @@ textarea::placeholder {
 
 /* Cards - Dark theme */
 [data-theme="dark"] .card {
-    background: rgba(30, 58, 138, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
 }
 
 [data-theme="dark"] .card-header {
@@ -1330,14 +1331,15 @@ textarea::placeholder {
 }
 
 [data-theme="dark"] .card-footer {
-    background: rgba(15, 23, 42, 0.5);
-    border-top-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.6);
+    border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Stat cards - Dark theme */
 [data-theme="dark"] .stat-card {
-    background: rgba(30, 58, 138, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
 }
 
 [data-theme="dark"] .stat-value {
@@ -1354,8 +1356,9 @@ textarea::placeholder {
 
 /* Tables - Dark theme */
 [data-theme="dark"] .data-table {
-    background: rgba(30, 58, 138, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
 }
 
 [data-theme="dark"] .table-header {
@@ -1367,9 +1370,9 @@ textarea::placeholder {
 }
 
 [data-theme="dark"] table th {
-    background: rgba(15, 23, 42, 0.5);
-    color: rgba(255, 255, 255, 0.7);
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.6);
+    color: rgba(212, 175, 55, 0.9);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 [data-theme="dark"] table td {
@@ -1383,8 +1386,9 @@ textarea::placeholder {
 
 /* Activity feed - Dark theme */
 [data-theme="dark"] .activity-feed {
-    background: rgba(30, 58, 138, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
 }
 
 [data-theme="dark"] .activity-item {

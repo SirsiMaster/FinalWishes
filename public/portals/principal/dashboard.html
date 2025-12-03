@@ -63,7 +63,11 @@
         }
         .phase-item.active {
             border-color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
+            background: var(--gold);
+        }
+        .phase-item.active .phase-number,
+        .phase-item.active .phase-name {
+            color: #0f172a; /* Dark text on gold background */
         }
         .phase-item.completed {
             border-color: var(--success);
@@ -319,7 +323,7 @@
                 
                 <!-- Quick Actions -->
                 <div class="mb-xl">
-                    <h3 style="margin-bottom: var(--space-md); color: var(--text-primary);">Quick Actions</h3>
+                    <h3 style="margin-bottom: var(--space-md); color: #FFFFFF; font-family: 'Cinzel', serif;">Quick Actions</h3>
                     <div class="quick-action-grid">
                         <a href="assets.html" class="quick-action-card">
                             <div class="quick-action-icon">

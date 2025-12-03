@@ -170,35 +170,8 @@ body {
     flex: 1;
     padding: var(--space-xl);
     overflow-y: auto;
-    background: #F9FAFB;
-    color: #1F2937;
-}
-
-/* Force readable text colors */
-.page-content * {
-    color: inherit;
-}
-
-.page-content h1, .page-content h2, .page-content h3, .page-content h4 {
-    color: #0B1F41;
-}
-
-.page-content .stat-label,
-.page-content .text-muted,
-.page-content .stat-change {
-    color: #6B7280;
-}
-
-.page-content .stat-value {
-    color: #111827;
-}
-
-.page-content th {
-    color: #374151;
-}
-
-.page-content td {
-    color: #1F2937;
+    background: var(--content-bg, #F9FAFB);
+    color: var(--text-primary, #1F2937);
 }
 
 /* ============================================================================
@@ -1292,6 +1265,160 @@ textarea::placeholder {
 .modal-close:hover {
     background: var(--color-gray-100);
     color: var(--color-gray-700);
+}
+
+/* ============================================================================
+   DARK THEME OVERRIDES
+   Applies when [data-theme="dark"] is set on <html>
+   ============================================================================ */
+
+/* Header - Dark theme */
+[data-theme="dark"] .admin-header {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .admin-header h1 {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .admin-header p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="dark"] .search-bar {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .search-bar svg {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="dark"] .search-bar input {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Page content - Dark theme */
+[data-theme="dark"] .page-content {
+    background: transparent;
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .page-content h1,
+[data-theme="dark"] .page-content h2,
+[data-theme="dark"] .page-content h3,
+[data-theme="dark"] .page-content h4 {
+    color: #FFFFFF;
+}
+
+/* Cards - Dark theme */
+[data-theme="dark"] .card {
+    background: rgba(30, 58, 138, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .card-title {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .card-footer {
+    background: rgba(15, 23, 42, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Stat cards - Dark theme */
+[data-theme="dark"] .stat-card {
+    background: rgba(30, 58, 138, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .stat-value {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] .stat-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="dark"] .stat-change {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Tables - Dark theme */
+[data-theme="dark"] .data-table {
+    background: rgba(30, 58, 138, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .table-header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .table-title {
+    color: #FFFFFF;
+}
+
+[data-theme="dark"] table th {
+    background: rgba(15, 23, 42, 0.5);
+    color: rgba(255, 255, 255, 0.7);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] table td {
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] table tr:hover td {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Activity feed - Dark theme */
+[data-theme="dark"] .activity-feed {
+    background: rgba(30, 58, 138, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .activity-item {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .activity-icon {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+[data-theme="dark"] .activity-text {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .activity-time {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Buttons - Dark theme */
+[data-theme="dark"] .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Theme toggle in dark admin header */
+[data-theme="dark"] .admin-header .theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
 }
 
 /* ============================================================================

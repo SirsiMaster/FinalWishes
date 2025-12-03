@@ -2250,7 +2250,7 @@
             }
             
             // Clear any previous messages
-            document.querySelectorAll('#auth-modal .bg-red-500\/20, #auth-modal .bg-emerald-500\/20').forEach(el => {
+            document.querySelectorAll('#auth-modal [class*="bg-red-500"], #auth-modal [class*="bg-emerald-500"]').forEach(el => {
                 el.classList.add('hidden');
             });
         }

@@ -425,14 +425,20 @@
         async function init() {
             console.log('🏛️ Legacy Estate OS - Heir Portal');
             
-            currentUser = AuthService.getCurrentUser();
-            if (!currentUser) {
-                window.location.href = '/';
-                return;
-            }
-            
-            await loadUserData();
-            await loadInheritanceData();
+            // Wait for auth state to be determined
+            AuthService.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    console.log('❌ No user, redirecting to home');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                currentUser = user;
+                console.log('✅ User authenticated:', user.email);
+                
+                await loadUserData();
+                await loadInheritanceData();
+            });
         }
         
         async function loadUserData() {

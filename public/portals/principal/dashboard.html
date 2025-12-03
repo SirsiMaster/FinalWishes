@@ -504,16 +504,21 @@
         async function init() {
             console.log('🏛️ Legacy Estate OS - Principal Portal');
             
-            // Check auth
-            currentUser = AuthService.getCurrentUser();
-            if (!currentUser) {
-                window.location.href = '/';
-                return;
-            }
-            
-            await loadUserData();
-            await loadEstateData();
-            updateUI();
+            // Wait for auth state to be determined
+            AuthService.onAuthStateChanged(async (user) => {
+                if (!user) {
+                    console.log('❌ No user, redirecting to home');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                currentUser = user;
+                console.log('✅ User authenticated:', user.email);
+                
+                await loadUserData();
+                await loadEstateData();
+                updateUI();
+            });
         }
         
         async function loadUserData() {

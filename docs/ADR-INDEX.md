@@ -1,0 +1,49 @@
+# Architecture Decision Records (ADR) Index
+
+This document indexes all Architecture Decision Records for the FinalWishes platform.
+
+## What is an ADR?
+
+An Architecture Decision Record captures a significant architectural decision along with its context, alternatives considered, and consequences. ADRs are **immutable** once accepted—to change a decision, create a new ADR that supersedes the previous one.
+
+## ADR Format
+
+Each ADR follows this structure:
+- **Status:** Proposed | Accepted | Deprecated | Superseded
+- **Context:** The problem or situation requiring a decision
+- **Decision:** The chosen approach
+- **Alternatives Considered:** Other options evaluated
+- **Justification:** Why this choice (with data, comparisons, cost analysis)
+- **Consequences:** Implications of the decision
+
+## ADR Registry
+
+| ADR # | Title | Status | Date | Supersedes |
+|-------|-------|--------|------|------------|
+| [ADR-001](ADR-001-ARCHITECTURE-DECISIONS.md) | Platform Architecture Decisions | Accepted | 2025-12-05 | — |
+
+## Categories
+
+### Security
+- ADR-001 §1: SOC 2 + AES-256 (not FIPS 140-3)
+- ADR-001 §2: Cloud KMS Software Keys (not HSM)
+- ADR-001 §6: Defense-in-Depth Security Architecture
+
+### Infrastructure
+- ADR-001 §3: Google Cloud Platform (vs AWS/Azure)
+
+### Technology Stack
+- ADR-001 §4: Go Backend (vs Rust)
+- ADR-001 §5: React + React Native Frontend
+
+## Creating a New ADR
+
+1. Copy `docs/ADR-TEMPLATE.md` to `docs/ADR-XXX-TITLE.md`
+2. Fill in all sections with research and justifications
+3. Add entry to this index
+4. Get stakeholder approval
+5. Update status to "Accepted"
+
+---
+
+*Last updated: 2025-12-05*

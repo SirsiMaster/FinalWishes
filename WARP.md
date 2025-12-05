@@ -44,6 +44,20 @@ Improve existing pages rather than creating new ones. Link to `/docs/`, don't co
 
 ---
 
+### **RULE 8: DOCUMENT ARCHITECTURE DECISIONS AS ADRS**
+Every significant technology, security, or infrastructure decision MUST be documented as an Architecture Decision Record (ADR) in `docs/ADR-XXX-*.md`. Include:
+- **Context:** What problem are we solving?
+- **Decision:** What did we choose?
+- **Alternatives:** What else was considered?
+- **Justification:** Why this choice? Include industry comparisons, cost analysis, and trade-offs.
+- **Consequences:** What are the implications?
+
+ADRs are immutable once accepted. To change a decision, create a new ADR that supersedes the old one.
+
+**ADR Index:** `docs/ADR-INDEX.md`
+
+---
+
 ## THE META-RULE
 
 **If any rule conflicts with delivering a world-class product, challenge the rule and propose a better approach.**

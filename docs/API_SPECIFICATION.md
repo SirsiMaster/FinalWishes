@@ -714,5 +714,5 @@ GET /payments/status?session_id=cs_...
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
-| 2.0.0 | 2025-12-05 | Claude | FinalWishes branding, Cloud Storage URLs, client-side encryption |
+| 2.0.0 | 2025-12-05 | Claude | MyShepherd branding, Cloud Storage URLs, client-side encryption |
 | **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd** |

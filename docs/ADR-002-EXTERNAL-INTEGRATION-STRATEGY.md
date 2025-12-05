@@ -483,7 +483,7 @@ This document provides:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    FinalWishes Data Architecture                 │
+│                    MyShepherd Data Architecture                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  FIRESTORE (NoSQL)                                               │

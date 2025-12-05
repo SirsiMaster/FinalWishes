@@ -342,5 +342,5 @@ The project is considered complete when:
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
-| 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |
+| 2.0.0 | 2025-12-05 | Claude | MyShepherd rebrand, 5-month timeline, React+Go+React Native stack |
 | **3.0.0** | **2025-12-05** | **Claude** | **MyShepherd rebrand, removed MVP language, 5 launch states (MD, IL, MN, DC, VA), innovation strategy for connector-building, full integrations (Plaid/Lob/DocuSign) from day one** |

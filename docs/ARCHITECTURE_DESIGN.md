@@ -8,7 +8,7 @@
 ## 1. Architecture Overview
 
 ### 1.1 Development Model
-**AI-Agentic Development** - This platform is built using Claude and AI tools as the development team, with human oversight only. No traditional human development team.
+**AI-Assisted Development** - This platform is built using Claude and AI tools as the development team, with human oversight only. No traditional human development team.
 
 ### 1.2 System Context
 
@@ -512,5 +512,5 @@ mobile/
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 2.0.0 | 2025-11-26 | Legacy Team | Added Go backend structure |
-| 3.0.0 | 2025-12-05 | Claude | Complete rewrite for React+Go+React Native, GCP-only, FinalWishes branding |
+| 3.0.0 | 2025-12-05 | Claude | Complete rewrite for React+Go+React Native, GCP-only, MyShepherd branding |
 | **4.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd** |

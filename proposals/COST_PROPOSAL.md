@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-This Cost Proposal provides a comprehensive breakdown for developing the **MyShepherd Estate OS** platform using an **AI-Agentic Development Model**. This document includes detailed architecture decisions, industry comparisons, and security justifications that inform our technology choices and pricing.
+This Cost Proposal provides a comprehensive breakdown for developing the **MyShepherd Estate OS** platform using an **AI-Assisted Development Model**. This document includes detailed architecture decisions, industry comparisons, and security justifications that inform our technology choices and pricing.
 
 **Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
@@ -238,9 +238,9 @@ This is what a competent mid-tier agency would quote. Top-tier agencies speciali
 
 ---
 
-## 4. AI-Agentic Development Model
+## 4. AI-Assisted Development Model
 
-### 4.1 How AI-Agentic Development Works
+### 4.1 How AI-Assisted Development Works
 
 MyShepherd uses a **domain-specific multi-agent architecture** where AI performs the majority of development work under human oversight:
 
@@ -268,9 +268,9 @@ MyShepherd uses a **domain-specific multi-agent architecture** where AI performs
            └─────────┘
 ```
 
-### 4.2 Why AI-Agentic Dramatically Reduces Costs
+### 4.2 Why AI-Assisted Dramatically Reduces Costs
 
-| Traditional Cost | AI-Agentic Cost | Savings | Reason |
+| Traditional Cost | AI-Assisted Cost | Savings | Reason |
 |-----------------|-----------------|---------|--------|
 | $1,329,600 Labor | ~$5,000 (AI tools) | 99.6% | AI performs development |
 | $80,000 PMO | ~$0 | 100% | AI self-coordinates |
@@ -433,7 +433,7 @@ This investment prevents costly user errors, court rejections, and potential lia
 | Approach | Cost | Timeline | Savings |
 |----------|------|----------|---------|
 | Traditional Agency | $400,000 - $500,000 | 8-12 months | Baseline |
-| **AI-Agentic** | **$95,000** | **5 months** | **76-81%** |
+| **AI-Assisted** | **$95,000** | **5 months** | **76-81%** |
 
 ---
 
@@ -560,10 +560,10 @@ To proceed, please confirm:
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft ($425K, AWS/Go) |
+| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft ($425K, AWS/Go) |
 || 2.0.0 | 2025-11-26 | Claude | Revised for AI-assisted, Firebase ($20K-$35K) |
 | 3.0.0 | 2025-11-26 | Claude | Realistic traditional comparison ($350K-$450K), $80K |
-| 3.1.0 | 2025-12-03 | Claude | Rebranded from Legacy to FinalWishes |
+| 3.1.0 | 2025-12-03 | Claude | Rebranded from Legacy to MyShepherd |
 | 4.0.0 | 2025-12-05 | Claude | Complete revision: React+Go architecture, $95K with mobile, 5-month timeline, ADR justifications, industry comparisons |
 | **5.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd, removed MVP language, added legal form review budget section ($5-10K from contingency), updated to 5 launch states** |
 

@@ -20,7 +20,7 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 | **Product** | MyShepherd - The Estate Operating System |
 | **Duration** | 5 months (20 weeks) |
 | **Investment** | $95,000 |
-| **Development Model** | AI-Agentic (Claude + Warp + Cursor) |
+| **Development Model** | AI-Assisted (Claude + Warp + Cursor) |
 | **Launch States** | Maryland, Illinois, Minnesota, DC, Virginia |
 
 ---
@@ -210,9 +210,9 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 
 ## 6. Development Model
 
-### 6.1 AI-Agentic Development
+### 6.1 AI-Assisted Development
 
-This project uses an **AI-Agentic Development Model** where AI tools perform the majority of development work under human oversight.
+This project uses an **AI-Assisted Development Model** where AI tools perform the majority of development work under human oversight.
 
 | Role | Allocation | Responsibilities |
 |------|------------|------------------|
@@ -445,7 +445,7 @@ Cloud Build: CI/CD
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft (AWS/Go, $425K) |
+| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft (AWS/Go, $425K) |
 | 2.0.0 | 2025-12-03 | Claude | Firebase architecture, $80K, 4 months |
 || 3.0.0 | 2025-12-05 | Claude | React+Go architecture, $95K, 5 months, mobile included |
 || **4.0.0** | **2025-12-05** | **Claude** | **Rebrand to MyShepherd, full integrations, connector strategy** |

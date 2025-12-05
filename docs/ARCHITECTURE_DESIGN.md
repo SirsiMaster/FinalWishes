@@ -1,6 +1,6 @@
 # Architecture Design Document
-## FinalWishes - The Estate Operating System
-**Version:** 3.0.0
+## MyShepherd - The Estate Operating System
+**Version:** 4.0.0
 **Date:** December 5, 2025
 
 ---
@@ -22,7 +22,7 @@
          └──────────┴─────────┴───────────┴───────────────┘
                               │
 ┌─────────────────────────────┴─────────────────────────────┐
-│                    FINALWISHES PLATFORM                    │
+│                    MYSHEPHERD PLATFORM                     │
 ├───────────────────────────────────────────────────────────┤
 │   ┌─────────────────────────────────────────────────┐     │
 │   │              Client Applications                 │     │
@@ -150,7 +150,7 @@ api/
 ### 2.3 API Design
 
 ```
-Base URL: https://api.finalwishes.app/v1
+Base URL: https://api.myshepherd.app/v1
 
 Authentication:
   POST   /auth/register
@@ -260,7 +260,7 @@ web/
 
 ### 3.3 Design System
 
-Following the established FinalWishes brand:
+Following the established MyShepherd brand:
 - **Colors:** Royal Blue (#1e3a8a), Gold (#C8A951), Navy (#0f172a)
 - **Typography:** Cinzel (headings), Inter (body)
 - **Components:** Glass panels, gold accents, status dots
@@ -513,3 +513,4 @@ mobile/
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 2.0.0 | 2025-11-26 | Legacy Team | Added Go backend structure |
 | 3.0.0 | 2025-12-05 | Claude | Complete rewrite for React+Go+React Native, GCP-only, FinalWishes branding |
+| **4.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd** |

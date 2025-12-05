@@ -9,7 +9,7 @@ If my approach is flawed, tell me immediately. Product quality > accommodation.
 
 ---
 
-### **RULE 1: CHECK SIRSI FIRST, THEN LEGACY**
+### **RULE 1: CHECK SIRSI FIRST, THEN MYSHEPHERD**
 Before building anything, check if it exists in Sirsi's universal library (`/Users/thekryptodragon/Development/sirsimaster-component-library`) or Assiduous codebase (`/Users/thekryptodragon/Development/assiduous`). Everything we build flows back to Sirsi eventually - that's the virtuous cycle.
 
 ---
@@ -68,66 +68,25 @@ The goal is a world-class product. Everything else is negotiable.
 
 ---
 
-## Agentic Development Model
-
-### Agent Architecture
-Development is organized into **domain-specific agents**, each responsible for a discrete area of the codebase. When working on a feature, load the relevant agent's context file first.
-
-| Agent | Domain | Context File |
-|-------|--------|-------------|
-| **Auth** | Authentication, users, sessions | `agents/auth/AGENT.md` |
-| **Estate** | Estates, assets, beneficiaries, phases | `agents/estate/AGENT.md` |
-| **Vault** | Document storage, OCR, encryption | `agents/vault/AGENT.md` |
-| **Compliance** | 6-state probate rules, templates | `agents/compliance/AGENT.md` |
-| **Notify** | Emails, push, SMS, letters | `agents/notify/AGENT.md` |
-| **LLM** | Vertex AI, guidance, recommendations | `agents/llm/AGENT.md` |
-
-### Working with Agents
-1. **Before starting work:** Read the relevant `AGENT.md` file(s)
-2. **Stay in domain:** Each agent owns specific Firestore collections, Functions, and UI components
-3. **Update status:** Mark checkboxes in AGENT.md as features complete
-4. **Cross-agent work:** When touching multiple domains, load all relevant agent contexts
-5. **Add to changelog:** Update the agent's changelog when making changes
-
-### Agent Dependencies
-```
-                    ┌─────────┐
-                    │  Auth   │ (root - no dependencies)
-                    └────┬────┘
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-    ┌─────────┐    ┌─────────┐    ┌─────────────┐
-    │ Estate  │◄───│  Vault  │    │ Compliance  │
-    └────┬────┘    └────┬────┘    └──────┬──────┘
-         │              │                │
-         └──────────────┼────────────────┘
-                        ▼
-                  ┌─────────┐
-                  │ Notify  │
-                  └────┬────┘
-                       ▼
-                  ┌─────────┐
-                  │   LLM   │ (depends on all)
-                  └─────────┘
-```
-
-### Invoking an Agent
-To work on a specific domain, say:
-- "Work on Auth" → Load `agents/auth/AGENT.md`
-- "Work on Estate" → Load `agents/estate/AGENT.md`
-- "Work on Compliance for Illinois" → Load `agents/compliance/AGENT.md`
-
----
-
 ## Project Overview
-**FinalWishes** is "The Estate Operating System" - an end-of-life estate management platform with web and native mobile applications. The project uses AI-agentic development (Claude + AI tools) with no human developer team.
+**MyShepherd** is "The Estate Operating System" - an end-of-life estate management and settlement platform with web and native mobile applications. The project uses AI-assisted development (Claude + AI tools).
+
+**Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
 **Platform Status:** Phase 1 - Foundation (Auth + Core DB)
 
-**Development Model:** AI-Agentic (Claude as Stack Leader)
+**Development Model:** AI-Assisted (Claude + Warp + Cursor)
 
 **Timeline:** 5 months (20 weeks) - See `proposals/SOW.md`
+
+**Launch States (Priority Order):**
+1. Maryland (MDEC e-filing statewide)
+2. Illinois (e-filing available)
+3. Minnesota (MNCIS statewide, UPC simplified)
+4. DC (build connector for limited e-filing)
+5. Virginia (build connector for partial e-filing)
+
+**Market Justification:** See `docs/MARKET_JUSTIFICATION.md`
 
 ## Technology Stack (GCP)
 - **Web Frontend:** React 18 + Vite + TailwindCSS
@@ -156,7 +115,7 @@ To work on a specific domain, say:
 
 ### How It Works
 - Theme toggle button in nav (sun/moon icon)
-- Preference stored in `localStorage` key `legacy-theme`
+- Preference stored in `localStorage` key `myshepherd-theme`
 - Falls back to system preference (`prefers-color-scheme`)
 - Default: dark theme
 
@@ -198,13 +157,13 @@ navLink: '#4B5563'
 
 ## File Structure
 ```
-FinalWishes/
+MyShepherd/
 ├── public/                 # ⚠️ Marketing site - Firebase Hosting
 │   ├── index.html          # Marketing landing page
 │   ├── proposals/          # Cost proposal & SOW pages
 │   ├── docs/               # Public documentation
 │   └── assets/             # Static assets
-├── web/                    # React 18 web application (future)
+├── web/                    # React 18 web application
 │   ├── src/
 │   │   ├── components/     # React components
 │   │   ├── pages/          # Route pages
@@ -213,23 +172,16 @@ FinalWishes/
 │   │   └── lib/            # Utilities
 │   ├── vite.config.ts
 │   └── package.json
-├── mobile/                 # React Native + Expo (future)
+├── mobile/                 # React Native + Expo
 │   ├── src/
 │   ├── app.json
 │   └── package.json
-├── api/                    # Go backend (future)
+├── api/                    # Go backend
 │   ├── cmd/api/            # Entry point
 │   ├── internal/           # Domain logic
 │   ├── pkg/                # Shared packages
 │   ├── Dockerfile
 │   └── go.mod
-├── agents/                 # Domain agent contexts (not deployed)
-│   ├── auth/AGENT.md
-│   ├── estate/AGENT.md
-│   ├── vault/AGENT.md
-│   ├── compliance/AGENT.md
-│   ├── notify/AGENT.md
-│   └── llm/AGENT.md
 ├── docs/                   # Platform documentation
 │   ├── ADR-*.md            # Architecture Decision Records
 │   └── *.md                # Technical docs
@@ -254,7 +206,7 @@ cd "/Users/thekryptodragon/Development/111 Venture Studio/Legacy"
 git add -A && git commit -m "message" && git push origin main
 firebase deploy --only hosting
 ```
-Live site: https://legacy-estate-os.web.app (will migrate to finalwishes.app)
+Live site: https://legacy-estate-os.web.app (will migrate to myshepherd.app)
 
 ## Design Tokens (CSS Variables)
 ```css
@@ -319,9 +271,9 @@ Live site: https://legacy-estate-os.web.app (will migrate to finalwishes.app)
 - **Architecture decisions:** `docs/ARCHITECTURE_DESIGN.md`
 - **API contracts:** `docs/API_SPECIFICATION.md`
 - **Data schema:** `docs/DATA_MODEL.md`
-- **Cost estimate:** `proposals/COST_PROPOSAL.md` ($80K-$100K AI-agentic)
-- **Timeline:** 4-month MVP (see `docs/PROJECT_SCOPE.md`)
-- **Agent contexts:** `agents/*/AGENT.md`
+- **Cost estimate:** `proposals/COST_PROPOSAL.md` ($95K)
+- **Timeline:** 5 months (see `docs/PROJECT_SCOPE.md`)
+- **Documentation index:** `docs/DOCUMENTATION_INDEX.md`
 
-## MVP Launch States
-Illinois, Michigan, Minnesota, DC, Virginia, Maryland
+## Launch States
+Maryland, Illinois, Minnesota, DC, Virginia

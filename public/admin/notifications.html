@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Notifications — Legacy Estate OS</title>
+    <title>Notifications — MyShepherd</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -283,7 +283,7 @@ You have been designated as the Executor for the {{estate_name}} estate. This ro
 Please review the estate documentation and contact our office to begin the administration process.
 
 Best regards,
-Legacy Estate Management`
+MyShepherd Estate Management`
             },
             document_request: {
                 subject: 'Document Request - {{estate_name}}',
@@ -294,7 +294,7 @@ We require the following documents to proceed with the administration of the {{e
 - [Document 1]
 - [Document 2]
 
-Please upload these documents to your Legacy Estate portal or mail copies to our office.
+Please upload these documents to your MyShepherd Estate portal or mail copies to our office.
 
 Thank you for your cooperation.`
             },
@@ -304,10 +304,10 @@ Thank you for your cooperation.`
 
 We are pleased to inform you that the {{estate_name}} estate has progressed to the {{phase}} phase.
 
-You can view detailed status updates by logging into your Legacy Estate portal.
+You can view detailed status updates by logging into your MyShepherd Estate portal.
 
 Best regards,
-Legacy Estate Management`
+MyShepherd Estate Management`
             },
             deadline_reminder: {
                 subject: 'Important Deadline Reminder - {{estate_name}}',
@@ -325,7 +325,7 @@ Thank you.`
         };
         
         async function init() {
-            console.log('🏛️ Legacy Estate OS - Notifications');
+            console.log('🏛️ MyShepherd - Notifications');
             await loadEstates();
             await loadNotifications();
         }

@@ -1,5 +1,5 @@
 # User Stories
-## Legacy - The Estate Operating System
+## MyShepherd - The Estate Operating System
 **Version:** 1.0.0
 **Date:** November 26, 2025
 
@@ -737,4 +737,4 @@
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft |

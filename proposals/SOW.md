@@ -1,7 +1,7 @@
 # Statement of Work (SOW)
-## FinalWishes Platform - MVP Development
+## MyShepherd Platform Development
 
-**Document Version:** 3.0.0
+**Document Version:** 4.0.0
 **Date:** December 5, 2025
 **Proposal Valid Until:** February 28, 2026
 
@@ -9,18 +9,21 @@
 
 ## 1. Executive Summary
 
-This Statement of Work (SOW) defines the scope, deliverables, timeline, and terms for the development of the **FinalWishes Platform MVP** — a cross-platform estate management application serving web, iOS, and Android users.
+This Statement of Work (SOW) defines the scope, deliverables, timeline, and terms for the development of the **MyShepherd Platform** — a cross-platform estate settlement application serving web, iOS, and Android users.
+
+**Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
 ### Project Overview
 
 | Attribute | Value |
 |-----------|-------|
-| **Product** | FinalWishes - The Estate Operating System |
+| **Product** | MyShepherd - The Estate Operating System |
 | **Duration** | 5 months (20 weeks) |
 | **Investment** | $95,000 |
 | **Development Model** | AI-Agentic (Claude + Warp + Cursor) |
+| **Launch States** | Maryland, Illinois, Minnesota, DC, Virginia |
 
-### Technology Stack
+---
 
 | Layer | Technology |
 |-------|------------|
@@ -38,11 +41,12 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 
 ### 2.1 Business Objectives
 
-1. Launch a complete MVP (web + iOS + Android) within 5 months
-2. Enable users to organize estate information securely
-3. Automate the estate settlement notification process
-4. Achieve initial market validation with early adopters
-5. Establish foundation for SOC 2 Type II certification
+1. Launch complete platform (web + iOS + Android) within 5 months
+2. Shepherd users through every step of estate settlement (manual or automated)
+3. Build connectors for states without e-filing (DC, Virginia)
+4. Create definitive probate form library (~75 forms across 5 states)
+5. Full integration with Plaid, Lob, and DocuSign
+6. Establish foundation for SOC 2 Type II certification
 
 ### 2.2 Technical Objectives
 
@@ -106,11 +110,24 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 | Rate Limiting | 100 req/min per user |
 | Audit Logging | All actions logged to Cloud Logging |
 
-### 3.5 Excluded from Scope (Post-MVP)
+### 3.5 Included Integrations
 
-- Plaid integration (automated asset discovery)
-- Lob integration (certified mail)
-- Full AI Assistant ("Shepherd")
+| Integration | Capability | Build Cost | Monthly OpEx* |
+|-------------|------------|------------|---------------|
+| **Plaid** | Full account discovery (banking, investments, liabilities) | Included | $0.30-$1.50/link |
+| **Lob** | Certified mail automation with tracking | Included | $1.50-$3.00/letter |
+| **DocuSign** | E-signature for beneficiary releases and forms | Included | $25-$40/envelope |
+| **Google Document AI** | OCR for document processing | Included | ~$1.50/1K pages |
+| **SendGrid** | Transactional email | Included | Free tier → $20/mo |
+| **Vertex AI** | Intelligent process guidance ("The Shepherd") | Included | ~$0.002/1K chars |
+
+*OpEx costs are usage-based and paid by the client post-launch. Not included in $95K build cost.*
+
+### 3.6 Future Expansion (Post-Launch)
+
+- Additional states (45 remaining)
+- Credit bureau integration (requires certification)
+- Court e-filing API partnerships
 - Multi-language support
 - Cryptocurrency wallet integration
 - White Glove tier features
@@ -125,10 +142,10 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 
 | ID | Deliverable | Technology | Acceptance Criteria |
 |----|-------------|------------|---------------------|
-| D1 | FinalWishes API | Go on Cloud Run | All endpoints functional, <200ms p95 latency |
-| D2 | FinalWishes Web | React + Vite | Deployed, responsive, WCAG 2.1 AA |
-| D3 | FinalWishes iOS | React Native + Expo | Published on App Store |
-| D4 | FinalWishes Android | React Native + Expo | Published on Google Play |
+| D1 | MyShepherd API | Go on Cloud Run | All endpoints functional, <200ms p95 latency |
+|| D2 | MyShepherd Web | React + Vite | Deployed, responsive, WCAG 2.1 AA |
+|| D3 | MyShepherd iOS | React Native + Expo | Published on App Store |
+|| D4 | MyShepherd Android | React Native + Expo | Published on Google Play |
 | D5 | Admin Dashboard | React | User management, estate viewing |
 
 ### 4.2 Documentation Deliverables
@@ -246,7 +263,7 @@ The Client shall provide:
 
 4. **Domain Expertise**
    - Estate settlement workflow validation
-   - State-specific requirements for 6 launch states
+   - State-specific requirements for 5 launch states
    - Institution notification requirements
 
 ---
@@ -326,8 +343,8 @@ The Client shall provide:
 4. Third-party APIs (Firebase, Stripe, SendGrid) remain stable
 5. No significant App Store guideline changes during development
 6. Requirements finalized after Week 8 (scope freeze)
-7. English-only for MVP
-8. 6 launch states: Illinois, Michigan, Minnesota, DC, Virginia, Maryland
+7. English-only for initial release
+8. 5 launch states: Maryland, Illinois, Minnesota, DC, Virginia
 
 ---
 
@@ -430,4 +447,5 @@ Cloud Build: CI/CD
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft (AWS/Go, $425K) |
 | 2.0.0 | 2025-12-03 | Claude | Firebase architecture, $80K, 4 months |
-| **3.0.0** | **2025-12-05** | **Claude** | **React+Go architecture, $95K, 5 months, mobile included** |
+|| 3.0.0 | 2025-12-05 | Claude | React+Go architecture, $95K, 5 months, mobile included |
+|| **4.0.0** | **2025-12-05** | **Claude** | **Rebrand to MyShepherd, full integrations, connector strategy** |

@@ -1,6 +1,6 @@
 /**
  * Firebase Modular SDK Initialization
- * Legacy Estate OS - "The Estate Operating System"
+ * MyShepherd - "The Estate Operating System"
  * 
  * IMPROVEMENTS OVER ASSIDUOUS:
  * - Better TypeScript-style JSDoc annotations
@@ -11,7 +11,7 @@
  * - Cleaner service separation
  * 
  * @version 2.0.0
- * @author Legacy AI Development Team
+ * @author MyShepherd AI Development Team
  */
 
 // Import Firebase modular SDK
@@ -63,7 +63,7 @@ import {
 // ============================================================================
 
 /**
- * Firebase configuration - Legacy Estate OS
+ * Firebase configuration - MyShepherd
  * @type {Object}
  */
 const firebaseConfig = {
@@ -199,7 +199,7 @@ export const AuthService = {
                 firstName: userData.firstName || '',
                 lastName: userData.lastName || '',
                 displayName,
-                role: userData.role || 'principal', // Legacy roles: principal, executor, heir, admin
+                role: userData.role || 'principal', // User roles: principal, executor, heir, admin
                 phone: userData.phone || '',
                 status: userData.role === 'executor' ? 'pending' : 'active',
                 createdAt: serverTimestamp(),

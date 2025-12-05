@@ -1,6 +1,6 @@
 /**
  * Sidebar Component
- * Legacy Estate OS - Reusable navigation sidebar
+ * MyShepherd - Reusable navigation sidebar
  * 
  * Usage:
  *   <div id="sidebar-root" data-active="dashboard"></div>
@@ -370,7 +370,7 @@
     }
     
     // Expose API
-    window.LegacySidebar = {
+    window.MyShepherdSidebar = {
         render: renderSidebar,
         setActive: setActiveItem
     };

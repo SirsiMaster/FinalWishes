@@ -1,8 +1,8 @@
 # API Specification
-## FinalWishes - The Estate Operating System
-**Version:** 2.0.0
+## MyShepherd - The Estate Operating System
+**Version:** 3.0.0
 **Date:** December 5, 2025
-**Base URL:** `https://api.finalwishes.app/v1`
+**Base URL:** `https://api.myshepherd.app/v1`
 
 ---
 
@@ -715,3 +715,4 @@ GET /payments/status?session_id=cs_...
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 2.0.0 | 2025-12-05 | Claude | FinalWishes branding, Cloud Storage URLs, client-side encryption |
+| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd** |

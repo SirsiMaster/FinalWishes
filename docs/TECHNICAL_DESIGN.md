@@ -1,6 +1,6 @@
 # Technical Design Document
-## FinalWishes - The Estate Operating System
-**Version:** 2.0.0
+## MyShepherd - The Estate Operating System
+**Version:** 3.0.0
 **Date:** December 5, 2025
 
 ---
@@ -440,8 +440,8 @@ func (s *PaymentService) CreateCheckoutSession(ctx context.Context, userID, tier
     params := &stripe.CheckoutSessionParams{
         Customer: stripe.String(user.StripeCustomerID),
         Mode:     stripe.String(string(stripe.CheckoutSessionModePayment)),
-        SuccessURL: stripe.String("https://app.finalwishes.app/payment/success?session_id={CHECKOUT_SESSION_ID}"),
-        CancelURL:  stripe.String("https://app.finalwishes.app/pricing"),
+        SuccessURL: stripe.String("https://app.myshepherd.app/payment/success?session_id={CHECKOUT_SESSION_ID}"),
+        CancelURL:  stripe.String("https://app.myshepherd.app/pricing"),
         LineItems: []*stripe.CheckoutSessionLineItemParams{
             {
                 Price:    stripe.String(prices[tier]),
@@ -696,3 +696,4 @@ service cloud.firestore {
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Go/GCP/Firebase Auth/Cloud KMS stack |
+| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd** |

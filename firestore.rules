@@ -4,16 +4,17 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // =============================================
-    // DEVELOPMENT MODE - Allow all reads for admin pages
-    // TODO: Remove before production
+    // MyShepherd - The Estate Operating System
+    // Security Rules v2.0.0 - December 5, 2025
     // =============================================
-    match /{document=**} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
+    // 
+    // IMPORTANT: No wildcard rules. All access must be explicit.
+    // These rules enforce proper authentication and authorization.
+    //
+    // =============================================
     
     // =============================================
-    // AUTH AGENT - User Collections
+    // AUTH - User Collections
     // =============================================
     
     // Users collection - each user can only access their own document

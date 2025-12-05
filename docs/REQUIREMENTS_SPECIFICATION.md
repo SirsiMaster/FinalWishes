@@ -1,5 +1,5 @@
 # Requirements Specification
-## Legacy - The Estate Operating System
+## MyShepherd - The Estate Operating System
 **Version:** 1.1.0
 **Date:** November 26, 2025
 **Status:** Draft - Pending Approval
@@ -9,20 +9,20 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This document specifies the functional and non-functional requirements for the Legacy platform—an AI-powered estate management system designed to automate end-of-life administration across web, iOS, and Android platforms.
+This document specifies the functional and non-functional requirements for the MyShepherd platform—an AI-powered estate management system designed to automate end-of-life administration across web, iOS, and Android platforms.
 
 ### 1.2 Scope
 Legacy transforms the chaotic 18-month estate settlement process into a streamlined 4-phase protocol: **Intake → Verify → Notify → Distribute**. The system serves three primary user types: Principals (account holders planning their estate), Executors (managing an estate post-death), and Heirs (receiving assets).
 
 ### 1.3 Geographic Scope (MVP)
-Initial launch supports **6 states** with state-specific probate rules and institution templates:
+Initial launch supports **5 jurisdictions** with state-specific probate rules and institution templates:
 
 | Region | States | Notes |
 |--------|--------|-------|
-| **Midwest** | Illinois, Michigan, Minnesota | Different probate thresholds |
+| **Midwest** | Illinois, Minnesota | Different probate thresholds |
 | **Mid-Atlantic** | District of Columbia, Virginia, Maryland | Common metro area (DC/MD/VA) |
 
-*Additional states targeted for v1.1+*
+*Additional states targeted for v1.1+ (including Michigan)*
 
 ### 1.4 Definitions
 | Term | Definition |
@@ -127,7 +127,7 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 
 #### FR-501: Institution Notification
 - System SHALL generate legally-compliant notification letters
-- System SHALL support institution templates for 6 launch states (IL, MI, MN, DC, VA, MD)
+- System SHALL support institution templates for 5 launch states (IL, MN, DC, VA, MD)
 - System SHALL track notification status (sent, received, acknowledged)
 - System SHOULD support certified mail integration (via Lob or similar) in v1.1
 
@@ -135,10 +135,9 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 - System SHALL generate IRS Form SS-4 (EIN application for estate)
 - System SHALL generate credit bureau notification requests
 - System SHALL track Social Security Administration notification
-- System SHALL provide state-specific probate guidance for 6 launch states:
+- System SHALL provide state-specific probate guidance for 5 launch states:
   - Illinois: Small estate affidavit threshold, supervised vs. independent administration
-  - Michigan: Informal vs. formal probate, small estate procedures
-  - Minnesota: Informal probate, summary administration options
+  - Minnesota: Informal probate, summary administration options (UPC simplified)
   - District of Columbia: Standard vs. abbreviated probate
   - Virginia: Qualification requirements, commissioner of accounts
   - Maryland: Register of Wills procedures, orphans' court
@@ -361,5 +360,5 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), Firebase/GCP constraints, 4-month timeline |

@@ -1,6 +1,6 @@
 # Data Model
-## FinalWishes - The Estate Operating System
-**Version:** 2.0.0
+## MyShepherd - The Estate Operating System
+**Version:** 3.0.0
 **Date:** December 5, 2025
 **Database:** Firestore (NoSQL) + Cloud SQL (PII)
 
@@ -490,7 +490,7 @@ interface NotificationTemplate {
   phone?: string;
   
   // State-specific
-  states: string[];              // ['IL', 'MI', 'MN', 'DC', 'VA', 'MD']
+  states: string[];              // ['MD', 'IL', 'MN', 'DC', 'VA']
   
   // Status
   isActive: boolean;
@@ -671,3 +671,4 @@ CREATE INDEX idx_heir_pii_heir ON heir_pii(heir_id);
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial PostgreSQL schema |
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Firestore + Cloud SQL hybrid |
+| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd, updated to 5 launch states** |

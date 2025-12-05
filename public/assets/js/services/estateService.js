@@ -1,6 +1,6 @@
 /**
  * Estate Service
- * Legacy Estate OS - Estate management operations
+ * MyShepherd - Estate management operations
  * Uses Firebase Modular SDK
  * 
  * @version 2.0.0

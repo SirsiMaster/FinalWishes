@@ -1,6 +1,6 @@
 /**
  * Universal Header Component
- * Legacy Estate OS - Reusable page header
+ * MyShepherd - Reusable page header
  * 
  * Usage:
  *   <header id="universal-header-root" 
@@ -368,8 +368,8 @@
         });
         
         // Expose update function
-        window.LegacyHeader = window.LegacyHeader || {};
-        window.LegacyHeader.updateNotificationCount = updateCount;
+        window.MyShepherdHeader = window.MyShepherdHeader || {};
+        window.MyShepherdHeader.updateNotificationCount = updateCount;
     }
     
     /**
@@ -391,7 +391,7 @@
     }
     
     // Expose API
-    window.LegacyHeader = window.LegacyHeader || {};
-    window.LegacyHeader.render = renderHeader;
-    window.LegacyHeader.setTitle = setTitle;
+    window.MyShepherdHeader = window.MyShepherdHeader || {};
+    window.MyShepherdHeader.render = renderHeader;
+    window.MyShepherdHeader.setTitle = setTitle;
 })();

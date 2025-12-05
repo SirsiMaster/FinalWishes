@@ -1,6 +1,6 @@
 # Project Scope Document
-## FinalWishes - The Estate Operating System
-**Version:** 2.0.0
+## MyShepherd - The Estate Operating System
+**Version:** 3.0.0
 **Date:** December 5, 2025
 **Project Duration:** 5 Months (20 Weeks)
 
@@ -8,19 +8,20 @@
 
 ## 1. Executive Summary
 
-FinalWishes is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 5-month MVP development sprint.
+MyShepherd is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 5-month development sprint.
+
+**Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
 **Goal:** Transform estate settlement from an 18-month bureaucratic nightmare into a streamlined, technology-assisted process.
 
-### MVP Geographic Scope
-Initial launch supports **6 states** with state-specific probate rules and institution templates:
+### Geographic Scope: 5 Launch States
 
-| Region | States |
-|--------|--------|
-| **Midwest** | Illinois, Michigan, Minnesota |
-| **Mid-Atlantic/DC Metro** | District of Columbia, Virginia, Maryland |
+| Category | States | E-Filing Status |
+|----------|--------|----------------|
+| **E-Filing Available** | Maryland (MDEC), Illinois, Minnesota (MNCIS) | Integrate with existing APIs |
+| **Build Connectors** | DC, Virginia | Automate paper processes, become benchmark |
 
-*Expansion to additional states in v1.1+*
+**Innovation Strategy:** For DC and Virginia, where court systems lack digital interfaces, MyShepherd will ingest the paper process and forms, automate form completion, and provide fillable/completed forms as currently required. This positions us as first movers and the benchmark for eventual state digitization.
 
 ---
 
@@ -29,17 +30,19 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 ### 2.1 Primary Objectives
 1. Deliver functional web application (React) and native mobile apps (React Native)
 2. Establish secure, scalable GCP infrastructure (Cloud Run, Firestore, Cloud SQL)
-3. Implement state-specific probate guidance for 6 launch states (IL, MI, MN, DC, VA, MD)
-4. Achieve SOC 2 readiness (Type I certification process initiated)
-5. Build LLM-powered process intelligence for estate workflows (Vertex AI)
+3. Implement state-specific probate guidance for 5 launch states (MD, IL, MN, DC, VA)
+4. Build court system connectors for states without e-filing (DC, VA)
+5. Achieve SOC 2 readiness (Type I certification process initiated)
+6. Build LLM-powered process intelligence for estate workflows (Vertex AI)
+7. Integrate full suite of external services (Plaid, Lob, DocuSign) from day one
 
 ### 2.2 Success Metrics
 | Metric | Target | Measurement |
 |--------|--------|-------------|
-| On-time delivery | 100% of MVP features | Sprint completion |
+| On-time delivery | 100% of features | Sprint completion |
 | Native apps | iOS + Android in stores | App Store approval |
 | Uptime | 99.9% | Post-launch week 1 |
-| State coverage | 6 states with full templates | Content audit |
+| State coverage | 5 states with full templates | Content audit |
 | User registration flow | <3 minutes | UX testing |
 | Document upload speed | <30 seconds (50MB) | Performance testing |
 | Security audit | Zero critical findings | Penetration test |
@@ -48,7 +51,7 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 
 ## 3. Scope Definition
 
-### 3.1 In-Scope (MVP Features)
+### 3.1 In-Scope Features
 
 #### Phase 1: Foundation (Weeks 1-4)
 **Backend Infrastructure**
@@ -92,11 +95,12 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 - Multi-executor confirmation (2-of-3)
 - 72-hour cooling-off implementation
 
-**Notify Phase (Partial)**
-- Institution templates for 6 launch states (IL, MI, MN, DC, VA, MD)
+**Notify Phase**
+- Institution templates for 5 launch states (MD, IL, MN, DC, VA)
 - State-specific probate guidance and requirements
 - Letter generation (PDF)
-- Basic tracking (sent/pending)
+- Certified mail integration (Lob)
+- Full tracking (sent/pending/delivered/returned)
 
 #### Phase 3: Vault & Security (Weeks 9-12)
 **Document Vault**
@@ -107,8 +111,21 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 
 **Notifications**
 - Institution letter generation
-- 6-state templates
-- Tracking system
+- 5-state templates
+- Certified mail via Lob integration
+- Full tracking system
+
+**External Integrations**
+- Plaid (bank account discovery and verification)
+- Lob (certified mail)
+- DocuSign (e-signatures for legal documents)
+
+**Court System Connectors**
+- MDEC integration (Maryland e-filing)
+- Illinois e-filing integration
+- MNCIS integration (Minnesota e-filing)
+- DC connector (automated form completion for manual filing)
+- Virginia connector (automated form completion for partial e-filing)
 
 #### Phase 4: Mobile Apps (Weeks 13-16)
 **React Native Development**
@@ -123,7 +140,8 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 **Testing & Security**
 - Security penetration testing
 - Load testing
-- State-specific content validation (6 states)
+- State-specific content validation (5 states)
+- Legal form review by state-specific attorneys (~75 forms)
 - Documentation finalization
 
 **Launch**
@@ -132,15 +150,12 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 - Launch monitoring setup
 - User onboarding flows
 
-### 3.2 Out of Scope (Post-MVP / Future Releases)
+### 3.2 Future Expansion (Post-Launch)
 
-| Feature | Reason for Exclusion | Target Release |
-|---------|---------------------|----------------|
-| **Additional states (44 remaining)** | Requires state-specific legal research | v1.1+ |
-| Plaid integration (auto-discovery) | Complex compliance, extends timeline | v1.1 |
-| Certified mail (Lob integration) | Requires legal review, contract setup | v1.1 |
+| Feature | Rationale | Target Release |
+|---------|-----------|----------------|
+| **Additional states (45 remaining)** | Requires state-specific legal research per state | v1.1+ |
 | Spanish localization | Translation and legal review | v1.2 |
-| Distribute Phase (full) | Requires banking partnerships | v1.3 |
 | Cryptocurrency support | Regulatory complexity | v2.0 |
 | White Glove tier (human agents) | Operational setup required | v2.0 |
 | HIPAA compliance | Requires dedicated audit | v2.0 |
@@ -151,19 +166,23 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 2. Domain and SSL certificates are procured
 3. Legal disclaimers and terms of service are provided
 4. Brand assets (logo, colors, fonts) are finalized
-5. State-specific probate rules researched for 6 launch states
-6. Third-party API keys are obtained (Stripe, SendGrid, etc.)
+5. State-specific probate rules researched for 5 launch states
+6. Third-party API keys are obtained (Plaid, Lob, DocuSign, Stripe, SendGrid, etc.)
 7. Apple Developer + Google Play accounts ready by Week 14
+8. State attorney engagement for legal form review ($5-10K from contingency)
 
 ### 3.4 Dependencies
 | Dependency | Owner | Due Date |
 |------------|-------|----------|
-| Legal review of notification templates (6 states) | Legal Counsel | Week 6 |
-| State-specific probate research (IL, MI, MN, DC, VA, MD) | Legal/Research | Week 4 |
+| Legal review of notification templates (5 states) | Legal Counsel | Week 6 |
+| State-specific probate research (MD, IL, MN, DC, VA) | Legal/Research | Week 4 |
 | Terms of Service draft | Legal Counsel | Week 4 |
 | Privacy Policy draft | Legal Counsel | Week 4 |
 | Brand guidelines finalization | Design | Week 1 |
 | Firebase project setup | Stack Leader | Day 1 |
+| Plaid API credentials | External | Week 6 |
+| Lob API credentials | External | Week 6 |
+| DocuSign API credentials | External | Week 8 |
 
 ---
 
@@ -172,12 +191,13 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 ### 4.1 Software Deliverables
 | Deliverable | Description | Acceptance Criteria |
 |-------------|-------------|---------------------|
-| FinalWishes API | Go backend on Cloud Run | All endpoints functional, documented |
-| FinalWishes Web | React web application | Deployed, responsive, accessible |
-| FinalWishes iOS | React Native iOS app | Live in App Store |
-| FinalWishes Android | React Native Android app | Live in Play Store |
+| MyShepherd API | Go backend on Cloud Run | All endpoints functional, documented |
+| MyShepherd Web | React web application | Deployed, responsive, accessible |
+| MyShepherd iOS | React Native iOS app | Live in App Store |
+| MyShepherd Android | React Native Android app | Live in Play Store |
 | Admin Dashboard | Internal admin interface | User management, estate viewing |
-| State Templates | Probate guides for 6 states | IL, MI, MN, DC, VA, MD complete |
+| State Templates | Probate guides for 5 states | MD, IL, MN, DC, VA complete |
+| Court Connectors | Automated form completion | MD, IL, MN (e-filing), DC, VA (paper) |
 
 ### 4.2 Documentation Deliverables
 | Document | Description |
@@ -204,10 +224,10 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 
 ```
 Week 1-4:   [████████] Foundation - GCP setup, Auth, Go API, React scaffold
-Week 5-8:   [████████] Core - Estate CRUD, Asset management, 6-state templates
-Week 9-12:  [████████] Vault - Document encryption, Notifications
+Week 5-8:   [████████] Core - Estate CRUD, Asset management, 5-state templates
+Week 9-12:  [████████] Vault - Document encryption, Integrations (Plaid/Lob/DocuSign), Court connectors
 Week 13-16: [████████] Mobile - React Native iOS + Android
-Week 17-20: [████████] Launch - Pen test, App Store submission
+Week 17-20: [████████] Launch - Pen test, Legal form review, App Store submission
 ```
 
 ### 5.1 Key Milestones
@@ -226,7 +246,7 @@ Week 17-20: [████████] Launch - Pen test, App Store submission
 ### 6.1 Time Constraints
 - Hard deadline: 5 months (20 weeks) from project start
 - No feature creep permitted after Week 12
-- State expansion deferred to v1.1
+- State expansion (beyond 5 launch states) deferred to v1.1
 
 ### 6.2 Budget Constraints
 - See COST_PROPOSAL.md for detailed breakdown
@@ -234,14 +254,14 @@ Week 17-20: [████████] Launch - Pen test, App Store submission
 - Third-party services: Approximately $1,500/month
 
 ### 6.3 Resource Constraints
-- Development model: AI-agentic (Claude + AI tools)
-- Human oversight and review only
+- Development model: AI-assisted (Claude + Warp + Cursor)
+- Human oversight and review
 - No traditional dev team
 
 ### 6.4 Technical Constraints
 - Must use GCP infrastructure (Cloud Run, Firestore, Cloud SQL, Cloud KMS)
 - React Native + Expo for mobile apps
-- Must support 6 launch states: IL, MI, MN, DC, VA, MD
+- Must support 5 launch states: MD, IL, MN, DC, VA
 
 ---
 
@@ -280,11 +300,13 @@ Week 17-20: [████████] Launch - Pen test, App Store submission
 The project is considered complete when:
 
 1. **Functional Completeness**
-   - [ ] All MVP features implemented per this document
+   - [ ] All features implemented per this document
    - [ ] Web application deployed and accessible
    - [ ] iOS app live in App Store
    - [ ] Android app live in Play Store
-   - [ ] 6-state probate templates complete (IL, MI, MN, DC, VA, MD)
+   - [ ] 5-state probate templates complete (MD, IL, MN, DC, VA)
+   - [ ] Court connectors operational (3 e-filing, 2 paper automation)
+   - [ ] External integrations live (Plaid, Lob, DocuSign)
 
 2. **Quality Gates**
    - [ ] Zero P0/P1 bugs open
@@ -321,3 +343,4 @@ The project is considered complete when:
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
 | 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |
+| **3.0.0** | **2025-12-05** | **Claude** | **MyShepherd rebrand, removed MVP language, 5 launch states (MD, IL, MN, DC, VA), innovation strategy for connector-building, full integrations (Plaid/Lob/DocuSign) from day one** |

@@ -1,10 +1,10 @@
 /**
- * Legacy Theme Toggle - Fixed for photo sections
+ * MyShepherd Theme Toggle - Fixed for photo sections
  */
 (function() {
     'use strict';
     
-    var STORAGE_KEY = 'legacy-theme';
+    var STORAGE_KEY = 'myshepherd-theme';
     
     var themes = {
         dark: {
@@ -131,5 +131,5 @@
     
     // Expose globally
     window.toggleTheme = toggleTheme;
-    window.LegacyTheme = { toggle: toggleTheme, apply: applyTheme, get: getTheme };
+    window.MyShepherdTheme = { toggle: toggleTheme, apply: applyTheme, get: getTheme };
 })();

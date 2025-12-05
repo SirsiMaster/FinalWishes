@@ -1,8 +1,8 @@
 # API Specification
-## Legacy - The Estate Operating System
-**Version:** 1.0.0
-**Date:** November 26, 2025
-**Base URL:** `https://api.legacy.app/v1`
+## FinalWishes - The Estate Operating System
+**Version:** 2.0.0
+**Date:** December 5, 2025
+**Base URL:** `https://api.finalwishes.app/v1`
 
 ---
 
@@ -442,12 +442,15 @@ POST /estates/:estateId/documents/upload-url
 ```json
 {
   "data": {
-    "upload_url": "https://s3.amazonaws.com/...",
+    "upload_url": "https://storage.googleapis.com/...",
     "document_id": "uuid",
+    "plaintext_dek": "base64-encoded-key",
     "expires_at": "2025-01-01T00:15:00Z"
   }
 }
 ```
+
+**Note:** Client must encrypt file with `plaintext_dek` (AES-256-GCM) before uploading.
 
 ### 6.2 Confirm Upload
 ```
@@ -487,11 +490,14 @@ GET /estates/:estateId/documents/:docId/download
 ```json
 {
   "data": {
-    "download_url": "https://s3.amazonaws.com/...",
+    "download_url": "https://storage.googleapis.com/...",
+    "plaintext_dek": "base64-encoded-key",
     "expires_at": "2025-01-01T00:15:00Z"
   }
 }
 ```
+
+**Note:** Client must decrypt file with `plaintext_dek` (AES-256-GCM) after downloading.
 
 ### 6.6 Delete Document
 ```
@@ -708,3 +714,4 @@ GET /payments/status?session_id=cs_...
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+| 2.0.0 | 2025-12-05 | Claude | FinalWishes branding, Cloud Storage URLs, client-side encryption |

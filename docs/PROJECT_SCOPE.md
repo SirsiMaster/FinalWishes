@@ -1,14 +1,14 @@
 # Project Scope Document
-## Legacy - The Estate Operating System
-**Version:** 1.1.0
-**Date:** November 26, 2025
-**Project Duration:** 4 Months (16 Weeks)
+## FinalWishes - The Estate Operating System
+**Version:** 2.0.0
+**Date:** December 5, 2025
+**Project Duration:** 5 Months (20 Weeks)
 
 ---
 
 ## 1. Executive Summary
 
-Legacy is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 4-month MVP development sprint.
+FinalWishes is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 5-month MVP development sprint.
 
 **Goal:** Transform estate settlement from an 18-month bureaucratic nightmare into a streamlined, technology-assisted process.
 
@@ -27,17 +27,17 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 ## 2. Project Objectives
 
 ### 2.1 Primary Objectives
-1. Deliver functional web application with PWA capabilities
-2. Establish secure, scalable Firebase/GCP infrastructure
+1. Deliver functional web application (React) and native mobile apps (React Native)
+2. Establish secure, scalable GCP infrastructure (Cloud Run, Firestore, Cloud SQL)
 3. Implement state-specific probate guidance for 6 launch states (IL, MI, MN, DC, VA, MD)
 4. Achieve SOC 2 readiness (Type I certification process initiated)
-5. Build LLM-powered process intelligence for estate workflows
+5. Build LLM-powered process intelligence for estate workflows (Vertex AI)
 
 ### 2.2 Success Metrics
 | Metric | Target | Measurement |
 |--------|--------|-------------|
 | On-time delivery | 100% of MVP features | Sprint completion |
-| PWA functionality | Installable on iOS & Android | Device testing |
+| Native apps | iOS + Android in stores | App Store approval |
 | Uptime | 99.9% | Post-launch week 1 |
 | State coverage | 6 states with full templates | Content audit |
 | User registration flow | <3 minutes | UX testing |
@@ -52,11 +52,12 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 
 #### Phase 1: Foundation (Weeks 1-4)
 **Backend Infrastructure**
-- Firebase Functions (Cloud Functions for Firebase)
+- Go API on Cloud Run
 - Firestore database with security rules
-- Cloud Storage for Firebase (encrypted documents)
-- Firebase Hosting with PWA support
-- CI/CD pipeline (GitHub Actions → Firebase)
+- Cloud SQL for PII storage
+- Cloud Storage (client-side encrypted documents)
+- Cloud KMS for key management
+- CI/CD pipeline (GitHub Actions → Cloud Run + Firebase)
 
 **Authentication & User Management**
 - Email/password registration
@@ -97,26 +98,28 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 - Letter generation (PDF)
 - Basic tracking (sent/pending)
 
-#### Phase 3: LLM Integration & Polish (Weeks 9-12)
-**AI/LLM Features**
-- Vertex AI integration for process intelligence
-- State-specific guidance engine (6 states)
-- Document analysis and extraction
-- Smart task recommendations
+#### Phase 3: Vault & Security (Weeks 9-12)
+**Document Vault**
+- Client-side AES-256-GCM encryption
+- Cloud KMS key management integration
+- Document upload/download with encryption
+- Folder organization
 
-**PWA Enhancement**
-- Installable PWA for iOS and Android
-- Offline capability for critical workflows
-- Push notifications via Firebase Cloud Messaging
-- Camera-based document capture
+**Notifications**
+- Institution letter generation
+- 6-state templates
+- Tracking system
 
-**Web Application Polish**
-- Responsive design optimization
-- Accessibility audit (WCAG 2.1 AA)
-- Performance optimization
-- Error handling improvements
+#### Phase 4: Mobile Apps (Weeks 13-16)
+**React Native Development**
+- Expo project setup
+- Shared logic from web (60-70%)
+- Native biometrics (Face ID, Touch ID)
+- Push notifications (FCM)
+- Document camera capture
+- TestFlight + Play Console beta
 
-#### Phase 4: Launch Prep (Weeks 13-16)
+#### Phase 5: Launch Prep (Weeks 17-20)
 **Testing & Security**
 - Security penetration testing
 - Load testing
@@ -124,7 +127,8 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 - Documentation finalization
 
 **Launch**
-- PWA deployment and testing
+- App Store + Play Store submission
+- Web deployment
 - Launch monitoring setup
 - User onboarding flows
 
@@ -133,7 +137,6 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 | Feature | Reason for Exclusion | Target Release |
 |---------|---------------------|----------------|
 | **Additional states (44 remaining)** | Requires state-specific legal research | v1.1+ |
-| Native iOS/Android apps | PWA sufficient for MVP | v1.2 |
 | Plaid integration (auto-discovery) | Complex compliance, extends timeline | v1.1 |
 | Certified mail (Lob integration) | Requires legal review, contract setup | v1.1 |
 | Spanish localization | Translation and legal review | v1.2 |
@@ -144,12 +147,13 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 | API for third-party developers | Business development needed | v2.0 |
 
 ### 3.3 Assumptions
-1. Firebase/GCP project is available and properly configured
+1. GCP project is available and properly configured
 2. Domain and SSL certificates are procured
 3. Legal disclaimers and terms of service are provided
 4. Brand assets (logo, colors, fonts) are finalized
 5. State-specific probate rules researched for 6 launch states
 6. Third-party API keys are obtained (Stripe, SendGrid, etc.)
+7. Apple Developer + Google Play accounts ready by Week 14
 
 ### 3.4 Dependencies
 | Dependency | Owner | Due Date |
@@ -168,9 +172,10 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 ### 4.1 Software Deliverables
 | Deliverable | Description | Acceptance Criteria |
 |-------------|-------------|---------------------|
-| Legacy API | Firebase Functions backend | All endpoints functional, documented |
-| Legacy Web | Web application with PWA | Deployed, responsive, accessible, installable |
-| Legacy PWA | Progressive Web App | Installable on iOS/Android, offline capable |
+| FinalWishes API | Go backend on Cloud Run | All endpoints functional, documented |
+| FinalWishes Web | React web application | Deployed, responsive, accessible |
+| FinalWishes iOS | React Native iOS app | Live in App Store |
+| FinalWishes Android | React Native Android app | Live in Play Store |
 | Admin Dashboard | Internal admin interface | User management, estate viewing |
 | State Templates | Probate guides for 6 states | IL, MI, MN, DC, VA, MD complete |
 
@@ -186,38 +191,41 @@ Initial launch supports **6 states** with state-specific probate rules and insti
 ### 4.3 Infrastructure Deliverables
 | Component | Specification |
 |-----------|---------------|
-| Production Environment | Firebase Hosting (global CDN) |
-| Staging Environment | Firebase preview channels |
-| CI/CD Pipeline | GitHub Actions → Firebase |
-| Monitoring | Firebase Performance, Google Cloud Monitoring |
-| Database | Firestore with security rules |
+| Production Environment | Cloud Run + Firebase Hosting |
+| Staging Environment | Cloud Run (staging) |
+| CI/CD Pipeline | GitHub Actions → Cloud Run + Firebase |
+| Monitoring | Cloud Monitoring + Cloud Logging |
+| Database | Firestore + Cloud SQL (PII) |
+| Key Management | Cloud KMS (software keys) |
 
 ---
 
 ## 5. Timeline Overview
 
 ```
-Week 1-4:   [████████] Foundation - Firebase setup, Auth, Core DB
-Week 5-8:   [████████] Core - User portals, Document vault, 6-state templates
-Week 9-12:  [████████] LLM - Vertex AI integration, PWA enhancement
-Week 13-16: [████████] Launch - Testing, Security, Deployment
+Week 1-4:   [████████] Foundation - GCP setup, Auth, Go API, React scaffold
+Week 5-8:   [████████] Core - Estate CRUD, Asset management, 6-state templates
+Week 9-12:  [████████] Vault - Document encryption, Notifications
+Week 13-16: [████████] Mobile - React Native iOS + Android
+Week 17-20: [████████] Launch - Pen test, App Store submission
 ```
 
 ### 5.1 Key Milestones
 | Milestone | Date | Deliverable |
 |-----------|------|-------------|
-| M1: Infrastructure Ready | End of Week 4 | Firebase deployed, Auth working, Admin dashboard |
-| M2: Core Features | End of Week 8 | User portals, Document vault, 6-state templates |
-| M3: LLM Integration | End of Week 12 | Vertex AI integrated, PWA functional |
-| M4: Launch Ready | End of Week 16 | All testing complete, production deployed |
+| M1: Infrastructure Ready | End of Week 4 | GCP deployed, Auth working, Go API scaffold |
+| M2: Core Features | End of Week 8 | Estate CRUD, Asset management, React app |
+| M3: Vault Complete | End of Week 12 | Document encryption, Notifications |
+| M4: Mobile Beta | End of Week 16 | iOS + Android in TestFlight/Play Console |
+| M5: Launch Ready | End of Week 20 | Pen test passed, Apps in stores |
 
 ---
 
 ## 6. Constraints
 
 ### 6.1 Time Constraints
-- Hard deadline: 4 months (16 weeks) from project start
-- No feature creep permitted after Week 10
+- Hard deadline: 5 months (20 weeks) from project start
+- No feature creep permitted after Week 12
 - State expansion deferred to v1.1
 
 ### 6.2 Budget Constraints
@@ -231,8 +239,8 @@ Week 13-16: [████████] Launch - Testing, Security, Deployment
 - No traditional dev team
 
 ### 6.4 Technical Constraints
-- Must use Firebase/GCP infrastructure
-- PWA for mobile (native apps post-MVP)
+- Must use GCP infrastructure (Cloud Run, Firestore, Cloud SQL, Cloud KMS)
+- React Native + Expo for mobile apps
 - Must support 6 launch states: IL, MI, MN, DC, VA, MD
 
 ---
@@ -274,7 +282,8 @@ The project is considered complete when:
 1. **Functional Completeness**
    - [ ] All MVP features implemented per this document
    - [ ] Web application deployed and accessible
-   - [ ] PWA installable on iOS and Android
+   - [ ] iOS app live in App Store
+   - [ ] Android app live in Play Store
    - [ ] 6-state probate templates complete (IL, MI, MN, DC, VA, MD)
 
 2. **Quality Gates**
@@ -311,3 +320,4 @@ The project is considered complete when:
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
+| 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |

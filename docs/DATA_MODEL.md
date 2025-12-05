@@ -1,660 +1,667 @@
 # Data Model
-## Legacy - The Estate Operating System
-**Version:** 1.0.0
-**Date:** November 26, 2025
-**Database:** PostgreSQL 15
+## FinalWishes - The Estate Operating System
+**Version:** 2.0.0
+**Date:** December 5, 2025
+**Database:** Firestore (NoSQL) + Cloud SQL (PII)
 
 ---
 
-## 1. Entity Relationship Diagram
+## 1. Database Strategy
 
-```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│      users      │────<│   estate_users  │>────│     estates     │
-└────────┬────────┘     └─────────────────┘     └────────┬────────┘
-         │                                                │
-         │                                    ┌───────────┼───────────┐
-         │                                    │           │           │
-         │                             ┌──────┴──────┐    │    ┌──────┴──────┐
-         │                             │   assets    │    │    │  documents  │
-         │                             └──────┬──────┘    │    └─────────────┘
-         │                                    │           │
-         │                             ┌──────┴──────┐    │
-         │                             │asset_allocs │    │
-         │                             └──────┬──────┘    │
-         │                                    │           │
-         │     ┌─────────────────┐     ┌──────┴──────┐    │
-         └────<│    executors    │>────│    heirs    │>───┘
-               └─────────────────┘     └─────────────┘
+### Firestore (Primary)
+- Real-time sync for UI
+- Nested subcollections for related data
+- Security rules for client-side access control
 
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  notifications  │>────│     estates     │────<│   audit_logs    │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-```
+### Cloud SQL (PII)
+- Sensitive data: SSN, account numbers, DOB
+- Referenced by ID from Firestore
+- Server-side access only via Go API
 
 ---
 
-## 2. Core Tables
+## 2. Collection Structure
 
-### 2.1 Users
-
-```sql
-CREATE TABLE users (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    auth0_id        VARCHAR(255) UNIQUE NOT NULL,
-    email           VARCHAR(255) UNIQUE NOT NULL,
-    email_verified  BOOLEAN DEFAULT FALSE,
-    
-    -- Profile
-    first_name      VARCHAR(100),
-    last_name       VARCHAR(100),
-    phone           VARCHAR(20),
-    date_of_birth   DATE,
-    address_line1   VARCHAR(255),
-    address_line2   VARCHAR(255),
-    city            VARCHAR(100),
-    state           VARCHAR(50),
-    zip_code        VARCHAR(20),
-    country         VARCHAR(50) DEFAULT 'US',
-    
-    -- Identity Verification
-    id_verified     BOOLEAN DEFAULT FALSE,
-    id_verified_at  TIMESTAMP WITH TIME ZONE,
-    id_provider     VARCHAR(50), -- 'persona', 'plaid'
-    id_provider_ref VARCHAR(255),
-    
-    -- Subscription
-    tier            VARCHAR(20) DEFAULT 'free', -- 'free', 'concierge', 'white_glove'
-    stripe_customer_id VARCHAR(255),
-    
-    -- Status
-    status          VARCHAR(20) DEFAULT 'active', -- 'active', 'suspended', 'deleted'
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    deleted_at      TIMESTAMP WITH TIME ZONE
-);
-
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_auth0_id ON users(auth0_id);
-CREATE INDEX idx_users_status ON users(status);
 ```
-
-### 2.2 Estates
-
-```sql
-CREATE TABLE estates (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name            VARCHAR(255) NOT NULL,
-    
-    -- Principal (owner)
-    principal_id    UUID NOT NULL REFERENCES users(id),
-    
-    -- Status
-    status          VARCHAR(30) DEFAULT 'active',
-    -- 'active', 'death_reported', 'executor_confirmed', 'in_settlement', 'closed'
-    
-    -- Death info (populated when death reported)
-    death_reported_at   TIMESTAMP WITH TIME ZONE,
-    death_reported_by   UUID REFERENCES users(id),
-    date_of_death       DATE,
-    death_certificate_doc_id UUID REFERENCES documents(id),
-    
-    -- Executor confirmation
-    executor_confirmed_at TIMESTAMP WITH TIME ZONE,
-    cooling_off_ends_at   TIMESTAMP WITH TIME ZONE,
-    
-    -- Valuation
-    estimated_value DECIMAL(15,2),
-    
-    -- Settlement
-    settled_at      TIMESTAMP WITH TIME ZONE,
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_estates_principal ON estates(principal_id);
-CREATE INDEX idx_estates_status ON estates(status);
-```
-
-### 2.3 Estate Users (Junction Table)
-
-```sql
-CREATE TABLE estate_users (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    user_id         UUID NOT NULL REFERENCES users(id),
-    
-    role            VARCHAR(20) NOT NULL, -- 'principal', 'executor', 'heir'
-    
-    -- Access status
-    access_granted  BOOLEAN DEFAULT FALSE,
-    access_granted_at TIMESTAMP WITH TIME ZONE,
-    
-    -- Invitation
-    invited_at      TIMESTAMP WITH TIME ZONE,
-    invitation_accepted_at TIMESTAMP WITH TIME ZONE,
-    invitation_declined_at TIMESTAMP WITH TIME ZONE,
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    
-    UNIQUE(estate_id, user_id, role)
-);
-
-CREATE INDEX idx_estate_users_estate ON estate_users(estate_id);
-CREATE INDEX idx_estate_users_user ON estate_users(user_id);
+firestore/
+├── users/
+│   └── {userId}
+├── estates/
+│   └── {estateId}
+│       ├── assets/
+│       │   └── {assetId}
+│       ├── documents/
+│       │   └── {documentId}
+│       ├── executors/
+│       │   └── {executorId}
+│       ├── heirs/
+│       │   └── {heirId}
+│       └── notifications/
+│           └── {notificationId}
+├── estate_users/
+│   └── {userId_estateId}
+├── notification_templates/
+│   └── {templateId}
+└── audit_logs/
+    └── {logId}
 ```
 
 ---
 
-## 3. Asset Tables
+## 3. Core Collections
 
-### 3.1 Assets (Base)
+### 3.1 Users
 
-```sql
-CREATE TABLE assets (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    
-    -- Classification
-    category        VARCHAR(30) NOT NULL,
-    -- 'financial', 'real_estate', 'vehicle', 'digital', 'personal_property'
-    
-    -- Common fields
-    name            VARCHAR(255) NOT NULL,
-    description     TEXT,
-    estimated_value DECIMAL(15,2),
-    notes           TEXT,
-    
-    -- Category-specific data (JSONB for flexibility)
-    metadata        JSONB DEFAULT '{}',
-    
-    -- Related document
-    primary_document_id UUID REFERENCES documents(id),
-    
-    -- Status
-    status          VARCHAR(20) DEFAULT 'active', -- 'active', 'transferred', 'archived'
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+**Path:** `users/{userId}`
 
-CREATE INDEX idx_assets_estate ON assets(estate_id);
-CREATE INDEX idx_assets_category ON assets(category);
-CREATE INDEX idx_assets_metadata ON assets USING GIN(metadata);
-```
-
-### 3.2 Asset Metadata Examples
-
-```json
-// Financial Asset
-{
-  "institution_name": "Chase Bank",
-  "account_type": "checking",
-  "account_number_last4": "1234",
-  "is_primary": true,
-  "plaid_account_id": null
-}
-
-// Real Estate
-{
-  "address": {
-    "line1": "123 Main St",
-    "city": "New York",
-    "state": "NY",
-    "zip": "10001"
-  },
-  "property_type": "single_family",
-  "ownership_type": "sole",
-  "mortgage_holder": "Wells Fargo",
-  "has_hoa": true
-}
-
-// Vehicle
-{
-  "make": "Toyota",
-  "model": "Camry",
-  "year": 2020,
-  "vin": "1HGBH41JXMN109186",
-  "is_leased": false,
-  "lien_holder": null
-}
-
-// Digital
-{
-  "service_name": "Gmail",
-  "service_type": "email",
-  "username": "example@gmail.com",
-  "desired_action": "delete",
-  "has_recovery_codes": true
-}
-
-// Personal Property
-{
-  "item_type": "jewelry",
-  "condition": "excellent",
-  "provenance": "Inherited from grandmother",
-  "appraisal_date": "2024-01-15"
+```typescript
+interface User {
+  id: string;                    // Firebase Auth UID
+  email: string;
+  emailVerified: boolean;
+  
+  // Profile
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  
+  // Address
+  address?: {
+    line1: string;
+    line2?: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  
+  // Identity (reference to Cloud SQL)
+  idVerified: boolean;
+  idVerifiedAt?: Timestamp;
+  piiRef?: string;               // Cloud SQL reference for DOB, SSN
+  
+  // Subscription
+  tier: 'free' | 'concierge' | 'white_glove';
+  stripeCustomerId?: string;
+  
+  // Status
+  status: 'active' | 'suspended' | 'deleted';
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 ```
 
-### 3.3 Asset Allocations
+### 3.2 Estates
 
-```sql
-CREATE TABLE asset_allocations (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    asset_id        UUID NOT NULL REFERENCES assets(id) ON DELETE CASCADE,
-    heir_id         UUID NOT NULL REFERENCES heirs(id) ON DELETE CASCADE,
-    
-    -- Allocation
-    percentage      DECIMAL(5,2) NOT NULL CHECK (percentage > 0 AND percentage <= 100),
-    
-    -- Conditions
-    condition_type  VARCHAR(30), -- 'none', 'age', 'date', 'milestone'
-    condition_value JSONB,
-    
-    -- Notes
-    notes           TEXT,
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+**Path:** `estates/{estateId}`
 
-CREATE INDEX idx_asset_allocations_asset ON asset_allocations(asset_id);
-CREATE INDEX idx_asset_allocations_heir ON asset_allocations(heir_id);
+```typescript
+interface Estate {
+  id: string;
+  name: string;
+  
+  // Principal (owner)
+  principalId: string;           // User ID
+  
+  // Status
+  status: 'active' | 'death_reported' | 'executor_confirmed' | 'in_settlement' | 'closed';
+  
+  // Death info (populated when death reported)
+  deathInfo?: {
+    reportedAt: Timestamp;
+    reportedBy: string;          // User ID
+    dateOfDeath: Timestamp;
+    deathCertificateDocId?: string;
+  };
+  
+  // Executor confirmation
+  executorConfirmedAt?: Timestamp;
+  coolingOffEndsAt?: Timestamp;
+  
+  // Valuation
+  estimatedValue?: number;
+  
+  // Settlement
+  settledAt?: Timestamp;
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
 
--- Constraint: total allocation per asset cannot exceed 100%
--- (enforced at application level)
+### 3.3 Estate Users (Access Control)
+
+**Path:** `estate_users/{userId_estateId}`
+
+```typescript
+interface EstateUser {
+  id: string;                    // Format: {userId}_{estateId}
+  estateId: string;
+  userId: string;
+  
+  role: 'principal' | 'executor' | 'heir';
+  
+  // Access status
+  accessGranted: boolean;
+  accessGrantedAt?: Timestamp;
+  
+  // Invitation
+  invitedAt?: Timestamp;
+  invitationAcceptedAt?: Timestamp;
+  invitationDeclinedAt?: Timestamp;
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
 ```
 
 ---
 
-## 4. Beneficiary Tables
+## 4. Asset Collections
 
-### 4.1 Executors
+### 4.1 Assets
 
-```sql
-CREATE TABLE executors (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    
-    -- Executor info (may or may not have user account)
-    user_id         UUID REFERENCES users(id),
-    email           VARCHAR(255) NOT NULL,
-    full_name       VARCHAR(255) NOT NULL,
-    phone           VARCHAR(20),
-    relationship    VARCHAR(100),
-    
-    -- Role
-    priority        INTEGER DEFAULT 1, -- 1 = primary, 2+ = alternate
-    
-    -- Invitation & Confirmation
-    invitation_token    VARCHAR(255),
-    invitation_sent_at  TIMESTAMP WITH TIME ZONE,
-    invitation_accepted_at TIMESTAMP WITH TIME ZONE,
-    
-    -- Post-death confirmation
-    confirmed_death     BOOLEAN DEFAULT FALSE,
-    confirmed_death_at  TIMESTAMP WITH TIME ZONE,
-    
-    -- Status
-    status          VARCHAR(20) DEFAULT 'pending',
-    -- 'pending', 'invited', 'accepted', 'declined', 'active', 'removed'
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+**Path:** `estates/{estateId}/assets/{assetId}`
 
-CREATE INDEX idx_executors_estate ON executors(estate_id);
-CREATE INDEX idx_executors_user ON executors(user_id);
-CREATE INDEX idx_executors_email ON executors(email);
+```typescript
+interface Asset {
+  id: string;
+  estateId: string;
+  
+  // Classification
+  category: 'financial' | 'real_estate' | 'vehicle' | 'digital' | 'personal_property';
+  
+  // Common fields
+  name: string;
+  description?: string;
+  estimatedValue?: number;
+  notes?: string;
+  
+  // Category-specific data
+  metadata: FinancialMetadata | RealEstateMetadata | VehicleMetadata | DigitalMetadata | PersonalPropertyMetadata;
+  
+  // Related document
+  primaryDocumentId?: string;
+  
+  // PII reference (Cloud SQL)
+  piiRef?: string;               // For account numbers, etc.
+  
+  // Status
+  status: 'active' | 'transferred' | 'archived';
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Metadata Types
+interface FinancialMetadata {
+  institutionName: string;
+  accountType: 'checking' | 'savings' | 'investment' | 'retirement' | 'insurance';
+  accountNumberLast4?: string;   // Only last 4 digits
+  isPrimary?: boolean;
+}
+
+interface RealEstateMetadata {
+  address: {
+    line1: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+  propertyType: 'single_family' | 'condo' | 'multi_family' | 'land' | 'commercial';
+  ownershipType: 'sole' | 'joint' | 'trust';
+  mortgageHolder?: string;
+  hasHoa?: boolean;
+}
+
+interface VehicleMetadata {
+  make: string;
+  model: string;
+  year: number;
+  vinLast6?: string;             // Only last 6 of VIN
+  isLeased: boolean;
+  lienHolder?: string;
+}
+
+interface DigitalMetadata {
+  serviceName: string;
+  serviceType: 'email' | 'social' | 'financial' | 'storage' | 'other';
+  username?: string;
+  desiredAction: 'delete' | 'memorialize' | 'transfer';
+  hasRecoveryCodes?: boolean;
+}
+
+interface PersonalPropertyMetadata {
+  itemType: string;
+  condition: 'excellent' | 'good' | 'fair' | 'poor';
+  provenance?: string;
+  appraisalDate?: Timestamp;
+}
 ```
 
-### 4.2 Heirs
+### 4.2 Asset Allocations
 
-```sql
-CREATE TABLE heirs (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    
-    -- Heir info
-    user_id         UUID REFERENCES users(id),
-    email           VARCHAR(255),
-    full_name       VARCHAR(255) NOT NULL,
-    date_of_birth   DATE,
-    relationship    VARCHAR(100),
-    is_minor        BOOLEAN DEFAULT FALSE,
-    
-    -- Guardian (if minor)
-    guardian_name   VARCHAR(255),
-    guardian_email  VARCHAR(255),
-    
-    -- Residuary designation
-    is_residuary    BOOLEAN DEFAULT FALSE, -- receives unallocated assets
-    residuary_percentage DECIMAL(5,2),
-    
-    -- Notification
-    notified_at     TIMESTAMP WITH TIME ZONE,
-    
-    -- Status
-    status          VARCHAR(20) DEFAULT 'active', -- 'active', 'removed'
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+**Path:** `estates/{estateId}/assets/{assetId}/allocations/{allocationId}`
 
-CREATE INDEX idx_heirs_estate ON heirs(estate_id);
-CREATE INDEX idx_heirs_user ON heirs(user_id);
-```
-
----
-
-## 5. Document Tables
-
-### 5.1 Documents
-
-```sql
-CREATE TABLE documents (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    
-    -- File info
-    original_name   VARCHAR(255) NOT NULL,
-    display_name    VARCHAR(255),
-    mime_type       VARCHAR(100) NOT NULL,
-    file_size       BIGINT NOT NULL,
-    
-    -- Storage
-    s3_key          VARCHAR(500) NOT NULL,
-    s3_bucket       VARCHAR(255) NOT NULL,
-    
-    -- Encryption
-    encryption_key_id VARCHAR(255), -- KMS key ID
-    
-    -- Organization
-    folder_id       UUID REFERENCES document_folders(id),
-    tags            TEXT[],
-    
-    -- OCR
-    ocr_processed   BOOLEAN DEFAULT FALSE,
-    ocr_text        TEXT,
-    ocr_processed_at TIMESTAMP WITH TIME ZONE,
-    
-    -- Version
-    version         INTEGER DEFAULT 1,
-    previous_version_id UUID REFERENCES documents(id),
-    
-    -- Status
-    status          VARCHAR(20) DEFAULT 'active', -- 'active', 'archived', 'deleted'
-    
-    -- Timestamps
-    uploaded_by     UUID REFERENCES users(id),
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_documents_estate ON documents(estate_id);
-CREATE INDEX idx_documents_folder ON documents(folder_id);
-CREATE INDEX idx_documents_tags ON documents USING GIN(tags);
-CREATE INDEX idx_documents_ocr ON documents USING GIN(to_tsvector('english', ocr_text));
-```
-
-### 5.2 Document Folders
-
-```sql
-CREATE TABLE document_folders (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    
-    name            VARCHAR(255) NOT NULL,
-    parent_id       UUID REFERENCES document_folders(id),
-    is_system       BOOLEAN DEFAULT FALSE, -- system folders can't be deleted
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_document_folders_estate ON document_folders(estate_id);
-CREATE INDEX idx_document_folders_parent ON document_folders(parent_id);
+```typescript
+interface AssetAllocation {
+  id: string;
+  assetId: string;
+  heirId: string;
+  
+  // Allocation
+  percentage: number;            // 0-100
+  
+  // Conditions
+  conditionType?: 'none' | 'age' | 'date' | 'milestone';
+  conditionValue?: {
+    age?: number;
+    date?: Timestamp;
+    description?: string;
+  };
+  
+  notes?: string;
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
 ```
 
 ---
 
-## 6. Notification Tables
+## 5. Beneficiary Collections
 
-### 6.1 Notifications (Institutional)
+### 5.1 Executors
 
-```sql
-CREATE TABLE notifications (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    asset_id        UUID REFERENCES assets(id),
-    
-    -- Institution
-    institution_name VARCHAR(255) NOT NULL,
-    institution_type VARCHAR(50), -- 'bank', 'insurance', 'utility', 'government', 'credit_bureau'
-    
-    -- Letter
-    letter_template_id UUID REFERENCES notification_templates(id),
-    generated_letter_doc_id UUID REFERENCES documents(id),
-    
-    -- Tracking
-    tracking_number VARCHAR(100),
-    
-    -- Status
-    status          VARCHAR(30) DEFAULT 'pending',
-    -- 'pending', 'generated', 'sent', 'delivered', 'acknowledged', 'completed', 'failed'
-    
-    -- Dates
-    generated_at    TIMESTAMP WITH TIME ZONE,
-    sent_at         TIMESTAMP WITH TIME ZONE,
-    sent_method     VARCHAR(20), -- 'email', 'mail', 'certified_mail', 'fax'
-    delivered_at    TIMESTAMP WITH TIME ZONE,
-    response_received_at TIMESTAMP WITH TIME ZONE,
-    response_doc_id UUID REFERENCES documents(id),
-    
-    -- Notes
-    notes           TEXT,
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+**Path:** `estates/{estateId}/executors/{executorId}`
 
-CREATE INDEX idx_notifications_estate ON notifications(estate_id);
-CREATE INDEX idx_notifications_status ON notifications(status);
+```typescript
+interface Executor {
+  id: string;
+  estateId: string;
+  
+  // Executor info
+  userId?: string;               // If they have an account
+  email: string;
+  fullName: string;
+  phone?: string;
+  relationship?: string;
+  
+  // Role
+  priority: number;              // 1 = primary, 2+ = alternate
+  
+  // Invitation
+  invitationToken?: string;
+  invitationSentAt?: Timestamp;
+  invitationAcceptedAt?: Timestamp;
+  
+  // Post-death confirmation
+  confirmedDeath: boolean;
+  confirmedDeathAt?: Timestamp;
+  
+  // Status
+  status: 'pending' | 'invited' | 'accepted' | 'declined' | 'active' | 'removed';
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
 ```
 
-### 6.2 Notification Templates
+### 5.2 Heirs
 
-```sql
-CREATE TABLE notification_templates (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    
-    institution_name VARCHAR(255) NOT NULL,
-    institution_type VARCHAR(50),
-    
-    -- Template
-    template_body   TEXT NOT NULL,
-    required_fields JSONB, -- fields needed from estate/user
-    
-    -- Contact info
-    mailing_address TEXT,
-    fax_number      VARCHAR(20),
-    email           VARCHAR(255),
-    phone           VARCHAR(20),
-    
-    -- Metadata
-    is_active       BOOLEAN DEFAULT TRUE,
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+**Path:** `estates/{estateId}/heirs/{heirId}`
 
----
-
-## 7. System Tables
-
-### 7.1 Audit Logs
-
-```sql
-CREATE TABLE audit_logs (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    
-    -- Context
-    estate_id       UUID REFERENCES estates(id),
-    user_id         UUID REFERENCES users(id),
-    
-    -- Action
-    action          VARCHAR(50) NOT NULL,
-    -- 'create', 'read', 'update', 'delete', 'login', 'logout', 'export', etc.
-    
-    resource_type   VARCHAR(50) NOT NULL,
-    -- 'user', 'estate', 'asset', 'document', 'executor', 'heir', etc.
-    
-    resource_id     UUID,
-    
-    -- Details
-    old_values      JSONB,
-    new_values      JSONB,
-    
-    -- Request info
-    ip_address      INET,
-    user_agent      TEXT,
-    request_id      VARCHAR(100),
-    
-    -- Timestamp
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Partition by month for performance
-CREATE INDEX idx_audit_logs_estate ON audit_logs(estate_id);
-CREATE INDEX idx_audit_logs_user ON audit_logs(user_id);
-CREATE INDEX idx_audit_logs_created ON audit_logs(created_at);
-CREATE INDEX idx_audit_logs_action ON audit_logs(action);
-```
-
-### 7.2 Payments
-
-```sql
-CREATE TABLE payments (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id         UUID NOT NULL REFERENCES users(id),
-    
-    -- Stripe
-    stripe_payment_intent_id VARCHAR(255) UNIQUE,
-    stripe_charge_id VARCHAR(255),
-    
-    -- Amount
-    amount_cents    INTEGER NOT NULL,
-    currency        VARCHAR(3) DEFAULT 'USD',
-    
-    -- Product
-    product_type    VARCHAR(50) NOT NULL, -- 'concierge', 'white_glove'
-    
-    -- Status
-    status          VARCHAR(20) NOT NULL,
-    -- 'pending', 'succeeded', 'failed', 'refunded'
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_payments_user ON payments(user_id);
-CREATE INDEX idx_payments_stripe ON payments(stripe_payment_intent_id);
-```
-
-### 7.3 Contacts
-
-```sql
-CREATE TABLE contacts (
-    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    estate_id       UUID NOT NULL REFERENCES estates(id) ON DELETE CASCADE,
-    
-    -- Contact info
-    full_name       VARCHAR(255) NOT NULL,
-    email           VARCHAR(255),
-    phone           VARCHAR(20),
-    
-    -- Address
-    address_line1   VARCHAR(255),
-    address_line2   VARCHAR(255),
-    city            VARCHAR(100),
-    state           VARCHAR(50),
-    zip_code        VARCHAR(20),
-    
-    -- Classification
-    category        VARCHAR(30),
-    -- 'family', 'financial', 'legal', 'medical', 'other'
-    
-    relationship    VARCHAR(100),
-    notes           TEXT,
-    
-    -- Timestamps
-    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
-CREATE INDEX idx_contacts_estate ON contacts(estate_id);
-CREATE INDEX idx_contacts_category ON contacts(category);
+```typescript
+interface Heir {
+  id: string;
+  estateId: string;
+  
+  // Heir info
+  userId?: string;               // If they have an account
+  email?: string;
+  fullName: string;
+  relationship?: string;
+  isMinor: boolean;
+  
+  // DOB stored in Cloud SQL via piiRef
+  piiRef?: string;
+  
+  // Guardian (if minor)
+  guardian?: {
+    name: string;
+    email: string;
+    phone?: string;
+  };
+  
+  // Residuary designation
+  isResiduary: boolean;          // Receives unallocated assets
+  residuaryPercentage?: number;
+  
+  // Notification
+  notifiedAt?: Timestamp;
+  
+  // Status
+  status: 'active' | 'removed';
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
 ```
 
 ---
 
-## 8. Database Configuration
+## 6. Document Collections
 
-### 8.1 Extensions
+### 6.1 Documents
 
-```sql
--- Enable required extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- For fuzzy text search
+**Path:** `estates/{estateId}/documents/{documentId}`
+
+```typescript
+interface Document {
+  id: string;
+  estateId: string;
+  
+  // File info
+  originalName: string;
+  displayName?: string;
+  mimeType: string;
+  fileSize: number;              // bytes
+  
+  // Storage
+  storageKey: string;            // Cloud Storage path
+  storageBucket: string;
+  
+  // Encryption
+  encryptedDEK: string;          // Base64 encoded, encrypted by KMS
+  
+  // Organization
+  folderId?: string;
+  tags?: string[];
+  
+  // OCR (future)
+  ocrProcessed: boolean;
+  ocrText?: string;
+  ocrProcessedAt?: Timestamp;
+  
+  // Version
+  version: number;
+  previousVersionId?: string;
+  
+  // Status
+  status: 'pending' | 'active' | 'archived' | 'deleted';
+  
+  // Timestamps
+  uploadedBy: string;            // User ID
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
 ```
 
-### 8.2 Row-Level Security (RLS)
+### 6.2 Document Folders
 
-```sql
--- Enable RLS on sensitive tables
-ALTER TABLE estates ENABLE ROW LEVEL SECURITY;
-ALTER TABLE assets ENABLE ROW LEVEL SECURITY;
-ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
+**Path:** `estates/{estateId}/folders/{folderId}`
 
--- Example policy (actual implementation via application JWT claims)
-CREATE POLICY estate_access ON estates
-    FOR ALL
-    USING (
-        principal_id = current_setting('app.current_user_id')::UUID
-        OR id IN (
-            SELECT estate_id FROM estate_users 
-            WHERE user_id = current_setting('app.current_user_id')::UUID
-            AND access_granted = TRUE
-        )
-    );
+```typescript
+interface DocumentFolder {
+  id: string;
+  estateId: string;
+  
+  name: string;
+  parentId?: string;             // For nested folders
+  isSystem: boolean;             // System folders can't be deleted
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
 ```
 
-### 8.3 Indexes Summary
+---
 
-| Table | Index | Columns | Type |
-|-------|-------|---------|------|
-| users | idx_users_email | email | B-tree |
-| estates | idx_estates_principal | principal_id | B-tree |
-| assets | idx_assets_metadata | metadata | GIN |
-| documents | idx_documents_ocr | ocr_text | GIN (full-text) |
-| audit_logs | idx_audit_logs_created | created_at | B-tree |
+## 7. Notification Collections
+
+### 7.1 Notifications (Institutional)
+
+**Path:** `estates/{estateId}/notifications/{notificationId}`
+
+```typescript
+interface Notification {
+  id: string;
+  estateId: string;
+  assetId?: string;
+  
+  // Institution
+  institutionName: string;
+  institutionType: 'bank' | 'insurance' | 'utility' | 'government' | 'credit_bureau';
+  
+  // Letter
+  letterTemplateId?: string;
+  generatedLetterDocId?: string;
+  
+  // Tracking
+  trackingNumber?: string;
+  
+  // Status
+  status: 'pending' | 'generated' | 'sent' | 'delivered' | 'acknowledged' | 'completed' | 'failed';
+  
+  // Dates
+  generatedAt?: Timestamp;
+  sentAt?: Timestamp;
+  sentMethod?: 'email' | 'mail' | 'certified_mail' | 'fax';
+  deliveredAt?: Timestamp;
+  responseReceivedAt?: Timestamp;
+  responseDocId?: string;
+  
+  notes?: string;
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
+
+### 7.2 Notification Templates
+
+**Path:** `notification_templates/{templateId}`
+
+```typescript
+interface NotificationTemplate {
+  id: string;
+  
+  institutionName: string;
+  institutionType: string;
+  
+  // Template
+  templateBody: string;          // Handlebars/Mustache template
+  requiredFields: string[];      // Fields needed from estate/user
+  
+  // Contact info
+  mailingAddress?: string;
+  faxNumber?: string;
+  email?: string;
+  phone?: string;
+  
+  // State-specific
+  states: string[];              // ['IL', 'MI', 'MN', 'DC', 'VA', 'MD']
+  
+  // Status
+  isActive: boolean;
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
+
+---
+
+## 8. System Collections
+
+### 8.1 Audit Logs
+
+**Path:** `audit_logs/{logId}`
+
+```typescript
+interface AuditLog {
+  id: string;
+  
+  // Context
+  estateId?: string;
+  userId?: string;
+  
+  // Action
+  action: 'create' | 'read' | 'update' | 'delete' | 'login' | 'logout' | 'export';
+  resourceType: 'user' | 'estate' | 'asset' | 'document' | 'executor' | 'heir';
+  resourceId?: string;
+  
+  // Details
+  oldValues?: Record<string, any>;
+  newValues?: Record<string, any>;
+  
+  // Request info
+  ipAddress?: string;
+  userAgent?: string;
+  requestId?: string;
+  
+  // Timestamp
+  createdAt: Timestamp;
+}
+```
+
+### 8.2 Payments
+
+**Path:** `payments/{paymentId}`
+
+```typescript
+interface Payment {
+  id: string;
+  userId: string;
+  
+  // Stripe
+  stripePaymentIntentId?: string;
+  stripeChargeId?: string;
+  
+  // Amount
+  amountCents: number;
+  currency: string;              // 'USD'
+  
+  // Product
+  productType: 'concierge' | 'white_glove';
+  
+  // Status
+  status: 'pending' | 'succeeded' | 'failed' | 'refunded';
+  
+  // Timestamps
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+```
+
+---
+
+## 9. Cloud SQL Schema (PII)
+
+For sensitive PII that cannot be stored in Firestore:
+
+```sql
+-- User PII
+CREATE TABLE user_pii (
+    id UUID PRIMARY KEY,
+    firebase_uid VARCHAR(128) UNIQUE NOT NULL,
+    date_of_birth DATE,
+    ssn_encrypted BYTEA,         -- Encrypted with Cloud KMS
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Asset PII
+CREATE TABLE asset_pii (
+    id UUID PRIMARY KEY,
+    asset_id VARCHAR(128) NOT NULL,
+    account_number_encrypted BYTEA,
+    routing_number_encrypted BYTEA,
+    vin_encrypted BYTEA,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Heir PII
+CREATE TABLE heir_pii (
+    id UUID PRIMARY KEY,
+    heir_id VARCHAR(128) NOT NULL,
+    date_of_birth DATE,
+    ssn_encrypted BYTEA,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes
+CREATE INDEX idx_user_pii_firebase ON user_pii(firebase_uid);
+CREATE INDEX idx_asset_pii_asset ON asset_pii(asset_id);
+CREATE INDEX idx_heir_pii_heir ON heir_pii(heir_id);
+```
+
+---
+
+## 10. Indexes
+
+### Firestore Composite Indexes
+
+```yaml
+# firestore.indexes.json
+{
+  "indexes": [
+    {
+      "collectionGroup": "estates",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "principalId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "estate_users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "role", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "assets",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "category", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "documents",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "audit_logs",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "estateId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    }
+  ]
+}
+```
 
 ---
 
@@ -662,4 +669,5 @@ CREATE POLICY estate_access ON estates
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+| 1.0.0 | 2025-11-26 | Legacy Team | Initial PostgreSQL schema |
+| 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Firestore + Cloud SQL hybrid |

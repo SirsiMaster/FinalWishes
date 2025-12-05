@@ -121,21 +121,27 @@ To work on a specific domain, say:
 ---
 
 ## Project Overview
-**Legacy** is "The Estate Operating System" - an end-of-life estate management platform with web and PWA applications. The project uses AI-agentic development (Claude + AI tools) with no human developer team.
+**FinalWishes** is "The Estate Operating System" - an end-of-life estate management platform with web and native mobile applications. The project uses AI-agentic development (Claude + AI tools) with no human developer team.
 
 **Platform Status:** Phase 1 - Foundation (Auth + Core DB)
 
 **Development Model:** AI-Agentic (Claude as Stack Leader)
 
-## Technology Stack (GCP/Firebase)
-- **Backend:** Firebase Functions (Cloud Functions)
-- **Database:** Firestore (NoSQL with real-time sync)
+**Timeline:** 5 months (20 weeks) - See `proposals/SOW.md`
+
+## Technology Stack (GCP)
+- **Web Frontend:** React 18 + Vite + TailwindCSS
+- **Mobile Apps:** React Native + Expo (iOS + Android)
+- **Backend API:** Go (Golang) on Cloud Run
+- **Database:** Firestore (real-time) + Cloud SQL (PII)
 - **Auth:** Firebase Authentication (with MFA)
-- **Storage:** Cloud Storage for Firebase (encrypted documents)
-- **Hosting:** Firebase Hosting
-- **AI/LLM:** Vertex AI / Claude API for intelligent process guidance
-- **Integrations:** MCP (Model Context Protocol) for tool automation
-- **CI/CD:** GitHub Actions → Firebase
+- **Storage:** Cloud Storage (client-side AES-256 encryption)
+- **Key Management:** Cloud KMS (software keys)
+- **Hosting:** Firebase Hosting (web), App Store / Play Store (mobile)
+- **AI/LLM:** Vertex AI for intelligent process guidance
+- **CI/CD:** GitHub Actions → Cloud Run + Firebase
+
+**Architecture Decisions:** See `docs/ADR-001-ARCHITECTURE-DECISIONS.md`
 
 ## Design Aesthetic: "Opulent, Permanent, Guardian-Like"
 - Deep Royal Blue Gradient background (NOT black) - Dark theme default
@@ -154,10 +160,14 @@ To work on a specific domain, say:
 - Falls back to system preference (`prefers-color-scheme`)
 - Default: dark theme
 
-### Key Files
+### Key Files (Marketing Site - Current)
 - `public/assets/js/theme-toggle.js` - Theme application logic
 - `src/input.css` - Tailwind theme variables in `@layer base`
 - Build CSS: `npm run build:css`
+
+### Key Files (React App - Future)
+- `web/src/styles/theme.ts` - Theme configuration
+- `web/tailwind.config.js` - Tailwind setup
 
 ### ⚠️ CRITICAL: Photo Sections Must Stay White
 Photo sections (`.photo-section`) have image backgrounds. Text MUST remain white regardless of theme.
@@ -188,16 +198,31 @@ navLink: '#4B5563'
 
 ## File Structure
 ```
-Legacy/
-├── public/                 # ⚠️ DEPLOY TARGET - Firebase Hosting
-│   ├── index.html          # Marketing site (edit here!)
-│   ├── images/             # Marketing images
-│   ├── admin/              # Admin dashboard
-│   ├── auth/               # Promo/unsubscribe pages
-│   ├── portals/            # Principal, Executor, Heir dashboards
-│   ├── components/         # Shared UI components
-│   ├── assets/             # Static assets
-│   └── legacy.css          # Design system
+FinalWishes/
+├── public/                 # ⚠️ Marketing site - Firebase Hosting
+│   ├── index.html          # Marketing landing page
+│   ├── proposals/          # Cost proposal & SOW pages
+│   ├── docs/               # Public documentation
+│   └── assets/             # Static assets
+├── web/                    # React 18 web application (future)
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── pages/          # Route pages
+│   │   ├── hooks/          # Custom hooks
+│   │   ├── stores/         # Zustand state
+│   │   └── lib/            # Utilities
+│   ├── vite.config.ts
+│   └── package.json
+├── mobile/                 # React Native + Expo (future)
+│   ├── src/
+│   ├── app.json
+│   └── package.json
+├── api/                    # Go backend (future)
+│   ├── cmd/api/            # Entry point
+│   ├── internal/           # Domain logic
+│   ├── pkg/                # Shared packages
+│   ├── Dockerfile
+│   └── go.mod
 ├── agents/                 # Domain agent contexts (not deployed)
 │   ├── auth/AGENT.md
 │   ├── estate/AGENT.md
@@ -205,10 +230,10 @@ Legacy/
 │   ├── compliance/AGENT.md
 │   ├── notify/AGENT.md
 │   └── llm/AGENT.md
-├── functions/              # Firebase Cloud Functions (separate deploy)
-├── docs/                   # Platform documentation (not deployed)
-├── proposals/              # Business proposals (not deployed)
-├── scripts/                # Dev/test scripts (not deployed)
+├── docs/                   # Platform documentation
+│   ├── ADR-*.md            # Architecture Decision Records
+│   └── *.md                # Technical docs
+├── proposals/              # Business proposals
 ├── WARP.md
 ├── CHANGELOG.md
 └── firebase.json
@@ -229,7 +254,7 @@ cd "/Users/thekryptodragon/Development/111 Venture Studio/Legacy"
 git add -A && git commit -m "message" && git push origin main
 firebase deploy --only hosting
 ```
-Live site: https://legacy-estate-os.web.app
+Live site: https://legacy-estate-os.web.app (will migrate to finalwishes.app)
 
 ## Design Tokens (CSS Variables)
 ```css
@@ -251,6 +276,12 @@ Live site: https://legacy-estate-os.web.app
 - `.active-card` - Card with gold hover border and tech line decorator
 - `.status-dot` - Green pulsing "alive" indicator
 - `.bg-grain` - Film grain texture overlay
+
+## Key Components (React App - Future)
+- `<Button variant="gold">` - Primary action button
+- `<GlassCard>` - Frosted glass container
+- `<StatusIndicator>` - Alive pulse indicator
+- `<DocumentUploader>` - Encrypted file upload
 
 ## Rules & Guidelines
 

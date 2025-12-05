@@ -1,226 +1,253 @@
 # Statement of Work (SOW)
-## FinalWish Platform - MVP Development
-**Document Version:** 2.0.0
-**Date:** December 3, 2025
+## FinalWishes Platform - MVP Development
+
+**Document Version:** 3.0.0
+**Date:** December 5, 2025
 **Proposal Valid Until:** February 28, 2026
 
 ---
 
 ## 1. Executive Summary
 
-This Statement of Work (SOW) defines the scope, deliverables, timeline, and terms for the development of the **FinalWish Platform MVP** — a cross-platform estate management application serving web, iOS, and Android users.
+This Statement of Work (SOW) defines the scope, deliverables, timeline, and terms for the development of the **FinalWishes Platform MVP** — a cross-platform estate management application serving web, iOS, and Android users.
 
-**Project Overview:**
-- **Product:** FinalWish - The Estate Operating System
-- **Duration:** 4 months (16 weeks)
-- **Platforms:** Web (Static HTML/Tailwind), PWA, iOS (Flutter optional), Android (Flutter optional)
-- **Backend:** Firebase (Firestore, Cloud Functions, Authentication)
-- **Infrastructure:** Google Cloud Platform (Firebase Hosting)
+### Project Overview
+
+| Attribute | Value |
+|-----------|-------|
+| **Product** | FinalWishes - The Estate Operating System |
+| **Duration** | 5 months (20 weeks) |
+| **Investment** | $95,000 |
+| **Development Model** | AI-Agentic (Claude + Warp + Cursor) |
+
+### Technology Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Web Frontend** | React 18 + Vite + TailwindCSS |
+| **Mobile Apps** | React Native + Expo |
+| **Backend API** | Go (Golang) on Cloud Run |
+| **Database** | Firestore (real-time) + Cloud SQL (PII) |
+| **Authentication** | Firebase Auth + MFA |
+| **Storage** | Cloud Storage (client-side encrypted) |
+| **Infrastructure** | Google Cloud Platform |
 
 ---
 
-## 2. Parties
+## 2. Project Objectives
 
-**Client:**
-[Client Name / Company]
-[Address]
-[Contact Information]
+### 2.1 Business Objectives
 
-**Contractor:**
-[Development Team / Agency]
-[Address]
-[Contact Information]
-
----
-
-## 3. Project Objectives
-
-### 3.1 Business Objectives
-1. Launch a minimum viable product (MVP) within 90 days
-2. Enable users to organize estate information across web and mobile
+1. Launch a complete MVP (web + iOS + Android) within 5 months
+2. Enable users to organize estate information securely
 3. Automate the estate settlement notification process
 4. Achieve initial market validation with early adopters
-5. Establish foundation for future feature expansion
+5. Establish foundation for SOC 2 Type II certification
 
-### 3.2 Technical Objectives
-1. Build secure, scalable backend infrastructure on Firebase/GCP
-2. Deliver responsive web application with modern UX
-3. Deploy Progressive Web App (PWA) with optional native apps
-4. Implement end-to-end encryption for sensitive data
-5. Achieve SOC 2 readiness
+### 2.2 Technical Objectives
+
+1. Build secure, scalable backend on Go + Cloud Run
+2. Deliver React web application with modern UX
+3. Deploy native iOS and Android apps via React Native
+4. Implement AES-256 encryption with Cloud KMS
+5. Pass external penetration testing
 
 ---
 
-## 4. Scope of Work
+## 3. Scope of Work
 
-### 4.1 Included in Scope (MVP Features)
+### 3.1 Backend Development (Go on Cloud Run)
 
-#### Backend Development
-- Firebase Cloud Functions for serverless API
-- Firestore (NoSQL) database design and implementation
-- Firebase Authentication with MFA support
-- Firebase Hosting with CDN
-- Cloud Storage for Firebase (encrypted documents)
-- Stripe integration for payments
-- SendGrid integration for email notifications
-- Google Cloud Vision API for OCR
-- CI/CD pipeline (GitHub Actions → Firebase)
+| Deliverable | Description |
+|-------------|-------------|
+| RESTful API | Go (Gin/Echo framework) with OpenAPI documentation |
+| Authentication | Firebase Auth integration with JWT validation |
+| Database Layer | Firestore (real-time data) + Cloud SQL (PII) |
+| Document Processing | Upload, encryption, OCR via Cloud Vision |
+| Notification Engine | Email (SendGrid), letter generation |
+| Background Jobs | Cloud Tasks for async processing |
+| API Gateway | Cloud Endpoints with rate limiting |
 
-#### Web Application (Static HTML/Tailwind + Firebase)
-- User registration and authentication (Firebase Auth)
-- Multi-factor authentication (MFA)
-- User profile management
-- Estate creation and management
-- Asset inventory (5 categories)
-- Document vault with upload/download (Cloud Storage)
-- Beneficiary designation (executors, heirs)
-- Principal dashboard with progress tracking
-- Executor dashboard with task management
-- Notification letter generation (50 institutions)
-- Payment processing (Stripe checkout)
-- Responsive design (desktop, tablet, mobile)
-- WCAG 2.1 AA accessibility
-- Progressive Web App (PWA) support
+### 3.2 Web Application (React + Vite)
 
-#### Mobile Applications (Flutter)
-- iOS application (iPhone, iPad)
-- Android application (phone, tablet)
-- Biometric authentication (Face ID, Touch ID, Fingerprint)
-- Push notifications
-- Document camera capture
-- Offline capability (view cached data)
-- Native performance and animations
+| Feature | Description |
+|---------|-------------|
+| User Authentication | Email/password, Google OAuth, MFA (TOTP) |
+| Principal Dashboard | Estate overview, progress tracking, quick actions |
+| Executor Dashboard | Task management, document access, notifications |
+| Heir Dashboard | View-only access, distribution tracking |
+| Estate Management | Create, edit, archive estates |
+| Asset Inventory | 5 categories (Financial, Property, Digital, Personal, Insurance) |
+| Document Vault | Upload, encrypt, organize, share documents |
+| Notification Center | In-app notifications, email preferences |
+| Institution Letters | Generate, track, mail notification letters |
+| Settings | Profile, security, preferences |
 
-#### Security & Compliance
-- AES-256 encryption at rest
-- TLS 1.3 encryption in transit
-- Role-based access control (RBAC)
-- Comprehensive audit logging
-- SOC 2 Type I readiness documentation
-- GDPR/CCPA compliance features
+### 3.3 Mobile Applications (React Native + Expo)
 
-#### Infrastructure
-- Production environment (Firebase Hosting with global CDN)
-- Staging environment (Firebase preview channels)
-- Automated deployments (GitHub Actions → Firebase)
-- Monitoring and alerting (Firebase Performance Monitoring, Cloud Logging)
-- Disaster recovery configuration (Firestore automatic backups)
+| Feature | iOS | Android |
+|---------|-----|---------|
+| Biometric Authentication | Face ID, Touch ID | Fingerprint |
+| Push Notifications | APNs | FCM |
+| Document Camera | Native camera capture | Native camera capture |
+| Offline Mode | Cached data viewing | Cached data viewing |
+| Deep Linking | Universal Links | App Links |
 
-### 4.2 Excluded from Scope (Post-MVP)
+### 3.4 Security Implementation
 
-The following features are explicitly excluded from this SOW and may be addressed in future engagements:
+| Control | Implementation |
+|---------|----------------|
+| Encryption at Rest | AES-256-GCM via Cloud KMS |
+| Encryption in Transit | TLS 1.3 |
+| Client-Side Encryption | Documents encrypted before upload |
+| Key Management | Cloud KMS with 90-day rotation |
+| MFA | TOTP (Google Authenticator, Authy) |
+| Session Management | JWT with refresh tokens, secure cookies |
+| Rate Limiting | 100 req/min per user |
+| Audit Logging | All actions logged to Cloud Logging |
 
-- Plaid integration for automated asset discovery
-- Lob integration for certified mail delivery
-- Full AI Assistant ("Shepherd") with ML capabilities
-- Spanish language localization
-- Complete Distribution Phase features
+### 3.5 Excluded from Scope (Post-MVP)
+
+- Plaid integration (automated asset discovery)
+- Lob integration (certified mail)
+- Full AI Assistant ("Shepherd")
+- Multi-language support
 - Cryptocurrency wallet integration
-- White Glove tier human agent workflows
-- HIPAA compliance certification
-- Public API for third-party developers
-- Admin panel advanced analytics
+- White Glove tier features
+- HIPAA certification
+- Public API
 
 ---
 
-## 5. Deliverables
+## 4. Deliverables
 
-### 5.1 Software Deliverables
+### 4.1 Software Deliverables
 
-| ID | Deliverable | Description | Acceptance Criteria |
-|----|-------------|-------------|---------------------|
-| D1 | FinalWish API | Firebase Cloud Functions backend | All API endpoints functional per specification |
-| D2 | FinalWish Web | Static HTML/Tailwind web application | Deployed on Firebase Hosting, responsive, accessible (WCAG 2.1 AA) |
-| D3 | FinalWish PWA | Progressive Web App | Installable, offline-capable, push notifications |
-| D4 | FinalWish iOS (Optional) | Flutter iOS application | Published on App Store |
-| D5 | FinalWish Android (Optional) | Flutter Android application | Published on Google Play Store |
-| D6 | Admin Dashboard | Internal administration interface | User management, estate viewing capabilities |
+| ID | Deliverable | Technology | Acceptance Criteria |
+|----|-------------|------------|---------------------|
+| D1 | FinalWishes API | Go on Cloud Run | All endpoints functional, <200ms p95 latency |
+| D2 | FinalWishes Web | React + Vite | Deployed, responsive, WCAG 2.1 AA |
+| D3 | FinalWishes iOS | React Native + Expo | Published on App Store |
+| D4 | FinalWishes Android | React Native + Expo | Published on Google Play |
+| D5 | Admin Dashboard | React | User management, estate viewing |
 
-### 5.2 Documentation Deliverables
+### 4.2 Documentation Deliverables
+
+| ID | Deliverable | Format |
+|----|-------------|--------|
+| D6 | API Documentation | OpenAPI 3.0 + Swagger UI |
+| D7 | User Guide | Markdown + PDF |
+| D8 | Admin Guide | Markdown |
+| D9 | Deployment Guide | Markdown + IaC |
+| D10 | Security Documentation | Markdown |
+
+### 4.3 Infrastructure Deliverables
 
 | ID | Deliverable | Description |
 |----|-------------|-------------|
-| D6 | API Documentation | OpenAPI 3.0 specification with examples |
-| D7 | User Guide | End-user documentation for all features |
-| D8 | Admin Guide | Internal operations and support guide |
-| D9 | Deployment Guide | Infrastructure setup and deployment procedures |
-| D10 | Architecture Decision Records | Documentation of technical decisions |
-
-### 5.3 Infrastructure Deliverables
-
-| ID | Deliverable | Description |
-|----|-------------|-------------|
-| D12 | Production Environment | Firebase Hosting with global CDN |
-| D13 | Staging Environment | Firebase preview channels |
-| D14 | CI/CD Pipeline | GitHub Actions → Firebase automated deployment |
-| D15 | Monitoring Setup | Firebase Performance Monitoring + Cloud Logging |
+| D11 | Production Environment | Cloud Run + Firestore + Cloud SQL |
+| D12 | Staging Environment | Mirrored production (scaled down) |
+| D13 | CI/CD Pipeline | GitHub Actions → Cloud Build → Cloud Run |
+| D14 | Monitoring | Cloud Monitoring + Sentry |
+| D15 | Backup System | Automated daily backups |
 
 ---
 
-## 6. Timeline & Milestones
+## 5. Timeline & Milestones
 
-**Project Duration:** 4 months (16 weeks)
-**Start Date:** Upon contract execution
-**Target Completion:** Start Date + 16 weeks
+### 5.1 Project Schedule
 
-### 6.1 Phase Schedule
+**Total Duration:** 5 months (20 weeks)
 
-| Phase | Duration | Focus Areas |
-|-------|----------|-------------|
-| **Phase 1: Foundation** | Weeks 1-4 | Firebase setup, authentication, core Firestore models |
-| **Phase 2: Core Features** | Weeks 5-8 | Estate management, document vault, settlement workflow |
-| **Phase 3: PWA & Mobile** | Weeks 9-12 | PWA optimization, optional Flutter apps |
-| **Phase 4: Polish & Launch** | Weeks 13-16 | Testing, accessibility, performance, go-live |
+| Month | Weeks | Focus | Deliverables |
+|-------|-------|-------|--------------|
+| **1** | 1-4 | Foundation | GCP setup, Auth, DB schema, React scaffold, Go API skeleton |
+| **2** | 5-8 | Core Features | Estate CRUD, Asset management, Go API endpoints |
+| **3** | 9-12 | Vault & Security | Document encryption, Notifications, Security hardening |
+| **4** | 13-16 | Mobile Apps | React Native iOS/Android, PWA optimization |
+| **5** | 17-20 | Launch Prep | Pen testing, Bug fixes, App Store submission, Launch |
 
-### 6.2 Key Milestones
+### 5.2 Key Milestones
 
-| Milestone | Target Date | Deliverable | Exit Criteria |
-|-----------|-------------|-------------|---------------|
-| **M1** | End Week 2 | Infrastructure Ready | Firebase deployed, CI/CD operational |
-| **M2** | End Week 4 | API Alpha | Core Cloud Functions functional (80% P0) |
-| **M3** | End Week 8 | Web Beta | Web app feature complete |
-| **M4** | End Week 12 | PWA Ready | PWA installable, offline-capable |
-| **M5** | End Week 14 | Launch Ready | All testing complete, zero P0 bugs |
-| **M6** | End Week 16 | Public Launch | Live on Firebase Hosting |
+| Milestone | Week | Deliverable | Exit Criteria |
+|-----------|------|-------------|---------------|
+| **M1** | 2 | Infrastructure Ready | GCP deployed, CI/CD operational |
+| **M2** | 4 | Auth Complete | Firebase Auth + MFA working end-to-end |
+| **M3** | 8 | API Alpha | Core Go endpoints functional (80% coverage) |
+| **M4** | 12 | Web Beta | React app feature complete |
+| **M5** | 16 | Mobile Beta | Apps in TestFlight + Internal Track |
+| **M6** | 18 | Security Complete | Penetration test passed |
+| **M7** | 20 | Production Launch | Live deployment, apps in stores |
 
-### 6.3 Payment Milestones
+### 5.3 Payment Milestones
 
-See Section 8 (Commercial Terms) for payment schedule tied to milestones.
+| Milestone | Percentage | Amount | Trigger |
+|-----------|------------|--------|---------|
+| Project Kickoff | 25% | $23,750 | Contract signed, GCP access |
+| Alpha Release (M3) | 25% | $23,750 | API Alpha complete |
+| Beta Release (M5) | 25% | $23,750 | Mobile Beta in TestFlight |
+| Production Launch (M7) | 25% | $23,750 | Apps live in stores |
+| **Total** | **100%** | **$95,000** | |
 
 ---
 
-## 7. Team & Resources
+## 6. Development Model
 
-### 7.1 Development Model: AI-Agentic
+### 6.1 AI-Agentic Development
 
-This project uses an **AI-Agentic Development Model** where AI tools (Claude, Warp, Cursor) perform the majority of development work under human oversight. This dramatically reduces cost while maintaining quality.
+This project uses an **AI-Agentic Development Model** where AI tools perform the majority of development work under human oversight.
 
-| Role | Model | Responsibilities |
-|------|-------|------------------|
-| Human Oversight | Part-time | Architecture review, acceptance testing, domain expertise, go/no-go decisions |
-| AI Stack Leader (Claude) | Full-time | All implementation, testing, documentation, cross-agent coordination |
-| AI Development Tools | Full-time | Cursor Pro, Warp, GitHub Copilot for code generation |
+| Role | Allocation | Responsibilities |
+|------|------------|------------------|
+| **Human Oversight** | Part-time | Architecture review, acceptance testing, domain expertise, go/no-go decisions |
+| **AI Stack Leader (Claude)** | Full-time | Implementation, testing, documentation, coordination |
+| **AI Development Tools** | Full-time | Cursor Pro, Warp, GitHub Copilot |
 
-**See COST_PROPOSAL.md Section 3 for detailed AI-Agentic architecture.**
+### 6.2 Quality Assurance
 
-### 7.2 Client Responsibilities
+| Test Type | Approach | Coverage Target |
+|-----------|----------|-----------------|
+| Unit Tests | AI-generated (Jest, Go testing) | 80% |
+| Integration Tests | AI-generated (API tests) | 90% of endpoints |
+| E2E Tests | AI-generated (Playwright) | Critical paths |
+| Security Testing | External vendor | OWASP Top 10 |
+| Performance Testing | k6 load testing | 100 concurrent users |
+
+### 6.3 Communication
+
+| Channel | Purpose | Frequency |
+|---------|---------|-----------|
+| GitHub Issues | Task tracking | Continuous |
+| Slack/Discord | Quick questions | As needed |
+| Weekly Update | Progress report | Weekly |
+| Milestone Review | Demo + approval | Per milestone |
+
+---
+
+## 7. Client Responsibilities
 
 The Client shall provide:
-- Access to required third-party accounts (Firebase/GCP, Apple Developer, Google Play Console)
-- Legal review and approval of Terms of Service, Privacy Policy, and notification templates
-- Brand assets (logo, colors, fonts) by Week 1
-- Timely feedback on deliverables (within 3 business days)
-- Subject matter expertise for estate settlement workflows
-- Final approval authority for go-live decision
 
-### 7.3 Communication
+1. **Access & Accounts**
+   - GCP/Firebase project with billing enabled
+   - Apple Developer account ($99/year)
+   - Google Play Console ($25 one-time)
+   - Domain for production deployment
 
-| Meeting | Frequency | Participants | Duration |
-|---------|-----------|--------------|----------|
-| Sprint Planning | Bi-weekly | All team + Client stakeholder | 2 hours |
-| Daily Standup | Daily | Dev team | 15 minutes |
-| Sprint Review | Bi-weekly | All team + Client | 1 hour |
-| Status Report | Weekly (Friday) | PM → Client | Written report |
+2. **Content & Assets**
+   - Brand assets (logo, colors, fonts) by Week 1
+   - Legal copy review (ToS, Privacy Policy) by Week 12
+   - Institution letter templates review by Week 10
+
+3. **Feedback & Approval**
+   - Timely feedback on deliverables (within 3 business days)
+   - Milestone approval within 5 business days
+   - Final go-live approval
+
+4. **Domain Expertise**
+   - Estate settlement workflow validation
+   - State-specific requirements for 6 launch states
+   - Institution notification requirements
 
 ---
 
@@ -228,109 +255,172 @@ The Client shall provide:
 
 ### 8.1 Pricing
 
-**See attached COST_PROPOSAL.md for detailed pricing breakdown.**
+| Item | Amount |
+|------|--------|
+| **Total Project Cost** | **$95,000 USD** |
+| Traditional Agency Equivalent | $400,000 - $500,000 |
+| **Savings** | **76-81%** |
 
-**Total Project Cost:** $80,000 - $100,000 USD (AI-Agentic model)
+### 8.2 Payment Terms
 
-*Traditional agency comparison: $350,000 - $450,000 (77-82% savings)*
-
-### 8.2 Payment Schedule
-
-| Milestone | Percentage | Amount | Due Date |
-|-----------|------------|--------|----------|
-| Contract Execution | 25% | $20,000 | Upon signing |
-| M2: API Alpha (Week 4) | 25% | $20,000 | End of Week 4 |
-| M4: PWA Ready (Week 12) | 25% | $20,000 | End of Week 12 |
-| M6: Launch (Week 16) | 25% | $20,000 | Upon launch |
-
-### 8.3 Payment Terms
 - Invoices due Net 15 from invoice date
 - Payments via wire transfer or ACH
 - Late payments subject to 1.5% monthly interest
 - Work may be paused if payment is >15 days overdue
 
-### 8.4 Expenses
-- All cloud infrastructure costs (Firebase/GCP) are pass-through at cost
-- Third-party service fees (Stripe, SendGrid, Persona) are pass-through at cost
-- Travel expenses (if required) billed at cost with prior approval
+### 8.3 Expenses
+
+- Cloud infrastructure costs: Pass-through at cost
+- Third-party services (Persona, SendGrid): Pass-through at cost
+- App Store fees: Client responsibility
 
 ---
 
 ## 9. Terms & Conditions
 
 ### 9.1 Intellectual Property
-- All custom code developed under this SOW shall be owned by the Client upon final payment
+
+- All custom code developed under this SOW shall be **owned by the Client** upon final payment
 - Contractor retains rights to pre-existing libraries and frameworks
 - Open-source components remain under their respective licenses
+- AI-generated code is considered work-for-hire
 
 ### 9.2 Confidentiality
+
 - Both parties agree to maintain confidentiality of proprietary information
 - NDA terms remain in effect for 3 years following project completion
+- Source code and documentation are confidential
 
 ### 9.3 Warranties
-- Contractor warrants deliverables will be free of material defects for 30 days post-launch
+
+- Deliverables will be free of material defects for **60 days** post-launch
 - Bug fixes during warranty period included at no additional cost
 - Warranty excludes issues caused by Client modifications
+- Warranty excludes third-party service outages
 
 ### 9.4 Limitation of Liability
+
 - Total liability limited to fees paid under this SOW
 - Neither party liable for indirect, consequential, or incidental damages
 
 ### 9.5 Change Management
+
 - Scope changes require written Change Request
 - Changes >8 hours require updated cost estimate
 - Changes >40 hours require SOW amendment
+- All changes must be approved before implementation
 
 ### 9.6 Termination
+
 - Either party may terminate with 30 days written notice
 - Upon termination, Client pays for work completed to date
-- Contractor delivers all work product and documentation
+- Contractor delivers all work product and documentation within 10 days
 
 ---
 
 ## 10. Assumptions
 
-1. Client has or will obtain required Firebase/GCP, Apple Developer and Google Play Console accounts
-2. Client will provide timely legal review (within 5 business days)
-3. Third-party APIs (Firebase, Stripe, SendGrid) remain available and stable
-4. No significant changes to App Store or Play Store guidelines during development
-5. Human oversight available for review/approval decisions
-6. Requirements are final after Week 8 (scope freeze)
-7. PWA acceptable for mobile MVP (native apps as optional add-on)
+1. Human oversight available for review/approval (minimum 5 hrs/week)
+2. GCP/Firebase accounts accessible and billable from Day 1
+3. Apple Developer and Google Play accounts ready by Week 14
+4. Third-party APIs (Firebase, Stripe, SendGrid) remain stable
+5. No significant App Store guideline changes during development
+6. Requirements finalized after Week 8 (scope freeze)
+7. English-only for MVP
+8. 6 launch states: Illinois, Michigan, Minnesota, DC, Virginia, Maryland
 
 ---
 
-## 11. Acceptance
+## 11. Risk Management
 
-This Statement of Work is accepted and agreed to by the authorized representatives of both parties:
+| Risk | Impact | Probability | Mitigation |
+|------|--------|-------------|------------|
+| API cost overruns | Medium | Medium | Usage monitoring, caching, included in contingency |
+| App Store rejection | Medium | Low | Pre-submission review, follow guidelines |
+| Third-party API changes | Medium | Medium | Abstraction layers, version pinning |
+| Security vulnerabilities | High | Low | Pen testing, code review, responsible disclosure |
+| Scope creep | High | Medium | Strict change management, scope freeze at Week 8 |
+
+---
+
+## 12. Acceptance
+
+This Statement of Work is accepted and agreed to by the authorized representatives of both parties.
 
 **Client:**
 
-| Signature | Date |
-|-----------|------|
-| | |
-| Name: | |
-| Title: | |
+| Field | Value |
+|-------|-------|
+| Signature | |
+| Name | |
+| Title | |
+| Date | |
 
 **Contractor:**
 
-| Signature | Date |
-|-----------|------|
-| | |
-| Name: | |
-| Title: | |
+| Field | Value |
+|-------|-------|
+| Signature | |
+| Name | |
+| Title | |
+| Date | |
 
 ---
 
-## Appendix A: Referenced Documents
+## Appendix A: Technology Stack Details
 
-1. REQUIREMENTS_SPECIFICATION.md
-2. PROJECT_SCOPE.md
-3. ARCHITECTURE_DESIGN.md
-4. DATA_MODEL.md
-5. API_SPECIFICATION.md
-6. COST_PROPOSAL.md
-7. RISK_MANAGEMENT.md
+### Frontend (React + Vite)
+```
+react: ^18.2.0
+vite: ^5.0.0
+tailwindcss: ^3.4.0
+react-query: ^5.0.0
+zustand: ^4.4.0
+react-router-dom: ^6.20.0
+```
+
+### Mobile (React Native + Expo)
+```
+react-native: 0.73.x
+expo: ~50.0.0
+react-navigation: ^6.x
+expo-secure-store: ~12.x
+```
+
+### Backend (Go)
+```
+go: 1.21+
+gin-gonic/gin: ^1.9.0
+firebase-admin-go: ^4.x
+cloud.google.com/go: latest
+```
+
+### Infrastructure
+```
+Cloud Run: Serverless containers
+Cloud SQL: PostgreSQL 15
+Firestore: Native mode
+Cloud Storage: Standard
+Cloud KMS: Software keys
+Cloud Build: CI/CD
+```
+
+---
+
+## Appendix B: API Endpoint Summary
+
+| Category | Endpoints | Auth Required |
+|----------|-----------|---------------|
+| Auth | 5 | Partial |
+| Users | 4 | Yes |
+| Estates | 8 | Yes |
+| Assets | 6 | Yes |
+| Documents | 7 | Yes |
+| Beneficiaries | 5 | Yes |
+| Notifications | 4 | Yes |
+| Institutions | 3 | Yes |
+| Admin | 6 | Yes (Admin role) |
+| **Total** | **48** | |
 
 ---
 
@@ -338,5 +428,6 @@ This Statement of Work is accepted and agreed to by the authorized representativ
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | FinalWish Team | Initial draft (AWS/Go architecture) |
-| 2.0.0 | 2025-12-03 | Claude | Rebranded to FinalWish, updated to Firebase/AI-Agentic architecture, revised pricing |
+| 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft (AWS/Go, $425K) |
+| 2.0.0 | 2025-12-03 | Claude | Firebase architecture, $80K, 4 months |
+| **3.0.0** | **2025-12-05** | **Claude** | **React+Go architecture, $95K, 5 months, mobile included** |

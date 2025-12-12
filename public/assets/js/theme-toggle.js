@@ -1,10 +1,10 @@
 /**
- * MyShepherd Theme Toggle - Fixed for photo sections
+ * FinalWishes Theme Toggle - Fixed for photo sections
  */
 (function() {
     'use strict';
     
-    var STORAGE_KEY = 'myshepherd-theme';
+    var STORAGE_KEY = 'finalwishes-theme';
     
     var themes = {
         dark: {
@@ -131,5 +131,5 @@
     
     // Expose globally
     window.toggleTheme = toggleTheme;
-    window.MyShepherdTheme = { toggle: toggleTheme, apply: applyTheme, get: getTheme };
+    window.FinalWishesTheme = { toggle: toggleTheme, apply: applyTheme, get: getTheme };
 })();

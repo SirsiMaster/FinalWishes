@@ -1,5 +1,5 @@
 # User Stories
-## MyShepherd - The Estate Operating System
+## FinalWishes - The Estate Operating System
 **Version:** 1.0.0
 **Date:** November 26, 2025
 
@@ -737,4 +737,4 @@
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft |
+| 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft |

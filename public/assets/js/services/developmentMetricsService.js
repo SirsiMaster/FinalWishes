@@ -1,6 +1,6 @@
 /**
  * Development Metrics Service
- * MyShepherd - Real-time development analytics
+ * FinalWishes - Real-time development analytics
  * 
  * Uses Firebase Modular SDK
  * 
@@ -34,7 +34,7 @@ class DevelopmentMetricsService {
             monthlyToolsCost: 650, // $/month (Warp AI, etc.)
             cacheTimeout: 5 * 60 * 1000, // 5 minutes
             gitHubOwner: 'YourOrg',
-            gitHubRepo: 'myshepherd',
+            gitHubRepo: 'finalwishes',
             projectStartDate: '2025-11-01', // Project start date
         };
         

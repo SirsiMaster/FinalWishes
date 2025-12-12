@@ -1,5 +1,5 @@
 # Requirements Specification
-## MyShepherd - The Estate Operating System
+## FinalWishes - The Estate Operating System
 **Version:** 1.1.0
 **Date:** November 26, 2025
 **Status:** Draft - Pending Approval
@@ -9,7 +9,7 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This document specifies the functional and non-functional requirements for the MyShepherd platform—an AI-powered estate management system designed to automate end-of-life administration across web, iOS, and Android platforms.
+This document specifies the functional and non-functional requirements for the FinalWishes platform—an AI-powered estate management system designed to automate end-of-life administration across web, iOS, and Android platforms.
 
 ### 1.2 Scope
 Legacy transforms the chaotic 18-month estate settlement process into a streamlined 4-phase protocol: **Intake → Verify → Notify → Distribute**. The system serves three primary user types: Principals (account holders planning their estate), Executors (managing an estate post-death), and Heirs (receiving assets).
@@ -360,5 +360,5 @@ Initial launch supports **5 jurisdictions** with state-specific probate rules an
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft |
+| 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), Firebase/GCP constraints, 4-month timeline |

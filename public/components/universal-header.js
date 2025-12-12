@@ -1,6 +1,6 @@
 /**
  * Universal Header Component
- * MyShepherd - Reusable page header
+ * FinalWishes - Reusable page header
  * 
  * Usage:
  *   <header id="universal-header-root" 
@@ -368,8 +368,8 @@
         });
         
         // Expose update function
-        window.MyShepherdHeader = window.MyShepherdHeader || {};
-        window.MyShepherdHeader.updateNotificationCount = updateCount;
+        window.FinalWishesHeader = window.FinalWishesHeader || {};
+        window.FinalWishesHeader.updateNotificationCount = updateCount;
     }
     
     /**
@@ -391,7 +391,7 @@
     }
     
     // Expose API
-    window.MyShepherdHeader = window.MyShepherdHeader || {};
-    window.MyShepherdHeader.render = renderHeader;
-    window.MyShepherdHeader.setTitle = setTitle;
+    window.FinalWishesHeader = window.FinalWishesHeader || {};
+    window.FinalWishesHeader.render = renderHeader;
+    window.FinalWishesHeader.setTitle = setTitle;
 })();

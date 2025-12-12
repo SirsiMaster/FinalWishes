@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADR) Index
 
-This document indexes all Architecture Decision Records for the MyShepherd platform.
+This document indexes all Architecture Decision Records for the FinalWishes platform.
 
 ## What is an ADR?
 

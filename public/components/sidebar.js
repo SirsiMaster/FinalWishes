@@ -1,6 +1,6 @@
 /**
  * Sidebar Component
- * MyShepherd - Reusable navigation sidebar
+ * FinalWishes - Reusable navigation sidebar
  * 
  * Usage:
  *   <div id="sidebar-root" data-active="dashboard"></div>
@@ -370,7 +370,7 @@
     }
     
     // Expose API
-    window.MyShepherdSidebar = {
+    window.FinalWishesSidebar = {
         render: renderSidebar,
         setActive: setActiveItem
     };

@@ -1,5 +1,5 @@
 # Project Scope Document
-## MyShepherd - The Estate Operating System
+## FinalWishes - The Estate Operating System
 **Version:** 3.0.0
 **Date:** December 5, 2025
 **Project Duration:** 5 Months (20 Weeks)
@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-MyShepherd is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 5-month development sprint.
+FinalWishes is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 5-month development sprint.
 
 **Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
@@ -21,7 +21,7 @@ MyShepherd is an AI-powered estate management platform that automates end-of-lif
 | **E-Filing Available** | Maryland (MDEC), Illinois, Minnesota (MNCIS) | Integrate with existing APIs |
 | **Build Connectors** | DC, Virginia | Automate paper processes, become benchmark |
 
-**Innovation Strategy:** For DC and Virginia, where court systems lack digital interfaces, MyShepherd will ingest the paper process and forms, automate form completion, and provide fillable/completed forms as currently required. This positions us as first movers and the benchmark for eventual state digitization.
+**Innovation Strategy:** For DC and Virginia, where court systems lack digital interfaces, FinalWishes will ingest the paper process and forms, automate form completion, and provide fillable/completed forms as currently required. This positions us as first movers and the benchmark for eventual state digitization.
 
 ---
 
@@ -191,10 +191,10 @@ MyShepherd is an AI-powered estate management platform that automates end-of-lif
 ### 4.1 Software Deliverables
 | Deliverable | Description | Acceptance Criteria |
 |-------------|-------------|---------------------|
-| MyShepherd API | Go backend on Cloud Run | All endpoints functional, documented |
-| MyShepherd Web | React web application | Deployed, responsive, accessible |
-| MyShepherd iOS | React Native iOS app | Live in App Store |
-| MyShepherd Android | React Native Android app | Live in Play Store |
+| FinalWishes API | Go backend on Cloud Run | All endpoints functional, documented |
+| FinalWishes Web | React web application | Deployed, responsive, accessible |
+| FinalWishes iOS | React Native iOS app | Live in App Store |
+| FinalWishes Android | React Native Android app | Live in Play Store |
 | Admin Dashboard | Internal admin interface | User management, estate viewing |
 | State Templates | Probate guides for 5 states | MD, IL, MN, DC, VA complete |
 | Court Connectors | Automated form completion | MD, IL, MN (e-filing), DC, VA (paper) |
@@ -342,5 +342,5 @@ The project is considered complete when:
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
-| 2.0.0 | 2025-12-05 | Claude | MyShepherd rebrand, 5-month timeline, React+Go+React Native stack |
-| **3.0.0** | **2025-12-05** | **Claude** | **MyShepherd rebrand, removed MVP language, 5 launch states (MD, IL, MN, DC, VA), innovation strategy for connector-building, full integrations (Plaid/Lob/DocuSign) from day one** |
+| 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |
+| **3.0.0** | **2025-12-05** | **Claude** | **FinalWishes rebrand, removed MVP language, 5 launch states (MD, IL, MN, DC, VA), innovation strategy for connector-building, full integrations (Plaid/Lob/DocuSign) from day one** |

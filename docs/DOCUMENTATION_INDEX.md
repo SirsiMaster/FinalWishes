@@ -1,7 +1,7 @@
-# MyShepherd Documentation Index
+# FinalWishes Documentation Index
 **Last Updated:** December 5, 2025
 
-This document clarifies the purpose and authority of each document in the MyShepherd project to avoid duplication and inconsistency.
+This document clarifies the purpose and authority of each document in the FinalWishes project to avoid duplication and inconsistency.
 
 ---
 

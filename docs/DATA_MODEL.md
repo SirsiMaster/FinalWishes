@@ -1,5 +1,5 @@
 # Data Model
-## MyShepherd - The Estate Operating System
+## FinalWishes - The Estate Operating System
 **Version:** 3.0.0
 **Date:** December 5, 2025
 **Database:** Firestore (NoSQL) + Cloud SQL (PII)
@@ -671,4 +671,4 @@ CREATE INDEX idx_heir_pii_heir ON heir_pii(heir_id);
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial PostgreSQL schema |
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Firestore + Cloud SQL hybrid |
-| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd, updated to 5 launch states** |
+| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to FinalWishes, updated to 5 launch states** |

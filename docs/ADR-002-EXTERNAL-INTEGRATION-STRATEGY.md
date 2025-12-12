@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-This ADR documents the **complete integration ecosystem** for MyShepherd, the Estate Operating System. After exhaustive analysis of government agencies, financial institutions, and court systems, we have identified both the limitations AND the opportunities.
+This ADR documents the **complete integration ecosystem** for FinalWishes, the Estate Operating System. After exhaustive analysis of government agencies, financial institutions, and court systems, we have identified both the limitations AND the opportunities.
 
 **The Reality:** Most estate settlement is still paper-based. There are no unified government APIs. Financial institutions have proprietary or non-existent programmatic interfaces. Court systems vary by county, not just state.
 
@@ -483,7 +483,7 @@ This document provides:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    MyShepherd Data Architecture                 │
+│                    FinalWishes Data Architecture                 │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  FIRESTORE (NoSQL)                                               │
@@ -521,7 +521,7 @@ This document provides:
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  CLOUD STORAGE (Documents)                                       │
-│  ├── Bucket: myshepherd-vault-{env}                            │
+│  ├── Bucket: finalwishes-vault-{env}                            │
 │  │   ├── /{estateId}/                      [TENANT BOUNDARY]   │
 │  │   │   ├── death-certificates/                               │
 │  │   │   ├── wills/                                            │
@@ -535,7 +535,7 @@ This document provides:
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  CLOUD KMS (Key Management)                                      │
-│  ├── Key Ring: myshepherd-{env}                                │
+│  ├── Key Ring: finalwishes-{env}                                │
 │  │   ├── document-encryption-key (AES-256)                     │
 │  │   ├── pii-encryption-key (AES-256)                          │
 │  │   └── Automatic rotation (90 days)                          │
@@ -721,7 +721,7 @@ This ensures that even a database breach doesn't expose all estates' data with a
 
 ### 8.1 Decision: Full Platform with Connector Innovation
 
-**MyShepherd will be a complete estate settlement platform that builds connectors where none exist.**
+**FinalWishes will be a complete estate settlement platform that builds connectors where none exist.**
 
 The competitive moat is:
 1. **State-specific expertise** (5 states at launch, expandable)

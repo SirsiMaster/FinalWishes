@@ -1,5 +1,5 @@
 # Market Justification & Competitive Analysis
-## MyShepherd - The Estate Operating System
+## FinalWishes - The Estate Operating System
 
 **Document Version:** 1.0.0
 **Date:** December 5, 2025
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This document captures the complete market research justifying the development of **MyShepherd**, an estate settlement platform. After exhaustive analysis of government agencies, financial institutions, court systems, and competitor offerings, we have identified a significant market opportunity.
+This document captures the complete market research justifying the development of **FinalWishes**, an estate settlement platform. After exhaustive analysis of government agencies, financial institutions, court systems, and competitor offerings, we have identified a significant market opportunity.
 
 ### The Core Problem
 
@@ -22,7 +22,7 @@ This document captures the complete market research justifying the development o
 - **State-by-state variations** in probate law and procedure
 - **Zero automation** available to consumers
 
-### The MyShepherd Opportunity
+### The FinalWishes Opportunity
 
 Where others see a fragmented, un-automatable market, we see an opportunity to:
 
@@ -83,7 +83,7 @@ Where others see a fragmented, un-automatable market, we see an opportunity to:
 
 **What NO competitor offers:**
 
-| Capability | Trust & Will | Everplans | Lantern | Atticus | MyShepherd |
+| Capability | Trust & Will | Everplans | Lantern | Atticus | FinalWishes |
 |------------|--------------|-----------|---------|---------|------------|
 | Will creation | ✅ | ❌ | ❌ | ❌ | ❌ (out of scope) |
 | Document vault | ❌ | ✅ | ❌ | ❌ | ✅ |
@@ -105,7 +105,7 @@ Where others see a fragmented, un-automatable market, we see an opportunity to:
 | Lantern | Freemium | Free - $149 |
 | Empathy | B2B enterprise | $5-15/employee/month |
 | Atticus | Subscription | $99/month |
-| **MyShepherd** | Subscription | **TBD** (est. $49-99/month) |
+| **FinalWishes** | Subscription | **TBD** (est. $49-99/month) |
 
 ---
 
@@ -147,11 +147,11 @@ After exhaustive research, the reality is stark:
 | **Virginia** | ⚠️ Partial | VACIS | 35 of 120 courts |
 | **DC** | ⚠️ Limited | DC Portal | Probate limited |
 
-**MyShepherd Strategy:** For states WITH e-filing, we guide users through those systems. For states WITHOUT, we become the connector—ingesting paper forms, automating completion, outputting compliant documents.
+**FinalWishes Strategy:** For states WITH e-filing, we guide users through those systems. For states WITHOUT, we become the connector—ingesting paper forms, automating completion, outputting compliant documents.
 
 ---
 
-## Part 4: The MyShepherd Innovation
+## Part 4: The FinalWishes Innovation
 
 ### 4.1 Where We Lead, States Will Follow
 
@@ -163,7 +163,7 @@ For states like Virginia and DC with limited e-filing:
 3. **Generate compliant output** - Produce print-ready, legally compliant forms
 4. **Track everything** - Even when submission is manual, track status
 
-When states eventually modernize, they'll look to platforms like MyShepherd as the benchmark for what their systems should do.
+When states eventually modernize, they'll look to platforms like FinalWishes as the benchmark for what their systems should do.
 
 ### 4.2 The Form Library Moat
 
@@ -307,7 +307,7 @@ Post-launch, expand to additional states based on:
 
 Trust & Will dominates **estate planning** (will creation). We dominate **estate settlement** (after death).
 
-These are complementary, not competitive. Users complete Trust & Will, then use MyShepherd when the time comes.
+These are complementary, not competitive. Users complete Trust & Will, then use FinalWishes when the time comes.
 
 ### 7.2 Technical Moat
 
@@ -343,7 +343,7 @@ As usage grows:
 
 ## Summary
 
-**MyShepherd exists because:**
+**FinalWishes exists because:**
 
 1. **The problem is universal** - 3.2M Americans die each year, creating millions of estates
 2. **The process is broken** - Paper-based, fragmented, 18+ months of chaos

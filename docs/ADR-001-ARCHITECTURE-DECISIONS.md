@@ -1,5 +1,5 @@
 # Architecture Decision Record (ADR-001)
-## MyShepherd Platform - Technology & Security Decisions
+## FinalWishes Platform - Technology & Security Decisions
 
 **Document Version:** 2.0.0
 **Date:** December 5, 2025
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-This document records the architectural decisions made for the MyShepherd platform, including technology stack selection, security architecture, and cloud provider choices. Each decision includes context, options considered, justification, and industry comparisons.
+This document records the architectural decisions made for the FinalWishes platform, including technology stack selection, security architecture, and cloud provider choices. Each decision includes context, options considered, justification, and industry comparisons.
 
 These decisions prioritize **practical security over theoretical perfection**, balancing regulatory requirements with delivery timeline and cost constraints.
 
@@ -19,7 +19,7 @@ These decisions prioritize **practical security over theoretical perfection**, b
 ## ADR-001: Security Compliance Level
 
 ### Context
-MyShepherd handles sensitive estate data including:
+FinalWishes handles sensitive estate data including:
 - Personal Identifiable Information (PII)
 - Financial account references
 - Legal documents (wills, trusts, death certificates)
@@ -174,7 +174,7 @@ Evaluate whether to stay on Google Cloud Platform or migrate to AWS or Azure.
 
 **There is no security advantage to switching providers.** All three meet bank-grade compliance requirements.
 
-#### Feature Comparison for MyShepherd
+#### Feature Comparison for FinalWishes
 
 | Feature | GCP | AWS Equivalent | Migration Effort |
 |---------|-----|----------------|------------------|
@@ -246,7 +246,7 @@ Current Firebase Functions use Node.js. Issues:
 - Larger attack surface (npm dependencies)
 - Memory usage higher than Go
 
-#### Go Advantages for MyShepherd
+#### Go Advantages for FinalWishes
 
 1. **Official Firebase Admin SDK** - First-class support
 2. **Excellent crypto stdlib** - `crypto/aes`, `crypto/cipher` are well-audited
@@ -346,7 +346,7 @@ Mobile Application:
 ## ADR-006: Security Architecture
 
 ### Context
-Define the comprehensive security architecture for MyShepherd.
+Define the comprehensive security architecture for FinalWishes.
 
 ### Decision: **Defense-in-Depth with Practical Controls**
 
@@ -354,7 +354,7 @@ Define the comprehensive security architecture for MyShepherd.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    MyShepherd Security Architecture              │
+│                    FinalWishes Security Architecture              │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  LAYER 1: NETWORK SECURITY                                       │

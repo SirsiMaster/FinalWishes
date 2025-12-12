@@ -1,6 +1,6 @@
 /**
  * Firebase Modular SDK Initialization
- * MyShepherd - "The Estate Operating System"
+ * FinalWishes - "The Estate Operating System"
  * 
  * IMPROVEMENTS OVER ASSIDUOUS:
  * - Better TypeScript-style JSDoc annotations
@@ -11,7 +11,7 @@
  * - Cleaner service separation
  * 
  * @version 2.0.0
- * @author MyShepherd AI Development Team
+ * @author FinalWishes AI Development Team
  */
 
 // Import Firebase modular SDK
@@ -63,7 +63,7 @@ import {
 // ============================================================================
 
 /**
- * Firebase configuration - MyShepherd
+ * Firebase configuration - FinalWishes
  * @type {Object}
  */
 const firebaseConfig = {

@@ -93,9 +93,9 @@ body {
     font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.6;
-    color: var(--text-primary);
-    background-color: var(--body-bg-color);
-    background-image: var(--body-bg-image);
+    color: #FFFFFF !important;
+    background-color: #0f172a !important;
+    background-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%) !important;
     background-attachment: fixed;
     min-height: 100vh;
 }

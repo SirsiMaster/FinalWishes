@@ -96,18 +96,18 @@ h6 {
     min-height: 100vh;
 }
 
-/* Sidebar */
+/* Sidebar - Royal Blue & Gold */
 .sidebar {
     width: 260px !important;
-    background: #FFFFFF !important;
-    border-right: 1px solid #E5E7EB !important;
+    background: #1e3a8a !important;
+    /* Royal Blue (Not Navy) */
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .sidebar-logo {
-    color: #0f172a !important;
-    /* Navy logo text */
+    color: #FFFFFF !important;
     font-family: 'Cinzel', serif !important;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .sidebar-logo svg {
@@ -115,20 +115,21 @@ h6 {
 }
 
 .nav-item {
-    color: #4b5563 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    /* High contrast offset white */
     border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
-    color: #111827 !important;
-    background: #F9FAFB !important;
+    color: #FFFFFF !important;
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
 .nav-item.active {
-    color: #b89c3a !important;
-    /* Darker gold for text readability */
-    background: #FFFBEB !important;
-    /* Very light gold bg */
+    color: #C8A951 !important;
+    /* Gold text */
+    background: rgba(0, 0, 0, 0.2) !important;
+    /* Darker shading for active state */
     border-left-color: #C8A951 !important;
     font-weight: 600;
 }

@@ -492,14 +492,330 @@
 
         <div class="tabs-container">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('cost')">Cost Proposal</button>
-                <button class="tab" onclick="showTab('sow')">Statement of Work</button>
+                <button class="tab active" onclick="showTab('sow')">Statement of Work</button>
+                <button class="tab" onclick="showTab('cost')">Cost Proposal</button>
                 <button class="tab" onclick="showTab('contract')">Contract</button>
             </div>
         </div>
 
+        <!-- SOW Tab (Active by Default) -->
+        <div id="sow-tab" class="tab-content active">
+            <section class="document glass-panel">
+                <div class="doc-header">
+                    <h2 class="gold-heading">Statement of Work (SOW)</h2>
+                </div>
+
+                <div class="adr-content-injection">
+                    <h3 class="gold-heading">Executive Summary</h3>
+                    <p>This Statement of Work documents the <strong>refined implementation plan</strong> for
+                        FinalWishes. It solidifies the decision to self-host key infrastructure (DocuSeal) and leverage
+                        the latest AI models (Gemini 3.0) to maximize efficiency and reduce operating costs.</p>
+                    <p><strong>The Reality:</strong> Most estate settlement is still paper-based. There are no unified
+                        government APIs. Financial institutions have proprietary or non-existent programmatic
+                        interfaces. Court systems vary by county, not just state.</p>
+                    <p><strong>The Innovation:</strong> Where connectors don't exist, we BUILD THEM. We become the
+                        benchmark for state adoption of automated estate settlement.</p>
+
+                    <h3 class="gold-heading">1. Strategic Approach</h3>
+                    <p><strong>The $95K/5-month scope includes:</strong></p>
+                    <ul>
+                        <li>Full automation for states WITH e-filing (MD, IL, MN)</li>
+                        <li>Form library covering ~45 probate forms across 3 states</li>
+                        <li>Complete user guidance through every step (manual or automated)</li>
+                        <li>Self-hosted DocuSeal for e-signatures (Postgres compatible, Cost saving vs DocuSign)</li>
+                    </ul>
+
+                    <h3 class="gold-heading">2. Complete Document Inventory</h3>
+
+                    <h4 class="gold-heading">2.1 Death & Identity Documents</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Source</th>
+                                    <th>API Available</th>
+                                    <th>Integration Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Death Certificate</td>
+                                    <td>State Vital Records Office</td>
+                                    <td><strong>NO</strong> (most states)</td>
+                                    <td>Manual upload, OCR extraction</td>
+                                </tr>
+                                <tr>
+                                    <td>Social Security Card</td>
+                                    <td>SSA</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Reference only</td>
+                                </tr>
+                                <tr>
+                                    <td>Birth Certificate</td>
+                                    <td>State Vital Records</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Manual upload</td>
+                                </tr>
+                                <tr>
+                                    <td>Government ID</td>
+                                    <td>State DMV</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Identity verification services</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><strong>Integration Reality:</strong> All identity documents require manual upload. OCR can
+                        extract data, but source APIs don't exist.</p>
+
+                    <h4 class="gold-heading">2.2 Probate Court Documents</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Filed With</th>
+                                    <th>API Available</th>
+                                    <th>Integration Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Petition for Probate</td>
+                                    <td>County Probate Court</td>
+                                    <td><strong>VARIES</strong></td>
+                                    <td>Template generation, manual filing</td>
+                                </tr>
+                                <tr>
+                                    <td>Letters Testamentary</td>
+                                    <td>Probate Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Track status manually</td>
+                                </tr>
+                                <tr>
+                                    <td>Inventory & Appraisal</td>
+                                    <td>Probate Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Template generation</td>
+                                </tr>
+                                <tr>
+                                    <td>Creditor Notice</td>
+                                    <td>Newspaper + Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Template generation</td>
+                                </tr>
+                                <tr>
+                                    <td>Final Accounting</td>
+                                    <td>Probate Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Template generation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="gold-heading">2.3 Financial Account Documents</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Source</th>
+                                    <th>API Available</th>
+                                    <th>Integration Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bank Statements</td>
+                                    <td>Banks</td>
+                                    <td><strong>Plaid</strong> (read)</td>
+                                    <td>Plaid Transactions API</td>
+                                </tr>
+                                <tr>
+                                    <td>Investment Statements</td>
+                                    <td>Brokerages</td>
+                                    <td><strong>Plaid</strong> (read)</td>
+                                    <td>Plaid Investments API</td>
+                                </tr>
+                                <tr>
+                                    <td>Retirement Account</td>
+                                    <td>Plan Administrators</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Manual upload, claim forms</td>
+                                </tr>
+                                <tr>
+                                    <td>Life Insurance</td>
+                                    <td>Insurance Cos</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Manual upload, claim forms</td>
+                                </tr>
+                                <tr>
+                                    <td>Mortgage Statements</td>
+                                    <td>Lenders</td>
+                                    <td><strong>Plaid</strong> (liabilities)</td>
+                                    <td>Plaid Liabilities API</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="gold-heading">3. Government Agency Integration Analysis</h3>
+
+                    <h4 class="gold-heading">3.1 Federal Agencies</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Agency</th>
+                                    <th>Purpose</th>
+                                    <th>API/Integration</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>SSA</strong></td>
+                                    <td>Death report, benefits stop</td>
+                                    <td><strong>NO API</strong></td>
+                                    <td>Phone/in-person only</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IRS</strong></td>
+                                    <td>EIN, taxes</td>
+                                    <td><strong>Limited</strong></td>
+                                    <td>EIN online; Form 706 paper only</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>VA</strong></td>
+                                    <td>Benefits stop, burial</td>
+                                    <td><strong>eBenefits</strong></td>
+                                    <td>Some online, mostly phone</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><strong>Federal Agency Reality:</strong> Zero useful APIs. All require phone, mail, or in-person
+                        interaction.</p>
+
+                    <h4 class="gold-heading">3.2 State Agencies (Launch States)</h4>
+                    <p><strong>Maryland:</strong> Register of Wills (MDEC e-filing available).<br>
+                        <strong>Illinois:</strong> Circuit Court (eCourt in Cook County).<br>
+                        <strong>Minnesota:</strong> District Court (MNCIS statewide e-filing).
+                    </p>
+
+                    <h3 class="gold-heading">4. Technical Stack & Architecture</h3>
+
+                    <h4 class="gold-heading">4.1 E-Signature (DocuSeal)</h4>
+                    <p><strong>Decision:</strong> Use <strong>DocuSeal</strong> (Self-Hosted).</p>
+                    <ul>
+                        <li><strong>Architecture Synergy:</strong> DocuSeal supports <strong>PostgreSQL</strong> (Cloud
+                            SQL).</li>
+                        <li><strong>Control:</strong> Data stays in our infrastructure (Cloud SQL/Storage).</li>
+                        <li><strong>Cost:</strong> Fixed infrastructure cost (~$50/mo) vs per-envelope pricing.</li>
+                    </ul>
+
+                    <h4 class="gold-heading">4.2 Document Processing</h4>
+                    <p><strong>Decision:</strong> Google Document AI (OCR, entity extraction).</p>
+
+                    <h4 class="gold-heading">4.3 Certified Mail</h4>
+                    <p><strong>Decision:</strong> Lob (Address verification, certified mail tracking).</p>
+
+                    <h4 class="gold-heading">4.4 Data Architecture (Multi-Tenant)</h4>
+                    <p>Each estate's data must be completely isolated. We employ a hybrid architecture:</p>
+                    <ul>
+                        <li><strong>Firestore (NoSQL):</strong> User profiles, estate metadata, task tracking.</li>
+                        <li><strong>Cloud SQL (PostgreSQL):</strong> PII Vault (SSNs, Account Numbers) with row-level
+                            security.</li>
+                        <li><strong>Cloud Storage:</strong> Encrypted document vault with client-side AES-256-GCM.</li>
+                    </ul>
+
+                    <h3 class="gold-heading">5. Scope Assessment & Recommendations</h3>
+
+                    <h4 class="gold-heading">5.1 What CAN Be Automated (MVP)</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Capability</th>
+                                    <th>Effort</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Document vault (upload, organize, encrypt)</td>
+                                    <td>Low</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Asset inventory tracking</td>
+                                    <td>Low</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>State-specific form generation (PDF)</td>
+                                    <td>Medium</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Probate timeline/checklist guidance</td>
+                                    <td>Medium</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Institution notification letter generation</td>
+                                    <td>Medium</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Certified mail via Lob</td>
+                                    <td>Low</td>
+                                    <td>Medium</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="gold-heading">5.2 Full Scope for $95K / 5 Months</h4>
+                    <p><strong>INCLUDED IN INITIAL RELEASE:</strong></p>
+                    <ol>
+                        <li><strong>Core Platform:</strong> Auth, Estate Management, Vault, Beneficiary Tracking.</li>
+                        <li><strong>Guidance System (The Shepherd):</strong> State checklists (5 states), Form library,
+                            Task tracking.</li>
+                        <li><strong>Document Generation:</strong> Notification letters, Court forms (PDF), Certified
+                            mail.</li>
+                        <li><strong>Full Integrations:</strong> Plaid (Account discovery), DocuSeal (Self-hosted), Lob,
+                            Vertex AI (Gemini 3.0).</li>
+                        <li><strong>Mobile Apps:</strong> React Native iOS + Android with document capture.</li>
+                    </ol>
+
+                    <h3 class="gold-heading">6. Final Decision</h3>
+                    <p><strong>FinalWishes will be a complete estate settlement platform that builds connectors where
+                            none exist.</strong></p>
+                    <p>The competitive moat is:</p>
+                    <ol>
+                        <li><strong>State-specific expertise</strong> (5 states at launch)</li>
+                        <li><strong>Form template library</strong> (~75 forms)</li>
+                        <li><strong>Connector strategy</strong> (we build what government doesn't provide)</li>
+                        <li><strong>Progress tracking</strong> (visibility into 18-month process)</li>
+                        <li><strong>Secure document vault</strong> (zero-knowledge)</li>
+                    </ol>
+                    <p><strong>Can we build a functional estate settlement platform for $95K in 5 months? YES.</strong>
+                    </p>
+                </div>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="btn-gold"
+                        style="background: var(--color-gold); border: none; padding: 10px 20px; font-family: 'Cinzel', serif; font-weight: bold; cursor: pointer;">Download
+                        Full SOW & ADR PDF</button>
+                </div>
+            </section>
+        </div>
+
         <!-- Cost Tab -->
-        <div id="cost-tab" class="tab-content active">
+        <div id="cost-tab" class="tab-content">
             <!-- Main Content Container with Glass Panel -->
             <section class="document glass-panel">
                 <div class="doc-header">
@@ -654,212 +970,7 @@
             </section>
         </div>
 
-        <!-- SOW Tab -->
-        <div id="sow-tab" class="tab-content">
-            <section class="document glass-panel">
-                <div class="doc-header">
-                    <h2 class="gold-heading">Statement of Work (SOW)</h2>
-                </div>
 
-                <h3 class="gold-heading">1. Executive Overview</h3>
-                <p>This Statement of Work ("SOW") defines the comprehensive scope for the <strong>MyShepherd /
-                        FinalWishes Estate Operating System</strong>. We will digitize and automate the estate
-                    settlement process for "Launch States" (Maryland, Illinois, Minnesota), building a bridge between
-                    archaic government systems and modern digital expectations.</p>
-                <p><strong>Objective:</strong> Deliver a "Vault-Grade" secure platform that guides users through the 18+
-                    month probate process, automating form generation, asset discovery, and stakeholder communication.
-                </p>
-
-                <h3 class="gold-heading">2. Detailed Scope of Services</h3>
-
-                <h4 class="gold-heading">2.1 Core Vault & Data Architecture</h4>
-                <p>Implementation of a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture ensures total data
-                    privacy. We employ a hybrid storage layer (Cloud SQL + Firestore) and a per-tenant file vault (Cloud
-                    Storage) with AES-256 encryption at rest (Cloud KMS). SOC 2 Type II controls are baked in from day
-                    one.</p>
-
-                <h4 class="gold-heading">2.2 Document Inventory & Automation</h4>
-                <p>We automate or provide manual guidance for the following critically identified document categories:
-                </p>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Action / Integration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Identity</strong></td>
-                                <td>Manual upload/OCR (Death Certs, IDs). Secure validation via Persona/Jumio logic.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Probate (MD, IL, MN)</strong></td>
-                                <td>MDEC (MD), eCourt (IL), MNCIS (MN) integrations or "Ready-to-Print" PDF generation
-                                    where APIs fail.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Financial</strong></td>
-                                <td>Plaid (Balances, Transactions, Liabilities). Auto-generation of "Notice of Death"
-                                    letters.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h4 class="gold-heading">2.3 System Integrations & Tech Stack</h4>
-                <div class="tech-stack" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <div class="tech-item"
-                        style="border: 1px solid var(--color-gold); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.2);">
-                        <strong>Plaid</strong><br><small>Banking Data</small>
-                    </div>
-                    <div class="tech-item"
-                        style="border: 1px solid var(--color-gold); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.2);">
-                        <strong>DocuSeal</strong><br><small>Self-Hosted E-Sign</small>
-                    </div>
-                    <div class="tech-item"
-                        style="border: 1px solid var(--color-gold); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.2);">
-                        <strong>Lob</strong><br><small>Certified Mail</small>
-                    </div>
-                    <div class="tech-item"
-                        style="border: 1px solid var(--color-gold); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.2);">
-                        <strong>Vertex AI</strong><br><small>Legal RAG Engine</small>
-                    </div>
-                    <div class="tech-item"
-                        style="border: 1px solid var(--color-gold); padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.2);">
-                        <strong>DocAI</strong><br><small>OCR Extraction</small>
-                    </div>
-                </div>
-
-                <h4 class="gold-heading">2.4 "The Shepherd" Guidance Engine</h4>
-                <p>A proprietary logic engine that:</p>
-                <ul>
-                    <li>Ingests MD, IL, and MN probate laws.</li>
-                    <li>Generates a dynamic 18-month Gantt chart.</li>
-                    <li>Proactively alerts for tax and court deadlines.</li>
-                    <li>Uses Gemini 3.0 for context-aware legal guidance.</li>
-                </ul>
-
-                <h3 class="gold-heading">3. Work Breakdown Structure (WBS)</h3>
-
-                <h4 class="gold-heading">PHASE 1: FOUNDATION & VAULT (Weeks 1-4)</h4>
-                <ul>
-                    <li>GCP Infrastructure (Cloud Run, SQL, Firestore, VPC).</li>
-                    <li>CI/CD & Auth (Firebase + MFA).</li>
-                    <li>Schema Design (Heirs vs. Documents).</li>
-                    <li>Vault Crypto Service (AES-256).</li>
-                    <li>Self-Hosted DocuSeal Deployment.</li>
-                </ul>
-
-                <h4 class="gold-heading">PHASE 2: CORE LOGIC & ENGINES (Weeks 5-10)</h4>
-                <ul>
-                    <li>Plaid Link Asset Module.</li>
-                    <li>State Engines: MD (Register of Wills), IL (Probate Div), MN (District Court).</li>
-                    <li>Gemini RAG Vector Store.</li>
-                    <li>PDF Stamper Service.</li>
-                </ul>
-
-                <h4 class="gold-heading">PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</h4>
-                <ul>
-                    <li>React Native mobile shell (Bio-Auth, Scanner).</li>
-                    <li>Plaid/Lob Webhooks.</li>
-                    <li>Offline Sync Engine.</li>
-                </ul>
-
-                <h4 class="gold-heading">PHASE 4: SECURITY & LAUNCH (Weeks 17-20)</h4>
-                <ul>
-                    <li>3rd Party Pen Test & Remediation.</li>
-                    <li>SOC 2 Evidence Collection.</li>
-                    <li>Load Testing (1k concurrent users).</li>
-                    <li>App Store Launch & Production Migration.</li>
-                </ul>
-
-                <h3 class="gold-heading">4. Acceptance Criteria</h3>
-                <ul>
-                    <li><strong>Functional:</strong> All User Stories pass QA.</li>
-                    <li><strong>Security:</strong> Zero functionality without Auth; Encryption verified.</li>
-                    <li><strong>Performance:</strong> API P95 < 200ms.</li>
-                    <li><strong>Design:</strong> Matches "Royal Neo-Deco" Figma.</li>
-                </ul>
-
-                <!-- ADR Appendix Embed -->
-                <div style="margin-top: 40px; border-top: 1px solid var(--color-gold); padding-top: 20px;">
-                    <details>
-                        <summary
-                            style="cursor: pointer; color: var(--color-gold); font-family: 'Cinzel', serif; font-weight: bold;">
-                            APPENDIX A: FULL IMPLEMENTATION PLAN (ADR-002)</summary>
-                        <div
-                            style="background: rgba(0,0,0,0.3); padding: 20px; margin-top: 10px; border-radius: 4px; overflow-x: auto;">
-                            <!-- Content from ADR-002 embedded below -->
-                            <h2 style="margin-top:0;">Architecture Decision Record (ADR-002)</h2>
-                            <p><strong>Status:</strong> ACCEPTED | <strong>Date:</strong> Dec 11, 2025</p>
-                            <hr style="border-color: rgba(255,255,255,0.1);">
-
-                            <h4>Executive Summary</h4>
-                            <p>This ADR documents the refined implementation plan for FinalWishes, solidifying
-                                self-hosted DocuSeal and Gemini 3.0 architecture.</p>
-
-                            <h4>Part 1: Document Inventory Highlights</h4>
-                            <table
-                                style="width:100%; border-collapse: collapse; font-size: 0.8em; margin-bottom: 20px;">
-                                <tr style="border-bottom: 1px solid #555;">
-                                    <th style="text-align:left;">Document</th>
-                                    <th style="text-align:left;">API?</th>
-                                    <th style="text-align:left;">Strategy</th>
-                                </tr>
-                                <tr>
-                                    <td>Death Certificate</td>
-                                    <td>NO</td>
-                                    <td>Manual Upload/OCR</td>
-                                </tr>
-                                <tr>
-                                    <td>Probate Petition</td>
-                                    <td>Varies</td>
-                                    <td>Template Generation</td>
-                                </tr>
-                                <tr>
-                                    <td>Bank Statements</td>
-                                    <td>YES (Plaid)</td>
-                                    <td>Plaid API</td>
-                                </tr>
-                                <tr>
-                                    <td>Real Property Deed</td>
-                                    <td>NO</td>
-                                    <td>Manual Upload</td>
-                                </tr>
-                            </table>
-
-                            <h4>Part 2: Integration Analysis</h4>
-                            <p><strong>Federal:</strong> SSA, IRS, VA have zero useful public APIs for this. We rely on
-                                manual reporting or paper generation.<br>
-                                <strong>State (Launch):</strong> MD (MDEC), IL (eCourt), MN (MNCIS) have e-filing
-                                systems we will integrate with or guide users through.
-                            </p>
-
-                            <h4>Part 3: Financial Integrations</h4>
-                            <p><strong>Plaid</strong> covers 95% of US banking. We use it for read-only access
-                                (Balances/Transactions) and Liabilities. Account closure still requires manual
-                                intervention (letters/phone).</p>
-
-                            <h4>Part 4: E-Signature (DocuSeal)</h4>
-                            <p>Self-hosted DocuSeal on Cloud Run is chosen over DocuSign API to save costs and maintain
-                                data sovereignty within our VPC.</p>
-
-                            <p><em>(Refer to the full PDF documentation for the complete 15-page technical
-                                    specification.)</em></p>
-                        </div>
-                    </details>
-                </div>
-
-                <div style="margin-top: 30px; text-align: center;">
-                    <button class="btn-gold"
-                        style="background: var(--color-gold); border: none; padding: 10px 20px; font-family: 'Cinzel', serif; font-weight: bold; cursor: pointer;">Download
-                        Full SOW & ADR PDF</button>
-                </div>
-            </section>
-        </div>
         <!-- Contract Tab -->
         <div id="contract-tab" class="tab-content">
             <div class="document" style="border: 2px solid var(--color-gold);">

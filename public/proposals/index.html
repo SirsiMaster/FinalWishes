@@ -314,6 +314,57 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
+        /* Atomic & Comparison Table Styles */
+        .atomic-table th,
+        .atomic-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .atomic-table .subtotal-row td {
+            background: rgba(200, 169, 81, 0.1);
+            color: var(--color-gold);
+            font-weight: 700;
+            border-top: 1px solid var(--color-gold);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 16px;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .highlight-col {
+            background: rgba(200, 169, 81, 0.1);
+            border-left: 1px solid rgba(200, 169, 81, 0.3);
+            border-right: 1px solid rgba(200, 169, 81, 0.3);
+            color: var(--color-gold) !important;
+            font-weight: 700;
+        }
+
+        .comparison-table thead th.highlight-col {
+            background: var(--color-gold);
+            color: #000 !important;
+        }
+
+        .cost-intro {
+            font-size: 1.1rem;
+            border-left: 3px solid var(--color-gold);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -819,153 +870,338 @@
             <!-- Main Content Container with Glass Panel -->
             <section class="document glass-panel">
                 <div class="doc-header">
-                    <h2 class="gold-heading">Cost Proposal</h2>
+                    <h2 class="gold-heading">Cost Proposal & ROI</h2>
                 </div>
 
-                <h3 class="gold-heading">1. Executive Summary</h3>
-                <p>This Cost Proposal outlines the financial investment required for the comprehensive development and
-                    launch of the <strong>MyShepherd / FinalWishes Estate Operating System</strong>. The total project
-                    development cost is <strong>$95,000</strong>, structured across four key milestones. This investment
-                    delivers a "Vault-Grade" secure platform, fully automated for three launch states, with innovation
-                    connectors for complex edge cases.</p>
-
-                <div class="callout-box"
-                    style="background: rgba(200, 169, 81, 0.1); border: 1px solid var(--color-gold); padding: 15px; margin: 20px 0; border-radius: 4px;">
-                    <h4 style="color: var(--color-gold); margin-top: 0;">Key Assumptions & Exclusions</h4>
-                    <ul style="margin-bottom: 0;">
-                        <li><strong>Third-Party APIs:</strong> Pricing based on current public rates for Plaid, Lob, and
-                            Google Cloud. Client pays these directly or reimburses as pass-through.</li>
-                        <li><strong>Contingency:</strong> A 10% contingency is recommended for unforeseen regulatory
-                            changes or additional innovation connectors.</li>
-                        <li><strong>Revenue Model:</strong> ROI analysis assumes 1,000 paying users at $199/year
-                            subscription.</li>
-                        <li><strong>Legal Services:</strong> Excludes custom legal work beyond the standard provided
-                            templates.</li>
-                    </ul>
+                <div class="cost-intro">
+                    <p>This proposal offers a transparent, <strong>atomic breakdown</strong> of the investment
+                        required to build your "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or
+                        No-Code MVPs, we provide a fixed-price engineering partnership with line-item visibility.</p>
                 </div>
 
-                <h3 class="gold-heading">2. Detailed Cost Model</h3>
-
-                <h4 style="color: var(--color-gold);">2.1 Base Infrastructure & Development (Fixed)</h4>
+                <h3 class="gold-heading">1. Comparative Market Analysis</h3>
+                <p>Why build with 111 Venture Studio vs. alternatives?</p>
                 <div class="table-wrapper">
-                    <table class="cost-table">
+                    <table class="cost-table comparison-table">
                         <thead>
                             <tr>
-                                <th>Item</th>
-                                <th>Milestone</th>
-                                <th>Amount</th>
+                                <th>Metric</th>
+                                <th class="highlight-col">FinalWishes (111 VS)</th>
+                                <th>"Big Law" Custom Tech</th>
+                                <th>Typical Dev Agency</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Phase 1: Foundation & Vault</strong><br><small>Identity, Auth, Encryption,
-                                        DocuSeal Setup</small></td>
-                                <td>Kickoff (Signing)</td>
-                                <td>$23,750</td>
+                                <td><strong>Total Cost</strong></td>
+                                <td class="highlight-col"><strong>$95,000</strong> (Fixed)</td>
+                                <td>$450,000+</td>
+                                <td>$220,000+</td>
                             </tr>
                             <tr>
-                                <td><strong>Phase 2: Core Logic Engines</strong><br><small>State Rules (MD, IL, MN), RAG
-                                        Engine</small></td>
-                                <td>Alpha Release (Wk 8)</td>
-                                <td>$23,750</td>
+                                <td><strong>Time to Market</strong></td>
+                                <td class="highlight-col"><strong>5 Months</strong></td>
+                                <td>18-24 Months</td>
+                                <td>9-12 Months</td>
                             </tr>
                             <tr>
-                                <td><strong>Phase 3: Deep Integrations</strong><br><small>Plaid, Lob, Mobile
-                                        Apps</small></td>
-                                <td>Beta Release (Wk 16)</td>
-                                <td>$23,750</td>
+                                <td><strong>Model</strong></td>
+                                <td class="highlight-col"><strong>Co-Founder Partner</strong></td>
+                                <td>Billable Hour ($800/hr)</td>
+                                <td>Time & Materials</td>
                             </tr>
                             <tr>
-                                <td><strong>Phase 4: Launch & Audit</strong><br><small>SOC 2 Prep, Pen Test, Store
-                                        Submission</small></td>
-                                <td>Production (Wk 20)</td>
-                                <td>$23,750</td>
+                                <td><strong>IP Ownership</strong></td>
+                                <td class="highlight-col"><strong>100% Client Owned</strong></td>
+                                <td>Firm Retains IP</td>
+                                <td>Vendor Lock-in</td>
                             </tr>
-                            <tr class="subtotal-row" style="background: rgba(200, 169, 81, 0.2);">
-                                <td><strong>TOTAL DEVELOPMENT</strong></td>
-                                <td></td>
-                                <td><strong>$95,000</strong></td>
+                            <tr>
+                                <td><strong>Security</strong></td>
+                                <td class="highlight-col"><strong>SOC 2 Type II Ready</strong></td>
+                                <td>"Enterprise" Bloat</td>
+                                <td>Afterthought</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compliance</strong></td>
+                                <td class="highlight-col"><strong>3rd Party Pen Test</strong></td>
+                                <td>Internal Only</td>
+                                <td>Extra Charge ($25k+)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <h4 style="color: var(--color-gold); margin-top: 30px;">2.2 Operational Expenditures (Est. Monthly)</h4>
+                <h3 class="gold-heading">2. Atomic Development Cost Breakdown</h3>
+                <p>We estimate **640 engineering hours** to deliver the MVP. At a blended boutique rate of ~$148/hr,
+                    this
+                    aligns with the $95k budget.</p>
+
+                <h4 class="gold-heading">Phase 1: Foundation & Vault (Weeks 1-4)</h4>
                 <div class="table-wrapper">
-                    <table>
+                    <table class="atomic-table">
                         <thead>
                             <tr>
-                                <th>Category</th>
-                                <th>Service / Configuration</th>
-                                <th>Est. Monthly Cost</th>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Base Infrastructure</strong></td>
-                                <td>Cloud Run, SQL, Secrets, DocuSeal Host</td>
-                                <td>~$36.00</td>
+                                <td>System Architecture (VPC, Encryption, Auth)</td>
+                                <td>Sr. Architect</td>
+                                <td>40</td>
+                                <td>$6,600</td>
                             </tr>
                             <tr>
-                                <td><strong>User-Driven (per 1k users)</strong></td>
-                                <td>Gemini AI, Plaid Links, Storage</td>
-                                <td>~$500.00</td>
+                                <td>Cloud SQL / Firestore Schema Design</td>
+                                <td>Backend Eng</td>
+                                <td>30</td>
+                                <td>$4,500</td>
                             </tr>
                             <tr>
-                                <td><strong>Pass-Throughs</strong></td>
-                                <td>Lob Mail ($1.50/letter), DocuSign</td>
-                                <td>Variable</td>
+                                <td>Vault Implemention (AES-256 + KMS)</td>
+                                <td>Security Eng</td>
+                                <td>35</td>
+                                <td>$6,125</td>
+                            </tr>
+                            <tr>
+                                <td>DocuSeal Self-Hosted Setup</td>
+                                <td>DevOps</td>
+                                <td>15</td>
+                                <td>$2,250</td>
+                            </tr>
+                            <tr>
+                                <td>Frontend Shell (React/Vite)</td>
+                                <td>Frontend Eng</td>
+                                <td>40</td>
+                                <td>$5,400</td>
                             </tr>
                             <tr class="subtotal-row">
-                                <td><strong>Total OpEx (1k Users)</strong></td>
+                                <td><strong>Phase 1 Total</strong></td>
                                 <td></td>
-                                <td><strong>~$536.00 / month</strong></td>
+                                <td><strong>160 hrs</strong></td>
+                                <td><strong>$24,875</strong></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <h3 class="gold-heading">3. Revenue & ROI Analysis</h3>
-                <p><strong>Scenario:</strong> 1,000 Active Paid Users in Year 1.</p>
+                <h4 class="gold-heading">Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</h4>
                 <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Value</th>
-                            <th>Notes</th>
-                        </tr>
-                        <tr>
-                            <td>Annual Revenue</td>
-                            <td>$199,000</td>
-                            <td>1,000 users @ $199/yr</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Less:</strong> Dev Cost</td>
-                            <td>($95,000)</td>
-                            <td>One-time CapEx</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Less:</strong> OpEx (Yr 1)</td>
-                            <td>(~$30,000)</td>
-                            <td>Includes buffer</td>
-                        </tr>
-                        <tr style="border-top: 2px solid var(--color-gold);">
-                            <td><strong>Net Profit (Year 1)</strong></td>
-                            <td><strong>$74,000</strong></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td><strong>ROI Factor</strong></td>
-                            <td><strong>9.1x</strong></td>
-                            <td>Projected</td>
-                        </tr>
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>State Engines (MD, IL, MN) (Rules/Dates)</td>
+                                <td>Logic Eng</td>
+                                <td>60</td>
+                                <td>$9,000</td>
+                            </tr>
+                            <tr>
+                                <td>Gemini 3.0 RAG Pipeline Setup</td>
+                                <td>AI Engineer</td>
+                                <td>45</td>
+                                <td>$8,100</td>
+                            </tr>
+                            <tr>
+                                <td>Legal Prompt Engineering & Testing</td>
+                                <td>Prompt Eng</td>
+                                <td>30</td>
+                                <td>$5,400</td>
+                            </tr>
+                            <tr>
+                                <td>Frontend Guidance UI (Gantt/Tasks)</td>
+                                <td>Frontend Eng</td>
+                                <td>50</td>
+                                <td>$6,750</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 2 Total</strong></td>
+                                <td></td>
+                                <td><strong>185 hrs</strong></td>
+                                <td><strong>$29,250</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="gold-heading">Phase 3: Deep Integrations & Mobile (Weeks 11-16)</h4>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Plaid Link & Webhooks Integration</td>
+                                <td>Backend Eng</td>
+                                <td>40</td>
+                                <td>$6,000</td>
+                            </tr>
+                            <tr>
+                                <td>Lob (Certified Mail) API</td>
+                                <td>Backend Eng</td>
+                                <td>20</td>
+                                <td>$3,000</td>
+                            </tr>
+                            <tr>
+                                <td>React Native (iOS/Android) Shell</td>
+                                <td>Mobile Eng</td>
+                                <td>60</td>
+                                <td>$9,000</td>
+                            </tr>
+                            <tr>
+                                <td>Document Scanner (OpenCV/Camera)</td>
+                                <td>Mobile Eng</td>
+                                <td>30</td>
+                                <td>$4,500</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 3 Total</strong></td>
+                                <td></td>
+                                <td><strong>150 hrs</strong></td>
+                                <td><strong>$22,500</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="gold-heading">Phase 4: QA, Security & Launch (Weeks 17-20)</h4>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Penetration Testing (3rd Party)</strong></td>
+                                <td>Security Analyst</td>
+                                <td>40</td>
+                                <td><strong>$8,000</strong></td>
+                            </tr>
+                            <tr>
+                                <td>End-to-End Testing (Cypress)</td>
+                                <td>QA Eng</td>
+                                <td>45</td>
+                                <td>$5,400</td>
+                            </tr>
+                            <tr>
+                                <td>SOC 2 Policy Generation</td>
+                                <td>Compliance</td>
+                                <td>20</td>
+                                <td>$3,000</td>
+                            </tr>
+                            <tr>
+                                <td>App Store Submission & Polish</td>
+                                <td>Mobile Eng</td>
+                                <td>40</td>
+                                <td>$6,000</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 4 Total</strong></td>
+                                <td></td>
+                                <td><strong>145 hrs</strong></td>
+                                <td><strong>$22,400</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="total-summary"
+                    style="margin: 20px 0; padding: 20px; border: 1px solid var(--color-gold); text-align: right;">
+                    <h3>GRAND TOTAL: 640 HOURS | $99,025 VALUE</h3>
+                    <h2 style="color: var(--color-gold); margin: 0;">DISCOUNTED FIXED BID: $95,000</h2>
+                </div>
+
+                <h3 class="gold-heading">3. Infrastructure Bill of Materials (BoM)</h3>
+                <p>Estimated monthly run-rate for the platform.</p>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Specific Item</th>
+                                <th>Est. Unit Cost</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Compute</strong></td>
+                                <td>Google Cloud Run (2 svcs)</td>
+                                <td>~$18/mo</td>
+                                <td>Serverless backend</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Database</strong></td>
+                                <td>Cloud SQL (Postgres db-f1-micro)</td>
+                                <td>~$9/mo</td>
+                                <td>Secure PII storage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NoSQL</strong></td>
+                                <td>Firestore (100k reads/day)</td>
+                                <td>Free Tier</td>
+                                <td>Metadata</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Storage</strong></td>
+                                <td>Cloud Storage (Standard)</td>
+                                <td>$0.026/GB</td>
+                                <td>Encrypted vault</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Secrets</strong></td>
+                                <td>Secret Manager</td>
+                                <td>$0.06/version</td>
+                                <td>Key management</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AI</strong></td>
+                                <td>Vertex AI (Gemini Flash)</td>
+                                <td>~$5/1M tokens</td>
+                                <td>Legal logic</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E-Sign</strong></td>
+                                <td>DocuSeal (Self-Hosted)</td>
+                                <td>$0 (OSS)</td>
+                                <td>Unlimited signatures</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mail</strong></td>
+                                <td>Lob API</td>
+                                <td>$1.55 / letter</td>
+                                <td>Physical mailings</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
 
                 <div style="margin-top: 30px; text-align: center;">
                     <button class="btn-gold"
                         style="background: var(--color-gold); border: none; padding: 10px 20px; font-family: 'Cinzel', serif; font-weight: bold; cursor: pointer;">Download
-                        Cost PDF</button>
+                        Detailed Cost Breakdown PDF</button>
                 </div>
             </section>
         </div>

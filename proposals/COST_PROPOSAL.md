@@ -1,105 +1,120 @@
-# Cost Proposal & Financial Narrative
+# Cost Proposal & ROI Analysis
 
-**Project:** MyShepherd / FinalWishes Platform  
-**Date:** December 11, 2025  
-**Version:** 5.0.0 (The Strategic Advantage)
-
----
-
-## 1. Executive Summary: The AI Arbitrage
-The traditional software development model is broken. It relies on billing you for hours spent learning, debugging, and managing junior talent. At **111 Venture Studio**, we invert this model.
-
-We leverage a "Centaur" approach: Top-tier human Architects guiding autonomous AI Agents (Gemini 3.0, Claude 3.5). This allows us to deliver a **$450,000+ enterprise-grade platform** for a fixed price of **$95,000** in just **20 weeks**.
-
-**Your Investment:** $95,000 (Fixed Price)  
-**Your Return:** A fully owned, SOC 2-ready, multi-state estate operating system with zero technical debt and "Big Tech" architecture.
+**Project:** MyShepherd / FinalWishes Estate Operating System
+**Client:** FinalWishes Inc.
+**Date:** December 11, 2025
+**Total Budget:** $95,000 (Fixed Bid)
 
 ---
 
-## 2. Where the Money Goes (Transparency Model)
-We do not hide our costs. We believe in radical transparency. Here is exactly how your capital is deployed to generate value.
+## 1. Executive Summary
 
-### 2.1 The "Human-in-the-Loop" (High-Leverage Labor)
-You are paying for **Strategy and Architectural perfection**, not potential keystrokes.
+This proposal offers a transparent, atomic breakdown of the investment required to build the "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or "billable hour" law firm models, we provide a fixed-price engineering partnership.
 
-| Role | Focus | Rate (Blended) | Est. Hours | Allocation |
-| :--- | :--- | :--- | :--- | :--- |
-| **Lead Architect** | System design, Security, Critical Review | $200/hr | 120 | $24,000 |
-| **Product Manager** | Scope, Legal Requirements, Acceptance | $150/hr | 80 | $12,000 |
-| **Prompt Engineer** | Orchestrating AI Agents, Context Management | $100/hr | 200 | $20,000 |
-| **Legal/QA Review** | Verifying Probate Logic & Forms | $150/hr | 40 | $6,000 |
-| | | | **Subtotal:** | **$62,000** |
+**The Bottom Line:**
+- **Your Investment:** $95,000 (Fixed)
+- **Time to Market:** 5 Months (20 Weeks)
+- **Output:** Fully secure, SOC 2-ready platform launching in MD, IL, and MN.
 
-### 2.2 Hard Costs (The "War Chest")
-We aggressively pre-pay for the tools and audits that guarantee success. These are included in your fixed price.
+---
 
-| Item | Description | Strategic Value | Allocation |
+## 2. Comparative Market Analysis
+
+Why build with 111 Venture Studio vs. alternatives?
+
+| Metric | **FinalWishes (111 VS)** | **"Big Law" Custom Tech** | **Typical Dev Agency** |
 | :--- | :--- | :--- | :--- |
-| **Security Audit** | 3rd Party Pen Test (Week 18) | **SOC 2 Evidence.** We prove security before you launch. | $12,000 |
-| **AI Inference** | Gemini/Claude Token Costs | **Unlimited Labor.** We generate millions of LOC without billing you. | $5,000 |
-| **Legal Consult** | Probate Counsel in MD, IL, MN | **Accuracy.** Ensuring our "Shepherd" logic matches court realities. | $8,000 |
-| **Infrastructure** | GCP & Dev Tools (5 Months) | **Velocity.** Enterprise tooling (GitHub, Sentry, Cursor) from Day 1. | $5,000 |
-| | | **Subtotal:** | **$30,000** |
+| **Total Cost** | **$95,000** (Fixed) | **$450,000+** | **$220,000+** |
+| **Time to Market** | **5 Months** | 18-24 Months | 9-12 Months |
+| **Model** | Co-Founder/Partner | Billable Hour ($800/hr) | Time & Materials |
+| **IP Ownership** | **100% Client Owned** | Firm Retains IP | Vendor Lock-in |
+| **Security** | **SOC 2 Type II Ready** | "Enterprise" bloat | Basic / Afterthought |
+| **AI Capability** | **Gemini 3.0 Native** | None / Rigid Logic | Generic Chatbot |
+| **Integrations** | Custom Connectors | Manual Office Work | Standard APIs Only |
 
-### 2.3 The "No-Surprise" Guarantee
-We allocate a small margin for the unknown. If we don't use it, it goes into extra polish.
-*   **Contingency Reserve:** $3,000 (3% of budget)
-
-**GRAND TOTAL:** **$95,000**
+> **Analysis:** We deliver 4x the speed at roughly 20% of the cost of a traditional enterprise build by leveraging our proprietary "Sirsi" component library and AI-accelerated development.
 
 ---
 
-## 3. Comparative Value Analysis
-Why 111 Venture Studio is the only rational choice for this venture.
+## 3. Atomic Development Cost Breakdown
 
-| Feature | 🏛️ Traditional Agency | 🤖 111 Venture Studio |
-| :--- | :--- | :--- |
-| **Staffing** | 7-10 FTEs (mix of Junior/Senior) | 2 Experts + 5 Autonomous Agents |
-| **Timeline** | 9-12 Months | **5 Months (Guaranteed)** |
-| **Billing Model** | Time & Materials (Risk is yours) | **Fixed Price (Risk is ours)** |
-| **Security** | "We'll think about that later" | **SOC 2 Ready from Day 0** |
-| **IP Ownership** | Often retains core libraries | **100% Work-for-Hire (Yours)** |
-| **ESTIMATED COST** | **$450,000 - $600,000** | **$95,000** |
+We estimate **640 engineering hours** to deliver the MVP. At a blended boutique rate of ~$148/hr, this aligns with the $95k budget.
 
----
+### Phase 1: Foundation & Vault (Weeks 1-4)
+**Goal:** Bank-grade security core and document architecture.
 
-## 4. Run Rate Analysis (Post-Launch)
-We architect for **Serverless Efficiency**. We do not want you burning cash on empty servers.
-
-**The "Sleep Mode" Architecture:**
-Your platform runs on Google Cloud Run. If no one is using it at 3 AM, your server cost drops to **nearly zero**. You only pay for active processing.
-
-**Monthly Operating Costs (Per 1,000 Active Users):**
-
-| Component | Provider | Cost Driver | Monthly Est. |
+| Activity | Role | Est. Hours | Cost (Allocated) |
 | :--- | :--- | :--- | :--- |
-| **Compute** | Cloud Run | Scale-to-Zero | $50.00 |
-| **Database** | Cloud SQL | Shared Postgres | $20.00 |
-| **Storage** | Cloud Storage | Document Vault | $10.00 |
-| **AI Guidance** | Vertex AI | RAG/Chat Queries | $200.00 |
-| **Banking Data** | Plaid | Account Linking | $300.00 |
-| **TOTAL OPEX** | | | **~$580 / month** |
+| **System Architecture** (VPC, Encryption, Auth) | Sr. Architect | 40 | $6,600 |
+| **Cloud SQL / Firestore Schema Design** | Backend Eng | 30 | $4,500 |
+| **Vault Implemention** (AES-256 + KMS) | Security Eng | 35 | $6,125 |
+| **DocuSeal Self-Hosted Setup** | DevOps | 15 | $2,250 |
+| **Frontend Shell (React/Vite)** | Frontend Eng | 40 | $5,400 |
+| **Phase 1 Total** | | **160 hrs** | **$24,875** |
 
-*Compare this to the revenue of 1,000 subscribers @ $199/yr = $16,583/mo.*
-**Margin:** **96%+ is achievable.**
+### Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)
+**Goal:** The innovative logic engine that replaces a lawyer's guidance.
+
+| Activity | Role | Est. Hours | Cost (Allocated) |
+| :--- | :--- | :--- | :--- |
+| **State Engines (MD, IL, MN)** (Rules/Dates) | Logic Eng | 60 | $9,000 |
+| **Gemini 3.0 RAG Pipeline Setup** | AI Engineer | 45 | $8,100 |
+| **Legal Prompt Engineering & Testing** | Prompt Eng | 30 | $5,400 |
+| **Frontend Guidance UI (Gantt/Tasks)** | Frontend Eng | 50 | $6,750 |
+| **Phase 2 Total** | | **185 hrs** | **$29,250** |
+
+### Phase 3: Deep Integrations & Mobile (Weeks 11-16)
+**Goal:** Connecting the platform to the real world (Banks, Mail, Courts).
+
+| Activity | Role | Est. Hours | Cost (Allocated) |
+| :--- | :--- | :--- | :--- |
+| **Plaid Link & Webhooks Integration** | Backend Eng | 40 | $6,000 |
+| **Lob (Certified Mail) API** | Backend Eng | 20 | $3,000 |
+| **React Native (iOS/Android) Shell** | Mobile Eng | 60 | $9,000 |
+| **Document Scanner (OpenCV/Camera)** | Mobile Eng | 30 | $4,500 |
+| **Phase 3 Total** | | **150 hrs** | **$22,500** |
+
+### Phase 4: QA, Security & Launch (Weeks 17-20)
+**Goal:** Ensuring the system is bulletproof and legally compliant.
+
+| Activity | Role | Est. Hours | Cost (Allocated) |
+| :--- | :--- | :--- | :--- |
+| **Penetration Testing (3rd Party)** | Security Analyst| 40 | **$8,000** |
+| **End-to-End Testing (Cypress)** | QA Eng | 45 | $5,400 |
+| **SOC 2 Policy Generation** | Compliance | 20 | $3,000 |
+| **App Store Submission & Polish** | Mobile Eng | 40 | $6,000 |
+| **Phase 4 Total** | | **145 hrs** | **$22,400** |
+
+**GRAND TOTAL: 640 Hours | $99,025 Value**  
+**DISCOUNTED FIXED BID: $95,000**
+
+---
+
+## 4. Infrastructure Bill of Materials (BoM)
+
+Estimated monthly run-rate for the platform.
+
+| Service | Specific Item | Est. Unit Cost | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Compute** | Google Cloud Run (2 services) | ~$18/mo | Serverless backend container |
+| **Database** | Cloud SQL (Postgres db-f1-micro) | ~$9/mo | Secure PII storage (encrypted) |
+| **NoSQL** | Firestore (100k reads/day) | Free Tier | User profile & metadata data |
+| **Storage** | Cloud Storage (Standard) | $0.026/GB | Encrypted document vault |
+| **Secrets** | Secret Manager | $0.06/version | API Key management |
+| **AI** | Vertex AI (Gemini Flash) | ~$5/1M tokens | Legal logic processing |
+| **E-Sign** | DocuSeal (Self-Hosted) | $0 (OSS) | Unlimited signatures vs DocuSign |
+| **Mail** | Lob API | $1.55 / letter | Physical certified mailings |
+| **Identity** | Persona / Jumio | ~$1.50 / check | Fraud prevention |
+
+**Total Estimated OpEx (Base): ~$50/month + Usage**
 
 ---
 
 ## 5. Payment Schedule
-We tie payments to **tangible value**, not dates on a calendar.
 
-| Milestone | Deliverable | % | Amount |
-| :--- | :--- | :--- | :--- |
-| **1. Deposit** | **Project Kickoff.** Team assembly, Repo init. | 25% | $23,750 |
-| **2. The Vault** | **Alpha Release.** Secure Uploads, Auth, Staging Env. | 25% | $23,750 |
-| **3. The Engine** | **Beta Release.** Probate Logic, mobile app binaries. | 25% | $23,750 |
-| **4. Launch** | **Gold Master.** App Store live, Source Code handoff. | 25% | $23,750 |
-
----
-
-## 6. Authorized Signature
-
-**111 Venture Studio**  
-*By: The Kryptodragon*  
-*Role: Lead Architect*  
-*Date: December 11, 2025*
+| Milestone | Deliverable Trigger | Amount |
+| :--- | :--- | :--- |
+| **1. Kickoff** | Contract Signing | **$23,750** |
+| **2. Alpha** | "Shepherd" Logic Working | **$23,750** |
+| **3. Beta** | Integrations Live | **$23,750** |
+| **4. Launch** | App Store Approval | **$23,750** |

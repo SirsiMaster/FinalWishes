@@ -12,23 +12,23 @@
  * @version 2.0.0
  */
 
-(function() {
+(function () {
     'use strict';
-    
+
     /**
      * Render the header
      */
     function renderHeader() {
         const root = document.getElementById('universal-header-root');
         if (!root) return;
-        
+
         // Get configuration from data attributes
         const title = root.dataset.title || 'Dashboard';
         const subtitle = root.dataset.subtitle || '';
         const searchPlaceholder = root.dataset.searchPlaceholder || 'Search...';
         const showSearch = root.dataset.showSearch !== 'false';
         const showNotifications = root.dataset.showNotifications !== 'false';
-        
+
         root.className = 'admin-header';
         root.innerHTML = `
             <div class="header-left">
@@ -94,22 +94,22 @@
                 </div>
             </div>
         `;
-        
+
         // Add styles
         addHeaderStyles();
-        
+
         // Setup interactions
         setupSearch();
         setupUserMenu();
         setupNotifications();
     }
-    
+
     /**
      * Add header-specific styles
      */
     function addHeaderStyles() {
         if (document.getElementById('header-styles')) return;
-        
+
         const style = document.createElement('style');
         style.id = 'header-styles';
         style.textContent = `
@@ -224,16 +224,16 @@
         `;
         document.head.appendChild(style);
     }
-    
+
     /**
      * Setup search functionality
      */
     function setupSearch() {
         const searchInput = document.getElementById('header-search');
         if (!searchInput) return;
-        
+
         let debounceTimer;
-        
+
         searchInput.addEventListener('input', (e) => {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
@@ -246,7 +246,7 @@
                 }
             }, 300);
         });
-        
+
         // Handle keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             // Cmd/Ctrl + K to focus search
@@ -254,14 +254,14 @@
                 e.preventDefault();
                 searchInput.focus();
             }
-            
+
             // Escape to blur search
             if (e.key === 'Escape' && document.activeElement === searchInput) {
                 searchInput.blur();
             }
         });
     }
-    
+
     /**
      * Setup user menu dropdown
      */
@@ -269,16 +269,16 @@
         const avatarBtn = document.getElementById('user-avatar-btn');
         const dropdown = document.getElementById('user-dropdown');
         const logoutBtn = document.getElementById('logout-btn');
-        
+
         if (!avatarBtn || !dropdown) return;
-        
+
         // Toggle dropdown
         avatarBtn.addEventListener('click', () => {
             const isOpen = dropdown.style.display !== 'none';
             dropdown.style.display = isOpen ? 'none' : 'block';
             avatarBtn.setAttribute('aria-expanded', !isOpen);
         });
-        
+
         // Keyboard support
         avatarBtn.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -286,7 +286,7 @@
                 avatarBtn.click();
             }
         });
-        
+
         // Close on outside click
         document.addEventListener('click', (e) => {
             if (!avatarBtn.contains(e.target) && !dropdown.contains(e.target)) {
@@ -294,7 +294,7 @@
                 avatarBtn.setAttribute('aria-expanded', 'false');
             }
         });
-        
+
         // Logout handler
         if (logoutBtn) {
             logoutBtn.addEventListener('click', async () => {
@@ -308,21 +308,21 @@
                 }
             });
         }
-        
+
         // Update user info when Firebase is ready
         window.addEventListener('firebase-ready', updateUserInfo);
         if (window.Firebase?.auth?.currentUser) {
             updateUserInfo();
         }
     }
-    
+
     /**
      * Update user info in header
      */
     async function updateUserInfo() {
         const avatarBtn = document.getElementById('user-avatar-btn');
         if (!avatarBtn) return;
-        
+
         const user = window.Firebase?.auth?.currentUser;
         if (user) {
             // Get initials from display name or email
@@ -332,21 +332,21 @@
                 .join('')
                 .substring(0, 2)
                 .toUpperCase();
-            
+
             avatarBtn.textContent = initials;
             avatarBtn.title = name;
         }
     }
-    
+
     /**
      * Setup notifications
      */
     function setupNotifications() {
         const notifBtn = document.getElementById('notifications-btn');
         const notifCount = document.getElementById('notification-count');
-        
+
         if (!notifBtn || !notifCount) return;
-        
+
         // Update notification count
         function updateCount(count) {
             if (count > 0) {
@@ -356,40 +356,40 @@
                 notifCount.style.display = 'none';
             }
         }
-        
+
         // Click handler
         notifBtn.addEventListener('click', () => {
             window.dispatchEvent(new CustomEvent('open-notifications'));
         });
-        
+
         // Listen for notification updates
         window.addEventListener('notification-count-update', (e) => {
             updateCount(e.detail.count);
         });
-        
+
         // Expose update function
         window.FinalWishesHeader = window.FinalWishesHeader || {};
         window.FinalWishesHeader.updateNotificationCount = updateCount;
     }
-    
+
     /**
      * Update header title dynamically
      */
     function setTitle(title, subtitle = null) {
         const h1 = document.querySelector('.admin-header h1');
         const p = document.querySelector('.admin-header .header-left p');
-        
+
         if (h1) h1.textContent = title;
         if (p && subtitle !== null) p.textContent = subtitle;
     }
-    
+
     // Initialize on DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', renderHeader);
     } else {
         renderHeader();
     }
-    
+
     // Expose API
     window.FinalWishesHeader = window.FinalWishesHeader || {};
     window.FinalWishesHeader.render = renderHeader;

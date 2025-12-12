@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposals | FINALWISHES</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --body-bg-color: #0f172a;
+            --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --color-gold: #C8A951;
+            --color-gold-bright: #D4B85A;
+            --color-emerald: #10B981;
+            --nav-bg: rgba(0, 0, 0, 0.2);
+            --card-bg: rgba(30, 58, 138, 0.5);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --panel-bg: rgba(30, 58, 138, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--body-bg-color);
+            background-image: var(--body-bg-image);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--color-gold);
+        }
+
+        .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: white;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 span {
+            color: var(--color-gold);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .doc-meta-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-emerald);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .tabs-container {
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Cinzel', serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .document {
+            background: var(--panel-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .document h2 {
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+
+        .document h2:first-child {
+            margin-top: 0;
+        }
+
+        .document h3 {
+            font-size: 1.125rem;
+            color: white;
+            margin: 24px 0 12px;
+        }
+
+        .document h4 {
+            font-size: 0.875rem;
+            color: var(--color-gold);
+            margin: 16px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .document p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .document strong {
+            color: white;
+        }
+
+        .document ul,
+        .document ol {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .document li {
+            margin-bottom: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: rgba(200, 169, 81, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Atomic & Comparison Table Styles */
+        .atomic-table th,
+        .atomic-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .atomic-table .subtotal-row td {
+            background: rgba(200, 169, 81, 0.1);
+            color: var(--color-gold);
+            font-weight: 700;
+            border-top: 1px solid var(--color-gold);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 16px;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .highlight-col {
+            background: rgba(200, 169, 81, 0.1);
+            border-left: 1px solid rgba(200, 169, 81, 0.3);
+            border-right: 1px solid rgba(200, 169, 81, 0.3);
+            color: var(--color-gold) !important;
+            font-weight: 700;
+        }
+
+        .comparison-table thead th.highlight-col {
+            background: var(--color-gold);
+            color: #000 !important;
+        }
+
+        .cost-intro {
+            font-size: 1.1rem;
+            border-left: 3px solid var(--color-gold);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-card.highlight {
+            border-color: var(--color-gold);
+            background: rgba(200, 169, 81, 0.1);
+        }
+
+        .summary-card .value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .summary-card.highlight .value {
+            color: var(--color-gold);
+        }
+
+        .summary-card .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 640px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-card.savings {
+            border-color: var(--color-emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+        }
+
+        .comparison-card .price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .comparison-card.savings .price {
+            color: var(--color-emerald);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-gold {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .badge-emerald {
+            background: var(--color-emerald);
+            color: #000;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .tech-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .tech-item .name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .tech-item .desc {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 24px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        @media print {
+
+            nav,
+            .tabs-container {
+                display: none;
+            }
+
+            .document {
+                box-shadow: none;
+                border: none;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                </svg>
+                <span class="logo-text">FINALWISHES</span>
+            </a>
+            <a href="/" class="nav-link">← Back to Home</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div id="sow-tab" class="tab-content active">
+            <section class="document glass-panel">
+                <div class="doc-header">
+                    <h2 class="gold-heading">Statement of Work (SOW)</h2>
+                </div>
+
+                <div class="adr-content-injection">
+                    <h3 class="gold-heading">Executive Summary</h3>
+                    <p>This Statement of Work documents the <strong>refined implementation plan</strong> for
+                        FinalWishes. It solidifies the decision to self-host key infrastructure (DocuSeal) and leverage
+                        the latest AI models (Gemini 3.0) to maximize efficiency and reduce operating costs.</p>
+                    <p><strong>The Reality:</strong> Most estate settlement is still paper-based. There are no unified
+                        government APIs. Financial institutions have proprietary or non-existent programmatic
+                        interfaces. Court systems vary by county, not just state.</p>
+                    <p><strong>The Innovation:</strong> Where connectors don't exist, we BUILD THEM. We become the
+                        benchmark for state adoption of automated estate settlement.</p>
+
+                    <h3 class="gold-heading">1. Strategic Approach</h3>
+                    <p><strong>The $95K/5-month scope includes:</strong></p>
+                    <ul>
+                        <li>Full automation for states WITH e-filing (MD, IL, MN)</li>
+                        <li>Form library covering ~45 probate forms across 3 states</li>
+                        <li>Complete user guidance through every step (manual or automated)</li>
+                        <li>Self-hosted DocuSeal for e-signatures (Postgres compatible, Cost saving vs DocuSign)</li>
+                    </ul>
+
+                    <h3 class="gold-heading">2. Complete Document Inventory</h3>
+
+                    <h4 class="gold-heading">2.1 Death & Identity Documents</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Source</th>
+                                    <th>API Available</th>
+                                    <th>Integration Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Death Certificate</td>
+                                    <td>State Vital Records Office</td>
+                                    <td><strong>NO</strong> (most states)</td>
+                                    <td>Manual upload, OCR extraction</td>
+                                </tr>
+                                <tr>
+                                    <td>Social Security Card</td>
+                                    <td>SSA</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Reference only</td>
+                                </tr>
+                                <tr>
+                                    <td>Birth Certificate</td>
+                                    <td>State Vital Records</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Manual upload</td>
+                                </tr>
+                                <tr>
+                                    <td>Government ID</td>
+                                    <td>State DMV</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Identity verification services</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><strong>Integration Reality:</strong> All identity documents require manual upload. OCR can
+                        extract data, but source APIs don't exist.</p>
+
+                    <h4 class="gold-heading">2.2 Probate Court Documents</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document</th>
+                                    <th>Filed With</th>
+                                    <th>API Available</th>
+                                    <th>Integration Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Petition for Probate</td>
+                                    <td>County Probate Court</td>
+                                    <td><strong>VARIES</strong></td>
+                                    <td>Template generation, manual filing</td>
+                                </tr>
+                                <tr>
+                                    <td>Letters Testamentary</td>
+                                    <td>Probate Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Track status manually</td>
+                                </tr>
+                                <tr>
+                                    <td>Inventory & Appraisal</td>
+                                    <td>Probate Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Template generation</td>
+                                </tr>
+                                <tr>
+                                    <td>Creditor Notice</td>
+                                    <td>Newspaper + Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Template generation</td>
+                                </tr>
+                                <tr>
+                                    <td>Final Accounting</td>
+                                    <td>Probate Court</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Template generation</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="gold-heading">2.3 Financial Account Documents</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Source</th>
+                                    <th>API Available</th>
+                                    <th>Integration Approach</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bank Statements</td>
+                                    <td>Banks</td>
+                                    <td><strong>Plaid</strong> (read)</td>
+                                    <td>Plaid Transactions API</td>
+                                </tr>
+                                <tr>
+                                    <td>Investment Statements</td>
+                                    <td>Brokerages</td>
+                                    <td><strong>Plaid</strong> (read)</td>
+                                    <td>Plaid Investments API</td>
+                                </tr>
+                                <tr>
+                                    <td>Retirement Account</td>
+                                    <td>Plan Administrators</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Manual upload, claim forms</td>
+                                </tr>
+                                <tr>
+                                    <td>Life Insurance</td>
+                                    <td>Insurance Cos</td>
+                                    <td><strong>NO</strong></td>
+                                    <td>Manual upload, claim forms</td>
+                                </tr>
+                                <tr>
+                                    <td>Mortgage Statements</td>
+                                    <td>Lenders</td>
+                                    <td><strong>Plaid</strong> (liabilities)</td>
+                                    <td>Plaid Liabilities API</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="gold-heading">3. Government Agency Integration Analysis</h3>
+
+                    <h4 class="gold-heading">3.1 Federal Agencies</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Agency</th>
+                                    <th>Purpose</th>
+                                    <th>API/Integration</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>SSA</strong></td>
+                                    <td>Death report, benefits stop</td>
+                                    <td><strong>NO API</strong></td>
+                                    <td>Phone/in-person only</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IRS</strong></td>
+                                    <td>EIN, taxes</td>
+                                    <td><strong>Limited</strong></td>
+                                    <td>EIN online; Form 706 paper only</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>VA</strong></td>
+                                    <td>Benefits stop, burial</td>
+                                    <td><strong>eBenefits</strong></td>
+                                    <td>Some online, mostly phone</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><strong>Federal Agency Reality:</strong> Zero useful APIs. All require phone, mail, or in-person
+                        interaction.</p>
+
+                    <h4 class="gold-heading">3.2 State Agencies (Launch States)</h4>
+                    <p><strong>Maryland:</strong> Register of Wills (MDEC e-filing available).<br>
+                        <strong>Illinois:</strong> Circuit Court (eCourt in Cook County).<br>
+                        <strong>Minnesota:</strong> District Court (MNCIS statewide e-filing).
+                    </p>
+
+                    <h3 class="gold-heading">4. Technical Stack & Architecture</h3>
+
+                    <h4 class="gold-heading">4.1 E-Signature (DocuSeal)</h4>
+                    <p><strong>Decision:</strong> Use <strong>DocuSeal</strong> (Self-Hosted).</p>
+                    <ul>
+                        <li><strong>Architecture Synergy:</strong> DocuSeal supports <strong>PostgreSQL</strong> (Cloud
+                            SQL).</li>
+                        <li><strong>Control:</strong> Data stays in our infrastructure (Cloud SQL/Storage).</li>
+                        <li><strong>Cost:</strong> Fixed infrastructure cost (~$50/mo) vs per-envelope pricing.</li>
+                    </ul>
+
+                    <h4 class="gold-heading">4.2 Document Processing</h4>
+                    <p><strong>Decision:</strong> Google Document AI (OCR, entity extraction).</p>
+
+                    <h4 class="gold-heading">4.3 Certified Mail</h4>
+                    <p><strong>Decision:</strong> Lob (Address verification, certified mail tracking).</p>
+
+                    <h4 class="gold-heading">4.4 Data Architecture (Multi-Tenant)</h4>
+                    <p>Each estate's data must be completely isolated. We employ a hybrid architecture:</p>
+                    <ul>
+                        <li><strong>Firestore (NoSQL):</strong> User profiles, estate metadata, task tracking.</li>
+                        <li><strong>Cloud SQL (PostgreSQL):</strong> PII Vault (SSNs, Account Numbers) with row-level
+                            security.</li>
+                        <li><strong>Cloud Storage:</strong> Encrypted document vault with client-side AES-256-GCM.</li>
+                    </ul>
+
+                    <h3 class="gold-heading">5. Scope Assessment & Recommendations</h3>
+
+                    <h4 class="gold-heading">5.1 What CAN Be Automated (MVP)</h4>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Capability</th>
+                                    <th>Effort</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Document vault (upload, organize, encrypt)</td>
+                                    <td>Low</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Asset inventory tracking</td>
+                                    <td>Low</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>State-specific form generation (PDF)</td>
+                                    <td>Medium</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Probate timeline/checklist guidance</td>
+                                    <td>Medium</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Institution notification letter generation</td>
+                                    <td>Medium</td>
+                                    <td>High</td>
+                                </tr>
+                                <tr>
+                                    <td>Certified mail via Lob</td>
+                                    <td>Low</td>
+                                    <td>Medium</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h4 class="gold-heading">5.2 Full Scope for $95K / 5 Months</h4>
+                    <p><strong>INCLUDED IN INITIAL RELEASE:</strong></p>
+                    <ol>
+                        <li><strong>Core Platform:</strong> Auth, Estate Management, Vault, Beneficiary Tracking.</li>
+                        <li><strong>Guidance System (The Shepherd):</strong> State checklists (5 states), Form library,
+                            Task tracking.</li>
+                        <li><strong>Document Generation:</strong> Notification letters, Court forms (PDF), Certified
+                            mail.</li>
+                        <li><strong>Full Integrations:</strong> Plaid (Account discovery), DocuSeal (Self-hosted), Lob,
+                            Vertex AI (Gemini 3.0).</li>
+                        <li><strong>Mobile Apps:</strong> React Native iOS + Android with document capture.</li>
+                    </ol>
+
+                    <h3 class="gold-heading">6. Final Decision</h3>
+                    <p><strong>FinalWishes will be a complete estate settlement platform that builds connectors where
+                            none exist.</strong></p>
+                    <p>The competitive moat is:</p>
+                    <ol>
+                        <li><strong>State-specific expertise</strong> (5 states at launch)</li>
+                        <li><strong>Form template library</strong> (~75 forms)</li>
+                        <li><strong>Connector strategy</strong> (we build what government doesn't provide)</li>
+                        <li><strong>Progress tracking</strong> (visibility into 18-month process)</li>
+                        <li><strong>Secure document vault</strong> (zero-knowledge)</li>
+                    </ol>
+                    <p><strong>Can we build a functional estate settlement platform for $95K in 5 months? YES.</strong>
+                    </p>
+                </div>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="btn-gold"
+                        style="background: var(--color-gold); border: none; padding: 10px 20px; font-family: 'Cinzel', serif; font-weight: bold; cursor: pointer;">Download
+                        Full SOW & ADR PDF</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Cost Tab -->
+</main></body></html>

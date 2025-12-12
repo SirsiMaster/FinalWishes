@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposals | FINALWISHES</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --body-bg-color: #0f172a;
+            --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --color-gold: #C8A951;
+            --color-gold-bright: #D4B85A;
+            --color-emerald: #10B981;
+            --nav-bg: rgba(0, 0, 0, 0.2);
+            --card-bg: rgba(30, 58, 138, 0.5);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --panel-bg: rgba(30, 58, 138, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--body-bg-color);
+            background-image: var(--body-bg-image);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--color-gold);
+        }
+
+        .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: white;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 span {
+            color: var(--color-gold);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .doc-meta-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-emerald);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .tabs-container {
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Cinzel', serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .document {
+            background: var(--panel-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .document h2 {
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+
+        .document h2:first-child {
+            margin-top: 0;
+        }
+
+        .document h3 {
+            font-size: 1.125rem;
+            color: white;
+            margin: 24px 0 12px;
+        }
+
+        .document h4 {
+            font-size: 0.875rem;
+            color: var(--color-gold);
+            margin: 16px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .document p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .document strong {
+            color: white;
+        }
+
+        .document ul,
+        .document ol {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .document li {
+            margin-bottom: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: rgba(200, 169, 81, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Atomic & Comparison Table Styles */
+        .atomic-table th,
+        .atomic-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .atomic-table .subtotal-row td {
+            background: rgba(200, 169, 81, 0.1);
+            color: var(--color-gold);
+            font-weight: 700;
+            border-top: 1px solid var(--color-gold);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 16px;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .highlight-col {
+            background: rgba(200, 169, 81, 0.1);
+            border-left: 1px solid rgba(200, 169, 81, 0.3);
+            border-right: 1px solid rgba(200, 169, 81, 0.3);
+            color: var(--color-gold) !important;
+            font-weight: 700;
+        }
+
+        .comparison-table thead th.highlight-col {
+            background: var(--color-gold);
+            color: #000 !important;
+        }
+
+        .cost-intro {
+            font-size: 1.1rem;
+            border-left: 3px solid var(--color-gold);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-card.highlight {
+            border-color: var(--color-gold);
+            background: rgba(200, 169, 81, 0.1);
+        }
+
+        .summary-card .value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .summary-card.highlight .value {
+            color: var(--color-gold);
+        }
+
+        .summary-card .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 640px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-card.savings {
+            border-color: var(--color-emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+        }
+
+        .comparison-card .price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .comparison-card.savings .price {
+            color: var(--color-emerald);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-gold {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .badge-emerald {
+            background: var(--color-emerald);
+            color: #000;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .tech-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .tech-item .name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .tech-item .desc {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 24px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        @media print {
+
+            nav,
+            .tabs-container {
+                display: none;
+            }
+
+            .document {
+                box-shadow: none;
+                border: none;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                </svg>
+                <span class="logo-text">FINALWISHES</span>
+            </a>
+            <a href="/" class="nav-link">← Back to Home</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div id="cost-tab" class="tab-content active">
+            <!-- Main Content Container with Glass Panel -->
+            <section class="document glass-panel">
+                <div class="doc-header">
+                    <h2 class="gold-heading">Cost Proposal & ROI</h2>
+                </div>
+
+                <div class="cost-intro">
+                    <p>This proposal offers a transparent, <strong>atomic breakdown</strong> of the investment
+                        required to build your "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or
+                        No-Code MVPs, we provide a fixed-price engineering partnership with line-item visibility.</p>
+                </div>
+
+                <h3 class="gold-heading">1. Comparative Market Analysis</h3>
+                <p>Why build with 111 Venture Studio vs. alternatives?</p>
+                <div class="table-wrapper">
+                    <table class="cost-table comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th class="highlight-col">FinalWishes (111 VS)</th>
+                                <th>"Big Law" Custom Tech</th>
+                                <th>Typical Dev Agency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total Cost</strong></td>
+                                <td class="highlight-col"><strong>$95,000</strong> (Fixed)</td>
+                                <td>$450,000+</td>
+                                <td>$220,000+</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Time to Market</strong></td>
+                                <td class="highlight-col"><strong>5 Months</strong></td>
+                                <td>18-24 Months</td>
+                                <td>9-12 Months</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Model</strong></td>
+                                <td class="highlight-col"><strong>Co-Founder Partner</strong></td>
+                                <td>Billable Hour ($800/hr)</td>
+                                <td>Time & Materials</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IP Ownership</strong></td>
+                                <td class="highlight-col"><strong>100% Client Owned</strong></td>
+                                <td>Firm Retains IP</td>
+                                <td>Vendor Lock-in</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Security</strong></td>
+                                <td class="highlight-col"><strong>SOC 2 Type II Ready</strong></td>
+                                <td>"Enterprise" Bloat</td>
+                                <td>Afterthought</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compliance</strong></td>
+                                <td class="highlight-col"><strong>3rd Party Pen Test</strong></td>
+                                <td>Internal Only</td>
+                                <td>Extra Charge ($25k+)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="gold-heading">2. Atomic Development Cost Breakdown</h3>
+                <p>We estimate **640 engineering hours** to deliver the MVP. At a blended boutique rate of ~$148/hr,
+                    this
+                    aligns with the $95k budget.</p>
+
+                <h4 class="gold-heading">Phase 1: Foundation & Vault (Weeks 1-4)</h4>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>System Architecture (VPC, Encryption, Auth)</td>
+                                <td>Sr. Architect</td>
+                                <td>40</td>
+                                <td>$6,600</td>
+                            </tr>
+                            <tr>
+                                <td>Cloud SQL / Firestore Schema Design</td>
+                                <td>Backend Eng</td>
+                                <td>30</td>
+                                <td>$4,500</td>
+                            </tr>
+                            <tr>
+                                <td>Vault Implemention (AES-256 + KMS)</td>
+                                <td>Security Eng</td>
+                                <td>35</td>
+                                <td>$6,125</td>
+                            </tr>
+                            <tr>
+                                <td>DocuSeal Self-Hosted Setup</td>
+                                <td>DevOps</td>
+                                <td>15</td>
+                                <td>$2,250</td>
+                            </tr>
+                            <tr>
+                                <td>Frontend Shell (React/Vite)</td>
+                                <td>Frontend Eng</td>
+                                <td>40</td>
+                                <td>$5,400</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 1 Total</strong></td>
+                                <td></td>
+                                <td><strong>160 hrs</strong></td>
+                                <td><strong>$24,875</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="gold-heading">Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</h4>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>State Engines (MD, IL, MN) (Rules/Dates)</td>
+                                <td>Logic Eng</td>
+                                <td>60</td>
+                                <td>$9,000</td>
+                            </tr>
+                            <tr>
+                                <td>Gemini 3.0 RAG Pipeline Setup</td>
+                                <td>AI Engineer</td>
+                                <td>45</td>
+                                <td>$8,100</td>
+                            </tr>
+                            <tr>
+                                <td>Legal Prompt Engineering & Testing</td>
+                                <td>Prompt Eng</td>
+                                <td>30</td>
+                                <td>$5,400</td>
+                            </tr>
+                            <tr>
+                                <td>Frontend Guidance UI (Gantt/Tasks)</td>
+                                <td>Frontend Eng</td>
+                                <td>50</td>
+                                <td>$6,750</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 2 Total</strong></td>
+                                <td></td>
+                                <td><strong>185 hrs</strong></td>
+                                <td><strong>$29,250</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="gold-heading">Phase 3: Deep Integrations & Mobile (Weeks 11-16)</h4>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Plaid Link & Webhooks Integration</td>
+                                <td>Backend Eng</td>
+                                <td>40</td>
+                                <td>$6,000</td>
+                            </tr>
+                            <tr>
+                                <td>Lob (Certified Mail) API</td>
+                                <td>Backend Eng</td>
+                                <td>20</td>
+                                <td>$3,000</td>
+                            </tr>
+                            <tr>
+                                <td>React Native (iOS/Android) Shell</td>
+                                <td>Mobile Eng</td>
+                                <td>60</td>
+                                <td>$9,000</td>
+                            </tr>
+                            <tr>
+                                <td>Document Scanner (OpenCV/Camera)</td>
+                                <td>Mobile Eng</td>
+                                <td>30</td>
+                                <td>$4,500</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 3 Total</strong></td>
+                                <td></td>
+                                <td><strong>150 hrs</strong></td>
+                                <td><strong>$22,500</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="gold-heading">Phase 4: QA, Security & Launch (Weeks 17-20)</h4>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>Role</th>
+                                <th>Est. Hours</th>
+                                <th>Value Allocation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Penetration Testing (3rd Party)</strong></td>
+                                <td>Security Analyst</td>
+                                <td>40</td>
+                                <td><strong>$8,000</strong></td>
+                            </tr>
+                            <tr>
+                                <td>End-to-End Testing (Cypress)</td>
+                                <td>QA Eng</td>
+                                <td>45</td>
+                                <td>$5,400</td>
+                            </tr>
+                            <tr>
+                                <td>SOC 2 Policy Generation</td>
+                                <td>Compliance</td>
+                                <td>20</td>
+                                <td>$3,000</td>
+                            </tr>
+                            <tr>
+                                <td>App Store Submission & Polish</td>
+                                <td>Mobile Eng</td>
+                                <td>40</td>
+                                <td>$6,000</td>
+                            </tr>
+                            <tr class="subtotal-row">
+                                <td><strong>Phase 4 Total</strong></td>
+                                <td></td>
+                                <td><strong>145 hrs</strong></td>
+                                <td><strong>$22,400</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="total-summary"
+                    style="margin: 20px 0; padding: 20px; border: 1px solid var(--color-gold); text-align: right;">
+                    <h3>GRAND TOTAL: 640 HOURS | $99,025 VALUE</h3>
+                    <h2 style="color: var(--color-gold); margin: 0;">DISCOUNTED FIXED BID: $95,000</h2>
+                </div>
+
+                <h3 class="gold-heading">3. Infrastructure Bill of Materials (BoM)</h3>
+                <p>Estimated monthly run-rate for the platform.</p>
+                <div class="table-wrapper">
+                    <table class="atomic-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Specific Item</th>
+                                <th>Est. Unit Cost</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Compute</strong></td>
+                                <td>Google Cloud Run (2 svcs)</td>
+                                <td>~$18/mo</td>
+                                <td>Serverless backend</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Database</strong></td>
+                                <td>Cloud SQL (Postgres db-f1-micro)</td>
+                                <td>~$9/mo</td>
+                                <td>Secure PII storage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NoSQL</strong></td>
+                                <td>Firestore (100k reads/day)</td>
+                                <td>Free Tier</td>
+                                <td>Metadata</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Storage</strong></td>
+                                <td>Cloud Storage (Standard)</td>
+                                <td>$0.026/GB</td>
+                                <td>Encrypted vault</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Secrets</strong></td>
+                                <td>Secret Manager</td>
+                                <td>$0.06/version</td>
+                                <td>Key management</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AI</strong></td>
+                                <td>Vertex AI (Gemini Flash)</td>
+                                <td>~$5/1M tokens</td>
+                                <td>Legal logic</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E-Sign</strong></td>
+                                <td>DocuSeal (Self-Hosted)</td>
+                                <td>$0 (OSS)</td>
+                                <td>Unlimited signatures</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mail</strong></td>
+                                <td>Lob API</td>
+                                <td>$1.55 / letter</td>
+                                <td>Physical mailings</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <button class="btn-gold"
+                        style="background: var(--color-gold); border: none; padding: 10px 20px; font-family: 'Cinzel', serif; font-weight: bold; cursor: pointer;">Download
+                        Detailed Cost Breakdown PDF</button>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- Contract Tab -->
+</main></body></html>

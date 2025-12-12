@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposals | FINALWISHES</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --body-bg-color: #0f172a;
+            --body-bg-image: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --color-gold: #C8A951;
+            --color-gold-bright: #D4B85A;
+            --color-emerald: #10B981;
+            --nav-bg: rgba(0, 0, 0, 0.2);
+            --card-bg: rgba(30, 58, 138, 0.5);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --panel-bg: rgba(30, 58, 138, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--body-bg-color);
+            background-image: var(--body-bg-image);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--color-gold);
+        }
+
+        .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: white;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: white;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 span {
+            color: var(--color-gold);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .doc-meta-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-emerald);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .tabs-container {
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Cinzel', serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .document {
+            background: var(--panel-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .document h2 {
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+
+        .document h2:first-child {
+            margin-top: 0;
+        }
+
+        .document h3 {
+            font-size: 1.125rem;
+            color: white;
+            margin: 24px 0 12px;
+        }
+
+        .document h4 {
+            font-size: 0.875rem;
+            color: var(--color-gold);
+            margin: 16px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .document p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
+
+        .document strong {
+            color: white;
+        }
+
+        .document ul,
+        .document ol {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+
+        .document li {
+            margin-bottom: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: rgba(200, 169, 81, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Atomic & Comparison Table Styles */
+        .atomic-table th,
+        .atomic-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .atomic-table .subtotal-row td {
+            background: rgba(200, 169, 81, 0.1);
+            color: var(--color-gold);
+            font-weight: 700;
+            border-top: 1px solid var(--color-gold);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 16px;
+        }
+
+        .comparison-table th:first-child,
+        .comparison-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .highlight-col {
+            background: rgba(200, 169, 81, 0.1);
+            border-left: 1px solid rgba(200, 169, 81, 0.3);
+            border-right: 1px solid rgba(200, 169, 81, 0.3);
+            color: var(--color-gold) !important;
+            font-weight: 700;
+        }
+
+        .comparison-table thead th.highlight-col {
+            background: var(--color-gold);
+            color: #000 !important;
+        }
+
+        .cost-intro {
+            font-size: 1.1rem;
+            border-left: 3px solid var(--color-gold);
+            padding-left: 20px;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-card.highlight {
+            border-color: var(--color-gold);
+            background: rgba(200, 169, 81, 0.1);
+        }
+
+        .summary-card .value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .summary-card.highlight .value {
+            color: var(--color-gold);
+        }
+
+        .summary-card .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 640px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-card.savings {
+            border-color: var(--color-emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+        }
+
+        .comparison-card .price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .comparison-card.savings .price {
+            color: var(--color-emerald);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-gold {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .badge-emerald {
+            background: var(--color-emerald);
+            color: #000;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .tech-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .tech-item .name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .tech-item .desc {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 24px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        @media print {
+
+            nav,
+            .tabs-container {
+                display: none;
+            }
+
+            .document {
+                box-shadow: none;
+                border: none;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                </svg>
+                <span class="logo-text">FINALWISHES</span>
+            </a>
+            <a href="/" class="nav-link">← Back to Home</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div id="contract-tab" class="tab-content active">
+            <div class="document" style="border: 2px solid var(--color-gold);">
+                <div class="doc-header"
+                    style="text-align: center; border-bottom: 2px solid var(--color-gold); padding-bottom: 20px; margin-bottom: 40px;">
+                    <h2 style="font-size: 2rem; letter-spacing: 0.1em; color: var(--color-gold); margin-bottom: 10px;">
+                        MASTER SERVICES AGREEMENT</h2>
+                    <div style="font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 0.9rem;">
+                        <p><strong>AGREEMENT NUMBER:</strong> MSA-2025-111-FW &nbsp;|&nbsp;
+                            <strong>EFFECTIVE
+                                DATE:</strong> December 11, 2025
+                        </p>
+                    </div>
+                </div>
+
+                <p>This <strong>Master Services Agreement</strong> (this "Agreement") is entered into by and
+                    between:</p>
+
+                <p><strong>FinalWishes Inc.</strong>, a Delaware Corporation with its principal place of
+                    business at [Address] ("Client"), and<br>
+                    <strong>111 Venture Studio</strong>, a Delaware Limited Liability Company with its
+                    principal
+                    place of business at [Address] ("Provider").
+                </p>
+
+                <p>Client and Provider may be referred to individually as a "Party" and collectively as the
+                    "Parties."</p>
+
+                <h3>1. RECITALS</h3>
+                <p><strong>WHEREAS</strong>, Client desires to engage Provider to design, develop, and
+                    implement
+                    a specialized estate settlement software platform known as "FinalWishes / MyShepherd"
+                    (the
+                    "Platform"); and</p>
+                <p><strong>WHEREAS</strong>, Provider has the requisite technical expertise, personnel, and
+                    capabilities in software engineering, artificial intelligence integration, and cloud
+                    architecture to perform such services; and</p>
+                <p><strong>WHEREAS</strong>, the Parties desire to set forth the terms and conditions under
+                    which Provider will provide such services to Client.</p>
+                <p><strong>NOW, THEREFORE</strong>, in consideration of the mutual covenants, terms, and
+                    conditions set forth herein, and for other good and valuable consideration, the receipt
+                    and
+                    sufficiency of which are hereby acknowledged, the Parties agree as follows:</p>
+
+                <h3>2. DEFINITIONS</h3>
+                <p>For purposes of this Agreement, the following terms shall have the meanings set forth
+                    below:
+                </p>
+                <ul>
+                    <li><strong>"Affiliate"</strong> means any entity that directly or indirectly controls,
+                        is
+                        controlled by, or is under common control with a Party, where "control" means
+                        ownership
+                        of more than fifty percent (50%) of the voting stock or other ownership interest.
+                    </li>
+                    <li><strong>"Background Technology"</strong> means all software, code, tools, libraries,
+                        frameworks, know-how, methodologies, and Intellectual Property Rights owned or
+                        licensed
+                        by Provider prior to the Effective Date or developed independently of the Services
+                        (including, without limitation, Provider’s "Sirsi" component library, "Gemini"
+                        guidance
+                        patterns, and standard deployment scripts).</li>
+                    <li><strong>"Confidential Information"</strong> means any non-public information
+                        disclosed
+                        by one Party (the "Disclosing Party") to the other Party (the "Receiving Party")
+                        that is
+                        designated as confidential or that, given the nature of the information or
+                        circumstances
+                        of disclosure, reasonably should be understood to be confidential.</li>
+                    <li><strong>"Deliverables"</strong> means all documents, work product, code, software,
+                        reports, and other materials that are specifically created for and delivered to
+                        Client
+                        by Provider pursuant to a Statement of Work.</li>
+                    <li><strong>"Intellectual Property Rights"</strong> means all patent rights, copyright
+                        rights, mask work rights, moral rights, rights of publicity, trademark, trade dress
+                        and
+                        service mark rights, goodwill, trade secret rights and other intellectual property
+                        rights as may now exist or hereafter come into existence, and all applications
+                        therefore
+                        and registrations, renewals and extensions thereof, under the laws of any state,
+                        country, territory or other jurisdiction.</li>
+                    <li><strong>"Services"</strong> means the professional software development, consulting,
+                        and
+                        design services to be performed by Provider as described in a Statement of Work.
+                    </li>
+                    <li><strong>"Statement of Work" or "SOW"</strong> means a document describing the
+                        specific
+                        Services to be performed, Deliverables to be provided, fees to be paid, and timeline
+                        for
+                        performance, which is agreed upon and signed by authorized representatives of both
+                        Parties. Each SOW shall be substantially in the form of <strong>Exhibit A</strong>.
+                    </li>
+                </ul>
+
+                <h3>3. SERVICES AND ENGAGEMENT</h3>
+                <p><strong>3.1 Statements of Work.</strong> Provider shall provide the Services and
+                    Deliverables
+                    to Client as specified in each SOW. Each SOW shall be effectively incorporated into this
+                    Agreement. In the event of a conflict between the terms of this Agreement and an SOW,
+                    the
+                    terms of the SOW shall control ONLY regarding the specific description of Services,
+                    fees,
+                    and timeline; for all other legal terms and conditions, this Agreement shall control.
+                </p>
+                <p><strong>3.2 Standard of Performance.</strong> Provider represents and warrants that the
+                    Services will be performed in a professional, workmanlike manner, by qualified
+                    personnel,
+                    and consistent with the highest industry standards for similar enterprise-grade software
+                    development services. Provider shall devote adequate resources to meet its obligations
+                    under
+                    this Agreement.</p>
+                <p><strong>3.3 Change Orders.</strong> Client may, at any time, request changes to the scope
+                    of
+                    the Services ("Change Request"). If Provider determines that such changes will impact
+                    the
+                    fees, timeline, or technical architecture, Provider shall submit a written "Change
+                    Order"
+                    detailing the impact. No change shall be effective until the Change Order is signed by
+                    both
+                    Parties. Minor changes requiring less than eight (8) hours of effort may be approved via
+                    written correspondence (email sufficient).</p>
+                <p><strong>3.4 Non-Exclusivity.</strong> Client acknowledges that Provider is a professional
+                    services firm and may provide similar services to third parties, provided that Provider
+                    does
+                    not use Client’s Confidential Information or specifically commissioned Deliverables for
+                    such
+                    third parties.</p>
+
+                <h3>4. COMPENSATION AND PAYMENT</h3>
+                <p><strong>4.1 Fees.</strong> Client shall pay Provider the fees set forth in the applicable
+                    SOW. Unless otherwise specified in an SOW, fees for fixed-price projects shall be
+                    payable
+                    according to the agreed-upon milestone schedule.</p>
+                <p><strong>4.2 Expenses.</strong> Client shall reimburse Provider for reasonable, documented
+                    "Pass-Through Expenses" incurred in connection with the Services (e.g., specific cloud
+                    infrastructure costs, third-party API licensing fees, software licenses specifically
+                    required for the Project). Provider shall obtain Client’s prior written approval for any
+                    individual expense exceeding Five Hundred Dollars ($500.00). Travel expenses shall only
+                    be
+                    reimbursable if pre-approved by Client in writing.</p>
+                <p><strong>4.3 Payment Terms.</strong> Provider shall submit invoices to Client upon
+                    completion
+                    of Milestones or monthly for Time & Materials engagements. Invoices are due and payable
+                    <strong>Net Fifteen (15)</strong> days from the invoice date.
+                </p>
+                <p><strong>4.4 Late Payments.</strong> Undisputed payments not received by the due date
+                    shall
+                    accrue interest at the lesser of one and one-half percent (1.5%) per month or the
+                    maximum
+                    rate permitted by law.</p>
+                <p><strong>4.5 Taxes.</strong> Fees do not include any sales, use, value-added, or similar
+                    taxes. Client shall be responsible for paying all such taxes properly levied on the
+                    Services, excluding taxes based on Provider’s net income, property, or employees.</p>
+
+                <h3>5. INTELLECTUAL PROPERTY RIGHTS</h3>
+                <p><strong>5.1 Work Made for Hire.</strong> Provider agrees that all Deliverables created
+                    for
+                    Client under this Agreement shall be considered "works made for hire" to the extent
+                    permitted by law. To the extent that any Deliverable does not qualify as a work made for
+                    hire under applicable law, Provider hereby irrevocably assigns to Client all right,
+                    title,
+                    and interest in and to such Deliverable, including all Intellectual Property Rights
+                    therein,
+                    free and clear of all liens and encumbrances.</p>
+                <p><strong>5.2 Background Technology.</strong> Notwithstanding Section 5.1, Provider retains
+                    all
+                    right, title, and interest in and to its Background Technology. Provider hereby grants
+                    to
+                    Client a perpetual, irrevocable, non-exclusive, royalty-free, fully paid-up, worldwide,
+                    sublicensable license to use, reproduce, modify, display, distribute, and create
+                    derivative
+                    works of any Background Technology incorporated into the Deliverables, solely as
+                    necessary
+                    for Client to utilize, exploit, and maintain the Deliverables for their intended
+                    purpose.
+                </p>
+                <p><strong>5.3 Third-Party and Open Source Software.</strong> The Deliverables may contain
+                    third-party software or open source software. Provider warrants that its use of such
+                    software will comply with the applicable licenses (e.g., AGPL-3.0, MIT, Apache 2.0).
+                    Provider shall identify any "Copyleft" libraries (that would mandate disclosure of
+                    Client’s
+                    source code) prior to integration and obtain Client’s approval.</p>
+                <p><strong>5.4 AI-Generated Content.</strong> The Parties acknowledge that Provider utilizes
+                    advanced Artificial Intelligence tools (e.g., Google Gemini, Anthropic Claude) to assist
+                    in
+                    code generation and architecture. Provider warrants that it has the full legal right to
+                    assign ownership of such AI-generated output to Client as part of the Deliverables, and
+                    that
+                    such use does not violate the terms of service of the AI providers.</p>
+                <p><strong>5.5 Further Assurances.</strong> Provider agrees to execute any documents and
+                    take
+                    any actions reasonably requested by Client to perfect Client’s ownership of the
+                    Intellectual
+                    Property Rights in the Deliverables.</p>
+
+                <h3>6. CONFIDENTIALITY</h3>
+                <p><strong>6.1 Obligations.</strong> The Receiving Party agrees: (i) to hold the Disclosing
+                    Party’s Confidential Information in strict confidence and take reasonable precautions to
+                    protect it (including all precautions the Receiving Party employs with respect to its
+                    own
+                    confidential materials); (ii) not to divulge any such Confidential Information to any
+                    third
+                    party (other than employees, contractors, or agents who have a need to know and are
+                    bound by
+                    written confidentiality obligations); and (iii) not to use such Confidential Information
+                    except for the performance of this Agreement.</p>
+                <p><strong>6.2 Exclusions.</strong> Confidential Information shall not include information
+                    that:
+                    (a) is or becomes generally available to the public without breach of this Agreement;
+                    (b)
+                    was in the Receiving Party’s possession prior to disclosure without legal restriction;
+                    (c)
+                    is captured by the Receiving Party from a third party who had the legal right to
+                    disclose
+                    it; or (d) is independently developed by the Receiving Party without reference to or use
+                    of
+                    the Confidential Information.</p>
+                <p><strong>6.3 Data Security & SOC 2 Compliance.</strong> Provider acknowledges that it may
+                    have
+                    access to Client’s data, which may include Personally Identifiable Information (PII).
+                    Provider agrees to implement and maintain commercially reasonable technical and
+                    organizational security measures—consistent with SOC 2 Type II criteria—to protect such
+                    data
+                    from unauthorized access, use, modification, or disclosure. This includes, but is not
+                    limited to, encryption of data at rest and in transit, access controls, and regular
+                    security
+                    audits.</p>
+                <p><strong>6.4 Compelled Disclosure.</strong> If the Receiving Party is required by law or
+                    court
+                    order to disclose Confidential Information, it shall give the Disclosing Party prompt
+                    written notice (if legally permitted) to allow the Disclosing Party to seek a protective
+                    order.</p>
+
+                <h3>7. WARRANTIES AND COVENANTS</h3>
+                <p><strong>7.1 Provider Warranties.</strong> Provider represents and warrants that:<br>
+                    (a) <strong>Non-Infringement:</strong> The Deliverables will be original and will not
+                    infringe, misappropriate, or violate any patent, copyright, trademark, trade secret, or
+                    other proprietary right of any third party.<br>
+                    (b) <strong>Compliance with Laws:</strong> The Services will be performed in compliance
+                    with
+                    all applicable federal, state, and local laws and regulations.<br>
+                    (c) <strong>Malicious Code:</strong> Provider will use industry-standard measures to
+                    ensure
+                    the Deliverables do not contain any viruses, malware, trojan horses, time bombs, or
+                    other
+                    harmful code.</p>
+                <p><strong>7.2 Performance Warranty (60-Day Bug Fix Guarantee).</strong> Provider warrants
+                    that,
+                    for a period of <strong>sixty (60) days</strong> following Client’s Acceptance of the
+                    Deliverables (the "Warranty Period"), the Deliverables will function materially in
+                    accordance with the specifications set forth in the SOW. If the Deliverables fail to
+                    meet
+                    this warranty, Provider shall, at its sole expense and as Client’s exclusive remedy for
+                    breach of this warranty, promptly correct the non-conformity.</p>
+                <p><strong>7.3 Disclaimer.</strong> EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT,
+                    PROVIDER
+                    MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED, AND HEREBY DISCLAIMS ALL IMPLIED
+                    WARRANTIES
+                    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+
+                <h3>8. INDEMNIFICATION</h3>
+                <p><strong>8.1 By Provider.</strong> Provider shall indemnify, defend, and hold harmless
+                    Client
+                    and its officers, directors, employees, and agents from and against any and all losses,
+                    damages, liabilities, costs, and expenses (including reasonable attorneys’ fees) arising
+                    out
+                    of or resulting from any third-party claim alleging that the Deliverables or Services
+                    infringe or misappropriate any U.S. copyright, trademark, or trade secret.</p>
+                <p><strong>8.2 By Client.</strong> Client shall indemnify, defend, and hold harmless
+                    Provider
+                    from and against any and all losses, damages, liabilities, costs, and expenses arising
+                    out
+                    of or resulting from: (i) Client’s specific specifications or instructions that
+                    compelled
+                    the infringement; or (ii) content or data provided by Client to Provider.</p>
+                <p><strong>8.3 Procedure.</strong> The indemnified party shall: (a) promptly notify the
+                    indemnifying party in writing of the claim; (b) allow the indemnifying party sole
+                    control of
+                    the defense and settlement of the claim; and (c) provide reasonable assistance to the
+                    indemnifying party.</p>
+
+                <h3>9. LIMITATION OF LIABILITY</h3>
+                <p><strong>9.1 Exclusion of Consequential Damages.</strong> EXCEPT FOR BREACHES OF
+                    CONFIDENTIALITY (SECTION 6) OR INDEMNIFICATION OBLIGATIONS (SECTION 8), IN NO EVENT
+                    SHALL
+                    EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
+                    CONSEQUENTIAL, OR
+                    PUNITIVE DAMAGES (INCLUDING LOSS OF PROFITS, DATA, OR USE), EVEN IF ADVISED OF THE
+                    POSSIBILITY OF SUCH DAMAGES.</p>
+                <p><strong>9.2 Liability Cap.</strong> EXCEPT FOR PROVIDER'S INDEMNIFICATION OBLIGATIONS FOR
+                    IP
+                    INFRINGEMENT (SECTION 8.1), EACH PARTY’S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR
+                    RELATED
+                    TO THIS AGREEMENT, WHETHER IN CONTRACT, TORT, OR OTHERWISE, SHALL NOT EXCEED THE TOTAL
+                    FEES
+                    PAID OR PAYABLE BY CLIENT TO PROVIDER UNDER THE APPLICABLE SOW IN THE TWELVE (12) MONTHS
+                    IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM.</p>
+
+                <h3>10. TERM AND TERMINATION</h3>
+                <p><strong>10.1 Term.</strong> This Agreement shall commence on the Effective Date and shall
+                    continue in full force and effect until terminated as provided herein.</p>
+                <p><strong>10.2 Termination for Convenience.</strong> Client may terminate this Agreement or
+                    any
+                    SOW for any reason or no reason upon thirty (30) days' prior written notice to Provider.
+                    Upon such termination, Client shall pay Provider for all Services performed and
+                    non-cancellable expenses incurred up to the date of termination.</p>
+                <p><strong>10.3 Termination for Cause.</strong> Either Party may terminate this Agreement or
+                    any
+                    SOW immediately upon written notice if the other Party: (i) materially breaches this
+                    Agreement and fails to cure such breach within fifteen (15) days after receiving written
+                    notice thereof; or (ii) becomes insolvent, makes an assignment for the benefit of
+                    creditors,
+                    or files for bankruptcy.</p>
+                <p><strong>10.4 Effect of Termination.</strong> Upon termination: (i) Client shall pay all
+                    outstanding undisputed invoices; (ii) Provider shall deliver to Client all completed and
+                    partially completed Deliverables; and (iii) each Party shall return or destroy the other
+                    Party’s Confidential Information.</p>
+                <p><strong>10.5 Survival.</strong> Sections 2, 4, 5, 6, 7.3, 8, 9, 11, and 12 shall survive
+                    any
+                    termination or expiration of this Agreement.</p>
+
+                <h3>11. GENERAL PROVISIONS</h3>
+                <p><strong>11.1 Independent Contractor.</strong> Provider is an independent contractor.
+                    Nothing
+                    in this Agreement shall be construed to create a partnership, joint venture, agency, or
+                    employment relationship between the Parties.</p>
+                <p><strong>11.2 Force Majeure.</strong> Neither Party shall be liable for any delay or
+                    failure
+                    to perform (excluding payment obligations) due to causes beyond its reasonable control,
+                    including acts of God, war, terrorism, riot, embargoes, acts of civil or military
+                    authorities, fire, floods, or accidents.</p>
+                <p><strong>11.3 Non-Solicitation.</strong> During the Term and for one (1) year thereafter,
+                    neither Party shall knowingly solicit for employment or hire any employee or contractor
+                    of
+                    the other Party who was directly involved in the provision of Services under this
+                    Agreement,
+                    without the prior written consent of the other Party. General solicitations not targeted
+                    at
+                    such persons shall not be a violation of this provision.</p>
+                <p><strong>11.4 Dispute Resolution.</strong><br>
+                    (a) <strong>Negotiation:</strong> The Parties agree to attempt to resolve any dispute
+                    arising out of this Agreement through good faith negotiation between senior
+                    executives.<br>
+                    (b) <strong>Arbitration:</strong> If negotiation fails within thirty (30) days, the
+                    dispute
+                    shall be predominantly resolved by binding arbitration administered by the American
+                    Arbitration Association (AAA) in accordance with its Commercial Arbitration Rules.<br>
+                    (c) <strong>Venue & Law:</strong> The seat of arbitration shall be <strong>Wilmington,
+                        Delaware</strong>. This Agreement shall be governed by the laws of the <strong>State
+                        of
+                        Delaware</strong>, without regard to its conflict of laws principles.<br>
+                    (d) <strong>No Jury Trial:</strong> EACH PARTY HEREBY WAIVES ANY RIGHT TO A JURY TRIAL
+                    IN
+                    CONNECTION WITH ANY DISPUTE ARISING OUT OF THIS AGREEMENT.</p>
+                <p><strong>11.5 Assignment.</strong> Neither Party may assign this Agreement without the
+                    prior
+                    written consent of the other Party, except that either Party may assign this Agreement
+                    to an
+                    Affiliate or in connection with a merger, acquisition, or sale of substantially all of
+                    its
+                    assets.</p>
+                <p><strong>11.6 Severability.</strong> If any provision of this Agreement is held to be
+                    invalid
+                    or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+                <p><strong>11.7 Entire Agreement.</strong> This Agreement, together with all SOWs and
+                    Exhibits,
+                    constitutes the entire agreement between the Parties regarding the subject matter hereof
+                    and
+                    supersedes all prior or contemporaneous agreements, understandings, and communications.
+                </p>
+                <p><strong>11.8 Counterparts.</strong> This Agreement may be executed in counterparts, each
+                    of
+                    which shall be deemed an original, but all of which together shall constitute one and
+                    the
+                    same instrument. Electronic signatures shall be deemed original signatures.</p>
+
+                <div class="deco-line" style="margin: 30px 0;"></div>
+
+                <div class="signature-section" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px;">
+                    <h4 style="color: var(--color-gold);">Execute Agreement</h4>
+                    <p style="font-size: 0.8rem; margin-bottom: 20px;">By signing below, you acknowledge
+                        reading
+                        and accepting the full terms of this Agreement, the SOW, and the Cost Proposal.</p>
+
+                    <div style="margin: 20px 0;">
+                        <input type="checkbox" id="agree-check" style="margin-right: 10px;">
+                        <label for="agree-check" style="font-size: 0.8rem; color: #ccc;">
+                            I accept the terms of the Master Services Agreement (MSA-2025-111-FW).
+                        </label>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 0.7rem; margin-bottom: 8px;">DIGITAL SIGNATURE</p>
+                        <canvas id="sig-canvas" width="400" height="150"
+                            style="border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); cursor: crosshair;"></canvas>
+                        <br>
+                        <button onclick="clearSig()"
+                            style="font-size: 0.7rem; color: #aaa; background: none; border: none; cursor: pointer; text-decoration: underline;">Clear</button>
+                    </div>
+
+                    <div id="payment-section" style="opacity: 0.5; pointer-events: none; transition: all 0.3s ease;">
+                        <button id="sign-btn" class="btn-gold"
+                            style="width: 100%; padding: 16px; background: var(--color-gold); border: none; border-radius: 4px; font-family: 'Cinzel', serif; font-weight: 700; cursor: pointer;"
+                            onclick="simulatePay()">
+                            Sign & Execute Contract
+                        </button>
+                    </div>
+                </div>
+
+                <div class="deco-line" style="margin: 30px 0;"></div>
+
+                <h3>EXHIBIT A: STATEMENT OF WORK (SOW) TEMPLATE</h3>
+                <p>This Exhibit A outlines the standard template for a Statement of Work (SOW) that will be
+                    executed under the Master Services Agreement (MSA) between Client and Provider. Each SOW
+                    will detail specific projects, deliverables, timelines, and payment terms.</p>
+
+                <h4>1. SOW Title & Number:</h4>
+                <p>[e.g., SOW-2025-001-WebsiteRedesign]</p>
+
+                <h4>2. Effective Date:</h4>
+                <p>[Date]</p>
+
+                <h4>3. Project Overview & Goals:</h4>
+                <p>A brief description of the project, its primary objectives, and the business value it
+                    aims
+                    to deliver.</p>
+
+                <h4>4. Scope of Services:</h4>
+                <p>Detailed description of the services to be performed by Provider, including specific
+                    tasks,
+                    activities, and responsibilities. This section should clearly define what is included
+                    and,
+                    where necessary, what is explicitly excluded from the scope.</p>
+                <ul>
+                    <li><strong>Deliverables:</strong> List of all tangible outputs to be provided by
+                        Provider
+                        (e.g., software modules, documentation, design files, test reports).</li>
+                    <li><strong>Milestones & Acceptance Criteria:</strong> Defined stages of the project
+                        with
+                        corresponding deliverables and the criteria Client will use to accept them.</li>
+                </ul>
+
+                <h4>5. Timeline & Schedule:</h4>
+                <p>Project start and end dates, key milestone dates, and estimated duration for each phase
+                    or
+                    deliverable.</p>
+
+                <h4>6. Fees & Payment Schedule:</h4>
+                <p>Total project cost or hourly rates, payment milestones, and any specific invoicing
+                    instructions. This section will specify if the project is Fixed-Price or Time &
+                    Materials.
+                </p>
+                <ul>
+                    <li><strong>Fixed-Price Projects:</strong> Payment schedule tied to milestones.</li>
+                    <li><strong>Time & Materials Projects:</strong> Hourly rates for personnel, estimated
+                        hours,
+                        and billing frequency.</li>
+                </ul>
+
+                <h4>7. Pass-Through Expenses:</h4>
+                <p>Any anticipated reimbursable expenses (e.g., specific software licenses, cloud hosting
+                    costs) and the approval process for such expenses.</p>
+
+                <h4>8. Client Responsibilities:</h4>
+                <p>Specific actions, resources, or information Client must provide to ensure the successful
+                    completion of the project (e.g., timely feedback, access to systems, provision of
+                    content).
+                </p>
+
+                <h4>9. Key Personnel:</h4>
+                <p>Identification of key contacts from both Client and Provider for the duration of the SOW.
+                </p>
+
+                <h4>10. Assumptions & Dependencies:</h4>
+                <p>Any assumptions made during the SOW creation and any dependencies on external factors or
+                    Client actions.</p>
+
+                <h4>11. Change Management:</h4>
+                <p>Process for requesting and approving changes to the SOW scope, timeline, or budget.</p>
+
+                <div class="deco-line" style="margin: 30px 0;"></div>
+
+                <h3>EXHIBIT B: ACCEPTANCE CRITERIA</h3>
+                <p>This Exhibit B defines the general acceptance criteria that will be applied to
+                    Deliverables
+                    under any Statement of Work (SOW) executed pursuant to the Master Services Agreement
+                    (MSA).
+                    Specific SOWs may include additional, project-specific acceptance criteria.</p>
+
+                <h4>1. General Acceptance Process:</h4>
+                <p>Upon completion of a Deliverable or a defined project milestone, Provider shall submit
+                    the
+                    Deliverable to Client for review and acceptance. Client shall have <strong>five (5)
+                        business
+                        days</strong> (the "Review Period") to review the Deliverable and provide written
+                    notice
+                    of acceptance or rejection.</p>
+
+                <h4>2. Acceptance:</h4>
+                <p>Client shall accept a Deliverable if it materially conforms to the specifications and
+                    requirements set forth in the applicable SOW and this Exhibit B.</p>
+
+                <h4>3. Rejection:</h4>
+                <p>If Client determines that a Deliverable does not materially conform to the
+                    specifications,
+                    Client shall provide Provider with a written notice of rejection during the Review
+                    Period,
+                    detailing the specific non-conformities and the reasons for rejection. Provider shall
+                    then
+                    have <strong>ten (10) business days</strong> to correct the non-conformities and
+                    resubmit
+                    the Deliverable for Client’s review, initiating a new Review Period.</p>
+
+                <h4>4. Deemed Acceptance:</h4>
+                <p>If Client fails to provide written notice of acceptance or rejection within the Review
+                    Period, the Deliverable shall be deemed accepted on the last day of the Review Period.
+                </p>
+
+                <h4>5. Criteria for Software Deliverables:</h4>
+                <ul>
+                    <li><strong>Functionality:</strong> The software performs all functions as described in
+                        the
+                        SOW and associated functional specifications.</li>
+                    <li><strong>Performance:</strong> The software meets specified performance metrics
+                        (e.g.,
+                        response times, load capacity) if defined in the SOW.</li>
+                    <li><strong>Usability:</strong> The user interface (if applicable) is intuitive and
+                        operates as designed.</li>
+                    <li><strong>Code Quality:</strong> The code is well-structured, commented, and adheres
+                        to
+                        agreed-upon coding standards.</li>
+                    <li><strong>Documentation:</strong> All required documentation (e.g., user manuals, API
+                        documentation, technical specifications) is complete and accurate.</li>
+                    <li><strong>Bug-Free:</strong> The software is free from critical defects or errors that
+                        prevent its intended use. Minor bugs or cosmetic issues may not constitute grounds
+                        for
+                        rejection but should be documented for future resolution.</li>
+                </ul>
+
+                <h4>6. Criteria for Design Deliverables:</h4>
+                <ul>
+                    <li><strong>Adherence to Brief:</strong> Designs align with the creative brief, brand
+                        guidelines, and functional requirements.</li>
+                    <li><strong>Visual Quality:</strong> Designs are aesthetically pleasing and
+                        professionally
+                        executed.</li>
+                    <li><strong>File Format:</strong> Deliverables are provided in agreed-upon file formats
+                        (e.g., Figma, Sketch, PSD, PNG, SVG).</li>
+                </ul>
+
+                <div class="deco-line" style="margin: 30px 0;"></div>
+
+                <h3>APPENDIX A: DEFINITIONS</h3>
+                <p>The following terms, when capitalized, shall have the meanings set forth below:</p>
+
+                <p><strong>"Acceptance"</strong> means Client’s written or deemed approval of a Deliverable
+                    as
+                    meeting the applicable acceptance criteria.</p>
+                <p><strong>"Affiliate"</strong> means any entity that directly or indirectly controls, is
+                    controlled by, or is under common control with a Party.</p>
+                <p><strong>"Agreement"</strong> means this Master Services Agreement, including all Exhibits
+                    and Appendices attached hereto, and all SOWs executed hereunder.</p>
+                <p><strong>"Background Technology"</strong> means all Intellectual Property Rights owned or
+                    licensed by Provider prior to or independent of this Agreement, including but not
+                    limited
+                    to, software libraries, tools, methodologies, and know-how, that are incorporated into
+                    or
+                    used in the creation of the Deliverables.</p>
+                <p><strong>"Change Order"</strong> means a written document signed by both Parties detailing
+                    agreed-upon changes to an SOW, including adjustments to scope, fees, or timeline.</p>
+                <p><strong>"Client"</strong> means the entity identified as the Client in the preamble of
+                    this
+                    Agreement.</p>
+                <p><strong>"Confidential Information"</strong> means any non-public information disclosed by
+                    one
+                    Party (the "Disclosing Party") to the other Party (the "Receiving Party"), whether
+                    orally
+                    or in writing, that is designated as confidential or that, by its nature, would
+                    reasonably
+                    be understood to be confidential. This includes, but is not limited to, trade secrets,
+                    business plans, financial information, customer lists, technical data, product designs,
+                    and
+                    software code.</p>
+                <p><strong>"Deliverables"</strong> means all software, documentation, designs, reports, and
+                    other materials or results that Provider is required to deliver to Client under an SOW.
+                </p>
+                <p><strong>"Effective Date"</strong> means the date on which this Agreement is executed by
+                    both
+                    Parties.</p>
+                <p><strong>"Intellectual Property Rights"</strong> means all patent rights, copyright
+                    rights,
+                    mask work rights, moral rights, rights of publicity, trademark, trade dress and service
+                    mark
+                    rights, goodwill, trade secret rights and other intellectual property rights as may now
+                    exist or hereafter come into existence, and all applications therefore and
+                    registrations,
+                    renewals and extensions thereof, under the laws of any state, country, territory or
+                    other
+                    jurisdiction.</p>
+                <p><strong>"Party"</strong> or <strong>"Parties"</strong> means Client and Provider
+                    individually or collectively.</p>
+                <p><strong>"Pass-Through Expenses"</strong> means reasonable, documented out-of-pocket
+                    expenses
+                    incurred by Provider directly in connection with the Services and approved by Client, as
+                    specified in an SOW or Section 4.2.</p>
+                <p><strong>"Provider"</strong> means the entity identified as the Provider in the preamble
+                    of
+                    this Agreement.</p>
+                <p><strong>"Services"</strong> means the software development, consulting, and related
+                    services
+                    to be performed by Provider for Client as described in an SOW.</p>
+                <p><strong>"SOW"</strong> or <strong>"Statement of Work"</strong> means a written document
+                    executed by both Parties that describes the specific Services, Deliverables, timelines,
+                    and
+                    fees for a particular project under this Agreement.</p>
+                <p><strong>"Term"</strong> means the period from the Effective Date until the termination or
+                    expiration of this Agreement.</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
+        </footer>
+    </main>
+
+    <script>
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+            window.scrollTo({ top: 200, behavior: 'smooth' });
+        }
+
+        // Signature Logic
+        const canvas = document.getElementById('sig-canvas');
+        const ctx = canvas.getContext('2d');
+        let painting = false;
+
+        function startPosition(e) { painting = true; draw(e); }
+        function finishedPosition() { painting = false; ctx.beginPath(); checkValidity(); }
+        function draw(e) {
+            if (!painting) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', finishedPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPosition);
+        canvas.addEventListener('touchend', finishedPosition);
+        canvas.addEventListener('touchmove', draw);
+
+        function clearSig() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            checkValidity();
+        }
+
+        const checkbox = document.getElementById('agree-check');
+        const paySection = document.getElementById('payment-section');
+
+        checkbox.addEventListener('change', checkValidity);
+
+        function checkValidity() {
+            // Check if canvas has content (simple approach)
+            const pixelBuffer = new Uint32Array(
+                ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+            );
+            const hasSignature = pixelBuffer.some(color => color !== 0);
+
+            if (checkbox.checked && hasSignature) {
+                paySection.style.opacity = '1';
+                paySection.style.pointerEvents = 'all';
+            } else {
+                paySection.style.opacity = '0.5';
+                paySection.style.pointerEvents = 'none';
+            }
+        }
+
+        function simulatePay() {
+            const btn = document.querySelector('#payment-section button');
+            btn.innerHTML = "Processing...";
+            setTimeout(() => {
+                btn.innerHTML = "🎉 Payment Successful! Welcome to 111 Ventures.";
+                btn.style.background = "var(--color-gold)";
+                confetti();
+            }, 1500);
+        }
+
+        // Simple confetti fallback
+        function confetti() {
+            // Visual flair only
+            const colors = ['#C8A951', '#10B981', '#FFFFFF'];
+            for (let i = 0; i < 50; i++) {
+                const el = document.createElement('div');
+                el.style.position = 'fixed';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.top = '-10px';
+                el.style.width = '10px';
+                el.style.height = '10px';
+                el.style.background = colors[Math.floor(Math.random() * colors.length)];
+                el.style.transition = 'top 2s ease-in, transform 2s linear';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.top = '100vh';
+                    el.style.transform = `rotate(${Math.random() * 360}deg)`;
+                }, 10);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

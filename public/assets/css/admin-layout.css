@@ -8,7 +8,7 @@
  * - Typography: Cinzel (Headers) & Inter (Body)
  */
 
-[data-auth-protect="admin"] {
+[data-auth-protect] {
     /* Color Palette */
     --color-gold: #C8A951;
     --color-gold-bright: #b89c3a;

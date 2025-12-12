@@ -1120,50 +1120,150 @@
                 <div class="deco-line"></div>
                 <!-- Contract Tab -->
                 <div id="contract-tab" class="tab-content">
-
-                    <h3>2. Intellectual Property</h3>
-                    <p>Upon full payment, Client owns all Custom Deliverables. Provider retains background technology
-                        (e.g.,
-                        Sirsi libraries).</p>
-
-                    <h3>3. Sign & Execute</h3>
-                    <div
-                        style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; border: 1px solid var(--card-border); margin-top: 20px;">
-                        <p style="margin-bottom: 15px; color: var(--color-gold);">I acknowledge and agree to the terms
-                            above.</p>
-                        <label
-                            style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; cursor: pointer;">
-                            <input type="checkbox" id="agree-check"
-                                style="width: 18px; height: 18px; accent-color: var(--color-emerald);">
-                            <span style="font-size: 0.9rem; color: white;">I am authorized to bind the Client to this
-                                Agreement.</span>
-                        </label>
-
-                        <div style="margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted);">DRA SIGNATURE
-                            BELOW:
-                        </div>
-                        <canvas id="sig-canvas" width="600" height="150"
-                            style="background: white; border-radius: 4px; cursor: crosshair; touch-action: none; max-width: 100%;"></canvas>
-                        <div style="margin-top: 8px; display: flex; gap: 10px;">
-                            <button onclick="clearSig()"
-                                style="padding: 6px 12px; border: 1px solid var(--text-muted); background: transparent; color: var(--text-muted); border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Clear</button>
+                    <div class="document" style="border: 2px solid var(--color-gold);">
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <h2 style="font-size: 1.5rem; letter-spacing: 0.2em; text-transform: uppercase;">Master
+                                Services Agreement</h2>
+                            <p><strong>AGREEMENT NUMBER:</strong> MSA-2025-111-FW</p>
+                            <p><strong>EFFECTIVE DATE:</strong> December 11, 2025</p>
                         </div>
 
-                        <div id="payment-section"
-                            style="margin-top: 30px; opacity: 0.5; pointer-events: none; transition: all 0.3s; border-top: 1px solid var(--card-border); padding-top: 20px;">
-                            <h4 style="color: var(--color-emerald);">Initiate Kickoff Payment ($23,750)</h4>
-                            <button onclick="simulatePay()"
-                                style="background: var(--color-emerald); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;">
-                                Pay & Execute Contract
+                        <p>This <strong>Master Services Agreement</strong> ("Agreement") is entered into by and between:
+                        </p>
+                        <p><strong>FinalWishes Inc.</strong>, a Delaware Corporation ("Client"), and<br>
+                            <strong>111 Venture Studio</strong> ("Provider").
+                        </p>
+
+                        <h3>1. RECITALS</h3>
+                        <p><strong>WHEREAS</strong>, Client wishes to engage Provider for specialized software
+                            development, architectural design, and strategic consulting services related to the
+                            "FinalWishes / MyShepherd" estate settlement platform (the "Platform"); and</p>
+                        <p><strong>WHEREAS</strong>, Provider has the requisite expertise, personnel, and technical
+                            capabilities to perform such services in a professional and workmanlike manner;</p>
+                        <p><strong>NOW, THEREFORE</strong>, in consideration of the mutual covenants and promises herein
+                            contained, the Parties agree as follows:</p>
+
+                        <h3>2. DEFINITIONS</h3>
+                        <ul>
+                            <li><strong>"Deliverables"</strong> means all code, documentation, designs, reports, and
+                                other work product specifically created by Provider for Client under an SOW.</li>
+                            <li><strong>"Intellectual Property Rights"</strong> means all patent rights, copyright
+                                rights, mask work rights, moral rights, rights of publicity, trademark, trade dress and
+                                service mark rights, goodwill, trade secret rights and other intellectual property
+                                rights as may now exist or hereafter come into existence.</li>
+                            <li><strong>"Background Technology"</strong> means all software, tools, know-how, and
+                                Intellectual Property owned by Provider prior to the Effective Date or developed
+                                independently of this Agreement (e.g., the "Sirsi" component library).</li>
+                            <li><strong>"Confidential Information"</strong> means any non-public information disclosed
+                                by one Party to the other that is designated as confidential or should reasonably be
+                                understood to be confidential.</li>
+                        </ul>
+
+                        <h3>3. SERVICES AND ENGAGEMENT</h3>
+                        <p><strong>3.1 Statements of Work.</strong> Provider shall perform the Services and provide the
+                            Deliverables as specified in each SOW. Each SOW shall be subject to the terms of this
+                            Agreement. In the event of a conflict between this Agreement and an SOW, the SOW shall
+                            control only regarding the specific scope and fees; otherwise, this Agreement controls.</p>
+                        <p><strong>3.2 Standard of Performance.</strong> Provider represents and warrants that the
+                            Services will be performed in a professional, workmanlike manner, consistent with the
+                            highest industry standards for similar services.</p>
+                        <p><strong>3.3 Change Orders.</strong> Client may request changes to the scope of Services. If
+                            such changes affect fees or timelines, Provider shall submit a written "Change Order" for
+                            Client’s approval. No changes shall be effective until signed by both Parties. Changes
+                            requiring less than 8 hours of effort may be approved via email.</p>
+
+                        <h3>4. COMPENSATION AND PAYMENT</h3>
+                        <p><strong>4.1 Fees.</strong> Client shall pay Provider the fees set forth in the applicable
+                            SOW. For fixed-price SOWs, fees are payable according to the milestone schedule.</p>
+                        <p><strong>4.2 Expenses.</strong> Client shall reimburse Provider for "Pass-Through Expenses"
+                            (e.g., Cloud Infrastructure costs, third-party API fees, software licenses specifically
+                            required for Client) at actual cost, with no markup.</p>
+                        <p><strong>4.3 Payment Terms.</strong> Invoices are due <strong>Net 15</strong> days from the
+                            invoice date.</p>
+
+                        <h3>5. INTELLECTUAL PROPERTY RIGHTS</h3>
+                        <p><strong>5.1 Work Made for Hire.</strong> Provider agrees that all Deliverables created for
+                            Client under this Agreement shall be considered "works made for hire" to the extent
+                            permitted by law. To the extent any Deliverable does not qualify as a work made for hire,
+                            Provider hereby irrevocably assigns to Client all right, title, and interest in and to such
+                            Deliverable, including all Intellectual Property Rights therein.</p>
+                        <p><strong>5.2 Provider Background Technology.</strong> Provider retains all right, title, and
+                            interest in its Background Technology. Provider hereby grants to Client a perpetual,
+                            irrevocable, non-exclusive, royalty-free, worldwide license to use, reproduce, modify,
+                            display, and distribute any Background Technology incorporated into the Deliverables.</p>
+                        <p><strong>5.3 Open Source Software.</strong> The Deliverables may contain open source software
+                            compliance with their respective licenses (e.g., AGPL-3.0 for DocuSeal).</p>
+                        <p><strong>5.4 AI-Generated Code.</strong> The Parties acknowledge that Provider utilizes AI
+                            tools (e.g., Gemini, Claude) to assist in development. Provider warrants that it has the
+                            right to assign ownership of such AI-generated output to Client as part of the Deliverables.
+                        </p>
+
+                        <h3>6. CONFIDENTIALITY</h3>
+                        <p><strong>6.1 Obligations.</strong> The Receiving Party agrees: (i) to hold Confidential
+                            Information in strict confidence; (ii) not to disclose such information to any third party
+                            without legal requirement or prior written consent.</p>
+                        <p><strong>6.3 Data Privacy (PII/PHI).</strong> Provider acknowledges that it may process
+                            Personal Identifiable Information (PII). Provider agrees to implement commercially
+                            reasonable technical and organizational measures (including encryption at rest and in
+                            transit) to protect such data, consistent with SOC 2 criteria.</p>
+
+                        <h3>7. WARRANTIES AND DISCLAIMER</h3>
+                        <p><strong>7.1 Provider Warranties.</strong> Provider warrants that:<br>
+                            (a) The Deliverables will be original and will not infringe any third-party IP Rights;<br>
+                            (b) The Services will be performed in compliance with all applicable laws;<br>
+                            (c) The Deliverables generally conform to the specifications set forth in the SOW for a
+                            period of <strong>sixty (60) days</strong> following Acceptance ("Warranty Period").</p>
+
+                        <h3>8. INDEMNIFICATION & LIABILITY</h3>
+                        <p><strong>8.1 By Provider.</strong> Provider shall indemnify, defend, and hold harmless Client
+                            from and against any third-party claims alleging that the Deliverables infringe any U.S.
+                            copyright or trade secret.</p>
+                        <p><strong>9.2 LIMITATION.</strong> EXCEPT FOR INDEMNIFICATION OBLIGATIONS, EACH PARTY’S TOTAL
+                            AGGREGATE LIABILITY ARISING OUT OF THIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAID OR
+                            PAYABLE BY CLIENT UNDER THE APPLICABLE SOW IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
+                        </p>
+
+                        <h3>9. TERM AND TERMINATION</h3>
+                        <p><strong>10.1 Term.</strong> This Agreement commences on the Effective Date and continues
+                            until terminated.</p>
+                        <p><strong>10.2 Termination for Convenience.</strong> Client may terminate this Agreement or any
+                            SOW at any time upon thirty (30) days written notice.</p>
+
+                        <div class="deco-line" style="margin: 30px 0;"></div>
+
+                        <div class="signature-section"
+                            style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px;">
+                            <h4 style="color: var(--color-gold);">Execute Agreement</h4>
+                            <p style="font-size: 0.8rem; margin-bottom: 20px;">By signing below, you acknowledge reading
+                                and accepting the full terms of this Agreement, the SOW, and the Cost Proposal.</p>
+
+                            <div style="margin: 20px 0;">
+                                <input type="checkbox" id="agree-terms" style="margin-right: 10px;">
+                                <label for="agree-terms" style="font-size: 0.8rem; color: #ccc;">
+                                    I accept the terms of the Master Services Agreement (MSA-2025-111-FW).
+                                </label>
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <p style="font-size: 0.7rem; margin-bottom: 8px;">DIGITAL SIGNATURE</p>
+                                <canvas id="signature-pad" width="400" height="150"
+                                    style="border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); cursor: crosshair;"></canvas>
+                                <br>
+                                <button onclick="clearSignature()"
+                                    style="font-size: 0.7rem; color: #aaa; background: none; border: none; cursor: pointer; text-decoration: underline;">Clear</button>
+                            </div>
+
+                            <button id="sign-btn" class="btn-gold"
+                                style="width: 100%; opacity: 0.5; pointer-events: none;" onclick="executeContract()">
+                                Sign & Execute Contract
                             </button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <footer>
-                <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
-            </footer>
+                <footer>
+                    <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
+                </footer>
     </main>
 
     <script>

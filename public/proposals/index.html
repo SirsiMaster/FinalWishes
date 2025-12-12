@@ -509,94 +509,313 @@
         <!-- Cost Proposal Tab -->
         <div id="cost-tab" class="tab-content active">
             <div class="document">
-                <h2>1. Executive Summary</h2>
-                <div class="summary-grid">
-                    <div class="summary-card highlight">
-                        <div class="value">$95,000</div>
-                        <div class="label">Fixed Price Guaranteed</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="value">20 Weeks</div>
-                        <div class="label">Delivery Timeline</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="value">9.1x</div>
-                        <div class="label">Forecasted Year 1 ROI</div>
-                    </div>
-                    <div class="summary-card">
-                        <div class="value">81%</div>
-                        <div class="label">Savings vs Agency</div>
-                    </div>
+                <div class="doc-header">
+                    <h2>Cost Proposal & Financial Analysis</h2>
+                    <p><strong>Project:</strong> MyShepherd / FinalWishes Platform</p>
+                    <p><strong>Version:</strong> 5.0.0 (Deep Dive)</p>
+                </div>
+
+                <h3>1. Investment Summary</h3>
+                <p>111 Venture Studio proposes a fixed-price engagement of <strong>$95,000</strong> to deliver the
+                    complete MyShepherd platform (Web + iOS + Android) in <strong>20 Weeks</strong>.</p>
+                <p>This is not an estimate; it is a <strong>guaranteed delivery price</strong>.</p>
+
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Primary Deliverable</th>
+                            <th>Description</th>
+                            <th>Value Allocation</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Core Platform Engineering</strong></td>
+                            <td>Backend, Web, Mobile codebase implementation</td>
+                            <td>$55,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security & Architecture</strong></td>
+                            <td>SOC 2 readiness, Encryption, Pen Testing</td>
+                            <td>$25,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AI & Legal Knowledge Base</strong></td>
+                            <td>Gemini training, Probate rules encoding</td>
+                            <td>$15,000</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>TOTAL</strong></td>
+                            <td></td>
+                            <td><strong>$95,000</strong></td>
+                        </tr>
+                    </table>
                 </div>
 
                 <h3>2. "Bottom-Up" Cost Analysis</h3>
-                <p>We justify every dollar. Here is exactly where the budget goes:</p>
+                <p>To validate the efficiency of our AI-Assisted model, we provide this comprehensive breakdown of how
+                    the budget is allocated.</p>
+
+                <h4>2.1 Engineering Labor (The "Human-in-the-Loop")</h4>
+                <p>Even with AI, senior oversight is critical.</p>
                 <div class="table-wrapper">
                     <table>
                         <tr>
-                            <th>Category</th>
-                            <th>Detail</th>
-                            <th>Allocation</th>
+                            <th>Role</th>
+                            <th>Rate (Blended)</th>
+                            <th>Est. Hours</th>
+                            <th>Total Cost</th>
                         </tr>
                         <tr>
-                            <td><strong>Engineering Labor</strong></td>
-                            <td>440 Senior Hours (Architect, PM, Q/A)</td>
-                            <td>$62,000</td>
+                            <td><strong>Lead Architect</strong></td>
+                            <td>$200/hr</td>
+                            <td>120 (6 hrs/wk)</td>
+                            <td>$24,000</td>
                         </tr>
                         <tr>
-                            <td><strong>Direct Costs</strong></td>
-                            <td>Infra, AI Tokens, 3rd Party Pen Test ($12k)</td>
-                            <td>$30,000</td>
+                            <td><strong>Product Manager</strong></td>
+                            <td>$150/hr</td>
+                            <td>80 (4 hrs/wk)</td>
+                            <td>$12,000</td>
                         </tr>
                         <tr>
-                            <td><strong>Risk Buffer</strong></td>
-                            <td>3% Contingency</td>
+                            <td><strong>AI Prompt Engineer</strong></td>
+                            <td>$100/hr</td>
+                            <td>200 (10 hrs/wk)</td>
+                            <td>$20,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>QA / Legal Review</strong></td>
+                            <td>$150/hr</td>
+                            <td>40 (Total)</td>
+                            <td>$6,000</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td><strong>Subtotal Labor</strong></td>
+                            <td></td>
+                            <td><strong>440 Hours</strong></td>
+                            <td><strong>$62,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h4>2.2 Technology & Infrastructure (Build Phase)</h4>
+                <p>Items included in the $95k fee (Provider pays):</p>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Description</th>
+                            <th>Cost</th>
+                        </tr>
+                        <tr>
+                            <td><strong>External Pen Test</strong></td>
+                            <td>3rd Party Security Firm Audit (Week 18)</td>
+                            <td>$12,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AI Inference Costs</strong></td>
+                            <td>Claude 3.5 / Gemini 3.0 API usage</td>
+                            <td>$5,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Infrastructure</strong></td>
+                            <td>GCP Development Environment (5 months)</td>
                             <td>$3,000</td>
                         </tr>
                         <tr>
-                            <td><strong>TOTAL</strong></td>
-                            <td><strong>Fixed Bid</strong></td>
-                            <td><strong style="color: var(--color-gold);">$95,000</strong></td>
+                            <td><strong>Legal Consult</strong></td>
+                            <td>Probate Attorney review of 3-State Forms</td>
+                            <td>$8,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tools</strong></td>
+                            <td>Cursor, GitHub Enterprise, Sentry Team</td>
+                            <td>$2,000</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td><strong>Subtotal Direct Costs</strong></td>
+                            <td></td>
+                            <td><strong>$30,000</strong></td>
                         </tr>
                     </table>
                 </div>
 
-                <h3>3. OpEx Forecast (After Launch)</h3>
-                <p>Designed for Scale-to-Zero efficiency.</p>
+                <h4>2.3 Margin & Risk Buffer</h4>
                 <div class="table-wrapper">
                     <table>
                         <tr>
-                            <th>Scenario</th>
-                            <th>Monthly Cost</th>
-                            <th>Breakdown</th>
+                            <th>Item</th>
+                            <th>Cost</th>
                         </tr>
                         <tr>
-                            <td><strong>Sleep Mode</strong> (0 Users)</td>
-                            <td>~$36.00 / mo</td>
-                            <td>Cloud Run ($2), SQL ($9), KMS ($10), DocuSeal ($15)</td>
+                            <td><strong>Contingency</strong> (3%)</td>
+                            <td>$3,000</td>
                         </tr>
-                        <tr>
-                            <td><strong>Scale Mode</strong> (1k Users)</td>
-                            <td>~$500.00 / mo</td>
-                            <td>Gemini AI Tokens (~$200), Plaid ($300), Storage</td>
+                        <tr class="highlight-row">
+                            <td><strong>GRAND TOTAL</strong></td>
+                            <td><strong>$95,000</strong></td>
                         </tr>
                     </table>
                 </div>
 
-                <h3>4. Market Positioning</h3>
-                <div class="comparison">
-                    <div class="comparison-card">
-                        <h4>Top-Tier Agency</h4>
-                        <div class="price">$450k+</div>
-                        <p style="font-size: 0.75rem; color: var(--text-muted);">Hourly T&M, Junior Devs, 9-12 Months
-                        </p>
-                    </div>
-                    <div class="comparison-card savings">
-                        <h4>111 Venture Studio</h4>
-                        <div class="price">$95k</div>
-                        <p style="font-size: 0.75rem; color: var(--text-muted);">Fixed Price, Senior + AI Agents, 5
-                            Months</p>
-                    </div>
+                <h3>3. Compare to Traditional Agency</h3>
+                <p>Why is this 80% cheaper? Because we don't bill for junior developers.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Cost Driver</th>
+                            <th>Traditional Agency</th>
+                            <th>111 Venture Studio</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Headcount</strong></td>
+                            <td>7-10 FTEs</td>
+                            <td>2 Humans + AI Agents</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Duration</strong></td>
+                            <td>9-12 Months</td>
+                            <td>5 Months</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Billable Hours</strong></td>
+                            <td>~6,000 Hours</td>
+                            <td>~440 Human Hours</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cost Basis</strong></td>
+                            <td>Hourly T&M</td>
+                            <td>Fixed Outcome</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Risk</strong></td>
+                            <td>Client pays for overruns</td>
+                            <td>Provider eats overruns</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>TOTAL BID</strong></td>
+                            <td><strong>$450,000+</strong></td>
+                            <td><strong>$95,000</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>4. Operational Expenses (OpEx) Forecast</h3>
+                <p>After launch (Week 20+), the Client will take over direct billing for infrastructure. We have
+                    architected this for extreme efficiency (Serverless).</p>
+
+                <h4>4.1 "Sleep Mode" Costs (0 Active Users)</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Service</th>
+                            <th>Tier</th>
+                            <th>Monthly Cost</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Cloud Run</strong></td>
+                            <td>On-Demand (Scale to Zero)</td>
+                            <td>~$2.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cloud SQL</strong></td>
+                            <td>db-f1-micro (Shared)</td>
+                            <td>$9.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DocuSeal</strong></td>
+                            <td>Self-Hosted Container</td>
+                            <td>$15.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Secrets/KMS</strong></td>
+                            <td>Key Versions</td>
+                            <td>$10.00</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td><strong>Total Base</strong></td>
+                            <td></td>
+                            <td><strong>~$36.00 / month</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h4>4.2 Active User Costs (Per 1,000 Users)</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Service</th>
+                            <th>Unit Cost</th>
+                            <th>Monthly (1k Users)</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Gemini AI</strong></td>
+                            <td>$0.002 / 1k tokens</td>
+                            <td>~$200.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Plaid</strong></td>
+                            <td>$0.30 / account link</td>
+                            <td>$300.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lob</strong></td>
+                            <td>$1.50 / letter</td>
+                            <td>Variable</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Storage</strong></td>
+                            <td>$0.02 / GB</td>
+                            <td>$5.00</td>
+                        </tr>
+                        <tr class="subtotal-row">
+                            <td><strong>Total</strong></td>
+                            <td></td>
+                            <td><strong>~$500 / month</strong></td>
+                        </tr>
+                    </table>
+                </div>
+                <p><em>Note: With a subscription price of $199/year, 1,000 users generates $199,000 revenue vs ~$6,000
+                        OpEx.</em></p>
+
+                <h3>5. ROI Analysis</h3>
+                <p><strong>Scenario:</strong> 5,000 Users in Year 1.</p>
+                <ul>
+                    <li><strong>Revenue:</strong> $995,000</li>
+                    <li><strong>Build Cost:</strong> ($95,000)</li>
+                    <li><strong>OpEx:</strong> (~$30,000)</li>
+                    <li><strong>Net Profit:</strong> <strong>$870,000</strong></li>
+                </ul>
+                <p>This represents a <strong>9.1x ROI</strong> in the first full year of operation.</p>
+
+                <h3>6. Payment Schedule</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                        <tr>
+                            <td><strong>1. Kickoff</strong></td>
+                            <td>$23,750</td>
+                            <td>Signing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Alpha</strong></td>
+                            <td>$23,750</td>
+                            <td>Week 8</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Beta</strong></td>
+                            <td>$23,750</td>
+                            <td>Week 16</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Launch</strong></td>
+                            <td>$23,750</td>
+                            <td>Week 20</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -604,379 +823,347 @@
         <!-- SOW Tab -->
         <div id="sow-tab" class="tab-content">
             <div class="document">
-
-                <h2>2. Scope of Work</h2>
-
-                <h3>2.1 Web Application Features</h3>
-                <ul>
-                    <li>User Authentication (Email, Google OAuth, MFA)</li>
-                    <li>Principal/Executor/Heir Dashboards</li>
-                    <li>Estate Management & Asset Inventory</li>
-                    <li>Document Vault (encrypted upload/download)</li>
-                    <li>Institution Letter Generation</li>
-                    <li>Notification Center</li>
-                </ul>
-
-                <h3>2.2 Mobile App Features</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Feature</th>
-                            <th>iOS</th>
-                            <th>Android</th>
-                        </tr>
-                        <tr>
-                            <td>Biometric Auth</td>
-                            <td>Face ID, Touch ID</td>
-                            <td>Fingerprint</td>
-                        </tr>
-                        <tr>
-                            <td>Push Notifications</td>
-                            <td>APNs</td>
-                            <td>FCM</td>
-                        </tr>
-                        <tr>
-                            <td>Document Camera</td>
-                            <td>Native capture</td>
-                            <td>Native capture</td>
-                        </tr>
-                        <tr>
-                            <td>Offline Mode</td>
-                            <td>Cached data</td>
-                            <td>Cached data</td>
-                        </tr>
-                    </table>
+                <div class="doc-header">
+                    <h2>Statement of Work (SOW)</h2>
+                    <p><strong>Project Name:</strong> MyShepherd Platform Development</p>
+                    <p><strong>Context:</strong> 20 Week Engagement | $95,000 USD</p>
                 </div>
 
-                <h3>2.3 Security Controls</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Control</th>
-                            <th>Implementation</th>
-                        </tr>
-                        <tr>
-                            <td>Encryption at Rest</td>
-                            <td>AES-256-GCM via Cloud KMS</td>
-                        </tr>
-                        <tr>
-                            <td>Encryption in Transit</td>
-                            <td>TLS 1.3</td>
-                        </tr>
-                        <tr>
-                            <td>Client-Side Encryption</td>
-                            <td>Documents encrypted before upload</td>
-                        </tr>
-                        <tr>
-                            <td>MFA</td>
-                            <td>TOTP (Google Authenticator, Authy)</td>
-                        </tr>
-                        <tr>
-                            <td>Rate Limiting</td>
-                            <td>100 req/min per user</td>
-                        </tr>
-                        <tr>
-                            <td>Audit Logging</td>
-                            <td>All actions to Cloud Logging</td>
-                        </tr>
-                    </table>
-                </div>
+                <h3>1. Executive Overview</h3>
+                <p>This Statement of Work ("SOW") outlines the specific scope, schedule, and deliverables for the
+                    development of the <strong>MyShepherd / FinalWishes Estate Operating System</strong>.</p>
+                <p><strong>Objective:</strong> To build and launch a SOC 2-ready, AI-assisted estate settlement platform
+                    serving Web, iOS, and Android users across three launch states (MD, IL, MN).</p>
 
-                <h2>3. Timeline & Milestones</h2>
-
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Month</th>
-                            <th>Focus</th>
-                            <th>Deliverables</th>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Foundation</td>
-                            <td>GCP setup, Auth, DB schema, React scaffold</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Core Features</td>
-                            <td>Estate CRUD, Asset management, Go API</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Vault & Security</td>
-                            <td>Document encryption, Notifications</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Mobile Apps</td>
-                            <td>React Native iOS/Android</td>
-                        </tr>
-                        <!-- Updates applied in Markdown, HTML pending full sync -->
-                    </table>
-                </div>
-
-                <h3>Key Milestones</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Milestone</th>
-                            <th>Week</th>
-                            <th>Exit Criteria</th>
-                        </tr>
-                        <tr>
-                            <td>M1: Infrastructure</td>
-                            <td>2</td>
-                            <td>GCP deployed, CI/CD operational</td>
-                        </tr>
-                        <tr>
-                            <td>M2: Auth Complete</td>
-                            <td>4</td>
-                            <td>Firebase Auth + MFA working</td>
-                        </tr>
-                        <tr>
-                            <td>M3: API Alpha</td>
-                            <td>8</td>
-                            <td>Core Go endpoints functional</td>
-                        </tr>
-                        <tr>
-                            <td>M4: Web Beta</td>
-                            <td>12</td>
-                            <td>React app feature complete</td>
-                        </tr>
-                        <tr>
-                            <td>M5: Mobile Beta</td>
-                            <td>16</td>
-                            <td>Apps in TestFlight</td>
-                        </tr>
-                        <tr>
-                            <td>M6: Security</td>
-                            <td>18</td>
-                            <td>Pen test passed</td>
-                        </tr>
-                        <tr>
-                            <td>M7: Launch</td>
-                            <td>20</td>
-                            <td>Apps live in stores</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h2>4. Deliverables</h2>
-
-                <h3>Software</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>ID</th>
-                            <th>Deliverable</th>
-                            <th>Technology</th>
-                        </tr>
-                        <tr>
-                            <td>D1</td>
-                            <td>FinalWishes API</td>
-                            <td>Go on Cloud Run</td>
-                        </tr>
-                        <tr>
-                            <td>D2</td>
-                            <td>FinalWishes Web</td>
-                            <td>React + Vite</td>
-                        </tr>
-                        <tr>
-                            <td>D3</td>
-                            <td>FinalWishes iOS</td>
-                            <td>React Native + Expo</td>
-                        </tr>
-                        <tr>
-                            <td>D4</td>
-                            <td>FinalWishes Android</td>
-                            <td>React Native + Expo</td>
-                        </tr>
-                        <tr>
-                            <td>D5</td>
-                            <td>Admin Dashboard</td>
-                            <td>React</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h3>Documentation</h3>
-                <ul>
-                    <li>API Documentation (OpenAPI 3.0)</li>
-                    <li>User Guide</li>
-                    <li>Admin Guide</li>
-                    <li>Deployment Guide</li>
-                    <li>Security Documentation</li>
-                </ul>
-
-                <h2>5. Development Model</h2>
-                <p>This project uses an <strong>AI-Assisted Development Model</strong> where AI tools perform the
-                    majority of development work under human oversight.</p>
-
+                <h3>2. Resource Plan & Roles</h3>
                 <div class="table-wrapper">
                     <table>
                         <tr>
                             <th>Role</th>
-                            <th>Allocation</th>
-                            <th>Responsibilities</th>
+                            <th>Responsibility</th>
+                            <th>Est. Hours</th>
                         </tr>
                         <tr>
-                            <td>Human Oversight</td>
-                            <td>Part-time</td>
-                            <td>Architecture review, testing, go/no-go decisions</td>
+                            <td><strong>Lead Architect (Human)</strong></td>
+                            <td>System design, code review, security audits, final sign-off.</td>
+                            <td>120 hrs</td>
                         </tr>
                         <tr>
-                            <td>AI Stack Leader (Claude)</td>
-                            <td>Full-time</td>
-                            <td>Implementation, testing, documentation</td>
+                            <td><strong>Product Manager (Human)</strong></td>
+                            <td>Scope management, acceptance testing, stakeholder comms.</td>
+                            <td>80 hrs</td>
                         </tr>
                         <tr>
-                            <td>AI Development Tools</td>
-                            <td>Full-time</td>
-                            <td>Cursor Pro, Warp, GitHub Copilot</td>
+                            <td><strong>AI Stack Leader (Claude)</strong></td>
+                            <td>Full-stack implementation, test generation, documentation.</td>
+                            <td>Continuous</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DevOps Agent</strong></td>
+                            <td>CI/CD pipeline, infrastructure management.</td>
+                            <td>Continuous</td>
+                        </tr>
+                        <tr>
+                            <td><strong>QA Agent</strong></td>
+                            <td>Automated regression testing, E2E scaling.</td>
+                            <td>Continuous</td>
                         </tr>
                     </table>
                 </div>
 
-                <h2>6. Terms</h2>
+                <h3>3. Work Breakdown Structure (WBS)</h3>
 
-                <h3>Payment Schedule</h3>
+                <h4>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</h4>
+                <p><strong>Focus:</strong> Infrastructure, Security, Auth, Data Sovereignty</p>
                 <div class="table-wrapper">
                     <table>
                         <tr>
-                            <th>Milestone</th>
-                            <th>%</th>
-                            <th>Amount</th>
+                            <th>Task ID</th>
+                            <th>Task Description</th>
+                            <th>Role</th>
+                            <th>Deliverable</th>
                         </tr>
                         <tr>
-                            <td>Project Kickoff</td>
-                            <td>25%</td>
-                            <td>$23,750</td>
+                            <td><strong>1.1</strong></td>
+                            <td><strong>GCP Infrastructure Setup</strong><br>Provision Cloud Run, Cloud SQL
+                                (PostgreSQL), Firestore, VPC, Cloud Armor.</td>
+                            <td>Architect</td>
+                            <td>Terraform Scripts</td>
                         </tr>
                         <tr>
-                            <td>Alpha Release (Week 8)</td>
-                            <td>25%</td>
-                            <td>$23,750</td>
+                            <td><strong>1.2</strong></td>
+                            <td><strong>Repo & CI/CD Pipeline</strong><br>Setup GitHub Actions for dual deployment (API
+                                + Web). Linting/Security scan gates.</td>
+                            <td>DevOps</td>
+                            <td>git workflows</td>
                         </tr>
                         <tr>
-                            <td>Beta Release (Week 16)</td>
-                            <td>25%</td>
-                            <td>$23,750</td>
+                            <td><strong>1.3</strong></td>
+                            <td><strong>Identity & Auth System</strong><br>Implement Firebase Auth, Custom Claims
+                                (Principal/Executor), MFA flows.</td>
+                            <td>AI Leader</td>
+                            <td>Auth Service API</td>
                         </tr>
                         <tr>
-                            <td>Production Launch (Week 20)</td>
-                            <td>25%</td>
-                            <td>$23,750</td>
+                            <td><strong>1.4</strong></td>
+                            <td><strong>Database Schema Design</strong><br>Design SQL Relational models (Heirs, Assets)
+                                and NoSQL Document stores.</td>
+                            <td>Architect</td>
+                            <td>schema.sql</td>
+                        </tr>
+                        <tr>
+                            <td><strong>1.5</strong></td>
+                            <td><strong>The Vault (Core)</strong><br>Encryption service (Cloud KMS integration). AES-256
+                                logic for file uploads.</td>
+                            <td>AI Leader</td>
+                            <td>pkg/crypto</td>
+                        </tr>
+                        <tr>
+                            <td><strong>1.6</strong></td>
+                            <td><strong>Initial Frontend Scaffold</strong><br>React + Vite setup. Install "Royal
+                                Neo-Deco" Design System / Tailwind theme.</td>
+                            <td>AI Leader</td>
+                            <td>web/ initialized</td>
+                        </tr>
+                        <tr>
+                            <td><strong>1.7</strong></td>
+                            <td><strong>DocuSeal Self-Hosting</strong><br>Deploy DocuSeal container to Cloud Run.
+                                Configure SQL storage.</td>
+                            <td>DevOps</td>
+                            <td>DocuSeal Instance</td>
                         </tr>
                     </table>
                 </div>
+                <p><strong>Deliverable D1:</strong> "Walking Skeleton" – Valid login, encrypted file upload/download,
+                    deployed to Staging.</p>
 
-                <h3>Warranties</h3>
-                <ul>
-                    <li>60-day warranty on deliverables post-launch</li>
-                    <li>Bug fixes included at no additional cost</li>
-                    <li>Excludes issues from client modifications</li>
-                </ul>
+                <h4>PHASE 2: CORE ESTATE LOGIC & AI GUIDANCE (Weeks 5-10)</h4>
+                <p><strong>Focus:</strong> Probate Engine, Gemini Integration, Intake Flows</p>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Description</th>
+                            <th>Role</th>
+                            <th>Deliverable</th>
+                        </tr>
+                        <tr>
+                            <td><strong>2.1</strong></td>
+                            <td><strong>Asset Inventory Module</strong><br>CRUD for Financial, Real Estate, Digital
+                                assets. Plaid Link scaffolding.</td>
+                            <td>AI Leader</td>
+                            <td>Asset API + UI</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2.2</strong></td>
+                            <td><strong>Probate State Machine (MD)</strong><br>Encode Maryland probate rules/deadlines
+                                into Logic Engine.</td>
+                            <td>Architect</td>
+                            <td>pkg/probate/md</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2.3</strong></td>
+                            <td><strong>Probate State Machine (IL)</strong><br>Encode Illinois probate rules/deadlines
+                                into Logic Engine.</td>
+                            <td>Architect</td>
+                            <td>pkg/probate/il</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2.4</strong></td>
+                            <td><strong>Probate State Machine (MN)</strong><br>Encode Minnesota probate rules/deadlines
+                                into Logic Engine.</td>
+                            <td>Architect</td>
+                            <td>pkg/probate/mn</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2.5</strong></td>
+                            <td><strong>Gemini Context Engine</strong><br>Build RAG pipeline manually feeding State Law
+                                context to Gemini 3.0.</td>
+                            <td>AI Leader</td>
+                            <td>AI Chatbot API</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2.6</strong></td>
+                            <td><strong>Document Generator</strong><br>PDF generation service (Go). Map database fields
+                                to Court Forms.</td>
+                            <td>AI Leader</td>
+                            <td>PDF Gen Service</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2.7</strong></td>
+                            <td><strong>E-Sign Workflow</strong><br>Integration with DocuSeal API. Trigger signature
+                                requests from Intake.</td>
+                            <td>AI Leader</td>
+                            <td>Sign Flow UI</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>Deliverable D2:</strong> Alpha Release – End-to-end flow for a Maryland estate (Intake ->
+                    Auto-fill Form -> E-Sign).</p>
 
-                <h3>Assumptions</h3>
+                <h4>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</h4>
+                <p><strong>Focus:</strong> Native Experience, External APIs</p>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Description</th>
+                            <th>Role</th>
+                            <th>Deliverable</th>
+                        </tr>
+                        <tr>
+                            <td><strong>3.1</strong></td>
+                            <td><strong>React Native Shell</strong><br>Initialize Expo project. Configure Native
+                                Navigation. Share Logic layer.</td>
+                            <td>AI Leader</td>
+                            <td>mobile/ init</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3.2</strong></td>
+                            <td><strong>Mobile Auth & Bio</strong><br>Implement FaceID/TouchID integration for login.
+                            </td>
+                            <td>AI Leader</td>
+                            <td>Bio-Auth screen</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3.3</strong></td>
+                            <td><strong>Document Scanner</strong><br>Native Camera implementation with edge detection
+                                for receipt scanning.</td>
+                            <td>AI Leader</td>
+                            <td>Scan Component</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3.4</strong></td>
+                            <td><strong>Plaid Integration</strong><br>Full Plaid API connection. Webhook handling for
+                                balance updates.</td>
+                            <td>Backend</td>
+                            <td>Banking Sync</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3.5</strong></td>
+                            <td><strong>Lob Integration</strong><br>Address verification API + Snail Mail printing
+                                trigger logic.</td>
+                            <td>Backend</td>
+                            <td>Mail Service</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3.6</strong></td>
+                            <td><strong>Offline Sync Engine</strong><br>Local SQLite cache for mobile. Sync logic for
+                                reliable uploads.</td>
+                            <td>Architect</td>
+                            <td>Sync Protocol</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>Deliverable D3:</strong> Beta Release – Feature parity on Web & Mobile. Beta Testers invited.
+                </p>
+
+                <h4>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</h4>
+                <p><strong>Focus:</strong> Hardening, Compliance, Polish</p>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Task ID</th>
+                            <th>Task Description</th>
+                            <th>Role</th>
+                            <th>Deliverable</th>
+                        </tr>
+                        <tr>
+                            <td><strong>4.1</strong></td>
+                            <td><strong>Penetration Testing</strong><br>Coordinate with 3rd party vendor. Remediate
+                                findings.</td>
+                            <td>Architect</td>
+                            <td>Security Report</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4.2</strong></td>
+                            <td><strong>SOC 2 Evidence</strong><br>Configure Cloud Logging/Audit trails. Generate
+                                compliance artifacts.</td>
+                            <td>DevOps</td>
+                            <td>Compliance Pack</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4.3</strong></td>
+                            <td><strong>Load Testing</strong><br>k6 script generation. Stress test API to 1000
+                                concurrent users.</td>
+                            <td>QA Agent</td>
+                            <td>Load Report</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4.4</strong></td>
+                            <td><strong>App Store Submission</strong><br>Prepare screenshots, metadata, privacy policy
+                                links. Submit for review.</td>
+                            <td>PM</td>
+                            <td>Store Listings</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4.5</strong></td>
+                            <td><strong>Production Migration</strong><br>Final DB migration scripts. DNS switchover.
+                            </td>
+                            <td>DevOps</td>
+                            <td>Live Site</td>
+                        </tr>
+                    </table>
+                </div>
+                <p><strong>Deliverable D4:</strong> Gold Master – Production Launch.</p>
+
+                <h3>4. Acceptance Criteria</h3>
                 <ol>
-                    <li>Human oversight available (min 5 hrs/week)</li>
-                    <li>GCP/Firebase accounts ready Day 1</li>
-                    <li>App Store accounts ready by Week 14</li>
-                    <li>Requirements frozen after Week 8</li>
-                    <li>English-only for MVP</li>
-                    <li>3 launch states: MD, IL, MN</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- Contract Tab -->
-        <div id="contract-tab" class="tab-content">
-            <div class="document">
-                <h2>Master Services Agreement</h2>
-                <p><strong>Parties:</strong> FinalWishes Inc. ("Client") and 111 Venture Studio ("Provider").</p>
-                <p><strong>Date:</strong> December 11, 2025</p>
-
-                <h3>1. Services & Compensation</h3>
-                <p>Provider agrees to perform the Services described in the SOW for
-                <h3>8.1 Detailed Timeline Breakdown</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Phase</th>
-                            <th>Weeks</th>
-                            <th>Deliverables</th>
-                        </tr>
-                        <tr>
-                            <td><strong>1. Foundation</strong></td>
-                            <td>1-4</td>
-                            <td>GCP Setup, Auth (MFA), <strong>The Vault</strong>, DB Design</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2. Core & AI</strong></td>
-                            <td>5-10</td>
-                            <td>Probate Logic, <strong>Gemini 3.0</strong>, DocuSeal Integration</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3. Integrations</strong></td>
-                            <td>11-16</td>
-                            <td>Plaid (Bank), Lob (Mail), <strong>Mobile Beta</strong></td>
-                        </tr>
-                        <tr>
-                            <td><strong>4. Launch</strong></td>
-                            <td>17-20</td>
-                            <td>Security Hardening, Pen Test, App Store Go-Live</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h3>8.2 The Team Structure</h3>
-                <ul>
-                    <li><strong>Lead Architect (Human):</strong> 15+ years exp. Oversees scalability & security.</li>
-                    <li><strong>AI Stack Leader (Claude):0</strong> Acts as the "10x Developer", writing 90% of code.
+                    <li><strong>Functional Correctness:</strong> Feature performs exactly as described in User Stories.
                     </li>
-                    <li><strong>Product Manager (Human):</strong> Aligns features with venture goals.</li>
-                </ul>
+                    <li><strong>Code Quality:</strong> Pass linting (golangci-lint, eslint), 0 Critical Vulnerabilities.
+                    </li>
+                    <li><strong>Performance:</strong> API P95 latency < 200ms. LH Score> 90.</li>
+                    <li><strong>Design:</strong> Pixel-perfect match to "Royal Neo-Deco" Figma/CSS tokens.</li>
+                </ol>
 
-                <h3>2. Intellectual Property</h3>
-                <p>Upon full payment, Client owns all Custom Deliverables. Provider retains background technology (e.g.,
-                    Sirsi libraries).</p>
+                <div class="deco-line"></div>
+                <!-- Contract Tab -->
+                <div id="contract-tab" class="tab-content">
 
-                <h3>3. Sign & Execute</h3>
-                <div
-                    style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; border: 1px solid var(--card-border); margin-top: 20px;">
-                    <p style="margin-bottom: 15px; color: var(--color-gold);">I acknowledge and agree to the terms
-                        above.</p>
-                    <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; cursor: pointer;">
-                        <input type="checkbox" id="agree-check"
-                            style="width: 18px; height: 18px; accent-color: var(--color-emerald);">
-                        <span style="font-size: 0.9rem; color: white;">I am authorized to bind the Client to this
-                            Agreement.</span>
-                    </label>
+                    <h3>2. Intellectual Property</h3>
+                    <p>Upon full payment, Client owns all Custom Deliverables. Provider retains background technology
+                        (e.g.,
+                        Sirsi libraries).</p>
 
-                    <div style="margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted);">DRA SIGNATURE BELOW:
-                    </div>
-                    <canvas id="sig-canvas" width="600" height="150"
-                        style="background: white; border-radius: 4px; cursor: crosshair; touch-action: none; max-width: 100%;"></canvas>
-                    <div style="margin-top: 8px; display: flex; gap: 10px;">
-                        <button onclick="clearSig()"
-                            style="padding: 6px 12px; border: 1px solid var(--text-muted); background: transparent; color: var(--text-muted); border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Clear</button>
-                    </div>
+                    <h3>3. Sign & Execute</h3>
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; border: 1px solid var(--card-border); margin-top: 20px;">
+                        <p style="margin-bottom: 15px; color: var(--color-gold);">I acknowledge and agree to the terms
+                            above.</p>
+                        <label
+                            style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; cursor: pointer;">
+                            <input type="checkbox" id="agree-check"
+                                style="width: 18px; height: 18px; accent-color: var(--color-emerald);">
+                            <span style="font-size: 0.9rem; color: white;">I am authorized to bind the Client to this
+                                Agreement.</span>
+                        </label>
 
-                    <div id="payment-section"
-                        style="margin-top: 30px; opacity: 0.5; pointer-events: none; transition: all 0.3s; border-top: 1px solid var(--card-border); padding-top: 20px;">
-                        <h4 style="color: var(--color-emerald);">Initiate Kickoff Payment ($23,750)</h4>
-                        <button onclick="simulatePay()"
-                            style="background: var(--color-emerald); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;">
-                            Pay & Execute Contract
-                        </button>
+                        <div style="margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted);">DRA SIGNATURE
+                            BELOW:
+                        </div>
+                        <canvas id="sig-canvas" width="600" height="150"
+                            style="background: white; border-radius: 4px; cursor: crosshair; touch-action: none; max-width: 100%;"></canvas>
+                        <div style="margin-top: 8px; display: flex; gap: 10px;">
+                            <button onclick="clearSig()"
+                                style="padding: 6px 12px; border: 1px solid var(--text-muted); background: transparent; color: var(--text-muted); border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Clear</button>
+                        </div>
+
+                        <div id="payment-section"
+                            style="margin-top: 30px; opacity: 0.5; pointer-events: none; transition: all 0.3s; border-top: 1px solid var(--card-border); padding-top: 20px;">
+                            <h4 style="color: var(--color-emerald);">Initiate Kickoff Payment ($23,750)</h4>
+                            <button onclick="simulatePay()"
+                                style="background: var(--color-emerald); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;">
+                                Pay & Execute Contract
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <footer>
-            <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
-        </footer>
+            <footer>
+                <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
+            </footer>
     </main>
 
     <script>

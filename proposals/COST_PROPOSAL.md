@@ -1,649 +1,132 @@
-# Cost Proposal
-## MyShepherd Platform - Full Platform Development
-
-**Document Version:** 5.0.0
-**Date:** December 5, 2025
-**Proposal Valid Until:** February 28, 2026
+# Cost Proposal & Financial Analysis
+**Project:** MyShepherd / FinalWishes Platform  
+**Date:** December 11, 2025  
+**Version:** 5.0.0 (Deep Dive)
 
 ---
 
-## 1. Executive Summary
+## 1. Investment Summary
 
-This Cost Proposal provides a comprehensive breakdown for developing the **MyShepherd Estate OS** platform using an **AI-Assisted Development Model**. This document includes detailed architecture decisions, industry comparisons, and security justifications that inform our technology choices and pricing.
+111 Venture Studio proposes a fixed-price engagement of **$95,000** to deliver the complete MyShepherd platform (Web + iOS + Android) in **20 Weeks**.
 
-**Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
+This is not an estimate; it is a **guaranteed delivery price**.
 
-## 1.1 Why 111 Venture Studio? The "Dream Team" Advantage
-
-We are not just a dev shop; we are a **Venture Studio**. This means we build businesses, not just code. Our incentives are aligned with your exit, not your hourly billing.
-
-| Feature | Low-Cost Agency | Premium Firm | **111 Venture Studio** |
-| :--- | :--- | :--- | :--- |
-| **Mindset** | "Ticket Takers" | "Consultants" | **"Co-Founders"** |
-| **Speed** | Slow (billable hours) | Medium (process heavy) | **AI-Speed (Goal oriented)** |
-| **Tech Stack** | Wordpress/Outdated | Over-engineered | **Modern/Scalable (Go + React)** |
-| **Equity View** | Zero interest | Zero interest | **Value-driven partnership** |
-| **Post-Launch** | "Good luck" | Retainer ($10k/mo) | **Strategic Growth Support** |
-
-**The 111 Difference:**
-1.  **Business-First Architecture**: We choose tech (like DocuSeal vs DocuSign) that saves you OpEx, not what's easiest for us to bill.
-2.  **AI-Native Execution**: We use Gemini 3.0 and Agentic workflows to do 5 months of work in 5 weeks.
-3.  **Future-Proofing**: We build with your Series A due diligence in mind (SOC 2, IP ownership, Clean code).
-
-## 1.2 Market Positioning: FinalWishes vs. The World
-
-FinalWishes is not just "software"; it is an **AI-Powered Executor**. We are competing against expensive human services and risky DIY forms.
-
-| Feature | Probate Attorney | DIY Legal Forms | **FinalWishes** |
-| :--- | :--- | :--- | :--- |
-| **Average Cost** | $15,000+ | $300 - $500 | **Subscription ($100s)** |
-| **Guidance** | High (Human) | None (Generic Instructions) | **High (Gemini 3.0 AI)** |
-| **Speed** | 12-18 Months | Variable (User Error) | **6-9 Months (Optimized)** |
-| **State Specific** | Valid for 1 State | Often Generic | **3 Launch States (Deep)** |
-| **Process** | Offline / Paper | Print & Mail | **Digital / e-File / Vault** |
-
-**Launch States:** Maryland, Illinois, Minnesota (e-filing available), DC, Virginia (build connectors)
-
-### Investment Summary
-
-| Deliverable | Investment | Timeline |
-|-------------|------------|----------|
-| **Complete Platform** (Web + Mobile + Backend) | **$95,000** | **5 months** |
-| Traditional Agency Equivalent | $400,000 - $500,000 | 8-12 months |
-| **Savings** | **76-81%** | **50%+ faster** |
-
-### What's Included in $95,000
-
-| Component | Technology | Status |
-|-----------|------------|--------|
-| Web Application | React + Vite + TailwindCSS | ✅ Included |
-| iOS Application | React Native + Expo | ✅ Included |
-| Android Application | React Native + Expo | ✅ Included |
-| Backend API | Go on Cloud Run | ✅ Included |
-| Database | Firestore + Cloud SQL | ✅ Included |
-| Authentication | Firebase Auth + MFA | ✅ Included |
-| Document Storage | Cloud Storage (encrypted) | ✅ Included |
-| Security | SOC 2-ready architecture | ✅ Included |
-| Penetration Testing | External vendor | ✅ Included |
-
----
-
-## 2. Architecture Decisions & Justifications
-
-This section documents the key architectural decisions with full justification. These decisions prioritize **practical security over theoretical perfection**, balancing requirements with delivery timeline and cost.
-
-### 2.1 Security Standard: SOC 2 Type II + AES-256
-
-### 2.1 Legal Validation & Vault Sovereignty: DocuSeal Strategy
-
-**The Strategic Pivot:** We aren't just choosing an "e-signature app". We are building the **FinalWishes Legal Vault**.
-
-**The Problem with DocuSign:**
-When you use DocuSign, *they* own the vault. If you stop paying their subscription, you lose access to the audit trails and legal proofs. Your user's long-term legal security is held hostage by a third-party vendor.
-
-**The Solution: DocuSeal (Self-Hosted)**
-By self-hosting DocuSeal on our own infrastructure (Cloud SQL):
-1.  **We Own the Evidence**: The cryptographic proofs and audit trails live in *your* database.
-2.  **Permanent Validation**: We can guarantee users access to their legal proofs for 10+ years without paying indefinite SaaS fees.
-3.  **Data Sovereignty**: Sensitive probate data never leaves your controlled GCP environment (HIPAA/SOC 2 aligned).
-
-| Feature | DocuSign (Rented Vault) | **DocuSeal (Owned Vault)** |
+| Primary Deliverable | Description | Value Allocation |
 | :--- | :--- | :--- |
-| **Legal Proofs** | Rented (Lost if you cancel) | **Owned (Yours Forever)** |
-| **Data Custody** | 3rd Party Cloud | **Your Private Cloud** |
-| **Long-Term Config**| Pay to Keep | **Architected for Archive** |
-| **Cost** | Per Envelope Tax | **Included in Infra** |
-
-### 2.2 Security Standard: SOC 2 Type II + AES-256
-
-**Why Not FIPS 140-3?**
-
-FIPS 140-3 is a **federal standard** required only for:
-- U.S. Government agencies and contractors
-- Defense industrial base
-- Healthcare systems handling federal data
-- Banking core ledger systems
-
-**Industry Reality - Who Does NOT Use FIPS 140-3:**
-
-| Company | What They Handle | Security Standard |
-|---------|------------------|-------------------|
-| **Betterment** | $40B+ in assets | SOC 2, standard AWS encryption |
-| **Wealthfront** | $30B+ in assets | SOC 2, standard encryption |
-| **Trust & Will** | Estate documents, wills | Basic cloud encryption |
-| **Everplans** | Estate planning, PII | Enterprise security (no FIPS) |
-| **1Password** | Passwords, secrets | AES-256, custom key derivation |
-| **Robinhood** | Securities trading | SOC 2, standard encryption |
-| **Stripe** | Payment card data | SOC 2, HSM for card keys only |
-| **Plaid** | Bank credentials | SOC 2, no FIPS requirement |
-
-**Cost Impact of FIPS 140-3:**
-- Additional cost: +$50,000-100,000/year
-- Timeline impact: +3-4 months
-- Customer value: Zero (not our target market)
-
-**Our Standard (Industry-Accepted):**
-1. SOC 2 Type II certification (target Year 1)
-2. AES-256 encryption at rest
-3. TLS 1.3 in transit
-4. MFA enforcement
-5. Annual penetration testing
-
-### 2.2 Key Management: Cloud KMS (Not HSM)
-
-**Decision:** Use Google Cloud KMS (software keys), NOT Hardware Security Modules.
-
-**HSM Adoption Reality:**
-
-| Industry | HSM Usage | Reason |
-|----------|-----------|--------|
-| Cryptocurrency exchanges | Required | Holding billions in keys |
-| Banking core systems | Required | Regulatory mandate |
-| Payment processors | Partial | PCI-DSS for card keys only |
-| Certificate authorities | Required | Root key protection |
-| **Consumer fintech** | **Not used** | Cost prohibitive, unnecessary |
-| **SaaS applications** | **Not used** | Software KMS sufficient |
-
-**Cost Comparison:**
-
-| Key Management | Monthly Cost | Annual Cost |
-|----------------|--------------|-------------|
-| Cloud HSM | $1,200+ | $14,400+ |
-| Cloud KMS (software) | ~$10-50 | ~$120-600 |
-| **Savings** | **$1,150/mo** | **$13,800/yr** |
-
-**What Cloud KMS Provides (Sufficient for SOC 2):**
-- AES-256 and RSA key support
-- Automatic key rotation
-- IAM-based access control
-- Full audit logging
-- FIPS 140-2 Level 1 validation
-
-### 2.3 Cloud Provider: Google Cloud Platform
-
-**Decision:** Remain on GCP. No security benefit to migrating.
-
-**Security Certifications (All Equivalent):**
-
-| Certification | GCP | AWS | Azure |
-|---------------|-----|-----|-------|
-| SOC 1/2/3 | ✅ | ✅ | ✅ |
-| ISO 27001 | ✅ | ✅ | ✅ |
-| ISO 27017/27018 | ✅ | ✅ | ✅ |
-| HIPAA BAA | ✅ | ✅ | ✅ |
-| PCI DSS | ✅ | ✅ | ✅ |
-| FedRAMP | ✅ | ✅ | ✅ |
-
-**Migration Cost (If We Switched):**
-
-| Component | Migration Effort |
-|-----------|------------------|
-| Firebase Auth → Cognito | 2-3 weeks |
-| Firestore → DynamoDB | 3-4 weeks |
-| Firebase Hosting → CloudFront | 1 week |
-| Cloud Run → ECS/Fargate | 1-2 weeks |
-| **Total Wasted Time** | **8-11 weeks** |
-
-**Decision Rationale:** 8-11 weeks of migration for zero security benefit is not justifiable.
-
-### 2.4 Backend: Go on Cloud Run
-
-**Decision:** Use Go (Golang) instead of Rust, Node.js, or Python.
-
-**Why Go Over Rust?**
-
-| Factor | Rust | Go | Winner for MyShepherd |
-|--------|------|-----|------------------------|
-| AI code generation quality | Good | Excellent | **Go** |
-| Firebase Admin SDK | Community | **Official** | **Go** |
-| Build times | 2-5 minutes | 10-30 seconds | **Go** |
-| Cloud Run cold start | ~100ms | ~50ms | **Go** |
-| Crypto libraries | Good | Excellent (stdlib) | **Go** |
-| Future hiring | Difficult | Easy | **Go** |
-
-**Why Not Node.js?**
-- Single-threaded performance ceiling
-- Larger attack surface (npm dependencies)
-- Higher memory usage
-- Type safety requires discipline
-
-**Companies Using Go:**
-
-| Company | Use Case |
-|---------|----------|
-| Stripe | Moving new services to Go |
-| Uber | Primary backend language |
-| Cloudflare | Most backend services |
-| Docker | Container orchestration |
-| Kubernetes | Industry standard |
-
-### 2.5 Frontend: React + React Native
-
-**Decision:** React for web, React Native for mobile (60-70% code sharing).
-
-**Why Not Flutter?**
-
-| Factor | React/RN | Flutter | Winner |
-|--------|----------|---------|--------|
-| Web performance | Native DOM | Canvas-based | **React** |
-| AI code generation | Excellent | Good | **React** |
-| Component ecosystem | Thousands | Hundreds | **React** |
-| Accessibility (web) | Native | Limited | **React** |
-| SEO support | Native | Limited | **React** |
-
-**Technology Stack:**
-
-```
-Web Application:
-├── React 18+
-├── Vite (build tool)
-├── TailwindCSS
-├── React Query (server state)
-├── Zustand (client state)
-└── React Router
-
-Mobile Applications:
-├── React Native 0.73+
-├── Expo (managed workflow)
-├── React Navigation
-└── 60-70% shared code with web
-```
+| **Core Platform Engineering** | Backend, Web, Mobile codebase implementation | $55,000 |
+| **Security & Architecture** | SOC 2 readiness, Encryption, Pen Testing | $25,000 |
+| **AI & Legal Knowledge Base** | Gemini training, Probate rules encoding | $15,000 |
+| **TOTAL** | | **$95,000** |
 
 ---
 
-## 3. Traditional Development Cost Analysis
+## 2. "Bottom-Up" Cost Analysis
 
-### 3.1 What a Traditional Agency Would Quote
+To validate the efficiency of our AI-Assisted model, we provide this comprehensive breakdown of how the budget is allocated.
 
-For a React + Go application with mobile apps, estate document handling, and bank-grade security:
+### 2.1 Engineering Labor (The "Human-in-the-Loop")
 
-| Role | Count | Rate | Duration | Total |
-|------|-------|------|----------|-------|
-| Project Manager | 1 | $125/hr | 6 months | $120,000 |
-| Technical Architect | 1 | $175/hr | 4 months | $112,000 |
-| Senior Go Developer | 2 | $160/hr | 6 months | $307,200 |
-| Senior React Developer | 2 | $150/hr | 6 months | $288,000 |
-| React Native Developer | 1 | $155/hr | 4 months | $99,200 |
-| DevOps Engineer | 1 | $145/hr | 5 months | $116,000 |
-| QA Engineer | 2 | $110/hr | 4 months | $140,800 |
-| Security Engineer | 1 | $170/hr | 3 months | $81,600 |
-| UI/UX Designer | 1 | $135/hr | 3 months | $64,800 |
-| **Subtotal Labor** | | | | **$1,329,600** |
+Even with AI, senior oversight is critical.
 
-### 3.2 Realistic Agency Quote
+| Role | Rate (Blended) | Est. Hours | Total Cost |
+| :--- | :--- | :--- | :--- |
+| **Lead Architect** | $200/hr | 120 (6 hrs/wk) | $24,000 |
+| **Product Manager** | $150/hr | 80 (4 hrs/wk) | $12,000 |
+| **AI Prompt Engineer** | $100/hr | 200 (10 hrs/wk) | $20,000 |
+| **QA / Legal Review** | $150/hr | 40 (Total) | $6,000 |
+| **Subtotal Labor** | | **440 Hours** | **$62,000** |
 
-After agency margin compression:
+### 2.2 Technology & Infrastructure (Build Phase)
 
-| Category | Cost Range |
-|----------|------------|
-| Development (7-8 devs, 6 months) | $280,000 - $350,000 |
-| PM + Design | $50,000 - $70,000 |
-| QA + Testing | $40,000 - $60,000 |
-| Security + Compliance | $30,000 - $50,000 |
-| Infrastructure + DevOps | $25,000 - $35,000 |
-| **Realistic Agency Total** | **$400,000 - $500,000** |
+Items included in the $95k fee (Provider pays):
 
-This is what a competent mid-tier agency would quote. Top-tier agencies specializing in financial applications would quote $600K+.
+| Item | Description | Cost |
+| :--- | :--- | :--- |
+| **External Pen Test** | 3rd Party Security Firm Audit (Week 18) | $12,000 |
+| **AI Inference Costs** | Claude 3.5 / Gemini 3.0 API usage for coding | $5,000 |
+| **Infrastructure** | GCP Development Environment (5 months) | $3,000 |
+| **Legal Consult** | Probate Attorney review of 3-State Forms | $8,000 |
+| **Tools** | Cursor, GitHub Enterprise, Sentry Team | $2,000 |
+| **Subtotal Direct Costs** | | **$30,000** |
 
----
+### 2.3 Margin & Risk Buffer
 
-## 4. AI-Assisted Development Model
+| Item | Cost |
+| :--- | :--- |
+| **Contingency** | $3,000 (3%) |
 
-### 4.1 How AI-Assisted Development Works
-
-MyShepherd uses a **domain-specific multi-agent architecture** where AI performs the majority of development work under human oversight:
-
-```
-                    ┌─────────────┐
-                    │ Stack Leader│ (Claude - Orchestrator)
-                    └──────┬──────┘
-                           │
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-   ┌────▼────┐       ┌─────▼─────┐      ┌─────▼─────┐
-   │  Auth   │       │  Estate   │      │Compliance │
-   │  Agent  │       │   Agent   │      │   Agent   │
-   └────┬────┘       └─────┬─────┘      └─────┬─────┘
-        │                  │                  │
-   ┌────▼────┐       ┌─────▼─────┐            │
-   │  Vault  │◄──────│  Notify   │◄───────────┘
-   │  Agent  │       │   Agent   │
-   └────┬────┘       └─────┬─────┘
-        │                  │
-        └────────┬─────────┘
-                 ▼
-           ┌─────────┐
-           │   LLM   │ (Vertex AI)
-           └─────────┘
-```
-
-### 4.2 Why AI-Assisted Dramatically Reduces Costs
-
-| Traditional Cost | AI-Assisted Cost | Savings | Reason |
-|-----------------|-----------------|---------|--------|
-| $1,329,600 Labor | ~$5,000 (AI tools) | 99.6% | AI performs development |
-| $80,000 PMO | ~$0 | 100% | AI self-coordinates |
-| $140,800 Testing | $15,000 | 89% | AI generates tests |
-| $81,600 Security Impl | $35,000 | 57% | External audit required |
-| $64,800 Design | $5,000 | 92% | AI generates, human reviews |
-
-### 4.3 Human Oversight Layer
-
-**What AI Does:**
-- All code implementation (React, Go, React Native)
-- Test generation and execution
-- Documentation generation
-- Bug detection and fixing
-- Cross-component coordination
-
-**What Humans Do:**
-- Architecture review and approval
-- Final acceptance testing
-- Domain expertise validation
-- Security audit approval
-- Go/no-go deployment decisions
+**GRAND TOTAL: $95,000**
 
 ---
 
-## 5. Detailed Budget Breakdown
+## 3. Compare to Traditional Agency
 
-### 5.1 AI Development Tools (5 months)
+Why is this 80% cheaper? Because we don't bill for junior developers.
 
-| Tool | Monthly | Duration | Total |
-|------|---------|----------|-------|
-| Claude API (Pro + API) | $800 | 5 mo | $4,000 |
-| Cursor Pro | $20 | 5 mo | $100 |
-| Warp Team | $20 | 5 mo | $100 |
-| GitHub Copilot | $19 | 5 mo | $95 |
-| **Subtotal** | | | **$4,295** |
-
-### 5.2 Cloud Infrastructure (5 months)
-
-| Service | Monthly | Duration | Total |
-|---------|---------|----------|-------|
-| Firebase (Blaze Plan) | $400 | 5 mo | $2,000 |
-| Cloud Run (Go backend) | $200 | 5 mo | $1,000 |
-| Cloud SQL (PostgreSQL) | $150 | 5 mo | $750 |
-| Cloud KMS | $50 | 5 mo | $250 |
-| Cloud Storage | $100 | 5 mo | $500 |
-| Vertex AI | $200 | 5 mo | $1,000 |
-| **Subtotal** | | | **$5,500** |
-
-### 5.3 Third-Party Services
-
-| Service | Cost | Purpose |
-|---------|------|---------|
-| Persona (ID Verification) | $3,000 | Executor identity verification |
-| SendGrid | $250 | Transactional email |
-| Sentry | $150 | Error tracking |
-| Expo (EAS) | $500 | React Native builds |
-| App Store Fees | $125 | Apple ($99) + Google ($25) |
-| Domain + SSL | $200 | Custom domain |
-| **Subtotal** | | **$4,225** |
-
-### 5.4 Security & Compliance
-
-| Item | Cost | Justification |
-|------|------|---------------|
-| External Penetration Test | $12,000 | Required for SOC 2 readiness |
-| SOC 2 Readiness Assessment | $10,000 | Pre-audit preparation |
-| Legal Review (ToS, Privacy) | $6,000 | Attorney review |
-| Security Documentation | $2,000 | Policies, procedures |
-| **Subtotal** | | **$30,000** |
-
-### 5.5 LLM Knowledge Base Development
-
-| Component | Cost | Purpose |
-|-----------|------|---------|
-| State-by-State Research | $4,000 | 50-state probate law database |
-| Institution Templates | $3,000 | 100+ notification letter templates |
-| Document Field Mapping | $2,000 | Form validation rules |
-| Workflow Automation | $2,500 | Process intelligence |
-| Vertex AI Fine-tuning | $1,500 | Domain-specific responses |
-| **Subtotal** | | **$13,000** |
-
-### 5.6 Contingency Buffer
-
-| Risk Type | Amount | Justification |
-|-----------|--------|---------------|
-| Scope Creep | $5,000 | Estate workflows are complex |
-| API Cost Overruns | $2,000 | LLM usage may exceed estimates |
-| Compliance Surprises | $3,000 | Regulatory requirements |
-| Integration Issues | $3,000 | Third-party API changes |
-| **Probate Form Legal Review** | **$5,000 - $10,000** | **State-specific form validation** |
-| **Subtotal (25%)** | | **$20,000** |
-
-### 5.7 Legal Form Review Budget (from Contingency)
-
-The **Probate Form Legal Review** line item above represents a critical investment to ensure all court forms, notification letters, and legal documents generated by MyShepherd are accurate and compliant for each launch state.
-
-**Scope of Legal Review:**
-
-| State | Estimated Forms | Complexity | Review Cost |
-|-------|-----------------|------------|-------------|
-| Maryland | ~15 forms | High (MDEC e-filing) | $1,500 - $2,500 |
-| Illinois | ~18 forms | High (multiple e-filing systems) | $1,500 - $2,500 |
-| Minnesota | ~12 forms | Medium (MNCIS + UPC simplified) | $1,000 - $1,500 |
-| DC | ~15 forms | Medium (limited e-filing) | $1,000 - $1,500 |
-| Virginia | ~15 forms | Medium (35/120 courts e-file) | $1,000 - $2,000 |
-| **Total** | **~75 forms** | | **$5,000 - $10,000** |
-
-**What Legal Review Covers:**
-1. **Form Accuracy** - Verify all required fields, statutory citations, and fee schedules
-2. **Filing Requirements** - Confirm jurisdiction-specific deadlines and procedures
-3. **Notification Letters** - Validate creditor notice language meets statutory requirements
-4. **Connector Validation** - For DC/VA, ensure our automated forms match manual processes
-5. **Annual Update Framework** - Establish process for tracking statutory changes
-
-**How It Works:**
-- Engage local probate/estate attorneys in each launch state ($200-400/hour)
-- 4-8 hours per state for comprehensive form review
-- Attorney provides marked-up corrections and sign-off
-- Forms updated and re-validated before launch
-- Annual refresh budgeted in operational costs
-
-**Risk Mitigation:**
-This investment prevents costly user errors, court rejections, and potential liability. Court filings rejected for technical errors can delay estate settlement by weeks and erode user trust.
+| Cost Driver | Traditional Agency | 111 Venture Studio |
+| :--- | :--- | :--- |
+| **Headcount** | 7-10 FTEs | 2 Humans + AI Agents |
+| **Duration** | 9-12 Months | 5 Months |
+| **Billable Hours** | ~6,000 Hours | ~440 Human Hours |
+| **Cost Basis** | Hourly T&M | Fixed Outcome |
+| **Risk** | Client pays for overruns | Provider eats overruns |
+| **TOTAL BID** | **$450,000+** | **$95,000** |
 
 ---
 
-## 6. Total Investment Summary
+## 4. Operational Expenses (OpEx) Forecast
 
-### 6.1 Complete Platform - $95,000
+After launch (Week 20+), the Client will take over direct billing for infrastructure. We have architected this for extreme efficiency (Serverless).
 
-| Category | Amount |
-|----------|--------|
-| AI Development Tools | $4,295 |
-| Cloud Infrastructure | $5,500 |
-| Third-Party Services | $4,225 |
-| Security & Compliance | $30,000 |
-| LLM Knowledge Base | $13,000 |
-| Contingency (25%) | $20,000 |
-| **Total** | **$77,020** |
-| **Rounded (includes buffer)** | **$95,000** |
+### 4.1 "Sleep Mode" Costs (0 Active Users)
+*Base cost to keep the verified secure platform live.*
 
-### 6.2 What's Included
+| Service | Tier | Monthly Cost |
+| :--- | :--- | :--- |
+| **Cloud Run** | On-Demand (Scale to Zero) | ~$2.00 |
+| **Cloud SQL** | db-f1-micro (Shared) | $9.00 |
+| **DocuSeal** | Self-Hosted Container | $15.00 |
+| **Secrets/KMS** | Key Versions | $10.00 |
+| **Total Base** | | **~$36.00 / month** |
 
-| Deliverable | Included |
-|-------------|----------|
-| React Web Application | ✅ |
-| React Native iOS App | ✅ |
-| React Native Android App | ✅ |
-| Go Backend API | ✅ |
-| Firebase Authentication + MFA | ✅ |
-| Firestore Database | ✅ |
-| Cloud SQL (PII data) | ✅ |
-| Document Encryption | ✅ |
-| External Penetration Test | ✅ |
-| SOC 2 Readiness | ✅ |
+### 4.2 Active User Costs (Per 1,000 Users)
 
-### 6.3 Comparison to Traditional
+| Service | Unit Cost | Monthly (1k Users) |
+| :--- | :--- | :--- |
+| **Gemini AI** | $0.002 / 1k tokens | ~$200.00 |
+| **Plaid** | $0.30 / account link | $300.00 |
+| **Lob** | $1.50 / letter | Variable |
+| **Storage** | $0.02 / GB | $5.00 |
+| **Total** | | **~$500 / month** |
 
-| Approach | Cost | Timeline | Savings |
-|----------|------|----------|---------|
-| Traditional Agency | $400,000 - $500,000 | 8-12 months | Baseline |
-| **AI-Assisted** | **$95,000** | **5 months** | **76-81%** |
+*Note: With a subscription price of $199/year, 1,000 users generates $199,000 revenue vs ~$6,000 OpEx.*
 
 ---
 
-## 7. Payment Schedule
+## 5. ROI Analysis
 
-### 7.1 Milestone-Based Payments
+**Scenario:** 5,000 Users in Year 1.
 
-| Milestone | % | Amount | Deliverable |
-|-----------|---|--------|-------------|
-| Project Kickoff | 25% | $23,750 | Architecture approved, GCP setup |
-| Alpha Release | 25% | $23,750 | Core features, authentication working |
-| Beta Release | 25% | $23,750 | Full features, mobile apps in TestFlight |
-| Production Launch | 25% | $23,750 | Security complete, live deployment |
-| **Total** | 100% | **$95,000** | |
+*   **Revenue:** $995,000
+*   **Build Cost:** ($95,000)
+*   **OpEx:** (~$30,000)
+*   **Net Profit:** **$870,000**
 
-### 7.2 Payment Terms
-
-- Invoices due Net 15 from invoice date
-- Payments via wire transfer or ACH
-- Late payments subject to 1.5% monthly interest
-- Work may be paused if payment is >15 days overdue
+This represents a **9.1x ROI** in the first full year of operation.
 
 ---
 
-## 8. Timeline Overview
+## 6. Payment Schedule
 
-### 8.1 5-Month Development Schedule
-
-| Month | Focus | Key Deliverables |
-|-------|-------|------------------|
-| **Month 1** | Foundation | GCP setup, Auth, Core DB schema, React scaffold |
-| **Month 2** | Core Features | Estate management, Asset inventory, Go API |
-| **Month 3** | Vault & Security | Document encryption, Notifications, Security hardening |
-| **Month 4** | Mobile Apps | React Native iOS/Android, PWA optimization |
-| **Month 5** | Launch Prep | Penetration test, Bug fixes, App Store submission |
-
-### 8.2 Key Milestones
-
-| Milestone | Week | Exit Criteria |
-|-----------|------|---------------|
-| M1: Infrastructure Ready | Week 2 | GCP deployed, CI/CD operational |
-| M2: Auth Complete | Week 4 | Firebase Auth + MFA working |
-| M3: API Alpha | Week 8 | Core Go endpoints functional |
-| M4: Web Beta | Week 12 | React app feature complete |
-| M5: Mobile Beta | Week 16 | Apps in TestFlight/Internal Track |
-| M6: Security Complete | Week 18 | Pen test passed |
-| M7: Launch | Week 20 | Live in production |
+| Milestone | Amount | Date |
+| :--- | :--- | :--- |
+| **1. Kickoff** | $23,750 | Signing |
+| **2. Alpha** | $23,750 | Week 8 |
+| **3. Beta** | $23,750 | Week 16 |
+| **4. Launch** | $23,750 | Week 20 |
 
 ---
 
-## 9. Risk Factors & Mitigations
-
-| Risk | Impact | Probability | Mitigation | Budget Impact |
-|------|--------|-------------|------------|---------------|
-| API cost overruns | Medium | Medium | Usage monitoring, caching | Included in contingency |
-| Regulatory changes | High | Low | Legal review buffer | Included in contingency |
-| App Store rejection | Medium | Low | DocuSeal | E-signature (Self-hosted) | Included | ~$50/mo (Cloud Run) |
-| Third-party API changes | Medium | Medium | Abstraction layers | Included in contingency |
-| Security vulnerabilities | High | Low | Pen testing, code review | Included in budget |
-
----
-
-## 10. Exclusions
-
-### 10.1 Not Included in This Proposal
-
-- SOC 2 Type II full audit ($30,000-$50,000) - Year 1 target
-- HIPAA certification ($20,000+) - if required later
-- Marketing and user acquisition
-- Ongoing legal counsel beyond initial review
-- DocuSeal (Self-hosted) instead of DocuSign ($40/envelope savings)cific financial institutions
-- White-label licensing
-- International expansion (localization)
-- FIPS 140-3 certification (unnecessary per ADR-001)
-- Hardware Security Modules (unnecessary per ADR-002)
-
-### 10.2 Assumptions
-
-- Human oversight available for review/approval decisions
-- GCP/Firebase accounts accessible and billable
-- Domain expertise consultation available for edge cases
-- English-only for initial release
-- 5 launch states (MD, IL, MN, DC, VA)
-
----
-
-## 11. Why This Proposal
-
-### 11.1 Proven AI-Assisted Model
-
-- Same development model used successfully for Assiduous
-- Firebase/GCP expertise validated in production
-- Component patterns from Sirsi library accelerate development
-- Claude + Warp + Cursor toolchain optimized for this architecture
-
-### 11.2 Realistic Security Approach
-
-- Industry-standard SOC 2 + AES-256 (not over-engineered FIPS)
-- Cloud KMS software keys (not expensive HSM)
-- Defense-in-depth architecture documented in ADR-001
-- External penetration testing included
-
-### 11.3 Modern Technology Stack
-
-- React + Go: Industry-proven, AI-friendly
-- React Native: True native mobile apps
-- GCP: No migration risk, excellent integration
-- All technology choices documented with justification
-
----
-
-## 12. Acceptance
-
-This Cost Proposal is valid for 90 days from the date above.
-
-To proceed, please confirm:
-1. Budget approval ($95,000)
-2. Timeline acceptance (5 months)
-3. Architecture approval (React + Go + GCP)
-
----
-
-## Document Control
-
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | MyShepherd Team | Initial draft ($425K, AWS/Go) |
-|| 2.0.0 | 2025-11-26 | Claude | Revised for AI-assisted, Firebase ($20K-$35K) |
-| 3.0.0 | 2025-11-26 | Claude | Realistic traditional comparison ($350K-$450K), $80K |
-| 3.1.0 | 2025-12-03 | Claude | Rebranded from Legacy to MyShepherd |
-| 4.0.0 | 2025-12-05 | Claude | Complete revision: React+Go architecture, $95K with mobile, 5-month timeline, ADR justifications, industry comparisons |
-| **5.0.0** | **2025-12-05** | **Claude** | **Rebranded to MyShepherd, removed MVP language, added legal form review budget section ($5-10K from contingency), updated to 5 launch states** |
-
----
-
-## Appendix A: Referenced Documents
-
-1. ADR-001-ARCHITECTURE-DECISIONS.md - Full architecture decision record
-2. SOW.md - Statement of Work
-3. REQUIREMENTS_SPECIFICATION.md - Feature requirements
-4. DATA_MODEL.md - Database schema
-5. API_SPECIFICATION.md - API contracts
-
----
-
-## Appendix B: Security Architecture Summary
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                  MyShepherd Security Architecture                │
-├─────────────────────────────────────────────────────────────────┤
-│  NETWORK: Cloud Armor, VPC Controls, Private Access             │
-├─────────────────────────────────────────────────────────────────┤
-│  APPLICATION: Firebase Auth, MFA, RBAC, Rate Limiting           │
-├─────────────────────────────────────────────────────────────────┤
-│  DATA: AES-256 at rest, TLS 1.3 transit, Client-side encryption │
-├─────────────────────────────────────────────────────────────────┤
-│  KEYS: Cloud KMS (software), 90-day rotation, IAM-restricted    │
-├─────────────────────────────────────────────────────────────────┤
-│  AUDIT: Cloud Audit Logs, Sentry, Immutable trail               │
-├─────────────────────────────────────────────────────────────────┤
-│  COMPLIANCE: SOC 2 ready, GDPR/CCPA, Annual pen testing         │
-└─────────────────────────────────────────────────────────────────┘
-```
+**Authorized by:**  
+The Kryptodragon  
+*Lead Architect, 111 Venture Studio*

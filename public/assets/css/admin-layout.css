@@ -1,52 +1,52 @@
 /**
- * Admin Layout Styles - Royal Neo-Deco Overhaul (v2 - Anti-Purple)
+ * Admin Layout Styles - Light Royal Theme
  * 
- * Design System: Royal Neo-Deco
- * - Background: Deepest Navy/Black Gradient (No Purple)
- * - Cards: Midnight Glass (Dark Navy/Black transparency)
+ * Design System: Light Royal
+ * - Background: Clean White (#FFFFFF) / Off-White (#F9FAFB)
+ * - Text: Stark Black (#111827)
  * - Accents: Metallic Gold (#C8A951)
  * - Typography: Cinzel (Headers) & Inter (Body)
  */
 
 [data-auth-protect="admin"] {
-    /* Royal Neo-Deco Palette - Strictly Defined */
+    /* Color Palette */
     --color-gold: #C8A951;
-    --color-gold-bright: #F0D77B;
-    --color-gold-dim: #8a7330;
+    --color-gold-bright: #b89c3a;
+    /* Slightly darker for visibility on white */
+    --color-gold-dim: #F0E6D2;
 
-    --color-navy-deep: #020617;
-    /* Almost black */
-    --color-navy-royal: #0f172a;
-    /* Slate 900 */
+    --color-navy: #0f172a;
+    /* Used for heavy contrast elements if needed */
 
-    /* Removed "Royal Blue" that looked purple. Using Deep Sky/Emerald instead for functional colors */
-    --color-accent-blue: #0ea5e9;
-    --color-emerald: #10B981;
-    --color-danger: #ef4444;
+    --color-emerald: #059669;
+    --color-danger: #dc2626;
+    --color-blue: #0284c7;
 
-    /* Text Colors */
-    --text-primary: #FFFFFF;
-    --text-secondary: #cbd5e1;
-    /* Slate 300 */
-    --text-muted: #94a3b8;
-    /* Slate 400 */
+    /* Text Colors - High Contrast */
+    --text-primary: #111827;
+    /* Gray 900 */
+    --text-secondary: #4b5563;
+    /* Gray 600 */
+    --text-muted: #9ca3af;
+    /* Gray 400 */
 
-    /* Surfaces - NO PURPLE TINTS */
-    --body-bg-color: #020617;
-    --body-bg-image: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 70%);
+    /* Surfaces - CLEAN SAAAS LOOK */
+    --body-bg-color: #F3F4F6;
+    /* Gray 100 */
+    --body-bg-image: none;
 
-    --nav-bg: rgba(2, 6, 23, 0.8);
-    --sidebar-bg: rgba(2, 6, 23, 0.95);
+    --nav-bg: #FFFFFF;
+    --sidebar-bg: #FFFFFF;
 
-    /* Midnight Glass Cards */
-    --card-bg: rgba(15, 23, 42, 0.7);
-    /* Deep Slate, not Blue */
-    --panel-bg: rgba(15, 23, 42, 0.8);
+    --card-bg: #FFFFFF;
+    --panel-bg: #FFFFFF;
 
-    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-    --glass-border-gold: 1px solid rgba(200, 169, 81, 0.3);
+    --glass-border: 1px solid #E5E7EB;
+    /* Gray 200 */
+    --glass-border-gold: 1px solid rgba(200, 169, 81, 0.4);
 
-    --backdrop-blur: blur(12px);
+    --backdrop-blur: none;
+    /* No blur needed for opaque light theme */
 
     /* Spacing & Layout */
     --sidebar-width: 260px;
@@ -64,16 +64,17 @@
     --font-heading: 'Cinzel', serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Shadows */
-    --shadow-gold: 0 0 15px rgba(200, 169, 81, 0.15);
-    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    /* Shadows - Soft & Clean */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* HARD OVERRIDES */
+/* HARD OVERRIDES FOR LIGHT THEME */
 body {
-    background-color: #020617 !important;
-    background-image: radial-gradient(circle at 50% -10%, #1e293b 0%, #020617 60%) !important;
-    color: #ffffff !important;
+    background-color: #F3F4F6 !important;
+    background-image: none !important;
+    color: #111827 !important;
     font-family: 'Inter', sans-serif !important;
 }
 
@@ -84,7 +85,7 @@ h4,
 h5,
 h6 {
     font-family: 'Cinzel', serif !important;
-    color: #ffffff !important;
+    color: #111827 !important;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -93,168 +94,184 @@ h6 {
 .admin-wrapper {
     display: flex;
     min-height: 100vh;
-    background: transparent !important;
 }
 
 /* Sidebar */
 .sidebar {
     width: 260px !important;
-    background: #020617 !important;
-    border-right: 1px solid rgba(200, 169, 81, 0.2) !important;
-    backdrop-filter: none !important;
-    /* Performance & clarity */
+    background: #FFFFFF !important;
+    border-right: 1px solid #E5E7EB !important;
 }
 
 .sidebar-logo {
-    color: #C8A951 !important;
+    color: #0f172a !important;
+    /* Navy logo text */
     font-family: 'Cinzel', serif !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.sidebar-logo svg {
+    color: #C8A951 !important;
 }
 
 .nav-item {
-    color: #94a3b8 !important;
+    color: #4b5563 !important;
     border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
-    color: #ffffff !important;
-    background: rgba(255, 255, 255, 0.03) !important;
+    color: #111827 !important;
+    background: #F9FAFB !important;
 }
 
 .nav-item.active {
-    color: #C8A951 !important;
-    background: rgba(200, 169, 81, 0.08) !important;
+    color: #b89c3a !important;
+    /* Darker gold for text readability */
+    background: #FFFBEB !important;
+    /* Very light gold bg */
     border-left-color: #C8A951 !important;
+    font-weight: 600;
 }
 
 /* Header */
 .admin-header {
-    background: rgba(2, 6, 23, 0.8) !important;
-    backdrop-filter: blur(10px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #E5E7EB !important;
     height: 70px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .header-left h1 {
-    color: #C8A951 !important;
-    text-shadow: 0 0 10px rgba(200, 169, 81, 0.2);
+    color: #111827 !important;
 }
 
 .header-left p {
-    color: #64748b !important;
+    color: #6b7280 !important;
 }
 
 /* Search Bar */
 .search-bar {
-    background: rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: #F3F4F6 !important;
+    border: 1px solid #E5E7EB !important;
     border-radius: 999px;
 }
 
 .search-bar input {
-    color: #ffffff !important;
+    color: #111827 !important;
 }
 
 .search-bar:focus-within {
     border-color: #C8A951 !important;
-    box-shadow: 0 0 0 1px #C8A951;
+    background: #FFFFFF !important;
+    box-shadow: 0 0 0 2px rgba(200, 169, 81, 0.2);
 }
 
-/* CARDS - THE ANTI-PURPLE FIX */
+/* CARDS - Clean White */
 .card,
 .stat-card,
 .data-table,
 .glass-panel,
 .activity-feed {
-    background-color: rgba(15, 23, 42, 0.6) !important;
-    /* Dark Slate Blue/Grey - NO PURPLE */
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
-    backdrop-filter: blur(12px);
+    background-color: #FFFFFF !important;
+    border: 1px solid #E5E7EB !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+    backdrop-filter: none;
     border-radius: 12px;
 }
 
 .stat-card:hover {
     border-color: #C8A951 !important;
     transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(200, 169, 81, 0.1) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Stat Icons - Clean, distinct colors */
+/* Stat Icons */
 .stat-icon {
-    background: rgba(255, 255, 255, 0.05) !important;
+    background: #F3F4F6 !important;
     border-radius: 8px;
 }
 
 .stat-icon.blue {
-    color: #38bdf8 !important;
+    color: #0284c7 !important;
+    background: #e0f2fe !important;
 }
 
-/* Sky Blue */
 .stat-icon.gold {
-    color: #C8A951 !important;
+    color: #d97706 !important;
+    background: #fef3c7 !important;
 }
 
 .stat-icon.green {
-    color: #34d399 !important;
+    color: #059669 !important;
+    background: #d1fae5 !important;
 }
 
 .stat-icon.red {
-    color: #f87171 !important;
+    color: #dc2626 !important;
+    background: #fee2e2 !important;
 }
 
 .stat-value {
-    color: #ffffff !important;
+    color: #111827 !important;
     font-family: 'Cinzel', serif !important;
 }
 
 .stat-label {
-    color: #94a3b8 !important;
+    color: #6b7280 !important;
     letter-spacing: 0.1em;
 }
 
 /* Tables */
 th {
-    background: rgba(0, 0, 0, 0.3) !important;
-    color: #C8A951 !important;
-    border-bottom: 1px solid rgba(200, 169, 81, 0.3) !important;
+    background: #F9FAFB !important;
+    color: #111827 !important;
+    border-bottom: 1px solid #E5E7EB !important;
     font-family: 'Cinzel', serif !important;
+    font-weight: 700 !important;
 }
 
 td {
-    color: #cbd5e1 !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #4b5563 !important;
+    border-bottom: 1px solid #E5E7EB !important;
 }
 
 tr:hover td {
-    background: rgba(255, 255, 255, 0.03) !important;
-    color: #ffffff !important;
+    background: #F9FAFB !important;
+    color: #111827 !important;
 }
 
 /* Buttons */
 .btn-primary {
     background: #C8A951 !important;
-    color: #000000 !important;
+    color: #FFFFFF !important;
     border: none !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
+    /* Inter bold is better for buttons */
     text-transform: uppercase;
-    font-family: 'Cinzel', serif !important;
+    font-family: 'Inter', sans-serif !important;
+    letter-spacing: 0.05em;
 }
 
 .btn-primary:hover {
-    background: #F0D77B !important;
-    box-shadow: 0 0 20px rgba(200, 169, 81, 0.5) !important;
+    background: #b89c3a !important;
+    box-shadow: 0 4px 6px -1px rgba(200, 169, 81, 0.4) !important;
 }
 
 .btn-secondary {
-    background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: #ffffff !important;
+    background: #FFFFFF !important;
+    border: 1px solid #D1D5DB !important;
+    color: #374151 !important;
 }
 
 .btn-secondary:hover {
     border-color: #C8A951 !important;
     color: #C8A951 !important;
+    background: #FFFBEB !important;
+}
+
+/* Quick Actions override for bright colors */
+.quick-actions .btn {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Badges */
@@ -266,27 +283,51 @@ tr:hover td {
 }
 
 .badge-success {
-    background: rgba(16, 185, 129, 0.2) !important;
-    color: #34d399 !important;
-    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+    background: #d1fae5 !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
 }
 
 .badge-warning {
-    background: rgba(245, 158, 11, 0.2) !important;
-    color: #fbbf24 !important;
-    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+    background: #fef3c7 !important;
+    color: #b45309 !important;
+    border: 1px solid #fde68a !important;
 }
 
 .badge-danger {
-    background: rgba(239, 68, 68, 0.2) !important;
-    color: #f87171 !important;
-    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
 }
 
 .badge-info {
-    background: rgba(56, 189, 248, 0.2) !important;
-    color: #38bdf8 !important;
-    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    background: #e0f2fe !important;
+    color: #0369a1 !important;
+    border: 1px solid #bae6fd !important;
+}
+
+.badge-neutral {
+    background: #f3f4f6 !important;
+    color: #4b5563 !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+/* Activity Feed */
+.activity-item {
+    border-bottom: 1px solid #E5E7EB !important;
+}
+
+.activity-icon {
+    background: #F3F4F6 !important;
+    color: #6b7280 !important;
+}
+
+.activity-text {
+    color: #111827 !important;
+}
+
+.activity-time {
+    color: #9ca3af !important;
 }
 
 /* Mobile */

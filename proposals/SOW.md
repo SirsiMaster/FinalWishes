@@ -20,8 +20,8 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 | **Product** | MyShepherd - The Estate Operating System |
 | **Duration** | 5 months (20 weeks) |
 | **Investment** | $95,000 |
-| **Development Model** | AI-Assisted (Claude + Warp + Cursor) |
-| **Launch States** | Maryland, Illinois, Minnesota, DC, Virginia |
+| **Development Model** | AI-Assisted (Gemini 3.0 + Vertex AI) |
+| **Launch States** | Maryland, Illinois, Minnesota |
 
 ---
 
@@ -59,6 +59,39 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 ---
 
 ## 3. Scope of Work
+
+### 8.1 Detailed Timeline Breakdown
+
+**Phase 1: Foundation & "The Vault" (Weeks 1-4)**
+*   **Week 1**: GCP Setup, Repo init, CI/CD Pipelines (Github -> Cloud Run), DB Schema Design (SQL + NoSQL).
+*   **Week 2**: Auth System (MFA / Magic Links), User Profiles, core API scaffolding in Go.
+*   **Week 3**: **The Document Vault**. Encrypted upload/download flows, client-side encryption logic.
+*   **Week 4**: "Assets & Liabilities" Inventory module. Frontend dashboards (React).
+
+**Phase 2: Core Estate logic & AI (Weeks 5-10)**
+*   **Week 5**: Probate Logic Engine (State machines for MD, IL, MN).
+*   **Week 6**: **Gemini 3.0 Integration**. "The Shepherd" chat interface and RAG pipeline.
+*   **Week 7**: **DocuSeal Integration**. Form mapping, e-signature flows for probate forms.
+*   **Week 8**: Alpha Release. Internal testing of end-to-end estate closure flow.
+
+**Phase 3: Deep Integrations & Mobile (Weeks 11-16)**
+*   **Week 9**: Plaid Integration (Bank syncing).
+*   **Week 10**: Lob Integration (Snail mail automation).
+*   **Week 11**: React Native kickoff (iOS/Android shell).
+*   **Week 12**: Mobile: Feature parity with Web (Biometrics, Camera scan).
+*   **Week 13-16**: **Mobile Beta**. Polishing interactions, offline mode, push notifications.
+
+**Phase 4: Launch & Polish (Weeks 17-20)**
+*   **Week 17**: Security Hardening (Pen Test coordination).
+*   **Week 18**: SOC 2 Evidence collection / Documentation.
+*   **Week 19**: App Store Submission & Review management.
+*   **Week 20**: **GO LIVE**. Production deployment.
+
+### 8.2 The Team Structure
+*   **Lead Architect (Human)**: 15+ years exp. Oversees all major decisions. Ensures scalability.
+*   **AI Stack Leader (Claude)**: Acts as the "10x Developer", writing 90% of the code, tests, and docs.
+*   **Product Manager (Human)**: Aligns features with venture goals, manages scope.
+*   **Security Specialist (Agentic)**: Continuous scanning of dependencies and infrastructure.
 
 ### 3.1 Backend Development (Go on Cloud Run)
 
@@ -116,10 +149,10 @@ This Statement of Work (SOW) defines the scope, deliverables, timeline, and term
 |-------------|------------|------------|---------------|
 | **Plaid** | Full account discovery (banking, investments, liabilities) | Included | $0.30-$1.50/link |
 | **Lob** | Certified mail automation with tracking | Included | $1.50-$3.00/letter |
-| **DocuSign** | E-signature for beneficiary releases and forms | Included | $25-$40/envelope |
+| **DocuSeal** | E-signature (Self-hosted on Cloud Run) | Included | ~$50/mo (Server costs) |
 | **Google Document AI** | OCR for document processing | Included | ~$1.50/1K pages |
 | **SendGrid** | Transactional email | Included | Free tier → $20/mo |
-| **Vertex AI** | Intelligent process guidance ("The Shepherd") | Included | ~$0.002/1K chars |
+| **Vertex AI** | Intelligent process guidance (Gemini 3.0) | Included | ~$0.002/1K chars |
 
 *OpEx costs are usage-based and paid by the client post-launch. Not included in $95K build cost.*
 
@@ -344,7 +377,7 @@ The Client shall provide:
 5. No significant App Store guideline changes during development
 6. Requirements finalized after Week 8 (scope freeze)
 7. English-only for initial release
-8. 5 launch states: Maryland, Illinois, Minnesota, DC, Virginia
+8. 3 launch states: Maryland, Illinois, Minnesota
 
 ---
 

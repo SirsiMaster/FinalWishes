@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proposals | FINALWISHES</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>⚜️</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --body-bg-color: #0f172a;
@@ -25,7 +29,12 @@
             --panel-bg: rgba(30, 58, 138, 0.6);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -37,115 +46,440 @@
             line-height: 1.6;
         }
 
-        h1, h2, h3, h4, h5 { font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 0.02em; }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
 
         nav {
-            position: fixed; top: 0; width: 100%; z-index: 50;
-            background: var(--nav-bg); backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-container {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px; height: 56px;
-            display: flex; align-items: center; justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-        .logo svg { width: 32px; height: 32px; fill: var(--color-gold); }
-        .logo-text { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; letter-spacing: 0.2em; color: white; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--color-gold);
+        }
+
+        .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: white;
+        }
 
         .nav-link {
-            color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px;
-            font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.2s;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.2s;
         }
-        .nav-link:hover { color: white; }
 
-        .main-container { max-width: 1000px; margin: 0 auto; padding: 100px 20px 60px; }
+        .nav-link:hover {
+            color: white;
+        }
 
-        .page-header { text-align: center; margin-bottom: 40px; }
-        .page-header h1 { font-size: 2.5rem; margin-bottom: 8px; }
-        .page-header h1 span { color: var(--color-gold); }
-        .page-header p { color: var(--text-muted); font-size: 0.875rem; }
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 100px 20px 60px;
+        }
 
-        .doc-meta { display: flex; justify-content: center; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
-        .doc-meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-        .doc-meta-item .dot { width: 6px; height: 6px; background: var(--color-emerald); border-radius: 50%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-        .tabs-container { margin-bottom: 32px; }
-        .tabs { display: flex; gap: 4px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 8px; border: 1px solid var(--card-border); }
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 span {
+            color: var(--color-gold);
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .doc-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .doc-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .doc-meta-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--color-emerald);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .tabs-container {
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
         .tab {
-            flex: 1; padding: 12px 24px; background: transparent; border: none;
-            color: var(--text-muted); font-family: 'Cinzel', serif; font-size: 0.875rem;
-            font-weight: 600; letter-spacing: 0.05em; cursor: pointer; border-radius: 6px; transition: all 0.2s;
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Cinzel', serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
-        .tab:hover { color: white; background: rgba(255,255,255,0.05); }
-        .tab.active { background: var(--color-gold); color: #000; }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         .document {
-            background: var(--panel-bg); border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 40px; backdrop-filter: blur(20px);
+            background: var(--panel-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
         }
 
         .document h2 {
-            font-size: 1.5rem; color: var(--color-gold); margin: 32px 0 16px;
-            padding-bottom: 8px; border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
         }
-        .document h2:first-child { margin-top: 0; }
-        .document h3 { font-size: 1.125rem; color: white; margin: 24px 0 12px; }
-        .document h4 { font-size: 0.875rem; color: var(--color-gold); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .document p { color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 12px; }
-        .document strong { color: white; }
-        .document ul, .document ol { color: var(--text-secondary); font-size: 0.875rem; margin: 12px 0; padding-left: 24px; }
-        .document li { margin-bottom: 6px; }
 
-        .table-wrapper { overflow-x: auto; margin: 16px 0; border-radius: 8px; border: 1px solid var(--card-border); }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { background: rgba(200, 169, 81, 0.15); color: var(--color-gold); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--card-border); }
-        td { padding: 10px 16px; border-bottom: 1px solid var(--card-border); color: var(--text-secondary); }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: rgba(255,255,255,0.02); }
+        .document h2:first-child {
+            margin-top: 0;
+        }
 
-        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
-        .summary-card { background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px; text-align: center; }
-        .summary-card.highlight { border-color: var(--color-gold); background: rgba(200, 169, 81, 0.1); }
-        .summary-card .value { font-family: 'Cinzel', serif; font-size: 1.75rem; font-weight: 700; color: white; margin-bottom: 4px; }
-        .summary-card.highlight .value { color: var(--color-gold); }
-        .summary-card .label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+        .document h3 {
+            font-size: 1.125rem;
+            color: white;
+            margin: 24px 0 12px;
+        }
 
-        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
-        @media (max-width: 640px) { .comparison { grid-template-columns: 1fr; } }
-        .comparison-card { background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px; }
-        .comparison-card.savings { border-color: var(--color-emerald); background: rgba(16, 185, 129, 0.1); }
-        .comparison-card h4 { margin-top: 0; }
-        .comparison-card .price { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; margin: 8px 0; }
-        .comparison-card.savings .price { color: var(--color-emerald); }
+        .document h4 {
+            font-size: 0.875rem;
+            color: var(--color-gold);
+            margin: 16px 0 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
 
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        .badge-gold { background: var(--color-gold); color: #000; }
-        .badge-emerald { background: var(--color-emerald); color: #000; }
+        .document p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 12px;
+        }
 
-        .tech-stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
-        .tech-item { background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; text-align: center; }
-        .tech-item .name { font-weight: 600; color: white; font-size: 0.8rem; }
-        .tech-item .desc { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+        .document strong {
+            color: white;
+        }
 
-        footer { margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--card-border); text-align: center; }
-        footer p { color: var(--text-muted); font-size: 0.7rem; }
+        .document ul,
+        .document ol {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 12px 0;
+            padding-left: 24px;
+        }
 
-        @media print { nav, .tabs-container { display: none; } .document { box-shadow: none; border: none; } body { background: white; color: black; } }
+        .document li {
+            margin-bottom: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: rgba(200, 169, 81, 0.15);
+            color: var(--color-gold);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .summary-card.highlight {
+            border-color: var(--color-gold);
+            background: rgba(200, 169, 81, 0.1);
+        }
+
+        .summary-card .value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .summary-card.highlight .value {
+            color: var(--color-gold);
+        }
+
+        .summary-card .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        @media (max-width: 640px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .comparison-card.savings {
+            border-color: var(--color-emerald);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .comparison-card h4 {
+            margin-top: 0;
+        }
+
+        .comparison-card .price {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .comparison-card.savings .price {
+            color: var(--color-emerald);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-gold {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .badge-emerald {
+            background: var(--color-emerald);
+            color: #000;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .tech-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .tech-item .name {
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .tech-item .desc {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 24px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        @media print {
+
+            nav,
+            .tabs-container {
+                display: none;
+            }
+
+            .document {
+                box-shadow: none;
+                border: none;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <nav>
         <div class="nav-container">
             <a href="/" class="logo">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+                    <path
+                        d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
                 </svg>
                 <span class="logo-text">FINALWISHES</span>
             </a>
@@ -156,7 +490,7 @@
     <main class="main-container">
         <header class="page-header">
             <h1>Project <span>Proposals</span></h1>
-<p>FinalWishes Platform - Full Platform Development</p>
+            <p>FinalWishes Platform - Full Platform Development</p>
             <div class="doc-meta">
                 <div class="doc-meta-item"><span class="dot"></span><span>Version 4.0.0</span></div>
                 <div class="doc-meta-item"><span class="dot"></span><span>December 2025</span></div>
@@ -168,6 +502,7 @@
             <div class="tabs">
                 <button class="tab active" onclick="showTab('cost')">Cost Proposal</button>
                 <button class="tab" onclick="showTab('sow')">Statement of Work</button>
+                <button class="tab" onclick="showTab('contract')">Contract</button>
             </div>
         </div>
 
@@ -175,8 +510,9 @@
         <div id="cost-tab" class="tab-content active">
             <div class="document">
                 <h2>1. Executive Summary</h2>
-                
-                <p>This Cost Proposal provides a comprehensive breakdown for developing the <strong>FinalWishes Estate OS</strong> platform using an <strong>AI-Assisted Development Model</strong>.</p>
+
+                <p>This Cost Proposal provides a comprehensive breakdown for developing the <strong>FinalWishes Estate
+                        OS</strong> platform using an <strong>AI-Assisted Development Model</strong>.</p>
 
                 <div class="summary-grid">
                     <div class="summary-card highlight">
@@ -199,12 +535,30 @@
 
                 <h3>Technology Stack</h3>
                 <div class="tech-stack">
-                    <div class="tech-item"><div class="name">React 18</div><div class="desc">Web Frontend</div></div>
-                    <div class="tech-item"><div class="name">React Native</div><div class="desc">iOS + Android</div></div>
-                    <div class="tech-item"><div class="name">Go</div><div class="desc">Backend API</div></div>
-                    <div class="tech-item"><div class="name">Cloud Run</div><div class="desc">Serverless</div></div>
-                    <div class="tech-item"><div class="name">Firestore</div><div class="desc">Real-time DB</div></div>
-                    <div class="tech-item"><div class="name">Cloud KMS</div><div class="desc">Encryption</div></div>
+                    <div class="tech-item">
+                        <div class="name">React 18</div>
+                        <div class="desc">Web Frontend</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">React Native</div>
+                        <div class="desc">iOS + Android</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Go</div>
+                        <div class="desc">Backend API</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Cloud Run</div>
+                        <div class="desc">Serverless</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Firestore</div>
+                        <div class="desc">Real-time DB</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Cloud KMS</div>
+                        <div class="desc">Encryption</div>
+                    </div>
                 </div>
 
                 <div class="comparison">
@@ -221,118 +575,353 @@
                 </div>
 
                 <h2>2. Architecture Decisions</h2>
-<p style="margin-bottom: 16px;">Key decisions summarized below. Full justifications available in Architecture Decision Records.</p>
+                <p style="margin-bottom: 16px;">Key decisions summarized below. Full justifications available in
+                    Architecture Decision Records.</p>
 
-                <h3>2.1 Security: SOC 2 + AES-256 (Not FIPS 140-3)</h3>
-                <p><strong>Decision:</strong> Implement industry-standard SOC 2 security, NOT federal FIPS 140-3.</p>
-                
-                <h4>Industry Reality - Who Doesn't Use FIPS</h4>
+                <h3>1.1 Why 111 Venture Studio?</h3>
+                <p>We are not just a dev shop; we are a <strong>Venture Studio</strong>. This means we build businesses,
+                    not just code. Our incentives are aligned with your exit.</p>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Company</th><th>What They Handle</th><th>Security Standard</th></tr>
-                        <tr><td>Betterment</td><td>$40B+ in assets</td><td>SOC 2, standard encryption</td></tr>
-                        <tr><td>Wealthfront</td><td>$30B+ in assets</td><td>SOC 2, standard encryption</td></tr>
-                        <tr><td>Trust & Will</td><td>Estate documents</td><td>Basic cloud encryption</td></tr>
-                        <tr><td>1Password</td><td>Passwords, secrets</td><td>AES-256, custom derivation</td></tr>
-                        <tr><td>Stripe</td><td>Payment card data</td><td>SOC 2, HSM for cards only</td></tr>
-                        <tr><td>Plaid</td><td>Bank credentials</td><td>SOC 2, no FIPS</td></tr>
-                    </table>
-                </div>
-                <p><strong>FIPS 140-3 cost impact:</strong> +$50,000-100,000/year, +3-4 months. <strong>Customer value: Zero.</strong></p>
-
-                <h3>2.2 Cloud KMS (Not HSM)</h3>
-                <p><strong>Decision:</strong> Use Google Cloud KMS software keys, NOT Hardware Security Modules.</p>
-                
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Key Management</th><th>Monthly Cost</th><th>Annual Cost</th></tr>
-                        <tr><td>Cloud HSM</td><td>$1,200+</td><td>$14,400+</td></tr>
-                        <tr><td>Cloud KMS (software)</td><td>~$10-50</td><td>~$120-600</td></tr>
-                        <tr><td><strong>Savings</strong></td><td><strong>$1,150/mo</strong></td><td><strong>$13,800/yr</strong></td></tr>
-                    </table>
-                </div>
-                <p>HSM is used by crypto exchanges and banking core systems. Consumer fintech uses software KMS.</p>
-
-                <h3>2.3 Go Backend (Not Rust)</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Factor</th><th>Rust</th><th>Go</th><th>Winner</th></tr>
-                        <tr><td>AI code generation</td><td>Good</td><td>Excellent</td><td><span class="badge badge-emerald">Go</span></td></tr>
-                        <tr><td>Firebase Admin SDK</td><td>Community</td><td>Official</td><td><span class="badge badge-emerald">Go</span></td></tr>
-                        <tr><td>Build times</td><td>2-5 min</td><td>10-30 sec</td><td><span class="badge badge-emerald">Go</span></td></tr>
-                        <tr><td>Cloud Run cold start</td><td>~100ms</td><td>~50ms</td><td><span class="badge badge-emerald">Go</span></td></tr>
-                        <tr><td>Future hiring</td><td>Difficult</td><td>Easy</td><td><span class="badge badge-emerald">Go</span></td></tr>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Low-Cost Agency</th>
+                            <th>111 Venture Studio</th>
+                        </tr>
+                        <tr>
+                            <td>Mindset</td>
+                            <td>"Ticket Takers"</td>
+                            <td><strong>"Co-Founders"</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Speed</td>
+                            <td>Slow (Billable Hours)</td>
+                            <td><strong>AI-Speed (Goal Oriented)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Equity View</td>
+                            <td>Zero Interest</td>
+                            <td><strong>Value-Driven Partnership</strong></td>
+                        </tr>
                     </table>
                 </div>
 
-                <h2>3. Budget Breakdown</h2>
-
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Category</th><th>Amount</th></tr>
-                        <tr><td>AI Development Tools (5 mo)</td><td>$4,295</td></tr>
-                        <tr><td>Cloud Infrastructure (5 mo)</td><td>$5,500</td></tr>
-                        <tr><td>Third-Party Services</td><td>$4,225</td></tr>
-                        <tr><td>Security & Compliance</td><td>$30,000</td></tr>
-                        <tr><td>LLM Knowledge Base</td><td>$13,000</td></tr>
-                        <tr><td>Contingency (25%)</td><td>$20,000</td></tr>
-                        <tr style="background: rgba(200, 169, 81, 0.15);"><td><strong>Total</strong></td><td><strong style="color: var(--color-gold);">$95,000</strong></td></tr>
-                    </table>
-                </div>
-
-                <h2>4. What's Included</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Deliverable</th><th>Technology</th><th>Status</th></tr>
-                        <tr><td>Web Application</td><td>React + Vite + Tailwind</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>iOS Application</td><td>React Native + Expo</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>Android Application</td><td>React Native + Expo</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>Backend API</td><td>Go on Cloud Run</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>Authentication + MFA</td><td>Firebase Auth</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>Document Encryption</td><td>AES-256 + Cloud KMS</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>Penetration Testing</td><td>External vendor</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                        <tr><td>SOC 2 Readiness</td><td>Documentation + controls</td><td><span class="badge badge-emerald">✓</span></td></tr>
-                    </table>
-                </div>
-
-                <h2>5. Payment Schedule</h2>
-                <div class="table-wrapper">
-                    <table>
-                        <tr><th>Milestone</th><th>%</th><th>Amount</th><th>Deliverable</th></tr>
-                        <tr><td>Project Kickoff</td><td>25%</td><td>$23,750</td><td>Architecture approved, GCP setup</td></tr>
-                        <tr><td>Alpha Release</td><td>25%</td><td>$23,750</td><td>Core features, auth working</td></tr>
-                        <tr><td>Beta Release</td><td>25%</td><td>$23,750</td><td>Mobile apps in TestFlight</td></tr>
-                        <tr><td>Production Launch</td><td>25%</td><td>$23,750</td><td>Apps live in stores</td></tr>
-                    </table>
-                </div>
+                <tr>
+                    <td>License</td>
+                    <td>Proprietary</td>
+                    <td><strong>Open Source (AGPL-3.0)</strong></td>
+                    <td><strong>No Lock-in</strong></td>
+                </tr>
+                </table>
             </div>
+
+            <h3>2.2 Security Standard: SOC 2 + AES-256</h3>
+            <p><strong>Decision:</strong> Implement industry-standard SOC 2 security, NOT federal FIPS 140-3.</p>
+
+            <h4>Industry Reality - Who Doesn't Use FIPS</h4>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Company</th>
+                        <th>What They Handle</th>
+                        <th>Security Standard</th>
+                    </tr>
+                    <tr>
+                        <td>Betterment</td>
+                        <td>$40B+ in assets</td>
+                        <td>SOC 2, standard encryption</td>
+                    </tr>
+                    <tr>
+                        <td>Wealthfront</td>
+                        <td>$30B+ in assets</td>
+                        <td>SOC 2, standard encryption</td>
+                    </tr>
+                    <tr>
+                        <td>Trust & Will</td>
+                        <td>Estate documents</td>
+                        <td>Basic cloud encryption</td>
+                    </tr>
+                    <tr>
+                        <td>1Password</td>
+                        <td>Passwords, secrets</td>
+                        <td>AES-256, custom derivation</td>
+                    </tr>
+                    <tr>
+                        <td>Stripe</td>
+                        <td>Payment card data</td>
+                        <td>SOC 2, HSM for cards only</td>
+                    </tr>
+                    <tr>
+                        <td>Plaid</td>
+                        <td>Bank credentials</td>
+                        <td>SOC 2, no FIPS</td>
+                    </tr>
+                </table>
+            </div>
+            <p><strong>FIPS 140-3 cost impact:</strong> +$50,000-100,000/year, +3-4 months. <strong>Customer value:
+                    Zero.</strong></p>
+
+            <h3>2.2 Cloud KMS (Not HSM)</h3>
+            <p><strong>Decision:</strong> Use Google Cloud KMS software keys, NOT Hardware Security Modules.</p>
+
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Key Management</th>
+                        <th>Monthly Cost</th>
+                        <th>Annual Cost</th>
+                    </tr>
+                    <tr>
+                        <td>Cloud HSM</td>
+                        <td>$1,200+</td>
+                        <td>$14,400+</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud KMS (software)</td>
+                        <td>~$10-50</td>
+                        <td>~$120-600</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Savings</strong></td>
+                        <td><strong>$1,150/mo</strong></td>
+                        <td><strong>$13,800/yr</strong></td>
+                    </tr>
+                </table>
+            </div>
+            <p>HSM is used by crypto exchanges and banking core systems. Consumer fintech uses software KMS.</p>
+
+            <h3>2.3 Go Backend (Not Rust)</h3>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Factor</th>
+                        <th>Rust</th>
+                        <th>Go</th>
+                        <th>Winner</th>
+                    </tr>
+                    <tr>
+                        <td>AI code generation</td>
+                        <td>Good</td>
+                        <td>Excellent</td>
+                        <td><span class="badge badge-emerald">Go</span></td>
+                    </tr>
+                    <tr>
+                        <td>Firebase Admin SDK</td>
+                        <td>Community</td>
+                        <td>Official</td>
+                        <td><span class="badge badge-emerald">Go</span></td>
+                    </tr>
+                    <tr>
+                        <td>Build times</td>
+                        <td>2-5 min</td>
+                        <td>10-30 sec</td>
+                        <td><span class="badge badge-emerald">Go</span></td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Run cold start</td>
+                        <td>~100ms</td>
+                        <td>~50ms</td>
+                        <td><span class="badge badge-emerald">Go</span></td>
+                    </tr>
+                    <tr>
+                        <td>Future hiring</td>
+                        <td>Difficult</td>
+                        <td>Easy</td>
+                        <td><span class="badge badge-emerald">Go</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2>3. Budget Breakdown</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Category</th>
+                        <th>Amount</th>
+                    </tr>
+                    <tr>
+                        <td>AI Development Tools (5 mo)</td>
+                        <td>$4,295</td>
+                    </tr>
+                    <tr>
+                        <td>Cloud Infrastructure (5 mo)</td>
+                        <td>$5,500</td>
+                    </tr>
+                    <tr>
+                        <td>Third-Party Services</td>
+                        <td>$4,225</td>
+                    </tr>
+                    <tr>
+                        <td>Security & Compliance</td>
+                        <td>$30,000</td>
+                    </tr>
+                    <tr>
+                        <td>LLM Knowledge Base</td>
+                        <td>$13,000</td>
+                    </tr>
+                    <tr>
+                        <td>Contingency (25%)</td>
+                        <td>$20,000</td>
+                    </tr>
+                    <tr style="background: rgba(200, 169, 81, 0.15);">
+                        <td><strong>Total</strong></td>
+                        <td><strong style="color: var(--color-gold);">$95,000</strong></td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2>4. What's Included</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Deliverable</th>
+                        <th>Technology</th>
+                        <th>Status</th>
+                    </tr>
+                    <tr>
+                        <td>Web Application</td>
+                        <td>React + Vite + Tailwind</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>iOS Application</td>
+                        <td>React Native + Expo</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Android Application</td>
+                        <td>React Native + Expo</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Backend API</td>
+                        <td>Go on Cloud Run</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Authentication + MFA</td>
+                        <td>Firebase Auth</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Document Encryption</td>
+                        <td>AES-256 + Cloud KMS</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>Penetration Testing</td>
+                        <td>External vendor</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td>SOC 2 Readiness</td>
+                        <td>Documentation + controls</td>
+                        <td><span class="badge badge-emerald">✓</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2>5. Payment Schedule</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Milestone</th>
+                        <th>%</th>
+                        <th>Amount</th>
+                        <th>Deliverable</th>
+                    </tr>
+                    <tr>
+                        <td>Project Kickoff</td>
+                        <td>25%</td>
+                        <td>$23,750</td>
+                        <td>Architecture approved, GCP setup</td>
+                    </tr>
+                    <tr>
+                        <td>Alpha Release</td>
+                        <td>25%</td>
+                        <td>$23,750</td>
+                        <td>Core features, auth working</td>
+                    </tr>
+                    <tr>
+                        <td>Beta Release</td>
+                        <td>25%</td>
+                        <td>$23,750</td>
+                        <td>Mobile apps in TestFlight</td>
+                    </tr>
+                    <tr>
+                        <td>Production Launch</td>
+                        <td>25%</td>
+                        <td>$23,750</td>
+                        <td>Apps live in stores</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         </div>
 
         <!-- SOW Tab -->
         <div id="sow-tab" class="tab-content">
             <div class="document">
                 <h2>1. Executive Summary</h2>
-                
-                <p>This Statement of Work defines the scope for developing the <strong>FinalWishes Platform MVP</strong> — web, iOS, and Android applications.</p>
+
+                <p>This Statement of Work defines the scope for developing the <strong>FinalWishes Platform MVP</strong>
+                    — web, iOS, and Android applications.</p>
 
                 <div class="summary-grid">
-                    <div class="summary-card"><div class="value">FinalWishes</div><div class="label">Product</div></div>
-                    <div class="summary-card highlight"><div class="value">20 Weeks</div><div class="label">Duration</div></div>
-                    <div class="summary-card"><div class="value">$95K</div><div class="label">Investment</div></div>
-                    <div class="summary-card"><div class="value">AI-Assisted</div><div class="label">Dev Model</div></div>
+                    <div class="summary-card">
+                        <div class="value">FinalWishes</div>
+                        <div class="label">Product</div>
+                    </div>
+                    <div class="summary-card highlight">
+                        <div class="value">20 Weeks</div>
+                        <div class="label">Duration</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">$95K</div>
+                        <div class="label">Investment</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="value">AI-Assisted</div>
+                        <div class="label">Dev Model</div>
+                    </div>
                 </div>
 
                 <h3>Technology Stack</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Layer</th><th>Technology</th></tr>
-                        <tr><td>Web Frontend</td><td>React 18 + Vite + TailwindCSS</td></tr>
-                        <tr><td>Mobile Apps</td><td>React Native + Expo</td></tr>
-                        <tr><td>Backend API</td><td>Go (Golang) on Cloud Run</td></tr>
-                        <tr><td>Database</td><td>Firestore (real-time) + Cloud SQL (PII)</td></tr>
-                        <tr><td>Authentication</td><td>Firebase Auth + MFA</td></tr>
-                        <tr><td>Storage</td><td>Cloud Storage (client-side encrypted)</td></tr>
-                        <tr><td>Infrastructure</td><td>Google Cloud Platform</td></tr>
+                        <tr>
+                            <th>Layer</th>
+                            <th>Technology</th>
+                        </tr>
+                        <tr>
+                            <td>Web Frontend</td>
+                            <td>React 18 + Vite + TailwindCSS</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile Apps</td>
+                            <td>React Native + Expo</td>
+                        </tr>
+                        <tr>
+                            <td>Backend API</td>
+                            <td>Go (Golang) on Cloud Run</td>
+                        </tr>
+                        <tr>
+                            <td>Database</td>
+                            <td>Firestore (real-time) + Cloud SQL (PII)</td>
+                        </tr>
+                        <tr>
+                            <td>Authentication</td>
+                            <td>Firebase Auth + MFA</td>
+                        </tr>
+                        <tr>
+                            <td>Storage</td>
+                            <td>Cloud Storage (client-side encrypted)</td>
+                        </tr>
+                        <tr>
+                            <td>Infrastructure</td>
+                            <td>Google Cloud Platform</td>
+                        </tr>
                     </table>
                 </div>
 
@@ -351,24 +940,65 @@
                 <h3>2.2 Mobile App Features</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Feature</th><th>iOS</th><th>Android</th></tr>
-                        <tr><td>Biometric Auth</td><td>Face ID, Touch ID</td><td>Fingerprint</td></tr>
-                        <tr><td>Push Notifications</td><td>APNs</td><td>FCM</td></tr>
-                        <tr><td>Document Camera</td><td>Native capture</td><td>Native capture</td></tr>
-                        <tr><td>Offline Mode</td><td>Cached data</td><td>Cached data</td></tr>
+                        <tr>
+                            <th>Feature</th>
+                            <th>iOS</th>
+                            <th>Android</th>
+                        </tr>
+                        <tr>
+                            <td>Biometric Auth</td>
+                            <td>Face ID, Touch ID</td>
+                            <td>Fingerprint</td>
+                        </tr>
+                        <tr>
+                            <td>Push Notifications</td>
+                            <td>APNs</td>
+                            <td>FCM</td>
+                        </tr>
+                        <tr>
+                            <td>Document Camera</td>
+                            <td>Native capture</td>
+                            <td>Native capture</td>
+                        </tr>
+                        <tr>
+                            <td>Offline Mode</td>
+                            <td>Cached data</td>
+                            <td>Cached data</td>
+                        </tr>
                     </table>
                 </div>
 
                 <h3>2.3 Security Controls</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Control</th><th>Implementation</th></tr>
-                        <tr><td>Encryption at Rest</td><td>AES-256-GCM via Cloud KMS</td></tr>
-                        <tr><td>Encryption in Transit</td><td>TLS 1.3</td></tr>
-                        <tr><td>Client-Side Encryption</td><td>Documents encrypted before upload</td></tr>
-                        <tr><td>MFA</td><td>TOTP (Google Authenticator, Authy)</td></tr>
-                        <tr><td>Rate Limiting</td><td>100 req/min per user</td></tr>
-                        <tr><td>Audit Logging</td><td>All actions to Cloud Logging</td></tr>
+                        <tr>
+                            <th>Control</th>
+                            <th>Implementation</th>
+                        </tr>
+                        <tr>
+                            <td>Encryption at Rest</td>
+                            <td>AES-256-GCM via Cloud KMS</td>
+                        </tr>
+                        <tr>
+                            <td>Encryption in Transit</td>
+                            <td>TLS 1.3</td>
+                        </tr>
+                        <tr>
+                            <td>Client-Side Encryption</td>
+                            <td>Documents encrypted before upload</td>
+                        </tr>
+                        <tr>
+                            <td>MFA</td>
+                            <td>TOTP (Google Authenticator, Authy)</td>
+                        </tr>
+                        <tr>
+                            <td>Rate Limiting</td>
+                            <td>100 req/min per user</td>
+                        </tr>
+                        <tr>
+                            <td>Audit Logging</td>
+                            <td>All actions to Cloud Logging</td>
+                        </tr>
                     </table>
                 </div>
 
@@ -376,26 +1006,78 @@
 
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Month</th><th>Focus</th><th>Deliverables</th></tr>
-                        <tr><td>1</td><td>Foundation</td><td>GCP setup, Auth, DB schema, React scaffold</td></tr>
-                        <tr><td>2</td><td>Core Features</td><td>Estate CRUD, Asset management, Go API</td></tr>
-                        <tr><td>3</td><td>Vault & Security</td><td>Document encryption, Notifications</td></tr>
-                        <tr><td>4</td><td>Mobile Apps</td><td>React Native iOS/Android</td></tr>
-                        <tr><td>5</td><td>Launch Prep</td><td>Pen test, App Store submission</td></tr>
+                        <tr>
+                            <th>Month</th>
+                            <th>Focus</th>
+                            <th>Deliverables</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Foundation</td>
+                            <td>GCP setup, Auth, DB schema, React scaffold</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Core Features</td>
+                            <td>Estate CRUD, Asset management, Go API</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Vault & Security</td>
+                            <td>Document encryption, Notifications</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Mobile Apps</td>
+                            <td>React Native iOS/Android</td>
+                        </tr>
+                        <!-- Updates applied in Markdown, HTML pending full sync -->
                     </table>
                 </div>
 
                 <h3>Key Milestones</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Milestone</th><th>Week</th><th>Exit Criteria</th></tr>
-                        <tr><td>M1: Infrastructure</td><td>2</td><td>GCP deployed, CI/CD operational</td></tr>
-                        <tr><td>M2: Auth Complete</td><td>4</td><td>Firebase Auth + MFA working</td></tr>
-                        <tr><td>M3: API Alpha</td><td>8</td><td>Core Go endpoints functional</td></tr>
-                        <tr><td>M4: Web Beta</td><td>12</td><td>React app feature complete</td></tr>
-                        <tr><td>M5: Mobile Beta</td><td>16</td><td>Apps in TestFlight</td></tr>
-                        <tr><td>M6: Security</td><td>18</td><td>Pen test passed</td></tr>
-                        <tr><td>M7: Launch</td><td>20</td><td>Apps live in stores</td></tr>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Week</th>
+                            <th>Exit Criteria</th>
+                        </tr>
+                        <tr>
+                            <td>M1: Infrastructure</td>
+                            <td>2</td>
+                            <td>GCP deployed, CI/CD operational</td>
+                        </tr>
+                        <tr>
+                            <td>M2: Auth Complete</td>
+                            <td>4</td>
+                            <td>Firebase Auth + MFA working</td>
+                        </tr>
+                        <tr>
+                            <td>M3: API Alpha</td>
+                            <td>8</td>
+                            <td>Core Go endpoints functional</td>
+                        </tr>
+                        <tr>
+                            <td>M4: Web Beta</td>
+                            <td>12</td>
+                            <td>React app feature complete</td>
+                        </tr>
+                        <tr>
+                            <td>M5: Mobile Beta</td>
+                            <td>16</td>
+                            <td>Apps in TestFlight</td>
+                        </tr>
+                        <tr>
+                            <td>M6: Security</td>
+                            <td>18</td>
+                            <td>Pen test passed</td>
+                        </tr>
+                        <tr>
+                            <td>M7: Launch</td>
+                            <td>20</td>
+                            <td>Apps live in stores</td>
+                        </tr>
                     </table>
                 </div>
 
@@ -404,12 +1086,36 @@
                 <h3>Software</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>ID</th><th>Deliverable</th><th>Technology</th></tr>
-                        <tr><td>D1</td><td>FinalWishes API</td><td>Go on Cloud Run</td></tr>
-                        <tr><td>D2</td><td>FinalWishes Web</td><td>React + Vite</td></tr>
-                        <tr><td>D3</td><td>FinalWishes iOS</td><td>React Native + Expo</td></tr>
-                        <tr><td>D4</td><td>FinalWishes Android</td><td>React Native + Expo</td></tr>
-                        <tr><td>D5</td><td>Admin Dashboard</td><td>React</td></tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Deliverable</th>
+                            <th>Technology</th>
+                        </tr>
+                        <tr>
+                            <td>D1</td>
+                            <td>FinalWishes API</td>
+                            <td>Go on Cloud Run</td>
+                        </tr>
+                        <tr>
+                            <td>D2</td>
+                            <td>FinalWishes Web</td>
+                            <td>React + Vite</td>
+                        </tr>
+                        <tr>
+                            <td>D3</td>
+                            <td>FinalWishes iOS</td>
+                            <td>React Native + Expo</td>
+                        </tr>
+                        <tr>
+                            <td>D4</td>
+                            <td>FinalWishes Android</td>
+                            <td>React Native + Expo</td>
+                        </tr>
+                        <tr>
+                            <td>D5</td>
+                            <td>Admin Dashboard</td>
+                            <td>React</td>
+                        </tr>
                     </table>
                 </div>
 
@@ -423,14 +1129,31 @@
                 </ul>
 
                 <h2>5. Development Model</h2>
-                <p>This project uses an <strong>AI-Assisted Development Model</strong> where AI tools perform the majority of development work under human oversight.</p>
-                
+                <p>This project uses an <strong>AI-Assisted Development Model</strong> where AI tools perform the
+                    majority of development work under human oversight.</p>
+
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Role</th><th>Allocation</th><th>Responsibilities</th></tr>
-                        <tr><td>Human Oversight</td><td>Part-time</td><td>Architecture review, testing, go/no-go decisions</td></tr>
-                        <tr><td>AI Stack Leader (Claude)</td><td>Full-time</td><td>Implementation, testing, documentation</td></tr>
-                        <tr><td>AI Development Tools</td><td>Full-time</td><td>Cursor Pro, Warp, GitHub Copilot</td></tr>
+                        <tr>
+                            <th>Role</th>
+                            <th>Allocation</th>
+                            <th>Responsibilities</th>
+                        </tr>
+                        <tr>
+                            <td>Human Oversight</td>
+                            <td>Part-time</td>
+                            <td>Architecture review, testing, go/no-go decisions</td>
+                        </tr>
+                        <tr>
+                            <td>AI Stack Leader (Claude)</td>
+                            <td>Full-time</td>
+                            <td>Implementation, testing, documentation</td>
+                        </tr>
+                        <tr>
+                            <td>AI Development Tools</td>
+                            <td>Full-time</td>
+                            <td>Cursor Pro, Warp, GitHub Copilot</td>
+                        </tr>
                     </table>
                 </div>
 
@@ -439,11 +1162,31 @@
                 <h3>Payment Schedule</h3>
                 <div class="table-wrapper">
                     <table>
-                        <tr><th>Milestone</th><th>%</th><th>Amount</th></tr>
-                        <tr><td>Project Kickoff</td><td>25%</td><td>$23,750</td></tr>
-                        <tr><td>Alpha Release (Week 8)</td><td>25%</td><td>$23,750</td></tr>
-                        <tr><td>Beta Release (Week 16)</td><td>25%</td><td>$23,750</td></tr>
-                        <tr><td>Production Launch (Week 20)</td><td>25%</td><td>$23,750</td></tr>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>%</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr>
+                            <td>Project Kickoff</td>
+                            <td>25%</td>
+                            <td>$23,750</td>
+                        </tr>
+                        <tr>
+                            <td>Alpha Release (Week 8)</td>
+                            <td>25%</td>
+                            <td>$23,750</td>
+                        </tr>
+                        <tr>
+                            <td>Beta Release (Week 16)</td>
+                            <td>25%</td>
+                            <td>$23,750</td>
+                        </tr>
+                        <tr>
+                            <td>Production Launch (Week 20)</td>
+                            <td>25%</td>
+                            <td>$23,750</td>
+                        </tr>
                     </table>
                 </div>
 
@@ -461,8 +1204,93 @@
                     <li>App Store accounts ready by Week 14</li>
                     <li>Requirements frozen after Week 8</li>
                     <li>English-only for MVP</li>
-<li>5 launch states: MD, IL, MN, DC, VA</li>
+                    <li>3 launch states: MD, IL, MN</li>
                 </ol>
+            </div>
+        </div>
+
+        <!-- Contract Tab -->
+        <div id="contract-tab" class="tab-content">
+            <div class="document">
+                <h2>Master Services Agreement</h2>
+                <p><strong>Parties:</strong> FinalWishes Inc. ("Client") and 111 Venture Studio ("Provider").</p>
+                <p><strong>Date:</strong> December 11, 2025</p>
+
+                <h3>1. Services & Compensation</h3>
+                <p>Provider agrees to perform the Services described in the SOW for
+                <h3>8.1 Detailed Timeline Breakdown</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Phase</th>
+                            <th>Weeks</th>
+                            <th>Deliverables</th>
+                        </tr>
+                        <tr>
+                            <td><strong>1. Foundation</strong></td>
+                            <td>1-4</td>
+                            <td>GCP Setup, Auth (MFA), <strong>The Vault</strong>, DB Design</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Core & AI</strong></td>
+                            <td>5-10</td>
+                            <td>Probate Logic, <strong>Gemini 3.0</strong>, DocuSeal Integration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Integrations</strong></td>
+                            <td>11-16</td>
+                            <td>Plaid (Bank), Lob (Mail), <strong>Mobile Beta</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Launch</strong></td>
+                            <td>17-20</td>
+                            <td>Security Hardening, Pen Test, App Store Go-Live</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>8.2 The Team Structure</h3>
+                <ul>
+                    <li><strong>Lead Architect (Human):</strong> 15+ years exp. Oversees scalability & security.</li>
+                    <li><strong>AI Stack Leader (Claude):0</strong> Acts as the "10x Developer", writing 90% of code.
+                    </li>
+                    <li><strong>Product Manager (Human):</strong> Aligns features with venture goals.</li>
+                </ul>
+
+                <h3>2. Intellectual Property</h3>
+                <p>Upon full payment, Client owns all Custom Deliverables. Provider retains background technology (e.g.,
+                    Sirsi libraries).</p>
+
+                <h3>3. Sign & Execute</h3>
+                <div
+                    style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; border: 1px solid var(--card-border); margin-top: 20px;">
+                    <p style="margin-bottom: 15px; color: var(--color-gold);">I acknowledge and agree to the terms
+                        above.</p>
+                    <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; cursor: pointer;">
+                        <input type="checkbox" id="agree-check"
+                            style="width: 18px; height: 18px; accent-color: var(--color-emerald);">
+                        <span style="font-size: 0.9rem; color: white;">I am authorized to bind the Client to this
+                            Agreement.</span>
+                    </label>
+
+                    <div style="margin-bottom: 10px; font-size: 0.8rem; color: var(--text-muted);">DRA SIGNATURE BELOW:
+                    </div>
+                    <canvas id="sig-canvas" width="600" height="150"
+                        style="background: white; border-radius: 4px; cursor: crosshair; touch-action: none; max-width: 100%;"></canvas>
+                    <div style="margin-top: 8px; display: flex; gap: 10px;">
+                        <button onclick="clearSig()"
+                            style="padding: 6px 12px; border: 1px solid var(--text-muted); background: transparent; color: var(--text-muted); border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Clear</button>
+                    </div>
+
+                    <div id="payment-section"
+                        style="margin-top: 30px; opacity: 0.5; pointer-events: none; transition: all 0.3s; border-top: 1px solid var(--card-border); padding-top: 20px;">
+                        <h4 style="color: var(--color-emerald);">Initiate Kickoff Payment ($23,750)</h4>
+                        <button onclick="simulatePay()"
+                            style="background: var(--color-emerald); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; width: 100%;">
+                            Pay & Execute Contract
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -479,7 +1307,93 @@
             document.getElementById(tab + '-tab').classList.add('active');
             window.scrollTo({ top: 200, behavior: 'smooth' });
         }
+
+        // Signature Logic
+        const canvas = document.getElementById('sig-canvas');
+        const ctx = canvas.getContext('2d');
+        let painting = false;
+
+        function startPosition(e) { painting = true; draw(e); }
+        function finishedPosition() { painting = false; ctx.beginPath(); checkValidity(); }
+        function draw(e) {
+            if (!painting) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', finishedPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPosition);
+        canvas.addEventListener('touchend', finishedPosition);
+        canvas.addEventListener('touchmove', draw);
+
+        function clearSig() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            checkValidity();
+        }
+
+        const checkbox = document.getElementById('agree-check');
+        const paySection = document.getElementById('payment-section');
+
+        checkbox.addEventListener('change', checkValidity);
+
+        function checkValidity() {
+            // Check if canvas has content (simple approach)
+            const pixelBuffer = new Uint32Array(
+                ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+            );
+            const hasSignature = pixelBuffer.some(color => color !== 0);
+
+            if (checkbox.checked && hasSignature) {
+                paySection.style.opacity = '1';
+                paySection.style.pointerEvents = 'all';
+            } else {
+                paySection.style.opacity = '0.5';
+                paySection.style.pointerEvents = 'none';
+            }
+        }
+
+        function simulatePay() {
+            const btn = document.querySelector('#payment-section button');
+            btn.innerHTML = "Processing...";
+            setTimeout(() => {
+                btn.innerHTML = "🎉 Payment Successful! Welcome to 111 Ventures.";
+                btn.style.background = "var(--color-gold)";
+                confetti();
+            }, 1500);
+        }
+
+        // Simple confetti fallback
+        function confetti() {
+            // Visual flair only
+            const colors = ['#C8A951', '#10B981', '#FFFFFF'];
+            for (let i = 0; i < 50; i++) {
+                const el = document.createElement('div');
+                el.style.position = 'fixed';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.top = '-10px';
+                el.style.width = '10px';
+                el.style.height = '10px';
+                el.style.background = colors[Math.floor(Math.random() * colors.length)];
+                el.style.transition = 'top 2s ease-in, transform 2s linear';
+                document.body.appendChild(el);
+                setTimeout(() => {
+                    el.style.top = '100vh';
+                    el.style.transform = `rotate(${Math.random() * 360}deg)`;
+                }, 10);
+            }
+        }
     </script>
 
 </body>
+
 </html>

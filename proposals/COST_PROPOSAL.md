@@ -13,6 +13,35 @@ This Cost Proposal provides a comprehensive breakdown for developing the **MyShe
 
 **Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
+## 1.1 Why 111 Venture Studio? The "Dream Team" Advantage
+
+We are not just a dev shop; we are a **Venture Studio**. This means we build businesses, not just code. Our incentives are aligned with your exit, not your hourly billing.
+
+| Feature | Low-Cost Agency | Premium Firm | **111 Venture Studio** |
+| :--- | :--- | :--- | :--- |
+| **Mindset** | "Ticket Takers" | "Consultants" | **"Co-Founders"** |
+| **Speed** | Slow (billable hours) | Medium (process heavy) | **AI-Speed (Goal oriented)** |
+| **Tech Stack** | Wordpress/Outdated | Over-engineered | **Modern/Scalable (Go + React)** |
+| **Equity View** | Zero interest | Zero interest | **Value-driven partnership** |
+| **Post-Launch** | "Good luck" | Retainer ($10k/mo) | **Strategic Growth Support** |
+
+**The 111 Difference:**
+1.  **Business-First Architecture**: We choose tech (like DocuSeal vs DocuSign) that saves you OpEx, not what's easiest for us to bill.
+2.  **AI-Native Execution**: We use Gemini 3.0 and Agentic workflows to do 5 months of work in 5 weeks.
+3.  **Future-Proofing**: We build with your Series A due diligence in mind (SOC 2, IP ownership, Clean code).
+
+## 1.2 Market Positioning: FinalWishes vs. The World
+
+FinalWishes is not just "software"; it is an **AI-Powered Executor**. We are competing against expensive human services and risky DIY forms.
+
+| Feature | Probate Attorney | DIY Legal Forms | **FinalWishes** |
+| :--- | :--- | :--- | :--- |
+| **Average Cost** | $15,000+ | $300 - $500 | **Subscription ($100s)** |
+| **Guidance** | High (Human) | None (Generic Instructions) | **High (Gemini 3.0 AI)** |
+| **Speed** | 12-18 Months | Variable (User Error) | **6-9 Months (Optimized)** |
+| **State Specific** | Valid for 1 State | Often Generic | **3 Launch States (Deep)** |
+| **Process** | Offline / Paper | Print & Mail | **Digital / e-File / Vault** |
+
 **Launch States:** Maryland, Illinois, Minnesota (e-filing available), DC, Virginia (build connectors)
 
 ### Investment Summary
@@ -45,7 +74,27 @@ This section documents the key architectural decisions with full justification. 
 
 ### 2.1 Security Standard: SOC 2 Type II + AES-256
 
-**Decision:** Implement SOC 2-compliant security with AES-256 encryption, NOT FIPS 140-3.
+### 2.1 Legal Validation & Vault Sovereignty: DocuSeal Strategy
+
+**The Strategic Pivot:** We aren't just choosing an "e-signature app". We are building the **FinalWishes Legal Vault**.
+
+**The Problem with DocuSign:**
+When you use DocuSign, *they* own the vault. If you stop paying their subscription, you lose access to the audit trails and legal proofs. Your user's long-term legal security is held hostage by a third-party vendor.
+
+**The Solution: DocuSeal (Self-Hosted)**
+By self-hosting DocuSeal on our own infrastructure (Cloud SQL):
+1.  **We Own the Evidence**: The cryptographic proofs and audit trails live in *your* database.
+2.  **Permanent Validation**: We can guarantee users access to their legal proofs for 10+ years without paying indefinite SaaS fees.
+3.  **Data Sovereignty**: Sensitive probate data never leaves your controlled GCP environment (HIPAA/SOC 2 aligned).
+
+| Feature | DocuSign (Rented Vault) | **DocuSeal (Owned Vault)** |
+| :--- | :--- | :--- |
+| **Legal Proofs** | Rented (Lost if you cancel) | **Owned (Yours Forever)** |
+| **Data Custody** | 3rd Party Cloud | **Your Private Cloud** |
+| **Long-Term Config**| Pay to Keep | **Architected for Archive** |
+| **Cost** | Per Envelope Tax | **Included in Infra** |
+
+### 2.2 Security Standard: SOC 2 Type II + AES-256
 
 **Why Not FIPS 140-3?**
 
@@ -101,7 +150,7 @@ FIPS 140-3 is a **federal standard** required only for:
 |----------------|--------------|-------------|
 | Cloud HSM | $1,200+ | $14,400+ |
 | Cloud KMS (software) | ~$10-50 | ~$120-600 |
-| **Savings** | **$1,150/month** | **$13,800/year** |
+| **Savings** | **$1,150/mo** | **$13,800/yr** |
 
 **What Cloud KMS Provides (Sufficient for SOC 2):**
 - AES-256 and RSA key support
@@ -490,7 +539,7 @@ This investment prevents costly user errors, court rejections, and potential lia
 |------|--------|-------------|------------|---------------|
 | API cost overruns | Medium | Medium | Usage monitoring, caching | Included in contingency |
 | Regulatory changes | High | Low | Legal review buffer | Included in contingency |
-| App Store rejection | Medium | Low | Pre-submission review | Included in timeline |
+| App Store rejection | Medium | Low | DocuSeal | E-signature (Self-hosted) | Included | ~$50/mo (Cloud Run) |
 | Third-party API changes | Medium | Medium | Abstraction layers | Included in contingency |
 | Security vulnerabilities | High | Low | Pen testing, code review | Included in budget |
 
@@ -504,7 +553,7 @@ This investment prevents costly user errors, court rejections, and potential lia
 - HIPAA certification ($20,000+) - if required later
 - Marketing and user acquisition
 - Ongoing legal counsel beyond initial review
-- Custom integrations with specific financial institutions
+- DocuSeal (Self-hosted) instead of DocuSign ($40/envelope savings)cific financial institutions
 - White-label licensing
 - International expansion (localization)
 - FIPS 140-3 certification (unnecessary per ADR-001)

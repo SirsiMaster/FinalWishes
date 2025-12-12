@@ -1,7 +1,7 @@
 # Project Scope Document
 ## FinalWishes - The Estate Operating System
-**Version:** 3.0.0
-**Date:** December 5, 2025
+**Version:** 4.0.0
+**Date:** December 11, 2025
 **Project Duration:** 5 Months (20 Weeks)
 
 ---
@@ -19,7 +19,7 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 | Category | States | E-Filing Status |
 |----------|--------|----------------|
 | **E-Filing Available** | Maryland (MDEC), Illinois, Minnesota (MNCIS) | Integrate with existing APIs |
-| **Build Connectors** | DC, Virginia | Automate paper processes, become benchmark |
+| **Deferred to v1.1** | DC, Virginia | Scope reduced for v1.0 launch |
 
 **Innovation Strategy:** For DC and Virginia, where court systems lack digital interfaces, FinalWishes will ingest the paper process and forms, automate form completion, and provide fillable/completed forms as currently required. This positions us as first movers and the benchmark for eventual state digitization.
 
@@ -33,8 +33,8 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 3. Implement state-specific probate guidance for 5 launch states (MD, IL, MN, DC, VA)
 4. Build court system connectors for states without e-filing (DC, VA)
 5. Achieve SOC 2 readiness (Type I certification process initiated)
-6. Build LLM-powered process intelligence for estate workflows (Vertex AI)
-7. Integrate full suite of external services (Plaid, Lob, DocuSign) from day one
+6. Build LLM-powered process intelligence (Vertex AI with Gemini 3.0)
+7. Integrate full suite of external services (Plaid, Lob, DocuSeal)
 
 ### 2.2 Success Metrics
 | Metric | Target | Measurement |
@@ -42,7 +42,7 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 | On-time delivery | 100% of features | Sprint completion |
 | Native apps | iOS + Android in stores | App Store approval |
 | Uptime | 99.9% | Post-launch week 1 |
-| State coverage | 5 states with full templates | Content audit |
+| State coverage | 3 states with full templates | Content audit |
 | User registration flow | <3 minutes | UX testing |
 | Document upload speed | <30 seconds (50MB) | Performance testing |
 | Security audit | Zero critical findings | Penetration test |
@@ -118,14 +118,14 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 **External Integrations**
 - Plaid (bank account discovery and verification)
 - Lob (certified mail)
-- DocuSign (e-signatures for legal documents)
+- DocuSign (replaced by self-hosted DocuSeal)
 
 **Court System Connectors**
 - MDEC integration (Maryland e-filing)
 - Illinois e-filing integration
 - MNCIS integration (Minnesota e-filing)
-- DC connector (automated form completion for manual filing)
-- Virginia connector (automated form completion for partial e-filing)
+- DC connector (deferred to v1.1)
+- Virginia connector (deferred to v1.1)
 
 #### Phase 4: Mobile Apps (Weeks 13-16)
 **React Native Development**
@@ -140,8 +140,8 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 **Testing & Security**
 - Security penetration testing
 - Load testing
-- State-specific content validation (5 states)
-- Legal form review by state-specific attorneys (~75 forms)
+- State-specific content validation (3 states)
+- Legal form review by state-specific attorneys (~45 forms)
 - Documentation finalization
 
 **Launch**
@@ -343,4 +343,4 @@ The project is considered complete when:
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
 | 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |
-| **3.0.0** | **2025-12-05** | **Claude** | **FinalWishes rebrand, removed MVP language, 5 launch states (MD, IL, MN, DC, VA), innovation strategy for connector-building, full integrations (Plaid/Lob/DocuSign) from day one** |
+| **4.0.0** | **2025-12-11** | **MyShepherd Team** | **Launch Scope reduced to 3 states (MD, IL, MN); AI upgraded to Gemini 3.0; E-Signature switched to DocuSeal (self-hosted)** |

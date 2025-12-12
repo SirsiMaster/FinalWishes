@@ -1,16 +1,16 @@
 # Architecture Decision Record (ADR-002)
-## External Integration Strategy & Estate Settlement Ecosystem
+## Implementation Plan: DocuSeal, Gemini 3.0 & Launch Scope
 
-**Document Version:** 2.0.0
-**Date:** December 5, 2025
+**Document Version:** 3.0.0
+**Date:** December 11, 2025
 **Status:** ACCEPTED
-**Decision Makers:** Project Leadership, AI Stack Leader (Claude)
+**Decision Makers:** Project Leadership, AI Stack Leader (Gemini)
 
 ---
 
 ## Executive Summary
 
-This ADR documents the **complete integration ecosystem** for FinalWishes, the Estate Operating System. After exhaustive analysis of government agencies, financial institutions, and court systems, we have identified both the limitations AND the opportunities.
+This ADR documents the **refined implementation plan** for FinalWishes. It solidifies the decision to self-host key infrastructure (DocuSeal) and leverage the latest AI models (Gemini 3.0) to maximize efficiency and reduce operating costs.
 
 **The Reality:** Most estate settlement is still paper-based. There are no unified government APIs. Financial institutions have proprietary or non-existent programmatic interfaces. Court systems vary by county, not just state.
 
@@ -28,9 +28,9 @@ This document provides:
 
 **The $95K/5-month scope includes:**
 - Full automation for states WITH e-filing (MD, IL, MN)
-- Connector-building for states WITHOUT complete e-filing (DC, VA)
-- Form library covering ~75 probate forms across 5 states
+- Form library covering ~45 probate forms across 3 states
 - Complete user guidance through every step (manual or automated)
+- Self-hosted DocuSeal for e-signatures (Postgres compatible, Cost saving vs DocuSign)
 
 ---
 
@@ -313,10 +313,15 @@ This document provides:
 
 | Service | Capability | API | Cost |
 |---------|-----------|-----|------|
-| **DocuSign** | E-signature, RON | ✅ Full API | $25-65/user/month |
-| **Notarize** | RON only | ✅ API | $25/transaction |
-| **OneNotary** | RON only | ✅ API | $25/transaction |
-| **SignNow** | E-signature | ✅ API | $8-30/user/month |
+| **DocuSeal** | E-signature | ✅ Full API | ~$50/mo (Cloud Run) |
+| **OpenSign** | E-signature | ✅ Yes | ~$50/mo (Requires MongoDB) |
+| **DocuSign** | E-signature | ✅ Yes | $25-65/user/month |
+
+**Decision:** Use **DocuSeal** (Self-Hosted).
+- **Architecture Synergy:** DocuSeal supports **PostgreSQL**. We are already running Cloud SQL (PostgreSQL). OpenSign requires MongoDB, which would add a new database engine and cost.
+- **Control:** Data stays in our infrastructure (Cloud SQL/Storage).
+- **Cost:** Fixed infrastructure cost vs per-envelope pricing.
+- **Licensing:** Open Source.
 
 **Remote Online Notarization (RON) Status by State:**
 
@@ -644,15 +649,15 @@ This ensures that even a database breach doesn't expose all estates' data with a
    - Notification letter templates
    - Court form auto-fill (PDF)
    - Certified mail via Lob
-   - **For states without e-filing:** Generate print-ready, compliant forms
    - **For states with e-filing:** Guide through their systems (MD, IL, MN)
+   - Certified mail via Lob
 
-4. **Full Integrations (Day One)**
+5. **Full Integrations (Day One)**
    - Plaid for account discovery (all products)
-   - DocuSign for e-signature
+   - **DocuSeal** for e-signature (Self-hosted)
    - Lob for certified mail automation
    - SendGrid for email
-   - Google Document AI for OCR
+   - **Vertex AI (Gemini 3.0)** for intelligent process guidance
 
 5. **Mobile Apps**
    - React Native iOS + Android
@@ -796,6 +801,9 @@ The competitive moat is:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-05 | Claude (AI Stack Leader) | Initial external integration analysis |
+| 2.0.0 | 2025-12-05 | Claude | Updated integration strategy |
+| 3.0.0 | 2025-12-11 | MyShepherd Team | Implementation Plan: OpenSign, Gemini 2.0, 3-State Scope |
+| **4.0.0** | **2025-12-11** | **MyShepherd Team** | **Refinement: Gemini 3.0 & DocuSeal (PostgreSQL)** |
 
 ---
 

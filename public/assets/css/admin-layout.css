@@ -96,12 +96,28 @@ h6 {
     min-height: 100vh;
 }
 
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 260px !important;
+    /* Matches sidebar width */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #F3F4F6;
+}
+
 /* Sidebar - Royal Blue & Gold */
 .sidebar {
     width: 260px !important;
     background: #1e3a8a !important;
-    /* Royal Blue (Not Navy) */
     border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    position: fixed !important;
+    height: 100vh !important;
+    z-index: 100 !important;
+    overflow-y: auto !important;
+    left: 0 !important;
+    top: 0 !important;
 }
 
 .sidebar-logo {
@@ -140,6 +156,13 @@ h6 {
     border-bottom: 1px solid #E5E7EB !important;
     height: 70px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-xl);
 }
 
 .header-left h1 {

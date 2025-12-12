@@ -1,4 +1,5 @@
 # Statement of Work (SOW)
+
 **Project Name:** MyShepherd Platform Development  
 **SOW Reference:** SOW-2025-001  
 **Associated MSA:** MSA-2025-111-FW  
@@ -8,118 +9,112 @@
 
 ## 1. Executive Overview
 
-This Statement of Work ("SOW") outlines the specific scope, schedule, and deliverables for the development of the **MyShepherd / FinalWishes Estate Operating System**.
+This Statement of Work ("SOW") defines the comprehensive scope for the **MyShepherd / FinalWishes Estate Operating System**. This project aims to digitize and automate the estate settlement process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where electronic filing or substantial digitization is possible.
 
-**Objective:** To build and launch a SOC 2-ready, AI-assisted estate settlement platform serving Web, iOS, and Android users across three launch states (MD, IL, MN).
-
-**Engagement Term:** 20 Weeks (5 Months)  
-**Total Contract Value:** $95,000 USD  
-**Development Method:** AI-Assisted Agile (Gemini 3.0 + 111 Venture Studio Team)
+**Objective:** deliver a "Vault-Grade" secure platform that guides users through the 18+ month probate process, automating form generation, asset discovery, and stakeholder communication.
 
 ---
 
-## 2. Resource Plan & Roles
+## 2. Detailed Scope of Services
 
-The following key personnel are assigned to this project:
+### 2.1 Core Vault & Data Architecture
+Provider shall implement a **Multi-Tenant, Zero-Knowledge** architecture to ensure total data privacy.
+*   **Storage Layer:** Hybrid approach using **Cloud SQL (PostgreSQL)** for structured PII (Encrypted) and **Firestore** for real-time document metadata.
+*   **File Vault:** **Cloud Storage** buckets with per-tenant isolation boundaries. All files encrypted at rest using **Cloud KMS** (AES-256).
+*   **Security:** Implementation of **SOC 2 Type II** controls, including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).
 
-| Role | Responsibility | Est. Hours |
+### 2.2 Document Inventory & Automation Scope
+Provider will build automation or manual guidance paths for the following specific document categories:
+
+**A. Identity & Vital Records**
+*   **Death Certificate:** Manual upload/OCR processing (No State API exists).
+*   **Social Security/Gov ID:** Secure entry & validation.
+
+**B. Probate Court Filings (Launch States)**
+*   **Maryland:** Integration/Guidance for **MDEC** (Tyler Odyssey) system. Template generation for Petition for Administration, Inventory, and Accounts.
+*   **Illinois:** Guidance for **eCourt** (Cook County) and standard circuit court forms.
+*   **Minnesota:** Full guidance for **MNCIS** statewide e-filing system.
+*   *Note: Where API filing is unavailable, the Platform will generate "Ready-to-Print" PDF packages.*
+
+**C. Financial & Asset Documents**
+*   **Asset Discovery:** Integration of **Plaid** for retrieving balances, transactions, and liabilities from 12,000+ financial institutions.
+*   **Life Insurance/Retirement:** Generation of standard "Notice of Death & Claim" letters for major carriers (MetLife, Prudential, etc.).
+*   **Real Estate:** Manual inventory tracking with integration to Zillow/Redfin APIs for valuation estimates (where available).
+
+### 2.3 System Integrations
+Provider shall integrate the following third-party services to achieve automation:
+
+| Service | Purpose | Integration Level |
 | :--- | :--- | :--- |
-| **Lead Architect (Human)** | System design, code review, security audits, final sign-off. | 120 hrs |
-| **Product Manager (Human)** | Scope management, acceptance testing, stakeholder comms. | 80 hrs |
-| **AI Stack Leader (Claude)** | Full-stack implementation, test generation, documentation. | Continuous |
-| **DevOps Agent** | CI/CD pipeline, infrastructure management, monitoring. | Continuous |
-| **QA Agent** | Automated regression testing, E2E test scripts. | Continuous |
+| **Plaid** | Financial Account Linking | **Deep Integration** (Transactions, Liabilities, Investments) |
+| **DocuSeal** | E-Signatures | **Self-Hosted** (Full API, embedded signing) |
+| **Lob** | Certified Mail / Physical Letters | **API Triggered** (Address verification, tracking) |
+| **SendGrid** | Transactional Email | **API Triggered** (Notifications, summaries) |
+| **Google Document AI** | OCR / Data Extraction | **API Integrated** (Receipts, Forms) |
+| **Vertex AI (Gemini)** | Process Guidance | **Context-Aware** (RAG pipeline on Probate Code) |
+
+### 2.4 "The Shepherd" Guidance Engine
+Provider shall build a logic engine ("The Shepherd") that:
+1.  **Ingests State Laws:** Encodes probate timing rules for MD, IL, and MN.
+2.  **Generates Timeline:** Creates a dynamic, 18-month Gantt chart for the Executor.
+3.  **Proactive Alerts:** Notifies users of upcoming court deadlines (Inventory due in 90 days, Taxes due in 9 mo).
+4.  **AI Assistance:** Uses Gemini 3.0 to answer context-specific questions (e.g., "Is this expense deductible in Maryland?").
 
 ---
 
 ## 3. Work Breakdown Structure (WBS)
 
-### **PHASE 1: FOUNDATION & VAULT ARCHITECTURE**
-**Duration:** Weeks 1-4  
-**Focus:** Infrastructure, Security, Auth, Data Sovereignty
+### **PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)**
+*   **1.1 GCP Infrastructure:** Provision Cloud Run, Cloud SQL, Firestore, VPC, Cloud Armor.
+*   **1.2 Ops:** Setup GitHub Actions CI/CD.
+*   **1.3 Auth:** Firebase Auth + MFA + Custom Claims.
+*   **1.4 Schema:** Design Relational (Heirs) vs Document (Metadata) schemas.
+*   **1.5 Vault:** Implement AES-256 crypto service and Signed URL logic.
+*   **1.6 Web:** React + Vite + "Royal Neo-Deco" Design System.
+*   **1.7 E-Sign:** Deploy Self-Hosted DocuSeal.
 
-| Task ID | Task Description | Role | Deliverable |
-| :--- | :--- | :--- | :--- |
-| **1.1** | **GCP Infrastructure Setup**<br>Provision Cloud Run, Cloud SQL (PostgreSQL), Firestore, VPC, Cloud Armor. | Architect | Terraform Scripts |
-| **1.2** | **Repo & CI/CD Pipeline**<br>Setup GitHub Actions for dual deployment (API + Web). Linting/Security scan gates. | DevOps | `git` workflows |
-| **1.3** | **Identity & Auth System**<br>Implement Firebase Auth, Custom Claims (Principal/Executor), MFA flows. | AI Leader | Auth Service API |
-| **1.4** | **Database Schema Design**<br>Design SQL Relational models (Heirs, Assets) and NoSQL Document stores. | Architect | `schema.sql` |
-| **1.5** | **The Vault (Core)**<br>Encryption service (Cloud KMS integration). AES-256 logic for file uploads. | AI Leader | `pkg/crypto` |
-| **1.6** | **Initial Frontend Scaffold**<br>React + Vite setup. Install "Royal Neo-Deco" Design System / Tailwind theme. | AI Leader | `web/` initialized |
-| **1.7** | **DocuSeal Self-Hosting**<br>Deploy DocuSeal container to Cloud Run. Configure SQL storage. | DevOps | DocuSeal Instance |
+### **PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)**
+*   **2.1 Asset Module:** Plaid Link integration & manual asset overrides.
+*   **2.2 Maryland Engine:** Encode MD Register of Wills rules & forms.
+*   **2.3 Illinois Engine:** Encode IL Probate Division rules.
+*   **2.4 Minnesota Engine:** Encode MN District Court rules.
+*   **2.5 Gemini RAG:** Build vector store for legal context.
+*   **2.6 PDF Service:** Go-based PDF stamper for court forms.
 
-**Deliverable D1:** "Walking Skeleton" – Valid login, encrypted file upload/download, deployed to Staging.
+### **PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)**
+*   **3.1 Mobile:** React Native Expo shell (iOS/Android).
+*   **3.2 Bio-Auth:** FaceID/TouchID wrapper.
+*   **3.3 Scanner:** Native camera module for receipt capture.
+*   **3.4 Plaid/Lob:** Full webhook handling and mail trigger logic.
+*   **3.5 Offline:** SQLite sync engine for mobile resilience.
 
----
-
-### **PHASE 2: CORE ESTATE LOGIC & AI GUIDANCE**
-**Duration:** Weeks 5-10  
-**Focus:** Probate Engine, Gemini Integration, Intake Flows
-
-| Task ID | Task Description | Role | Deliverable |
-| :--- | :--- | :--- | :--- |
-| **2.1** | **Asset Inventory Module**<br>CRUD for Financial, Real Estate, Digital assets. Plaid Link scaffolding. | AI Leader | Asset API + UI |
-| **2.2** | **Probate State Machine (MD)**<br>Encode Maryland probate rules/deadlines into Logic Engine. | Architect | `pkg/probate/md` |
-| **2.3** | **Probate State Machine (IL)**<br>Encode Illinois probate rules/deadlines into Logic Engine. | Architect | `pkg/probate/il` |
-| **2.4** | **Probate State Machine (MN)**<br>Encode Minnesota probate rules/deadlines into Logic Engine. | Architect | `pkg/probate/mn` |
-| **2.5** | **Gemini Context Engine**<br>Build RAG pipeline manually feeding State Law context to Gemini 3.0. | AI Leader | AI Chatbot API |
-| **2.6** | **Document Generator**<br>PDF generation service (Go). Map database fields to Court Forms. | AI Leader | PDF Gen Service |
-| **2.7** | **E-Sign Workflow**<br>Integration with DocuSeal API. Trigger signature requests from Intake. | AI Leader | Sign Flow UI |
-
-**Deliverable D2:** Alpha Release – End-to-end flow for a Maryland estate (Intake -> Auto-fill Form -> E-Sign).
+### **PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)**
+*   **4.1 Pen Test:** Third-party security audit & remediation.
+*   **4.2 Compliance:** SOC 2 evidence collection (logging, access controls).
+*   **4.3 Load Test:** Stress testing (k6) to 1,000 concurrent users.
+*   **4.4 Store Launch:** App Store & Play Store submission.
+*   **4.5 Go-Live:** DNS switchover and Production migration.
 
 ---
 
-### **PHASE 3: MOBILE & DEEP INTEGRATIONS**
-**Duration:** Weeks 11-16  
-**Focus:** Native Experience, External APIs
+## 4. Deliverables
 
-| Task ID | Task Description | Role | Deliverable |
-| :--- | :--- | :--- | :--- |
-| **3.1** | **React Native Shell**<br>Initialize Expo project. Configure Native Navigation. Share Logic layer. | AI Leader | `mobile/` init |
-| **3.2** | **Mobile Auth & Bio**<br>Implement FaceID/TouchID integration for login. | AI Leader | Bio-Auth screen |
-| **3.3** | **Document Scanner**<br>Native Camera implementation with edge detection for receipt scanning. | AI Leader | Scan Component |
-| **3.4** | **Plaid Integration**<br>Full Plaid API connection. Webhook handling for balance updates. | Backend | Banking Sync |
-| **3.5** | **Lob Integration**<br>Address verification API + Snail Mail printing trigger logic. | Backend | Mail Service |
-| **3.6** | **Offline Sync Engine**<br>Local SQLite cache for mobile. Sync logic for reliable uploads. | Architect | Sync Protocol |
-
-**Deliverable D3:** Beta Release – Feature parity on Web & Mobile. Beta Testers invited.
+| Deliverable | Description | Format |
+| :--- | :--- | :--- |
+| **D1: The Vault** | Security core, Auth, Encrypted Storage | Staging URL |
+| **D2: State Engines** | Form generation for MD, IL, MN | API + UI |
+| **D3: Mobile Apps** | iOS and Android binaries (TestFlight) | .ipa / .apk |
+| **D4: The Platform** | Production release, fully tested | Live URL |
+| **D5: Documentation** | API Specs, Admin Guide, Compliance Pack | PDF / Markdown |
 
 ---
 
-### **PHASE 4: AUDIT, SECURITY & LAUNCH**
-**Duration:** Weeks 17-20  
-**Focus:** Hardening, Compliance, Polish
+## 5. Assumptions
 
-| Task ID | Task Description | Role | Deliverable |
-| :--- | :--- | :--- | :--- |
-| **4.1** | **Penetration Testing**<br>Coordinate with 3rd party vendor. Remediate findings. | Architect | Security Report |
-| **4.2** | **SOC 2 Evidence**<br>Configure Cloud Logging/Audit trails. Generate compliance artifacts. | DevOps | Compliance Pack |
-| **4.3** | **Load Testing**<br>k6 script generation. Stress test API to 1000 concurrent users. | QA Agent | Load Report |
-| **4.4** | **App Store Submission**<br>Prepare screenshots, metadata, privacy policy links. Submit for review. | PM | Store Listings |
-| **4.5** | **Production Migration**<br>Final DB migration scripts. DNS switchover. | DevOps | Live Site |
-
-**Deliverable D4:** Gold Master – Production Launch.
-
----
-
-## 4. Acceptance Criteria
-
-Client shall evaluate Deliverables based on the following criteria:
-
-1.  **Functional Correctness:** Feature performs exactly as described in User Stories.
-2.  **Code Quality:** Pass linting (golangci-lint, eslint), 0 Critical Vulnerabilities.
-3.  **Performance:** API P95 latency < 200ms. LH Score > 90.
-4.  **Design:** Pixel-perfect match to "Royal Neo-Deco" Figma/CSS tokens.
-
----
-
-## 5. Assumptions & Dependencies
-
-*   Client will provide Apple Developer & Google Play Console accounts by Week 10.
-*   Client legal counsel will validate final text of generated Court Forms.
-*   "Launch States" are strictly MD, IL, and MN for V1.
-*   Third-party API costs (Plaid, Lob, OpenAI/Google) are billed directly to Client.
+1.  **Launch States Only:** Logic is strictly limited to Maryland, Illinois, and Minnesota for V1.
+2.  **No Legal Advice:** The "Shepherd" provides procedural guidance, not legal advice. Disclaimer implementation is mandatory.
+3.  **Third-Party Costs:** Client pays direct consumption costs for Plaid, Lob, and Cloud IDs.
+4.  **Content:** Client is responsible for final validation of court form templates.
 
 ---
 

@@ -506,318 +506,119 @@
             </div>
         </div>
 
-        <!-- Cost Proposal Tab -->
-        <div id="cost-tab" class="tab-content active">
-            <div class="document">
-                <div class="doc-header">
-                    <h2>Cost Proposal & Financial Analysis</h2>
-                    <p><strong>Project:</strong> MyShepherd / FinalWishes Platform</p>
-                    <p><strong>Version:</strong> 5.0.0 (Deep Dive)</p>
-                </div>
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Tier</th>
+                <th>Monthly Cost</th>
+            </tr>
+            <tr>
+                <td><strong>Cloud Run</strong></td>
+                <td>On-Demand (Scale to Zero)</td>
+                <td>~$2.00</td>
+            </tr>
+            <tr>
+                <td><strong>Cloud SQL</strong></td>
+                <td>db-f1-micro (Shared)</td>
+                <td>$9.00</td>
+            </tr>
+            <tr>
+                <td><strong>DocuSeal</strong></td>
+                <td>Self-Hosted Container</td>
+                <td>$15.00</td>
+            </tr>
+            <tr>
+                <td><strong>Secrets/KMS</strong></td>
+                <td>Key Versions</td>
+                <td>$10.00</td>
+            </tr>
+            <tr class="subtotal-row">
+                <td><strong>Total Base</strong></td>
+                <td></td>
+                <td><strong>~$36.00 / month</strong></td>
+            </tr>
+        </table>
+        </div>
 
-                <h3>1. Investment Summary</h3>
-                <p>111 Venture Studio proposes a fixed-price engagement of <strong>$95,000</strong> to deliver the
-                    complete MyShepherd platform (Web + iOS + Android) in <strong>20 Weeks</strong>.</p>
-                <p>This is not an estimate; it is a <strong>guaranteed delivery price</strong>.</p>
+        <h4>4.2 Active User Costs (Per 1,000 Users)</h4>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Service</th>
+                    <th>Unit Cost</th>
+                    <th>Monthly (1k Users)</th>
+                </tr>
+                <tr>
+                    <td><strong>Gemini AI</strong></td>
+                    <td>$0.002 / 1k tokens</td>
+                    <td>~$200.00</td>
+                </tr>
+                <tr>
+                    <td><strong>Plaid</strong></td>
+                    <td>$0.30 / account link</td>
+                    <td>$300.00</td>
+                </tr>
+                <tr>
+                    <td><strong>Lob</strong></td>
+                    <td>$1.50 / letter</td>
+                    <td>Variable</td>
+                </tr>
+                <tr>
+                    <td><strong>Storage</strong></td>
+                    <td>$0.02 / GB</td>
+                    <td>$5.00</td>
+                </tr>
+                <tr class="subtotal-row">
+                    <td><strong>Total</strong></td>
+                    <td></td>
+                    <td><strong>~$500 / month</strong></td>
+                </tr>
+            </table>
+        </div>
+        <p><em>Note: With a subscription price of $199/year, 1,000 users generates $199,000 revenue vs ~$6,000
+                OpEx.</em></p>
 
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Primary Deliverable</th>
-                            <th>Description</th>
-                            <th>Value Allocation</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Core Platform Engineering</strong></td>
-                            <td>Backend, Web, Mobile codebase implementation</td>
-                            <td>$55,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Security & Architecture</strong></td>
-                            <td>SOC 2 readiness, Encryption, Pen Testing</td>
-                            <td>$25,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>AI & Legal Knowledge Base</strong></td>
-                            <td>Gemini training, Probate rules encoding</td>
-                            <td>$15,000</td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>TOTAL</strong></td>
-                            <td></td>
-                            <td><strong>$95,000</strong></td>
-                        </tr>
-                    </table>
-                </div>
+        <h3>5. ROI Analysis</h3>
+        <p><strong>Scenario:</strong> 5,000 Users in Year 1.</p>
+        <ul>
+            <li><strong>Revenue:</strong> $995,000</li>
+            <li><strong>Build Cost:</strong> ($95,000)</li>
+            <li><strong>OpEx:</strong> (~$30,000)</li>
+            <li><strong>Net Profit:</strong> <strong>$870,000</strong></li>
+        </ul>
+        <p>This represents a <strong>9.1x ROI</strong> in the first full year of operation.</p>
 
-                <h3>2. "Bottom-Up" Cost Analysis</h3>
-                <p>To validate the efficiency of our AI-Assisted model, we provide this comprehensive breakdown of how
-                    the budget is allocated.</p>
-
-                <h4>2.1 Engineering Labor (The "Human-in-the-Loop")</h4>
-                <p>Even with AI, senior oversight is critical.</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Role</th>
-                            <th>Rate (Blended)</th>
-                            <th>Est. Hours</th>
-                            <th>Total Cost</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Lead Architect</strong></td>
-                            <td>$200/hr</td>
-                            <td>120 (6 hrs/wk)</td>
-                            <td>$24,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Product Manager</strong></td>
-                            <td>$150/hr</td>
-                            <td>80 (4 hrs/wk)</td>
-                            <td>$12,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>AI Prompt Engineer</strong></td>
-                            <td>$100/hr</td>
-                            <td>200 (10 hrs/wk)</td>
-                            <td>$20,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>QA / Legal Review</strong></td>
-                            <td>$150/hr</td>
-                            <td>40 (Total)</td>
-                            <td>$6,000</td>
-                        </tr>
-                        <tr class="subtotal-row">
-                            <td><strong>Subtotal Labor</strong></td>
-                            <td></td>
-                            <td><strong>440 Hours</strong></td>
-                            <td><strong>$62,000</strong></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h4>2.2 Technology & Infrastructure (Build Phase)</h4>
-                <p>Items included in the $95k fee (Provider pays):</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Item</th>
-                            <th>Description</th>
-                            <th>Cost</th>
-                        </tr>
-                        <tr>
-                            <td><strong>External Pen Test</strong></td>
-                            <td>3rd Party Security Firm Audit (Week 18)</td>
-                            <td>$12,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>AI Inference Costs</strong></td>
-                            <td>Claude 3.5 / Gemini 3.0 API usage</td>
-                            <td>$5,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Infrastructure</strong></td>
-                            <td>GCP Development Environment (5 months)</td>
-                            <td>$3,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Legal Consult</strong></td>
-                            <td>Probate Attorney review of 3-State Forms</td>
-                            <td>$8,000</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tools</strong></td>
-                            <td>Cursor, GitHub Enterprise, Sentry Team</td>
-                            <td>$2,000</td>
-                        </tr>
-                        <tr class="subtotal-row">
-                            <td><strong>Subtotal Direct Costs</strong></td>
-                            <td></td>
-                            <td><strong>$30,000</strong></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h4>2.3 Margin & Risk Buffer</h4>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Item</th>
-                            <th>Cost</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Contingency</strong> (3%)</td>
-                            <td>$3,000</td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>GRAND TOTAL</strong></td>
-                            <td><strong>$95,000</strong></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h3>3. Compare to Traditional Agency</h3>
-                <p>Why is this 80% cheaper? Because we don't bill for junior developers.</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Cost Driver</th>
-                            <th>Traditional Agency</th>
-                            <th>111 Venture Studio</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Headcount</strong></td>
-                            <td>7-10 FTEs</td>
-                            <td>2 Humans + AI Agents</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Duration</strong></td>
-                            <td>9-12 Months</td>
-                            <td>5 Months</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Billable Hours</strong></td>
-                            <td>~6,000 Hours</td>
-                            <td>~440 Human Hours</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Cost Basis</strong></td>
-                            <td>Hourly T&M</td>
-                            <td>Fixed Outcome</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Risk</strong></td>
-                            <td>Client pays for overruns</td>
-                            <td>Provider eats overruns</td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>TOTAL BID</strong></td>
-                            <td><strong>$450,000+</strong></td>
-                            <td><strong>$95,000</strong></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h3>4. Operational Expenses (OpEx) Forecast</h3>
-                <p>After launch (Week 20+), the Client will take over direct billing for infrastructure. We have
-                    architected this for extreme efficiency (Serverless).</p>
-
-                <h4>4.1 "Sleep Mode" Costs (0 Active Users)</h4>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Service</th>
-                            <th>Tier</th>
-                            <th>Monthly Cost</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Cloud Run</strong></td>
-                            <td>On-Demand (Scale to Zero)</td>
-                            <td>~$2.00</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Cloud SQL</strong></td>
-                            <td>db-f1-micro (Shared)</td>
-                            <td>$9.00</td>
-                        </tr>
-                        <tr>
-                            <td><strong>DocuSeal</strong></td>
-                            <td>Self-Hosted Container</td>
-                            <td>$15.00</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Secrets/KMS</strong></td>
-                            <td>Key Versions</td>
-                            <td>$10.00</td>
-                        </tr>
-                        <tr class="subtotal-row">
-                            <td><strong>Total Base</strong></td>
-                            <td></td>
-                            <td><strong>~$36.00 / month</strong></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <h4>4.2 Active User Costs (Per 1,000 Users)</h4>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Service</th>
-                            <th>Unit Cost</th>
-                            <th>Monthly (1k Users)</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Gemini AI</strong></td>
-                            <td>$0.002 / 1k tokens</td>
-                            <td>~$200.00</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Plaid</strong></td>
-                            <td>$0.30 / account link</td>
-                            <td>$300.00</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Lob</strong></td>
-                            <td>$1.50 / letter</td>
-                            <td>Variable</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Storage</strong></td>
-                            <td>$0.02 / GB</td>
-                            <td>$5.00</td>
-                        </tr>
-                        <tr class="subtotal-row">
-                            <td><strong>Total</strong></td>
-                            <td></td>
-                            <td><strong>~$500 / month</strong></td>
-                        </tr>
-                    </table>
-                </div>
-                <p><em>Note: With a subscription price of $199/year, 1,000 users generates $199,000 revenue vs ~$6,000
-                        OpEx.</em></p>
-
-                <h3>5. ROI Analysis</h3>
-                <p><strong>Scenario:</strong> 5,000 Users in Year 1.</p>
-                <ul>
-                    <li><strong>Revenue:</strong> $995,000</li>
-                    <li><strong>Build Cost:</strong> ($95,000)</li>
-                    <li><strong>OpEx:</strong> (~$30,000)</li>
-                    <li><strong>Net Profit:</strong> <strong>$870,000</strong></li>
-                </ul>
-                <p>This represents a <strong>9.1x ROI</strong> in the first full year of operation.</p>
-
-                <h3>6. Payment Schedule</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Milestone</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                        </tr>
-                        <tr>
-                            <td><strong>1. Kickoff</strong></td>
-                            <td>$23,750</td>
-                            <td>Signing</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2. Alpha</strong></td>
-                            <td>$23,750</td>
-                            <td>Week 8</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3. Beta</strong></td>
-                            <td>$23,750</td>
-                            <td>Week 16</td>
-                        </tr>
-                        <tr>
-                            <td><strong>4. Launch</strong></td>
-                            <td>$23,750</td>
-                            <td>Week 20</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+        <h3>6. Payment Schedule</h3>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Milestone</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+                <tr>
+                    <td><strong>1. Kickoff</strong></td>
+                    <td>$23,750</td>
+                    <td>Signing</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Alpha</strong></td>
+                    <td>$23,750</td>
+                    <td>Week 8</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Beta</strong></td>
+                    <td>$23,750</td>
+                    <td>Week 16</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Launch</strong></td>
+                    <td>$23,750</td>
+                    <td>Week 20</td>
+                </tr>
+            </table>
+        </div>
+        </div>
         </div>
 
         <!-- SOW Tab -->
@@ -825,287 +626,144 @@
             <div class="document">
                 <div class="doc-header">
                     <h2>Statement of Work (SOW)</h2>
-                    <p><strong>Project Name:</strong> MyShepherd Platform Development</p>
-                    <p><strong>Context:</strong> 20 Week Engagement | $95,000 USD</p>
+                    <p><strong>Project Name:</strong> MyShepherd / FinalWishes Platform</p>
+                    <p><strong>Reference:</strong> SOW-2025-001 | <strong>Scope:</strong> V1 Full Launch</p>
                 </div>
 
                 <h3>1. Executive Overview</h3>
-                <p>This Statement of Work ("SOW") outlines the specific scope, schedule, and deliverables for the
-                    development of the <strong>MyShepherd / FinalWishes Estate Operating System</strong>.</p>
-                <p><strong>Objective:</strong> To build and launch a SOC 2-ready, AI-assisted estate settlement platform
-                    serving Web, iOS, and Android users across three launch states (MD, IL, MN).</p>
+                <p>This Statement of Work ("SOW") defines the comprehensive scope for the <strong>MyShepherd /
+                        FinalWishes Estate Operating System</strong>. This project aims to digitize and automate the
+                    estate settlement process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where
+                    electronic filing or substantial digitization is possible.</p>
+                <p><strong>Objective:</strong> Deliver a "Vault-Grade" secure platform that guides users through the 18+
+                    month probate process, automating form generation, asset discovery, and stakeholder communication.
+                </p>
 
-                <h3>2. Resource Plan & Roles</h3>
+                <h3>2. Detailed Scope of Services</h3>
+
+                <h4>2.1 Core Vault & Data Architecture</h4>
+                <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to ensure total
+                    data privacy.</p>
+                <ul>
+                    <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL (PostgreSQL)</strong>
+                        for structured PII (Encrypted) and <strong>Firestore</strong> for real-time document metadata.
+                    </li>
+                    <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with per-tenant isolation
+                        boundaries. All files encrypted at rest using <strong>Cloud KMS</strong> (AES-256).</li>
+                    <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong> controls, including
+                        strict IAM roles, audit logging, and encryption in transit (TLS 1.3).</li>
+                </ul>
+
+                <h4>2.2 Document Inventory & Automation Scope</h4>
+                <p>Provider will build automation or manual guidance paths for the following specific document
+                    categories:</p>
+
                 <div class="table-wrapper">
                     <table>
                         <tr>
-                            <th>Role</th>
-                            <th>Responsibility</th>
-                            <th>Est. Hours</th>
+                            <th>Category</th>
+                            <th>Action / Integration</th>
                         </tr>
                         <tr>
-                            <td><strong>Lead Architect (Human)</strong></td>
-                            <td>System design, code review, security audits, final sign-off.</td>
-                            <td>120 hrs</td>
+                            <td><strong>A. Identity</strong></td>
+                            <td>Manual upload/OCR processing for Death Certificates (No State API). Secure validation
+                                for SSN/Gov ID.</td>
                         </tr>
                         <tr>
-                            <td><strong>Product Manager (Human)</strong></td>
-                            <td>Scope management, acceptance testing, stakeholder comms.</td>
-                            <td>80 hrs</td>
+                            <td><strong>B. Probate (MD, IL, MN)</strong></td>
+                            <td>
+                                Integration/Guidance for <strong>MDEC (MD)</strong>, <strong>eCourt (IL)</strong>, and
+                                <strong>MNCIS (MN)</strong> systems.
+                                Platform generates "Ready-to-Print" PDF packages where e-filing is unavailable.
+                            </td>
                         </tr>
                         <tr>
-                            <td><strong>AI Stack Leader (Claude)</strong></td>
-                            <td>Full-stack implementation, test generation, documentation.</td>
-                            <td>Continuous</td>
-                        </tr>
-                        <tr>
-                            <td><strong>DevOps Agent</strong></td>
-                            <td>CI/CD pipeline, infrastructure management.</td>
-                            <td>Continuous</td>
-                        </tr>
-                        <tr>
-                            <td><strong>QA Agent</strong></td>
-                            <td>Automated regression testing, E2E scaling.</td>
-                            <td>Continuous</td>
+                            <td><strong>C. Financial</strong></td>
+                            <td>
+                                <strong>Plaid Integration:</strong> Retrieving balances, transactions, and liabilities
+                                from 12,000+ institutions.
+                                Generation of "Notice of Death" letters for major insurers.
+                            </td>
                         </tr>
                     </table>
                 </div>
+
+                <h4>2.3 System Integrations</h4>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="name">Plaid</div>
+                        <div class="desc">Deep Banking Integration</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">DocuSeal</div>
+                        <div class="desc">Self-Hosted E-Signatures</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Lob</div>
+                        <div class="desc">Certified Mail Automation</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Vertex AI</div>
+                        <div class="desc">Probate Law RAG Engine</div>
+                    </div>
+                    <div class="tech-item">
+                        <div class="name">Google DocAI</div>
+                        <div class="desc">OCR & Extraction</div>
+                    </div>
+                </div>
+
+                <h4>2.4 "The Shepherd" Guidance Engine</h4>
+                <p>Provider shall build a logic engine that:</p>
+                <ol>
+                    <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and MN.</li>
+                    <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the Executor.
+                    </li>
+                    <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines (Inventory due in
+                        90 days, Taxes due in 9 mo).</li>
+                    <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions.</li>
+                </ol>
 
                 <h3>3. Work Breakdown Structure (WBS)</h3>
 
                 <h4>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</h4>
-                <p><strong>Focus:</strong> Infrastructure, Security, Auth, Data Sovereignty</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Task Description</th>
-                            <th>Role</th>
-                            <th>Deliverable</th>
-                        </tr>
-                        <tr>
-                            <td><strong>1.1</strong></td>
-                            <td><strong>GCP Infrastructure Setup</strong><br>Provision Cloud Run, Cloud SQL
-                                (PostgreSQL), Firestore, VPC, Cloud Armor.</td>
-                            <td>Architect</td>
-                            <td>Terraform Scripts</td>
-                        </tr>
-                        <tr>
-                            <td><strong>1.2</strong></td>
-                            <td><strong>Repo & CI/CD Pipeline</strong><br>Setup GitHub Actions for dual deployment (API
-                                + Web). Linting/Security scan gates.</td>
-                            <td>DevOps</td>
-                            <td>git workflows</td>
-                        </tr>
-                        <tr>
-                            <td><strong>1.3</strong></td>
-                            <td><strong>Identity & Auth System</strong><br>Implement Firebase Auth, Custom Claims
-                                (Principal/Executor), MFA flows.</td>
-                            <td>AI Leader</td>
-                            <td>Auth Service API</td>
-                        </tr>
-                        <tr>
-                            <td><strong>1.4</strong></td>
-                            <td><strong>Database Schema Design</strong><br>Design SQL Relational models (Heirs, Assets)
-                                and NoSQL Document stores.</td>
-                            <td>Architect</td>
-                            <td>schema.sql</td>
-                        </tr>
-                        <tr>
-                            <td><strong>1.5</strong></td>
-                            <td><strong>The Vault (Core)</strong><br>Encryption service (Cloud KMS integration). AES-256
-                                logic for file uploads.</td>
-                            <td>AI Leader</td>
-                            <td>pkg/crypto</td>
-                        </tr>
-                        <tr>
-                            <td><strong>1.6</strong></td>
-                            <td><strong>Initial Frontend Scaffold</strong><br>React + Vite setup. Install "Royal
-                                Neo-Deco" Design System / Tailwind theme.</td>
-                            <td>AI Leader</td>
-                            <td>web/ initialized</td>
-                        </tr>
-                        <tr>
-                            <td><strong>1.7</strong></td>
-                            <td><strong>DocuSeal Self-Hosting</strong><br>Deploy DocuSeal container to Cloud Run.
-                                Configure SQL storage.</td>
-                            <td>DevOps</td>
-                            <td>DocuSeal Instance</td>
-                        </tr>
-                    </table>
-                </div>
-                <p><strong>Deliverable D1:</strong> "Walking Skeleton" – Valid login, encrypted file upload/download,
-                    deployed to Staging.</p>
+                <ul>
+                    <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL, Firestore, VPC, Cloud
+                        Armor.</li>
+                    <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
+                    <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
+                    <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata) schemas.</li>
+                    <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service and Signed URL logic.</li>
+                    <li><strong>1.6 Web:</strong> React + Vite + "Royal Neo-Deco" Design System.</li>
+                    <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
+                </ul>
 
-                <h4>PHASE 2: CORE ESTATE LOGIC & AI GUIDANCE (Weeks 5-10)</h4>
-                <p><strong>Focus:</strong> Probate Engine, Gemini Integration, Intake Flows</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Task Description</th>
-                            <th>Role</th>
-                            <th>Deliverable</th>
-                        </tr>
-                        <tr>
-                            <td><strong>2.1</strong></td>
-                            <td><strong>Asset Inventory Module</strong><br>CRUD for Financial, Real Estate, Digital
-                                assets. Plaid Link scaffolding.</td>
-                            <td>AI Leader</td>
-                            <td>Asset API + UI</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.2</strong></td>
-                            <td><strong>Probate State Machine (MD)</strong><br>Encode Maryland probate rules/deadlines
-                                into Logic Engine.</td>
-                            <td>Architect</td>
-                            <td>pkg/probate/md</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.3</strong></td>
-                            <td><strong>Probate State Machine (IL)</strong><br>Encode Illinois probate rules/deadlines
-                                into Logic Engine.</td>
-                            <td>Architect</td>
-                            <td>pkg/probate/il</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.4</strong></td>
-                            <td><strong>Probate State Machine (MN)</strong><br>Encode Minnesota probate rules/deadlines
-                                into Logic Engine.</td>
-                            <td>Architect</td>
-                            <td>pkg/probate/mn</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.5</strong></td>
-                            <td><strong>Gemini Context Engine</strong><br>Build RAG pipeline manually feeding State Law
-                                context to Gemini 3.0.</td>
-                            <td>AI Leader</td>
-                            <td>AI Chatbot API</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.6</strong></td>
-                            <td><strong>Document Generator</strong><br>PDF generation service (Go). Map database fields
-                                to Court Forms.</td>
-                            <td>AI Leader</td>
-                            <td>PDF Gen Service</td>
-                        </tr>
-                        <tr>
-                            <td><strong>2.7</strong></td>
-                            <td><strong>E-Sign Workflow</strong><br>Integration with DocuSeal API. Trigger signature
-                                requests from Intake.</td>
-                            <td>AI Leader</td>
-                            <td>Sign Flow UI</td>
-                        </tr>
-                    </table>
-                </div>
-                <p><strong>Deliverable D2:</strong> Alpha Release – End-to-end flow for a Maryland estate (Intake ->
-                    Auto-fill Form -> E-Sign).</p>
+                <h4>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</h4>
+                <ul>
+                    <li><strong>2.1 Asset Module:</strong> Plaid Link integration & manual asset overrides.</li>
+                    <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules & forms.</li>
+                    <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
+                    <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
+                    <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
+                    <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
+                </ul>
 
                 <h4>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</h4>
-                <p><strong>Focus:</strong> Native Experience, External APIs</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Task Description</th>
-                            <th>Role</th>
-                            <th>Deliverable</th>
-                        </tr>
-                        <tr>
-                            <td><strong>3.1</strong></td>
-                            <td><strong>React Native Shell</strong><br>Initialize Expo project. Configure Native
-                                Navigation. Share Logic layer.</td>
-                            <td>AI Leader</td>
-                            <td>mobile/ init</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3.2</strong></td>
-                            <td><strong>Mobile Auth & Bio</strong><br>Implement FaceID/TouchID integration for login.
-                            </td>
-                            <td>AI Leader</td>
-                            <td>Bio-Auth screen</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3.3</strong></td>
-                            <td><strong>Document Scanner</strong><br>Native Camera implementation with edge detection
-                                for receipt scanning.</td>
-                            <td>AI Leader</td>
-                            <td>Scan Component</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3.4</strong></td>
-                            <td><strong>Plaid Integration</strong><br>Full Plaid API connection. Webhook handling for
-                                balance updates.</td>
-                            <td>Backend</td>
-                            <td>Banking Sync</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3.5</strong></td>
-                            <td><strong>Lob Integration</strong><br>Address verification API + Snail Mail printing
-                                trigger logic.</td>
-                            <td>Backend</td>
-                            <td>Mail Service</td>
-                        </tr>
-                        <tr>
-                            <td><strong>3.6</strong></td>
-                            <td><strong>Offline Sync Engine</strong><br>Local SQLite cache for mobile. Sync logic for
-                                reliable uploads.</td>
-                            <td>Architect</td>
-                            <td>Sync Protocol</td>
-                        </tr>
-                    </table>
-                </div>
-                <p><strong>Deliverable D3:</strong> Beta Release – Feature parity on Web & Mobile. Beta Testers invited.
-                </p>
+                <ul>
+                    <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
+                    <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
+                    <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.
+                    <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger logic.</li>
+                    <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
+                </ul>
 
                 <h4>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</h4>
-                <p><strong>Focus:</strong> Hardening, Compliance, Polish</p>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Task ID</th>
-                            <th>Task Description</th>
-                            <th>Role</th>
-                            <th>Deliverable</th>
-                        </tr>
-                        <tr>
-                            <td><strong>4.1</strong></td>
-                            <td><strong>Penetration Testing</strong><br>Coordinate with 3rd party vendor. Remediate
-                                findings.</td>
-                            <td>Architect</td>
-                            <td>Security Report</td>
-                        </tr>
-                        <tr>
-                            <td><strong>4.2</strong></td>
-                            <td><strong>SOC 2 Evidence</strong><br>Configure Cloud Logging/Audit trails. Generate
-                                compliance artifacts.</td>
-                            <td>DevOps</td>
-                            <td>Compliance Pack</td>
-                        </tr>
-                        <tr>
-                            <td><strong>4.3</strong></td>
-                            <td><strong>Load Testing</strong><br>k6 script generation. Stress test API to 1000
-                                concurrent users.</td>
-                            <td>QA Agent</td>
-                            <td>Load Report</td>
-                        </tr>
-                        <tr>
-                            <td><strong>4.4</strong></td>
-                            <td><strong>App Store Submission</strong><br>Prepare screenshots, metadata, privacy policy
-                                links. Submit for review.</td>
-                            <td>PM</td>
-                            <td>Store Listings</td>
-                        </tr>
-                        <tr>
-                            <td><strong>4.5</strong></td>
-                            <td><strong>Production Migration</strong><br>Final DB migration scripts. DNS switchover.
-                            </td>
-                            <td>DevOps</td>
-                            <td>Live Site</td>
-                        </tr>
-                    </table>
-                </div>
-                <p><strong>Deliverable D4:</strong> Gold Master – Production Launch.</p>
+                <ul>
+                    <li><strong>4.1 Pen Test:</strong> Third-party security audit & remediation.</li>
+                    <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection (logging, access controls).</li>
+                    <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 concurrent users.</li>
+                    <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
+                    <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
+                </ul>
 
                 <h3>4. Acceptance Criteria</h3>
                 <ol>
@@ -1117,153 +775,321 @@
                     <li><strong>Design:</strong> Pixel-perfect match to "Royal Neo-Deco" Figma/CSS tokens.</li>
                 </ol>
 
-                <div class="deco-line"></div>
-                <!-- Contract Tab -->
-                <div id="contract-tab" class="tab-content">
-                    <div class="document" style="border: 2px solid var(--color-gold);">
-                        <div style="text-align: center; margin-bottom: 30px;">
-                            <h2 style="font-size: 1.5rem; letter-spacing: 0.2em; text-transform: uppercase;">Master
-                                Services Agreement</h2>
-                            <p><strong>AGREEMENT NUMBER:</strong> MSA-2025-111-FW</p>
-                            <p><strong>EFFECTIVE DATE:</strong> December 11, 2025</p>
-                        </div>
-
-                        <p>This <strong>Master Services Agreement</strong> ("Agreement") is entered into by and between:
-                        </p>
-                        <p><strong>FinalWishes Inc.</strong>, a Delaware Corporation ("Client"), and<br>
-                            <strong>111 Venture Studio</strong> ("Provider").
-                        </p>
-
-                        <h3>1. RECITALS</h3>
-                        <p><strong>WHEREAS</strong>, Client wishes to engage Provider for specialized software
-                            development, architectural design, and strategic consulting services related to the
-                            "FinalWishes / MyShepherd" estate settlement platform (the "Platform"); and</p>
-                        <p><strong>WHEREAS</strong>, Provider has the requisite expertise, personnel, and technical
-                            capabilities to perform such services in a professional and workmanlike manner;</p>
-                        <p><strong>NOW, THEREFORE</strong>, in consideration of the mutual covenants and promises herein
-                            contained, the Parties agree as follows:</p>
-
-                        <h3>2. DEFINITIONS</h3>
-                        <ul>
-                            <li><strong>"Deliverables"</strong> means all code, documentation, designs, reports, and
-                                other work product specifically created by Provider for Client under an SOW.</li>
-                            <li><strong>"Intellectual Property Rights"</strong> means all patent rights, copyright
-                                rights, mask work rights, moral rights, rights of publicity, trademark, trade dress and
-                                service mark rights, goodwill, trade secret rights and other intellectual property
-                                rights as may now exist or hereafter come into existence.</li>
-                            <li><strong>"Background Technology"</strong> means all software, tools, know-how, and
-                                Intellectual Property owned by Provider prior to the Effective Date or developed
-                                independently of this Agreement (e.g., the "Sirsi" component library).</li>
-                            <li><strong>"Confidential Information"</strong> means any non-public information disclosed
-                                by one Party to the other that is designated as confidential or should reasonably be
-                                understood to be confidential.</li>
-                        </ul>
-
-                        <h3>3. SERVICES AND ENGAGEMENT</h3>
-                        <p><strong>3.1 Statements of Work.</strong> Provider shall perform the Services and provide the
-                            Deliverables as specified in each SOW. Each SOW shall be subject to the terms of this
-                            Agreement. In the event of a conflict between this Agreement and an SOW, the SOW shall
-                            control only regarding the specific scope and fees; otherwise, this Agreement controls.</p>
-                        <p><strong>3.2 Standard of Performance.</strong> Provider represents and warrants that the
-                            Services will be performed in a professional, workmanlike manner, consistent with the
-                            highest industry standards for similar services.</p>
-                        <p><strong>3.3 Change Orders.</strong> Client may request changes to the scope of Services. If
-                            such changes affect fees or timelines, Provider shall submit a written "Change Order" for
-                            Client’s approval. No changes shall be effective until signed by both Parties. Changes
-                            requiring less than 8 hours of effort may be approved via email.</p>
-
-                        <h3>4. COMPENSATION AND PAYMENT</h3>
-                        <p><strong>4.1 Fees.</strong> Client shall pay Provider the fees set forth in the applicable
-                            SOW. For fixed-price SOWs, fees are payable according to the milestone schedule.</p>
-                        <p><strong>4.2 Expenses.</strong> Client shall reimburse Provider for "Pass-Through Expenses"
-                            (e.g., Cloud Infrastructure costs, third-party API fees, software licenses specifically
-                            required for Client) at actual cost, with no markup.</p>
-                        <p><strong>4.3 Payment Terms.</strong> Invoices are due <strong>Net 15</strong> days from the
-                            invoice date.</p>
-
-                        <h3>5. INTELLECTUAL PROPERTY RIGHTS</h3>
-                        <p><strong>5.1 Work Made for Hire.</strong> Provider agrees that all Deliverables created for
-                            Client under this Agreement shall be considered "works made for hire" to the extent
-                            permitted by law. To the extent any Deliverable does not qualify as a work made for hire,
-                            Provider hereby irrevocably assigns to Client all right, title, and interest in and to such
-                            Deliverable, including all Intellectual Property Rights therein.</p>
-                        <p><strong>5.2 Provider Background Technology.</strong> Provider retains all right, title, and
-                            interest in its Background Technology. Provider hereby grants to Client a perpetual,
-                            irrevocable, non-exclusive, royalty-free, worldwide license to use, reproduce, modify,
-                            display, and distribute any Background Technology incorporated into the Deliverables.</p>
-                        <p><strong>5.3 Open Source Software.</strong> The Deliverables may contain open source software
-                            compliance with their respective licenses (e.g., AGPL-3.0 for DocuSeal).</p>
-                        <p><strong>5.4 AI-Generated Code.</strong> The Parties acknowledge that Provider utilizes AI
-                            tools (e.g., Gemini, Claude) to assist in development. Provider warrants that it has the
-                            right to assign ownership of such AI-generated output to Client as part of the Deliverables.
-                        </p>
-
-                        <h3>6. CONFIDENTIALITY</h3>
-                        <p><strong>6.1 Obligations.</strong> The Receiving Party agrees: (i) to hold Confidential
-                            Information in strict confidence; (ii) not to disclose such information to any third party
-                            without legal requirement or prior written consent.</p>
-                        <p><strong>6.3 Data Privacy (PII/PHI).</strong> Provider acknowledges that it may process
-                            Personal Identifiable Information (PII). Provider agrees to implement commercially
-                            reasonable technical and organizational measures (including encryption at rest and in
-                            transit) to protect such data, consistent with SOC 2 criteria.</p>
-
-                        <h3>7. WARRANTIES AND DISCLAIMER</h3>
-                        <p><strong>7.1 Provider Warranties.</strong> Provider warrants that:<br>
-                            (a) The Deliverables will be original and will not infringe any third-party IP Rights;<br>
-                            (b) The Services will be performed in compliance with all applicable laws;<br>
-                            (c) The Deliverables generally conform to the specifications set forth in the SOW for a
-                            period of <strong>sixty (60) days</strong> following Acceptance ("Warranty Period").</p>
-
-                        <h3>8. INDEMNIFICATION & LIABILITY</h3>
-                        <p><strong>8.1 By Provider.</strong> Provider shall indemnify, defend, and hold harmless Client
-                            from and against any third-party claims alleging that the Deliverables infringe any U.S.
-                            copyright or trade secret.</p>
-                        <p><strong>9.2 LIMITATION.</strong> EXCEPT FOR INDEMNIFICATION OBLIGATIONS, EACH PARTY’S TOTAL
-                            AGGREGATE LIABILITY ARISING OUT OF THIS AGREEMENT SHALL NOT EXCEED THE TOTAL FEES PAID OR
-                            PAYABLE BY CLIENT UNDER THE APPLICABLE SOW IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
-                        </p>
-
-                        <h3>9. TERM AND TERMINATION</h3>
-                        <p><strong>10.1 Term.</strong> This Agreement commences on the Effective Date and continues
-                            until terminated.</p>
-                        <p><strong>10.2 Termination for Convenience.</strong> Client may terminate this Agreement or any
-                            SOW at any time upon thirty (30) days written notice.</p>
-
-                        <div class="deco-line" style="margin: 30px 0;"></div>
-
-                        <div class="signature-section"
-                            style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px;">
-                            <h4 style="color: var(--color-gold);">Execute Agreement</h4>
-                            <p style="font-size: 0.8rem; margin-bottom: 20px;">By signing below, you acknowledge reading
-                                and accepting the full terms of this Agreement, the SOW, and the Cost Proposal.</p>
-
-                            <div style="margin: 20px 0;">
-                                <input type="checkbox" id="agree-terms" style="margin-right: 10px;">
-                                <label for="agree-terms" style="font-size: 0.8rem; color: #ccc;">
-                                    I accept the terms of the Master Services Agreement (MSA-2025-111-FW).
-                                </label>
-                            </div>
-
-                            <div style="margin-bottom: 20px;">
-                                <p style="font-size: 0.7rem; margin-bottom: 8px;">DIGITAL SIGNATURE</p>
-                                <canvas id="signature-pad" width="400" height="150"
-                                    style="border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); cursor: crosshair;"></canvas>
-                                <br>
-                                <button onclick="clearSignature()"
-                                    style="font-size: 0.7rem; color: #aaa; background: none; border: none; cursor: pointer; text-decoration: underline;">Clear</button>
-                            </div>
-
-                            <button id="sign-btn" class="btn-gold"
-                                style="width: 100%; opacity: 0.5; pointer-events: none;" onclick="executeContract()">
-                                Sign & Execute Contract
-                            </button>
-                        </div>
+                <h3>5. Deliverables & Assumptions</h3>
+                <p><strong>Deliverables:</strong> Staging URL, Mobile Binaries (.ipa/apk), Compliance Pack, Admin Guide.
+                </p>
+                <p><strong>Assumptions:</strong> V1 limited to Launch States (MD, IL, MN). Client covers third-party API
+                    costs (Plaid, Lob). "The Shepherd" provides procedural guidance, not legal advice.</p>
+            </div>
+        </div>
+        <!-- Contract Tab -->
+        <div id="contract-tab" class="tab-content">
+            <div class="document" style="border: 2px solid var(--color-gold);">
+                <div class="doc-header"
+                    style="text-align: center; border-bottom: 2px solid var(--color-gold); padding-bottom: 20px; margin-bottom: 40px;">
+                    <h2 style="font-size: 2rem; letter-spacing: 0.1em; color: var(--color-gold); margin-bottom: 10px;">
+                        MASTER SERVICES AGREEMENT</h2>
+                    <div style="font-family: 'Inter', sans-serif; color: var(--text-secondary); font-size: 0.9rem;">
+                        <p><strong>AGREEMENT NUMBER:</strong> MSA-2025-111-FW &nbsp;|&nbsp; <strong>EFFECTIVE
+                                DATE:</strong> December 11, 2025</p>
                     </div>
                 </div>
 
-                <footer>
-                    <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
-                </footer>
+                <p>This <strong>Master Services Agreement</strong> (this "Agreement") is entered into by and
+                    between:</p>
+
+                <p><strong>FinalWishes Inc.</strong>, a Delaware Corporation with its principal place of
+                    business at [Address] ("Client"), and<br>
+                    <strong>111 Venture Studio</strong>, a Delaware Limited Liability Company with its principal
+                    place of business at [Address] ("Provider").
+                </p>
+
+                <p>Client and Provider may be referred to individually as a "Party" and collectively as the
+                    "Parties."</p>
+
+                <h3>1. RECITALS</h3>
+                <p><strong>WHEREAS</strong>, Client desires to engage Provider to design, develop, and implement
+                    a specialized estate settlement software platform known as "FinalWishes / MyShepherd" (the
+                    "Platform"); and</p>
+                <p><strong>WHEREAS</strong>, Provider has the requisite technical expertise, personnel, and
+                    capabilities in software engineering, artificial intelligence integration, and cloud
+                    architecture to perform such services; and</p>
+                <p><strong>WHEREAS</strong>, the Parties desire to set forth the terms and conditions under
+                    which Provider will provide such services to Client.</p>
+                <p><strong>NOW, THEREFORE</strong>, in consideration of the mutual covenants, terms, and
+                    conditions set forth herein, and for other good and valuable consideration, the receipt and
+                    sufficiency of which are hereby acknowledged, the Parties agree as follows:</p>
+
+                <h3>2. DEFINITIONS</h3>
+                <p>For purposes of this Agreement, the following terms shall have the meanings set forth below:
+                </p>
+                <ul>
+                    <li><strong>"Affiliate"</strong> means any entity that directly or indirectly controls, is
+                        controlled by, or is under common control with a Party, where "control" means ownership
+                        of more than fifty percent (50%) of the voting stock or other ownership interest.</li>
+                    <li><strong>"Background Technology"</strong> means all software, code, tools, libraries,
+                        frameworks, know-how, methodologies, and Intellectual Property Rights owned or licensed
+                        by Provider prior to the Effective Date or developed independently of the Services
+                        (including, without limitation, Provider’s "Sirsi" component library, "Gemini" guidance
+                        patterns, and standard deployment scripts).</li>
+                    <li><strong>"Confidential Information"</strong> means any non-public information disclosed
+                        by one Party (the "Disclosing Party") to the other Party (the "Receiving Party") that is
+                        designated as confidential or that, given the nature of the information or circumstances
+                        of disclosure, reasonably should be understood to be confidential.</li>
+                    <li><strong>"Deliverables"</strong> means all documents, work product, code, software,
+                        reports, and other materials that are specifically created for and delivered to Client
+                        by Provider pursuant to a Statement of Work.</li>
+                    <li><strong>"Intellectual Property Rights"</strong> means all patent rights, copyright
+                        rights, mask work rights, moral rights, rights of publicity, trademark, trade dress and
+                        service mark rights, goodwill, trade secret rights and other intellectual property
+                        rights as may now exist or hereafter come into existence, and all applications therefore
+                        and registrations, renewals and extensions thereof, under the laws of any state,
+                        country, territory or other jurisdiction.</li>
+                    <li><strong>"Services"</strong> means the professional software development, consulting, and
+                        design services to be performed by Provider as described in a Statement of Work.</li>
+                    <li><strong>"Statement of Work" or "SOW"</strong> means a document describing the specific
+                        Services to be performed, Deliverables to be provided, fees to be paid, and timeline for
+                        performance, which is agreed upon and signed by authorized representatives of both
+                        Parties. Each SOW shall be substantially in the form of <strong>Exhibit A</strong>.</li>
+                </ul>
+
+                <h3>3. SERVICES AND ENGAGEMENT</h3>
+                <p><strong>3.1 Statements of Work.</strong> Provider shall provide the Services and Deliverables
+                    to Client as specified in each SOW. Each SOW shall be effectively incorporated into this
+                    Agreement. In the event of a conflict between the terms of this Agreement and an SOW, the
+                    terms of the SOW shall control ONLY regarding the specific description of Services, fees,
+                    and timeline; for all other legal terms and conditions, this Agreement shall control.</p>
+                <p><strong>3.2 Standard of Performance.</strong> Provider represents and warrants that the
+                    Services will be performed in a professional, workmanlike manner, by qualified personnel,
+                    and consistent with the highest industry standards for similar enterprise-grade software
+                    development services. Provider shall devote adequate resources to meet its obligations under
+                    this Agreement.</p>
+                <p><strong>3.3 Change Orders.</strong> Client may, at any time, request changes to the scope of
+                    the Services ("Change Request"). If Provider determines that such changes will impact the
+                    fees, timeline, or technical architecture, Provider shall submit a written "Change Order"
+                    detailing the impact. No change shall be effective until the Change Order is signed by both
+                    Parties. Minor changes requiring less than eight (8) hours of effort may be approved via
+                    written correspondence (email sufficient).</p>
+                <p><strong>3.4 Non-Exclusivity.</strong> Client acknowledges that Provider is a professional
+                    services firm and may provide similar services to third parties, provided that Provider does
+                    not use Client’s Confidential Information or specifically commissioned Deliverables for such
+                    third parties.</p>
+
+                <h3>4. COMPENSATION AND PAYMENT</h3>
+                <p><strong>4.1 Fees.</strong> Client shall pay Provider the fees set forth in the applicable
+                    SOW. Unless otherwise specified in an SOW, fees for fixed-price projects shall be payable
+                    according to the agreed-upon milestone schedule.</p>
+                <p><strong>4.2 Expenses.</strong> Client shall reimburse Provider for reasonable, documented
+                    "Pass-Through Expenses" incurred in connection with the Services (e.g., specific cloud
+                    infrastructure costs, third-party API licensing fees, software licenses specifically
+                    required for the Project). Provider shall obtain Client’s prior written approval for any
+                    individual expense exceeding Five Hundred Dollars ($500.00). Travel expenses shall only be
+                    reimbursable if pre-approved by Client in writing.</p>
+                <p><strong>4.3 Payment Terms.</strong> Provider shall submit invoices to Client upon completion
+                    of Milestones or monthly for Time & Materials engagements. Invoices are due and payable
+                    <strong>Net Fifteen (15)</strong> days from the invoice date.
+                </p>
+                <p><strong>4.4 Late Payments.</strong> Undisputed payments not received by the due date shall
+                    accrue interest at the lesser of one and one-half percent (1.5%) per month or the maximum
+                    rate permitted by law.</p>
+                <p><strong>4.5 Taxes.</strong> Fees do not include any sales, use, value-added, or similar
+                    taxes. Client shall be responsible for paying all such taxes properly levied on the
+                    Services, excluding taxes based on Provider’s net income, property, or employees.</p>
+
+                <h3>5. INTELLECTUAL PROPERTY RIGHTS</h3>
+                <p><strong>5.1 Work Made for Hire.</strong> Provider agrees that all Deliverables created for
+                    Client under this Agreement shall be considered "works made for hire" to the extent
+                    permitted by law. To the extent that any Deliverable does not qualify as a work made for
+                    hire under applicable law, Provider hereby irrevocably assigns to Client all right, title,
+                    and interest in and to such Deliverable, including all Intellectual Property Rights therein,
+                    free and clear of all liens and encumbrances.</p>
+                <p><strong>5.2 Background Technology.</strong> Notwithstanding Section 5.1, Provider retains all
+                    right, title, and interest in and to its Background Technology. Provider hereby grants to
+                    Client a perpetual, irrevocable, non-exclusive, royalty-free, fully paid-up, worldwide,
+                    sublicensable license to use, reproduce, modify, display, distribute, and create derivative
+                    works of any Background Technology incorporated into the Deliverables, solely as necessary
+                    for Client to utilize, exploit, and maintain the Deliverables for their intended purpose.
+                </p>
+                <p><strong>5.3 Third-Party and Open Source Software.</strong> The Deliverables may contain
+                    third-party software or open source software. Provider warrants that its use of such
+                    software will comply with the applicable licenses (e.g., AGPL-3.0, MIT, Apache 2.0).
+                    Provider shall identify any "Copyleft" libraries (that would mandate disclosure of Client’s
+                    source code) prior to integration and obtain Client’s approval.</p>
+                <p><strong>5.4 AI-Generated Content.</strong> The Parties acknowledge that Provider utilizes
+                    advanced Artificial Intelligence tools (e.g., Google Gemini, Anthropic Claude) to assist in
+                    code generation and architecture. Provider warrants that it has the full legal right to
+                    assign ownership of such AI-generated output to Client as part of the Deliverables, and that
+                    such use does not violate the terms of service of the AI providers.</p>
+                <p><strong>5.5 Further Assurances.</strong> Provider agrees to execute any documents and take
+                    any actions reasonably requested by Client to perfect Client’s ownership of the Intellectual
+                    Property Rights in the Deliverables.</p>
+
+                <h3>6. CONFIDENTIALITY</h3>
+                <p><strong>6.1 Obligations.</strong> The Receiving Party agrees: (i) to hold the Disclosing
+                    Party’s Confidential Information in strict confidence and take reasonable precautions to
+                    protect it (including all precautions the Receiving Party employs with respect to its own
+                    confidential materials); (ii) not to divulge any such Confidential Information to any third
+                    party (other than employees, contractors, or agents who have a need to know and are bound by
+                    written confidentiality obligations); and (iii) not to use such Confidential Information
+                    except for the performance of this Agreement.</p>
+                <p><strong>6.2 Exclusions.</strong> Confidential Information shall not include information that:
+                    (a) is or becomes generally available to the public without breach of this Agreement; (b)
+                    was in the Receiving Party’s possession prior to disclosure without legal restriction; (c)
+                    is captured by the Receiving Party from a third party who had the legal right to disclose
+                    it; or (d) is independently developed by the Receiving Party without reference to or use of
+                    the Confidential Information.</p>
+                <p><strong>6.3 Data Security & SOC 2 Compliance.</strong> Provider acknowledges that it may have
+                    access to Client’s data, which may include Personally Identifiable Information (PII).
+                    Provider agrees to implement and maintain commercially reasonable technical and
+                    organizational security measures—consistent with SOC 2 Type II criteria—to protect such data
+                    from unauthorized access, use, modification, or disclosure. This includes, but is not
+                    limited to, encryption of data at rest and in transit, access controls, and regular security
+                    audits.</p>
+                <p><strong>6.4 Compelled Disclosure.</strong> If the Receiving Party is required by law or court
+                    order to disclose Confidential Information, it shall give the Disclosing Party prompt
+                    written notice (if legally permitted) to allow the Disclosing Party to seek a protective
+                    order.</p>
+
+                <h3>7. WARRANTIES AND COVENANTS</h3>
+                <p><strong>7.1 Provider Warranties.</strong> Provider represents and warrants that:<br>
+                    (a) <strong>Non-Infringement:</strong> The Deliverables will be original and will not
+                    infringe, misappropriate, or violate any patent, copyright, trademark, trade secret, or
+                    other proprietary right of any third party.<br>
+                    (b) <strong>Compliance with Laws:</strong> The Services will be performed in compliance with
+                    all applicable federal, state, and local laws and regulations.<br>
+                    (c) <strong>Malicious Code:</strong> Provider will use industry-standard measures to ensure
+                    the Deliverables do not contain any viruses, malware, trojan horses, time bombs, or other
+                    harmful code.</p>
+                <p><strong>7.2 Performance Warranty (60-Day Bug Fix Guarantee).</strong> Provider warrants that,
+                    for a period of <strong>sixty (60) days</strong> following Client’s Acceptance of the
+                    Deliverables (the "Warranty Period"), the Deliverables will function materially in
+                    accordance with the specifications set forth in the SOW. If the Deliverables fail to meet
+                    this warranty, Provider shall, at its sole expense and as Client’s exclusive remedy for
+                    breach of this warranty, promptly correct the non-conformity.</p>
+                <p><strong>7.3 Disclaimer.</strong> EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, PROVIDER
+                    MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED, AND HEREBY DISCLAIMS ALL IMPLIED WARRANTIES
+                    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</p>
+
+                <h3>8. INDEMNIFICATION</h3>
+                <p><strong>8.1 By Provider.</strong> Provider shall indemnify, defend, and hold harmless Client
+                    and its officers, directors, employees, and agents from and against any and all losses,
+                    damages, liabilities, costs, and expenses (including reasonable attorneys’ fees) arising out
+                    of or resulting from any third-party claim alleging that the Deliverables or Services
+                    infringe or misappropriate any U.S. copyright, trademark, or trade secret.</p>
+                <p><strong>8.2 By Client.</strong> Client shall indemnify, defend, and hold harmless Provider
+                    from and against any and all losses, damages, liabilities, costs, and expenses arising out
+                    of or resulting from: (i) Client’s specific specifications or instructions that compelled
+                    the infringement; or (ii) content or data provided by Client to Provider.</p>
+                <p><strong>8.3 Procedure.</strong> The indemnified party shall: (a) promptly notify the
+                    indemnifying party in writing of the claim; (b) allow the indemnifying party sole control of
+                    the defense and settlement of the claim; and (c) provide reasonable assistance to the
+                    indemnifying party.</p>
+
+                <h3>9. LIMITATION OF LIABILITY</h3>
+                <p><strong>9.1 Exclusion of Consequential Damages.</strong> EXCEPT FOR BREACHES OF
+                    CONFIDENTIALITY (SECTION 6) OR INDEMNIFICATION OBLIGATIONS (SECTION 8), IN NO EVENT SHALL
+                    EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
+                    PUNITIVE DAMAGES (INCLUDING LOSS OF PROFITS, DATA, OR USE), EVEN IF ADVISED OF THE
+                    POSSIBILITY OF SUCH DAMAGES.</p>
+                <p><strong>9.2 Liability Cap.</strong> EXCEPT FOR PROVIDER'S INDEMNIFICATION OBLIGATIONS FOR IP
+                    INFRINGEMENT (SECTION 8.1), EACH PARTY’S TOTAL AGGREGATE LIABILITY ARISING OUT OF OR RELATED
+                    TO THIS AGREEMENT, WHETHER IN CONTRACT, TORT, OR OTHERWISE, SHALL NOT EXCEED THE TOTAL FEES
+                    PAID OR PAYABLE BY CLIENT TO PROVIDER UNDER THE APPLICABLE SOW IN THE TWELVE (12) MONTHS
+                    IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM.</p>
+
+                <h3>10. TERM AND TERMINATION</h3>
+                <p><strong>10.1 Term.</strong> This Agreement shall commence on the Effective Date and shall
+                    continue in full force and effect until terminated as provided herein.</p>
+                <p><strong>10.2 Termination for Convenience.</strong> Client may terminate this Agreement or any
+                    SOW for any reason or no reason upon thirty (30) days' prior written notice to Provider.
+                    Upon such termination, Client shall pay Provider for all Services performed and
+                    non-cancellable expenses incurred up to the date of termination.</p>
+                <p><strong>10.3 Termination for Cause.</strong> Either Party may terminate this Agreement or any
+                    SOW immediately upon written notice if the other Party: (i) materially breaches this
+                    Agreement and fails to cure such breach within fifteen (15) days after receiving written
+                    notice thereof; or (ii) becomes insolvent, makes an assignment for the benefit of creditors,
+                    or files for bankruptcy.</p>
+                <p><strong>10.4 Effect of Termination.</strong> Upon termination: (i) Client shall pay all
+                    outstanding undisputed invoices; (ii) Provider shall deliver to Client all completed and
+                    partially completed Deliverables; and (iii) each Party shall return or destroy the other
+                    Party’s Confidential Information.</p>
+                <p><strong>10.5 Survival.</strong> Sections 2, 4, 5, 6, 7.3, 8, 9, 11, and 12 shall survive any
+                    termination or expiration of this Agreement.</p>
+
+                <h3>11. GENERAL PROVISIONS</h3>
+                <p><strong>11.1 Independent Contractor.</strong> Provider is an independent contractor. Nothing
+                    in this Agreement shall be construed to create a partnership, joint venture, agency, or
+                    employment relationship between the Parties.</p>
+                <p><strong>11.2 Force Majeure.</strong> Neither Party shall be liable for any delay or failure
+                    to perform (excluding payment obligations) due to causes beyond its reasonable control,
+                    including acts of God, war, terrorism, riot, embargoes, acts of civil or military
+                    authorities, fire, floods, or accidents.</p>
+                <p><strong>11.3 Non-Solicitation.</strong> During the Term and for one (1) year thereafter,
+                    neither Party shall knowingly solicit for employment or hire any employee or contractor of
+                    the other Party who was directly involved in the provision of Services under this Agreement,
+                    without the prior written consent of the other Party. General solicitations not targeted at
+                    such persons shall not be a violation of this provision.</p>
+                <p><strong>11.4 Dispute Resolution.</strong><br>
+                    (a) <strong>Negotiation:</strong> The Parties agree to attempt to resolve any dispute
+                    arising out of this Agreement through good faith negotiation between senior executives.<br>
+                    (b) <strong>Arbitration:</strong> If negotiation fails within thirty (30) days, the dispute
+                    shall be predominantly resolved by binding arbitration administered by the American
+                    Arbitration Association (AAA) in accordance with its Commercial Arbitration Rules.<br>
+                    (c) <strong>Venue & Law:</strong> The seat of arbitration shall be <strong>Wilmington,
+                        Delaware</strong>. This Agreement shall be governed by the laws of the <strong>State of
+                        Delaware</strong>, without regard to its conflict of laws principles.<br>
+                    (d) <strong>No Jury Trial:</strong> EACH PARTY HEREBY WAIVES ANY RIGHT TO A JURY TRIAL IN
+                    CONNECTION WITH ANY DISPUTE ARISING OUT OF THIS AGREEMENT.</p>
+                <p><strong>11.5 Assignment.</strong> Neither Party may assign this Agreement without the prior
+                    written consent of the other Party, except that either Party may assign this Agreement to an
+                    Affiliate or in connection with a merger, acquisition, or sale of substantially all of its
+                    assets.</p>
+                <p><strong>11.6 Severability.</strong> If any provision of this Agreement is held to be invalid
+                    or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+                <p><strong>11.7 Entire Agreement.</strong> This Agreement, together with all SOWs and Exhibits,
+                    constitutes the entire agreement between the Parties regarding the subject matter hereof and
+                    supersedes all prior or contemporaneous agreements, understandings, and communications.</p>
+                <p><strong>11.8 Counterparts.</strong> This Agreement may be executed in counterparts, each of
+                    which shall be deemed an original, but all of which together shall constitute one and the
+                    same instrument. Electronic signatures shall be deemed original signatures.</p>
+
+                <div class="deco-line" style="margin: 30px 0;"></div>
+
+                <div class="signature-section" style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px;">
+                    <h4 style="color: var(--color-gold);">Execute Agreement</h4>
+                    <p style="font-size: 0.8rem; margin-bottom: 20px;">By signing below, you acknowledge reading
+                        and accepting the full terms of this Agreement, the SOW, and the Cost Proposal.</p>
+
+                    <div style="margin: 20px 0;">
+                        <input type="checkbox" id="agree-check" style="margin-right: 10px;">
+                        <label for="agree-check" style="font-size: 0.8rem; color: #ccc;">
+                            I accept the terms of the Master Services Agreement (MSA-2025-111-FW).
+                        </label>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 0.7rem; margin-bottom: 8px;">DIGITAL SIGNATURE</p>
+                        <canvas id="sig-canvas" width="400" height="150"
+                            style="border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); cursor: crosshair;"></canvas>
+                        <br>
+                        <button onclick="clearSig()"
+                            style="font-size: 0.7rem; color: #aaa; background: none; border: none; cursor: pointer; text-decoration: underline;">Clear</button>
+                    </div>
+
+                    <div id="payment-section" style="opacity: 0.5; pointer-events: none; transition: all 0.3s ease;">
+                        <button id="sign-btn" class="btn-gold"
+                            style="width: 100%; padding: 16px; background: var(--color-gold); border: none; border-radius: 4px; font-family: 'Cinzel', serif; font-weight: 700; cursor: pointer;"
+                            onclick="simulatePay()">
+                            Sign & Execute Contract
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 FinalWishes Inc. All rights reserved. | Document Version 4.0.0</p>
+        </footer>
     </main>
 
     <script>

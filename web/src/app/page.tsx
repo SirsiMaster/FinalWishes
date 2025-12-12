@@ -67,7 +67,7 @@ export default function Home() {
               The 500-Hour <span className="text-gold">Problem</span>
             </h2>
             <p className="font-tenor text-white/70 leading-relaxed mb-6">
-              Probate courts, lost passwords, and endless paperwork. While you should be grieving, you're fighting bureaucracy.
+              Probate courts, lost passwords, and endless paperwork. While you should be grieving, you&apos;re fighting bureaucracy.
             </p>
             <p className="font-tenor text-white/70 leading-relaxed mb-8">
               FinalWishes acts as your <span className="text-gold">Digital Executor</span>, securing assets and automating the transfer of wealth.

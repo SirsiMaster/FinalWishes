@@ -7,44 +7,39 @@ This document clarifies the purpose and authority of each document in the FinalW
 
 ## Document Hierarchy
 
-### Tier 1: Canonical Sources of Truth
-These documents are authoritative. When conflicts exist, these win.
+### Tier 1: Canonical Sources of Truth (The 28 Benchmark Files)
+These files are the absolute authority. All project progress is measured against them.
 
-| Document | Purpose | Authority Over |
-|----------|---------|----------------|
-| `WARP.md` | Development governance rules | All development decisions |
-| `docs/ADR-*.md` | Architecture decisions (immutable) | Technology choices |
-| `firestore.rules` | Security rules (deployed) | Data access |
-| `firestore.indexes.json` | Database indexes (deployed) | Query optimization |
-
-### Tier 2: Requirements & Specifications
-These define WHAT we build. Changes require explicit approval.
-
-| Document | Purpose | Do NOT Duplicate In |
-|----------|---------|---------------------|
-| `docs/REQUIREMENTS_SPECIFICATION.md` | Functional requirements (FR-XXX) | SOW, ARCHITECTURE_DESIGN |
-| `docs/USER_STORIES.md` | User stories and personas | Anywhere else |
-| `docs/DATA_MODEL.md` | Firestore/SQL schemas | TECHNICAL_DESIGN |
-| `docs/API_SPECIFICATION.md` | API contracts (OpenAPI) | TECHNICAL_DESIGN |
-
-### Tier 3: Architecture & Design
-These describe HOW we build. Reference Tier 2 instead of copying.
-
-| Document | Purpose | References |
-|----------|---------|------------|
-| `docs/ARCHITECTURE_DESIGN.md` | High-level system design | ADRs, DATA_MODEL |
-| `docs/TECHNICAL_DESIGN.md` | Implementation details | DATA_MODEL, API_SPEC |
-| `docs/ADR-002-EXTERNAL-INTEGRATION-STRATEGY.md` | Integration ecosystem | None (self-contained) |
-
-### Tier 4: Business & Proposals
-These are client-facing. Should reference Tier 1-3 for technical details.
-
-| Document | Purpose | Keep Unique |
-|----------|---------|-------------|
-| `proposals/SOW.md` | Statement of Work | Timeline, milestones, payment terms |
-| `proposals/COST_PROPOSAL.md` | Pricing and justifications | Budget breakdown, technology justifications |
-| `docs/PROJECT_SCOPE.md` | Scope summary | Phase definitions |
-| `docs/MARKET_JUSTIFICATION.md` | Business case | Market analysis only |
+| ID | Document | Purpose & Authority |
+|----|----------|---------------------|
+| **1** | `proposals/CONTRACT.md` | **The Master Agreement.** Legally binding terms. |
+| **2** | `proposals/SOW.md` | **Statement of Work.** Scope, timeline, and deliverables. |
+| **3** | `proposals/COST_PROPOSAL.md` | **Financial Truth.** Budget, value, and breakdowns. |
+| **4** | `GEMINI.md` | **Agent Directive.** Operational rules for AI agents. |
+| **5** | `docs/PROJECT_SCOPE.md` | **Scope Definition.** In/Out boundaries for MVP. |
+| **6** | `docs/PROJECT_MANAGEMENT.md` | **Execution Plan.** Roles, sprints, and governance. |
+| **7** | `docs/ARCHITECTURE_DESIGN.md` | **System Core.** High-level architectural blueprint. |
+| **8** | `docs/TECHNICAL_DESIGN.md` | **Implementation.** Detailed technical specs. |
+| **9** | `docs/DATA_MODEL.md` | **Data Truth.** Database schemas and relationships. |
+| **10** | `docs/API_SPECIFICATION.md` | **Interface Contracts.** API endpoints and behavior. |
+| **11** | `docs/SECURITY_COMPLIANCE.md` | **Security Posture.** SOC 2, HIPAA, and encryption rules. |
+| **12** | `docs/RISK_MANAGEMENT.md` | **Risk Logic.** Identified risks and mitigations. |
+| **13** | `docs/QA_PLAN.md` | **Quality Gate.** Testing strategies and acceptance criteria. |
+| **14** | `docs/REQUIREMENTS_SPECIFICATION.md` | **Functional Spec.** Detailed feature requirements. |
+| **15** | `docs/USER_STORIES.md` | **User Truth.** Personas and user journeys. |
+| **16** | `docs/MARKET_JUSTIFICATION.md` | **Business Case.** Market size and competitive analysis. |
+| **17** | `docs/DEPLOYMENT_GUIDE.md` | **Release Manual.** Deployment and rollback procedures. |
+| **18** | `docs/MAINTENANCE_SUPPORT.md` | **Ops Manual.** Ongoing support and SLAs. |
+| **19** | `docs/CHANGE_MANAGEMENT.md` | **Change Control.** Process for scope/timeline changes. |
+| **20** | `docs/COMMUNICATION_PLAN.md` | **Comms Strategy.** Stakeholder updates and matrix. |
+| **21** | `docs/TEST_PLAN.md` | **Test Strategy.** Unit, integration, and E2E plans. |
+| **22** | `docs/TRAINING_DOCUMENTATION.md` | **Enablement.** Training materials for end-users. |
+| **23** | `docs/ADR-001-ARCHITECTURE-DECISIONS.md` | **Tech Decisions.** Immutable record of architecture choices. |
+| **24** | `docs/ADR-002-IMPLEMENTATION-PLAN.md` | **Implementation Logic.** Specific plan for execution. |
+| **25** | `docs/POST_IMPLEMENTATION_REVIEW.md` | **Review Logic.** Success criteria and retrospective format. |
+| **26** | `docs/ADR-INDEX.md` | **Index.** Master list of all ADRs. |
+| **27** | `docs/DOCUMENTATION_INDEX.md` | **Index.** This file. Master map of documentation. |
+| **28** | `docs/ADR-TEMPLATE.md` | **Template.** Standard format for new decisions. |
 
 ---
 

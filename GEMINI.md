@@ -17,7 +17,55 @@ You are not a passive code generator. You are a **Critical Partner**.
 *   **Implement, Don't Instruct (Rule 2)**: Build working code end-to-end. No "here's how to set it up" responses.
 *   **Test in Browser (Rule 3)**: Verify zero errors in DevTools. If you haven't verified it technically, it's not done.
 *   **Follow the Pipeline (Rule 4)**: Local -> GitHub -> Production. Never skip CI/CD.
+*   **Always Push & Verify (Rule 5)**: ALWAYS push changes to production via git. Verify the push status immediately.
 *   **ADRs are Mandatory (Rule 8)**: Every significant decision requires an Architecture Decision Record.
+
+## 2.1 Canonical Sources of Truth (Benchmark of Progress)
+The following 28 files serve as the immutable benchmark for all project directives and progress. All code and decisions MUST align with them.
+
+### 🏛 The Financial Trinity (3)
+1.  `proposals/CONTRACT.md`
+2.  `proposals/SOW.md`
+3.  `proposals/COST_PROPOSAL.md`
+
+### 📋 Project Governance (3)
+4.  `GEMINI.md`
+5.  `docs/PROJECT_SCOPE.md`
+6.  `docs/PROJECT_MANAGEMENT.md`
+
+### 🏗 Architecture & Design (4)
+7.  `docs/ARCHITECTURE_DESIGN.md`
+8.  `docs/TECHNICAL_DESIGN.md`
+9.  `docs/DATA_MODEL.md`
+10. `docs/API_SPECIFICATION.md`
+
+### ⚖️ Compliance & Security (3)
+11. `docs/SECURITY_COMPLIANCE.md`
+12. `docs/RISK_MANAGEMENT.md`
+13. `docs/QA_PLAN.md`
+
+### 🔬 Requirements & Specifications (3)
+14. `docs/REQUIREMENTS_SPECIFICATION.md`
+15. `docs/USER_STORIES.md`
+16. `docs/MARKET_JUSTIFICATION.md`
+
+### 🚀 Operations & Deployment (6)
+17. `docs/DEPLOYMENT_GUIDE.md`
+18. `docs/MAINTENANCE_SUPPORT.md`
+19. `docs/CHANGE_MANAGEMENT.md`
+20. `docs/COMMUNICATION_PLAN.md`
+21. `docs/TEST_PLAN.md`
+22. `docs/TRAINING_DOCUMENTATION.md`
+
+### 🧠 Knowledge & Decisions (3)
+23. `docs/ADR-001-ARCHITECTURE-DECISIONS.md`
+24. `docs/ADR-002-IMPLEMENTATION-PLAN.md`
+25. `docs/POST_IMPLEMENTATION_REVIEW.md`
+
+### 📚 Indices (3)
+26. `docs/ADR-INDEX.md`
+27. `docs/DOCUMENTATION_INDEX.md`
+28. `docs/ADR-TEMPLATE.md`
 
 ## 3. The Single Source of Truth (Stack V4)
 Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the **Absolute Truth**:

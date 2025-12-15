@@ -1,7 +1,7 @@
 # Project Scope Document
 ## FinalWishes - The Estate Operating System
 **Version:** 4.0.0
-**Date:** December 11, 2025
+**Date:** December 12, 2025
 **Project Duration:** 5 Months (20 Weeks)
 
 ---
@@ -10,9 +10,9 @@
 
 FinalWishes is an AI-powered estate management platform that automates end-of-life administration. This document defines the scope, deliverables, and boundaries for the 5-month development sprint.
 
-**Core Mission:** Shepherd users through every step of the estate settlement journey—whether manual or automated. Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
+**Core Mission:** Shepherd users through the ENTIRE estate journey—from "Living Legacy" planning to post-death administration. We serve two distinct but linked personas: the **Principal** (Who plans and preserves) and the **Executor** (Who administers and settles).
 
-**Goal:** Transform estate settlement from an 18-month bureaucratic nightmare into a streamlined, technology-assisted process.
+**Goal:** Transform estate settlement from a bureaucratic nightmare into a streamlined, technology-assisted process, while preserving the human legacy of the departed.
 
 ### Geographic Scope: 5 Launch States
 
@@ -21,31 +21,20 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 | **E-Filing Available** | Maryland (MDEC), Illinois, Minnesota (MNCIS) | Integrate with existing APIs |
 | **Deferred to v1.1** | DC, Virginia | Scope reduced for v1.0 launch |
 
-**Innovation Strategy:** For DC and Virginia, where court systems lack digital interfaces, FinalWishes will ingest the paper process and forms, automate form completion, and provide fillable/completed forms as currently required. This positions us as first movers and the benchmark for eventual state digitization.
-
 ---
 
 ## 2. Project Objectives
 
 ### 2.1 Primary Objectives
-1. Deliver functional web application (React) and native mobile apps (React Native)
-2. Establish secure, scalable GCP infrastructure (Cloud Run, Firestore, Cloud SQL)
-3. Implement state-specific probate guidance for 5 launch states (MD, IL, MN, DC, VA)
-4. Build court system connectors for states without e-filing (DC, VA)
-5. Achieve SOC 2 readiness (Type I certification process initiated)
-6. Build LLM-powered process intelligence (Vertex AI with Gemini 3.0)
-7. Integrate full suite of external services (Plaid, Lob, DocuSeal)
+1. **Universal App Strategy:** Build "Mobile First" via React Native (Web + iOS + Android).
+2. **Dual-Path Workflow:** Support "Living Legacy" (Pre-Death) and "Transitional Executor" (Post-Death) flows.
+3. **Secure Infrastructure:** Establish SOC 2-ready GCP infrastructure (Cloud Run, Firestore, KMS).
+4. **Legacy Preservation:** Implement multimedia memory walls and memoir storage.
+5. **Estate Administration:** Automate probate guidance for launch states.
+6. **Design Excellence:** "Light Royal Neo-Deco" design system for premium user experience.
 
 ### 2.2 Success Metrics
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| On-time delivery | 100% of features | Sprint completion |
-| Native apps | iOS + Android in stores | App Store approval |
-| Uptime | 99.9% | Post-launch week 1 |
-| State coverage | 3 states with full templates | Content audit |
-| User registration flow | <3 minutes | UX testing |
-| Document upload speed | <30 seconds (50MB) | Performance testing |
-| Security audit | Zero critical findings | Penetration test |
+(unchanged)
 
 ---
 
@@ -53,7 +42,14 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 
 ### 3.1 In-Scope Features
 
-#### Phase 1: Foundation (Weeks 1-4)
+#### Phase 0: Design & Identity (Weeks 1-4)
+**Graphic Design & UX**
+- Brand Identity (Logo, Typography, Palette)
+- High-fidelity UI Kit (Mobile & Web)
+- "Light Royal Neo-Deco" Design System implementation
+- Iconography and Asset production
+
+#### Phase 1: Foundation & Vault (Weeks 1-5)
 **Backend Infrastructure**
 - Go API on Cloud Run
 - Firestore database with security rules
@@ -63,86 +59,37 @@ FinalWishes is an AI-powered estate management platform that automates end-of-li
 - CI/CD pipeline (GitHub Actions → Cloud Run + Firebase)
 
 **Authentication & User Management**
+- Dual Persona Support (Principal / Executor)
 - Email/password registration
 - OAuth (Google, Apple Sign-In)
 - Multi-factor authentication (TOTP)
 - Role-based access control (Principal, Executor, Heir)
-- Password reset flow
 
-**Core Data Models**
-- Users and profiles
-- Estates and ownership
-- Assets (5 categories)
-- Documents and vault
-- Beneficiary designations
-
-#### Phase 2: Core Features (Weeks 5-8)
-**Estate Profile**
-- Asset inventory management (CRUD)
-- Document vault with folder organization
-- Beneficiary designation interface
-- Estate dashboard with progress indicators
-
-**Intake Phase**
-- Document upload and storage
-- Basic OCR extraction (AWS Textract)
-- Manual asset entry forms
-- Contact management
-
-**Verify Phase**
-- Death certificate upload
+#### Phase 2: Core Logic & "The Shepherd" (Weeks 6-10)
+**Verification & Logic**
+- Death certificate upload & verification
 - Executor notification flow
-- Multi-executor confirmation (2-of-3)
-- 72-hour cooling-off implementation
-
-**Notify Phase**
-- Institution templates for 5 launch states (MD, IL, MN, DC, VA)
-- State-specific probate guidance and requirements
+- State-specific probate guidance (MD, IL, MN)
 - Letter generation (PDF)
-- Certified mail integration (Lob)
-- Full tracking (sent/pending/delivered/returned)
 
-#### Phase 3: Vault & Security (Weeks 9-12)
-**Document Vault**
-- Client-side AES-256-GCM encryption
-- Cloud KMS key management integration
-- Document upload/download with encryption
-- Folder organization
+**Legacy Features (The "Living" Pivot)**
+- **Memoirs:** Rich text editor for personal stories.
+- **Memory Wall:** Multimedia gallery (Photos, Videos, Music lists).
+- **Heir Naming:** Designation of beneficiaries (Data only, no Will Gen).
+- **Asset Distribution:** Wishlist style assignment of assets to heirs.
 
-**Notifications**
-- Institution letter generation
-- 5-state templates
-- Certified mail via Lob integration
-- Full tracking system
-
-**External Integrations**
-- Plaid (bank account discovery and verification)
-- Lob (certified mail)
-- DocuSign (replaced by self-hosted DocuSeal)
-
-**Court System Connectors**
-- MDEC integration (Maryland e-filing)
-- Illinois e-filing integration
-- MNCIS integration (Minnesota e-filing)
-- DC connector (deferred to v1.1)
-- Virginia connector (deferred to v1.1)
-
-#### Phase 4: Mobile Apps (Weeks 13-16)
+#### Phase 3: Universal App & Integrations (Weeks 11-16)
 **React Native Development**
-- Expo project setup
-- Shared logic from web (60-70%)
-- Native biometrics (Face ID, Touch ID)
-- Push notifications (FCM)
-- Document camera capture
-- TestFlight + Play Console beta
+- **Universal Codebase:** 70% shared code between Web/iOS/Android.
+- **Native Features:** Biometrics, Camera, Offline Sync.
+- **Integrations:** Plaid (Assets), Lob (Mail), DocuSeal (E-Sign).
 
-#### Phase 5: Launch Prep (Weeks 17-20)
+#### Phase 4: Launch Prep (Weeks 17-20)
 **Testing & Security**
-- Security penetration testing
-- Load testing
-- State-specific content validation (3 states)
-- Legal form review by state-specific attorneys (~45 forms)
-- Documentation finalization
+- **Mini-Penetration Test** (External security audit).
+- Load testing.
+- State-specific content validation.
+- App Store + Play Store submission.
 
 **Launch**
 - App Store + Play Store submission

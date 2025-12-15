@@ -9,8 +9,8 @@ on:
       - main
 
 env:
-  NODE_VERSION: '20.x'
-  GO_VERSION: '1.21'
+  NODE_VERSION: '22.x'
+  GO_VERSION: '1.24'
 
 jobs:
   # ===========================================
@@ -92,7 +92,7 @@ jobs:
         run: go mod download
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v6
         with:
           version: latest
           working-directory: api

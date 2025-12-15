@@ -804,6 +804,7 @@ The competitive moat is:
 | 2.0.0 | 2025-12-05 | Claude | Updated integration strategy |
 | 3.0.0 | 2025-12-11 | FinalWishes Team | Implementation Plan: OpenSign, Gemini 2.0, 3-State Scope |
 | **4.0.0** | **2025-12-11** | **FinalWishes Team** | **Refinement: Gemini 3.0 & DocuSeal (PostgreSQL)** |
+| 5.0.0 | Future | FinalWishes Team | **Roadmap Expansion**: Fundraising, Family Tree, Money Tracking, Digital Vault |
 
 ---
 

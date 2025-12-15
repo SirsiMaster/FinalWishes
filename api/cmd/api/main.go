@@ -50,7 +50,7 @@ func main() {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("MyShepherd API is running"))
+		_, _ = w.Write([]byte("FinalWishes API is running"))
 	})
 
 	// API routes will be added here
@@ -85,7 +85,7 @@ func main() {
 
 	// Start server in goroutine
 	go func() {
-		log.Info().Str("port", port).Msg("Starting MyShepherd API server")
+		log.Info().Str("port", port).Msg("Starting FinalWishes API server")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal().Err(err).Msg("Server failed to start")
 		}

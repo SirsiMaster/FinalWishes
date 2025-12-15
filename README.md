@@ -1,9 +1,9 @@
-# MyShepherd
+# FinalWishes (built by Sirsi Technologies)
 
 **The Estate Operating System** — Shepherd users through every step of the estate settlement journey.
 
 ## Overview
-MyShepherd transforms the chaotic 18-month estate settlement process into a streamlined, technology-assisted journey. Whether manual or automated, we guide executors and heirs through every step.
+FinalWishes transforms the chaotic 18-month estate settlement process into a streamlined, technology-assisted journey. Whether manual or automated, we guide executors and heirs through every step.
 
 **Core Mission:** Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
@@ -42,4 +42,4 @@ cd api && go run cmd/api/main.go
 - Security: `docs/SECURITY_COMPLIANCE.md`
 
 ## License
-© 2025 MyShepherd Inc. All rights reserved.
+© 2025 FinalWishes Inc. All rights reserved.

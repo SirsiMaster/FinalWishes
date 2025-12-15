@@ -3,7 +3,7 @@
 **This Master Services Agreement ("Agreement") is entered into as of **December 11, 2025** (the "Effective Date") by and between:
 
 - **FinalWishes Inc.**, a Delaware corporation, with its principal place of business at [Address] ("Client"); and
-- **111 Venture Studio**, a Delaware limited liability company, with its principal place of business at [Address] ("Provider").
+- **Sirsi Technologies**, a Delaware limited liability company, with its principal place of business at [Address] ("Provider").
 
 Client and Provider may be referred to individually as a "Party" and collectively as the "Parties".
 
@@ -11,7 +11,7 @@ Client and Provider may be referred to individually as a "Party" and collectivel
 
 ## 1. RECITALS
 
-**WHEREAS**, Client desires to engage Provider to design, develop, and implement a comprehensive estate settlement software platform known as **FinalWishes / MyShepherd** (the "Platform");
+**WHEREAS**, Client desires to engage Provider to design, develop, and implement a comprehensive estate settlement software platform known as **FinalWishes** (the "Platform");
 
 **WHEREAS**, Provider possesses the requisite technical expertise, personnel, and infrastructure, including expertise in artificial intelligence, cloud architecture, and secure software development, to perform the Services;
 

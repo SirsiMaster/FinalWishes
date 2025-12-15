@@ -1,4 +1,4 @@
-name: MyShepherd CI/CD Pipeline
+name: FinalWishes CI/CD Pipeline (Sirsi)
 
 on:
   push:

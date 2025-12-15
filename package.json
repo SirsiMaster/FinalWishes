@@ -1,7 +1,7 @@
 {
-  "name": "myshepherd",
+  "name": "finalwishes",
   "version": "1.0.0",
-  "description": "MyShepherd - The Estate Operating System. Shepherd users through every step of the estate settlement journey.",
+  "description": "FinalWishes - The Estate Operating System. Built by Sirsi Technologies.",
   "main": "index.js",
   "directories": {
     "doc": "docs"

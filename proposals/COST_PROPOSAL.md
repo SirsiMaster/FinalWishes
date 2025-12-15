@@ -1,6 +1,6 @@
 # Cost Proposal & ROI Analysis
 
-**Project:** MyShepherd / FinalWishes Estate Operating System
+**Project:** FinalWishes Estate Operating System
 **Client:** FinalWishes Inc.
 **Date:** December 11, 2025
 **Total Budget:** $175,000 (Fixed Bid)
@@ -20,7 +20,7 @@ This proposal offers a transparent, atomic breakdown of the investment required 
 
 ## 2. Comparative Market Analysis
 
-Why build with 111 Venture Studio vs. alternatives?
+Why build with Sirsi Technologies vs. alternatives?
 
 | Metric | **FinalWishes (111 VS)** | **"Big Law" Custom Tech** | **Typical Dev Agency** |
 | :--- | :--- | :--- | :--- |

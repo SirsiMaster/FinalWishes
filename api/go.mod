@@ -1,4 +1,4 @@
-module github.com/myshepherd/api
+module github.com/sirsi-technologies/finalwishes-api
 
 go 1.21
 

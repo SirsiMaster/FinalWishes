@@ -1,6 +1,6 @@
 # Statement of Work (SOW)
 
-**Project Name:** MyShepherd Platform Development  
+**Project Name:** FinalWishes Platform Development
 **SOW Reference:** SOW-2025-001  
 **Associated MSA:** MSA-2025-111-FW  
 **Date:** December 11, 2025  
@@ -9,7 +9,7 @@
 
 ## 1. Executive Overview
 
-This Statement of Work ("SOW") defines the comprehensive scope for the **MyShepherd / FinalWishes Estate Operating System**. This project aims to digitize and automate the estate settlement process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where electronic filing or substantial digitization is possible.
+This Statement of Work ("SOW") defines the comprehensive scope for the **FinalWishes Estate Operating System**. This project aims to digitize and automate the estate settlement process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where electronic filing or substantial digitization is possible.
 
 **Objective:** deliver a "Vault-Grade" secure platform that guides users through the 18+ month probate process, automating form generation, asset discovery, and stakeholder communication.
 
@@ -70,7 +70,7 @@ Provider shall build a logic engine ("The Shepherd") that:
 *   **1.3 Auth:** Firebase Auth + MFA + Custom Claims.
 *   **1.4 Schema:** Design Relational (Heirs) vs Document (Metadata) schemas.
 *   **1.5 Vault:** Implement AES-256 crypto service and Signed URL logic.
-*   **1.6 Web:** React + Vite + "Royal Neo-Deco" Design System.
+*   **1.6 Web:** React + Vite + "Light Royal Neo-Deco" Design System.
 *   **1.7 E-Sign:** Deploy Self-Hosted DocuSeal.
 
 ### **PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)**

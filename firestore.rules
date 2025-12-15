@@ -4,7 +4,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // =============================================
-    // MyShepherd - The Estate Operating System
+    // FinalWishes - The Estate Operating System
     // Security Rules v2.0.0 - December 5, 2025
     // =============================================
     // 

@@ -21,7 +21,7 @@ Each ADR follows this structure:
 | ADR # | Title | Status | Date | Supersedes |
 |-------|-------|--------|------|------------|
 | [ADR-001](ADR-001-ARCHITECTURE-DECISIONS.md) | Platform Architecture Decisions | Accepted | 2025-12-05 | — |
-| [ADR-002](ADR-002-EXTERNAL-INTEGRATION-STRATEGY.md) | External Integration Strategy | **PROPOSED** | 2025-12-05 | — |
+| [ADR-002](ADR-002-IMPLEMENTATION-PLAN.md) | Implementation Plan: DocuSeal, Gemini & Scope | Accepted | 2025-12-11 | — |
 
 ## Categories
 

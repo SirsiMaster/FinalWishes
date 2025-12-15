@@ -290,4 +290,4 @@ The project is considered complete when:
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
 | 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |
-| **4.0.0** | **2025-12-11** | **MyShepherd Team** | **Launch Scope reduced to 3 states (MD, IL, MN); AI upgraded to Gemini 3.0; E-Signature switched to DocuSeal (self-hosted)** |
+| **4.0.0** | **2025-12-11** | **FinalWishes Team** | **Launch Scope reduced to 3 states (MD, IL, MN); AI upgraded to Gemini 3.0; E-Signature switched to DocuSeal (self-hosted)** |

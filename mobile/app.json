@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MyShepherd",
-    "slug": "myshepherd",
+    "name": "FinalWishes",
+    "slug": "finalwishes",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.myshepherd.app",
+      "bundleIdentifier": "com.sirsitechnologies.finalwishes",
       "buildNumber": "1"
     },
     "android": {
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f172a"
       },
-      "package": "com.myshepherd.app",
+      "package": "com.sirsitechnologies.finalwishes",
       "versionCode": 1
     },
     "web": {

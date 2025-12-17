@@ -9,9 +9,9 @@
  * @version 2.0.0
  */
 
-(function() {
+(function () {
     'use strict';
-    
+
     // Navigation configuration
     const navConfig = {
         main: [
@@ -24,6 +24,19 @@
                     <rect x="14" y="3" width="7" height="7"></rect>
                     <rect x="14" y="14" width="7" height="7"></rect>
                     <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>`
+            },
+            {
+                id: 'contracts',
+                label: 'Proposal & Contract',
+                href: '/admin/contracts.html',
+                badge: 'ACTION REQ',
+                icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>`
             },
             {
@@ -120,21 +133,30 @@
             }
         ]
     };
-    
+
     /**
      * Render the sidebar
      */
     function renderSidebar(activeItem = 'dashboard') {
         const root = document.getElementById('sidebar-root');
         if (!root) return;
-        
+
         // Get active item from data attribute if available
         activeItem = root.dataset.active || activeItem;
-        
-        // Determine base path (no longer needed - public is root)
-        const path = window.location.pathname;
+
+        // Determine base path for local development
         let basePath = '';
-        
+        if (window.location.protocol === 'file:') {
+            const path = window.location.pathname;
+            // Find the 'public' directory in the path to establish root
+            const publicIndex = path.indexOf('/public/');
+            if (publicIndex !== -1) {
+                // Base path is everything up to and including '/public'
+                // e.g. /Users/name/project/public
+                basePath = path.substring(0, publicIndex + 7); // +7 for '/public'
+            }
+        }
+
         // Generate nav items HTML
         const renderNavItem = (item) => {
             const isActive = item.id === activeItem;
@@ -147,14 +169,14 @@
                 </a>
             `;
         };
-        
+
         const renderSection = (title, items) => `
             <div class="nav-section">
                 <div class="nav-section-title">${title}</div>
                 ${items.map(renderNavItem).join('')}
             </div>
         `;
-        
+
         root.innerHTML = `
             <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
                 <div class="sidebar-header">
@@ -186,23 +208,23 @@
                 </div>
             </aside>
         `;
-        
+
         // Add footer styles
         addFooterStyles();
-        
+
         // Setup keyboard navigation
         setupKeyboardNav();
-        
+
         // Setup mobile toggle
         setupMobileToggle();
     }
-    
+
     /**
      * Add sidebar footer styles
      */
     function addFooterStyles() {
         if (document.getElementById('sidebar-footer-styles')) return;
-        
+
         const style = document.createElement('style');
         style.id = 'sidebar-footer-styles';
         style.textContent = `
@@ -280,19 +302,19 @@
         `;
         document.head.appendChild(style);
     }
-    
+
     /**
      * Setup keyboard navigation
      */
     function setupKeyboardNav() {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;
-        
+
         const navItems = sidebar.querySelectorAll('.nav-item');
-        
+
         navItems.forEach((item, index) => {
             item.setAttribute('tabindex', '0');
-            
+
             item.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowDown') {
                     e.preventDefault();
@@ -309,7 +331,7 @@
             });
         });
     }
-    
+
     /**
      * Setup mobile toggle
      */
@@ -330,15 +352,15 @@
             toggle.setAttribute('aria-label', 'Toggle navigation menu');
             document.body.appendChild(toggle);
         }
-        
+
         const sidebar = document.getElementById('sidebar');
-        
+
         toggle.addEventListener('click', () => {
             sidebar.classList.toggle('open');
             const isOpen = sidebar.classList.contains('open');
             toggle.setAttribute('aria-expanded', isOpen);
         });
-        
+
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 768) {
@@ -348,7 +370,7 @@
             }
         });
     }
-    
+
     /**
      * Update active nav item
      */
@@ -361,14 +383,14 @@
             }
         });
     }
-    
+
     // Initialize on DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => renderSidebar());
     } else {
         renderSidebar();
     }
-    
+
     // Expose API
     window.FinalWishesSidebar = {
         render: renderSidebar,

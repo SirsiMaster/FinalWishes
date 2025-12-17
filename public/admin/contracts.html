@@ -17,11 +17,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-    <!-- Design System: V6 Royal Alignment -->
+    <!-- Admin Layout Styles -->
+    <link rel="stylesheet" href="../assets/css/admin-layout.css">
+    <link rel="stylesheet" href="../finalwishes.css">
+    <link rel="stylesheet" href="../assets/css/theme.css">
+
+    <!-- Contract Specific Styles -->
     <style>
-        /* ROYAL NEO-DECO THEME */
-        :root {
-            /* Sidebar Compatibility Vars */
+        /* Override Admin Layout for Inner Content to maintain Premium Dark Theme */
+        .contract-immersive-wrapper {
+            /* ROYAL NEO-DECO THEME */
             --space-sm: 0.5rem;
             --space-md: 1rem;
             --space-lg: 2rem;
@@ -31,45 +36,47 @@
             --color-blue-navy: #0f172a;
             --color-white: #ffffff;
             --radius: 4px;
-        }
 
-        body {
-            /* EXACT Gradient from Legacy Siste */
             background-image: radial-gradient(circle at 50% 0%, rgb(37, 99, 235) 0%, rgb(30, 58, 138) 40%, rgb(15, 23, 42) 80%);
             background-color: rgb(15, 23, 42);
             color: rgba(255, 255, 255, 0.9);
             font-family: 'Inter', sans-serif;
-            min-height: 100vh;
+            flex: 1;
+            overflow-y: auto;
+            /* Scrollable content */
+            height: 100%;
             font-size: 18px;
             line-height: 1.6;
+            padding: 4rem 2rem;
         }
 
-        /* TYPOGRAPHY OVERRIDES */
-        h1,
-        h2,
-        h3,
-        h4,
-        .serif {
-            font-family: 'Cinzel', serif;
+        /* TYPOGRAPHY OVERRIDES WITHIN WRAPPER */
+        .contract-immersive-wrapper h1,
+        .contract-immersive-wrapper h2,
+        .contract-immersive-wrapper h3,
+        .contract-immersive-wrapper h4,
+        .contract-immersive-wrapper .serif {
+            font-family: 'Cinzel', serif !important;
+            color: white !important;
         }
 
-        .gold-text {
-            color: #C8A951;
+        .contract-immersive-wrapper .gold-text {
+            color: #C8A951 !important;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        h1 {
+        .contract-immersive-wrapper h1 {
             font-size: 3.5rem;
             letter-spacing: -0.02em;
         }
 
-        h2 {
+        .contract-immersive-wrapper h2 {
             font-size: 2.25rem;
             margin-bottom: 1.5rem;
-            color: #C8A951;
+            color: #C8A951 !important;
         }
 
-        h3 {
+        .contract-immersive-wrapper h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: white;
@@ -77,66 +84,13 @@
             padding-bottom: 0.5rem;
         }
 
-        p {
+        .contract-immersive-wrapper p {
             margin-bottom: 1.5rem;
             color: rgba(255, 255, 255, 0.85);
             font-size: 1.125rem;
         }
 
-        /* SIDEBAR FIXES - CRITICAL */
-        #sidebar-root {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 260px;
-            z-index: 50;
-            background: #1e3a8a;
-            /* Explicit background */
-        }
-
-        /* Force SVG Sizing in Sidebar */
-        #sidebar-root svg {
-            width: 20px !important;
-            height: 20px !important;
-            min-width: 20px;
-        }
-
-        /* Sidebar layout fixes */
-        .sidebar {
-            background: #1e3a8a !important;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .nav-item.active {
-            background: rgba(200, 169, 81, 0.2);
-            color: #C8A951;
-        }
-
-        .nav-icon {
-            margin-right: 12px;
-            display: flex;
-        }
-
-        /* LAYOUT CONTAINER */
-        .page-wrapper {
-            margin-left: 0;
-            padding: 4rem 6rem;
-            max-width: 100%;
-            width: 100%;
-        }
-
+        /* CARD STYLES */
         .main-card {
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(200, 169, 81, 0.3);
@@ -167,6 +121,10 @@
             letter-spacing: 0.05em;
             font-size: 1.125rem;
             cursor: pointer;
+            background: transparent;
+            border-top: none;
+            border-left: none;
+            border-right: none;
         }
 
         .tab-btn:hover {
@@ -204,11 +162,12 @@
         }
 
         /* SUB-COMPONENTS */
-        .stat-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .stat-card.contract-stat {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
             padding: 2rem;
             text-align: center;
+            box-shadow: none !important;
         }
 
         .plan-card {
@@ -224,7 +183,7 @@
             background: linear-gradient(135deg, rgba(200, 169, 81, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
         }
 
-        /* LEGAL TEXT VIEWER - Updated for Full Width Text */
+        /* LEGAL TEXT VIEWER */
         .legal-viewer {
             background: rgba(255, 255, 255, 0.95);
             color: #1e293b;
@@ -237,17 +196,19 @@
             box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        /* Ensure text in legal viewer is readable (Light mode paper) */
         .legal-viewer h2 {
-            color: #0f172a;
+            color: #0f172a !important;
             border-bottom: 2px solid #C8A951;
             padding-bottom: 1rem;
             font-size: 1.8rem;
             margin-top: 3rem;
+            font-family: 'Cinzel', serif !important;
         }
 
         .legal-viewer h3 {
-            color: #334155;
-            font-family: 'Cinzel', serif;
+            color: #334155 !important;
+            font-family: 'Cinzel', serif !important;
             font-size: 1.2rem;
             border-bottom: none;
             margin-top: 2.5rem;
@@ -256,7 +217,7 @@
 
         .legal-viewer p,
         .legal-viewer li {
-            color: #334155;
+            color: #334155 !important;
             font-size: 1.05rem;
             margin-bottom: 1.2rem;
         }
@@ -267,24 +228,16 @@
         }
 
         .legal-viewer table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2rem;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            color: #334155 !important;
         }
 
         .legal-viewer th {
+            color: #111827 !important;
             background: #f1f5f9;
-            text-align: left;
-            padding: 12px;
-            border-bottom: 2px solid #e2e8f0;
-            font-weight: 600;
         }
 
         .legal-viewer td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
+            color: #4b5563 !important;
         }
 
         /* CHECK LISTS */
@@ -306,757 +259,861 @@
 </head>
 
 <body>
+    <div class="admin-wrapper">
+        <!-- Sidebar Component -->
+        <div id="sidebar-root" data-active="proposal-contract"></div>
 
-    <!-- SIDEBAR ELIMINATED -->
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Component -->
+            <header id="universal-header-root" data-title="Proposal & Contract"
+                data-subtitle="FinalWishes • Strategic Partnership Agreement"
+                data-search-placeholder="Search contract terms..."></header>
 
-    <div class="page-wrapper">
+            <!-- Immersive Contract View -->
+            <div class="contract-immersive-wrapper">
 
-        <!-- HEADER -->
-        <div class="text-center mb-12 relative">
-            <a href="dashboard.html"
-                class="absolute left-0 top-0 text-blue-300 hover:text-white flex items-center gap-2 transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-                Back to Dashboard
-            </a>
-            <h1 class="gold-text mb-4">Technical Partnership Agreement</h1>
-            <p class="text-blue-200 uppercase tracking-[0.2em] font-medium">Prepared for Tameeka Lockhart • December 17,
-                2025</p>
-        </div>
+                <div class="text-center mb-12 relative">
+                    <a href="dashboard.html"
+                        class="absolute left-0 top-0 text-blue-300 hover:text-white flex items-center gap-2 transition-colors">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                        Back to Dashboard
+                    </a>
+                    <h1 class="gold-text mb-4">Technical Partnership Agreement</h1>
+                    <p class="text-blue-200 uppercase tracking-[0.2em] font-medium">Prepared for Tameeka Lockhart •
+                        December 17, 2025</p>
+                </div>
 
-        <div class="main-card">
+                <div class="main-card">
 
-            <!-- TABS -->
-            <div class="nav-tabs">
-                <button class="tab-btn active" onclick="switchTab('sow')">Statement of Work</button>
-                <button class="tab-btn" onclick="switchTab('cost')">Cost & Valuation</button>
-                <button class="tab-btn" onclick="switchTab('contract')">Master Agreement (MSA)</button>
-            </div>
+                    <!-- TABS -->
+                    <div class="nav-tabs">
+                        <button class="tab-btn active" onclick="switchTab('sow')">Statement of Work</button>
+                        <button class="tab-btn" onclick="switchTab('cost')">Cost & Valuation</button>
+                        <button class="tab-btn" onclick="switchTab('contract')">Master Agreement (MSA)</button>
+                    </div>
 
-            <!-- TAB 1: SOW (FULL LEGACY CONTENT) -->
-            <div id="sow" class="tab-content active text-blue-100">
-                <div class="grid grid-cols-12 gap-12">
-                    <div class="col-span-12">
-                        <!-- HEADER -->
-                        <div class="border-b border-white/10 pb-8 mb-8">
-                            <h2 class="text-white mb-2">Statement of Work (SOW)</h2>
-                            <div class="grid grid-cols-2 gap-4 text-sm font-mono text-blue-300">
-                                <div><strong>Project:</strong> FinalWishes Platform Development</div>
-                                <div><strong>Date:</strong> December 17, 2025</div>
-                                <div><strong>Ref:</strong> SOW-2025-001</div>
-                                <div><strong>MSA:</strong> MSA-2025-111-FW</div>
-                            </div>
-                        </div>
-
-                        <!-- 1. EXECUTIVE OVERVIEW -->
-                        <h2 class="text-[#C8A951] mt-8 mb-4">1. Executive Overview</h2>
-                        <p class="mb-6">This Statement of Work ("SOW") defines the comprehensive scope for the
-                            <strong>FinalWishes Estate Operating System</strong>. This project aims to digitize and
-                            automate the estate settlement process, focusing on "Launch States" (Maryland, Illinois,
-                            Minnesota) where electronic filing or substantial digitization is possible.
-                        </p>
-                        <div class="bg-blue-900/40 border-l-4 border-[#C8A951] p-4 mb-8">
-                            <p class="mb-0 text-white"><strong>Objective:</strong> deliver a "Vault-Grade" secure
-                                platform that guides users through the 18+ month probate process, automating form
-                                generation, asset discovery, and stakeholder communication.</p>
-                        </div>
-
-                        <!-- 2. DETAILED SCOPE -->
-                        <h2 class="text-[#C8A951] mt-12 mb-6">2. Detailed Scope of Services</h2>
-
-                        <!-- 2.1 -->
-                        <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.1 Core Vault &
-                            Data Architecture</h3>
-                        <p class="mb-4">Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong>
-                            architecture to ensure total data privacy.</p>
-                        <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
-                            <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL
-                                    (PostgreSQL)</strong> for structured PII (Encrypted) and <strong>Firestore</strong>
-                                for real-time document metadata.</li>
-                            <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with per-tenant
-                                isolation boundaries. All files encrypted at rest using <strong>Cloud KMS</strong>
-                                (AES-256).</li>
-                            <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong> controls,
-                                including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).</li>
-                        </ul>
-
-                        <!-- 2.2 -->
-                        <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.2 Document
-                            Inventory & Automation</h3>
-                        <p class="mb-4">Provider will build automation or manual guidance paths for the following
-                            specific document categories:</p>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                            <div>
-                                <h4 class="text-[#C8A951] font-bold mb-2">A. Identity & Vital Records</h4>
-                                <ul class="list-disc pl-5 text-sm text-blue-200">
-                                    <li><strong>Death Certificate:</strong> Manual upload/OCR processing.</li>
-                                    <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-[#C8A951] font-bold mb-2">C. Financial & Asset Documents</h4>
-                                <ul class="list-disc pl-5 text-sm text-blue-200">
-                                    <li><strong>Asset Discovery:</strong> Plaid integration (12,000+ institutions).</li>
-                                    <li><strong>Life Insurance:</strong> "Notice of Death" generation.</li>
-                                    <li><strong>Real Estate:</strong> Zillow/Redfin valuation integration.</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <h4 class="text-[#C8A951] font-bold mb-2">B. Probate Court Filings (Launch States)</h4>
-                        <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
-                            <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
-                                Odyssey).</li>
-                            <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County).</li>
-                            <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide e-filing
-                                system.</li>
-                            <li><em>Note: Where API filing is unavailable, the Platform will generate "Ready-to-Print"
-                                    PDF packages.</em></li>
-                        </ul>
-
-                        <!-- 2.3 -->
-                        <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.3 System
-                            Integrations</h3>
-                        <div class="overflow-x-auto mb-8">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="border-b border-white/20 text-[#C8A951]">
-                                        <th class="p-3">Service</th>
-                                        <th class="p-3">Purpose</th>
-                                        <th class="p-3">Integration Level</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-sm text-blue-200">
-                                    <tr class="border-b border-white/5 bg-white/5">
-                                        <td class="p-3 font-bold">Plaid</td>
-                                        <td class="p-3">Financial Account Linking</td>
-                                        <td class="p-3">Deep Integration (Transactions, Liabilities)</td>
-                                    </tr>
-                                    <tr class="border-b border-white/5">
-                                        <td class="p-3 font-bold">DocuSeal</td>
-                                        <td class="p-3">E-Signatures</td>
-                                        <td class="p-3">Self-Hosted (Full API)</td>
-                                    </tr>
-                                    <tr class="border-b border-white/5 bg-white/5">
-                                        <td class="p-3 font-bold">Lob</td>
-                                        <td class="p-3">Certified Mail / Physical Letters</td>
-                                        <td class="p-3">API Triggered (Tracking)</td>
-                                    </tr>
-                                    <tr class="border-b border-white/5">
-                                        <td class="p-3 font-bold">SendGrid</td>
-                                        <td class="p-3">Transactional Email</td>
-                                        <td class="p-3">API Triggered (Notifications)</td>
-                                    </tr>
-                                    <tr class="border-b border-white/5 bg-white/5">
-                                        <td class="p-3 font-bold">Vertex AI</td>
-                                        <td class="p-3">Process Guidance</td>
-                                        <td class="p-3">Context-Aware (RAG pipeline)</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- 2.4 -->
-                        <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.4 "The Shepherd"
-                            Guidance Engine</h3>
-                        <ul class="list-decimal pl-6 mb-8 text-blue-200 space-y-2">
-                            <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and MN.
-                            </li>
-                            <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the
-                                Executor.</li>
-                            <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines.</li>
-                            <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions.
-                            </li>
-                        </ul>
-
-                        <!-- 3. WBS -->
-                        <h2 class="text-[#C8A951] mt-12 mb-6">3. Work Breakdown Structure (WBS)</h2>
-
-                        <div class="space-y-6">
-                            <!-- PHASE 1 -->
-                            <div class="bg-white/5 p-6 rounded border border-[#C8A951]/30">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h4 class="text-white text-lg font-bold">PHASE 1: FOUNDATION & VAULT</h4>
-                                    <span
-                                        class="text-xs font-mono text-[#C8A951] border border-[#C8A951] px-2 py-1 rounded">WEEKS
-                                        1-4</span>
+                    <!-- TAB 1: SOW -->
+                    <div id="sow" class="tab-content active text-blue-100">
+                        <div class="grid grid-cols-12 gap-12">
+                            <div class="col-span-12">
+                                <!-- HEADER -->
+                                <div class="border-b border-white/10 pb-8 mb-8">
+                                    <h2 class="text-white mb-2">Statement of Work (SOW)</h2>
+                                    <div class="grid grid-cols-2 gap-4 text-sm font-mono text-blue-300">
+                                        <div><strong>Project:</strong> FinalWishes Platform Development</div>
+                                        <div><strong>Date:</strong> December 17, 2025</div>
+                                        <div><strong>Ref:</strong> SOW-2025-001</div>
+                                        <div><strong>MSA:</strong> MSA-2025-111-FW</div>
+                                    </div>
                                 </div>
-                                <ul
-                                    class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                    <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL,
-                                        Firestore, VPC.</li>
-                                    <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
-                                    <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
-                                    <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata).
+
+                                <!-- 1. EXECUTIVE OVERVIEW -->
+                                <h2 class="text-[#C8A951] mt-8 mb-4">1. Executive Overview</h2>
+                                <p class="mb-6">This Statement of Work ("SOW") defines the comprehensive scope for the
+                                    <strong>FinalWishes Estate Operating System</strong>. This project aims to digitize
+                                    and
+                                    automate the estate settlement process, focusing on "Launch States" (Maryland,
+                                    Illinois,
+                                    Minnesota) where electronic filing or substantial digitization is possible.
+                                </p>
+                                <div class="bg-blue-900/40 border-l-4 border-[#C8A951] p-4 mb-8">
+                                    <p class="mb-0 text-white"><strong>Objective:</strong> deliver a "Vault-Grade"
+                                        secure
+                                        platform that guides users through the 18+ month probate process, automating
+                                        form
+                                        generation, asset discovery, and stakeholder communication.</p>
+                                </div>
+
+                                <!-- 2. DETAILED SCOPE -->
+                                <h2 class="text-[#C8A951] mt-12 mb-6">2. Detailed Scope of Services</h2>
+
+                                <!-- 2.1 -->
+                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.1 Core
+                                    Vault &
+                                    Data Architecture</h3>
+                                <p class="mb-4">Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong>
+                                    architecture to ensure total data privacy.</p>
+                                <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
+                                    <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL
+                                            (PostgreSQL)</strong> for structured PII (Encrypted) and
+                                        <strong>Firestore</strong>
+                                        for real-time document metadata.
                                     </li>
-                                    <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service.</li>
-                                    <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design.</li>
-                                    <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
+                                    <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with
+                                        per-tenant
+                                        isolation boundaries. All files encrypted at rest using <strong>Cloud
+                                            KMS</strong>
+                                        (AES-256).</li>
+                                    <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong>
+                                        controls,
+                                        including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).
+                                    </li>
                                 </ul>
-                            </div>
 
-                            <!-- PHASE 2 -->
-                            <div class="bg-white/5 p-6 rounded border border-white/10">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h4 class="text-white text-lg font-bold">PHASE 2: CORE LOGIC & STATE ENGINES</h4>
-                                    <span
-                                        class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">WEEKS
-                                        5-10</span>
-                                </div>
-                                <ul
-                                    class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                    <li><strong>2.1 Asset Module:</strong> Plaid Link integration & overrides.</li>
-                                    <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules.</li>
-                                    <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
-                                    <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
-                                    <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
-                                    <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
-                                </ul>
-                            </div>
+                                <!-- 2.2 -->
+                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.2 Document
+                                    Inventory & Automation</h3>
+                                <p class="mb-4">Provider will build automation or manual guidance paths for the
+                                    following
+                                    specific document categories:</p>
 
-                            <!-- PHASE 3 -->
-                            <div class="bg-white/5 p-6 rounded border border-white/10">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h4 class="text-white text-lg font-bold">PHASE 3: MOBILE & DEEP INTEGRATIONS</h4>
-                                    <span
-                                        class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">WEEKS
-                                        11-16</span>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                    <div>
+                                        <h4 class="text-[#C8A951] font-bold mb-2">A. Identity & Vital Records</h4>
+                                        <ul class="list-disc pl-5 text-sm text-blue-200">
+                                            <li><strong>Death Certificate:</strong> Manual upload/OCR processing.</li>
+                                            <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-[#C8A951] font-bold mb-2">C. Financial & Asset Documents</h4>
+                                        <ul class="list-disc pl-5 text-sm text-blue-200">
+                                            <li><strong>Asset Discovery:</strong> Plaid integration (12,000+
+                                                institutions).</li>
+                                            <li><strong>Life Insurance:</strong> "Notice of Death" generation.</li>
+                                            <li><strong>Real Estate:</strong> Zillow/Redfin valuation integration.</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <ul
-                                    class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                    <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
-                                    <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
-                                    <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.</li>
-                                    <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger.</li>
-                                    <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
-                                </ul>
-                            </div>
 
-                            <!-- PHASE 4 -->
-                            <div class="bg-white/5 p-6 rounded border border-white/10">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h4 class="text-white text-lg font-bold">PHASE 4: AUDIT, SECURITY & LAUNCH</h4>
-                                    <span
-                                        class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">WEEKS
-                                        17-20</span>
-                                </div>
-                                <ul
-                                    class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                    <li><strong>4.1 Pen Test:</strong> Third-party security audit.</li>
-                                    <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection.</li>
-                                    <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 users.</li>
-                                    <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
-                                    <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
+                                <h4 class="text-[#C8A951] font-bold mb-2">B. Probate Court Filings (Launch States)</h4>
+                                <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
+                                    <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
+                                        Odyssey).</li>
+                                    <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County).
+                                    </li>
+                                    <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide
+                                        e-filing
+                                        system.</li>
+                                    <li><em>Note: Where API filing is unavailable, the Platform will generate
+                                            "Ready-to-Print"
+                                            PDF packages.</em></li>
                                 </ul>
+
+                                <!-- 2.3 -->
+                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.3 System
+                                    Integrations</h3>
+                                <div class="overflow-x-auto mb-8">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-white/20 text-[#C8A951]">
+                                                <th class="p-3">Service</th>
+                                                <th class="p-3">Purpose</th>
+                                                <th class="p-3">Integration Level</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-sm text-blue-200">
+                                            <tr class="border-b border-white/5 bg-white/5">
+                                                <td class="p-3 font-bold">Plaid</td>
+                                                <td class="p-3">Financial Account Linking</td>
+                                                <td class="p-3">Deep Integration (Transactions, Liabilities)</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-3 font-bold">DocuSeal</td>
+                                                <td class="p-3">E-Signatures</td>
+                                                <td class="p-3">Self-Hosted (Full API)</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5 bg-white/5">
+                                                <td class="p-3 font-bold">Lob</td>
+                                                <td class="p-3">Certified Mail / Physical Letters</td>
+                                                <td class="p-3">API Triggered (Tracking)</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-3 font-bold">SendGrid</td>
+                                                <td class="p-3">Transactional Email</td>
+                                                <td class="p-3">API Triggered (Notifications)</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5 bg-white/5">
+                                                <td class="p-3 font-bold">Vertex AI</td>
+                                                <td class="p-3">Process Guidance</td>
+                                                <td class="p-3">Context-Aware (RAG pipeline)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- 2.4 -->
+                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.4 "The
+                                    Shepherd"
+                                    Guidance Engine</h3>
+                                <ul class="list-decimal pl-6 mb-8 text-blue-200 space-y-2">
+                                    <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL,
+                                        and MN.
+                                    </li>
+                                    <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for
+                                        the
+                                        Executor.</li>
+                                    <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines.
+                                    </li>
+                                    <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific
+                                        questions.
+                                    </li>
+                                </ul>
+
+                                <!-- 3. WBS -->
+                                <h2 class="text-[#C8A951] mt-12 mb-6">3. Work Breakdown Structure (WBS)</h2>
+
+                                <div class="space-y-6">
+                                    <!-- PHASE 1 -->
+                                    <div class="bg-white/5 p-6 rounded border border-[#C8A951]/30">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h4 class="text-white text-lg font-bold">PHASE 1: FOUNDATION & VAULT</h4>
+                                            <span
+                                                class="text-xs font-mono text-[#C8A951] border border-[#C8A951] px-2 py-1 rounded">WEEKS
+                                                1-4</span>
+                                        </div>
+                                        <ul
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL,
+                                                Firestore, VPC.</li>
+                                            <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
+                                            <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
+                                            <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document
+                                                (Metadata).
+                                            </li>
+                                            <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service.</li>
+                                            <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design.
+                                            </li>
+                                            <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- PHASE 2 -->
+                                    <div class="bg-white/5 p-6 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h4 class="text-white text-lg font-bold">PHASE 2: CORE LOGIC & STATE ENGINES
+                                            </h4>
+                                            <span
+                                                class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">WEEKS
+                                                5-10</span>
+                                        </div>
+                                        <ul
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong>2.1 Asset Module:</strong> Plaid Link integration & overrides.
+                                            </li>
+                                            <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules.
+                                            </li>
+                                            <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.
+                                            </li>
+                                            <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.
+                                            </li>
+                                            <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.
+                                            </li>
+                                            <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- PHASE 3 -->
+                                    <div class="bg-white/5 p-6 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h4 class="text-white text-lg font-bold">PHASE 3: MOBILE & DEEP INTEGRATIONS
+                                            </h4>
+                                            <span
+                                                class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">WEEKS
+                                                11-16</span>
+                                        </div>
+                                        <ul
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
+                                            <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
+                                            <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.
+                                            </li>
+                                            <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger.
+                                            </li>
+                                            <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- PHASE 4 -->
+                                    <div class="bg-white/5 p-6 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-4">
+                                            <h4 class="text-white text-lg font-bold">PHASE 4: AUDIT, SECURITY & LAUNCH
+                                            </h4>
+                                            <span
+                                                class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">WEEKS
+                                                17-20</span>
+                                        </div>
+                                        <ul
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong>4.1 Pen Test:</strong> Third-party security audit.</li>
+                                            <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection.</li>
+                                            <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 users.</li>
+                                            <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.
+                                            </li>
+                                            <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- 4. DELIVERABLES -->
+                                <h2 class="text-[#C8A951] mt-12 mb-6">4. Deliverables</h2>
+                                <div class="overflow-x-auto mb-12">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr class="border-b border-white/20 text-[#C8A951]">
+                                                <th class="p-3">Deliverable</th>
+                                                <th class="p-3">Description</th>
+                                                <th class="p-3">Format</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-sm text-blue-200">
+                                            <tr class="border-b border-white/5 bg-white/5">
+                                                <td class="p-3 font-bold">D1: The Vault</td>
+                                                <td class="p-3">Security core, Auth, Encrypted Storage</td>
+                                                <td class="p-3">Staging URL</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-3 font-bold">D2: State Engines</td>
+                                                <td class="p-3">Form generation for MD, IL, MN</td>
+                                                <td class="p-3">API + UI</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5 bg-white/5">
+                                                <td class="p-3 font-bold">D3: Mobile Apps</td>
+                                                <td class="p-3">iOS and Android binaries (TestFlight)</td>
+                                                <td class="p-3">.ipa / .apk</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-3 font-bold">D4: The Platform</td>
+                                                <td class="p-3">Production release, fully tested</td>
+                                                <td class="p-3">Live URL</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5 bg-white/5">
+                                                <td class="p-3 font-bold">D5: Documentation</td>
+                                                <td class="p-3">API Specs, Admin Guide, Compliance Pack</td>
+                                                <td class="p-3">PDF / Markdown</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 4. DELIVERABLES -->
-                        <h2 class="text-[#C8A951] mt-12 mb-6">4. Deliverables</h2>
-                        <div class="overflow-x-auto mb-12">
-                            <table class="w-full text-left border-collapse">
+                    <!-- TAB 2: COST -->
+                    <div id="cost" class="tab-content">
+                        <!-- TOP STATS -->
+                        <div class="grid grid-cols-4 gap-8 mb-16">
+                            <div class="stat-card contract-stat">
+                                <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">True Market Value
+                                </div>
+                                <div class="text-3xl text-slate-400 line-through decoration-red-500/50">$1.0M+</div>
+                            </div>
+                            <div
+                                class="stat-card contract-stat border-[#C8A951] bg-[#C8A951]/20 shadow-[0_0_15px_rgba(200,169,81,0.2)]">
+                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3">Fixed Bid Price</div>
+                                <div class="text-4xl font-bold text-white">$200,000</div>
+                            </div>
+                            <div class="stat-card contract-stat">
+                                <div class="text-xs text-emerald-400 uppercase tracking-widest mb-3">Sirsi Efficiency
+                                </div>
+                                <div class="text-3xl text-emerald-400">Included</div>
+                            </div>
+                            <div class="stat-card contract-stat">
+                                <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">Total Hours</div>
+                                <div class="text-3xl text-white">1,200+</div>
+                            </div>
+                        </div>
+                        <!-- VALUE WATERFALL -->
+                        <div class="col-span-12">
+                            <h2 class="text-center mb-8">The Path to $200k</h2>
+                            <div class="space-y-3 font-serif max-w-2xl mx-auto">
+                                <div
+                                    class="flex justify-between items-center text-slate-400 border-b border-white/5 pb-2">
+                                    <span>"Big Law" Custom Development</span><span>$1,000,000+</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center text-slate-400 border-b border-white/5 pb-2">
+                                    <span>Typical Agency Rate</span><span>$450,000</span>
+                                </div>
+                                <div class="flex justify-between items-center text-emerald-400">
+                                    <span><span>▼</span> SirsiNexus Accelerator</span><span>-$150,000</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center text-emerald-400 border-b border-white/10 pb-2">
+                                    <span><span>▼</span> Strategic Partnership</span><span>-$100,000</span>
+                                </div>
+                                <div class="flex justify-between items-center text-[#C8A951] text-2xl font-bold pt-4">
+                                    <span>Final Fixed Price</span><span>$200,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: CONTRACT -->
+                    <div id="contract" class="tab-content">
+                        <div class="legal-viewer mb-8 text-black" style="color: #0f172a;">
+                            <!-- MSA HEADER -->
+                            <div class="text-center mb-12 pb-12 border-b border-gray-200">
+                                <h2 class="text-4xl text-black mb-4 !border-none">MASTER SERVICES AGREEMENT</h2>
+                                <p class="text-gray-500">Global Effective Date: December 17, 2025</p>
+                            </div>
+
+                            <p>This Master Services Agreement ("Agreement") is entered into by and between
+                                <strong>Tameeka
+                                    Lockhart</strong> ("Client") and <strong>Sirsi Technologies</strong>, a Delaware
+                                Corporation
+                                ("Provider").
+                            </p>
+
+                            <h3>1. Services</h3>
+                            <p>Client engages Provider to design, develop, and launch the "FinalWishes" platform as
+                                described in
+                                Exhibit A. Total Value: <strong>$200,000.00 USD</strong>.</p>
+
+                            <hr class="my-12 border-gray-200">
+
+                            <!-- EXHIBIT A -->
+                            <h2 class="text-center mb-8 !text-2xl font-serif">Exhibit A: Statement of Work (SOW)</h2>
+
+                            <p><strong>Project Name:</strong> FinalWishes Platform Development<br>
+                                <strong>SOW Reference:</strong> SOW-2025-001<br>
+                                <strong>Date:</strong> December 17, 2025
+                            </p>
+
+                            <h3>1. Executive Overview</h3>
+                            <p>This Statement of Work ("SOW") defines the comprehensive scope for the
+                                <strong>FinalWishes Estate
+                                    Operating System</strong>. This project aims to digitize and automate the estate
+                                settlement
+                                process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where electronic
+                                filing or
+                                substantial digitization is possible.
+                            </p>
+                            <p><strong>Objective:</strong> deliver a "Vault-Grade" secure platform that guides users
+                                through the
+                                18+ month probate process, automating form generation, asset discovery, and stakeholder
+                                communication.</p>
+
+                            <h3>2. Detailed Scope of Services</h3>
+
+                            <p><strong>2.1 Core Vault & Data Architecture</strong></p>
+                            <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to
+                                ensure
+                                total data privacy.</p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL
+                                        (PostgreSQL)</strong> for structured PII (Encrypted) and
+                                    <strong>Firestore</strong> for
+                                    real-time document metadata.
+                                </li>
+                                <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with per-tenant
+                                    isolation boundaries. All files encrypted at rest using <strong>Cloud KMS</strong>
+                                    (AES-256).</li>
+                                <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong>
+                                    controls,
+                                    including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).</li>
+                            </ul>
+
+                            <p><strong>2.2 Document Inventory & Automation Scope</strong></p>
+                            <p>Provider will build automation or manual guidance paths for the following specific
+                                document
+                                categories:</p>
+
+                            <p><strong>A. Identity & Vital Records</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Death Certificate:</strong> Manual upload/OCR processing (No State API
+                                    exists).</li>
+                                <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
+                            </ul>
+
+                            <p><strong>B. Probate Court Filings (Launch States)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
+                                    Odyssey)
+                                    system. Template generation for Petition for Administration, Inventory, and
+                                    Accounts.</li>
+                                <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County) and
+                                    standard
+                                    circuit court forms.</li>
+                                <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide
+                                    e-filing
+                                    system.</li>
+                                <li><em>Note: Where API filing is unavailable, the Platform will generate
+                                        "Ready-to-Print" PDF
+                                        packages.</em></li>
+                            </ul>
+
+                            <p><strong>C. Financial & Asset Documents</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Asset Discovery:</strong> Integration of <strong>Plaid</strong> for
+                                    retrieving
+                                    balances, transactions, and liabilities from 12,000+ financial institutions.</li>
+                                <li><strong>Life Insurance/Retirement:</strong> Generation of standard "Notice of Death
+                                    & Claim"
+                                    letters for major carriers (MetLife, Prudential, etc.).</li>
+                                <li><strong>Real Estate:</strong> Manual inventory tracking with integration to
+                                    Zillow/Redfin
+                                    APIs for valuation estimates (where available).</li>
+                            </ul>
+
+                            <h3>2.3 System Integrations</h3>
+                            <p>Provider shall integrate the following third-party services to achieve automation:</p>
+                            <table class="w-full border-collapse border border-gray-300 mb-4">
                                 <thead>
-                                    <tr class="border-b border-white/20 text-[#C8A951]">
-                                        <th class="p-3">Deliverable</th>
-                                        <th class="p-3">Description</th>
-                                        <th class="p-3">Format</th>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 p-2 text-left">Service</th>
+                                        <th class="border border-gray-300 p-2 text-left">Purpose</th>
+                                        <th class="border border-gray-300 p-2 text-left">Integration Level</th>
                                     </tr>
                                 </thead>
-                                <tbody class="text-sm text-blue-200">
-                                    <tr class="border-b border-white/5 bg-white/5">
-                                        <td class="p-3 font-bold">D1: The Vault</td>
-                                        <td class="p-3">Security core, Auth, Encrypted Storage</td>
-                                        <td class="p-3">Staging URL</td>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Plaid</strong></td>
+                                        <td class="border border-gray-300 p-2">Financial Account Linking</td>
+                                        <td class="border border-gray-300 p-2"><strong>Deep Integration</strong>
+                                            (Transactions,
+                                            Liabilities, Investments)</td>
                                     </tr>
-                                    <tr class="border-b border-white/5">
-                                        <td class="p-3 font-bold">D2: State Engines</td>
-                                        <td class="p-3">Form generation for MD, IL, MN</td>
-                                        <td class="p-3">API + UI</td>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>DocuSeal</strong></td>
+                                        <td class="border border-gray-300 p-2">E-Signatures</td>
+                                        <td class="border border-gray-300 p-2"><strong>Self-Hosted</strong> (Full API,
+                                            embedded
+                                            signing)</td>
                                     </tr>
-                                    <tr class="border-b border-white/5 bg-white/5">
-                                        <td class="p-3 font-bold">D3: Mobile Apps</td>
-                                        <td class="p-3">iOS and Android binaries (TestFlight)</td>
-                                        <td class="p-3">.ipa / .apk</td>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Lob</strong></td>
+                                        <td class="border border-gray-300 p-2">Certified Mail / Physical Letters</td>
+                                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong> (Address
+                                            verification, tracking)</td>
                                     </tr>
-                                    <tr class="border-b border-white/5">
-                                        <td class="p-3 font-bold">D4: The Platform</td>
-                                        <td class="p-3">Production release, fully tested</td>
-                                        <td class="p-3">Live URL</td>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>SendGrid</strong></td>
+                                        <td class="border border-gray-300 p-2">Transactional Email</td>
+                                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong>
+                                            (Notifications,
+                                            summaries)</td>
                                     </tr>
-                                    <tr class="border-b border-white/5 bg-white/5">
-                                        <td class="p-3 font-bold">D5: Documentation</td>
-                                        <td class="p-3">API Specs, Admin Guide, Compliance Pack</td>
-                                        <td class="p-3">PDF / Markdown</td>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Google Document AI</strong></td>
+                                        <td class="border border-gray-300 p-2">OCR / Data Extraction</td>
+                                        <td class="border border-gray-300 p-2"><strong>API Integrated</strong>
+                                            (Receipts, Forms)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Vertex AI (Gemini)</strong></td>
+                                        <td class="border border-gray-300 p-2">Process Guidance</td>
+                                        <td class="border border-gray-300 p-2"><strong>Context-Aware</strong> (RAG
+                                            pipeline on
+                                            Probate Code)</td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
+                            <h3>2.4 "The Shepherd" Guidance Engine</h3>
+                            <p>Provider shall build a logic engine ("The Shepherd") that:</p>
+                            <ul class="list-decimal pl-5 mb-4">
+                                <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and
+                                    MN.</li>
+                                <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the
+                                    Executor.</li>
+                                <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines
+                                    (Inventory due
+                                    in 90 days, Taxes due in 9 mo).</li>
+                                <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions
+                                    (e.g.,
+                                    "Is this expense deductible in Maryland?").</li>
+                            </ul>
 
-            <!-- TAB 2: COST (DETAILED BREAKDOWN) -->
-            <div id="cost" class="tab-content">
-                <!-- TOP STATS -->
-                <div class="grid grid-cols-4 gap-8 mb-16">
-                    <div class="stat-card">
-                        <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">True Market Value</div>
-                        <div class="text-3xl text-slate-400 line-through decoration-red-500/50">$1.0M+</div>
-                    </div>
-                    <div class="stat-card border-[#C8A951] bg-[#C8A951]/20 shadow-[0_0_15px_rgba(200,169,81,0.2)]">
-                        <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3">Fixed Bid Price</div>
-                        <div class="text-4xl font-bold text-white">$200,000</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-xs text-emerald-400 uppercase tracking-widest mb-3">Sirsi Efficiency</div>
-                        <div class="text-3xl text-emerald-400">Included</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">Total Hours</div>
-                        <div class="text-3xl text-white">1,200+</div>
-                    </div>
-                </div>
-                <!-- VALUE WATERFALL -->
-                <div class="col-span-12">
-                    <h2 class="text-center mb-8">The Path to $200k</h2>
-                    <div class="space-y-3 font-serif max-w-2xl mx-auto">
-                        <div class="flex justify-between items-center text-slate-400 border-b border-white/5 pb-2">
-                            <span>"Big Law" Custom Development</span><span>$1,000,000+</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-400 border-b border-white/5 pb-2">
-                            <span>Typical Agency Rate</span><span>$450,000</span>
-                        </div>
-                        <div class="flex justify-between items-center text-emerald-400">
-                            <span><span>▼</span> SirsiNexus Accelerator</span><span>-$150,000</span>
-                        </div>
-                        <div class="flex justify-between items-center text-emerald-400 border-b border-white/10 pb-2">
-                            <span><span>▼</span> Strategic Partnership</span><span>-$100,000</span>
-                        </div>
-                        <div class="flex justify-between items-center text-[#C8A951] text-2xl font-bold pt-4">
-                            <span>Final Fixed Price</span><span>$200,000</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            <h3>3. Work Breakdown Structure (WBS)</h3>
 
-            <!-- TAB 3: CONTRACT (FULL VERBATIM TEX) -->
-            <div id="contract" class="tab-content">
-                <div class="legal-viewer mb-8 text-black" style="color: #0f172a;">
-                    <!-- MSA HEADER -->
-                    <div class="text-center mb-12 pb-12 border-b border-gray-200">
-                        <h2 class="text-4xl text-black mb-4 !border-none">MASTER SERVICES AGREEMENT</h2>
-                        <p class="text-gray-500">Global Effective Date: December 17, 2025</p>
-                    </div>
+                            <p><strong>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL, Firestore,
+                                    VPC,
+                                    Cloud Armor.</li>
+                                <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
+                                <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
+                                <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata)
+                                    schemas.</li>
+                                <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service and Signed URL logic.
+                                </li>
+                                <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design System.</li>
+                                <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
+                            </ul>
 
-                    <p>This Master Services Agreement ("Agreement") is entered into by and between <strong>Tameeka
-                            Lockhart</strong> ("Client") and <strong>Sirsi Technologies</strong>, a Delaware Corporation
-                        ("Provider").</p>
+                            <p><strong>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>2.1 Asset Module:</strong> Plaid Link integration & manual asset overrides.
+                                </li>
+                                <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules & forms.
+                                </li>
+                                <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
+                                <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
+                                <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
+                                <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
+                            </ul>
 
-                    <h3>1. Services</h3>
-                    <p>Client engages Provider to design, develop, and launch the "FinalWishes" platform as described in
-                        Exhibit A. Total Value: <strong>$200,000.00 USD</strong>.</p>
+                            <p><strong>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
+                                <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
+                                <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.</li>
+                                <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger logic.</li>
+                                <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
+                            </ul>
 
-                    <hr class="my-12 border-gray-200">
+                            <p><strong>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>4.1 Pen Test:</strong> Third-party security audit & remediation.</li>
+                                <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection (logging, access
+                                    controls).</li>
+                                <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 concurrent users.</li>
+                                <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
+                                <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
+                            </ul>
 
-                    <!-- EXHIBIT A: FULL SOW (VERBATIM FROM SOW.MD) -->
-                    <h2 class="text-center mb-8 !text-2xl font-serif">Exhibit A: Statement of Work (SOW)</h2>
+                            <hr class="my-12 border-gray-200">
 
-                    <p><strong>Project Name:</strong> FinalWishes Platform Development<br>
-                        <strong>SOW Reference:</strong> SOW-2025-001<br>
-                        <strong>Date:</strong> December 17, 2025
-                    </p>
+                            <!-- EXHIBIT B -->
+                            <h2 class="text-center mt-12 mb-8 !text-2xl font-serif">Exhibit B: Cost Proposal</h2>
 
-                    <h3>1. Executive Overview</h3>
-                    <p>This Statement of Work ("SOW") defines the comprehensive scope for the <strong>FinalWishes Estate
-                            Operating System</strong>. This project aims to digitize and automate the estate settlement
-                        process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where electronic filing or
-                        substantial digitization is possible.</p>
-                    <p><strong>Objective:</strong> deliver a "Vault-Grade" secure platform that guides users through the
-                        18+ month probate process, automating form generation, asset discovery, and stakeholder
-                        communication.</p>
+                            <h3>1. Executive Summary</h3>
+                            <p>This proposal offers a transparent, atomic breakdown of the investment required to build
+                                the
+                                "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or "billable
+                                hour" law
+                                firm models, we provide a fixed-price engineering partnership.</p>
+                            <p><strong>The Bottom Line:</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Your Investment:</strong> $200,000 (Fixed)</li>
+                                <li><strong>Time to Market:</strong> 5 Months (20 Weeks)</li>
+                                <li><strong>Output:</strong> Fully secure, SOC 2-ready platform launching in MD, IL, and
+                                    MN.
+                                </li>
+                            </ul>
 
-                    <h3>2. Detailed Scope of Services</h3>
+                            <h3>2. Comparative Market Analysis</h3>
+                            <p>Why build with Sirsi Technologies vs. alternatives?</p>
+                            <table class="w-full border-collapse border border-gray-300 mb-4">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 p-2 text-left">Metric</th>
+                                        <th class="border border-gray-300 p-2 text-left">FinalWishes (111 VS)</th>
+                                        <th class="border border-gray-300 p-2 text-left">"Big Law" Custom Tech</th>
+                                        <th class="border border-gray-300 p-2 text-left">Typical Dev Agency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Total Cost</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>$200,000</strong> (Fixed)</td>
+                                        <td class="border border-gray-300 p-2"><strong>$650,000+</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>$350,000+</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Time to Market</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>5 Months</strong></td>
+                                        <td class="border border-gray-300 p-2">18-24 Months</td>
+                                        <td class="border border-gray-300 p-2">9-12 Months</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Model</strong></td>
+                                        <td class="border border-gray-300 p-2">Co-Founder/Partner</td>
+                                        <td class="border border-gray-300 p-2">Billable Hour ($800/hr)</td>
+                                        <td class="border border-gray-300 p-2">Time & Materials</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>IP Ownership</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>100% Client Owned</strong></td>
+                                        <td class="border border-gray-300 p-2">Firm Retains IP</td>
+                                        <td class="border border-gray-300 p-2">Vendor Lock-in</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p><em>Analysis: We deliver 4x the speed at roughly 40% of the cost of a traditional
+                                    enterprise
+                                    build by leveraging our proprietary "Sirsi" component library and AI-accelerated
+                                    development.</em></p>
 
-                    <p><strong>2.1 Core Vault & Data Architecture</strong></p>
-                    <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to ensure
-                        total data privacy.</p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL
-                                (PostgreSQL)</strong> for structured PII (Encrypted) and <strong>Firestore</strong> for
-                            real-time document metadata.</li>
-                        <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with per-tenant
-                            isolation boundaries. All files encrypted at rest using <strong>Cloud KMS</strong>
-                            (AES-256).</li>
-                        <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong> controls,
-                            including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).</li>
-                    </ul>
+                            <h3>3. Atomic Development Cost Breakdown</h3>
+                            <p>We estimate <strong>1,200+ engineering & design hours</strong> to deliver the MVP. At a
+                                blended
+                                boutique rate of ~$152/hr, this aligns with the budget.</p>
 
-                    <p><strong>2.2 Document Inventory & Automation Scope</strong></p>
-                    <p>Provider will build automation or manual guidance paths for the following specific document
-                        categories:</p>
+                            <p><strong>Phase 0: Design & Identity (Weeks 1-4)</strong> - $30,000</p>
+                            <p>Goal: World-class "Light Royal Neo-Deco" visual identity for App & Web.</p>
 
-                    <p><strong>A. Identity & Vital Records</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>Death Certificate:</strong> Manual upload/OCR processing (No State API exists).</li>
-                        <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
-                    </ul>
+                            <p><strong>Phase 1: Foundation & Vault (Weeks 1-4)</strong> - $25,875</p>
+                            <p>Goal: Bank-grade security core and document architecture.</p>
 
-                    <p><strong>B. Probate Court Filings (Launch States)</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler Odyssey)
-                            system. Template generation for Petition for Administration, Inventory, and Accounts.</li>
-                        <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County) and standard
-                            circuit court forms.</li>
-                        <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide e-filing
-                            system.</li>
-                        <li><em>Note: Where API filing is unavailable, the Platform will generate "Ready-to-Print" PDF
-                                packages.</em></li>
-                    </ul>
+                            <p><strong>Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</strong> - $30,000</p>
+                            <p>Goal: The innovative logic engine that replaces a lawyer's guidance.</p>
 
-                    <p><strong>C. Financial & Asset Documents</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>Asset Discovery:</strong> Integration of <strong>Plaid</strong> for retrieving
-                            balances, transactions, and liabilities from 12,000+ financial institutions.</li>
-                        <li><strong>Life Insurance/Retirement:</strong> Generation of standard "Notice of Death & Claim"
-                            letters for major carriers (MetLife, Prudential, etc.).</li>
-                        <li><strong>Real Estate:</strong> Manual inventory tracking with integration to Zillow/Redfin
-                            APIs for valuation estimates (where available).</li>
-                    </ul>
+                            <p><strong>Phase 3: Living Legacy & Universal App (Weeks 11-16)</strong> - $33,000</p>
+                            <p>Goal: "Universal App" (React Native) for Pre-Death & Post-Death flows.</p>
 
-                    <h3>2.3 System Integrations</h3>
-                    <p>Provider shall integrate the following third-party services to achieve automation:</p>
-                    <table class="w-full border-collapse border border-gray-300 mb-4">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="border border-gray-300 p-2 text-left">Service</th>
-                                <th class="border border-gray-300 p-2 text-left">Purpose</th>
-                                <th class="border border-gray-300 p-2 text-left">Integration Level</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Plaid</strong></td>
-                                <td class="border border-gray-300 p-2">Financial Account Linking</td>
-                                <td class="border border-gray-300 p-2"><strong>Deep Integration</strong> (Transactions,
-                                    Liabilities, Investments)</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>DocuSeal</strong></td>
-                                <td class="border border-gray-300 p-2">E-Signatures</td>
-                                <td class="border border-gray-300 p-2"><strong>Self-Hosted</strong> (Full API, embedded
-                                    signing)</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Lob</strong></td>
-                                <td class="border border-gray-300 p-2">Certified Mail / Physical Letters</td>
-                                <td class="border border-gray-300 p-2"><strong>API Triggered</strong> (Address
-                                    verification, tracking)</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>SendGrid</strong></td>
-                                <td class="border border-gray-300 p-2">Transactional Email</td>
-                                <td class="border border-gray-300 p-2"><strong>API Triggered</strong> (Notifications,
-                                    summaries)</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Google Document AI</strong></td>
-                                <td class="border border-gray-300 p-2">OCR / Data Extraction</td>
-                                <td class="border border-gray-300 p-2"><strong>API Integrated</strong> (Receipts, Forms)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Vertex AI (Gemini)</strong></td>
-                                <td class="border border-gray-300 p-2">Process Guidance</td>
-                                <td class="border border-gray-300 p-2"><strong>Context-Aware</strong> (RAG pipeline on
-                                    Probate Code)</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            <p><strong>Phase 4: QA, Security & Launch (Weeks 17-20)</strong> - $28,000</p>
+                            <p>Goal: Ensuring the system is bulletproof and legally compliant.</p>
 
-                    <h3>2.4 "The Shepherd" Guidance Engine</h3>
-                    <p>Provider shall build a logic engine ("The Shepherd") that:</p>
-                    <ul class="list-decimal pl-5 mb-4">
-                        <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and MN.</li>
-                        <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the
-                            Executor.</li>
-                        <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines (Inventory due
-                            in 90 days, Taxes due in 9 mo).</li>
-                        <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions (e.g.,
-                            "Is this expense deductible in Maryland?").</li>
-                    </ul>
+                            <p><strong>GRAND TOTAL VALUE:</strong> $178,875+ (plus Ops)<br><strong>FIXED BID:</strong>
+                                $200,000
+                            </p>
 
-                    <h3>3. Work Breakdown Structure (WBS)</h3>
+                            <h3>4. Infrastructure Bill of Materials (BoM)</h3>
+                            <p>Estimated monthly run-rate for the platform.</p>
+                            <table class="w-full border-collapse border border-gray-300 mb-4">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 p-2 text-left">Service</th>
+                                        <th class="border border-gray-300 p-2 text-left">Specific Item</th>
+                                        <th class="border border-gray-300 p-2 text-left">Est. Unit Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">Compute</td>
+                                        <td class="border border-gray-300 p-2">Google Cloud Run (2 services)</td>
+                                        <td class="border border-gray-300 p-2">~$18/mo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">Database</td>
+                                        <td class="border border-gray-300 p-2">Cloud SQL (Postgres db-f1-micro)</td>
+                                        <td class="border border-gray-300 p-2">~$9/mo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">AI</td>
+                                        <td class="border border-gray-300 p-2">Vertex AI (Gemini Flash)</td>
+                                        <td class="border border-gray-300 p-2">~$5/1M tokens</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">E-Sign</td>
+                                        <td class="border border-gray-300 p-2">DocuSeal (Self-Hosted)</td>
+                                        <td class="border border-gray-300 p-2">$0 (OSS)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
-                    <p><strong>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL, Firestore, VPC,
-                            Cloud Armor.</li>
-                        <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
-                        <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
-                        <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata) schemas.</li>
-                        <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service and Signed URL logic.</li>
-                        <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design System.</li>
-                        <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
-                    </ul>
-
-                    <p><strong>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>2.1 Asset Module:</strong> Plaid Link integration & manual asset overrides.</li>
-                        <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules & forms.</li>
-                        <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
-                        <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
-                        <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
-                        <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
-                    </ul>
-
-                    <p><strong>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
-                        <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
-                        <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.</li>
-                        <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger logic.</li>
-                        <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
-                    </ul>
-
-                    <p><strong>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>4.1 Pen Test:</strong> Third-party security audit & remediation.</li>
-                        <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection (logging, access controls).</li>
-                        <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 concurrent users.</li>
-                        <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
-                        <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
-                    </ul>
-
-                    <hr class="my-12 border-gray-200">
-
-                    <!-- EXHIBIT B: FULL COST (VERBATIM FROM COST_PROPOSAL.MD) -->
-                    <h2 class="text-center mt-12 mb-8 !text-2xl font-serif">Exhibit B: Cost Proposal</h2>
-
-                    <h3>1. Executive Summary</h3>
-                    <p>This proposal offers a transparent, atomic breakdown of the investment required to build the
-                        "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or "billable hour" law
-                        firm models, we provide a fixed-price engineering partnership.</p>
-                    <p><strong>The Bottom Line:</strong></p>
-                    <ul class="list-disc pl-5 mb-4">
-                        <li><strong>Your Investment:</strong> $200,000 (Fixed)</li>
-                        <li><strong>Time to Market:</strong> 5 Months (20 Weeks)</li>
-                        <li><strong>Output:</strong> Fully secure, SOC 2-ready platform launching in MD, IL, and MN.
-                        </li>
-                    </ul>
-
-                    <h3>2. Comparative Market Analysis</h3>
-                    <p>Why build with Sirsi Technologies vs. alternatives?</p>
-                    <table class="w-full border-collapse border border-gray-300 mb-4">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="border border-gray-300 p-2 text-left">Metric</th>
-                                <th class="border border-gray-300 p-2 text-left">FinalWishes (111 VS)</th>
-                                <th class="border border-gray-300 p-2 text-left">"Big Law" Custom Tech</th>
-                                <th class="border border-gray-300 p-2 text-left">Typical Dev Agency</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Total Cost</strong></td>
-                                <td class="border border-gray-300 p-2"><strong>$200,000</strong> (Fixed)</td>
-                                <td class="border border-gray-300 p-2"><strong>$650,000+</strong></td>
-                                <td class="border border-gray-300 p-2"><strong>$350,000+</strong></td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Time to Market</strong></td>
-                                <td class="border border-gray-300 p-2"><strong>5 Months</strong></td>
-                                <td class="border border-gray-300 p-2">18-24 Months</td>
-                                <td class="border border-gray-300 p-2">9-12 Months</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>Model</strong></td>
-                                <td class="border border-gray-300 p-2">Co-Founder/Partner</td>
-                                <td class="border border-gray-300 p-2">Billable Hour ($800/hr)</td>
-                                <td class="border border-gray-300 p-2">Time & Materials</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2"><strong>IP Ownership</strong></td>
-                                <td class="border border-gray-300 p-2"><strong>100% Client Owned</strong></td>
-                                <td class="border border-gray-300 p-2">Firm Retains IP</td>
-                                <td class="border border-gray-300 p-2">Vendor Lock-in</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p><em>Analysis: We deliver 4x the speed at roughly 40% of the cost of a traditional enterprise
-                            build by leveraging our proprietary "Sirsi" component library and AI-accelerated
-                            development.</em></p>
-
-                    <h3>3. Atomic Development Cost Breakdown</h3>
-                    <p>We estimate <strong>1,200+ engineering & design hours</strong> to deliver the MVP. At a blended
-                        boutique rate of ~$152/hr, this aligns with the budget.</p>
-
-                    <p><strong>Phase 0: Design & Identity (Weeks 1-4)</strong> - $30,000</p>
-                    <p>Goal: World-class "Light Royal Neo-Deco" visual identity for App & Web.</p>
-
-                    <p><strong>Phase 1: Foundation & Vault (Weeks 1-4)</strong> - $25,875</p>
-                    <p>Goal: Bank-grade security core and document architecture.</p>
-
-                    <p><strong>Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</strong> - $30,000</p>
-                    <p>Goal: The innovative logic engine that replaces a lawyer's guidance.</p>
-
-                    <p><strong>Phase 3: Living Legacy & Universal App (Weeks 11-16)</strong> - $33,000</p>
-                    <p>Goal: "Universal App" (React Native) for Pre-Death & Post-Death flows.</p>
-
-                    <p><strong>Phase 4: QA, Security & Launch (Weeks 17-20)</strong> - $28,000</p>
-                    <p>Goal: Ensuring the system is bulletproof and legally compliant.</p>
-
-                    <p><strong>GRAND TOTAL VALUE:</strong> $178,875+ (plus Ops)<br><strong>FIXED BID:</strong> $200,000
-                    </p>
-
-                    <h3>4. Infrastructure Bill of Materials (BoM)</h3>
-                    <p>Estimated monthly run-rate for the platform.</p>
-                    <table class="w-full border-collapse border border-gray-300 mb-4">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th class="border border-gray-300 p-2 text-left">Service</th>
-                                <th class="border border-gray-300 p-2 text-left">Specific Item</th>
-                                <th class="border border-gray-300 p-2 text-left">Est. Unit Cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="border border-gray-300 p-2">Compute</td>
-                                <td class="border border-gray-300 p-2">Google Cloud Run (2 services)</td>
-                                <td class="border border-gray-300 p-2">~$18/mo</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2">Database</td>
-                                <td class="border border-gray-300 p-2">Cloud SQL (Postgres db-f1-micro)</td>
-                                <td class="border border-gray-300 p-2">~$9/mo</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2">AI</td>
-                                <td class="border border-gray-300 p-2">Vertex AI (Gemini Flash)</td>
-                                <td class="border border-gray-300 p-2">~$5/1M tokens</td>
-                            </tr>
-                            <tr>
-                                <td class="border border-gray-300 p-2">E-Sign</td>
-                                <td class="border border-gray-300 p-2">DocuSeal (Self-Hosted)</td>
-                                <td class="border border-gray-300 p-2">$0 (OSS)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <br><br>
-                    <div id="signature-block"
-                        class="p-8 bg-gray-50 border border-gray-200 rounded text-center mt-8 scroll-mt-32">
-                        <p class="text-sm text-gray-500 uppercase tracking-widest mb-4">Electronic Signature</p>
-                        <div class="h-px w-64 bg-black mx-auto mb-2"></div>
-                        <p class="font-serif italic text-xl text-black">Tameeka Lockhart</p>
-                        <p class="text-xs text-gray-400 mt-2">Signed via FinalWishes Admin • <span
-                                id="signDate">December 17, 2025</span></p>
-                    </div>
-                    <!-- PAYMENT SELECTION -->
-                    <div class="col-span-12 mt-16 pt-16 border-t border-white/10">
-                        <h2 class="text-center mb-12">Select Your Payment Plan</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-                            <!-- PLAN A -->
-                            <div
-                                class="p-6 rounded border border-white/10 bg-white/5 hover:border-[#C8A951] transition-colors group">
-                                <h3 class="text-xl text-white font-bold mb-2">Plan A: Standard Split</h3>
-                                <div class="text-[#C8A951] text-sm font-mono mb-4">50% / 50%</div>
-                                <ul class="text-sm text-blue-200 space-y-2 mb-8 h-24">
-                                    <li>• $100,000 due at Signing</li>
-                                    <li>• $100,000 due at Launch</li>
-                                    <li>• Total: $200,000</li>
-                                </ul>
-                                <button onclick="selectPlan('Plan A')"
-                                    class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all">
-                                    Select & Sign
-                                </button>
+                            <br><br>
+                            <div id="signature-block"
+                                class="p-8 bg-gray-50 border border-gray-200 rounded text-center mt-8 scroll-mt-32">
+                                <p class="text-sm text-gray-500 uppercase tracking-widest mb-4">Electronic Signature</p>
+                                <div class="h-px w-64 bg-black mx-auto mb-2"></div>
+                                <p class="font-serif italic text-xl text-black">Tameeka Lockhart</p>
+                                <p class="text-xs text-gray-400 mt-2">Signed via FinalWishes Admin • <span
+                                        id="signDate">December 17, 2025</span></p>
                             </div>
+                            <!-- PAYMENT SELECTION -->
+                            <div class="col-span-12 mt-16 pt-16 border-t border-white/10">
+                                <h2 class="text-center mb-12" style="color: black !important;">Select Your Payment Plan
+                                </h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                            <!-- PLAN B -->
-                            <div
-                                class="p-6 rounded border border-white/10 bg-white/5 hover:border-[#C8A951] transition-colors group">
-                                <h3 class="text-xl text-white font-bold mb-2">Plan B: Trimester</h3>
-                                <div class="text-[#C8A951] text-sm font-mono mb-4">33% / 33% / 33%</div>
-                                <ul class="text-sm text-blue-200 space-y-2 mb-8 h-24">
-                                    <li>• $66,666 due at Signing</li>
-                                    <li>• $66,666 due Month 2</li>
-                                    <li>• $66,668 due Month 4</li>
-                                </ul>
-                                <button onclick="selectPlan('Plan B')"
-                                    class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all">
-                                    Select & Sign
-                                </button>
-                            </div>
+                                    <!-- PLAN A -->
+                                    <div
+                                        class="p-6 rounded border border-gray-200 bg-gray-50 hover:border-[#C8A951] transition-colors group">
+                                        <h3 class="text-xl text-black font-bold mb-2">Plan A: Standard Split</h3>
+                                        <div class="text-[#C8A951] text-sm font-mono mb-4">50% / 50%</div>
+                                        <ul class="text-sm text-gray-600 space-y-2 mb-8 h-24">
+                                            <li>• $100,000 due at Signing</li>
+                                            <li>• $100,000 due at Launch</li>
+                                            <li>• Total: $200,000</li>
+                                        </ul>
+                                        <button onclick="selectPlan('Plan A')"
+                                            class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all">
+                                            Select & Sign
+                                        </button>
+                                    </div>
 
-                            <!-- PLAN C -->
-                            <div
-                                class="p-6 rounded border border-[#C8A951] bg-[#C8A951]/10 transform scale-105 shadow-[0_0_30px_rgba(200,169,81,0.15)] relative overflow-hidden">
-                                <div class="absolute top-0 right-0 bg-[#C8A951] text-black text-xs font-bold px-3 py-1">
-                                    RECOMMENDED</div>
-                                <h3 class="text-xl text-white font-bold mb-2">Plan C: Partnership</h3>
-                                <div class="text-[#C8A951] text-sm font-mono mb-4">Cash + Equity</div>
-                                <ul class="text-sm text-blue-200 space-y-2 mb-8 h-24">
-                                    <li>• $75k due at Signing</li>
-                                    <li>• $50k at Mo 2, $50k at Mo 4.</li>
-                                    <li>• <strong>2.5% Non-Dilutive Equity</strong></li>
-                                </ul>
-                                <button onclick="selectPlan('Plan C')"
-                                    class="w-full py-3 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(200,169,81,0.4)]">
-                                    Select & Sign
-                                </button>
+                                    <!-- PLAN B -->
+                                    <div
+                                        class="p-6 rounded border border-gray-200 bg-gray-50 hover:border-[#C8A951] transition-colors group">
+                                        <h3 class="text-xl text-black font-bold mb-2">Plan B: Trimester</h3>
+                                        <div class="text-[#C8A951] text-sm font-mono mb-4">33% / 33% / 33%</div>
+                                        <ul class="text-sm text-gray-600 space-y-2 mb-8 h-24">
+                                            <li>• $66,666 due at Signing</li>
+                                            <li>• $66,666 due Month 2</li>
+                                            <li>• $66,668 due Month 4</li>
+                                        </ul>
+                                        <button onclick="selectPlan('Plan B')"
+                                            class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all">
+                                            Select & Sign
+                                        </button>
+                                    </div>
+
+                                    <!-- PLAN C -->
+                                    <div
+                                        class="p-6 rounded border border-[#C8A951] bg-[#C8A951]/10 transform scale-105 shadow-[0_0_30px_rgba(200,169,81,0.15)] relative overflow-hidden">
+                                        <div
+                                            class="absolute top-0 right-0 bg-[#C8A951] text-black text-xs font-bold px-3 py-1">
+                                            RECOMMENDED</div>
+                                        <h3 class="text-xl text-black font-bold mb-2">Plan C: Partnership</h3>
+                                        <div class="text-[#C8A951] text-sm font-mono mb-4">Cash + Equity</div>
+                                        <ul class="text-sm text-gray-600 space-y-2 mb-8 h-24">
+                                            <li>• $75k due at Signing</li>
+                                            <li>• $50k at Mo 2, $50k at Mo 4.</li>
+                                            <li>• <strong>2.5% Non-Dilutive Equity</strong></li>
+                                        </ul>
+                                        <button onclick="selectPlan('Plan C')"
+                                            class="w-full py-3 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(200,169,81,0.4)]">
+                                            Select & Sign
+                                        </button>
+                                    </div>
+
+                                </div>
                             </div>
 
                         </div>
                     </div>
-
                 </div>
+
             </div>
-        </div>
+        </main>
+    </div>
 
-        <!-- Sidebar loader -->
-        <script src="../../components/sidebar.js"></script>
+    <!-- Scripts -->
+    <!-- Sidebar -->
+    <script src="../components/sidebar.js"></script>
+    <!-- Header -->
+    <script src="../components/universal-header.js"></script>
 
-        <script>
-            function switchTab(tabId) {
-                // Hide all content
-                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    <script>
+        function switchTab(tabId) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
 
-                // Show target
-                document.getElementById(tabId).classList.add('active');
+            // Show target
+            document.getElementById(tabId).classList.add('active');
 
-                // Activate btn
-                const buttons = document.querySelectorAll('.tab-btn');
-                if (tabId === 'sow') buttons[0].classList.add('active');
-                if (tabId === 'cost') buttons[1].classList.add('active');
-                if (tabId === 'contract') buttons[2].classList.add('active');
-            }
+            // Activate btn
+            const buttons = document.querySelectorAll('.tab-btn');
+            if (tabId === 'sow') buttons[0].classList.add('active');
+            if (tabId === 'cost') buttons[1].classList.add('active');
+            if (tabId === 'contract') buttons[2].classList.add('active');
+        }
 
-            function selectPlan(planName) {
-                console.log('Selected Plan:', planName);
+        function selectPlan(planName) {
+            console.log('Selected Plan:', planName);
 
-                // 1. Switch to Contract Tab
-                switchTab('contract');
+            // 1. Switch to Contract Tab
+            switchTab('contract');
 
-                // 2. Scroll to Signature Section
-                setTimeout(() => {
-                    const signatureBlock = document.getElementById('signature-block');
-                    if (signatureBlock) {
-                        signatureBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 2. Scroll to Signature Section
+            setTimeout(() => {
+                const signatureBlock = document.getElementById('signature-block');
+                if (signatureBlock) {
+                    signatureBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-                        // Optional: Flash effect or visual cue
-                        signatureBlock.style.transition = 'all 0.5s ease';
-                        signatureBlock.style.boxShadow = '0 0 30px rgba(200,169,81,0.4)';
-                        setTimeout(() => {
-                            signatureBlock.style.boxShadow = 'none';
-                        }, 1500);
-                    }
-                }, 100);
-            }
-        </script>
+                    // Optional: Flash effect or visual cue
+                    signatureBlock.style.transition = 'all 0.5s ease';
+                    signatureBlock.style.boxShadow = '0 0 30px rgba(200,169,81,0.4)';
+                    setTimeout(() => {
+                        signatureBlock.style.boxShadow = 'none';
+                    }, 1500);
+                }
+            }, 100);
+        }
+    </script>
 </body>
 
 </html>

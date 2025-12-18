@@ -651,6 +651,17 @@
             font-weight: bold;
         }
 
+        /* GLOBAL TYPOGRAPHY OVERRIDE - NO MORE SERIFS */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .font-serif {
+            font-family: 'Inter', sans-serif !important;
+        }
+
         /* REWRITTEN TABLE STYLES - SINGLE FONT SOURCE OF TRUTH */
         #market-analysis-table {
             width: 100%;
@@ -842,7 +853,9 @@
                                 </div>
 
                                 <!-- 1. EXECUTIVE OVERVIEW -->
-                                <h2 class="text-[#C8A951] mt-8 mb-4">1. Executive Overview</h2>
+                                <h2
+                                    class="text-[#C8A951] mt-12 mb-8 text-3xl font-extrabold uppercase tracking-widest text-center">
+                                    1. Executive Overview</h2>
 
                                 <p class="mb-8 font-serif text-xl leading-loose italic text-blue-100 max-w-6xl">
                                     "To ensure that when a life ends, the love remains—undiminished by bureaucracy,
@@ -871,7 +884,7 @@
                                     <div class="uppercase tracking-[0.2em] text-[#C8A951] text-sm font-bold mb-4">
                                         Primary Objective</div>
                                     <p
-                                        class="mb-0 text-white text-2xl font-serif italic max-w-4xl mx-auto leading-relaxed">
+                                        class="mb-0 text-white text-2xl italic max-w-4xl mx-auto leading-relaxed font-bold">
                                         "Deliver a dual-purpose platform that empowers the Living to <span
                                             class="text-[#C8A951] font-bold">Curate their Legacy</span> (Memories &
                                         Wishes) and equips their Loved Ones to <span

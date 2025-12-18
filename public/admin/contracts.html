@@ -322,8 +322,8 @@
                         <div class="grid grid-cols-12 gap-12">
                             <div class="col-span-12">
                                 <!-- HEADER -->
-                                <div class="border-b border-white/10 pb-8 mb-8">
-                                    <h2 class="text-white mb-2">Statement of Work (SOW)</h2>
+                                <div class="border-b border-white/10 pb-8 mb-12">
+                                    <h2 class="text-4xl text-[#C8A951] mb-6 font-serif">Statement of Work (SOW)</h2>
                                     <div class="grid grid-cols-2 gap-4 text-sm font-mono text-blue-300">
                                         <div><strong>Project:</strong> FinalWishes Platform Development</div>
                                         <div><strong>Date:</strong> December 17, 2025</div>
@@ -335,12 +335,13 @@
                                 <!-- 1. EXECUTIVE OVERVIEW -->
                                 <h2 class="text-[#C8A951] mt-8 mb-4">1. Executive Overview</h2>
 
-                                <p class="mb-6 font-serif text-lg leading-relaxed italic text-blue-200">
+                                <p class="mb-8 font-serif text-xl leading-loose italic text-blue-100 max-w-4xl">
                                     "To transform estate settlement from a bureaucratic nightmare into a streamlined,
                                     technology-assisted process, while preserving the human legacy of the departed."
                                 </p>
 
-                                <p class="mb-6">This Statement of Work ("SOW") defines the comprehensive scope for the
+                                <p class="mb-8 text-lg leading-relaxed text-slate-300 max-w-4xl">This Statement of Work
+                                    ("SOW") defines the comprehensive scope for the
                                     <strong>FinalWishes Estate Operating System</strong>. This project aims to digitize
                                     and
                                     automate the estate settlement process, focusing on "Launch States" (Maryland,
@@ -367,30 +368,37 @@
                                 <h2 class="text-[#C8A951] mt-12 mb-6">2. Detailed Scope of Services</h2>
 
                                 <!-- 2.1 -->
-                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.1 Core
+                                <h3
+                                    class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-12">
+                                    2.1 Core
                                     Vault &
                                     Data Architecture</h3>
                                 <p class="mb-4">Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong>
                                     architecture to ensure total data privacy.</p>
-                                <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
-                                    <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL
+                                <ul class="list-disc pl-6 mb-12 text-blue-200 space-y-4 text-base leading-relaxed">
+                                    <li><strong class="text-white">Storage Layer:</strong> Hybrid approach using
+                                        <strong>Cloud SQL
                                             (PostgreSQL)</strong> for structured PII (Encrypted) and
                                         <strong>Firestore</strong>
                                         for real-time document metadata.
                                     </li>
-                                    <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with
+                                    <li><strong class="text-white">File Vault:</strong> <strong>Cloud Storage</strong>
+                                        buckets with
                                         per-tenant
                                         isolation boundaries. All files encrypted at rest using <strong>Cloud
                                             KMS</strong>
                                         (AES-256).</li>
-                                    <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong>
+                                    <li><strong class="text-white">Security:</strong> Implementation of <strong>SOC 2
+                                            Type II</strong>
                                         controls,
                                         including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).
                                     </li>
                                 </ul>
 
                                 <!-- 2.2 -->
-                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.2 Document
+                                <h3
+                                    class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-16">
+                                    2.2 Document
                                     Inventory & Automation</h3>
                                 <p class="mb-4">Provider will build automation or manual guidance paths for the
                                     following
@@ -430,7 +438,9 @@
                                 </ul>
 
                                 <!-- 2.3 -->
-                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.3 System
+                                <h3
+                                    class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-16">
+                                    2.3 System
                                     Integrations</h3>
                                 <div class="overflow-x-auto mb-8">
                                     <table class="w-full text-left border-collapse">
@@ -477,7 +487,9 @@
                                 </div>
 
                                 <!-- 2.4 -->
-                                <h3 class="text-white text-xl font-bold mb-4 border-b border-white/10 pb-2">2.4 "The
+                                <h3
+                                    class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-16">
+                                    2.4 "The
                                     Shepherd"
                                     Guidance Engine</h3>
                                 <ul class="list-decimal pl-6 mb-8 text-blue-200 space-y-2">

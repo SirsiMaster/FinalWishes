@@ -42,7 +42,7 @@
         strong,
         td,
         th {
-            color: inherit;
+            color: inherit !important;
             /* Allow cascading from body or specific classes */
         }
 
@@ -127,26 +127,41 @@
         }
 
         .neo-glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 8px !important;
+        }
+
+        /* RESTITUTION OF PRIMARY OBJECTIVE STYLING */
+        /* Overrides the generic neo-glass-panel !important rules */
+        .neo-glass-gold {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(245, 158, 11, 0.3) !important;
+            /* amber-500/30 */
+            box-shadow: 0 10px 15px -3px rgba(120, 53, 15, 0.2), 0 4px 6px -2px rgba(120, 53, 15, 0.1) !important;
+            /* shadow-amber-900/20 */
         }
 
         .neo-stat-card-base {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 32px 24px;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 8px !important;
+            padding: 32px 24px !important;
+            text-align: center !important;
+        }
+
+        /* Ensure main content is transparent so body gradient shows */
+        .main-content {
+            background: transparent !important;
         }
 
         .neo-stat-card-hero {
-            background: rgba(200, 169, 81, 0.08);
-            border: 2px solid #C8A951;
-            border-radius: 8px;
-            padding: 32px 24px;
-            text-align: center;
-            box-shadow: 0 0 40px rgba(200, 169, 81, 0.15);
+            background: rgba(200, 169, 81, 0.08) !important;
+            border: 2px solid #C8A951 !important;
+            border-radius: 8px !important;
+            padding: 32px 24px !important;
+            text-align: center !important;
+            box-shadow: 0 0 40px rgba(200, 169, 81, 0.15) !important;
         }
 
         .neo-section-divider {
@@ -156,56 +171,56 @@
         }
 
         .neo-section-title {
-            font-size: 28px;
-            font-family: 'Cinzel', serif;
-            color: #C8A951;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
+            font-size: 28px !important;
+            font-family: 'Cinzel', serif !important;
+            color: #C8A951 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
         }
 
         /* ATOMIC PHASE CARDS */
         .neo-phase-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            margin-bottom: 24px !important;
         }
 
         .neo-phase-header {
-            padding: 24px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.03);
-            transition: background 0.2s;
+            padding: 24px 32px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            cursor: pointer !important;
+            background: rgba(255, 255, 255, 0.03) !important;
+            transition: background 0.2s !important;
         }
 
         .neo-phase-header:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.08) !important;
             /* slight hover effect */
         }
 
         .neo-phase-number {
-            height: 48px;
-            width: 48px;
-            border-radius: 4px;
-            background: rgba(200, 169, 81, 0.1);
-            border: 1px solid #C8A951;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #C8A951;
-            font-family: 'Cinzel', serif;
-            font-weight: bold;
-            font-size: 20px;
+            height: 48px !important;
+            width: 48px !important;
+            border-radius: 4px !important;
+            background: rgba(200, 169, 81, 0.1) !important;
+            border: 1px solid #C8A951 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #C8A951 !important;
+            font-family: 'Cinzel', serif !important;
+            font-weight: bold !important;
+            font-size: 20px !important;
         }
 
         .neo-phase-content {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 24px 32px;
-            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding: 24px 32px !important;
+            background: rgba(0, 0, 0, 0.2) !important;
         }
 
         /*
@@ -967,7 +982,7 @@
 
                                 <!-- OBJECTIVE BAR (GOLD BOX) -->
                                 <div
-                                    class="neo-glass-panel py-12 px-8 mb-16 text-center relative max-w-4xl mx-auto border border-amber-500/20 shadow-lg shadow-amber-900/10">
+                                    class="neo-glass-panel neo-glass-gold py-12 px-8 mb-16 text-center relative max-w-4xl mx-auto border border-amber-500/20 shadow-lg shadow-amber-900/10">
                                     <div
                                         class="uppercase tracking-[0.25em] neo-text-gold text-xs font-bold mb-6 opacity-90">
                                         Primary Objective</div>

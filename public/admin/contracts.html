@@ -2483,16 +2483,18 @@
                             DOWNLOAD PDF
                         </button>
 
-                        <!-- STEP 1: PLAN SELECTION -->
+                        <!-- STEP 2: PLAN SELECTION (Locked until MSA read) -->
                         <div id="selection-phase"
-                            style="margin-bottom: 64px; margin-top: 48px; max-width: 1200px; margin-left: auto; margin-right: auto;">
-                            <h2
+                            style="margin-bottom: 64px; margin-top: 48px; max-width: 1200px; margin-left: auto; margin-right: auto; opacity: 0.4; pointer-events: none; transition: all 0.5s;">
+                            <h2 id="step-2-plan-label"
                                 style="text-align: center; font-family: Cinzel, serif; font-size: 28px; color: #C8A951; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.15em;">
-                                Step 1: Select Your Partnership Plan</h2>
+                                Step 2: Select Your Partnership Plan</h2>
                             <p
                                 style="text-align: center; color: #94a3b8; margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 14px; line-height: 1.6;">
-                                Please choose a financial structure below to live-amend the agreement. You will be able
-                                to review and sign once a selection is made.</p>
+                                <span id="plan-lock-notice" style="color: #EF4444;">🔒 Complete Step 1 to unlock plan
+                                    selection.</span><br>
+                                Choose a financial structure to amend Exhibit B.
+                            </p>
 
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
                                 <!-- PLAN A -->
@@ -2626,13 +2628,14 @@
                         </div>
                     </div>
 
-                    <div id="step-2-label" class="text-center mb-8 opacity-40 transition-opacity duration-700">
+                    <div id="step-1-label" class="text-center mb-8 transition-opacity duration-700">
                         <h2 class="font-serif text-2xl text-[#C8A951] uppercase tracking-widest">
-                            Step 2: Review & Verify Agreement</h2>
+                            Step 1: Review Master Services Agreement</h2>
+                        <p class="text-sm text-white/60 mt-2">Scroll through and read the entire agreement before
+                            proceeding.</p>
                     </div>
 
-                    <div class="legal-viewer mb-8 opacity-40 transition-opacity duration-700 pointer-events-none"
-                        id="contract-document">
+                    <div class="legal-viewer mb-8 transition-opacity duration-700" id="contract-document">
                         <!-- MSA HEADER -->
                         <div class="text-center mb-12 pb-12 border-b border-gray-200">
                             <h2>MASTER SERVICES AGREEMENT</h2>
@@ -3375,6 +3378,26 @@
                         </section>
                     </div>
 
+                    <!-- MSA ACKNOWLEDGMENT BLOCK -->
+                    <div id="msa-acknowledgment-block"
+                        class="p-8 bg-white/5 border border-[#C8A951]/30 rounded text-center my-8 opacity-40 transition-all duration-500"
+                        style="pointer-events: none;">
+                        <p class="text-lg text-white/80 mb-4">📜 Master Services Agreement Review Complete</p>
+                        <p id="scroll-notice" class="text-sm text-red-400 mb-4">⚠️ Please scroll to the bottom of the
+                            agreement to continue.</p>
+                        <label id="msa-ack-label" class="flex items-center justify-center gap-3 cursor-pointer mb-4"
+                            style="pointer-events: none; opacity: 0.5;">
+                            <input type="checkbox" id="msa-read-acknowledge" onchange="unlockPlanSelection()"
+                                class="w-5 h-5 accent-[#C8A951] cursor-pointer" disabled>
+                            <span class="text-sm text-white/80">I have read and understand the Master Services Agreement
+                                above.</span>
+                        </label>
+                        <button id="proceed-to-step2" disabled onclick="scrollToPlanSelection()"
+                            style="background: linear-gradient(to right, #C8A951, #E2C76B); color: #0f172a; padding: 12px 24px; font-weight: bold; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 6px; border: none; cursor: not-allowed; opacity: 0.5; transition: all 0.3s;">
+                            Proceed to Step 2: Select Plan
+                        </button>
+                    </div>
+
                     <br><br>
                     <div id="step-3-label" class="text-center mt-16 mb-8 opacity-0 transition-opacity duration-1000">
                         <h2 class="font-serif text-2xl text-[#C8A951] uppercase tracking-widest">
@@ -3487,18 +3510,11 @@
             btnElement.style.backgroundColor = btnElement.classList.contains('border-[#10B981]') ? '#10B981' : '#C8A951';
             btnElement.style.color = '#000000';
 
-            // 3. Reveal Document & Step 2 Label
-            const doc = document.getElementById('contract-document');
-            const step2Label = document.getElementById('step-2-label');
+            // 3. Reveal Step 3 (Signature Block) - Document already visible
             const step3Label = document.getElementById('step-3-label');
             const sigBlock = document.getElementById('signature-block');
 
-            doc.classList.remove('opacity-40', 'pointer-events-none');
-            doc.classList.add('opacity-100');
-            step2Label.classList.remove('opacity-40');
-            step2Label.classList.add('opacity-100');
-
-            // 3b. Reveal Signature Block (Step 3)
+            // Reveal Signature Block (Step 3)
             sigBlock.classList.remove('opacity-0', 'pointer-events-none');
             sigBlock.classList.add('opacity-100');
             step3Label.classList.remove('opacity-0');
@@ -3548,9 +3564,9 @@
             dynamicBlock.style.background = 'rgba(200, 169, 81, 0.05)';
             dynamicBlock.style.borderColor = 'rgba(200, 169, 81, 0.5)';
 
-            // 5. Scroll to Step 2 (MSA Document) - User must read through
+            // 5. Scroll to Step 3 (Signature Block)
             setTimeout(() => {
-                step2Label.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                step3Label.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 300);
         }
 
@@ -3595,7 +3611,88 @@
         });
 
         // ============================================
-        // ACKNOWLEDGMENT TOGGLE
+        // SCROLL DETECTION FOR MSA
+        // ============================================
+        let msaScrollComplete = false;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const contractDoc = document.getElementById('contract-document');
+            const scrollNotice = document.getElementById('scroll-notice');
+            const msaAckBlock = document.getElementById('msa-acknowledgment-block');
+            const msaAckLabel = document.getElementById('msa-ack-label');
+            const msaCheckbox = document.getElementById('msa-read-acknowledge');
+
+            if (contractDoc) {
+                // Use IntersectionObserver to detect when user scrolls to bottom
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !msaScrollComplete) {
+                            msaScrollComplete = true;
+
+                            // Unlock the acknowledgment block
+                            msaAckBlock.style.opacity = '1';
+                            msaAckBlock.style.pointerEvents = 'auto';
+
+                            // Update scroll notice
+                            scrollNotice.textContent = '✅ Agreement review complete. Please acknowledge below.';
+                            scrollNotice.style.color = '#10B981';
+
+                            // Enable the checkbox
+                            msaAckLabel.style.pointerEvents = 'auto';
+                            msaAckLabel.style.opacity = '1';
+                            msaCheckbox.disabled = false;
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                // Observe the MSA acknowledgment block (near bottom of document)
+                if (msaAckBlock) {
+                    observer.observe(msaAckBlock);
+                }
+            }
+        });
+
+        function unlockPlanSelection() {
+            const checkbox = document.getElementById('msa-read-acknowledge');
+            const proceedBtn = document.getElementById('proceed-to-step2');
+
+            if (checkbox && proceedBtn) {
+                if (checkbox.checked) {
+                    proceedBtn.disabled = false;
+                    proceedBtn.style.opacity = '1';
+                    proceedBtn.style.cursor = 'pointer';
+                    proceedBtn.style.boxShadow = '0 4px 20px rgba(200, 169, 81, 0.3)';
+                } else {
+                    proceedBtn.disabled = true;
+                    proceedBtn.style.opacity = '0.5';
+                    proceedBtn.style.cursor = 'not-allowed';
+                    proceedBtn.style.boxShadow = 'none';
+                }
+            }
+        }
+
+        function scrollToPlanSelection() {
+            const selectionPhase = document.getElementById('selection-phase');
+            const planLockNotice = document.getElementById('plan-lock-notice');
+
+            if (selectionPhase) {
+                // Unlock the plan selection
+                selectionPhase.style.opacity = '1';
+                selectionPhase.style.pointerEvents = 'auto';
+
+                // Update lock notice
+                if (planLockNotice) {
+                    planLockNotice.textContent = '✅ Step 1 Complete. Select your plan below.';
+                    planLockNotice.style.color = '#10B981';
+                }
+
+                // Scroll to plan selection
+                selectionPhase.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // ============================================
+        // ACKNOWLEDGMENT TOGGLE (Step 3 - Execute)
         // ============================================
         function toggleExecuteButton() {
             const checkbox = document.getElementById('msa-acknowledge');

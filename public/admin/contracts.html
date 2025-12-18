@@ -20,7 +20,49 @@
     <!-- Admin Layout Styles -->
     <link rel="stylesheet" href="../assets/css/admin-layout.css">
     <style>
-        /* CONTRACT WRAPPER OVERRIDES REMOVED */
+        /* CRITICAL: FORCE DARK ROYAL THEME (Overrides admin-layout.css) */
+        body {
+            background: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%) !important;
+            background-color: #0f172a !important;
+            background-attachment: fixed !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Enforce White Text on these elements even if admin-layout tries to force dark */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        li,
+        span,
+        div,
+        strong,
+        td,
+        th {
+            color: inherit;
+            /* Allow cascading from body or specific classes */
+        }
+
+        .text-white {
+            color: #ffffff !important;
+        }
+
+        .text-gray-200 {
+            color: #e5e7eb !important;
+        }
+
+        .text-gray-400 {
+            color: #9ca3af !important;
+        }
+
+        .text-blue-300 {
+            color: #93c5fd !important;
+        }
+
+        /* Rest of overrides */
 
         /* Ensure table text is readable */
         td,

@@ -2149,378 +2149,374 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- TAB 3: CONTRACT -->
+                    <div id="contract" class="tab-content">
+                        <div class="legal-viewer mb-8 text-black" style="color: #0f172a;">
+                            <!-- MSA HEADER -->
+                            <div class="text-center mb-12 pb-12 border-b border-gray-200">
+                                <h2 class="text-4xl text-black mb-4 !border-none">MASTER SERVICES AGREEMENT</h2>
+                                <p class="text-gray-500">Global Effective Date: December 17, 2025</p>
+                            </div>
+
+                            <p>This Master Services Agreement ("Agreement") is entered into by and between
+                                <strong>Tameeka
+                                    Lockhart</strong> ("Client") and <strong>Sirsi Technologies</strong>, a Delaware
+                                Corporation
+                                ("Provider").
+                            </p>
+
+                            <h3>1. Services</h3>
+                            <p>Client engages Provider to design, develop, and launch the "FinalWishes" platform as
+                                described in
+                                Exhibit A. Total Value: <strong>$200,000.00 USD</strong>.</p>
+
+                            <hr class="my-12 border-gray-200">
+
+                            <!-- EXHIBIT A -->
+                            <h2 class="text-center mb-12 text-3xl font-serif text-[#C8A951]">Exhibit A: Statement of
+                                Work (SOW)</h2>
+
+                            <p><strong>Project Name:</strong> FinalWishes Platform Development<br>
+                                <strong>SOW Reference:</strong> SOW-2025-001<br>
+                                <strong>Date:</strong> December 17, 2025
+                            </p>
+
+                            <h3>1. Executive Overview</h3>
+                            <p>This Statement of Work ("SOW") defines the comprehensive scope for the
+                                <strong>FinalWishes Estate Operating System</strong>. While competent estate management
+                                is critical, <strong>FinalWishes is not merely a probate tool.</strong> It is a Legacy
+                                Management Application designed to capture the "Soul" of the Principal—their memories,
+                                values, and final messages—before dealing with the "Administration" of their assets.
+                            </p>
+                            <p><strong>Objective:</strong> Deliver a dual-purpose platform that empowers the Living to
+                                <strong>Curate their Legacy</strong> (Memories & Wishes) and equips their Loved Ones to
+                                <strong>Automate the Estate</strong> (Probate & Assets).
+                            </p>
+
+                            <h3>2. Detailed Scope of Services</h3>
+
+                            <p><strong>2.1 The Legacy & Memory Vault ("The Soul")</strong></p>
+                            <p>Provider shall build a secure module for non-financial legacy preservation:</p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Time-Capsule Messages:</strong> Video/text delivery logic triggered by
+                                    verified death.</li>
+                                <li><strong>Ethical Will:</strong> Values curation and "How I want to be remembered"
+                                    directives.</li>
+                                <li><strong>Final Wishes:</strong> Funeral, burial, and ceremonial preferences.</li>
+                            </ul>
+
+                            <p><strong>2.2 Core Vault & Data Architecture ("The Safe")</strong></p>
+                            <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to
+                                ensure total data privacy.</p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Storage Layer:</strong> Hybrid Cloud SQL (PostgreSQL) + Firestore.</li>
+                                <li><strong>File Vault:</strong> Cloud Storage with per-tenant isolation + Cloud KMS
+                                    (AES-256).</li>
+                                <li><strong>Security:</strong> SOC 2 Type II controls (IAM, TLS 1.3, Audit Logs).</li>
+                            </ul>
+
+                            <p><strong>2.3 Document Inventory & Automation ("The Admin")</strong></p>
+                            <p>Provider will build automation paths for:</p>
+
+                            <p><strong>A. Identity & Vital Records</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Death Certificate:</strong> Manual upload/OCR processing (No State API
+                                    exists).</li>
+                                <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
+                            </ul>
+
+                            <p><strong>B. Probate Court Filings (Launch States)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
+                                    Odyssey)
+                                    system. Template generation for Petition for Administration, Inventory, and
+                                    Accounts.</li>
+                                <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County) and
+                                    standard
+                                    circuit court forms.</li>
+                                <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide
+                                    e-filing
+                                    system.</li>
+                                <li><em>Note: Where API filing is unavailable, the Platform will generate
+                                        "Ready-to-Print" PDF
+                                        packages.</em></li>
+                            </ul>
+
+                            <p><strong>C. Financial & Asset Documents</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Asset Discovery:</strong> Integration of <strong>Plaid</strong> for
+                                    retrieving
+                                    balances, transactions, and liabilities from 12,000+ financial institutions.</li>
+                                <li><strong>Life Insurance/Retirement:</strong> Generation of standard "Notice of Death
+                                    & Claim"
+                                    letters for major carriers (MetLife, Prudential, etc.).</li>
+                                <li><strong>Real Estate:</strong> Manual inventory tracking with integration to
+                                    Zillow/Redfin
+                                    APIs for valuation estimates (where available).</li>
+                            </ul>
+
+                            <h3>2.4 System Integrations</h3>
+                            <p>Provider shall integrate the following third-party services to achieve automation:</p>
+                            <table class="w-full border-collapse border border-gray-300 mb-4">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 p-2 text-left">Service</th>
+                                        <th class="border border-gray-300 p-2 text-left">Purpose</th>
+                                        <th class="border border-gray-300 p-2 text-left">Integration Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Plaid</strong></td>
+                                        <td class="border border-gray-300 p-2">Financial Account Linking</td>
+                                        <td class="border border-gray-300 p-2"><strong>Deep Integration</strong>
+                                            (Transactions,
+                                            Liabilities, Investments)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>DocuSeal</strong></td>
+                                        <td class="border border-gray-300 p-2">E-Signatures</td>
+                                        <td class="border border-gray-300 p-2"><strong>Self-Hosted</strong> (Full API,
+                                            embedded
+                                            signing)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Lob</strong></td>
+                                        <td class="border border-gray-300 p-2">Certified Mail / Physical Letters</td>
+                                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong> (Address
+                                            verification, tracking)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>SendGrid</strong></td>
+                                        <td class="border border-gray-300 p-2">Transactional Email</td>
+                                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong>
+                                            (Notifications,
+                                            summaries)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Google Document AI</strong></td>
+                                        <td class="border border-gray-300 p-2">OCR / Data Extraction</td>
+                                        <td class="border border-gray-300 p-2"><strong>API Integrated</strong>
+                                            (Receipts, Forms)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Vertex AI (Gemini)</strong></td>
+                                        <td class="border border-gray-300 p-2">Process Guidance</td>
+                                        <td class="border border-gray-300 p-2"><strong>Context-Aware</strong> (RAG
+                                            pipeline on
+                                            Probate Code)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h3>2.5 "The Shepherd" Guidance Engine</h3>
+                            <p>Provider shall build a logic engine ("The Shepherd") that:</p>
+                            <ul class="list-decimal pl-5 mb-4">
+                                <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and
+                                    MN.</li>
+                                <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the
+                                    Executor.</li>
+                                <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines
+                                    (Inventory due
+                                    in 90 days, Taxes due in 9 mo).</li>
+                                <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions
+                                    (e.g.,
+                                    "Is this expense deductible in Maryland?").</li>
+                            </ul>
+
+                            <h3>3. Work Breakdown Structure (WBS)</h3>
+
+                            <p><strong>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL, Firestore,
+                                    VPC,
+                                    Cloud Armor.</li>
+                                <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
+                                <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
+                                <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata)
+                                    schemas.</li>
+                                <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service and Signed URL logic.
+                                </li>
+                                <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design System.</li>
+                                <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
+                            </ul>
+
+                            <p><strong>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>2.1 Asset Module:</strong> Plaid Link integration & manual asset overrides.
+                                </li>
+                                <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules & forms.
+                                </li>
+                                <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
+                                <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
+                                <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
+                                <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
+                                <li><strong>2.7 Legacy Vault:</strong> Build Ethical Will & Message intake logic.</li>
+                            </ul>
+
+                            <p><strong>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
+                                <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
+                                <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.</li>
+                                <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger logic.</li>
+                                <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
+                                <li><strong>3.6 Legacy Capture:</strong> Mobile video/audio recording for Final Wishes.
+                                </li>
+                            </ul>
+
+                            <p><strong>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>4.1 Pen Test:</strong> Third-party security audit & remediation.</li>
+                                <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection (logging, access
+                                    controls).</li>
+                                <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 concurrent users.</li>
+                                <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
+                                <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
+                            </ul>
+
+                            <hr class="my-12 border-gray-200">
+
+                            <!-- EXHIBIT B -->
+                            <h2 class="text-center mt-16 mb-12 text-3xl font-serif text-[#C8A951]">Exhibit B: Cost
+                                Proposal</h2>
+
+                            <h3>1. Executive Summary</h3>
+                            <p>This proposal offers a transparent, atomic breakdown of the investment required to build
+                                the
+                                "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or "billable
+                                hour" law
+                                firm models, we provide a fixed-price engineering partnership.</p>
+                            <p><strong>The Bottom Line:</strong></p>
+                            <ul class="list-disc pl-5 mb-4">
+                                <li><strong>Your Investment:</strong> $200,000 (Fixed)</li>
+                                <li><strong>Time to Market:</strong> 5 Months (20 Weeks)</li>
+                                <li><strong>Output:</strong> Fully secure, SOC 2-ready platform launching in MD, IL, and
+                                    MN.
+                                </li>
+                            </ul>
+
+                            <h3>2. Comparative Market Analysis</h3>
+                            <p>Why build with Sirsi Technologies vs. alternatives?</p>
+                            <table class="w-full border-collapse border border-gray-300 mb-4">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 p-2 text-left">Metric</th>
+                                        <th class="border border-gray-300 p-2 text-left">FinalWishes (111 VS)</th>
+                                        <th class="border border-gray-300 p-2 text-left">"Big Law" Custom Tech</th>
+                                        <th class="border border-gray-300 p-2 text-left">Typical Dev Agency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Total Cost</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>$200,000</strong> (Fixed)</td>
+                                        <td class="border border-gray-300 p-2"><strong>$650,000+</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>$350,000+</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Time to Market</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>5 Months</strong></td>
+                                        <td class="border border-gray-300 p-2">18-24 Months</td>
+                                        <td class="border border-gray-300 p-2">9-12 Months</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>Model</strong></td>
+                                        <td class="border border-gray-300 p-2">Co-Founder/Partner</td>
+                                        <td class="border border-gray-300 p-2">Billable Hour ($800/hr)</td>
+                                        <td class="border border-gray-300 p-2">Time & Materials</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2"><strong>IP Ownership</strong></td>
+                                        <td class="border border-gray-300 p-2"><strong>100% Client Owned</strong></td>
+                                        <td class="border border-gray-300 p-2">Firm Retains IP</td>
+                                        <td class="border border-gray-300 p-2">Vendor Lock-in</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p><em>Analysis: We deliver 4x the speed at roughly 40% of the cost of a traditional
+                                    enterprise
+                                    build by leveraging our proprietary "Sirsi" component library and AI-accelerated
+                                    development.</em></p>
+
+                            <h3>3. Atomic Development Cost Breakdown</h3>
+                            <p>We estimate <strong>1,200+ engineering & design hours</strong> to deliver the MVP. At a
+                                blended
+                                boutique rate of ~$152/hr, this aligns with the budget.</p>
+
+                            <p><strong>Phase 0: Design & Identity (Weeks 1-4)</strong> - $30,000</p>
+                            <p>Goal: World-class "Light Royal Neo-Deco" visual identity for App & Web.</p>
+
+                            <p><strong>Phase 1: Foundation & Vault (Weeks 1-4)</strong> - $25,875</p>
+                            <p>Goal: Bank-grade security core and document architecture.</p>
+
+                            <p><strong>Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</strong> - $30,000</p>
+                            <p>Goal: The innovative logic engine that replaces a lawyer's guidance.</p>
+
+                            <p><strong>Phase 3: Living Legacy & Universal App (Weeks 11-16)</strong> - $33,000</p>
+                            <p>Goal: "Universal App" (React Native) for Pre-Death & Post-Death flows.</p>
+
+                            <p><strong>Phase 4: QA, Security & Launch (Weeks 17-20)</strong> - $28,000</p>
+                            <p>Goal: Ensuring the system is bulletproof and legally compliant.</p>
+
+                            <p><strong>GRAND TOTAL VALUE:</strong> $178,875+ (plus Ops)<br><strong>FIXED BID:</strong>
+                                $200,000
+                            </p>
+
+                            <h3>4. Infrastructure Bill of Materials (BoM)</h3>
+                            <p>Estimated monthly run-rate for the platform.</p>
+                            <table class="w-full border-collapse border border-gray-300 mb-4">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="border border-gray-300 p-2 text-left">Service</th>
+                                        <th class="border border-gray-300 p-2 text-left">Specific Item</th>
+                                        <th class="border border-gray-300 p-2 text-left">Est. Unit Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">Compute</td>
+                                        <td class="border border-gray-300 p-2">Google Cloud Run (2 services)</td>
+                                        <td class="border border-gray-300 p-2">~$18/mo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">Database</td>
+                                        <td class="border border-gray-300 p-2">Cloud SQL (Postgres db-f1-micro)</td>
+                                        <td class="border border-gray-300 p-2">~$9/mo</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">AI</td>
+                                        <td class="border border-gray-300 p-2">Vertex AI (Gemini Flash)</td>
+                                        <td class="border border-gray-300 p-2">~$5/1M tokens</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2">E-Sign</td>
+                                        <td class="border border-gray-300 p-2">DocuSeal (Self-Hosted)</td>
+                                        <td class="border border-gray-300 p-2">$0 (OSS)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <br><br>
+                            <div id="signature-block"
+                                class="p-8 bg-gray-50 border border-gray-200 rounded text-center mt-8 scroll-mt-32">
+                                <p class="text-sm text-gray-500 uppercase tracking-widest mb-4">Electronic Signature</p>
+                                <div class="h-px w-64 bg-black mx-auto mb-2"></div>
+                                <p class="font-serif italic text-xl text-black">Tameeka Lockhart</p>
+                                <p class="text-xs text-gray-400 mt-2">Signed via FinalWishes Admin • <span
+                                        id="signDate">December 17,
+                                        2025</span></p>
+                            </div>
+
+
+                        </div>
+                    </div>
                 </div>
 
             </div>
-    </div>
-    </div>
-
-    <!-- TAB 3: CONTRACT -->
-    <div id="contract" class="tab-content">
-        <div class="legal-viewer mb-8 text-black" style="color: #0f172a;">
-            <!-- MSA HEADER -->
-            <div class="text-center mb-12 pb-12 border-b border-gray-200">
-                <h2 class="text-4xl text-black mb-4 !border-none">MASTER SERVICES AGREEMENT</h2>
-                <p class="text-gray-500">Global Effective Date: December 17, 2025</p>
-            </div>
-
-            <p>This Master Services Agreement ("Agreement") is entered into by and between
-                <strong>Tameeka
-                    Lockhart</strong> ("Client") and <strong>Sirsi Technologies</strong>, a Delaware
-                Corporation
-                ("Provider").
-            </p>
-
-            <h3>1. Services</h3>
-            <p>Client engages Provider to design, develop, and launch the "FinalWishes" platform as
-                described in
-                Exhibit A. Total Value: <strong>$200,000.00 USD</strong>.</p>
-
-            <hr class="my-12 border-gray-200">
-
-            <!-- EXHIBIT A -->
-            <h2 class="text-center mb-12 text-3xl font-serif text-[#C8A951]">Exhibit A: Statement of
-                Work (SOW)</h2>
-
-            <p><strong>Project Name:</strong> FinalWishes Platform Development<br>
-                <strong>SOW Reference:</strong> SOW-2025-001<br>
-                <strong>Date:</strong> December 17, 2025
-            </p>
-
-            <h3>1. Executive Overview</h3>
-            <p>This Statement of Work ("SOW") defines the comprehensive scope for the
-                <strong>FinalWishes Estate Operating System</strong>. While competent estate management
-                is critical, <strong>FinalWishes is not merely a probate tool.</strong> It is a Legacy
-                Management Application designed to capture the "Soul" of the Principal—their memories,
-                values, and final messages—before dealing with the "Administration" of their assets.
-            </p>
-            <p><strong>Objective:</strong> Deliver a dual-purpose platform that empowers the Living to
-                <strong>Curate their Legacy</strong> (Memories & Wishes) and equips their Loved Ones to
-                <strong>Automate the Estate</strong> (Probate & Assets).
-            </p>
-
-            <h3>2. Detailed Scope of Services</h3>
-
-            <p><strong>2.1 The Legacy & Memory Vault ("The Soul")</strong></p>
-            <p>Provider shall build a secure module for non-financial legacy preservation:</p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Time-Capsule Messages:</strong> Video/text delivery logic triggered by
-                    verified death.</li>
-                <li><strong>Ethical Will:</strong> Values curation and "How I want to be remembered"
-                    directives.</li>
-                <li><strong>Final Wishes:</strong> Funeral, burial, and ceremonial preferences.</li>
-            </ul>
-
-            <p><strong>2.2 Core Vault & Data Architecture ("The Safe")</strong></p>
-            <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to
-                ensure total data privacy.</p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Storage Layer:</strong> Hybrid Cloud SQL (PostgreSQL) + Firestore.</li>
-                <li><strong>File Vault:</strong> Cloud Storage with per-tenant isolation + Cloud KMS
-                    (AES-256).</li>
-                <li><strong>Security:</strong> SOC 2 Type II controls (IAM, TLS 1.3, Audit Logs).</li>
-            </ul>
-
-            <p><strong>2.3 Document Inventory & Automation ("The Admin")</strong></p>
-            <p>Provider will build automation paths for:</p>
-
-            <p><strong>A. Identity & Vital Records</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Death Certificate:</strong> Manual upload/OCR processing (No State API
-                    exists).</li>
-                <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
-            </ul>
-
-            <p><strong>B. Probate Court Filings (Launch States)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
-                    Odyssey)
-                    system. Template generation for Petition for Administration, Inventory, and
-                    Accounts.</li>
-                <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County) and
-                    standard
-                    circuit court forms.</li>
-                <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide
-                    e-filing
-                    system.</li>
-                <li><em>Note: Where API filing is unavailable, the Platform will generate
-                        "Ready-to-Print" PDF
-                        packages.</em></li>
-            </ul>
-
-            <p><strong>C. Financial & Asset Documents</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Asset Discovery:</strong> Integration of <strong>Plaid</strong> for
-                    retrieving
-                    balances, transactions, and liabilities from 12,000+ financial institutions.</li>
-                <li><strong>Life Insurance/Retirement:</strong> Generation of standard "Notice of Death
-                    & Claim"
-                    letters for major carriers (MetLife, Prudential, etc.).</li>
-                <li><strong>Real Estate:</strong> Manual inventory tracking with integration to
-                    Zillow/Redfin
-                    APIs for valuation estimates (where available).</li>
-            </ul>
-
-            <h3>2.4 System Integrations</h3>
-            <p>Provider shall integrate the following third-party services to achieve automation:</p>
-            <table class="w-full border-collapse border border-gray-300 mb-4">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border border-gray-300 p-2 text-left">Service</th>
-                        <th class="border border-gray-300 p-2 text-left">Purpose</th>
-                        <th class="border border-gray-300 p-2 text-left">Integration Level</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Plaid</strong></td>
-                        <td class="border border-gray-300 p-2">Financial Account Linking</td>
-                        <td class="border border-gray-300 p-2"><strong>Deep Integration</strong>
-                            (Transactions,
-                            Liabilities, Investments)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>DocuSeal</strong></td>
-                        <td class="border border-gray-300 p-2">E-Signatures</td>
-                        <td class="border border-gray-300 p-2"><strong>Self-Hosted</strong> (Full API,
-                            embedded
-                            signing)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Lob</strong></td>
-                        <td class="border border-gray-300 p-2">Certified Mail / Physical Letters</td>
-                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong> (Address
-                            verification, tracking)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>SendGrid</strong></td>
-                        <td class="border border-gray-300 p-2">Transactional Email</td>
-                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong>
-                            (Notifications,
-                            summaries)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Google Document AI</strong></td>
-                        <td class="border border-gray-300 p-2">OCR / Data Extraction</td>
-                        <td class="border border-gray-300 p-2"><strong>API Integrated</strong>
-                            (Receipts, Forms)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Vertex AI (Gemini)</strong></td>
-                        <td class="border border-gray-300 p-2">Process Guidance</td>
-                        <td class="border border-gray-300 p-2"><strong>Context-Aware</strong> (RAG
-                            pipeline on
-                            Probate Code)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>2.5 "The Shepherd" Guidance Engine</h3>
-            <p>Provider shall build a logic engine ("The Shepherd") that:</p>
-            <ul class="list-decimal pl-5 mb-4">
-                <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and
-                    MN.</li>
-                <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the
-                    Executor.</li>
-                <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines
-                    (Inventory due
-                    in 90 days, Taxes due in 9 mo).</li>
-                <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions
-                    (e.g.,
-                    "Is this expense deductible in Maryland?").</li>
-            </ul>
-
-            <h3>3. Work Breakdown Structure (WBS)</h3>
-
-            <p><strong>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL, Firestore,
-                    VPC,
-                    Cloud Armor.</li>
-                <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
-                <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
-                <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata)
-                    schemas.</li>
-                <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service and Signed URL logic.
-                </li>
-                <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design System.</li>
-                <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
-            </ul>
-
-            <p><strong>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>2.1 Asset Module:</strong> Plaid Link integration & manual asset overrides.
-                </li>
-                <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules & forms.
-                </li>
-                <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
-                <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
-                <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
-                <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
-                <li><strong>2.7 Legacy Vault:</strong> Build Ethical Will & Message intake logic.</li>
-            </ul>
-
-            <p><strong>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
-                <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
-                <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.</li>
-                <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger logic.</li>
-                <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
-                <li><strong>3.6 Legacy Capture:</strong> Mobile video/audio recording for Final Wishes.
-                </li>
-            </ul>
-
-            <p><strong>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>4.1 Pen Test:</strong> Third-party security audit & remediation.</li>
-                <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection (logging, access
-                    controls).</li>
-                <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 concurrent users.</li>
-                <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
-                <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
-            </ul>
-
-            <hr class="my-12 border-gray-200">
-
-            <!-- EXHIBIT B -->
-            <h2 class="text-center mt-16 mb-12 text-3xl font-serif text-[#C8A951]">Exhibit B: Cost
-                Proposal</h2>
-
-            <h3>1. Executive Summary</h3>
-            <p>This proposal offers a transparent, atomic breakdown of the investment required to build
-                the
-                "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or "billable
-                hour" law
-                firm models, we provide a fixed-price engineering partnership.</p>
-            <p><strong>The Bottom Line:</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Your Investment:</strong> $200,000 (Fixed)</li>
-                <li><strong>Time to Market:</strong> 5 Months (20 Weeks)</li>
-                <li><strong>Output:</strong> Fully secure, SOC 2-ready platform launching in MD, IL, and
-                    MN.
-                </li>
-            </ul>
-
-            <h3>2. Comparative Market Analysis</h3>
-            <p>Why build with Sirsi Technologies vs. alternatives?</p>
-            <table class="w-full border-collapse border border-gray-300 mb-4">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border border-gray-300 p-2 text-left">Metric</th>
-                        <th class="border border-gray-300 p-2 text-left">FinalWishes (111 VS)</th>
-                        <th class="border border-gray-300 p-2 text-left">"Big Law" Custom Tech</th>
-                        <th class="border border-gray-300 p-2 text-left">Typical Dev Agency</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Total Cost</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>$200,000</strong> (Fixed)</td>
-                        <td class="border border-gray-300 p-2"><strong>$650,000+</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>$350,000+</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Time to Market</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>5 Months</strong></td>
-                        <td class="border border-gray-300 p-2">18-24 Months</td>
-                        <td class="border border-gray-300 p-2">9-12 Months</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Model</strong></td>
-                        <td class="border border-gray-300 p-2">Co-Founder/Partner</td>
-                        <td class="border border-gray-300 p-2">Billable Hour ($800/hr)</td>
-                        <td class="border border-gray-300 p-2">Time & Materials</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>IP Ownership</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>100% Client Owned</strong></td>
-                        <td class="border border-gray-300 p-2">Firm Retains IP</td>
-                        <td class="border border-gray-300 p-2">Vendor Lock-in</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p><em>Analysis: We deliver 4x the speed at roughly 40% of the cost of a traditional
-                    enterprise
-                    build by leveraging our proprietary "Sirsi" component library and AI-accelerated
-                    development.</em></p>
-
-            <h3>3. Atomic Development Cost Breakdown</h3>
-            <p>We estimate <strong>1,200+ engineering & design hours</strong> to deliver the MVP. At a
-                blended
-                boutique rate of ~$152/hr, this aligns with the budget.</p>
-
-            <p><strong>Phase 0: Design & Identity (Weeks 1-4)</strong> - $30,000</p>
-            <p>Goal: World-class "Light Royal Neo-Deco" visual identity for App & Web.</p>
-
-            <p><strong>Phase 1: Foundation & Vault (Weeks 1-4)</strong> - $25,875</p>
-            <p>Goal: Bank-grade security core and document architecture.</p>
-
-            <p><strong>Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</strong> - $30,000</p>
-            <p>Goal: The innovative logic engine that replaces a lawyer's guidance.</p>
-
-            <p><strong>Phase 3: Living Legacy & Universal App (Weeks 11-16)</strong> - $33,000</p>
-            <p>Goal: "Universal App" (React Native) for Pre-Death & Post-Death flows.</p>
-
-            <p><strong>Phase 4: QA, Security & Launch (Weeks 17-20)</strong> - $28,000</p>
-            <p>Goal: Ensuring the system is bulletproof and legally compliant.</p>
-
-            <p><strong>GRAND TOTAL VALUE:</strong> $178,875+ (plus Ops)<br><strong>FIXED BID:</strong>
-                $200,000
-            </p>
-
-            <h3>4. Infrastructure Bill of Materials (BoM)</h3>
-            <p>Estimated monthly run-rate for the platform.</p>
-            <table class="w-full border-collapse border border-gray-300 mb-4">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border border-gray-300 p-2 text-left">Service</th>
-                        <th class="border border-gray-300 p-2 text-left">Specific Item</th>
-                        <th class="border border-gray-300 p-2 text-left">Est. Unit Cost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2">Compute</td>
-                        <td class="border border-gray-300 p-2">Google Cloud Run (2 services)</td>
-                        <td class="border border-gray-300 p-2">~$18/mo</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2">Database</td>
-                        <td class="border border-gray-300 p-2">Cloud SQL (Postgres db-f1-micro)</td>
-                        <td class="border border-gray-300 p-2">~$9/mo</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2">AI</td>
-                        <td class="border border-gray-300 p-2">Vertex AI (Gemini Flash)</td>
-                        <td class="border border-gray-300 p-2">~$5/1M tokens</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2">E-Sign</td>
-                        <td class="border border-gray-300 p-2">DocuSeal (Self-Hosted)</td>
-                        <td class="border border-gray-300 p-2">$0 (OSS)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <br><br>
-            <div id="signature-block"
-                class="p-8 bg-gray-50 border border-gray-200 rounded text-center mt-8 scroll-mt-32">
-                <p class="text-sm text-gray-500 uppercase tracking-widest mb-4">Electronic Signature</p>
-                <div class="h-px w-64 bg-black mx-auto mb-2"></div>
-                <p class="font-serif italic text-xl text-black">Tameeka Lockhart</p>
-                <p class="text-xs text-gray-400 mt-2">Signed via FinalWishes Admin • <span id="signDate">December 17,
-                        2025</span></p>
-            </div>
-
-
-        </div>
-    </div>
-    </div>
-
-    </div>
-    </main>
+        </main>
     </div>
 
     <!-- Scripts -->

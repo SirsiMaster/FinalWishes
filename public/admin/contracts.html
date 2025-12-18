@@ -484,6 +484,124 @@
             color: white !important;
         }
 
+        /* INTERACTIVE PLAN CARDS */
+        .plan-card-interactive {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .plan-card-interactive:hover {
+            border-color: #C8A951;
+            box-shadow: 0 0 25px rgba(200, 169, 81, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .selected-plan-card {
+            border: 2px solid #C8A951 !important;
+            background: linear-gradient(135deg, rgba(200, 169, 81, 0.15) 0%, rgba(0, 0, 0, 0.6) 100%) !important;
+            transform: scale(1.02) !important;
+            box-shadow: 0 0 40px rgba(200, 169, 81, 0.25) !important;
+            z-index: 10;
+        }
+
+        .selected-plan-card::after {
+            content: "✓";
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: #10B981;
+            color: #0f172a;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            border: 2px solid #0f172a;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* INTERACTIVE ANIMATIONS */
+        .plan-card-anim {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+        }
+
+        .plan-card-anim:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.5);
+            border-color: rgba(200, 169, 81, 0.4);
+            z-index: 5;
+        }
+
+        .plan-card-anim.selected-anim {
+            transform: scale(1.05);
+            border-color: #C8A951 !important;
+            background: linear-gradient(135deg, rgba(200, 169, 81, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%) !important;
+            box-shadow: 0 0 40px rgba(200, 169, 81, 0.2);
+            z-index: 10;
+        }
+
+        /* DOWNLOAD BUTTONS */
+        .download-btn-neo {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            border: 1px solid rgba(200, 169, 81, 0.4);
+            color: #C8A951;
+            padding: 0.6rem 1.2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            background: rgba(15, 23, 42, 0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all 0.3s ease;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            border-radius: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .download-btn-neo:hover {
+            background: rgba(200, 169, 81, 0.15);
+            border-color: #C8A951;
+            box-shadow: 0 0 20px rgba(200, 169, 81, 0.25);
+            color: #fbbf24;
+            transform: translateY(-1px);
+        }
+
+        .download-btn-neo svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+        }
+
+        .download-btn-neo:hover svg {
+            opacity: 1;
+        }
+
         /* TABLE OVERRIDES FOR DARK MODE */
         .contract-immersive-wrapper table {
             border-collapse: collapse;
@@ -604,6 +722,47 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* DYNAMIC SELECTION STYLES */
+        .plan-card-interactive {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card-interactive:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(200, 169, 81, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .selected-plan-card {
+            background: rgba(200, 169, 81, 0.05) !important;
+            border-color: #C8A951 !important;
+            box-shadow: 0 0 40px -10px rgba(200, 169, 81, 0.3) !important;
+            transform: scale(1.02);
+            z-index: 5;
+        }
+
+        .selected-plan-card::after {
+            content: 'SELECTED';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #C8A951;
+            color: #0f172a;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 4px 12px;
+            letter-spacing: 0.1em;
+            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
         }
 
         /* SUB-COMPONENTS */
@@ -918,7 +1077,16 @@
                     </div>
 
                     <!-- TAB 1: SOW -->
-                    <div id="sow" class="tab-content active text-blue-100" style="padding-top: 1rem !important;">
+                    <div id="sow" class="tab-content active text-blue-100"
+                        style="padding-top: 1rem !important; position: relative;">
+                        <!-- Download Button -->
+                        <button onclick="window.print()" class="download-btn-neo">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            DOWNLOAD PDF
+                        </button>
                         <div class="grid grid-cols-12 gap-12">
                             <div class="col-span-12">
                                 <!-- HEADER -->
@@ -1218,9 +1386,30 @@
                                 </div>
 
                                 <!-- 3. WBS -->
+                                <!-- 3. WBS -->
                                 <h2 class="text-[#C8A951] mt-12 mb-8">3. Work Breakdown Structure (WBS)</h2>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                                    <!-- PHASE 0 -->
+                                    <div class="bg-white/5 p-8 rounded border border-[#C8A951]/30">
+                                        <div class="flex justify-between items-center mb-6">
+                                            <h4 class="text-white text-lg font-bold uppercase">PHASE 0: DESIGN &
+                                                IDENTITY</h4>
+                                            <span
+                                                class="text-xs font-mono text-[#C8A951] border border-[#C8A951] px-2 py-1 rounded">WEEKS
+                                                1-4</span>
+                                        </div>
+                                        <ul class="space-y-4 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong class="text-white">0.1 Brand Identity:</strong> Logo,
+                                                Typography, Palette finalization.</li>
+                                            <li><strong class="text-white">0.2 UX/UI Design System:</strong> Figma-based
+                                                Web + Mobile design system.</li>
+                                            <li><strong class="text-white">0.3 Prototyping:</strong> High-fidelity
+                                                interaction models.</li>
+                                            <li><strong class="text-white">0.4 Asset Production:</strong> Custom icons
+                                                and illustrations.</li>
+                                        </ul>
+                                    </div>
                                     <!-- PHASE 1 -->
                                     <div class="bg-white/5 p-8 rounded border border-[#C8A951]/30">
                                         <div class="flex justify-between items-center mb-6">
@@ -1319,6 +1508,26 @@
                                                 Production migration.</li>
                                         </ul>
                                     </div>
+
+                                    <!-- PHASE 5 -->
+                                    <div class="bg-white/5 p-8 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-6">
+                                            <h4 class="text-white text-lg font-bold uppercase">PHASE 5: CONTINGENCY &
+                                                PROJECT MANAGEMENT</h4>
+                                            <span
+                                                class="text-xs font-mono text-blue-300 border border-blue-300 px-2 py-1 rounded">ONGOING</span>
+                                        </div>
+                                        <ul class="space-y-4 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong class="text-white">5.1 PM:</strong> Weekly client syncing and
+                                                project management.</li>
+                                            <li><strong class="text-white">5.2 Manual QA:</strong> Cross-platform manual
+                                                verification.</li>
+                                            <li><strong class="text-white">5.3 Iteration:</strong> Refinements based on
+                                                user feedback.</li>
+                                            <li><strong class="text-white">5.4 Support:</strong> Post-launch
+                                                stabilization.</li>
+                                        </ul>
+                                    </div>
                                 </div>
 
                                 <!-- 4. DELIVERABLES -->
@@ -1384,7 +1593,16 @@
                     </div>
 
                     <!-- TAB 2: COST -->
-                    <div id="cost" class="tab-content text-blue-100" style="padding-top: 1rem !important;">
+                    <div id="cost" class="tab-content text-blue-100"
+                        style="padding-top: 1rem !important; position: relative;">
+                        <!-- Download Button -->
+                        <button onclick="window.print()" class="download-btn-neo">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            DOWNLOAD PDF
+                        </button>
                         <!-- TOP STATS - INLINE STYLES TO OVERRIDE CSS -->
                         <div
                             style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 48px; max-width: 1200px; margin-left: auto; margin-right: auto;">
@@ -1514,7 +1732,7 @@
                             <div
                                 style="width: 100%; text-align: center; display: flex; justify-content: center; margin-bottom: 48px;">
                                 <p id="allocation-text" style="text-align: center !important; margin: 0;">
-                                    Transparent allocation of <strong style="color: white;">925 hours</strong> across 5
+                                    Transparent allocation of <strong style="color: white;">925 hours</strong> across 6
                                     key phases.
                                 </p>
                             </div>
@@ -1609,7 +1827,7 @@
                                         <div style="text-align: right;">
                                             <div
                                                 style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
-                                                $25,875</div>
+                                                $30,000</div>
                                             <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
                                         </div>
                                     </div>
@@ -1624,25 +1842,24 @@
                                                 <th style="padding-bottom: 12px; text-align: right;">Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">System Architecture (VPC,
-                                                    Encryption)</td>
+                                                <td style="padding: 12px 0; color: white;">System Architecture</td>
                                                 <td style="color: white;">Sr. Architect</td>
                                                 <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$7,000</td>
+                                                <td style="text-align: right; color: #10b981;">$8,000</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Schema Design (SQL/NoSQL)
                                                 </td>
                                                 <td style="color: white;">Backend Eng</td>
                                                 <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$4,500</td>
+                                                <td style="text-align: right; color: #10b981;">$5,500</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Vault Implementation (KMS)
                                                 </td>
                                                 <td style="color: white;">Security Eng</td>
                                                 <td style="text-align: right; color: white;">35</td>
-                                                <td style="text-align: right; color: #10b981;">$6,125</td>
+                                                <td style="text-align: right; color: #10b981;">$7,250</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">DocuSeal Setup</td>
@@ -1654,7 +1871,7 @@
                                                 <td style="padding: 12px 0; color: white;">Frontend Shell (React)</td>
                                                 <td style="color: white;">Frontend Eng</td>
                                                 <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$6,000</td>
+                                                <td style="text-align: right; color: #10b981;">$7,000</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1681,7 +1898,7 @@
                                         <div style="text-align: right;">
                                             <div
                                                 style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
-                                                $30,000</div>
+                                                $35,000</div>
                                             <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
                                         </div>
                                     </div>
@@ -1700,25 +1917,25 @@
                                                 </td>
                                                 <td style="color: white;">Logic Eng</td>
                                                 <td style="text-align: right; color: white;">60</td>
-                                                <td style="text-align: right; color: #10b981;">$9,000</td>
+                                                <td style="text-align: right; color: #10b981;">$11,000</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Gemini 3.0 RAG Pipeline</td>
                                                 <td style="color: white;">AI Engineer</td>
                                                 <td style="text-align: right; color: white;">45</td>
-                                                <td style="text-align: right; color: #10b981;">$8,100</td>
+                                                <td style="text-align: right; color: #10b981;">$9,500</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Legal Prompt Engineering</td>
                                                 <td style="color: white;">Prompt Eng</td>
                                                 <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$5,400</td>
+                                                <td style="text-align: right; color: #10b981;">$6,000</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Frontend Guidance UI</td>
                                                 <td style="color: white;">Frontend Eng</td>
                                                 <td style="text-align: right; color: white;">50</td>
-                                                <td style="text-align: right; color: #10b981;">$7,500</td>
+                                                <td style="text-align: right; color: #10b981;">$8,500</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1745,7 +1962,7 @@
                                         <div style="text-align: right;">
                                             <div
                                                 style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
-                                                $33,000</div>
+                                                $38,000</div>
                                             <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
                                         </div>
                                     </div>
@@ -1763,25 +1980,25 @@
                                                 <td style="padding: 12px 0; color: white;">React Native Shell</td>
                                                 <td style="color: white;">Mobile Eng</td>
                                                 <td style="text-align: right; color: white;">80</td>
-                                                <td style="text-align: right; color: #10b981;">$12,000</td>
+                                                <td style="text-align: right; color: #10b981;">$14,000</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Living Legacy Features</td>
                                                 <td style="color: white;">Full Stack</td>
                                                 <td style="text-align: right; color: white;">60</td>
-                                                <td style="text-align: right; color: #10b981;">$9,000</td>
+                                                <td style="text-align: right; color: #10b981;">$10,500</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Asset Distribution UI</td>
                                                 <td style="color: white;">React Eng</td>
                                                 <td style="text-align: right; color: white;">50</td>
-                                                <td style="text-align: right; color: #10b981;">$7,500</td>
+                                                <td style="text-align: right; color: #10b981;">$8,500</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">Doc Scanner / Camera</td>
                                                 <td style="color: white;">Mobile Eng</td>
                                                 <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$4,500</td>
+                                                <td style="text-align: right; color: #10b981;">$5,000</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1808,7 +2025,7 @@
                                         <div style="text-align: right;">
                                             <div
                                                 style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
-                                                $28,000</div>
+                                                $32,000</div>
                                             <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
                                         </div>
                                     </div>
@@ -1823,28 +2040,78 @@
                                                 <th style="padding-bottom: 12px; text-align: right;">Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Mini-Pen Testing</td>
+                                                <td style="padding: 12px 0; color: white;">Pen Testing (Ext)</td>
                                                 <td style="color: white;">Sec Analyst</td>
                                                 <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$10,000</td>
+                                                <td style="text-align: right; color: #10b981;">$12,000</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">E2E Testing (Cypress)</td>
                                                 <td style="color: white;">QA Eng</td>
                                                 <td style="text-align: right; color: white;">60</td>
-                                                <td style="text-align: right; color: #10b981;">$9,000</td>
+                                                <td style="text-align: right; color: #10b981;">$10,000</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; color: white;">SOC 2 Policy Gen</td>
                                                 <td style="color: white;">Compliance</td>
                                                 <td style="text-align: right; color: white;">20</td>
-                                                <td style="text-align: right; color: #10b981;">$3,000</td>
+                                                <td style="text-align: right; color: #10b981;">$4,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">App Store Polish</td>
+                                                <td style="padding: 12px 0; color: white;">App Store Submission</td>
                                                 <td style="color: white;">Mobile Eng</td>
                                                 <td style="text-align: right; color: white;">40</td>
                                                 <td style="text-align: right; color: #10b981;">$6,000</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- PHASE 5 -->
+                                <div
+                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; overflow: hidden;">
+                                    <div style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.03);"
+                                        onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        <div style="display: flex; align-items: center; gap: 24px;">
+                                            <div
+                                                style="height: 48px; width: 48px; border-radius: 4px; background: rgba(200,169,81,0.1); border: 1px solid #C8A951; display: flex; align-items: center; justify-content: center; color: #C8A951; font-family: Cinzel, serif; font-weight: bold; font-size: 20px;">
+                                                5</div>
+                                            <div>
+                                                <h3
+                                                    style="color: white; font-weight: 600; font-size: 24px; font-family: Cinzel, serif; margin: 0;">
+                                                    Contingency & PM</h3>
+                                                <p
+                                                    style="color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; margin: 4px 0 0 0;">
+                                                    Project Oversight • Ongoing</p>
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div
+                                                style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
+                                                $35,000</div>
+                                            <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
+                                        </div>
+                                    </div>
+                                    <div class="hidden"
+                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
+                                        <table
+                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
+                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                                <th style="padding-bottom: 12px;">Activity</th>
+                                                <th style="padding-bottom: 12px;">Role</th>
+                                                <th style="padding-bottom: 12px; text-align: right;">Hrs</th>
+                                                <th style="padding-bottom: 12px; text-align: right;">Cost</th>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; color: white;">15% Project Contingency</td>
+                                                <td style="color: white;">Risk Mgmt</td>
+                                                <td style="text-align: right; color: white;">-</td>
+                                                <td style="text-align: right; color: #10b981;">$28,000</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; color: white;">Project Management</td>
+                                                <td style="color: white;">Lead Dev</td>
+                                                <td style="text-align: right; color: white;">50</td>
+                                                <td style="text-align: right; color: #10b981;">$7,000</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -2057,7 +2324,7 @@
                         <div style="margin-top: 96px; padding-top: 48px; border-top: 1px solid rgba(200,169,81,0.3);">
                             <h2
                                 style="text-align: center; margin-bottom: 64px; font-size: 28px; font-family: Cinzel, serif; color: #C8A951; text-transform: uppercase; letter-spacing: 0.15em;">
-                                5. Select Your Payment Plan</h2>
+                                5. Payment Schedule Options</h2>
 
                             <div
                                 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
@@ -2089,9 +2356,6 @@
                                         <div
                                             style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
                                             $200,000</div>
-                                        <button onclick="selectPlan('Plan A')"
-                                            style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
-                                            Plan A</button>
                                     </div>
                                 </div>
 
@@ -2108,17 +2372,17 @@
                                         style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $66,666</div>
+                                                $66,666.66</div>
                                             <div style="font-size: 14px; color: white;">Due at Signing</div>
                                         </div>
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $66,666</div>
+                                                $66,666.67</div>
                                             <div style="font-size: 14px; color: white;">Due Month 2</div>
                                         </div>
                                         <div>
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $66,668</div>
+                                                $66,666.67</div>
                                             <div style="font-size: 14px; color: white;">Due Month 4</div>
                                         </div>
                                     </div>
@@ -2126,11 +2390,8 @@
                                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
                                         <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Total</div>
                                         <div
-                                            style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
+                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
                                             $200,000</div>
-                                        <button onclick="selectPlan('Plan B')"
-                                            style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
-                                            Plan B</button>
                                     </div>
                                 </div>
 
@@ -2147,19 +2408,25 @@
                                         style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $87,500</div>
-                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
+                                                $75,000</div>
+                                            <div style="font-size: 14px; color: white;">Due at Close</div>
                                         </div>
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $87,500</div>
-                                            <div style="font-size: 14px; color: white;">Due Month 3</div>
+                                                $50,000</div>
+                                            <div style="font-size: 14px; color: white;">Follow-up 1</div>
+                                        </div>
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $50,000</div>
+                                            <div style="font-size: 14px; color: white;">Follow-up 2</div>
                                         </div>
                                         <div
                                             style="background: rgba(200,169,81,0.1); padding: 0.75rem; border: 1px solid rgba(200,169,81,0.3);">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 2.5% Equity</div>
-                                            <div style="font-size: 14px; color: white;">In lieu of $25k cash</div>
+                                            <div style="font-size: 14px; color: white;">Stake in FinalWishes Platform
+                                            </div>
                                         </div>
                                     </div>
 
@@ -2167,13 +2434,8 @@
                                         <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Cash Total
                                         </div>
                                         <div
-                                            style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 0.25rem;">
+                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
                                             $175,000</div>
-                                        <div style="font-size: 14px; color: #10b981; margin-bottom: 1rem;">Save $25,000
-                                        </div>
-                                        <button onclick="selectPlan('Plan C')"
-                                            style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
-                                            Plan C</button>
                                     </div>
                                 </div>
 
@@ -2182,347 +2444,961 @@
                     </div>
 
                     <!-- TAB 3: CONTRACT -->
-                    <div id="contract" class="tab-content">
-                        <div class="legal-viewer mb-8">
-                            <!-- MSA HEADER -->
-                            <div class="text-center mb-12 pb-12 border-b border-gray-200">
-                                <h2>MASTER SERVICES AGREEMENT</h2>
-                                <p class="text-center opacity-60">Global Effective Date: December 17, 2025</p>
+                    <div id="contract" class="tab-content" style="position: relative;">
+                        <!-- Download Button -->
+                        <button onclick="window.print()" class="download-btn-neo">
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            DOWNLOAD PDF
+                        </button>
+
+                        <!-- STEP 1: PLAN SELECTION -->
+                        <!-- STEP 1: PLAN SELECTION -->
+                        <div id="selection-phase" class="mb-24 mt-12 w-full max-w-6xl mx-auto">
+                            <!-- HEADER (Aligned) -->
+                            <div class="text-center mb-12">
+                                <h2
+                                    class="font-serif text-3xl text-[#C8A951] mb-6 uppercase tracking-[0.2em] drop-shadow-md">
+                                    Step 1: Select Your Partnership Plan</h2>
+                                <p class="text-slate-400 max-w-2xl mx-auto font-light leading-relaxed text-sm">Please
+                                    choose a financial
+                                    structure below to live-amend the agreement. You will be able to review and sign
+                                    once a
+                                    selection is made.</p>
                             </div>
 
-                            <!-- ROBUST MSA CONTENT (SYNCED FROM CONTRACT.HTML) -->
-                            <div class="space-y-12">
-                                <section>
-                                    <h2>1. RECITALS</h2>
-                                    <p><strong>WHEREAS</strong>, Client desires to engage Provider to design, develop,
-                                        and implement a comprehensive estate settlement software platform known as
-                                        <strong>FinalWishes</strong> (the "Platform");</p>
-                                    <p><strong>WHEREAS</strong>, Provider possesses the requisite technical expertise,
-                                        personnel, and infrastructure, including expertise in artificial intelligence,
-                                        cloud architecture, and secure software development, to perform the Services;
-                                    </p>
-                                    <p><strong>WHEREAS</strong>, the Parties wish to set forth the terms and conditions
-                                        under which Provider will provide such Services to Client.</p>
-                                    <p><strong>NOW, THEREFORE</strong>, in consideration of the mutual covenants
-                                        contained herein, the Parties agree as follows:</p>
-                                </section>
+                            <!-- CARDS (Hyper-Modern) -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <!-- PLAN A -->
+                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
+                                    id="card-plan-a">
+                                    <div
+                                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    </div>
 
-                                <section>
-                                    <h2>2. DEFINITIONS</h2>
-                                    <p>For purposes of this Agreement, the following terms shall have the meanings set
-                                        forth below:</p>
-                                    <ul>
-                                        <li><strong>"Background Technology"</strong> means all software, code, tools,
-                                            libraries, frameworks, know-how, methodologies, and Intellectual Property
-                                            Rights owned or licensed by Provider prior to the Effective Date or
-                                            developed independently of the Services (including, without limitation,
-                                            Provider’s "Sirsi" component library, "Gemini" guidance patterns, and
-                                            standard deployment scripts).</li>
-                                        <li><strong>"Confidential Information"</strong> means any non-public information
-                                            disclosed by one Party (the "Disclosing Party") to the other Party (the
-                                            "Receiving Party") that is designated as confidential or that, given the
-                                            nature of the information or circumstances of disclosure, reasonably should
-                                            be understood to be confidential.</li>
-                                        <li><strong>"Deliverables"</strong> means all documents, work product, code,
-                                            software, reports, and other materials that are specifically created for and
-                                            delivered to Client by Provider pursuant to a Statement of Work.</li>
-                                        <li><strong>"Intellectual Property Rights"</strong> means all patent rights,
-                                            copyright rights, mask work rights, moral rights, rights of publicity,
-                                            trademark, trade dress and service mark rights, goodwill, trade secret
-                                            rights and other intellectual property rights as may now exist or hereafter
-                                            come into existence.</li>
-                                        <li><strong>"Services"</strong> means the professional software development,
-                                            consulting, and design services to be performed by Provider as described in
-                                            a Statement of Work.</li>
-                                        <li><strong>"Statement of Work" or "SOW"</strong> means a document describing
-                                            the specific Services to be performed, Deliverables to be provided, fees to
-                                            be paid, and timeline for performance. Each SOW shall be substantially in
-                                            the form of Exhibit A.</li>
-                                    </ul>
-                                </section>
-
-                                <section>
-                                    <h2>3. SERVICES AND ENGAGEMENT</h2>
-                                    <p><strong>3.1 Statements of Work.</strong> Provider shall provide the Services and
-                                        Deliverables to Client as specified in each SOW. Each SOW shall be effectively
-                                        incorporated into this Agreement.</p>
-                                    <p><strong>3.2 Standard of Performance.</strong> Provider represents and warrants
-                                        that the Services will be performed in a professional, workmanlike manner, by
-                                        qualified personnel, and consistent with the highest industry standards for
-                                        similar enterprise-grade software development services.</p>
-                                    <p><strong>3.3 Change Orders.</strong> Client may, at any time, request changes to
-                                        the scope of the Services. No change shall be effective until a written "Change
-                                        Order" is signed by both Parties.</p>
-                                </section>
-
-                                <section>
-                                    <h2>4. COMPENSATION AND PAYMENT</h2>
-                                    <p><strong>4.1 Fees.</strong> Client shall pay Provider the fees set forth in the
-                                        applicable SOW. This contract value is fixed at <strong>$200,000.00 USD</strong>
-                                        as detailed in Exhibit B.</p>
-                                    <h3>4.2 Payment Plan Selection</h3>
-                                    <p>Client shall select <strong>ONE</strong> of the following payment plans for the
-                                        disbursement of fees. Selection must be made upon execution of this Agreement.
-                                    </p>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-                                        <div class="bg-white/5 p-6 border border-white/10 rounded-lg">
-                                            <h4 class="text-[#C8A951] font-serif mb-4">PLAN A: Standard Split</h4>
-                                            <p class="text-sm opacity-80 mb-4">50% Upfront / 50% Launch</p>
-                                            <div class="text-2xl font-serif text-white">$100k / $100k</div>
+                                    <div class="flex-grow">
+                                        <div class="flex justify-between items-start mb-8">
+                                            <h4 class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">PLAN
+                                                A</h4>
+                                            <div class="h-1 w-8 bg-[#C8A951] rounded-full"></div>
                                         </div>
-                                        <div class="bg-white/5 p-6 border border-white/10 rounded-lg">
-                                            <h4 class="text-[#C8A951] font-serif mb-4">PLAN B: Installments</h4>
-                                            <p class="text-sm opacity-80 mb-4">Trimester (33/33/33)</p>
-                                            <div class="text-2xl font-serif text-white">3x $66,666</div>
-                                        </div>
-                                        <div
-                                            class="bg-white/5 p-6 border border-[#C8A951]/40 rounded-lg ring-1 ring-[#C8A951]/40">
-                                            <h4 class="text-[#C8A951] font-serif mb-4 italic">PLAN C: Strategic</h4>
-                                            <p class="text-sm opacity-80 mb-4">Performance Partnership</p>
-                                            <div class="text-2xl font-serif text-white">Cash + Equity</div>
+
+                                        <div class="space-y-8">
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
+                                                    Signing</div>
+                                                <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
+                                                    Launch</div>
+                                                <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <p><strong>4.3 Payment Terms.</strong> Invoices are due and payable <strong>Net
-                                            Fifteen (15)</strong> days from the invoice date.</p>
-                                </section>
 
-                                <section>
-                                    <h2>5. INTELLECTUAL PROPERTY RIGHTS</h2>
-                                    <p><strong>5.1 Work Made for Hire.</strong> Provider agrees that all Deliverables
-                                        created for Client under this Agreement shall be considered "works made for
-                                        hire" to the extent permitted by law. Provider hereby irrevocably assigns to
-                                        Client all right, title, and interest in and to such Deliverable.</p>
-                                    <p><strong>5.2 Background Technology.</strong> Provider retains all right, title,
-                                        and interest in and to its Background Technology. Provider hereby grants to
-                                        Client a perpetual, irrevocable, non-exclusive, royalty-free license to use such
-                                        background technology solely as necessary for Client to utilize the
-                                        Deliverables.</p>
-                                    <p><strong>5.3 AI-Generated Content.</strong> The Parties acknowledge that Provider
-                                        utilizes advanced Artificial Intelligence tools (e.g., Google Gemini) to assist
-                                        in code generation. Provider warrants that it has the full legal right to assign
-                                        ownership of such AI-generated output to Client.</p>
-                                </section>
+                                    <div class="mt-12">
+                                        <div class="flex justify-between items-center mb-6 px-1">
+                                            <span class="text-[10px] uppercase tracking-widest text-white/40">Total
+                                                Value</span>
+                                            <span class="text-white font-serif tracking-wider">$200k</span>
+                                        </div>
+                                        <button onclick="selectContractPlan('Plan A', this)"
+                                            class="w-full py-4 rounded-full bg-gradient-to-r from-[#C8A951] to-[#E2C76B] text-black font-bold text-xs uppercase tracking-[0.25em] shadow-lg shadow-[#C8A951]/20 hover:shadow-[#C8A951]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 select-plan-btn">
+                                            Select Plan
+                                        </button>
+                                    </div>
+                                </div>
 
-                                <section>
-                                    <h2>6. CONFIDENTIALITY AND SECURITY</h2>
-                                    <p><strong>6.1 Obligations.</strong> The Receiving Party agrees to hold the
-                                        Disclosing Party’s Confidential Information in strict confidence and take
-                                        reasonable precautions to protect it.</p>
-                                    <p><strong>6.2 Data Security & SOC 2 Compliance.</strong> Provider agrees to
-                                        implement and maintain commercially reasonable technical and organizational
-                                        security measures—consistent with SOC 2 Type II criteria—to protect such data
-                                        from unauthorized access, including encryption of data at rest and in transit.
-                                    </p>
-                                </section>
+                                <!-- PLAN B -->
+                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
+                                    id="card-plan-b">
+                                    <div
+                                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    </div>
 
-                                <section>
-                                    <h2>7. WARRANTIES AND COVENANTS</h2>
-                                    <p><strong>7.1 Provider Warranties.</strong> Provider warrants that the Deliverables
-                                        will be original, will not infringe any third-party rights, and will be
-                                        performed in compliance with all applicable laws.</p>
-                                    <p><strong>7.2 Performance Warranty (60-Day Bug Fix Guarantee).</strong> Provider
-                                        warrants that, for a period of <strong>sixty (60) days</strong> following
-                                        Acceptance, the Deliverables will function materially in accordance with the
-                                        specifications.</p>
-                                </section>
+                                    <div class="flex-grow">
+                                        <div class="flex justify-between items-start mb-8">
+                                            <h4 class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">PLAN
+                                                B</h4>
+                                            <div
+                                                class="h-1 w-8 bg-white/10 rounded-full group-hover:bg-[#C8A951] transition-colors duration-500">
+                                            </div>
+                                        </div>
 
-                                <section>
-                                    <h2>8. INDEMNIFICATION</h2>
-                                    <p><strong>8.1 By Provider.</strong> Provider shall indemnify, defend, and hold
-                                        harmless Client from and against any losses arising out of any third-party claim
-                                        alleging that the Deliverables infringe or misappropriate any U.S. copyright,
-                                        trademark, or trade secret.</p>
-                                    <p><strong>8.2 By Client.</strong> Client shall indemnify Provider from losses
-                                        arising out of: (i) Client’s specific specifications that compelled the
-                                        infringement; or (ii) content or data provided by Client.</p>
-                                </section>
+                                        <div class="space-y-6">
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-1">
+                                                    Signing</div>
+                                                <div class="text-white text-4xl font-thin tracking-tight">$66.6k</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-1">
+                                                    Month 2</div>
+                                                <div class="text-white text-4xl font-thin tracking-tight">$66.6k</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-1">
+                                                    Month 4</div>
+                                                <div class="text-white text-4xl font-thin tracking-tight">$66.6k</div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <section>
-                                    <h2>9. LIMITATION OF LIABILITY</h2>
-                                    <p><strong>9.1 Exclusion of Consequential Damages.</strong> EXCEPT FOR BREACHES OF
-                                        CONFIDENTIALITY OR INDEMNIFICATION, IN NO EVENT SHALL EITHER PARTY BE LIABLE FOR
-                                        ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES.</p>
-                                    <p><strong>9.2 Liability Cap.</strong> EACH PARTY’S TOTAL AGGREGATE LIABILITY SHALL
-                                        NOT EXCEED THE TOTAL FEES PAID OR PAYABLE BY CLIENT TO PROVIDER UNDER THE
-                                        APPLICABLE SOW IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.</p>
-                                </section>
+                                    <div class="mt-12">
+                                        <div class="flex justify-between items-center mb-6 px-1">
+                                            <span class="text-[10px] uppercase tracking-widest text-white/40">Total
+                                                Value</span>
+                                            <span class="text-white font-serif tracking-wider">$200k</span>
+                                        </div>
+                                        <button onclick="selectContractPlan('Plan B', this)"
+                                            class="w-full py-4 rounded-full bg-gradient-to-r from-[#C8A951] to-[#E2C76B] text-black font-bold text-xs uppercase tracking-[0.25em] shadow-lg shadow-[#C8A951]/20 hover:shadow-[#C8A951]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 select-plan-btn">
+                                            Select Plan
+                                        </button>
+                                    </div>
+                                </div>
 
-                                <section>
-                                    <h2>10. TERM AND TERMINATION</h2>
-                                    <p><strong>10.1 Term.</strong> This Agreement shall commence on the Effective Date
-                                        and shall continue until terminated as provided herein.</p>
-                                    <p><strong>10.2 Termination for Convenience.</strong> Client may terminate this
-                                        Agreement or any SOW for any reason upon thirty (30) days' prior written notice.
-                                        Client shall pay Provider for all Services performed up to the date of
-                                        termination.</p>
-                                </section>
+                                <!-- PLAN C -->
+                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 hover:border-[#10B981]/50 hover:shadow-2xl hover:shadow-[#10B981]/10"
+                                    id="card-plan-c">
+                                    <div
+                                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    </div>
 
-                                <section>
-                                    <h2>11. GENERAL PROVISIONS</h2>
-                                    <p><strong>11.1 Independent Contractor.</strong> Provider is an independent
-                                        contractor. Nothing in this Agreement shall be construed to create a partnership
-                                        or employment relationship.</p>
-                                    <p><strong>11.2 Dispute Resolution.</strong> The Parties agree to attempt to resolve
-                                        any dispute through good faith negotiation. If negotiation fails, the dispute
-                                        shall be resolved by binding arbitration in Wilmington, Delaware.</p>
-                                    <p><strong>11.3 Governing Law.</strong> This Agreement shall be governed by the laws
-                                        of the <strong>State of Delaware</strong>.</p>
-                                </section>
+                                    <div class="flex-grow">
+                                        <div class="flex justify-between items-start mb-8">
+                                            <h4 class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">PLAN
+                                                C</h4>
+                                            <div class="h-1 w-8 bg-[#10B981] rounded-full"></div>
+                                        </div>
 
-                                <hr class="border-[#C8A951]/20 my-16">
+                                        <div class="space-y-8">
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
+                                                    Cash Deposit</div>
+                                                <div class="text-white text-5xl font-thin tracking-tight">$75k</div>
+                                            </div>
+                                            <div>
+                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
+                                                    Follow-ups</div>
+                                                <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
+                                            </div>
+                                            <div class="relative pt-2">
+                                                <div
+                                                    class="absolute -top-2 left-0 text-[10px] uppercase tracking-widest text-[#10B981]">
+                                                    Equity Stake</div>
+                                                <div class="text-[#10B981] text-4xl font-light tracking-tight">2.5%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <section id="exhibit-a">
-                                    <h2 class="text-center">Exhibit A: Statement of Work</h2>
-                                    <p class="text-center opacity-60 mb-12">Project: FinalWishes Estate Operating System
-                                        • SOW-2025-001</p>
-
-                                    <h3>1. Executive Overview</h3>
-                                    <p>This Statement of Work ("SOW") defines the comprehensive scope for the
-                                        <strong>FinalWishes Estate Operating System</strong>. It is designed to capture
-                                        the "Soul" of the Principal—their memories, values, and final messages—before
-                                        dealing with the "Administration" of their assets.
-                                    </p>
-
-                                    <h3>2. Detailed Scope of Services</h3>
-                                    <p><strong>2.1 The Legacy & Memory Vault ("The Soul")</strong></p>
-                                    <ul>
-                                        <li><strong>Time-Capsule Messages</strong>: Video/text delivery logic triggered
-                                            by verified death.</li>
-                                        <li><strong>Ethical Will</strong>: Values curation and "How I want to be
-                                            remembered" directives.</li>
-                                        <li><strong>Final Wishes</strong>: Funeral, burial, and ceremonial preferences.
-                                        </li>
-                                    </ul>
-
-                                    <p><strong>2.2 Core Vault & Data Architecture ("The Safe")</strong></p>
-                                    <ul>
-                                        <li><strong>Zero-Knowledge Storage</strong>: Hybrid Cloud SQL + Firestore with
-                                            per-tenant encryption.</li>
-                                        <li><strong>Security</strong>: SOC 2 Type II controls, IAM, and TLS 1.3.</li>
-                                    </ul>
-
-                                    <p><strong>2.3 Document Inventory & Automation ("The Admin")</strong></p>
-                                    <p>Guidance and automation for probate court filings in Maryland, Illinois, and
-                                        Minnesota, including Asset Discovery via Plaid.</p>
-
-                                    <h3>3. Work Breakdown Structure</h3>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Phase</th>
-                                                <th>Deliverables</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1. Foundation</td>
-                                                <td>Cloud Architecture, Auth, Vault Security, Design System.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2. Core Logic</td>
-                                                <td>"The Shepherd" Engine, MD/IL/MN State Rules.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3. Universal App</td>
-                                                <td>iOS/Android Applications (React Native), Asset Discovery.</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4. Launch</td>
-                                                <td>Pen Testing, SOC 2 Audit Review, App Store Submission.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </section>
-
-                                <hr class="border-[#C8A951]/20 my-16">
-
-                                <section id="exhibit-b">
-                                    <h2 class="text-center">Exhibit B: Cost & Valuation</h2>
-                                    <p class="text-center opacity-60 mb-12">Total Fixed Investment: $200,000.00 USD</p>
-
-                                    <h3>1. Market Valuation</h3>
-                                    <table class="w-full">
-                                        <thead>
-                                            <tr>
-                                                <th>Metric</th>
-                                                <th>Market Rate</th>
-                                                <th>Partner Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Base Development</td>
-                                                <td>$450,000</td>
-                                                <td class="text-[#10b981] font-bold">Included</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Security Ops</td>
-                                                <td>$50,000</td>
-                                                <td class="text-[#10b981] font-bold">Included</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Total Value</strong></td>
-                                                <td><strong>$500,000+</strong></td>
-                                                <td><strong>$200,000</strong></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <h3>2. Infrastructure BoM (OpEx)</h3>
-                                    <p>Estimated monthly run-rate for the platform.</p>
-                                    <table class="w-full">
-                                        <thead>
-                                            <tr>
-                                                <th>Service</th>
-                                                <th>Est. Unit Cost</th>
-                                                <th>Purpose</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Compute</td>
-                                                <td>~$18/mo</td>
-                                                <td>Google Cloud Run (Serverless)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Database</td>
-                                                <td>~$9/mo</td>
-                                                <td>Cloud SQL (Encrypted Storage)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>AI Engine</td>
-                                                <td>~$5/1M tokens</td>
-                                                <td>Vertex AI (Legal Guidance)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>E-Sign</td>
-                                                <td>$0 (OSS)</td>
-                                                <td>DocuSeal Self-Hosted</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </section>
+                                    <div class="mt-12">
+                                        <div class="flex justify-between items-center mb-6 px-1">
+                                            <span class="text-[10px] uppercase tracking-widest text-white/40">Cash
+                                                Value</span>
+                                            <span class="text-white font-serif tracking-wider">$175k</span>
+                                        </div>
+                                        <button onclick="selectContractPlan('Plan C', this)"
+                                            class="w-full py-4 rounded-full bg-gradient-to-r from-[#10B981] to-[#34D399] text-black font-bold text-xs uppercase tracking-[0.25em] shadow-lg shadow-[#10B981]/20 hover:shadow-[#10B981]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 select-plan-btn">
+                                            Select Plan
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-
-                            <br><br>
-                            <div id="signature-block"
-                                class="p-12 bg-white/5 border border-[#C8A951]/30 rounded text-center mt-12 scroll-mt-32">
-                                <p class="text-sm text-[#C8A951] uppercase tracking-[0.3em] font-serif mb-6">Execution
-                                    of
-                                    Agreement</p>
-                                <div class="h-px w-64 bg-[#C8A951]/40 mx-auto mb-6"></div>
-                                <p class="font-serif italic text-3xl text-white mb-2">Tameeka Lockhart</p>
-                                <p class="text-sm text-blue-300/60 mt-4 font-mono">Digitally Verified via FinalWishes
-                                    Protocol • <span id="signDate">December 17, 2025</span></p>
-                            </div>
-
-
                         </div>
                     </div>
-                </div>
 
+                    <div id="step-2-label" class="text-center mb-8 opacity-40 transition-opacity duration-700">
+                        <h2 class="font-serif text-2xl text-[#C8A951] uppercase tracking-widest">
+                            Step 2: Review & Verify Agreement</h2>
+                    </div>
+
+                    <div class="legal-viewer mb-8 opacity-40 transition-opacity duration-700 pointer-events-none"
+                        id="contract-document">
+                        <!-- MSA HEADER -->
+                        <div class="text-center mb-12 pb-12 border-b border-gray-200">
+                            <h2>MASTER SERVICES AGREEMENT</h2>
+                            <p class="text-center opacity-60">Global Effective Date: December 11, 2025</p>
+                        </div>
+
+                        <div class="mb-12 p-8 bg-white/5 border border-white/10 rounded-lg">
+                            <p class="mb-4 italic opacity-80">This <strong>Master Services Agreement</strong> (this
+                                "Agreement") is entered into as of December 11, 2025 (the "Effective Date") by and
+                                between:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="p-4 bg-white/5 rounded border border-white/5">
+                                    <h4 class="text-[#C8A951] font-serif mb-2 underline tracking-wider">CLIENT</h4>
+                                    <p><strong>FinalWishes Inc.</strong><br>
+                                        Principal: Tameeka Lockhart<br>
+                                        [Address Code: Pending Verification]<br>
+                                        ("Client")</p>
+                                </div>
+                                <div class="p-4 bg-white/5 rounded border border-white/5">
+                                    <h4 class="text-[#C8A951] font-serif mb-2 underline tracking-wider">PROVIDER
+                                    </h4>
+                                    <p><strong>Sirsi Technologies, Inc</strong><br>
+                                        FEIN: 93-1696269<br>
+                                        909 Rose Avenue, Suite 400<br>
+                                        North Bethesda, MD 20852<br>
+                                        ("Provider")</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ROBUST MSA CONTENT (100% COMPLETE - NO OMISSIONS) -->
+                        <div class="space-y-12">
+                            <section>
+                                <h2>1. RECITALS</h2>
+                                <p><strong>WHEREAS</strong>, Client desires to engage Provider to design, develop,
+                                    and implement a comprehensive estate settlement software platform known as
+                                    <strong>FinalWishes</strong> (the "Platform");
+                                </p>
+                                <p><strong>WHEREAS</strong>, Provider (Sirsi Technologies, Inc) possesses the
+                                    requisite technical expertise, personnel, and infrastructure, including
+                                    expertise in artificial intelligence, cloud architecture, and secure software
+                                    development, to perform the Services;</p>
+                                <p><strong>WHEREAS</strong>, the Parties wish to set forth the terms and conditions
+                                    under which Provider will provide such Services to Client.</p>
+                                <p><strong>NOW, THEREFORE</strong>, in consideration of the mutual covenants
+                                    contained herein, and for other good and valuable consideration, the receipt and
+                                    sufficiency of which are hereby acknowledged, the Parties agree as follows:</p>
+                            </section>
+
+                            <section>
+                                <h2>2. DEFINITIONS</h2>
+                                <p>For purposes of this Agreement, the following terms shall have the meanings set
+                                    forth below:</p>
+                                <ul>
+                                    <li><strong>"Affiliate"</strong> means any entity that directly or indirectly
+                                        controls, is controlled by, or is under common control with a Party, where
+                                        "control" means ownership of more than fifty percent (50%) of the voting
+                                        stock or other ownership interest.</li>
+                                    <li><strong>"Background Technology"</strong> means all software, code, tools,
+                                        libraries, frameworks, know-how, methodologies, and Intellectual Property
+                                        Rights owned or licensed by Provider prior to the Effective Date or
+                                        developed independently of the Services (including, without limitation,
+                                        Provider’s "Sirsi" component library, "Gemini" guidance patterns, and
+                                        standard deployment scripts).</li>
+                                    <li><strong>"Confidential Information"</strong> means any non-public information
+                                        disclosed by one Party (the "Disclosing Party") to the other Party (the
+                                        "Receiving Party") that is designated as confidential or that, given the
+                                        nature of the information or circumstances of disclosure, reasonably should
+                                        be understood to be confidential.</li>
+                                    <li><strong>"Deliverables"</strong> means all documents, work product, code,
+                                        software, reports, and other materials that are specifically created for and
+                                        delivered to Client by Provider pursuant to a Statement of Work.</li>
+                                    <li><strong>"Intellectual Property Rights"</strong> means all patent rights,
+                                        copyright rights, mask work rights, moral rights, rights of publicity,
+                                        trademark, trade dress and service mark rights, goodwill, trade secret
+                                        rights and other intellectual property rights as may now exist or hereafter
+                                        come into existence, and all applications therefore and registrations,
+                                        renewals and extensions thereof, under the laws of any state, country,
+                                        territory or other jurisdiction.</li>
+                                    <li><strong>"Services"</strong> means the professional software development,
+                                        consulting, and design services to be performed by Provider as described in
+                                        a Statement of Work.</li>
+                                    <li><strong>"Statement of Work" or "SOW"</strong> means a document describing
+                                        the specific Services to be performed, Deliverables to be provided, fees to
+                                        be paid, and timeline for performance, which is agreed upon and signed by
+                                        authorized representatives of both Parties. Each SOW shall be substantially
+                                        in the form of Exhibit A.</li>
+                                </ul>
+                            </section>
+
+                            <section>
+                                <h2>3. SERVICES AND ENGAGEMENT</h2>
+                                <p><strong>3.1 Statements of Work.</strong> Provider shall provide the Services and
+                                    Deliverables to Client as specified in each SOW. Each SOW shall be effectively
+                                    incorporated into this Agreement. In the event of a conflict between the terms
+                                    of this Agreement and an SOW, the terms of the SOW shall control ONLY regarding
+                                    the specific description of Services, fees, and timeline; for all other legal
+                                    terms and conditions, this Agreement shall control.</p>
+                                <p><strong>3.2 Standard of Performance.</strong> Provider represents and warrants
+                                    that the Services will be performed in a professional, workmanlike manner, by
+                                    qualified personnel, and consistent with the highest industry standards for
+                                    similar enterprise-grade software development services. Provider shall devote
+                                    adequate resources to meet its obligations under this Agreement.</p>
+                                <p><strong>3.3 Change Orders.</strong> Client may, at any time, request changes to
+                                    the scope of the Services ("Change Request"). If Provider determines that such
+                                    changes will impact the fees, timeline, or technical architecture, Provider
+                                    shall submit a written "Change Order" detailing the impact. No change shall be
+                                    effective until the Change Order is signed by both Parties. Minor changes
+                                    requiring less than eight (8) hours of effort may be approved via written
+                                    correspondence (email sufficient).</p>
+                                <p><strong>3.4 Non-Exclusivity.</strong> Client acknowledges that Provider is a
+                                    professional services firm and may provide similar services to third parties,
+                                    provided that Provider does not use Client’s Confidential Information or
+                                    specifically commissioned Deliverables for such third parties.</p>
+                            </section>
+
+                            <section>
+                                <h2>4. COMPENSATION AND PAYMENT</h2>
+                                <p><strong>4.1 Fees.</strong> Client shall pay Provider the fees set forth in the
+                                    applicable SOW. Unless otherwise specified in an SOW, fees for fixed-price
+                                    projects shall be payable according to the agreed-upon milestone schedule.</p>
+                                <p><strong>4.2 Expenses.</strong> Client shall reimburse Provider for reasonable,
+                                    documented "Pass-Through Expenses" incurred in connection with the Services
+                                    (e.g., specific cloud infrastructure costs, third-party API licensing fees,
+                                    software licenses specifically required for the Project). Provider shall obtain
+                                    Client’s prior written approval for any individual expense exceeding Five
+                                    Hundred Dollars ($500.00). Travel expenses shall only be reimbursable if
+                                    pre-approved by Client in writing.</p>
+                                <p><strong>4.3 Payment Terms.</strong> Provider shall submit invoices to Client upon
+                                    completion of Milestones or monthly for Time & Materials engagements. Invoices
+                                    are due and payable <strong>Net Fifteen (15)</strong> days from the invoice
+                                    date.</p>
+                                <p><strong>4.4 Late Payments.</strong> Undisputed payments not received by the due
+                                    date shall accrue interest at the lesser of one and one-half percent (1.5%) per
+                                    month or the maximum rate permitted by law.</p>
+                                <p><strong>4.5 Taxes.</strong> Fees do not include any sales, use, value-added, or
+                                    similar taxes. Client shall be responsible for paying all such taxes properly
+                                    levied on the Services, excluding taxes based on Provider’s net income,
+                                    property, or employees.</p>
+                            </section>
+
+                            <section>
+                                <h2>5. INTELLECTUAL PROPERTY RIGHTS</h2>
+                                <p><strong>5.1 Work Made for Hire.</strong> Provider agrees that all Deliverables
+                                    created for Client under this Agreement shall be considered "works made for
+                                    hire" to the extent permitted by law. To the extent that any Deliverable does
+                                    not qualify as a work made for hire under applicable law, Provider hereby
+                                    irrevocably assigns to Client all right, title, and interest in and to such
+                                    Deliverable, including all Intellectual Property Rights therein, free and clear
+                                    of all liens and encumbrances.</p>
+                                <p><strong>5.2 Background Technology.</strong> Notwithstanding Section 5.1, Provider
+                                    retains all right, title, and interest in and to its Background Technology.
+                                    Provider hereby grants to Client a perpetual, irrevocable, non-exclusive,
+                                    royalty-free, fully paid-up, worldwide, sublicensable license to use, reproduce,
+                                    modify, display, distribute, and create derivative works of any Background
+                                    Technology incorporated into the Deliverables, solely as necessary for Client to
+                                    utilize, exploit, and maintain the Deliverables for their intended purpose.</p>
+                                <p><strong>5.3 Third-Party and Open Source Software.</strong> The Deliverables may
+                                    contain third-party software or open source software. Provider warrants that its
+                                    use of such software will comply with the applicable licenses (e.g., AGPL-3.0,
+                                    MIT, Apache 2.0). Provider shall identify any "Copyleft" libraries (that would
+                                    mandate disclosure of Client’s source code) prior to integration and obtain
+                                    Client’s approval.</p>
+                                <p><strong>5.4 AI-Generated Content.</strong> The Parties acknowledge that Provider
+                                    utilizes advanced Artificial Intelligence tools (e.g., Google Gemini, Anthropic
+                                    Claude) to assist in code generation and architecture. Provider warrants that it
+                                    has the full legal right to assign ownership of such AI-generated output to
+                                    Client as part of the Deliverables, and that such use does not violate the terms
+                                    of service of the AI providers.</p>
+                                <p><strong>5.5 Further Assurances.</strong> Provider agrees to execute any documents
+                                    and take any actions reasonably requested by Client to perfect Client’s
+                                    ownership of the Intellectual Property Rights in the Deliverables.</p>
+                            </section>
+
+                            <section>
+                                <h2>6. CONFIDENTIALITY</h2>
+                                <p><strong>6.1 Obligations.</strong> The Receiving Party agrees: (i) to hold the
+                                    Disclosing Party’s Confidential Information in strict confidence and take
+                                    reasonable precautions to protect it (including all precautions the Receiving
+                                    Party employs with respect to its own confidential materials); (ii) not to
+                                    divulge any such Confidential Information to any third party (other than
+                                    employees, contractors, or agents who have a need to know and are bound by
+                                    written confidentiality obligations); and (iii) not to use such Confidential
+                                    Information except for the performance of this Agreement.</p>
+                                <p><strong>6.2 Exclusions.</strong> Confidential Information shall not include
+                                    information that: (a) is or becomes generally available to the public without
+                                    breach of this Agreement; (b) was in the Receiving Party’s possession prior to
+                                    disclosure without legal restriction; (c) is captured by the Receiving Party
+                                    from a third party who had the legal right to disclose it; or (d) is
+                                    independently developed by the Receiving Party without reference to or use of
+                                    the Confidential Information.</p>
+                                <p><strong>6.3 Data Security & SOC 2 Compliance.</strong> Provider acknowledges that
+                                    it may have access to Client’s data, which may include Personally Identifiable
+                                    Information (PII). Provider agrees to implement and maintain commercially
+                                    reasonable technical and organizational security measures—consistent with SOC 2
+                                    Type II criteria—to protect such data from unauthorized access, use,
+                                    modification, or disclosure. This includes, but is not limited to, encryption of
+                                    data at rest and in transit, access controls, and regular security audits.</p>
+                                <p><strong>6.4 Compelled Disclosure.</strong> If the Receiving Party is required by
+                                    law or court order to disclose Confidential Information, it shall give the
+                                    Disclosing Party prompt written notice (if legally permitted) to allow the
+                                    Disclosing Party to seek a protective order.</p>
+                            </section>
+
+                            <section>
+                                <h2>7. WARRANTIES AND COVENANTS</h2>
+                                <p><strong>7.1 Provider Warranties.</strong> Provider represents and warrants
+                                    that:<br>(a) <strong>Non-Infringement:</strong> The Deliverables will be
+                                    original and will not infringe, misappropriate, or violate any patent,
+                                    copyright, trademark, trade secret, or other proprietary right of any third
+                                    party.<br>(b) <strong>Compliance with Laws:</strong> The Services will be
+                                    performed in compliance with all applicable federal, state, and local laws and
+                                    regulations.<br>(c) <strong>Malicious Code:</strong> Provider will use
+                                    industry-standard measures to ensure the Deliverables do not contain any
+                                    viruses, malware, trojan horses, time bombs, or other harmful code.</p>
+                                <p><strong>7.2 Performance Warranty (60-Day Bug Fix Guarantee).</strong> Provider
+                                    warrants that, for a period of <strong>sixty (60) days</strong> following
+                                    Client’s Acceptance of the Deliverables (the "Warranty Period"), the
+                                    Deliverables will function materially in accordance with the specifications set
+                                    forth in the SOW. If the Deliverables fail to meet this warranty, Provider
+                                    shall, at its sole expense and as Client’s exclusive remedy for breach of this
+                                    warranty, promptly correct the non-conformity.</p>
+                                <p><strong>7.3 Disclaimer.</strong> EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT,
+                                    PROVIDER MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED, AND HEREBY DISCLAIMS ALL
+                                    IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
+                                    NON-INFRINGEMENT.</p>
+                            </section>
+
+                            <section>
+                                <h2>8. INDEMNIFICATION</h2>
+                                <p><strong>8.1 By Provider.</strong> Provider shall indemnify, defend, and hold
+                                    harmless Client and its officers, directors, employees, and agents from and
+                                    against any and all losses, damages, liabilities, costs, and expenses (including
+                                    reasonable attorneys’ fees) arising out of or resulting from any third-party
+                                    claim alleging that the Deliverables or Services infringe or misappropriate any
+                                    U.S. copyright, trademark, or trade secret.</p>
+                                <p><strong>8.2 By Client.</strong> Client shall indemnify, defend, and hold harmless
+                                    Provider from and against any and all losses, damages, liabilities, costs, and
+                                    expenses arising out of or resulting from: (i) Client’s specific specifications
+                                    or instructions that compelled the infringement; or (ii) content or data
+                                    provided by Client to Provider.</p>
+                                <p><strong>8.3 Procedure.</strong> The indemnified party shall: (a) promptly notify
+                                    the indemnifying party in writing of the claim; (b) allow the indemnifying party
+                                    sole control of the defense and settlement of the claim; and (c) provide
+                                    reasonable assistance to the indemnifying party.</p>
+                            </section>
+
+                            <section>
+                                <h2>9. LIMITATION OF LIABILITY</h2>
+                                <p><strong>9.1 Exclusion of Consequential Damages.</strong> EXCEPT FOR BREACHES OF
+                                    CONFIDENTIALITY (SECTION 6) OR INDEMNIFICATION OBLIGATIONS (SECTION 8), IN NO
+                                    EVENT SHALL EITHER PARTY BE LIABLE TO THE OTHER FOR ANY INDIRECT, INCIDENTAL,
+                                    SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES (INCLUDING LOSS OF PROFITS, DATA, OR
+                                    USE), EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
+                                <p><strong>9.2 Liability Cap.</strong> EXCEPT FOR PROVIDER'S INDEMNIFICATION
+                                    OBLIGATIONS FOR IP INFRINGEMENT (SECTION 8.1), EACH PARTY’S TOTAL AGGREGATE
+                                    LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT, WHETHER IN CONTRACT,
+                                    TORT, OR OTHERWISE, SHALL NOT EXCEED THE TOTAL FEES PAID OR PAYABLE BY CLIENT TO
+                                    PROVIDER UNDER THE APPLICABLE SOW IN THE TWELVE (12) MONTHS IMMEDIATELY
+                                    PRECEDING THE EVENT GIVING RISE TO THE CLAIM.</p>
+                            </section>
+
+                            <section>
+                                <h2>10. TERM AND TERMINATION</h2>
+                                <p><strong>10.1 Term.</strong> This Agreement shall commence on the Effective Date
+                                    and shall continue in full force and effect until terminated as provided herein.
+                                </p>
+                                <p><strong>10.2 Termination for Convenience.</strong> Client may terminate this
+                                    Agreement or any SOW for any reason or no reason upon thirty (30) days' prior
+                                    written notice to Provider. Upon such termination, Client shall pay Provider for
+                                    all Services performed and non-cancellable expenses incurred up to the date of
+                                    termination.</p>
+                                <p><strong>10.3 Termination for Cause.</strong> Either Party may terminate this
+                                    Agreement or any SOW immediately upon written notice if the other Party: (i)
+                                    materially breaches this Agreement and fails to cure such breach within fifteen
+                                    (15) days after receiving written notice thereof; or (ii) becomes insolvent,
+                                    makes an assignment for the benefit of creditors, or files for bankruptcy.</p>
+                                <p><strong>10.4 Effect of Termination.</strong> Upon termination: (i) Client shall
+                                    pay all outstanding undisputed invoices; (ii) Provider shall deliver to Client
+                                    all completed and partially completed Deliverables; and (iii) each Party shall
+                                    return or destroy the other Party’s Confidential Information.</p>
+                                <p><strong>10.5 Survival.</strong> Sections 2, 4, 5, 6, 7.3, 8, 9, 11, and 12 shall
+                                    survive any termination or expiration of this Agreement.</p>
+                            </section>
+
+                            <section>
+                                <h2>11. GENERAL PROVISIONS</h2>
+                                <p><strong>11.1 Independent Contractor.</strong> Provider is an independent
+                                    contractor. Nothing in this Agreement shall be construed to create a
+                                    partnership, joint venture, agency, or employment relationship between the
+                                    Parties.</p>
+                                <p><strong>11.2 Force Majeure.</strong> Neither Party shall be liable for any delay
+                                    or failure to perform (excluding payment obligations) due to causes beyond its
+                                    reasonable control, including acts of God, war, terrorism, riot, embargoes, acts
+                                    of civil or military authorities, fire, floods, or accidents.</p>
+                                <p><strong>11.3 Non-Solicitation.</strong> During the Term and for one (1) year
+                                    thereafter, neither Party shall knowingly solicit for employment or hire any
+                                    employee or contractor of the other Party who was directly involved in the
+                                    provision of Services under this Agreement, without the prior written consent of
+                                    the other Party. General solicitations not targeted at such persons shall not be
+                                    a violation of this provision.</p>
+                                <p><strong>11.4 Dispute Resolution.</strong><br>(a) <strong>Negotiation:</strong>
+                                    The Parties agree to attempt to resolve any dispute arising out of this
+                                    Agreement through good faith negotiation between senior executives.<br>(b)
+                                    <strong>Arbitration:</strong> If negotiation fails within thirty (30) days, the
+                                    dispute shall be predominantly resolved by binding arbitration administered by
+                                    the American Arbitration Association (AAA) in accordance with its Commercial
+                                    Arbitration Rules.<br>(c) <strong>Venue & Law:</strong> The seat of arbitration
+                                    shall be <strong>Wilmington, Delaware</strong>. This Agreement shall be governed
+                                    by the laws of the <strong>State of Delaware</strong>, without regard to its
+                                    conflict of laws principles.<br>(d) <strong>No Jury Trial:</strong> EACH PARTY
+                                    HEREBY WAIVES ANY RIGHT TO A JURY TRIAL IN CONNECTION WITH ANY DISPUTE ARISING
+                                    OUT OF THIS AGREEMENT.
+                                </p>
+                                <p><strong>11.5 Assignment.</strong> Neither Party may assign this Agreement without
+                                    the prior written consent of the other Party, except that either Party may
+                                    assign this Agreement to an Affiliate or in connection with a merger,
+                                    acquisition, or sale of substantially all of its assets.</p>
+                                <p><strong>11.6 Severability.</strong> If any provision of this Agreement is held to
+                                    be invalid or unenforceable, the remaining provisions shall continue in full
+                                    force and effect.</p>
+                                <p><strong>11.7 Entire Agreement.</strong> This Agreement, together with all SOWs
+                                    and Exhibits, constitutes the entire agreement between the Parties regarding the
+                                    subject matter hereof and supersedes all prior or contemporaneous agreements,
+                                    understandings, and communications.</p>
+                                <p><strong>11.8 Counterparts.</strong> This Agreement may be executed in
+                                    counterparts, each of which shall be deemed an original, but all of which
+                                    together shall constitute one and the same instrument. Electronic signatures
+                                    shall be deemed original signatures.</p>
+                            </section>
+                        </div>
+                        <hr class="border-[#C8A951]/20 my-16">
+
+                        <section id="exhibit-a">
+                            <h2 class="text-center font-serif text-3xl text-[#C8A951] mb-12">Exhibit A:
+                                Statement of Work (SOW)</h2>
+                            <p class="text-center opacity-60 mb-12">Project Name: FinalWishes Platform
+                                Development<br>SOW Reference: SOW-2025-001 | Associated MSA:
+                                MSA-2025-111-FW<br>Date: December 11, 2025</p>
+
+                            <h3>1. Executive Overview</h3>
+                            <p>This Statement of Work ("SOW") defines the comprehensive scope for the
+                                <strong>FinalWishes Estate Operating System</strong>. This project aims to
+                                digitize and automate the estate settlement process, focusing on "Launch States"
+                                (Maryland, Illinois, Minnesota) where electronic filing or substantial
+                                digitization is possible.
+                            </p>
+                            <p><strong>Objective:</strong> Deliver a "Vault-Grade" secure platform that guides
+                                users through the 18+ month probate process, automating form generation, asset
+                                discovery, and stakeholder communication.</p>
+
+                            <h3>2. Detailed Scope of Services</h3>
+                            <p><strong>2.1 Core Vault & Data Architecture</strong></p>
+                            <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong>
+                                architecture to ensure total data privacy.</p>
+                            <ul>
+                                <li><strong>Storage Layer:</strong> Hybrid approach using <strong>Cloud SQL
+                                        (PostgreSQL)</strong> for structured PII (Encrypted) and
+                                    <strong>Firestore</strong> for real-time document metadata.
+                                </li>
+                                <li><strong>File Vault:</strong> <strong>Cloud Storage</strong> buckets with
+                                    per-tenant isolation boundaries. All files encrypted at rest using
+                                    <strong>Cloud KMS</strong> (AES-256).
+                                </li>
+                                <li><strong>Security:</strong> Implementation of <strong>SOC 2 Type II</strong>
+                                    controls, including strict IAM roles, audit logging, and encryption in
+                                    transit (TLS 1.3).</li>
+                            </ul>
+
+                            <p><strong>2.2 Document Inventory & Automation Scope</strong></p>
+                            <p>Provider will build automation or manual guidance paths for the following
+                                specific document categories:</p>
+                            <p><strong>A. Identity & Vital Records</strong></p>
+                            <ul>
+                                <li><strong>Death Certificate:</strong> Manual upload/OCR processing (No State
+                                    API exists).</li>
+                                <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
+                            </ul>
+                            <p><strong>B. Probate Court Filings (Launch States)</strong></p>
+                            <ul>
+                                <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong>
+                                    (Tyler Odyssey) system. Template generation for Petition for Administration,
+                                    Inventory, and Accounts.</li>
+                                <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook
+                                    County) and standard circuit court forms.</li>
+                                <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong>
+                                    statewide e-filing system.</li>
+                                <li><em>Note: Where API filing is unavailable, the Platform will generate
+                                        "Ready-to-Print" PDF packages.</em></li>
+                            </ul>
+                            <p><strong>C. Financial & Asset Documents</strong></p>
+                            <ul>
+                                <li><strong>Asset Discovery:</strong> Integration of <strong>Plaid</strong> for
+                                    retrieving balances, transactions, and liabilities from 12,000+ financial
+                                    institutions.</li>
+                                <li><strong>Life Insurance/Retirement:</strong> Generation of standard "Notice
+                                    of Death & Claim" letters for major carriers (MetLife, Prudential, etc.).
+                                </li>
+                                <li><strong>Real Estate:</strong> Manual inventory tracking with integration to
+                                    Zillow/Redfin APIs for valuation estimates (where available).</li>
+                            </ul>
+
+                            <h4>2.3 System Integrations</h4>
+                            <p>Provider shall integrate the following third-party services to achieve
+                                automation:</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Purpose</th>
+                                        <th>Integration Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Plaid</strong></td>
+                                        <td>Financial Account Linking</td>
+                                        <td><strong>Deep Integration</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>DocuSeal</strong></td>
+                                        <td>E-Signatures</td>
+                                        <td><strong>Self-Hosted (Full API)</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Lob</strong></td>
+                                        <td>Certified Mail / Physical Letters</td>
+                                        <td><strong>API Triggered</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SendGrid</strong></td>
+                                        <td>Transactional Email</td>
+                                        <td><strong>API Triggered</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Google Document AI</strong></td>
+                                        <td>OCR / Data Extraction</td>
+                                        <td><strong>API Integrated</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Vertex AI (Gemini)</strong></td>
+                                        <td>Process Guidance</td>
+                                        <td><strong>Context-Aware (RAG)</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h4>2.4 "The Shepherd" Guidance Engine</h4>
+                            <p>Provider shall build a logic engine ("The Shepherd") that:</p>
+                            <ol>
+                                <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for
+                                    MD, IL, and MN.</li>
+                                <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt
+                                    chart for the Executor.</li>
+                                <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court
+                                    deadlines (Inventory due in 90 days, Taxes due in 9 mo).</li>
+                                <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer
+                                    context-specific questions (e.g., "Is this expense deductible in
+                                    Maryland?").</li>
+                            </ol>
+
+                            <h3>3. Work Breakdown Structure (WBS)</h3>
+                            <p><strong>PHASE 0: STRATEGIC DESIGN & IDENTITY (Weeks 1-4)</strong></p>
+                            <ul>
+                                <li>0.1 Brand Identity: Logo, Typography, Palette finalization.</li>
+                                <li>0.2 UX/UI Design System: Figma-based Web + Mobile design system.</li>
+                                <li>0.3 Prototyping: High-fidelity interaction models.</li>
+                                <li>0.4 Asset Production: Custom icons and illustrations.</li>
+                            </ul>
+
+                            <p><strong>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</strong></p>
+                            <ul>
+                                <li>1.1 GCP Infrastructure: Provision Cloud Run, Cloud SQL, Firestore, VPC,
+                                    Cloud Armor.</li>
+                                <li>1.2 Ops: Setup GitHub Actions CI/CD.</li>
+                                <li>1.3 Auth: Firebase Auth + MFA + Custom Claims.</li>
+                                <li>1.4 Schema: Design Relational (Heirs) vs Document (Metadata) schemas.
+                                </li>
+                                <li>1.5 Vault: Implement AES-256 crypto service and Signed URL logic.</li>
+                                <li>1.6 Web: React + Vite + "Light Royal Neo-Deco" Design System.</li>
+                                <li>1.7 E-Sign: Deploy Self-Hosted DocuSeal.</li>
+                            </ul>
+                            <p><strong>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</strong></p>
+                            <ul>
+                                <li>2.1 Asset Module: Plaid Link integration & manual asset overrides.</li>
+                                <li>2.2 Maryland Engine: Encode MD Register of Wills rules & forms.</li>
+                                <li>2.3 Illinois Engine: Encode IL Probate Division rules.</li>
+                                <li>2.4 Minnesota Engine: Encode MN District Court rules.</li>
+                                <li>2.5 Gemini RAG: Build vector store for legal context.</li>
+                                <li>2.6 PDF Service: Go-based PDF stamper for court forms.</li>
+                            </ul>
+                            <p><strong>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</strong></p>
+                            <ul>
+                                <li>3.1 Mobile: React Native Expo shell (iOS/Android).</li>
+                                <li>3.2 Bio-Auth: FaceID/TouchID wrapper.</li>
+                                <li>3.3 Scanner: Native camera module for receipt capture.</li>
+                                <li>3.4 Plaid/Lob: Full webhook handling and mail trigger logic.</li>
+                                <li>3.5 Offline: SQLite sync engine for mobile resilience.</li>
+                            </ul>
+                            <p><strong>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</strong></p>
+                            <ul>
+                                <li>4.1 Pen Test: Third-party security audit & remediation.</li>
+                                <li>4.2 Compliance: SOC 2 evidence collection (logging, access controls).
+                                </li>
+                                <li>4.3 Load Test: Stress testing (k6) to 1,000 concurrent users.</li>
+                                <li>4.4 Store Launch: App Store & Play Store submission.</li>
+                                <li>4.5 Go-Live: DNS switchover and Production migration.</li>
+                            </ul>
+                            <p><strong>PHASE 5: CONTINGENCY & PROJECT MANAGEMENT (Ongoing)</strong></p>
+                            <ul>
+                                <li>5.1 Project Management & Client Liaison.</li>
+                                <li>5.2 Manual QA & Cross-Platform Verification.</li>
+                                <li>5.3 User Feedback Loops & Iterative Refinement.</li>
+                                <li>5.4 Post-Launch Stabilization & Infrastructure Watch.</li>
+                            </ul>
+
+                            <h3>4. Deliverables</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Deliverable</th>
+                                        <th>Description</th>
+                                        <th>Format</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>D1: The Vault</strong></td>
+                                        <td>Security core, Auth, Encrypted Storage</td>
+                                        <td>Staging URL</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>D2: State Engines</strong></td>
+                                        <td>Form generation for MD, IL, MN</td>
+                                        <td>API + UI</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>D3: Mobile Apps</strong></td>
+                                        <td>iOS and Android binaries (TestFlight)</td>
+                                        <td>.ipa / .apk</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>D4: The Platform</strong></td>
+                                        <td>Production release, fully tested</td>
+                                        <td>Live URL</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>D5: Documentation</strong></td>
+                                        <td>API Specs, Admin Guide, Compliance Pack</td>
+                                        <td>PDF / Markdown</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <h3>5. Assumptions</h3>
+                            <ol>
+                                <li><strong>Launch States Only:</strong> Logic is strictly limited to
+                                    Maryland, Illinois, and Minnesota for V1.</li>
+                                <li><strong>No Legal Advice:</strong> The "Shepherd" provides procedural
+                                    guidance, not legal advice. Disclaimer implementation is mandatory.</li>
+                                <li><strong>Third-Party Costs:</strong> Client pays direct consumption costs
+                                    for Plaid, Lob, and Cloud IDs.</li>
+                                <li><strong>Content:</strong> Client is responsible for final validation of
+                                    court form templates.</li>
+                            </ol>
+                        </section>
+
+                        <hr class="border-[#C8A951]/20 my-16">
+
+                        <section id="exhibit-b">
+                            <h2 class="text-center font-serif text-3xl text-[#C8A951] mb-12">Exhibit B: Cost
+                                Proposal & ROI Analysis</h2>
+
+                            <div class="mb-12 p-6 bg-white/5 border border-white/10 rounded text-center">
+                                <p class="text-xl font-serif text-[#C8A951]">Project Budget: $200,000 (Standard) /
+                                    $175,000 (Equity)</p>
+                                <p class="font-mono text-sm opacity-60 mt-2">Effective: December 11, 2025 | Launch
+                                    Target: 20 Weeks</p>
+                            </div>
+
+                            <h3>1. Executive Summary</h3>
+                            <p>This proposal offers a transparent, atomic breakdown of the investment required to
+                                build the "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or
+                                "billable hour" law firm models, we provide a fixed-price engineering partnership.
+                            </p>
+
+                            <h3>2. Comparative Market Analysis</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>FinalWishes (111 VS)</th>
+                                        <th>"Big Law" Custom Tech</th>
+                                        <th>Typical Dev Agency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Total Cost</strong></td>
+                                        <td><strong>$200,000 (Standard)</strong></td>
+                                        <td>$650,000+</td>
+                                        <td>$350,000+</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Time to Market</strong></td>
+                                        <td><strong>5 Months</strong></td>
+                                        <td>18-24 Months</td>
+                                        <td>9-12 Months</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Model</strong></td>
+                                        <td><strong>Co-Founder/Partner</strong></td>
+                                        <td>Billable Hour ($800/hr)</td>
+                                        <td>Time & Materials</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>IP Ownership</strong></td>
+                                        <td><strong>100% Client Owned</strong></td>
+                                        <td>Firm Retains IP</td>
+                                        <td>Vendor Lock-in</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>AI Capability</strong></td>
+                                        <td><strong>Gemini 3.0 Native</strong></td>
+                                        <td>None / Rigid Logic</td>
+                                        <td>Generic Chatbot</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <blockquote>
+                                Analysis: We deliver 4x the speed at roughly 40% of the cost of a traditional
+                                enterprise build by leveraging our proprietary "Sirsi" component library and
+                                AI-accelerated development.
+                            </blockquote>
+
+                            <h3>3. Atomic Development Cost Breakdown</h3>
+                            <p><strong>Phase 0: Design & Identity (Weeks 1-4) - $30,000</strong></p>
+                            <ul>
+                                <li>Brand Identity (Logo, Typography, Palette): $6,000</li>
+                                <li>UX/UI Design System (Figma: Web + Mobile): $12,000</li>
+                                <li>High-Fidelity Prototyping: $6,000</li>
+                                <li>Asset Production (Icons, Illustrations): $6,000</li>
+                            </ul>
+                            <p><strong>Phase 1: Foundation & Vault (Weeks 1-4) - $30,000</strong></p>
+                            <ul>
+                                <li>System Architecture: $8,000</li>
+                                <li>Cloud SQL / Firestore Schema: $5,500</li>
+                                <li>Vault Implementation (AES-256): $7,250</li>
+                                <li>DocuSeal Setup: $2,250</li>
+                                <li>Frontend Shell: $7,000</li>
+                            </ul>
+                            <p><strong>Phase 2: Core Logic & "The Shepherd" (Weeks 5-10) - $35,000</strong></p>
+                            <ul>
+                                <li>State Engines (MD, IL, MN): $11,000</li>
+                                <li>Gemini 3.0 RAG Pipeline: $9,500</li>
+                                <li>Legal Prompt Engineering: $6,000</li>
+                                <li>Frontend Guidance UI: $8,500</li>
+                            </ul>
+                            <p><strong>Phase 3: Living Legacy & Universal App (Weeks 11-16) - $38,000</strong>
+                            </p>
+                            <ul>
+                                <li>React Native Universal Shell: $14,000</li>
+                                <li>Living Legacy Features: $10,500</li>
+                                <li>Heir Naming & Distribution UI: $8,500</li>
+                                <li>Document Scanner: $5,000</li>
+                            </ul>
+                            <p><strong>Phase 4: QA, Security & Launch (Weeks 17-20) - $32,000</strong></p>
+                            <ul>
+                                <li>Penetration Testing (External): $12,000</li>
+                                <li>End-to-End Testing (Cypress): $10,000</li>
+                                <li>SOC 2 Policy Generation: $4,000</li>
+                                <li>App Store Submission: $6,000</li>
+                            </ul>
+                            <p><strong>Phase 5: Contingency & Project Management - $35,000</strong></p>
+                            <ul>
+                                <li>15% Project Contingency: $28,000</li>
+                                <li>Project Management & Client Liaison: $7,000</li>
+                            </ul>
+
+                            <h3>4. Infrastructure Bill of Materials (BoM)</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Item</th>
+                                        <th>Est. Unit Cost</th>
+                                        <th>Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Compute</td>
+                                        <td>Cloud Run</td>
+                                        <td>~$18/mo</td>
+                                        <td>Backend container</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Database</td>
+                                        <td>Cloud SQL</td>
+                                        <td>~$9/mo</td>
+                                        <td>Secure PII storage</td>
+                                    </tr>
+                                    <tr>
+                                        <td>NoSQL</td>
+                                        <td>Firestore</td>
+                                        <td>Free Tier</td>
+                                        <td>User metadata</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Storage</td>
+                                        <td>Cloud Storage</td>
+                                        <td>$0.026/GB</td>
+                                        <td>Document vault</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AI</td>
+                                        <td>Vertex AI</td>
+                                        <td>~$5/1M tokens</td>
+                                        <td>Legal logic</td>
+                                    </tr>
+                                    <tr>
+                                        <td>E-Sign</td>
+                                        <td>DocuSeal</td>
+                                        <td>$0 (OSS)</td>
+                                        <td>Unlimited signatures</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div id="exhibit-b-dynamic"
+                                class="p-8 border border-[#C8A951]/20 rounded bg-white/5 italic text-center opacity-60">
+                                Selection Pending: Please select a partnership plan above to finalize Exhibit B and
+                                execute the agreement.
+                            </div>
+                        </section>
+                    </div>
+
+                    <br><br>
+                    <div id="step-3-label" class="text-center mt-16 mb-8 opacity-0 transition-opacity duration-1000">
+                        <h2 class="font-serif text-2xl text-[#C8A951] uppercase tracking-widest">
+                            Step 3: Final Execution</h2>
+                    </div>
+
+                    <div id="signature-block"
+                        class="p-12 bg-white/5 border border-[#C8A951]/30 rounded text-center mt-4 scroll-mt-32 opacity-0 pointer-events-none transition-all duration-1000">
+                        <p class="text-sm text-[#C8A951] uppercase tracking-[0.3em] font-serif mb-6">Execution
+                            of Agreement</p>
+                        <div class="h-px w-64 bg-[#C8A951]/40 mx-auto mb-12"></div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+                            <div class="text-left space-y-4">
+                                <p class="text-xs text-[#C8A951] uppercase tracking-widest">Client Signature</p>
+                                <div class="py-4 border-b border-white/10">
+                                    <p class="font-serif italic text-3xl text-white">Tameeka Lockhart</p>
+                                </div>
+                                <p class="text-sm opacity-60 font-mono">Digitally Verified: 12/11/2025</p>
+                            </div>
+                            <div class="text-left space-y-4">
+                                <p class="text-xs text-[#C8A951] uppercase tracking-widest">Provider Signature
+                                </p>
+                                <div class="py-4 border-b border-white/10">
+                                    <p class="font-serif italic text-3xl text-white">Cylton Collymore</p>
+                                </div>
+                                <p class="text-sm opacity-60">Cylton Collymore, CEO<br>Sirsi Technologies, Inc
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 pt-8 border-t border-white/5">
+                            <p class="text-[10px] text-blue-300/40 uppercase tracking-tighter">Verified via
+                                FinalWishes Protocol ⚜️ Transaction ID: 0x93-1696269-BETH-2025</p>
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
-        </main>
+    </div>
+
+    </div>
+    </main>
     </div>
 
     <!-- Scripts -->
@@ -2547,26 +3423,95 @@
             if (tabId === 'contract') buttons[2].classList.add('active');
         }
 
-        function selectPlan(planName) {
-            console.log('Selected Plan:', planName);
+        function selectContractPlan(planName, btnElement) {
+            // 1. Reset All UI
+            // Reset borders
+            document.querySelectorAll('.plan-card-static').forEach(c => {
+                c.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                c.style.backgroundColor = 'rgba(0, 0, 0, 0.4)';
+            });
+            // Reset buttons
+            document.querySelectorAll('.select-plan-btn').forEach(b => {
+                b.innerHTML = 'SELECT PLAN';
+                b.style.backgroundColor = 'transparent';
+                b.style.color = b.classList.contains('border-[#10B981]') ? '#10B981' : '#C8A951';
+            });
 
-            // 1. Switch to Contract Tab
-            switchTab('contract');
+            // 2. Activate Selected
+            const card = btnElement.closest('.plan-card-static');
+            card.style.borderColor = '#C8A951';
+            card.style.backgroundColor = 'rgba(200, 169, 81, 0.05)';
 
-            // 2. Scroll to Signature Section
+            btnElement.innerHTML = 'SELECTED';
+            btnElement.style.backgroundColor = btnElement.classList.contains('border-[#10B981]') ? '#10B981' : '#C8A951';
+            btnElement.style.color = '#000000';
+
+            // 3. Reveal Document & Step 2 Label
+            const doc = document.getElementById('contract-document');
+            const step2Label = document.getElementById('step-2-label');
+            const step3Label = document.getElementById('step-3-label');
+            const sigBlock = document.getElementById('signature-block');
+
+            doc.classList.remove('opacity-40', 'pointer-events-none');
+            doc.classList.add('opacity-100');
+            step2Label.classList.remove('opacity-40');
+            step2Label.classList.add('opacity-100');
+
+            // 3b. Reveal Signature Block (Step 3)
+            sigBlock.classList.remove('opacity-0', 'pointer-events-none');
+            sigBlock.classList.add('opacity-100');
+            step3Label.classList.remove('opacity-0');
+            step3Label.classList.add('opacity-100');
+
+            // 4. Update Exhibit B
+            const dynamicBlock = document.getElementById('exhibit-b-dynamic');
+            let planContent = '';
+
+            if (planName === 'Plan A') {
+                planContent = `
+                    <h3>5. Payment Schedule (Option A: 50/50)</h3>
+                    <p>Standard engineering engagement with payments tied to initiation and successful launch.</p>
+                    <table class="w-full text-left border-collapse mt-4">
+                        <tr class="border-b border-white/10"><td class="py-2">Milestone 1: Execution (Signing)</td><td class="text-right text-[#C8A951]">$100,000</td></tr>
+                        <tr><td class="py-2">Milestone 2: Functional Delivery (Launch)</td><td class="text-right text-[#C8A951]">$100,000</td></tr>
+                    </table>
+                    <p class="mt-4 text-sm font-bold opacity-60">Total Contract Value: $200,000 USD</p>
+                `;
+            } else if (planName === 'Plan B') {
+                planContent = `
+                    <h3>5. Payment Schedule (Option B: Trimester)</h3>
+                    <p>Deferred payment structure focused on month-over-month delivery velocity.</p>
+                    <table class="w-full text-left border-collapse mt-4">
+                        <tr class="border-b border-white/10"><td class="py-2">Milestone 1: Execution (Signing)</td><td class="text-right text-[#C8A951]">$66,666.66</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Milestone 2: Sprint Audit (Month 2)</td><td class="text-right text-[#C8A951]">$66,666.67</td></tr>
+                        <tr><td class="py-2">Milestone 3: Final Integration (Month 4)</td><td class="text-right text-[#C8A951]">$66,666.67</td></tr>
+                    </table>
+                    <p class="mt-4 text-sm font-bold opacity-60">Total Contract Value: $200,000 USD</p>
+                `;
+            } else if (planName === 'Plan C') {
+                planContent = `
+                    <h3>5. Payment Schedule (Option C: Equity Bundle)</h3>
+                    <p>Strategic partnership model with reduced cash requirements in exchange for long-term alignment.</p>
+                    <table class="w-full text-left border-collapse mt-4">
+                        <tr class="border-b border-white/10"><td class="py-2">Milestone 1: Partnership Close</td><td class="text-right text-[#C8A951]">$75,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Milestone 2: Core Engineering</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Milestone 3: Launch Readiness</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
+                        <tr><td class="py-2 font-bold text-[#10B981]">Equity Grant (2.5%)</td><td class="text-right text-[#10B981]">Vesting over 12mo</td></tr>
+                    </table>
+                    <p class="mt-4 text-sm font-bold opacity-60">Total Cash Value: $175,000 USD + Equity</p>
+                `;
+            }
+
+            dynamicBlock.innerHTML = planContent;
+            dynamicBlock.classList.remove('opacity-60', 'italic', 'text-center');
+            dynamicBlock.style.background = 'rgba(200, 169, 81, 0.05)';
+            dynamicBlock.style.borderColor = 'rgba(200, 169, 81, 0.5)';
+
+            // 5. Scroll to amended Exhibit B
             setTimeout(() => {
-                const signatureBlock = document.getElementById('signature-block');
-                if (signatureBlock) {
-                    signatureBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                    // Optional: Flash effect or visual cue
-                    signatureBlock.style.transition = 'all 0.5s ease';
-                    signatureBlock.style.boxShadow = '0 0 30px rgba(200,169,81,0.4)';
-                    setTimeout(() => {
-                        signatureBlock.style.boxShadow = 'none';
-                    }, 1500);
-                }
-            }, 100);
+                dynamicBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                dynamicBlock.style.boxShadow = '0 0 30px rgba(200,169,81,0.2)';
+            }, 500);
         }
     </script>
 

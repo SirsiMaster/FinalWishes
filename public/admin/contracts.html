@@ -414,6 +414,11 @@
             --color-white: #ffffff;
             --radius: 4px;
 
+            /* NEO HERO CARD */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border-color: rgba(200, 169, 81, 0.5);
+
+
             background-image: radial-gradient(circle at 50% 0%, rgb(37, 99, 235) 0%, rgb(30, 58, 138) 40%, rgb(15, 23, 42) 80%);
             background-color: rgb(15, 23, 42);
             color: rgba(255, 255, 255, 0.9);
@@ -425,6 +430,21 @@
             font-size: 18px;
             line-height: 1.6;
             padding: 4rem 2rem;
+        }
+
+        /* MISSING CLASS DEFINITION */
+        .neo-stat-card-hero {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(200, 169, 81, 0.5) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+            backdrop-filter: blur(5px) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .neo-stat-card-hero:hover {
+            border-color: #C8A951 !important;
+            box-shadow: 0 0 20px rgba(200, 169, 81, 0.2) !important;
         }
 
         /* TYPOGRAPHY OVERRIDES WITHIN WRAPPER */
@@ -864,7 +884,8 @@
                                     1. Executive Overview</h2>
 
                                 <!-- PRIMARY OBJECTIVE (HERO CARD STYLE) -->
-                                <div class="neo-stat-card-hero py-10 px-8 mb-16 text-center max-w-4xl mx-auto">
+                                <div class="neo-stat-card-hero py-10 px-8 mb-16 text-center max-w-4xl mx-auto"
+                                    style="background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(200, 169, 81, 0.5) !important; border-radius: 8px !important; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3) !important; margin-top: 2rem !important;">
                                     <div class="uppercase tracking-[0.25em] neo-text-gold text-xs font-bold mb-4">
                                         Primary Objective
                                     </div>

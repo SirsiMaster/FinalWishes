@@ -26,34 +26,37 @@
 
         /* Level 2: Section Headers (e.g. "2. Detailed Scope") */
         .contract-immersive-wrapper h2 {
-            font-family: 'Cinzel', serif !important;
+            font-family: 'Inter', sans-serif !important;
+            /* FIXED: FORCE INTER */
             color: #C8A951 !important;
             font-size: 2.25rem !important;
-            /* text-4xl (36px) */
+            font-weight: 600 !important;
+            /* REFINED: SemiBold instead of ExtraBold */
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            /* Tighter spacing */
             margin-top: 4rem !important;
             margin-bottom: 2rem !important;
-            text-transform: none !important;
             border: none !important;
             line-height: 2.5rem !important;
+            text-align: center !important;
+            /* Center all section headers */
         }
 
         /* Level 3: Subsections (e.g. "2.1 Core Vault") */
         /* FIX: Making this larger than H4 */
         .contract-immersive-wrapper h3 {
-            font-family: 'Cinzel', serif !important;
-            /* Switch back to Serif for importance */
-            font-size: 1.5rem !important;
-            /* text-2xl (24px) */
-            line-height: 2rem !important;
-            font-weight: 400 !important;
-            text-transform: none !important;
-            /* Normal case */
-            letter-spacing: normal !important;
-            color: #FFFFFF !important;
-            /* White to distinguish from Gold H2/H4 */
+            font-family: 'Inter', sans-serif !important;
+            /* FIXED: FORCE INTER */
+            color: #93c5fd !important;
+            /* Blue-300 */
+            font-size: 1.125rem !important;
+            /* text-lg */
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
             margin-top: 3rem !important;
             margin-bottom: 1.5rem !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
             padding-bottom: 0.5rem !important;
         }
 
@@ -650,6 +653,146 @@
             color: #C8A951;
             font-weight: bold;
         }
+
+        /* GLOBAL TYPOGRAPHY OVERRIDE - NO MORE SERIFS */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .font-serif {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        /* REWRITTEN TABLE STYLES - SINGLE FONT SOURCE OF TRUTH */
+        #market-analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', sans-serif !important;
+            /* FORCE INTER */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            border-spacing: 0;
+        }
+
+        #market-analysis-table thead tr {
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Darker header */
+            border-bottom: 2px solid rgba(200, 169, 81, 0.4);
+            /* Stronger separator */
+        }
+
+        #market-analysis-table th {
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 800;
+            /* Extra Bold Headers */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2rem 1.5rem;
+            /* More vertical padding */
+            text-align: center;
+            font-size: 1.25rem !important;
+            /* 20px - Larger Headers */
+            line-height: 1.2;
+        }
+
+        #market-analysis-table th:nth-child(1) {
+            text-align: left;
+            color: #C8A951;
+            width: 25%;
+            font-size: 1.1rem !important;
+            /* Slightly smaller for 'METRIC' label */
+            opacity: 0.8;
+        }
+
+        #market-analysis-table th:nth-child(2) {
+            color: white;
+            width: 28%;
+            /* Give hero column more space */
+            background: rgba(255, 255, 255, 0.05);
+            /* Highlight Hero Header */
+        }
+
+        #market-analysis-table th:nth-child(3),
+        #market-analysis-table th:nth-child(4) {
+            color: #94a3b8;
+            width: 23.5%;
+            font-weight: 600;
+            font-size: 1.1rem !important;
+            /* De-emphasize competitors */
+        }
+
+        #market-analysis-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.2s;
+        }
+
+        #market-analysis-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        #market-analysis-table td {
+            font-family: 'Inter', sans-serif !important;
+            padding: 1.75rem 1.5rem;
+            /* Larger cells */
+            text-align: center;
+            font-size: 1.125rem !important;
+            /* 18px Body Text */
+            color: rgba(255, 255, 255, 0.9);
+            vertical-align: middle;
+        }
+
+        #market-analysis-table td:nth-child(1) {
+            text-align: left;
+            font-weight: 700;
+            color: white;
+            font-size: 1.25rem !important;
+            /* Metric Name Large */
+        }
+
+        #market-analysis-table td:nth-child(2) {
+            color: white;
+            font-weight: 600;
+            background-color: rgba(200, 169, 81, 0.08);
+            /* Stronger Highlight */
+            border-left: 1px solid rgba(200, 169, 81, 0.15);
+            border-right: 1px solid rgba(200, 169, 81, 0.15);
+            font-size: 1.25rem !important;
+            /* Hero Values Large */
+        }
+
+        #market-analysis-table td:nth-child(3),
+        #market-analysis-table td:nth-child(4) {
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+        /* Special Values Helper Class */
+        .u-cinzel-accent {
+            font-family: 'Cinzel', serif !important;
+        }
+
+        .u-text-gold {
+            color: #C8A951 !important;
+        }
+
+        .u-text-emerald {
+            color: #10b981 !important;
+        }
+
+        /* Allocation Text */
+        #allocation-text {
+            text-align: center !important;
+            font-family: 'Inter', sans-serif !important;
+            font-style: italic;
+            font-size: 22px !important;
+            /* Larger */
+            color: white;
+            line-height: 1.5;
+        }
     </style>
 </head>
 
@@ -669,18 +812,19 @@
             <div class="contract-immersive-wrapper pb-48">
 
                 <!-- Header Component -->
-                <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative max-w-[1400px] mx-auto">
+                <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative w-full mx-auto">
 
                     <!-- Title -->
-                    <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+                    <div
+                        style="text-align: center; width: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
                         <h1
-                            style="color: #C8A951; margin-bottom: 16px; font-size: 56px; font-family: Cinzel, serif; letter-spacing: 0.02em;">
+                            style="color: #C8A951; margin-bottom: 16px; font-size: 42px; line-height: 1.2; font-family: 'Inter', sans-serif !important; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; max-width: 900px;">
                             Technical Partnership Agreement
                         </h1>
                         <div style="height: 1px; width: 128px; background: #C8A951; margin: 24px auto; opacity: 0.5;">
                         </div>
                         <p
-                            style="font-size: 18px; color: white; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 500;">
+                            style="font-size: 16px; color: white; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600; text-align: center; font-family: 'Inter', sans-serif !important;">
                             Prepared for Tameeka Lockhart • December 17, 2025
                         </p>
                     </div>
@@ -712,14 +856,19 @@
                                 </div>
 
                                 <!-- 1. EXECUTIVE OVERVIEW -->
-                                <h2 class="text-[#C8A951] mt-8 mb-4">1. Executive Overview</h2>
+                                <h2
+                                    class="text-[#C8A951] mt-12 mb-8 text-3xl font-extrabold uppercase tracking-widest text-center">
+                                    1. Executive Overview</h2>
 
-                                <p class="mb-8 font-serif text-xl leading-loose italic text-blue-100 max-w-6xl">
+                                <!-- Subtle Quote -->
+                                <p
+                                    class="mb-8 text-base leading-relaxed text-slate-500 max-w-4xl mx-auto text-center italic opacity-70">
                                     "To ensure that when a life ends, the love remains—undiminished by bureaucracy,
                                     preserved in a digital vault, and delivered exactly as intended."
                                 </p>
 
-                                <p class="mb-8 text-lg leading-relaxed text-slate-300 max-w-6xl">This Statement of Work
+                                <p class="mb-8 text-lg leading-relaxed text-slate-300 max-w-5xl mx-auto">This Statement
+                                    of Work
                                     ("SOW") defines the comprehensive scope for the
                                     <strong>FinalWishes Estate Operating System</strong>. While competent estate
                                     management is critical, <strong>FinalWishes is not merely a probate tool.</strong>
@@ -728,7 +877,7 @@
                                     "Administration" of their assets.
                                 </p>
 
-                                <p class="mb-12">
+                                <p class="mb-12 text-lg leading-relaxed text-slate-300 max-w-5xl mx-auto">
                                     We serve the <strong>Human</strong> first and the <strong>Process</strong> second.
                                     By curating the emotional legacy of the soon-to-be-deceased, we effectively arm the
                                     Executor not just with legal documents, but with the moral authority and clear
@@ -737,15 +886,14 @@
 
                                 <!-- OBJECTIVE BAR (GOLD BOX) -->
                                 <div
-                                    class="relative bg-[#C8A951]/10 border border-[#C8A951] rounded-lg py-10 px-8 mb-16 text-center">
-                                    <div class="uppercase tracking-[0.2em] text-[#C8A951] text-sm font-bold mb-4">
+                                    class="relative bg-white/5 border border-white/10 rounded-lg py-12 px-8 mb-16 text-center backdrop-blur-sm">
+                                    <div class="uppercase tracking-[0.2em] text-[#C8A951] text-sm font-semibold mb-6">
                                         Primary Objective</div>
-                                    <p
-                                        class="mb-0 text-white text-2xl font-serif italic max-w-4xl mx-auto leading-relaxed">
+                                    <p class="mb-0 text-white text-xl max-w-4xl mx-auto leading-relaxed font-normal">
                                         "Deliver a dual-purpose platform that empowers the Living to <span
-                                            class="text-[#C8A951] font-bold">Curate their Legacy</span> (Memories &
+                                            class="text-[#C8A951] font-medium">Curate their Legacy</span> (Memories &
                                         Wishes) and equips their Loved Ones to <span
-                                            class="text-[#C8A951] font-bold">Automate the Estate</span> (Probate &
+                                            class="text-[#C8A951] font-medium">Automate the Estate</span> (Probate &
                                         Assets)."
                                     </p>
                                 </div>
@@ -1221,73 +1369,54 @@
                                 <div class="h-px bg-white/10 flex-1"></div>
                             </div>
 
-                            <div class="overflow-hidden rounded border border-white/10 bg-white/5 backdrop-blur-sm">
-                                <table class="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr class="bg-black/20 border-b border-[#C8A951]/30">
-                                            <th
-                                                class="p-6 text-[#C8A951] font-serif tracking-wider uppercase text-lg w-1/4">
-                                                Metric</th>
-                                            <th
-                                                class="p-6 text-white font-serif tracking-wider uppercase text-lg w-1/4">
-                                                FinalWishes (111 VS)</th>
-                                            <th
-                                                class="p-6 text-slate-400 font-serif tracking-wider uppercase text-lg w-1/4">
-                                                "Big Law" Custom Tech</th>
-                                            <th
-                                                class="p-6 text-slate-400 font-serif tracking-wider uppercase text-lg w-1/4">
-                                                Typical Dev Agency</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-white/5 text-base"> <!-- text-base for body -->
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white">Total Cost</td>
-                                            <td
-                                                class="p-6 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10 font-serif">
-                                                $200,000 (Fixed)</td>
-                                            <td class="p-6 text-slate-300 font-serif">$650,000+</td>
-                                            <td class="p-6 text-slate-300 font-serif">$350,000+</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white">Time to Market</td>
-                                            <td
-                                                class="p-6 font-bold text-[#C8A951] bg-[#C8A951]/5 border-x border-[#C8A951]/10">
-                                                5 Months</td>
-                                            <td class="p-6 text-slate-300">18-24 Months</td>
-                                            <td class="p-6 text-slate-300">9-12 Months</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white">Model</td>
-                                            <td class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">
-                                                Co-Founder/Partner</td>
-                                            <td class="p-6 text-slate-300">Billable Hour ($800/hr)</td>
-                                            <td class="p-6 text-slate-300">Time & Materials</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white">IP Ownership</td>
-                                            <td
-                                                class="p-6 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10">
-                                                100% Client Owned</td>
-                                            <td class="p-6 text-slate-300">Firm Retains IP</td>
-                                            <td class="p-6 text-slate-300">Vendor Lock-in</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white">Security</td>
-                                            <td class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">SOC 2
-                                                Type II Ready</td>
-                                            <td class="p-6 text-slate-300">"Enterprise" bloat</td>
-                                            <td class="p-6 text-slate-300">Basic / Afterthought</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white">AI Capability</td>
-                                            <td class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">
-                                                Gemini 3.0 Native</td>
-                                            <td class="p-6 text-slate-300">None / Rigid Logic</td>
-                                            <td class="p-6 text-slate-300">Generic Chatbot</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table id="market-analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>FinalWishes (111 VS)</th>
+                                        <th>"Big Law" Custom Tech</th>
+                                        <th>Typical Dev Agency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Total Cost</td>
+                                        <td class="u-text-emerald">$200,000 (Fixed)</td>
+                                        <td>$650,000+</td>
+                                        <td>$350,000+</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Time to Market</td>
+                                        <td class="u-text-gold">5 Months</td>
+                                        <td>18-24 Months</td>
+                                        <td>9-12 Months</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Model</td>
+                                        <td>Co-Founder/Partner</td>
+                                        <td>Billable Hour ($800/hr)</td>
+                                        <td>Time & Materials</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IP Ownership</td>
+                                        <td class="u-text-emerald">100% Client Owned</td>
+                                        <td>Firm Retains IP</td>
+                                        <td>Vendor Lock-in</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Security</td>
+                                        <td>SOC 2 Type II Ready</td>
+                                        <td>"Enterprise" bloat</td>
+                                        <td>Basic / Afterthought</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AI Capability</td>
+                                        <td>Gemini 3.0 Native</td>
+                                        <td>None / Rigid Logic</td>
+                                        <td>Generic Chatbot</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                         <!-- 2. ATOMIC DEVELOPMENT BREAKDOWN -->
@@ -1299,10 +1428,13 @@
                                     2. Atomic Development Breakdown</h2>
                                 <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
                             </div>
-                            <p
-                                style="text-align: center; color: white; margin-bottom: 48px; font-style: italic; font-size: 24px;">
-                                Transparent allocation of <strong style="color: white;">925 hours</strong> across 5 key
-                                phases.</p>
+                            <div
+                                style="width: 100%; text-align: center; display: flex; justify-content: center; margin-bottom: 48px;">
+                                <p id="allocation-text" style="text-align: center !important; margin: 0;">
+                                    Transparent allocation of <strong style="color: white;">925 hours</strong> across 5
+                                    key phases.
+                                </p>
+                            </div>
 
                             <div
                                 style="display: flex; flex-direction: column; gap: 24px; max-width: 900px; margin: 0 auto;">
@@ -1649,7 +1781,8 @@
                                 <!-- Row 1: Starting Point -->
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <span style="font-size: 24px; color: white;">Market Standard ("Big Law")</span>
+                                    <span style="font-size: 20px; font-family: Inter, sans-serif; color: white;">Market
+                                        Standard ("Big Law")</span>
                                     <span
                                         style="font-size: 24px; font-family: Cinzel, serif; color: #94a3b8; text-decoration: line-through;">$650,000</span>
                                 </div>
@@ -1657,7 +1790,9 @@
                                 <!-- Row 2: Discount 1 -->
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
-                                    <span style="font-size: 24px; color: white;">SirsiNexus Efficiency</span>
+                                    <span
+                                        style="font-size: 20px; font-family: Inter, sans-serif; color: white;">SirsiNexus
+                                        Efficiency</span>
                                     <span
                                         style="font-size: 24px; font-family: Cinzel, serif; color: #10b981;">−$350,000</span>
                                 </div>
@@ -1665,7 +1800,9 @@
                                 <!-- Row 3: Discount 2 -->
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <span style="font-size: 24px; color: white;">"Project 111" Credit</span>
+                                    <span
+                                        style="font-size: 20px; font-family: Inter, sans-serif; color: white;">"Project
+                                        111" Credit</span>
                                     <span
                                         style="font-size: 24px; font-family: Cinzel, serif; color: #10b981;">−$100,000</span>
                                 </div>
@@ -1673,7 +1810,9 @@
                                 <!-- Row 4: Final Total -->
                                 <div
                                     style="display: flex; justify-content: space-between; align-items: center; padding: 24px 0 12px 0;">
-                                    <span style="font-size: 24px; font-weight: 600; color: #C8A951;">Your Price</span>
+                                    <span
+                                        style="font-size: 20px; font-family: Inter, sans-serif; font-weight: 600; color: #C8A951;">Your
+                                        Price</span>
                                     <span
                                         style="font-size: 24px; font-family: Cinzel, serif; font-weight: 600; color: #C8A951;">$200,000</span>
                                 </div>
@@ -1846,26 +1985,26 @@
                                     <h3
                                         style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                         Plan A</h3>
-                                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 1.5rem;">50/50 Split</p>
+                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">50/50 Split</p>
 
                                     <div
                                         style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $100,000</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due at Signing</div>
+                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
                                         </div>
                                         <div>
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $100,000</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due at Launch</div>
+                                            <div style="font-size: 14px; color: white;">Due at Launch</div>
                                         </div>
                                     </div>
 
                                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                        <div style="font-size: 16px; color: #64748b; margin-bottom: 0.5rem;">Total</div>
+                                        <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Total</div>
                                         <div
-                                            style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
+                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
                                             $200,000</div>
                                         <button onclick="selectPlan('Plan A')"
                                             style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
@@ -1879,7 +2018,7 @@
                                     <h3
                                         style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                         Plan B</h3>
-                                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 1.5rem;">Trimester
+                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Trimester
                                         Payments</p>
 
                                     <div
@@ -1887,22 +2026,22 @@
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $66,666</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due at Signing</div>
+                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
                                         </div>
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $66,666</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due Month 2</div>
+                                            <div style="font-size: 14px; color: white;">Due Month 2</div>
                                         </div>
                                         <div>
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $66,668</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due Month 4</div>
+                                            <div style="font-size: 14px; color: white;">Due Month 4</div>
                                         </div>
                                     </div>
 
                                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                        <div style="font-size: 16px; color: #64748b; margin-bottom: 0.5rem;">Total</div>
+                                        <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Total</div>
                                         <div
                                             style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
                                             $200,000</div>
@@ -1918,7 +2057,7 @@
                                     <h3
                                         style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                         Plan C</h3>
-                                    <p style="font-size: 14px; color: #94a3b8; margin-bottom: 1.5rem;">Partnership +
+                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Partnership +
                                         Equity</p>
 
                                     <div
@@ -1926,23 +2065,23 @@
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $87,500</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due at Signing</div>
+                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
                                         </div>
                                         <div style="margin-bottom: 1rem;">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 $87,500</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">Due Month 3</div>
+                                            <div style="font-size: 14px; color: white;">Due Month 3</div>
                                         </div>
                                         <div
                                             style="background: rgba(200,169,81,0.1); padding: 0.75rem; border: 1px solid rgba(200,169,81,0.3);">
                                             <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
                                                 2.5% Equity</div>
-                                            <div style="font-size: 14px; color: #94a3b8;">In lieu of $25k cash</div>
+                                            <div style="font-size: 14px; color: white;">In lieu of $25k cash</div>
                                         </div>
                                     </div>
 
                                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                        <div style="font-size: 16px; color: #64748b; margin-bottom: 0.5rem;">Cash Total
+                                        <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Cash Total
                                         </div>
                                         <div
                                             style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 0.25rem;">

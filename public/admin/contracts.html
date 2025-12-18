@@ -889,7 +889,7 @@
                             <div class="stat-card contract-stat">
                                 <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">True Market Value
                                 </div>
-                                <div class="text-3xl text-slate-400 line-through decoration-red-500/50">$1.0M+</div>
+                                <div class="text-3xl text-slate-400 line-through decoration-red-500/50">$650k+</div>
                             </div>
                             <div
                                 class="stat-card contract-stat border-[#C8A951] bg-[#C8A951]/20 shadow-[0_0_15px_rgba(200,169,81,0.2)]">
@@ -903,7 +903,7 @@
                             </div>
                             <div class="stat-card contract-stat">
                                 <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">Total Hours</div>
-                                <div class="text-3xl text-white">1,200+</div>
+                                <div class="text-3xl text-white">1,150+</div>
                             </div>
                         </div>
                         <!-- TRUE MARKET PRICE ANALYSIS -->
@@ -981,16 +981,14 @@
                             <div class="space-y-3 font-serif max-w-2xl mx-auto">
                                 <div
                                     class="flex justify-between items-center text-slate-400 border-b border-white/5 pb-2">
-                                    <span>Gross Development Value (~1,800 hrs)</span><span>$450,000</span>
+                                    <span>Gross Market Value (Typical Agency)</span><span>$450,000</span>
                                 </div>
                                 <div class="flex justify-between items-center text-emerald-400">
-                                    <span><span>▼</span> SirsiNexus Efficiency (Auth, Vault,
-                                        UI)</span><span>-$150,000</span>
+                                    <span><span>▼</span> SirsiNexus Asset Efficiency</span><span>-$150,000</span>
                                 </div>
                                 <div
                                     class="flex justify-between items-center text-emerald-400 border-b border-white/10 pb-2">
-                                    <span><span>▼</span> Friends &amp; Family Discount (Shared
-                                        Risk)</span><span>-$100,000</span>
+                                    <span><span>▼</span> "Project 111" Partnership Credit</span><span>-$100,000</span>
                                 </div>
                                 <div class="flex justify-between items-center text-[#C8A951] text-2xl font-bold pt-4">
                                     <span>NET CONTRACT PRICE</span><span>$200,000</span>
@@ -1027,6 +1025,65 @@
                                             class="text-sm font-normal text-slate-400">/1M tokens</span></p>
                                     <p class="text-sm text-slate-400 mt-2">Context-aware guidance engine</p>
                                 </div>
+                            </div>
+                        </div>
+                        <!-- PAYMENT SELECTION MOVED HERE -->
+                        <div class="col-span-12 mt-16 pt-16 border-t border-white/10">
+                            <h2 class="text-center mb-12 text-3xl font-serif text-[#C8A951]">4. Select Your Partnership
+                                Plan</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                                <!-- PLAN A -->
+                                <div
+                                    class="p-6 rounded border border-white/10 bg-white/5 hover:border-[#C8A951] transition-colors group relative overflow-hidden backdrop-blur-sm">
+                                    <h3 class="text-xl text-white font-bold mb-2 font-serif">Plan A: Standard Split</h3>
+                                    <div class="text-[#C8A951] text-sm font-mono mb-6">50% / 50%</div>
+                                    <ul class="text-sm text-blue-200 space-y-3 mb-8 h-24">
+                                        <li>• <strong class="text-white">$100,000</strong> due at Signing</li>
+                                        <li>• <strong class="text-white">$100,000</strong> due at Beta Launch</li>
+                                        <li>• Total Cash: <strong>$200,000</strong></li>
+                                    </ul>
+                                    <button onclick="selectPlan('Plan A')"
+                                        class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all rounded-sm">
+                                        Select Plan A
+                                    </button>
+                                </div>
+
+                                <!-- PLAN B -->
+                                <div
+                                    class="p-6 rounded border border-white/10 bg-white/5 hover:border-[#C8A951] transition-colors group relative overflow-hidden backdrop-blur-sm">
+                                    <h3 class="text-xl text-white font-bold mb-2 font-serif">Plan B: Trimester</h3>
+                                    <div class="text-[#C8A951] text-sm font-mono mb-6">33% / 33% / 33%</div>
+                                    <ul class="text-sm text-blue-200 space-y-3 mb-8 h-24">
+                                        <li>• <strong class="text-white">$66,666</strong> due at Signing</li>
+                                        <li>• <strong class="text-white">$66,666</strong> due Month 2</li>
+                                        <li>• <strong class="text-white">$66,668</strong> due Month 4</li>
+                                    </ul>
+                                    <button onclick="selectPlan('Plan B')"
+                                        class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all rounded-sm">
+                                        Select Plan B
+                                    </button>
+                                </div>
+
+                                <!-- PLAN C -->
+                                <div
+                                    class="p-6 rounded border border-[#C8A951] bg-[#C8A951]/10 transform scale-105 shadow-[0_0_30px_rgba(200,169,81,0.15)] relative overflow-hidden backdrop-blur-md">
+                                    <div
+                                        class="absolute top-0 right-0 bg-[#C8A951] text-black text-xs font-bold px-3 py-1 font-sans tracking-wide">
+                                        -$25,000 CREDIT</div>
+                                    <h3 class="text-xl text-white font-bold mb-2 font-serif">Plan C: Partnership</h3>
+                                    <div class="text-[#C8A951] text-sm font-mono mb-6">Cash + Equity</div>
+                                    <ul class="text-sm text-blue-200 space-y-3 mb-8 h-24">
+                                        <li>• <strong class="text-white">$87,500</strong> due at Signing</li>
+                                        <li>• <strong class="text-white">$87,500</strong> due Month 3</li>
+                                        <li>• <strong class="text-[#C8A951]">2.5% Equity ($25k Discount)</strong></li>
+                                    </ul>
+                                    <button onclick="selectPlan('Plan C')"
+                                        class="w-full py-3 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(200,169,81,0.4)] rounded-sm">
+                                        Select & Sign
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -1389,65 +1446,7 @@
                                 <p class="text-xs text-gray-400 mt-2">Signed via FinalWishes Admin • <span
                                         id="signDate">December 17, 2025</span></p>
                             </div>
-                            <!-- PAYMENT SELECTION -->
-                            <div class="col-span-12 mt-16 pt-16 border-t border-white/10">
-                                <h2 class="text-center mb-12" style="color: black !important;">Select Your Payment Plan
-                                </h2>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-                                    <!-- PLAN A -->
-                                    <div
-                                        class="p-6 rounded border border-gray-200 bg-gray-50 hover:border-[#C8A951] transition-colors group">
-                                        <h3 class="text-xl text-black font-bold mb-2">Plan A: Standard Split</h3>
-                                        <div class="text-[#C8A951] text-sm font-mono mb-4">50% / 50%</div>
-                                        <ul class="text-sm text-gray-600 space-y-2 mb-8 h-24">
-                                            <li>• $100,000 due at Signing</li>
-                                            <li>• $100,000 due at Launch</li>
-                                            <li>• Total: $200,000</li>
-                                        </ul>
-                                        <button onclick="selectPlan('Plan A')"
-                                            class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all">
-                                            Select & Sign
-                                        </button>
-                                    </div>
-
-                                    <!-- PLAN B -->
-                                    <div
-                                        class="p-6 rounded border border-gray-200 bg-gray-50 hover:border-[#C8A951] transition-colors group">
-                                        <h3 class="text-xl text-black font-bold mb-2">Plan B: Trimester</h3>
-                                        <div class="text-[#C8A951] text-sm font-mono mb-4">33% / 33% / 33%</div>
-                                        <ul class="text-sm text-gray-600 space-y-2 mb-8 h-24">
-                                            <li>• $66,666 due at Signing</li>
-                                            <li>• $66,666 due Month 2</li>
-                                            <li>• $66,668 due Month 4</li>
-                                        </ul>
-                                        <button onclick="selectPlan('Plan B')"
-                                            class="w-full py-3 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-wider transition-all">
-                                            Select & Sign
-                                        </button>
-                                    </div>
-
-                                    <!-- PLAN C -->
-                                    <div
-                                        class="p-6 rounded border border-[#C8A951] bg-[#C8A951]/10 transform scale-105 shadow-[0_0_30px_rgba(200,169,81,0.15)] relative overflow-hidden">
-                                        <div
-                                            class="absolute top-0 right-0 bg-[#C8A951] text-black text-xs font-bold px-3 py-1">
-                                            RECOMMENDED</div>
-                                        <h3 class="text-xl text-black font-bold mb-2">Plan C: Partnership</h3>
-                                        <div class="text-[#C8A951] text-sm font-mono mb-4">Cash + Equity</div>
-                                        <ul class="text-sm text-gray-600 space-y-2 mb-8 h-24">
-                                            <li>• $75k due at Signing</li>
-                                            <li>• $50k at Mo 2, $50k at Mo 4.</li>
-                                            <li>• <strong>2.5% Non-Dilutive Equity</strong></li>
-                                        </ul>
-                                        <button onclick="selectPlan('Plan C')"
-                                            class="w-full py-3 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(200,169,81,0.4)]">
-                                            Select & Sign
-                                        </button>
-                                    </div>
-
-                                </div>
-                            </div>
 
                         </div>
                     </div>

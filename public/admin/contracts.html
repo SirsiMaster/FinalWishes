@@ -539,11 +539,13 @@
         }
 
         /* INTERACTIVE ANIMATIONS */
-        .plan-card-anim {
+        .plan-card-static.plan-card-anim {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             z-index: 1;
             border-radius: 2.5rem !important;
+            -webkit-border-radius: 2.5rem !important;
+            -moz-border-radius: 2.5rem !important;
         }
 
         .plan-card-anim:hover {
@@ -2609,9 +2611,8 @@
                                                     Follow-ups</div>
                                                 <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
                                             </div>
-                                            <div class="relative pt-2">
-                                                <div
-                                                    class="absolute -top-2 left-0 text-[10px] uppercase tracking-widest text-[#10B981]">
+                                            <div class="mt-4">
+                                                <div class="text-[10px] uppercase tracking-widest text-[#10B981] mb-2">
                                                     Equity Stake</div>
                                                 <div class="text-[#10B981] text-4xl font-light tracking-tight">2.5%
                                                 </div>

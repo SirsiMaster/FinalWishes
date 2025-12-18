@@ -20,119 +20,151 @@
     <!-- Admin Layout Styles -->
     <link rel="stylesheet" href="../assets/css/admin-layout.css">
     <style>
-        /* CRITICAL OVERRIDES FOR CONTRACT HIERARCHY */
+        /* CONTRACT WRAPPER OVERRIDES REMOVED */
 
-        /* Level 1: Main Page Title (H1) - Handled in layout */
-
-        /* Level 2: Section Headers (e.g. "2. Detailed Scope") */
-        .contract-immersive-wrapper h2 {
-            font-family: 'Inter', sans-serif !important;
-            /* FIXED: FORCE INTER */
-            color: #C8A951 !important;
-            font-size: 2.25rem !important;
-            font-weight: 600 !important;
-            /* REFINED: SemiBold instead of ExtraBold */
-            text-transform: uppercase !important;
-            letter-spacing: 0.05em !important;
-            /* Tighter spacing */
-            margin-top: 4rem !important;
-            margin-bottom: 2rem !important;
-            border: none !important;
-            line-height: 2.5rem !important;
-            text-align: center !important;
-            /* Center all section headers */
+        /* Ensure table text is readable */
+        td,
+        th {
+            text-align: left !important;
         }
 
-        /* Level 3: Subsections (e.g. "2.1 Core Vault") */
-        /* FIX: Making this larger than H4 */
-        .contract-immersive-wrapper h3 {
-            font-family: 'Inter', sans-serif !important;
-            /* FIXED: FORCE INTER */
-            color: #93c5fd !important;
-            /* Blue-300 */
-            font-size: 1.125rem !important;
-            /* text-lg */
-            font-weight: 700 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.15em !important;
-            margin-top: 3rem !important;
-            margin-bottom: 1.5rem !important;
-            padding-bottom: 0.5rem !important;
-        }
-
-        /* Level 4: Item Groups (e.g. "A. Identity") */
-        .contract-immersive-wrapper h4 {
-            font-family: 'Inter', sans-serif !important;
-            color: #C8A951 !important;
-            font-size: 1.125rem !important;
-            /* text-lg (18px) - Clearly smaller than H3 */
-            font-weight: 700 !important;
-            margin-top: 1.5rem !important;
-            margin-bottom: 0.5rem !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.05em !important;
-        }
-
-        /* Fix list spacing */
-        .contract-immersive-wrapper ul {
-            margin-bottom: 2rem !important;
-        }
-
-        .contract-immersive-wrapper li {
-            margin-bottom: 0.75rem !important;
-        }
-
-        /* FORCE WIDER WIDTHS */
-        .max-w-4xl {
-            max-width: 80rem !important;
-            /* max-w-7xl override */
-        }
-
-        /* Force grid to behave */
+        /* Essential Grid Fixes from previous block, keeping generic */
         .grid-cols-12 {
             display: grid !important;
             grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
             gap: 2rem !important;
         }
 
-        /* Fix the 2-column sections */
         .grid-cols-1.md\:grid-cols-2 {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
             gap: 3rem !important;
         }
 
-        /* Fix lists specifically */
-        ul.list-disc {
-            margin-left: 1.5rem !important;
-            margin-bottom: 2rem !important;
-        }
-
-        ul.list-disc li {
-            padding-left: 0.5rem !important;
-            margin-bottom: 0.75rem !important;
-        }
-
-        /* Card overrides for space */
-        .bg-white\/5 {
-            padding: 2rem !important;
-        }
-
-        /* Ensure table text is readable */
-        td,
-        th {
-            padding: 1rem !important;
-            text-align: left !important;
-        }
-
-        /* Force left alignment on text */
-        .contract-immersive-wrapper p {
-            text-align: left !important;
-            margin-bottom: 1.5rem !important;
-        }
 
         /* ========================================== */
         /* COST & VALUATION TAB: UNIFIED TYPOGRAPHY  */
         /* ========================================== */
+
+        /* Utility Classes for Refactor */
+        .neo-text-gold {
+            color: #C8A951 !important;
+        }
+
+        .neo-text-gold-light {
+            color: rgba(200, 169, 81, 0.8) !important;
+        }
+
+        .neo-text-white {
+            color: white !important;
+        }
+
+        .neo-text-slate {
+            color: #94a3b8 !important;
+        }
+
+        .neo-text-emerald {
+            color: #10b981 !important;
+        }
+
+        .neo-font-cinzel {
+            font-family: 'Cinzel', serif !important;
+        }
+
+        .neo-font-inter {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        .neo-uppercase-track {
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
+        }
+
+        .neo-uppercase-track-wide {
+            text-transform: uppercase !important;
+            letter-spacing: 0.25em !important;
+        }
+
+        .neo-glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .neo-stat-card-base {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .neo-stat-card-hero {
+            background: rgba(200, 169, 81, 0.08);
+            border: 2px solid #C8A951;
+            border-radius: 8px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(200, 169, 81, 0.15);
+        }
+
+        .neo-section-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            flex: 1;
+        }
+
+        .neo-section-title {
+            font-size: 28px;
+            font-family: 'Cinzel', serif;
+            color: #C8A951;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* ATOMIC PHASE CARDS */
+        .neo-phase-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .neo-phase-header {
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            transition: background 0.2s;
+        }
+
+        .neo-phase-header:hover {
+            background: rgba(255, 255, 255, 0.08);
+            /* slight hover effect */
+        }
+
+        .neo-phase-number {
+            height: 48px;
+            width: 48px;
+            border-radius: 4px;
+            background: rgba(200, 169, 81, 0.1);
+            border: 1px solid #C8A951;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C8A951;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .neo-phase-content {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px 32px;
+            background: rgba(0, 0, 0, 0.2);
+        }
 
         /*
          * UNIFIED TYPE SCALE (Based on 16px root):
@@ -349,6 +381,7 @@
             font-size: 22px !important;
             font-family: 'Cinzel', serif !important;
             color: white !important;
+            font-weight: bold;
         }
 
         #cost .space-y-6>div .text-xs {
@@ -446,6 +479,13 @@
             background: rgba(255, 255, 255, 0.05) !important;
             color: #C8A951 !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 11px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.15em !important;
+            font-weight: 600 !important;
+            padding: 1rem !important;
+            text-align: left !important;
         }
 
         .contract-immersive-wrapper td {
@@ -815,16 +855,15 @@
                 <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative w-full mx-auto">
 
                     <!-- Title -->
-                    <div
-                        style="text-align: center; width: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
+                    <div class="flex flex-col items-center text-center w-full mx-auto">
                         <h1
-                            style="color: #C8A951; margin-bottom: 16px; font-size: 42px; line-height: 1.2; font-family: 'Inter', sans-serif !important; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; max-width: 900px;">
+                            class="neo-font-inter neo-text-gold mb-4 text-4xl leading-tight font-extrabold tracking-wide uppercase max-w-4xl">
                             Technical Partnership Agreement
                         </h1>
-                        <div style="height: 1px; width: 128px; background: #C8A951; margin: 24px auto; opacity: 0.5;">
+                        <div class="h-px w-32 bg-yellow-500/50 my-6 mx-auto">
                         </div>
                         <p
-                            style="font-size: 16px; color: white; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600; text-align: center; font-family: 'Inter', sans-serif !important;">
+                            class="neo-font-inter text-base text-white uppercase tracking-widest font-semibold text-center">
                             Prepared for Tameeka Lockhart • December 17, 2025
                         </p>
                     </div>
@@ -860,24 +899,18 @@
                                     class="text-[#C8A951] mt-12 mb-8 text-3xl font-extrabold uppercase tracking-widest text-center">
                                     1. Executive Overview</h2>
 
-                                <!-- Subtle Quote -->
-                                <p
-                                    class="mb-8 text-base leading-relaxed text-slate-500 max-w-4xl mx-auto text-center italic opacity-70">
-                                    "To ensure that when a life ends, the love remains—undiminished by bureaucracy,
-                                    preserved in a digital vault, and delivered exactly as intended."
-                                </p>
-
-                                <p class="mb-8 text-lg leading-relaxed text-slate-300 max-w-5xl mx-auto">This Statement
+                                <p class="mb-8 text-lg leading-relaxed text-gray-200 max-w-4xl mx-auto">This Statement
                                     of Work
                                     ("SOW") defines the comprehensive scope for the
                                     <strong>FinalWishes Estate Operating System</strong>. While competent estate
-                                    management is critical, <strong>FinalWishes is not merely a probate tool.</strong>
+                                    management is critical, <strong class="neo-text-gold">FinalWishes is not merely a
+                                        probate tool.</strong>
                                     It is a Legacy Management Application designed to capture the "Soul" of the
                                     Principal—their memories, values, and final messages—before dealing with the
                                     "Administration" of their assets.
                                 </p>
 
-                                <p class="mb-12 text-lg leading-relaxed text-slate-300 max-w-5xl mx-auto">
+                                <p class="mb-12 text-lg leading-relaxed text-gray-200 max-w-4xl mx-auto">
                                     We serve the <strong>Human</strong> first and the <strong>Process</strong> second.
                                     By curating the emotional legacy of the soon-to-be-deceased, we effectively arm the
                                     Executor not just with legal documents, but with the moral authority and clear
@@ -886,16 +919,20 @@
 
                                 <!-- OBJECTIVE BAR (GOLD BOX) -->
                                 <div
-                                    class="relative bg-white/5 border border-white/10 rounded-lg py-12 px-8 mb-16 text-center backdrop-blur-sm">
-                                    <div class="uppercase tracking-[0.2em] text-[#C8A951] text-sm font-semibold mb-6">
+                                    class="neo-glass-panel py-12 px-8 mb-16 text-center relative max-w-4xl mx-auto border border-amber-500/20 shadow-lg shadow-amber-900/10">
+                                    <div
+                                        class="uppercase tracking-[0.25em] neo-text-gold text-xs font-bold mb-6 opacity-90">
                                         Primary Objective</div>
-                                    <p class="mb-0 text-white text-xl max-w-4xl mx-auto leading-relaxed font-normal">
+                                    <h3
+                                        class="mb-0 text-white text-2xl max-w-3xl mx-auto leading-relaxed font-serif italic font-light">
                                         "Deliver a dual-purpose platform that empowers the Living to <span
-                                            class="text-[#C8A951] font-medium">Curate their Legacy</span> (Memories &
+                                            class="neo-text-gold not-italic font-medium border-b border-amber-500/30 pb-0.5">Curate
+                                            their Legacy</span> (Memories &
                                         Wishes) and equips their Loved Ones to <span
-                                            class="text-[#C8A951] font-medium">Automate the Estate</span> (Probate &
+                                            class="neo-text-gold not-italic font-medium border-b border-amber-500/30 pb-0.5">Automate
+                                            the Estate</span> (Probate &
                                         Assets)."
-                                    </p>
+                                    </h3>
                                 </div>
 
                                 <!-- 2. DETAILED SCOPE -->
@@ -1303,59 +1340,44 @@
                     <!-- TAB 2: COST -->
                     <div id="cost" class="tab-content">
                         <!-- TOP STATS - INLINE STYLES TO OVERRIDE CSS -->
-                        <div
-                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 48px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                        <!-- TOP STATS - UNIFIED CSS CLASSES -->
+                        <div class="grid grid-cols-4 gap-6 mb-12 max-w-7xl mx-auto">
 
                             <!-- True Market Value -->
-                            <div
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 32px 24px; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; font-weight: 500;">
+                            <div class="neo-stat-card-base">
+                                <div class="neo-text-gold text-sm uppercase tracking-widest mb-3 font-medium">
                                     True Market Value</div>
-                                <div
-                                    style="font-size: 32px; font-family: Cinzel, serif; color: #94a3b8; text-decoration: line-through; font-weight: 400;">
+                                <div class="neo-font-cinzel text-slate-400 line-through text-4xl font-normal">
                                     $650k+</div>
-                                <div
-                                    style="font-size: 12px; color: white; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 8px;">
+                                <div class="neo-text-white text-xs uppercase tracking-widest mt-2">
                                     Big Law Comparable</div>
                             </div>
 
                             <!-- Fixed Bid Price - HERO -->
-                            <div
-                                style="background: rgba(200,169,81,0.08); border: 2px solid #C8A951; border-radius: 8px; padding: 32px 24px; text-align: center; box-shadow: 0 0 40px rgba(200,169,81,0.15);">
-                                <div
-                                    style="font-size: 16px; color: #C8A951; text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 12px; font-weight: 600;">
+                            <div class="neo-stat-card-hero">
+                                <div class="neo-text-gold text-base uppercase tracking-widest mb-3 font-semibold">
                                     Fixed Bid Price</div>
-                                <div
-                                    style="font-size: 36px; font-family: Cinzel, serif; color: white; font-weight: 600;">
+                                <div class="neo-font-cinzel text-white text-5xl font-semibold">
                                     $200,000</div>
                             </div>
 
                             <!-- Sirsi Efficiency -->
-                            <div
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 32px 24px; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; font-weight: 500;">
+                            <div class="neo-stat-card-base">
+                                <div class="neo-text-gold text-sm uppercase tracking-widest mb-3 font-medium">
                                     Sirsi Efficiency</div>
-                                <div
-                                    style="font-size: 32px; font-family: Cinzel, serif; color: #10b981; font-weight: 400;">
+                                <div class="neo-font-cinzel neo-text-emerald text-4xl font-normal">
                                     Included</div>
-                                <div
-                                    style="font-size: 12px; color: white; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 8px;">
+                                <div class="neo-text-white text-xs uppercase tracking-widest mt-2">
                                     SOC 2, Auth, Vault Core</div>
                             </div>
 
                             <!-- Total Hours -->
-                            <div
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 32px 24px; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 12px; font-weight: 500;">
+                            <div class="neo-stat-card-base">
+                                <div class="neo-text-gold text-sm uppercase tracking-widest mb-3 font-medium">
                                     Total Hours</div>
-                                <div
-                                    style="font-size: 32px; font-family: Cinzel, serif; color: white; font-weight: 400;">
+                                <div class="neo-font-cinzel text-white text-4xl font-normal">
                                     925+</div>
-                                <div
-                                    style="font-size: 12px; color: white; text-transform: uppercase; letter-spacing: 0.15em; margin-top: 8px;">
+                                <div class="neo-text-white text-xs uppercase tracking-widest mt-2">
                                     Direct Engineering Output</div>
                             </div>
                         </div>
@@ -1420,58 +1442,46 @@
                         </div>
 
                         <!-- 2. ATOMIC DEVELOPMENT BREAKDOWN -->
-                        <div style="margin-bottom: 80px;">
-                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px;">
-                                <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
-                                <h2
-                                    style="font-size: 28px; font-family: Cinzel, serif; color: #C8A951; text-transform: uppercase; letter-spacing: 0.15em;">
-                                    2. Atomic Development Breakdown</h2>
-                                <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
+                        <div class="mb-20">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="neo-section-divider"></div>
+                                <h2 class="neo-section-title">2. Atomic Development Breakdown</h2>
+                                <div class="neo-section-divider"></div>
                             </div>
-                            <div
-                                style="width: 100%; text-align: center; display: flex; justify-content: center; margin-bottom: 48px;">
-                                <p id="allocation-text" style="text-align: center !important; margin: 0;">
-                                    Transparent allocation of <strong style="color: white;">925 hours</strong> across 5
+                            <div class="flex justify-center mb-12">
+                                <p id="allocation-text">
+                                    Transparent allocation of <strong class="text-white">925 hours</strong> across 5
                                     key phases.
                                 </p>
                             </div>
 
-                            <div
-                                style="display: flex; flex-direction: column; gap: 24px; max-width: 900px; margin: 0 auto;">
+                            <div class="space-y-6 max-w-4xl mx-auto">
                                 <!-- PHASE 0 -->
-                                <div
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; overflow: hidden;">
-                                    <div style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.03);"
+                                <div class="neo-phase-card">
+                                    <div class="neo-phase-header"
                                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                                        <div style="display: flex; align-items: center; gap: 24px;">
-                                            <div
-                                                style="height: 48px; width: 48px; border-radius: 4px; background: rgba(200,169,81,0.1); border: 1px solid #C8A951; display: flex; align-items: center; justify-content: center; color: #C8A951; font-family: Cinzel, serif; font-weight: bold; font-size: 20px;">
-                                                0</div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="neo-phase-number">0</div>
                                             <div>
-                                                <h3
-                                                    style="color: white; font-weight: 600; font-size: 24px; font-family: Cinzel, serif; margin: 0;">
+                                                <h3 class="neo-font-cinzel text-white text-2xl font-semibold m-0">
                                                     Design & Identity</h3>
-                                                <p
-                                                    style="color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; margin: 4px 0 0 0;">
+                                                <p class="neo-text-gold neo-uppercase-track text-sm mt-1">
                                                     Weeks 1-4 • 200 Hours</p>
                                             </div>
                                         </div>
-                                        <div style="text-align: right;">
-                                            <div
-                                                style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
+                                        <div class="text-right">
+                                            <div class="neo-font-cinzel text-white text-2xl font-bold">
                                                 $30,000</div>
-                                            <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
+                                            <div class="neo-text-gold text-sm">Allocated Value</div>
                                         </div>
                                     </div>
-                                    <div class="hidden"
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 16px; text-align: center;">Activity</th>
-                                                <th style="padding-bottom: 16px; text-align: center;">Role</th>
-                                                <th style="padding-bottom: 16px; text-align: center;">Hrs</th>
-                                                <th style="padding-bottom: 16px; text-align: center;">Cost</th>
+                                    <div class="neo-phase-content hidden">
+                                        <table class="w-full text-center border-collapse text-2xl">
+                                            <tr class="text-white border-b border-white/10">
+                                                <th class="pb-4 text-center">Activity</th>
+                                                <th class="pb-4 text-center">Role</th>
+                                                <th class="pb-4 text-center">Hrs</th>
+                                                <th class="pb-4 text-center">Cost</th>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 16px 0; color: white; text-align: center;">Brand
@@ -1506,262 +1516,226 @@
                                 </div>
 
                                 <!-- PHASE 1 -->
-                                <div
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; overflow: hidden;">
-                                    <div style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.03);"
+                                <div class="neo-phase-card">
+                                    <div class="neo-phase-header"
                                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                                        <div style="display: flex; align-items: center; gap: 24px;">
-                                            <div
-                                                style="height: 48px; width: 48px; border-radius: 4px; background: rgba(200,169,81,0.1); border: 1px solid #C8A951; display: flex; align-items: center; justify-content: center; color: #C8A951; font-family: Cinzel, serif; font-weight: bold; font-size: 20px;">
-                                                1</div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="neo-phase-number">1</div>
                                             <div>
-                                                <h3
-                                                    style="color: white; font-weight: 600; font-size: 24px; font-family: Cinzel, serif; margin: 0;">
+                                                <h3 class="neo-font-cinzel text-white text-2xl font-semibold m-0">
                                                     Foundation & Vault</h3>
-                                                <p
-                                                    style="color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; margin: 4px 0 0 0;">
+                                                <p class="neo-text-gold neo-uppercase-track text-sm mt-1">
                                                     Weeks 1-4 • 160 Hours</p>
                                             </div>
                                         </div>
-                                        <div style="text-align: right;">
-                                            <div
-                                                style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
+                                        <div class="text-right">
+                                            <div class="neo-font-cinzel text-white text-2xl font-bold">
                                                 $25,875</div>
-                                            <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
+                                            <div class="neo-text-gold text-sm">Allocated Value</div>
                                         </div>
                                     </div>
-                                    <div class="hidden"
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 12px;">Activity</th>
-                                                <th style="padding-bottom: 12px;">Role</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Hrs</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Cost</th>
+                                    <div class="neo-phase-content hidden">
+                                        <table class="w-full text-left border-collapse text-2xl">
+                                            <tr class="text-white border-b border-white/10">
+                                                <th class="pb-4">Activity</th>
+                                                <th class="pb-4">Role</th>
+                                                <th class="pb-4 text-right">Hrs</th>
+                                                <th class="pb-4 text-right">Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">System Architecture (VPC,
-                                                    Encryption)</td>
-                                                <td style="color: white;">Sr. Architect</td>
-                                                <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$7,000</td>
+                                                <td class="py-3 text-white">System Architecture (VPC, Encryption)</td>
+                                                <td class="text-white">Sr. Architect</td>
+                                                <td class="text-right text-white">40</td>
+                                                <td class="text-right neo-text-emerald">$7,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Schema Design (SQL/NoSQL)
-                                                </td>
-                                                <td style="color: white;">Backend Eng</td>
-                                                <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$4,500</td>
+                                                <td class="py-3 text-white">Schema Design (SQL/NoSQL)</td>
+                                                <td class="text-white">Backend Eng</td>
+                                                <td class="text-right text-white">30</td>
+                                                <td class="text-right neo-text-emerald">$4,500</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Vault Implementation (KMS)
-                                                </td>
-                                                <td style="color: white;">Security Eng</td>
-                                                <td style="text-align: right; color: white;">35</td>
-                                                <td style="text-align: right; color: #10b981;">$6,125</td>
+                                                <td class="py-3 text-white">Vault Implementation (KMS)</td>
+                                                <td class="text-white">Security Eng</td>
+                                                <td class="text-right text-white">35</td>
+                                                <td class="text-right neo-text-emerald">$6,125</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">DocuSeal Setup</td>
-                                                <td style="color: white;">DevOps</td>
-                                                <td style="text-align: right; color: white;">15</td>
-                                                <td style="text-align: right; color: #10b981;">$2,250</td>
+                                                <td class="py-3 text-white">DocuSeal Setup</td>
+                                                <td class="text-white">DevOps</td>
+                                                <td class="text-right text-white">15</td>
+                                                <td class="text-right neo-text-emerald">$2,250</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Frontend Shell (React)</td>
-                                                <td style="color: white;">Frontend Eng</td>
-                                                <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$6,000</td>
+                                                <td class="py-3 text-white">Frontend Shell (React)</td>
+                                                <td class="text-white">Frontend Eng</td>
+                                                <td class="text-right text-white">40</td>
+                                                <td class="text-right neo-text-emerald">$6,000</td>
                                             </tr>
                                         </table>
                                     </div>
                                 </div>
 
                                 <!-- PHASE 2 -->
-                                <div
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; overflow: hidden;">
-                                    <div style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.03);"
+                                <div class="neo-phase-card">
+                                    <div class="neo-phase-header"
                                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                                        <div style="display: flex; align-items: center; gap: 24px;">
-                                            <div
-                                                style="height: 48px; width: 48px; border-radius: 4px; background: rgba(200,169,81,0.1); border: 1px solid #C8A951; display: flex; align-items: center; justify-content: center; color: #C8A951; font-family: Cinzel, serif; font-weight: bold; font-size: 20px;">
-                                                2</div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="neo-phase-number">2</div>
                                             <div>
-                                                <h3
-                                                    style="color: white; font-weight: 600; font-size: 24px; font-family: Cinzel, serif; margin: 0;">
+                                                <h3 class="neo-font-cinzel text-white text-2xl font-semibold m-0">
                                                     Core Logic & "The Shepherd"</h3>
-                                                <p
-                                                    style="color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; margin: 4px 0 0 0;">
+                                                <p class="neo-text-gold neo-uppercase-track text-sm mt-1">
                                                     Weeks 5-10 • 185 Hours</p>
                                             </div>
                                         </div>
-                                        <div style="text-align: right;">
-                                            <div
-                                                style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
+                                        <div class="text-right">
+                                            <div class="neo-font-cinzel text-white text-2xl font-bold">
                                                 $30,000</div>
-                                            <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
+                                            <div class="neo-text-gold text-sm">Allocated Value</div>
                                         </div>
                                     </div>
-                                    <div class="hidden"
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 12px;">Activity</th>
-                                                <th style="padding-bottom: 12px;">Role</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Hrs</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Cost</th>
+                                    <div class="neo-phase-content hidden">
+                                        <table class="w-full text-left border-collapse text-2xl">
+                                            <tr class="text-white border-b border-white/10">
+                                                <th class="pb-4">Activity</th>
+                                                <th class="pb-4">Role</th>
+                                                <th class="pb-4 text-right">Hrs</th>
+                                                <th class="pb-4 text-right">Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">State Engines (MD, IL, MN)
-                                                </td>
-                                                <td style="color: white;">Logic Eng</td>
-                                                <td style="text-align: right; color: white;">60</td>
-                                                <td style="text-align: right; color: #10b981;">$9,000</td>
+                                                <td class="py-3 text-white">State Engines (MD, IL, MN)</td>
+                                                <td class="text-white">Logic Eng</td>
+                                                <td class="text-right text-white">60</td>
+                                                <td class="text-right neo-text-emerald">$9,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Gemini 3.0 RAG Pipeline</td>
-                                                <td style="color: white;">AI Engineer</td>
-                                                <td style="text-align: right; color: white;">45</td>
-                                                <td style="text-align: right; color: #10b981;">$8,100</td>
+                                                <td class="py-3 text-white">Gemini 3.0 RAG Pipeline</td>
+                                                <td class="text-white">AI Engineer</td>
+                                                <td class="text-right text-white">45</td>
+                                                <td class="text-right neo-text-emerald">$8,100</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Legal Prompt Engineering</td>
-                                                <td style="color: white;">Prompt Eng</td>
-                                                <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$5,400</td>
+                                                <td class="py-3 text-white">Legal Prompt Engineering</td>
+                                                <td class="text-white">Prompt Eng</td>
+                                                <td class="text-right text-white">30</td>
+                                                <td class="text-right neo-text-emerald">$5,400</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Frontend Guidance UI</td>
-                                                <td style="color: white;">Frontend Eng</td>
-                                                <td style="text-align: right; color: white;">50</td>
-                                                <td style="text-align: right; color: #10b981;">$7,500</td>
+                                                <td class="py-3 text-white">Frontend Guidance UI</td>
+                                                <td class="text-white">Frontend Eng</td>
+                                                <td class="text-right text-white">50</td>
+                                                <td class="text-right neo-text-emerald">$7,500</td>
                                             </tr>
                                         </table>
                                     </div>
                                 </div>
 
                                 <!-- PHASE 3 -->
-                                <div
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; overflow: hidden;">
-                                    <div style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.03);"
+                                <div class="neo-phase-card">
+                                    <div class="neo-phase-header"
                                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                                        <div style="display: flex; align-items: center; gap: 24px;">
-                                            <div
-                                                style="height: 48px; width: 48px; border-radius: 4px; background: rgba(200,169,81,0.1); border: 1px solid #C8A951; display: flex; align-items: center; justify-content: center; color: #C8A951; font-family: Cinzel, serif; font-weight: bold; font-size: 20px;">
-                                                3</div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="neo-phase-number">3</div>
                                             <div>
-                                                <h3
-                                                    style="color: white; font-weight: 600; font-size: 24px; font-family: Cinzel, serif; margin: 0;">
+                                                <h3 class="neo-font-cinzel text-white text-2xl font-semibold m-0">
                                                     Living Legacy & Universal App</h3>
-                                                <p
-                                                    style="color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; margin: 4px 0 0 0;">
+                                                <p class="neo-text-gold neo-uppercase-track text-sm mt-1">
                                                     Weeks 11-16 • 220 Hours</p>
                                             </div>
                                         </div>
-                                        <div style="text-align: right;">
-                                            <div
-                                                style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
+                                        <div class="text-right">
+                                            <div class="neo-font-cinzel text-white text-2xl font-bold">
                                                 $33,000</div>
-                                            <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
+                                            <div class="neo-text-gold text-sm">Allocated Value</div>
                                         </div>
                                     </div>
-                                    <div class="hidden"
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 12px;">Activity</th>
-                                                <th style="padding-bottom: 12px;">Role</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Hrs</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Cost</th>
+                                    <div class="neo-phase-content hidden">
+                                        <table class="w-full text-left border-collapse text-2xl">
+                                            <tr class="text-white border-b border-white/10">
+                                                <th class="pb-4">Activity</th>
+                                                <th class="pb-4">Role</th>
+                                                <th class="pb-4 text-right">Hrs</th>
+                                                <th class="pb-4 text-right">Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">React Native Shell</td>
-                                                <td style="color: white;">Mobile Eng</td>
-                                                <td style="text-align: right; color: white;">80</td>
-                                                <td style="text-align: right; color: #10b981;">$12,000</td>
+                                                <td class="py-3 text-white">React Native Shell</td>
+                                                <td class="text-white">Mobile Eng</td>
+                                                <td class="text-right text-white">80</td>
+                                                <td class="text-right neo-text-emerald">$12,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Living Legacy Features</td>
-                                                <td style="color: white;">Full Stack</td>
-                                                <td style="text-align: right; color: white;">60</td>
-                                                <td style="text-align: right; color: #10b981;">$9,000</td>
+                                                <td class="py-3 text-white">Living Legacy Features</td>
+                                                <td class="text-white">Full Stack</td>
+                                                <td class="text-right text-white">60</td>
+                                                <td class="text-right neo-text-emerald">$9,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Asset Distribution UI</td>
-                                                <td style="color: white;">React Eng</td>
-                                                <td style="text-align: right; color: white;">50</td>
-                                                <td style="text-align: right; color: #10b981;">$7,500</td>
+                                                <td class="py-3 text-white">Asset Distribution UI</td>
+                                                <td class="text-white">React Eng</td>
+                                                <td class="text-right text-white">50</td>
+                                                <td class="text-right neo-text-emerald">$7,500</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Doc Scanner / Camera</td>
-                                                <td style="color: white;">Mobile Eng</td>
-                                                <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$4,500</td>
+                                                <td class="py-3 text-white">Doc Scanner / Camera</td>
+                                                <td class="text-white">Mobile Eng</td>
+                                                <td class="text-right text-white">30</td>
+                                                <td class="text-right neo-text-emerald">$4,500</td>
                                             </tr>
                                         </table>
                                     </div>
                                 </div>
 
                                 <!-- PHASE 4 -->
-                                <div
-                                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; overflow: hidden;">
-                                    <div style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: rgba(255,255,255,0.03);"
+                                <div class="neo-phase-card">
+                                    <div class="neo-phase-header"
                                         onclick="this.nextElementSibling.classList.toggle('hidden')">
-                                        <div style="display: flex; align-items: center; gap: 24px;">
-                                            <div
-                                                style="height: 48px; width: 48px; border-radius: 4px; background: rgba(200,169,81,0.1); border: 1px solid #C8A951; display: flex; align-items: center; justify-content: center; color: #C8A951; font-family: Cinzel, serif; font-weight: bold; font-size: 20px;">
-                                                4</div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="neo-phase-number">4</div>
                                             <div>
-                                                <h3
-                                                    style="color: white; font-weight: 600; font-size: 24px; font-family: Cinzel, serif; margin: 0;">
+                                                <h3 class="neo-font-cinzel text-white text-2xl font-semibold m-0">
                                                     QA, Security & Launch</h3>
-                                                <p
-                                                    style="color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em; font-size: 14px; margin: 4px 0 0 0;">
+                                                <p class="neo-text-gold neo-uppercase-track text-sm mt-1">
                                                     Weeks 17-20 • 160 Hours</p>
                                             </div>
                                         </div>
-                                        <div style="text-align: right;">
-                                            <div
-                                                style="font-size: 24px; font-weight: bold; color: white; font-family: Cinzel, serif;">
+                                        <div class="text-right">
+                                            <div class="neo-font-cinzel text-white text-2xl font-bold">
                                                 $28,000</div>
-                                            <div style="font-size: 14px; color: #C8A951;">Allocated Value</div>
+                                            <div class="neo-text-gold text-sm">Allocated Value</div>
                                         </div>
                                     </div>
-                                    <div class="hidden"
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 12px;">Activity</th>
-                                                <th style="padding-bottom: 12px;">Role</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Hrs</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Cost</th>
+                                    <div class="neo-phase-content hidden">
+                                        <table class="w-full text-left border-collapse text-2xl">
+                                            <tr class="text-white border-b border-white/10">
+                                                <th class="pb-4">Activity</th>
+                                                <th class="pb-4">Role</th>
+                                                <th class="pb-4 text-right">Hrs</th>
+                                                <th class="pb-4 text-right">Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Mini-Pen Testing</td>
-                                                <td style="color: white;">Sec Analyst</td>
-                                                <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$10,000</td>
+                                                <td class="py-3 text-white">Mini-Pen Testing</td>
+                                                <td class="text-white">Sec Analyst</td>
+                                                <td class="text-right text-white">40</td>
+                                                <td class="text-right neo-text-emerald">$10,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">E2E Testing (Cypress)</td>
-                                                <td style="color: white;">QA Eng</td>
-                                                <td style="text-align: right; color: white;">60</td>
-                                                <td style="text-align: right; color: #10b981;">$9,000</td>
+                                                <td class="py-3 text-white">E2E Testing (Cypress)</td>
+                                                <td class="text-white">QA Eng</td>
+                                                <td class="text-right text-white">60</td>
+                                                <td class="text-right neo-text-emerald">$9,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">SOC 2 Policy Gen</td>
-                                                <td style="color: white;">Compliance</td>
-                                                <td style="text-align: right; color: white;">20</td>
-                                                <td style="text-align: right; color: #10b981;">$3,000</td>
+                                                <td class="py-3 text-white">SOC 2 Policy Gen</td>
+                                                <td class="text-white">Compliance</td>
+                                                <td class="text-right text-white">20</td>
+                                                <td class="text-right neo-text-emerald">$3,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">App Store Polish</td>
-                                                <td style="color: white;">Mobile Eng</td>
-                                                <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$6,000</td>
+                                                <td class="py-3 text-white">App Store Polish</td>
+                                                <td class="text-white">Mobile Eng</td>
+                                                <td class="text-right text-white">40</td>
+                                                <td class="text-right neo-text-emerald">$6,000</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1770,700 +1744,593 @@
                         </div>
 
                         <!-- 3. DISCOUNT REALIZATION - SIMPLE CALCULATION BOX -->
-                        <div style="margin-bottom: 96px;">
-                            <h2
-                                style="text-align: center; margin-bottom: 48px; font-size: 28px; font-family: Cinzel, serif; color: #C8A951; text-transform: uppercase; letter-spacing: 0.15em;">
+                        <div class="mb-24">
+                            <h2 class="neo-section-title text-center mb-12">
                                 3. Discount Realization</h2>
 
-                            <div
-                                style="max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.03); border: 1px solid rgba(200,169,81,0.4); padding: 32px; border-radius: 8px;">
-
+                            <div class="discount-box-container">
                                 <!-- Row 1: Starting Point -->
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <span style="font-size: 20px; font-family: Inter, sans-serif; color: white;">Market
+                                <div class="flex justify-between items-center py-4 border-b border-white/10">
+                                    <span class="discount-label text-xl text-white">Market
                                         Standard ("Big Law")</span>
-                                    <span
-                                        style="font-size: 24px; font-family: Cinzel, serif; color: #94a3b8; text-decoration: line-through;">$650,000</span>
+                                    <span class="discount-value strikethrough text-2xl">$650,000</span>
                                 </div>
 
                                 <!-- Row 2: Discount 1 -->
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
-                                    <span
-                                        style="font-size: 20px; font-family: Inter, sans-serif; color: white;">SirsiNexus
+                                <div class="flex justify-between items-center py-4">
+                                    <span class="discount-label text-xl text-white">SirsiNexus
                                         Efficiency</span>
-                                    <span
-                                        style="font-size: 24px; font-family: Cinzel, serif; color: #10b981;">−$350,000</span>
+                                    <span class="discount-value neo-text-emerald text-2xl">−$350,000</span>
                                 </div>
 
                                 <!-- Row 3: Discount 2 -->
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <span
-                                        style="font-size: 20px; font-family: Inter, sans-serif; color: white;">"Project
+                                <div class="flex justify-between items-center py-4 border-b border-white/10">
+                                    <span class="discount-label text-xl text-white">"Project
                                         111" Credit</span>
-                                    <span
-                                        style="font-size: 24px; font-family: Cinzel, serif; color: #10b981;">−$100,000</span>
+                                    <span class="discount-value neo-text-emerald text-2xl">−$100,000</span>
                                 </div>
 
                                 <!-- Row 4: Final Total -->
-                                <div
-                                    style="display: flex; justify-content: space-between; align-items: center; padding: 24px 0 12px 0;">
-                                    <span
-                                        style="font-size: 20px; font-family: Inter, sans-serif; font-weight: 600; color: #C8A951;">Your
+                                <div class="flex justify-between items-center pt-6 pb-3">
+                                    <span class="discount-final-label text-xl neo-text-gold">Your
                                         Price</span>
-                                    <span
-                                        style="font-size: 24px; font-family: Cinzel, serif; font-weight: 600; color: #C8A951;">$200,000</span>
+                                    <span class="discount-final-value text-3xl">
+                                        $200,000</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 4. INFRASTRUCTURE BOM -->
-                        <div style="margin-bottom: 96px;">
-                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px;">
-                                <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
-                                <h2
-                                    style="font-size: 28px; font-family: Cinzel, serif; color: #C8A951; text-transform: uppercase; letter-spacing: 0.15em;">
-                                    4. Infrastructure BoM (OpEx)</h2>
-                                <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
+                        <div class="mb-24">
+                            <div class="flex items-center gap-4 mb-8">
+                                <div class="neo-section-divider"></div>
+                                <h2 class="neo-section-title">4. Infrastructure BoM (OpEx)</h2>
+                                <div class="neo-section-divider"></div>
                             </div>
 
-                            <div
-                                style="border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); overflow: hidden; max-width: 1000px; margin: 0 auto;">
-                                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                            <div class="neo-glass-panel max-w-5xl mx-auto overflow-hidden">
+                                <table class="w-full text-left border-collapse">
                                     <thead>
-                                        <tr
-                                            style="background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                            <th
-                                                style="padding: 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #C8A951;">
+                                        <tr class="bg-black/20 border-b border-white/10">
+                                            <th class="p-5 text-base font-bold uppercase tracking-widest neo-text-gold">
                                                 Service</th>
-                                            <th
-                                                style="padding: 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #C8A951;">
+                                            <th class="p-5 text-base font-bold uppercase tracking-widest neo-text-gold">
                                                 Specific Item</th>
-                                            <th
-                                                style="padding: 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #C8A951;">
+                                            <th class="p-5 text-base font-bold uppercase tracking-widest neo-text-gold">
                                                 Est. Unit Cost</th>
-                                            <th
-                                                style="padding: 20px; font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #C8A951;">
+                                            <th class="p-5 text-base font-bold uppercase tracking-widest neo-text-gold">
                                                 Purpose</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                Compute</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Google Cloud
-                                                Run</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $18/mo</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Serverless
-                                                backend</td>
+                                    <tbody class="text-white">
+                                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                            <td class="p-5 text-xl font-semibold">Compute</td>
+                                            <td class="p-5 text-xl">Google Cloud Run</td>
+                                            <td class="p-5 text-xl neo-font-cinzel text-amber-400">$18/mo</td>
+                                            <td class="p-5 text-xl">Serverless backend</td>
                                         </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                Database</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Cloud SQL
-                                                (Postgres)</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $9/mo</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Secure PII
-                                                storage</td>
+                                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                            <td class="p-5 text-xl font-semibold">Database</td>
+                                            <td class="p-5 text-xl">Cloud SQL (Postgres)</td>
+                                            <td class="p-5 text-xl neo-font-cinzel text-amber-400">$9/mo</td>
+                                            <td class="p-5 text-xl">Secure PII storage</td>
                                         </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                NoSQL</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Firestore
-                                            </td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #10b981;">
-                                                Free Tier</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">User metadata
-                                            </td>
+                                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                            <td class="p-5 text-xl font-semibold">NoSQL</td>
+                                            <td class="p-5 text-xl">Firestore</td>
+                                            <td class="p-5 text-xl neo-font-cinzel neo-text-emerald">Free Tier</td>
+                                            <td class="p-5 text-xl">User metadata</td>
                                         </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                Storage</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Cloud Storage
-                                            </td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $0.026/GB</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Encrypted
-                                                vault</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                AI</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Vertex AI
-                                                (Gemini)</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $5/1M tokens</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Legal
-                                                guidance</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                E-Sign</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">DocuSeal
-                                                (Self-Hosted)</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #10b981;">
-                                                $0 (OSS)</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Unlimited
-                                                signing</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                Mail</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Lob API</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $1.55/letter</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Certified
-                                                mail</td>
-                                        </tr>
-                                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                Identity</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Persona /
-                                                Jumio</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $1.50/check</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Fraud
-                                                prevention</td>
-                                        </tr>
-                                        <tr>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
-                                                Maintenance</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">111 Venture
-                                                Studio</td>
-                                            <td
-                                                style="padding: 16px 20px; font-size: 18px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $1,500/mo</td>
-                                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Ongoing
-                                                support, updates, monitoring</td>
+                                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                            <td class="p-5 text-xl font-semibold">Storage</td>
+                                            <td class="p-5 text-xl">Cloud Storage</td>
+                                            <td class="p-5 text-xl neo-font-cinzel text-amber-400">$0.02/GB</td>
+                                            <td class="p-5 text-xl">DocuSeal PDFs</td>
                                         </tr>
                                     </tbody>
-                                    <tfoot style="background: rgba(200,169,81,0.1);">
-                                        <tr>
-                                            <td colspan="4"
-                                                style="padding: 20px; text-align: center; font-weight: 700; font-size: 24px; color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em;">
-                                                Total Estimated OpEx: ~$1,560/month + Usage
-                                            </td>
-                                        </tr>
-                                    </tfoot>
                                 </table>
                             </div>
                         </div>
-
-                        <!-- 5. PARTNERSHIP PLANS - SIMPLE PAYMENT SCHEDULES -->
-                        <div style="margin-top: 96px; padding-top: 48px; border-top: 1px solid rgba(200,169,81,0.3);">
-                            <h2
-                                style="text-align: center; margin-bottom: 64px; font-size: 28px; font-family: Cinzel, serif; color: #C8A951; text-transform: uppercase; letter-spacing: 0.15em;">
-                                5. Select Your Payment Plan</h2>
-
-                            <div
-                                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
-
-                                <!-- PLAN A -->
-                                <div
-                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center;">
-                                    <h3
-                                        style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
-                                        Plan A</h3>
-                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">50/50 Split</p>
-
-                                    <div
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
-                                        <div style="margin-bottom: 1rem;">
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $100,000</div>
-                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
-                                        </div>
-                                        <div>
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $100,000</div>
-                                            <div style="font-size: 14px; color: white;">Due at Launch</div>
-                                        </div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                        <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Total</div>
-                                        <div
-                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
-                                            $200,000</div>
-                                        <button onclick="selectPlan('Plan A')"
-                                            style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
-                                            Plan A</button>
-                                    </div>
-                                </div>
-
-                                <!-- PLAN B -->
-                                <div
-                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center;">
-                                    <h3
-                                        style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
-                                        Plan B</h3>
-                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Trimester
-                                        Payments</p>
-
-                                    <div
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
-                                        <div style="margin-bottom: 1rem;">
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $66,666</div>
-                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
-                                        </div>
-                                        <div style="margin-bottom: 1rem;">
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $66,666</div>
-                                            <div style="font-size: 14px; color: white;">Due Month 2</div>
-                                        </div>
-                                        <div>
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $66,668</div>
-                                            <div style="font-size: 14px; color: white;">Due Month 4</div>
-                                        </div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                        <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Total</div>
-                                        <div
-                                            style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
-                                            $200,000</div>
-                                        <button onclick="selectPlan('Plan B')"
-                                            style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
-                                            Plan B</button>
-                                    </div>
-                                </div>
-
-                                <!-- PLAN C -->
-                                <div
-                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center;">
-                                    <h3
-                                        style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
-                                        Plan C</h3>
-                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Partnership +
-                                        Equity</p>
-
-                                    <div
-                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem;">
-                                        <div style="margin-bottom: 1rem;">
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $87,500</div>
-                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
-                                        </div>
-                                        <div style="margin-bottom: 1rem;">
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                $87,500</div>
-                                            <div style="font-size: 14px; color: white;">Due Month 3</div>
-                                        </div>
-                                        <div
-                                            style="background: rgba(200,169,81,0.1); padding: 0.75rem; border: 1px solid rgba(200,169,81,0.3);">
-                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                                2.5% Equity</div>
-                                            <div style="font-size: 14px; color: white;">In lieu of $25k cash</div>
-                                        </div>
-                                    </div>
-
-                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                        <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Cash Total
-                                        </div>
-                                        <div
-                                            style="font-size: 16px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 0.25rem;">
-                                            $175,000</div>
-                                        <div style="font-size: 14px; color: #10b981; margin-bottom: 1rem;">Save $25,000
-                                        </div>
-                                        <button onclick="selectPlan('Plan C')"
-                                            style="width: 100%; padding: 0.75rem; border: 1px solid rgba(200,169,81,0.5); background: transparent; color: #C8A951; font-size: 14px; cursor: pointer;">Select
-                                            Plan C</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                        </td>
+                        <td style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                            $0.026/GB</td>
+                        <td style="padding: 16px 20px; font-size: 24px; color: white;">Encrypted
+                            vault</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
+                                AI</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Vertex AI
+                                (Gemini)</td>
+                            <td
+                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                $5/1M tokens</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Legal
+                                guidance</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
+                                E-Sign</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">DocuSeal
+                                (Self-Hosted)</td>
+                            <td
+                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #10b981;">
+                                $0 (OSS)</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Unlimited
+                                signing</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
+                                Mail</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Lob API</td>
+                            <td
+                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                $1.55/letter</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Certified
+                                mail</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
+                                Identity</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Persona /
+                                Jumio</td>
+                            <td
+                                style="padding: 16px 20px; font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                $1.50/check</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Fraud
+                                prevention</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 16px 20px; font-size: 24px; font-weight: 600; color: white;">
+                                Maintenance</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">111 Venture
+                                Studio</td>
+                            <td
+                                style="padding: 16px 20px; font-size: 18px; font-family: Cinzel, serif; color: #C8A951;">
+                                $1,500/mo</td>
+                            <td style="padding: 16px 20px; font-size: 24px; color: white;">Ongoing
+                                support, updates, monitoring</td>
+                        </tr>
+                        </tbody>
+                        <tfoot style="background: rgba(200,169,81,0.1);">
+                            <tr>
+                                <td colspan="4"
+                                    style="padding: 20px; text-align: center; font-weight: 700; font-size: 24px; color: #C8A951; text-transform: uppercase; letter-spacing: 0.1em;">
+                                    Total Estimated OpEx: ~$1,560/month + Usage
+                                </td>
+                            </tr>
+                        </tfoot>
+                        </table>
                     </div>
                 </div>
 
+                <!-- 5. PARTNERSHIP PLANS - SIMPLE PAYMENT SCHEDULES -->
+                <div class="mt-24 pt-12 border-t border-amber-500/30">
+                    <h2 class="neo-section-title text-center mb-16">
+                        5. Select Your Payment Plan</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
+                        <!-- PLAN A -->
+                        <div class="neo-glass-panel p-8 text-center flex flex-col h-full">
+                            <h3 class="neo-font-cinzel text-2xl text-white mb-2">Plan A</h3>
+                            <p class="text-sm text-white mb-6">50/50 Split</p>
+
+                            <div class="border-t border-white/10 pt-6 mb-6 flex-grow">
+                                <div class="mb-4">
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$100,000</div>
+                                    <div class="text-sm text-white">Due at Signing</div>
+                                </div>
+                                <div>
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$100,000</div>
+                                    <div class="text-sm text-white">Due at Launch</div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-white/10 pt-6">
+                                <div class="text-base text-white mb-2">Total</div>
+                                <div class="neo-font-cinzel text-xl text-white font-semibold mb-4">$200,000</div>
+                                <button onclick="selectPlan('Plan A')" class="neo-btn-outline w-full text-center">
+                                    Select Plan A
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PLAN B -->
+                        <div class="neo-glass-panel p-8 text-center flex flex-col h-full">
+                            <h3 class="neo-font-cinzel text-2xl text-white mb-2">Plan B</h3>
+                            <p class="text-sm text-white mb-6">Trimester Payments</p>
+
+                            <div class="border-t border-white/10 pt-6 mb-6 flex-grow">
+                                <div class="mb-4">
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$66,666</div>
+                                    <div class="text-sm text-white">Due at Signing</div>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$66,666</div>
+                                    <div class="text-sm text-white">Due Month 2</div>
+                                </div>
+                                <div>
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$66,668</div>
+                                    <div class="text-sm text-white">Due Month 4</div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-white/10 pt-6">
+                                <div class="text-base text-white mb-2">Total</div>
+                                <div class="neo-font-cinzel text-base text-white font-semibold mb-4">$200,000</div>
+                                <button onclick="selectPlan('Plan B')" class="neo-btn-outline w-full text-center">
+                                    Select Plan B
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- PLAN C -->
+                        <div class="neo-glass-panel p-8 text-center flex flex-col h-full ring-1 ring-emerald-500/50">
+                            <h3 class="neo-font-cinzel text-2xl text-white mb-2">Plan C</h3>
+                            <p class="text-sm text-white mb-6">Partnership + Equity</p>
+
+                            <div class="border-t border-white/10 pt-6 mb-6 flex-grow">
+                                <div class="mb-4">
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$87,500</div>
+                                    <div class="text-sm text-white">Due at Signing</div>
+                                </div>
+                                <div class="mb-4">
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">$87,500</div>
+                                    <div class="text-sm text-white">Due Month 3</div>
+                                </div>
+                                <div class="bg-amber-900/20 p-3 border border-amber-500/30 rounded">
+                                    <div class="neo-font-cinzel text-2xl text-amber-400">2.5% Equity</div>
+                                    <div class="text-sm text-white">In lieu of $25k cash</div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-white/10 pt-6">
+                                <div class="text-base text-white mb-2">Cash Total</div>
+                                <div class="neo-font-cinzel text-base text-white font-semibold mb-1">$175,000</div>
+                                <div class="text-sm neo-text-emerald mb-4">Save $25,000</div>
+                                <button onclick="selectPlan('Plan C')" class="neo-btn-outline w-full text-center">
+                                    Select Plan C
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
+    </div>
+
+    </div>
     </div>
     </div>
 
     <!-- TAB 3: CONTRACT -->
     <div id="contract" class="tab-content">
-        <div class="legal-viewer mb-8 text-black" style="color: #0f172a;">
+        <div class="neo-glass-panel max-w-5xl mx-auto p-12 relative text-gray-300">
             <!-- MSA HEADER -->
-            <div class="text-center mb-12 pb-12 border-b border-gray-200">
-                <h2 class="text-4xl text-black mb-4 !border-none">MASTER SERVICES AGREEMENT</h2>
-                <p class="text-gray-500">Global Effective Date: December 17, 2025</p>
+            <div class="text-center mb-16 pb-8 border-b border-white/10">
+                <h2 class="neo-font-cinzel text-4xl text-white mb-4 tracking-widest">MASTER SERVICES AGREEMENT</h2>
+                <p class="text-gray-400 font-light tracking-wide">Global Effective Date: December 17, 2025</p>
             </div>
 
-            <p>This Master Services Agreement ("Agreement") is entered into by and between
-                <strong>Tameeka
-                    Lockhart</strong> ("Client") and <strong>Sirsi Technologies</strong>, a Delaware
-                Corporation
-                ("Provider").
+            <p class="mb-8">This Master Services Agreement ("Agreement") is entered into by and between
+                <strong class="text-white">Tameeka Lockhart</strong> ("Client") and <strong class="text-white">Sirsi
+                    Technologies</strong>, a Delaware Corporation ("Provider").
             </p>
 
-            <h3>1. Services</h3>
-            <p>Client engages Provider to design, develop, and launch the "FinalWishes" platform as
-                described in
-                Exhibit A. Total Value: <strong>$200,000.00 USD</strong>.</p>
+            <div class="mb-12">
+                <h3 class="neo-font-cinzel text-2xl neo-text-gold mb-4">1. Services</h3>
+                <p>Client engages Provider to design, develop, and launch the "FinalWishes" platform as
+                    described in Exhibit A. Total Value: <strong class="text-white">$200,000.00 USD</strong>.</p>
+            </div>
 
-            <hr class="my-12 border-gray-200">
+            <div class="h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent my-12"></div>
 
             <!-- EXHIBIT A -->
-            <h2 class="text-center mb-12 text-3xl font-serif text-[#C8A951]">Exhibit A: Statement of
-                Work (SOW)</h2>
+            <div class="mb-12">
+                <h2 class="text-center mb-12 text-3xl neo-font-cinzel neo-text-gold">Exhibit A: Statement of Work (SOW)
+                </h2>
 
-            <p><strong>Project Name:</strong> FinalWishes Platform Development<br>
-                <strong>SOW Reference:</strong> SOW-2025-001<br>
-                <strong>Date:</strong> December 17, 2025
-            </p>
+                <div class="bg-black/20 p-6 rounded-lg border border-white/5 mb-8">
+                    <p class="mb-2"><strong class="neo-text-gold">Project Name:</strong> FinalWishes Platform
+                        Development</p>
+                    <p class="mb-2"><strong class="neo-text-gold">SOW Reference:</strong> SOW-2025-001</p>
+                    <p><strong class="neo-text-gold">Date:</strong> December 17, 2025</p>
+                </div>
 
-            <h3>1. Executive Overview</h3>
-            <p>This Statement of Work ("SOW") defines the comprehensive scope for the
-                <strong>FinalWishes Estate Operating System</strong>. While competent estate management
-                is critical, <strong>FinalWishes is not merely a probate tool.</strong> It is a Legacy
-                Management Application designed to capture the "Soul" of the Principal—their memories,
-                values, and final messages—before dealing with the "Administration" of their assets.
-            </p>
-            <p><strong>Objective:</strong> Deliver a dual-purpose platform that empowers the Living to
-                <strong>Curate their Legacy</strong> (Memories & Wishes) and equips their Loved Ones to
-                <strong>Automate the Estate</strong> (Probate & Assets).
-            </p>
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">1. Executive Overview</h3>
+                <p class="mb-4">This Statement of Work ("SOW") defines the comprehensive scope for the
+                    <strong class="text-white">FinalWishes Estate Operating System</strong>. While competent estate
+                    management
+                    is critical, <strong class="text-white">FinalWishes is not merely a probate tool.</strong> It is a
+                    Legacy
+                    Management Application designed to capture the "Soul" of the Principal—their memories,
+                    values, and final messages—before dealing with the "Administration" of their assets.
+                </p>
+                <p class="mb-8"><strong class="text-white">Objective:</strong> Deliver a dual-purpose platform that
+                    empowers the Living to
+                    <strong class="text-white">Curate their Legacy</strong> (Memories & Wishes) and equips their Loved
+                    Ones to
+                    <strong class="text-white">Automate the Estate</strong> (Probate & Assets).
+                </p>
 
-            <h3>2. Detailed Scope of Services</h3>
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">2. Detailed Scope of Services</h3>
 
-            <p><strong>2.1 The Legacy & Memory Vault ("The Soul")</strong></p>
-            <p>Provider shall build a secure module for non-financial legacy preservation:</p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Time-Capsule Messages:</strong> Video/text delivery logic triggered by
-                    verified death.</li>
-                <li><strong>Ethical Will:</strong> Values curation and "How I want to be remembered"
-                    directives.</li>
-                <li><strong>Final Wishes:</strong> Funeral, burial, and ceremonial preferences.</li>
-            </ul>
+                <p class="font-semibold text-white mb-2">2.1 The Legacy & Memory Vault ("The Soul")</p>
+                <p class="mb-2">Provider shall build a secure module for non-financial legacy preservation:</p>
+                <ul class="list-disc pl-5 mb-8 space-y-2 marker:text-amber-500">
+                    <li><strong>Time-Capsule Messages:</strong> Video/text delivery logic triggered by verified death.
+                    </li>
+                    <li><strong>Ethical Will:</strong> Values curation and "How I want to be remembered" directives.
+                    </li>
+                    <li><strong>Final Wishes:</strong> Funeral, burial, and ceremonial preferences.</li>
+                </ul>
 
-            <p><strong>2.2 Core Vault & Data Architecture ("The Safe")</strong></p>
-            <p>Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to
-                ensure total data privacy.</p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Storage Layer:</strong> Hybrid Cloud SQL (PostgreSQL) + Firestore.</li>
-                <li><strong>File Vault:</strong> Cloud Storage with per-tenant isolation + Cloud KMS
-                    (AES-256).</li>
-                <li><strong>Security:</strong> SOC 2 Type II controls (IAM, TLS 1.3, Audit Logs).</li>
-            </ul>
+                <p class="font-semibold text-white mb-2">2.2 Core Vault & Data Architecture ("The Safe")</p>
+                <p class="mb-2">Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong> architecture to
+                    ensure total data privacy.</p>
+                <ul class="list-disc pl-5 mb-8 space-y-2 marker:text-amber-500">
+                    <li><strong>Storage Layer:</strong> Hybrid Cloud SQL (PostgreSQL) + Firestore.</li>
+                    <li><strong>File Vault:</strong> Cloud Storage with per-tenant isolation + Cloud KMS (AES-256).</li>
+                    <li><strong>Security:</strong> SOC 2 Type II controls (IAM, TLS 1.3, Audit Logs).</li>
+                </ul>
 
-            <p><strong>2.3 Document Inventory & Automation ("The Admin")</strong></p>
-            <p>Provider will build automation paths for:</p>
+                <p class="font-semibold text-white mb-2">2.3 Document Inventory & Automation ("The Admin")</p>
+                <p class="mb-4">Provider will build automation paths for:</p>
 
-            <p><strong>A. Identity & Vital Records</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Death Certificate:</strong> Manual upload/OCR processing (No State API
-                    exists).</li>
-                <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
-            </ul>
+                <div class="ml-4 mb-8">
+                    <p class="neo-text-gold mb-2">A. Identity & Vital Records</p>
+                    <ul class="list-disc pl-5 mb-4 space-y-2 marker:text-amber-500">
+                        <li><strong>Death Certificate:</strong> Manual upload/OCR processing.</li>
+                        <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
+                    </ul>
 
-            <p><strong>B. Probate Court Filings (Launch States)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
-                    Odyssey)
-                    system. Template generation for Petition for Administration, Inventory, and
-                    Accounts.</li>
-                <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County) and
-                    standard
-                    circuit court forms.</li>
-                <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide
-                    e-filing
-                    system.</li>
-                <li><em>Note: Where API filing is unavailable, the Platform will generate
-                        "Ready-to-Print" PDF
-                        packages.</em></li>
-            </ul>
+                    <p class="neo-text-gold mb-2">B. Probate Court Filings (Launch States)</p>
+                    <ul class="list-disc pl-5 mb-4 space-y-2 marker:text-amber-500">
+                        <li><strong>Maryland:</strong> Integration/Guidance for MDEC system.</li>
+                        <li><strong>Illinois:</strong> Guidance for eCourt (Cook County).</li>
+                        <li><strong>Minnesota:</strong> Full guidance for MNCIS statewide e-filing system.</li>
+                    </ul>
 
-            <p><strong>C. Financial & Asset Documents</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Asset Discovery:</strong> Integration of <strong>Plaid</strong> for
-                    retrieving
-                    balances, transactions, and liabilities from 12,000+ financial institutions.</li>
-                <li><strong>Life Insurance/Retirement:</strong> Generation of standard "Notice of Death
-                    & Claim"
-                    letters for major carriers (MetLife, Prudential, etc.).</li>
-                <li><strong>Real Estate:</strong> Manual inventory tracking with integration to
-                    Zillow/Redfin
-                    APIs for valuation estimates (where available).</li>
-            </ul>
+                    <p class="neo-text-gold mb-2">C. Financial & Asset Documents</p>
+                    <ul class="list-disc pl-5 mb-4 space-y-2 marker:text-amber-500">
+                        <li><strong>Asset Discovery:</strong> Plaid integration (12,000+ institutions).</li>
+                        <li><strong>Life Insurance:</strong> "Notice of Death & Claim" generators.</li>
+                        <li><strong>Real Estate:</strong> Zillow/Redfin API valuation integration.</li>
+                    </ul>
+                </div>
 
-            <h3>2.4 System Integrations</h3>
-            <p>Provider shall integrate the following third-party services to achieve automation:</p>
-            <table class="w-full border-collapse border border-gray-300 mb-4">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border border-gray-300 p-2 text-left">Service</th>
-                        <th class="border border-gray-300 p-2 text-left">Purpose</th>
-                        <th class="border border-gray-300 p-2 text-left">Integration Level</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Plaid</strong></td>
-                        <td class="border border-gray-300 p-2">Financial Account Linking</td>
-                        <td class="border border-gray-300 p-2"><strong>Deep Integration</strong>
-                            (Transactions,
-                            Liabilities, Investments)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>DocuSeal</strong></td>
-                        <td class="border border-gray-300 p-2">E-Signatures</td>
-                        <td class="border border-gray-300 p-2"><strong>Self-Hosted</strong> (Full API,
-                            embedded
-                            signing)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Lob</strong></td>
-                        <td class="border border-gray-300 p-2">Certified Mail / Physical Letters</td>
-                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong> (Address
-                            verification, tracking)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>SendGrid</strong></td>
-                        <td class="border border-gray-300 p-2">Transactional Email</td>
-                        <td class="border border-gray-300 p-2"><strong>API Triggered</strong>
-                            (Notifications,
-                            summaries)</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Google Document AI</strong></td>
-                        <td class="border border-gray-300 p-2">OCR / Data Extraction</td>
-                        <td class="border border-gray-300 p-2"><strong>API Integrated</strong>
-                            (Receipts, Forms)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Vertex AI (Gemini)</strong></td>
-                        <td class="border border-gray-300 p-2">Process Guidance</td>
-                        <td class="border border-gray-300 p-2"><strong>Context-Aware</strong> (RAG
-                            pipeline on
-                            Probate Code)</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">2.4 System Integrations</h3>
+                <p class="mb-4">Provider shall integrate the following third-party services:</p>
 
-            <h3>2.5 "The Shepherd" Guidance Engine</h3>
-            <p>Provider shall build a logic engine ("The Shepherd") that:</p>
-            <ul class="list-decimal pl-5 mb-4">
-                <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and
-                    MN.</li>
-                <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for the
-                    Executor.</li>
-                <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines
-                    (Inventory due
-                    in 90 days, Taxes due in 9 mo).</li>
-                <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific questions
-                    (e.g.,
-                    "Is this expense deductible in Maryland?").</li>
-            </ul>
+                <div class="overflow-hidden border border-white/10 rounded-lg mb-8">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white/5 border-b border-white/10">
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Service</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Purpose</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Integration Level</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">Plaid</td>
+                                <td class="p-4">Financial Account Linking</td>
+                                <td class="p-4">Deep Integration</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">DocuSeal</td>
+                                <td class="p-4">E-Signatures</td>
+                                <td class="p-4">Self-Hosted</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">Lob</td>
+                                <td class="p-4">Physical Letters</td>
+                                <td class="p-4">API Triggered</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">SendGrid</td>
+                                <td class="p-4">Transactional Email</td>
+                                <td class="p-4">API Triggered</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">Google Document AI</td>
+                                <td class="p-4">OCR / Data Extraction</td>
+                                <td class="p-4">API Integrated</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-gray-200">Vertex AI (Gemini)</td>
+                                <td class="p-4">Process Guidance</td>
+                                <td class="p-4">Context-Aware</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <h3>3. Work Breakdown Structure (WBS)</h3>
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">2.5 "The Shepherd" Guidance Engine</h3>
+                <ul class="list-decimal pl-5 mb-8 space-y-2 marker:text-amber-500">
+                    <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL, and MN.</li>
+                    <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart.</li>
+                    <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines.</li>
+                    <li><strong>AI Assistance:</strong> Uses Gemini 3.0 for context-specific questions.</li>
+                </ul>
 
-            <p><strong>PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL, Firestore,
-                    VPC,
-                    Cloud Armor.</li>
-                <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
-                <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
-                <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document (Metadata)
-                    schemas.</li>
-                <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service and Signed URL logic.
-                </li>
-                <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design System.</li>
-                <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
-            </ul>
-
-            <p><strong>PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>2.1 Asset Module:</strong> Plaid Link integration & manual asset overrides.
-                </li>
-                <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules & forms.
-                </li>
-                <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.</li>
-                <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.</li>
-                <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.</li>
-                <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.</li>
-                <li><strong>2.7 Legacy Vault:</strong> Build Ethical Will & Message intake logic.</li>
-            </ul>
-
-            <p><strong>PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
-                <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
-                <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.</li>
-                <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger logic.</li>
-                <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.</li>
-                <li><strong>3.6 Legacy Capture:</strong> Mobile video/audio recording for Final Wishes.
-                </li>
-            </ul>
-
-            <p><strong>PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>4.1 Pen Test:</strong> Third-party security audit & remediation.</li>
-                <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection (logging, access
-                    controls).</li>
-                <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 concurrent users.</li>
-                <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.</li>
-                <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.</li>
-            </ul>
-
-            <hr class="my-12 border-gray-200">
-
-            <!-- EXHIBIT B -->
-            <h2 class="text-center mt-16 mb-12 text-3xl font-serif text-[#C8A951]">Exhibit B: Cost
-                Proposal</h2>
-
-            <h3>1. Executive Summary</h3>
-            <p>This proposal offers a transparent, atomic breakdown of the investment required to build
-                the
-                "Vault-Grade" estate settlement platform. Unlike opaque agency pricing or "billable
-                hour" law
-                firm models, we provide a fixed-price engineering partnership.</p>
-            <p><strong>The Bottom Line:</strong></p>
-            <ul class="list-disc pl-5 mb-4">
-                <li><strong>Your Investment:</strong> $200,000 (Fixed)</li>
-                <li><strong>Time to Market:</strong> 5 Months (20 Weeks)</li>
-                <li><strong>Output:</strong> Fully secure, SOC 2-ready platform launching in MD, IL, and
-                    MN.
-                </li>
-            </ul>
-
-            <h3>2. Comparative Market Analysis</h3>
-            <p>Why build with Sirsi Technologies vs. alternatives?</p>
-            <table class="w-full border-collapse border border-gray-300 mb-4">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border border-gray-300 p-2 text-left">Metric</th>
-                        <th class="border border-gray-300 p-2 text-left">FinalWishes (111 VS)</th>
-                        <th class="border border-gray-300 p-2 text-left">"Big Law" Custom Tech</th>
-                        <th class="border border-gray-300 p-2 text-left">Typical Dev Agency</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Total Cost</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>$200,000</strong> (Fixed)</td>
-                        <td class="border border-gray-300 p-2"><strong>$650,000+</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>$350,000+</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Time to Market</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>5 Months</strong></td>
-                        <td class="border border-gray-300 p-2">18-24 Months</td>
-                        <td class="border border-gray-300 p-2">9-12 Months</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>Model</strong></td>
-                        <td class="border border-gray-300 p-2">Co-Founder/Partner</td>
-                        <td class="border border-gray-300 p-2">Billable Hour ($800/hr)</td>
-                        <td class="border border-gray-300 p-2">Time & Materials</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2"><strong>IP Ownership</strong></td>
-                        <td class="border border-gray-300 p-2"><strong>100% Client Owned</strong></td>
-                        <td class="border border-gray-300 p-2">Firm Retains IP</td>
-                        <td class="border border-gray-300 p-2">Vendor Lock-in</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p><em>Analysis: We deliver 4x the speed at roughly 40% of the cost of a traditional
-                    enterprise
-                    build by leveraging our proprietary "Sirsi" component library and AI-accelerated
-                    development.</em></p>
-
-            <h3>3. Atomic Development Cost Breakdown</h3>
-            <p>We estimate <strong>1,200+ engineering & design hours</strong> to deliver the MVP. At a
-                blended
-                boutique rate of ~$152/hr, this aligns with the budget.</p>
-
-            <p><strong>Phase 0: Design & Identity (Weeks 1-4)</strong> - $30,000</p>
-            <p>Goal: World-class "Light Royal Neo-Deco" visual identity for App & Web.</p>
-
-            <p><strong>Phase 1: Foundation & Vault (Weeks 1-4)</strong> - $25,875</p>
-            <p>Goal: Bank-grade security core and document architecture.</p>
-
-            <p><strong>Phase 2: Core Logic & "The Shepherd" (Weeks 5-10)</strong> - $30,000</p>
-            <p>Goal: The innovative logic engine that replaces a lawyer's guidance.</p>
-
-            <p><strong>Phase 3: Living Legacy & Universal App (Weeks 11-16)</strong> - $33,000</p>
-            <p>Goal: "Universal App" (React Native) for Pre-Death & Post-Death flows.</p>
-
-            <p><strong>Phase 4: QA, Security & Launch (Weeks 17-20)</strong> - $28,000</p>
-            <p>Goal: Ensuring the system is bulletproof and legally compliant.</p>
-
-            <p><strong>GRAND TOTAL VALUE:</strong> $178,875+ (plus Ops)<br><strong>FIXED BID:</strong>
-                $200,000
-            </p>
-
-            <h3>4. Infrastructure Bill of Materials (BoM)</h3>
-            <p>Estimated monthly run-rate for the platform.</p>
-            <table class="w-full border-collapse border border-gray-300 mb-4">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border border-gray-300 p-2 text-left">Service</th>
-                        <th class="border border-gray-300 p-2 text-left">Specific Item</th>
-                        <th class="border border-gray-300 p-2 text-left">Est. Unit Cost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 p-2">Compute</td>
-                        <td class="border border-gray-300 p-2">Google Cloud Run (2 services)</td>
-                        <td class="border border-gray-300 p-2">~$18/mo</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2">Database</td>
-                        <td class="border border-gray-300 p-2">Cloud SQL (Postgres db-f1-micro)</td>
-                        <td class="border border-gray-300 p-2">~$9/mo</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2">AI</td>
-                        <td class="border border-gray-300 p-2">Vertex AI (Gemini Flash)</td>
-                        <td class="border border-gray-300 p-2">~$5/1M tokens</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 p-2">E-Sign</td>
-                        <td class="border border-gray-300 p-2">DocuSeal (Self-Hosted)</td>
-                        <td class="border border-gray-300 p-2">$0 (OSS)</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <br><br>
-            <div id="signature-block"
-                class="p-8 bg-gray-50 border border-gray-200 rounded text-center mt-8 scroll-mt-32">
-                <p class="text-sm text-gray-500 uppercase tracking-widest mb-4">Electronic Signature</p>
-                <div class="h-px w-64 bg-black mx-auto mb-2"></div>
-                <p class="font-serif italic text-xl text-black">Tameeka Lockhart</p>
-                <p class="text-xs text-gray-400 mt-2">Signed via FinalWishes Admin • <span id="signDate">December 17,
-                        2025</span></p>
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">3. Work Breakdown Structure (WBS)</h3>
+                <div class="space-y-4 mb-8">
+                    <div>
+                        <p class="text-white font-semibold">PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)</p>
+                        <p class="text-sm text-gray-400 pl-4">GCP Infra, GitHub Actions, Firebase Auth, Schema Design,
+                            Security Vault, Web App, E-Sign.</p>
+                    </div>
+                    <div>
+                        <p class="text-white font-semibold">PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)</p>
+                        <p class="text-sm text-gray-400 pl-4">Asset Module, MD/IL/MN Engines, Gemini RAG, PDF Service,
+                            Legacy Vault.</p>
+                    </div>
+                    <div>
+                        <p class="text-white font-semibold">PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)</p>
+                        <p class="text-sm text-gray-400 pl-4">React Native Mobile, Bio-Auth, Scanner, Plaid/Lob
+                            Webhooks, Offline Sync, Legacy Capture.</p>
+                    </div>
+                    <div>
+                        <p class="text-white font-semibold">PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)</p>
+                        <p class="text-sm text-gray-400 pl-4">Pen Test, SOC 2 Compliance, Load Test, Store Launch,
+                            Go-Live.</p>
+                    </div>
+                </div>
             </div>
 
+            <div class="h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent my-12"></div>
 
+            <!-- EXHIBIT B -->
+            <div>
+                <h2 class="text-center mb-12 text-3xl neo-font-cinzel neo-text-gold">Exhibit B: Cost Proposal</h2>
+
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">1. Executive Summary</h3>
+                <p class="mb-4">This proposal offers a transparent, atomic breakdown of the investment required to build
+                    the "Vault-Grade" estate settlement platform.</p>
+                <ul class="list-disc pl-5 mb-8 space-y-2 marker:text-amber-500">
+                    <li><strong>Your Investment:</strong> <span class="text-white">$200,000 (Fixed)</span></li>
+                    <li><strong>Time to Market:</strong> <span class="text-white">5 Months (20 Weeks)</span></li>
+                    <li><strong>Output:</strong> <span class="text-white">Fully secure, SOC 2-ready platform for MD, IL,
+                            and MN.</span></li>
+                </ul>
+
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">2. Comparative Market Analysis</h3>
+                <div class="overflow-hidden border border-white/10 rounded-lg mb-8">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white/5 border-b border-white/10">
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Metric</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">FinalWishes (111 VS)</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Big Law Custom Tech</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Typical Dev Agency</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">Total Cost</td>
+                                <td class="p-4 neo-text-emerald font-bold">$200,000 (Fixed)</td>
+                                <td class="p-4 text-gray-400">$650,000+</td>
+                                <td class="p-4 text-gray-400">$350,000+</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">Time to Market</td>
+                                <td class="p-4 neo-text-emerald font-bold">5 Months</td>
+                                <td class="p-4 text-gray-400">18-24 Months</td>
+                                <td class="p-4 text-gray-400">9-12 Months</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-medium text-gray-200">Model</td>
+                                <td class="p-4 neo-text-emerald font-bold">Co-Founder/Partner</td>
+                                <td class="p-4 text-gray-400">Billable Hour</td>
+                                <td class="p-4 text-gray-400">Time & Materials</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-gray-200">IP Ownership</td>
+                                <td class="p-4 neo-text-emerald font-bold">100% Client Owned</td>
+                                <td class="p-4 text-gray-400">Firm Retains IP</td>
+                                <td class="p-4 text-gray-400">Vendor Lock-in</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">3. Atomic Development Cost Breakdown</h3>
+                <p class="mb-6">Based on ~1,200 engineering hours at a boutique rate.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-white/5 p-4 rounded border border-white/10">
+                        <span class="block neo-text-gold text-xs uppercase tracking-widest">Phase 0</span>
+                        <span class="block text-white text-lg font-semibold">Design & Identity</span>
+                        <span class="block text-gray-400 text-sm">$30,000</span>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border border-white/10">
+                        <span class="block neo-text-gold text-xs uppercase tracking-widest">Phase 1</span>
+                        <span class="block text-white text-lg font-semibold">Foundation & Vault</span>
+                        <span class="block text-gray-400 text-sm">$25,875</span>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border border-white/10">
+                        <span class="block neo-text-gold text-xs uppercase tracking-widest">Phase 2</span>
+                        <span class="block text-white text-lg font-semibold">Core Logic</span>
+                        <span class="block text-gray-400 text-sm">$30,000</span>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border border-white/10">
+                        <span class="block neo-text-gold text-xs uppercase tracking-widest">Phase 3</span>
+                        <span class="block text-white text-lg font-semibold">Living Legacy App</span>
+                        <span class="block text-gray-400 text-sm">$33,000</span>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border border-white/10">
+                        <span class="block neo-text-gold text-xs uppercase tracking-widest">Phase 4</span>
+                        <span class="block text-white text-lg font-semibold">QA & Launch</span>
+                        <span class="block text-gray-400 text-sm">$28,000</span>
+                    </div>
+                    <div class="bg-emerald-900/20 p-4 rounded border border-emerald-500/30">
+                        <span class="block neo-text-emerald text-xs uppercase tracking-widest">Total Fixed Bid</span>
+                        <span class="block text-white text-lg font-semibold">Grand Total</span>
+                        <span class="block text-emerald-400 text-xl font-bold">$200,000</span>
+                    </div>
+                </div>
+
+                <h3 class="neo-font-cinzel text-xl text-white mb-4">4. Infrastructure Bill of Materials</h3>
+                <div class="overflow-hidden border border-white/10 rounded-lg mb-12">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white/5 border-b border-white/10">
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Service</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Item</th>
+                                <th class="p-4 neo-text-gold font-bold uppercase text-sm">Est. Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-semibold text-white">Compute</td>
+                                <td class="p-4">Google Cloud Run</td>
+                                <td class="p-4">~$18/mo</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-semibold text-white">Database</td>
+                                <td class="p-4">Cloud SQL (Postgres)</td>
+                                <td class="p-4">~$9/mo</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="p-4 font-semibold text-white">AI</td>
+                                <td class="p-4">Vertex AI (Gemini)</td>
+                                <td class="p-4">~$5/1M tokens</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-white">E-Sign</td>
+                                <td class="p-4">DocuSeal (Self-Hosted)</td>
+                                <td class="p-4 text-emerald-400">$0 (OSS)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
+
+        <!-- Signature Block -->
+        <div id="signature-block"
+            class="mt-16 p-8 bg-gradient-to-br from-white/5 to-white/0 border border-amber-500/30 rounded-lg text-center backdrop-blur-sm relative overflow-hidden group">
+            <div
+                class="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            </div>
+
+            <p class="text-xs neo-text-gold uppercase tracking-[0.2em] mb-8 relative z-10">Electronic Signature Verified
+            </p>
+
+            <div class="font-serif italic text-4xl text-white mb-4 relative z-10 font-normal">Tameeka Lockhart</div>
+
+            <div class="h-px w-64 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mx-auto mb-4"></div>
+
+            <p class="text-xs text-gray-500 relative z-10">
+                Signed via FinalWishes Admin • <span id="signDate" class="text-gray-400">December 17, 2025</span>
+            </p>
+
+            <div class="absolute bottom-4 right-4 opacity-20">
+                <!-- Fingerprint Icon or similar could go here, omitting for now -->
+            </div>
+        </div>
+    </div>
     </div>
     </div>
 

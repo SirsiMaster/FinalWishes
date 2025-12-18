@@ -79,6 +79,48 @@
             margin-bottom: 0.75rem !important;
         }
 
+        /* FORCE WIDER WIDTHS */
+        .max-w-4xl {
+            max-width: 80rem !important;
+            /* max-w-7xl override */
+        }
+
+        /* Force grid to behave */
+        .grid-cols-12 {
+            display: grid !important;
+            grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+            gap: 2rem !important;
+        }
+
+        /* Fix the 2-column sections */
+        .grid-cols-1.md\:grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 3rem !important;
+        }
+
+        /* Fix lists specifically */
+        ul.list-disc {
+            margin-left: 1.5rem !important;
+            margin-bottom: 2rem !important;
+        }
+
+        ul.list-disc li {
+            padding-left: 0.5rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+
+        /* Card overrides for space */
+        .bg-white\/5 {
+            padding: 2rem !important;
+        }
+
+        /* Ensure table text is readable */
+        td,
+        th {
+            padding: 1rem !important;
+            text-align: left !important;
+        }
+
         /* Force left alignment on text */
         .contract-immersive-wrapper p {
             text-align: left !important;
@@ -401,12 +443,12 @@
                                 <!-- 1. EXECUTIVE OVERVIEW -->
                                 <h2 class="text-[#C8A951] mt-8 mb-4">1. Executive Overview</h2>
 
-                                <p class="mb-8 font-serif text-xl leading-loose italic text-blue-100 max-w-4xl">
+                                <p class="mb-8 font-serif text-xl leading-loose italic text-blue-100 max-w-6xl">
                                     "To transform estate settlement from a bureaucratic nightmare into a streamlined,
                                     technology-assisted process, while preserving the human legacy of the departed."
                                 </p>
 
-                                <p class="mb-8 text-lg leading-relaxed text-slate-300 max-w-4xl">This Statement of Work
+                                <p class="mb-8 text-lg leading-relaxed text-slate-300 max-w-6xl">This Statement of Work
                                     ("SOW") defines the comprehensive scope for the
                                     <strong>FinalWishes Estate Operating System</strong>. This project aims to digitize
                                     and
@@ -756,7 +798,7 @@
                         <div class="mb-16">
                             <h2 class="text-center mb-8 text-3xl font-serif text-[#C8A951]">1. "True Market Price"
                                 Analysis</h2>
-                            <p class="text-left text-slate-400 mb-8 max-w-3xl mx-auto">
+                            <p class="text-left text-slate-400 mb-8 max-w-6xl mx-auto">
                                 Analysis of what FinalWishes would pay for this specific scope without Sirsi
                                 Technologies'
                                 partnership.

@@ -430,9 +430,10 @@
                         <div class="grid grid-cols-12 gap-12">
                             <div class="col-span-12">
                                 <!-- HEADER -->
-                                <div class="border-b border-white/10 pb-8 mb-12">
+                                <div class="border-b border-white/10 pb-8 mb-12 text-center">
                                     <h2 class="text-4xl text-[#C8A951] mb-6 font-serif">Statement of Work (SOW)</h2>
-                                    <div class="grid grid-cols-2 gap-4 text-sm font-mono text-blue-300">
+                                    <div
+                                        class="grid grid-cols-2 gap-4 text-sm font-mono text-blue-300 max-w-lg mx-auto text-left">
                                         <div><strong>Project:</strong> FinalWishes Platform Development</div>
                                         <div><strong>Date:</strong> December 17, 2025</div>
                                         <div><strong>Ref:</strong> SOW-2025-001</div>
@@ -464,8 +465,9 @@
                                     memories are not lost in transition.
                                 </p>
 
-                                <div class="bg-blue-900/40 border-l-4 border-[#C8A951] p-4 mb-8">
-                                    <p class="mb-0 text-white"><strong>Objective:</strong> deliver a "Vault-Grade"
+                                <div class="bg-blue-900/40 border-l-4 border-[#C8A951] p-6 pl-8 mb-12 rounded-r-lg">
+                                    <p class="mb-0 text-white text-lg"><strong>Objective:</strong> deliver a
+                                        "Vault-Grade"
                                         secure
                                         platform that guides users through the 18+ month probate process, automating
                                         form
@@ -478,79 +480,85 @@
                                 <!-- 2.1 -->
                                 <h3
                                     class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-12">
-                                    2.1 Core
-                                    Vault &
-                                    Data Architecture</h3>
+                                    2.1 Core Vault & Data Architecture</h3>
                                 <p class="mb-4">Provider shall implement a <strong>Multi-Tenant, Zero-Knowledge</strong>
                                     architecture to ensure total data privacy.</p>
                                 <ul class="list-disc pl-6 mb-12 text-blue-200 space-y-4 text-base leading-relaxed">
                                     <li><strong class="text-white">Storage Layer:</strong> Hybrid approach using
-                                        <strong>Cloud SQL
-                                            (PostgreSQL)</strong> for structured PII (Encrypted) and
-                                        <strong>Firestore</strong>
-                                        for real-time document metadata.
+                                        <strong>Cloud SQL (PostgreSQL)</strong> for structured PII (Encrypted) and
+                                        <strong>Firestore</strong> for real-time document metadata.
                                     </li>
                                     <li><strong class="text-white">File Vault:</strong> <strong>Cloud Storage</strong>
-                                        buckets with
-                                        per-tenant
-                                        isolation boundaries. All files encrypted at rest using <strong>Cloud
-                                            KMS</strong>
-                                        (AES-256).</li>
+                                        buckets with per-tenant isolation boundaries. All files encrypted at rest using
+                                        <strong>Cloud
+                                            KMS</strong> (AES-256).
+                                    </li>
                                     <li><strong class="text-white">Security:</strong> Implementation of <strong>SOC 2
-                                            Type II</strong>
-                                        controls,
-                                        including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).
+                                            Type II</strong> controls, including strict IAM roles, audit logging, and
+                                        encryption in transit (TLS 1.3).
                                     </li>
                                 </ul>
 
                                 <!-- 2.2 -->
                                 <h3
                                     class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-16">
-                                    2.2 Document
-                                    Inventory & Automation</h3>
-                                <p class="mb-4">Provider will build automation or manual guidance paths for the
-                                    following
-                                    specific document categories:</p>
+                                    2.2 Document Inventory & Automation</h3>
+                                <p class="mb-8">Provider will build automation or manual guidance paths for the
+                                    following specific document categories:</p>
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                                    <div>
-                                        <h4 class="text-[#C8A951] font-bold mb-2">A. Identity & Vital Records</h4>
-                                        <ul class="list-disc pl-5 text-sm text-blue-200">
-                                            <li><strong>Death Certificate:</strong> Manual upload/OCR processing.</li>
-                                            <li><strong>Social Security/Gov ID:</strong> Secure entry & validation.</li>
+                                <!-- Grid Layout for Categories -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+
+                                    <!-- A: Identity -->
+                                    <div class="bg-white/5 p-6 rounded-lg border border-white/5">
+                                        <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
+                                            A. Identity & Vital Records</h4>
+                                        <ul class="list-disc pl-5 text-sm text-blue-200 space-y-3">
+                                            <li><strong class="text-white">Death Certificate:</strong> Manual upload/OCR
+                                                processing (No State API exists).</li>
+                                            <li><strong class="text-white">Social Security:</strong> Secure entry &
+                                                validation.</li>
                                         </ul>
                                     </div>
-                                    <div>
-                                        <h4 class="text-[#C8A951] font-bold mb-2">C. Financial & Asset Documents</h4>
-                                        <ul class="list-disc pl-5 text-sm text-blue-200">
-                                            <li><strong>Asset Discovery:</strong> Plaid integration (12,000+
-                                                institutions).</li>
-                                            <li><strong>Life Insurance:</strong> "Notice of Death" generation.</li>
-                                            <li><strong>Real Estate:</strong> Zillow/Redfin valuation integration.</li>
+
+                                    <!-- B: Probate Court -->
+                                    <div class="bg-white/5 p-6 rounded-lg border border-white/5">
+                                        <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
+                                            B. Probate Court Filings</h4>
+                                        <ul class="list-disc pl-5 text-sm text-blue-200 space-y-3">
+                                            <li><strong class="text-white">Maryland:</strong> Integration/Guidance for
+                                                <strong>MDEC</strong>.
+                                            </li>
+                                            <li><strong class="text-white">Illinois:</strong> Guidance for
+                                                <strong>eCourt</strong> (Cook County).
+                                            </li>
+                                            <li><strong class="text-white">Minnesota:</strong> Guidance for
+                                                <strong>MNCIS</strong>.
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- C: Financial (Full Width) -->
+                                    <div class="bg-white/5 p-6 rounded-lg border border-white/5 md:col-span-2">
+                                        <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
+                                            C. Financial & Asset Documents</h4>
+                                        <ul
+                                            class="list-disc pl-5 text-sm text-blue-200 space-y-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <li class="md:col-span-1"><strong class="text-white">Asset
+                                                    Discovery:</strong> Plaid integration (12,000+ institutions).</li>
+                                            <li class="md:col-span-1"><strong class="text-white">Life
+                                                    Insurance:</strong> "Notice of Death" generation.</li>
+                                            <li class="md:col-span-1"><strong class="text-white">Real Estate:</strong>
+                                                Zillow/Redfin valuation integration.</li>
                                         </ul>
                                     </div>
                                 </div>
 
-                                <h4 class="text-[#C8A951] font-bold mb-2">B. Probate Court Filings (Launch States)</h4>
-                                <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
-                                    <li><strong>Maryland:</strong> Integration/Guidance for <strong>MDEC</strong> (Tyler
-                                        Odyssey).</li>
-                                    <li><strong>Illinois:</strong> Guidance for <strong>eCourt</strong> (Cook County).
-                                    </li>
-                                    <li><strong>Minnesota:</strong> Full guidance for <strong>MNCIS</strong> statewide
-                                        e-filing
-                                        system.</li>
-                                    <li><em>Note: Where API filing is unavailable, the Platform will generate
-                                            "Ready-to-Print"
-                                            PDF packages.</em></li>
-                                </ul>
-
                                 <!-- 2.3 -->
                                 <h3
                                     class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-16">
-                                    2.3 System
-                                    Integrations</h3>
-                                <div class="overflow-x-auto mb-8">
+                                    2.3 System Integrations</h3>
+                                <div class="overflow-x-auto mb-12 bg-white/5 rounded-lg border border-white/5 p-4">
                                     <table class="w-full text-left border-collapse">
                                         <thead>
                                             <tr class="border-b border-white/20 text-[#C8A951]">
@@ -597,54 +605,109 @@
                                 <!-- 2.4 -->
                                 <h3
                                     class="text-blue-300 text-sm tracking-[0.2em] uppercase font-sans font-bold mb-6 border-b border-white/10 pb-2 mt-16">
-                                    2.4 "The
-                                    Shepherd"
-                                    Guidance Engine</h3>
-                                <ul class="list-decimal pl-6 mb-8 text-blue-200 space-y-2">
-                                    <li><strong>Ingests State Laws:</strong> Encodes probate timing rules for MD, IL,
-                                        and MN.
-                                    </li>
-                                    <li><strong>Generates Timeline:</strong> Creates a dynamic, 18-month Gantt chart for
-                                        the
-                                        Executor.</li>
-                                    <li><strong>Proactive Alerts:</strong> Notifies users of upcoming court deadlines.
-                                    </li>
-                                    <li><strong>AI Assistance:</strong> Uses Gemini 3.0 to answer context-specific
-                                        questions.
-                                    </li>
-                                </ul>
+                                    2.4 "The Shepherd" Guidance Engine</h3>
+
+                                <div class="bg-white/5 p-8 rounded-lg border border-white/5 mb-12">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div class="flex gap-4">
+                                            <div class="text-[#C8A951] pt-1">
+                                                <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-white font-bold mb-1">Ingests State Laws</h4>
+                                                <p class="text-sm text-blue-200">Encodes complex probate timing rules
+                                                    for MD, IL, and MN directly into the workflow engine.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-4">
+                                            <div class="text-[#C8A951] pt-1">
+                                                <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-white font-bold mb-1">Generates Timeline</h4>
+                                                <p class="text-sm text-blue-200">Creates a dynamic, 18-month Gantt chart
+                                                    customized for the specific Estate topology.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-4">
+                                            <div class="text-[#C8A951] pt-1">
+                                                <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M15 17h5l-1.405-1.405A2.032 2 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-white font-bold mb-1">Proactive Alerts</h4>
+                                                <p class="text-sm text-blue-200">Notifies Executors of upcoming court
+                                                    deadlines via Email & Push notifications.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-4">
+                                            <div class="text-[#C8A951] pt-1">
+                                                <svg width="24" height="24" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-white font-bold mb-1">AI Assistance</h4>
+                                                <p class="text-sm text-blue-200">Uses Gemini 3.0 to answer
+                                                    context-specific questions based on the uploaded documents.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- 3. WBS -->
-                                <h2 class="text-[#C8A951] mt-12 mb-6">3. Work Breakdown Structure (WBS)</h2>
+                                <h2 class="text-[#C8A951] mt-12 mb-8">3. Work Breakdown Structure (WBS)</h2>
 
-                                <div class="space-y-6">
+                                <div class="space-y-8">
                                     <!-- PHASE 1 -->
-                                    <div class="bg-white/5 p-6 rounded border border-[#C8A951]/30">
-                                        <div class="flex justify-between items-center mb-4">
+                                    <div class="bg-white/5 p-8 rounded border border-[#C8A951]/30">
+                                        <div class="flex justify-between items-center mb-6">
                                             <h4 class="text-white text-lg font-bold">PHASE 1: FOUNDATION & VAULT</h4>
                                             <span
                                                 class="text-xs font-mono text-[#C8A951] border border-[#C8A951] px-2 py-1 rounded">WEEKS
                                                 1-4</span>
                                         </div>
                                         <ul
-                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                            <li><strong>1.1 GCP Infrastructure:</strong> Provision Cloud Run, Cloud SQL,
-                                                Firestore, VPC.</li>
-                                            <li><strong>1.2 Ops:</strong> Setup GitHub Actions CI/CD.</li>
-                                            <li><strong>1.3 Auth:</strong> Firebase Auth + MFA + Custom Claims.</li>
-                                            <li><strong>1.4 Schema:</strong> Design Relational (Heirs) vs Document
-                                                (Metadata).
-                                            </li>
-                                            <li><strong>1.5 Vault:</strong> Implement AES-256 crypto service.</li>
-                                            <li><strong>1.6 Web:</strong> React + Vite + "Light Royal Neo-Deco" Design.
-                                            </li>
-                                            <li><strong>1.7 E-Sign:</strong> Deploy Self-Hosted DocuSeal.</li>
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong class="text-white">1.1 GCP Infrastructure:</strong> Provision
+                                                Cloud Run, Cloud SQL, Firestore, VPC.</li>
+                                            <li><strong class="text-white">1.2 Ops:</strong> Setup GitHub Actions CI/CD
+                                                workflows.</li>
+                                            <li><strong class="text-white">1.3 Auth:</strong> Firebase Auth + MFA +
+                                                Custom Claims.</li>
+                                            <li><strong class="text-white">1.4 Schema:</strong> Design Relational
+                                                (Heirs) vs Document (Metadata).</li>
+                                            <li><strong class="text-white">1.5 Vault:</strong> Implement AES-256 crypto
+                                                service.</li>
+                                            <li><strong class="text-white">1.6 Web:</strong> React + Vite + "Light Royal
+                                                Neo-Deco" Design.</li>
+                                            <li><strong class="text-white">1.7 E-Sign:</strong> Deploy Self-Hosted
+                                                DocuSeal.</li>
                                         </ul>
                                     </div>
 
                                     <!-- PHASE 2 -->
-                                    <div class="bg-white/5 p-6 rounded border border-white/10">
-                                        <div class="flex justify-between items-center mb-4">
+                                    <div class="bg-white/5 p-8 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-6">
                                             <h4 class="text-white text-lg font-bold">PHASE 2: CORE LOGIC & STATE ENGINES
                                             </h4>
                                             <span
@@ -652,25 +715,25 @@
                                                 5-10</span>
                                         </div>
                                         <ul
-                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                            <li><strong>2.1 Asset Module:</strong> Plaid Link integration & overrides.
-                                            </li>
-                                            <li><strong>2.2 Maryland Engine:</strong> Encode MD Register of Wills rules.
-                                            </li>
-                                            <li><strong>2.3 Illinois Engine:</strong> Encode IL Probate Division rules.
-                                            </li>
-                                            <li><strong>2.4 Minnesota Engine:</strong> Encode MN District Court rules.
-                                            </li>
-                                            <li><strong>2.5 Gemini RAG:</strong> Build vector store for legal context.
-                                            </li>
-                                            <li><strong>2.6 PDF Service:</strong> Go-based PDF stamper for court forms.
-                                            </li>
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong class="text-white">2.1 Asset Module:</strong> Plaid Link
+                                                integration & data overrides.</li>
+                                            <li><strong class="text-white">2.2 Maryland Engine:</strong> Encode MD
+                                                Register of Wills rules.</li>
+                                            <li><strong class="text-white">2.3 Illinois Engine:</strong> Encode IL
+                                                Probate Division rules.</li>
+                                            <li><strong class="text-white">2.4 Minnesota Engine:</strong> Encode MN
+                                                District Court rules.</li>
+                                            <li><strong class="text-white">2.5 Gemini RAG:</strong> Build vector store
+                                                for legal context.</li>
+                                            <li><strong class="text-white">2.6 PDF Service:</strong> Go-based PDF
+                                                stamper for court forms.</li>
                                         </ul>
                                     </div>
 
                                     <!-- PHASE 3 -->
-                                    <div class="bg-white/5 p-6 rounded border border-white/10">
-                                        <div class="flex justify-between items-center mb-4">
+                                    <div class="bg-white/5 p-8 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-6">
                                             <h4 class="text-white text-lg font-bold">PHASE 3: MOBILE & DEEP INTEGRATIONS
                                             </h4>
                                             <span
@@ -678,21 +741,25 @@
                                                 11-16</span>
                                         </div>
                                         <ul
-                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                            <li><strong>3.1 Mobile:</strong> React Native Expo shell (iOS/Android).</li>
-                                            <li><strong>3.2 Bio-Auth:</strong> FaceID/TouchID wrapper.</li>
-                                            <li><strong>3.3 Scanner:</strong> Native camera module for receipt capture.
-                                            </li>
-                                            <li><strong>3.4 Plaid/Lob:</strong> Full webhook handling and mail trigger.
-                                            </li>
-                                            <li><strong>3.5 Offline:</strong> SQLite sync engine for mobile resilience.
-                                            </li>
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong class="text-white">3.1 React Native:</strong> Initialize
+                                                iOS/Android Expo project.</li>
+                                            <li><strong class="text-white">3.2 Camera/Scan:</strong> Implement document
+                                                scanner in mobile app.</li>
+                                            <li><strong class="text-white">3.3 Biometrics:</strong> Enable
+                                                FaceID/TouchID for Vault access.</li>
+                                            <li><strong class="text-white">3.4 Push:</strong> Integrate Notifications
+                                                for timeline alerts.</li>
+                                            <li><strong class="text-white">3.5 Lob:</strong> Physical mail API
+                                                integration.</li>
+                                            <li><strong class="text-white">3.6 SendGrid:</strong> Transactional email
+                                                templates.</li>
                                         </ul>
                                     </div>
 
                                     <!-- PHASE 4 -->
-                                    <div class="bg-white/5 p-6 rounded border border-white/10">
-                                        <div class="flex justify-between items-center mb-4">
+                                    <div class="bg-white/5 p-8 rounded border border-white/10">
+                                        <div class="flex justify-between items-center mb-6">
                                             <h4 class="text-white text-lg font-bold">PHASE 4: AUDIT, SECURITY & LAUNCH
                                             </h4>
                                             <span
@@ -700,54 +767,57 @@
                                                 17-20</span>
                                         </div>
                                         <ul
-                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-blue-200 list-disc pl-5">
-                                            <li><strong>4.1 Pen Test:</strong> Third-party security audit.</li>
-                                            <li><strong>4.2 Compliance:</strong> SOC 2 evidence collection.</li>
-                                            <li><strong>4.3 Load Test:</strong> Stress testing (k6) to 1,000 users.</li>
-                                            <li><strong>4.4 Store Launch:</strong> App Store & Play Store submission.
-                                            </li>
-                                            <li><strong>4.5 Go-Live:</strong> DNS switchover and Production migration.
-                                            </li>
+                                            class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-sm text-blue-200 list-disc pl-5">
+                                            <li><strong class="text-white">4.1 Pen Test:</strong> Third-party security
+                                                audit.</li>
+                                            <li><strong class="text-white">4.2 Compliance:</strong> SOC 2 evidence
+                                                collection.</li>
+                                            <li><strong class="text-white">4.3 Load Test:</strong> Stress testing (k6)
+                                                to 1,000 users.</li>
+                                            <li><strong class="text-white">4.4 Store Launch:</strong> App Store & Play
+                                                Store submission.</li>
+                                            <li><strong class="text-white">4.5 Go-Live:</strong> DNS switchover and
+                                                Production migration.</li>
                                         </ul>
                                     </div>
                                 </div>
 
                                 <!-- 4. DELIVERABLES -->
-                                <h2 class="text-[#C8A951] mt-12 mb-6">4. Deliverables</h2>
-                                <div class="overflow-x-auto mb-12">
+                                <h2 class="text-[#C8A951] mt-12 mb-8">4. Deliverables</h2>
+                                <div class="overflow-x-auto mb-24 bg-white/5 rounded-lg border border-white/5 p-4">
                                     <table class="w-full text-left border-collapse">
                                         <thead>
                                             <tr class="border-b border-white/20 text-[#C8A951]">
-                                                <th class="p-3">Deliverable</th>
-                                                <th class="p-3">Description</th>
-                                                <th class="p-3">Format</th>
+                                                <th class="p-4">Deliverable</th>
+                                                <th class="p-4">Description</th>
+                                                <th class="p-4">Format</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="text-sm text-slate-200" style="color: #e2e8f0;">
-                                            <tr class="border-b border-white/5 bg-white/5">
-                                                <td class="p-3 font-bold">D1: The Vault</td>
-                                                <td class="p-3">Security core, Auth, Encrypted Storage</td>
-                                                <td class="p-3">Staging URL</td>
+                                        <tbody class="text-sm text-slate-200">
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-4 font-bold">D1: The Vault</td>
+                                                <td class="p-4">Security core, Auth, Encrypted Storage</td>
+                                                <td class="p-4">Staging URL</td>
                                             </tr>
                                             <tr class="border-b border-white/5">
-                                                <td class="p-3 font-bold">D2: State Engines</td>
-                                                <td class="p-3">Form generation for MD, IL, MN</td>
-                                                <td class="p-3">API + UI</td>
-                                            </tr>
-                                            <tr class="border-b border-white/5 bg-white/5">
-                                                <td class="p-3 font-bold">D3: Mobile Apps</td>
-                                                <td class="p-3">iOS and Android binaries (TestFlight)</td>
-                                                <td class="p-3">.ipa / .apk</td>
+                                                <td class="p-4 font-bold">D2: State Engines</td>
+                                                <td class="p-4">Form generation for MD, IL, MN</td>
+                                                <td class="p-4">API + UI</td>
                                             </tr>
                                             <tr class="border-b border-white/5">
-                                                <td class="p-3 font-bold">D4: The Platform</td>
-                                                <td class="p-3">Production release, fully tested</td>
-                                                <td class="p-3">Live URL</td>
+                                                <td class="p-4 font-bold">D3: Mobile Apps</td>
+                                                <td class="p-4">iOS and Android binaries (TestFlight)</td>
+                                                <td class="p-4">.ipa / .apk</td>
                                             </tr>
-                                            <tr class="border-b border-white/5 bg-white/5">
-                                                <td class="p-3 font-bold">D5: Documentation</td>
-                                                <td class="p-3">API Specs, Admin Guide, Compliance Pack</td>
-                                                <td class="p-3">PDF / Markdown</td>
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-4 font-bold">D4: The Platform</td>
+                                                <td class="p-4">Production release, fully tested</td>
+                                                <td class="p-4">Live URL</td>
+                                            </tr>
+                                            <tr class="border-b border-white/5">
+                                                <td class="p-4 font-bold">D5: Documentation</td>
+                                                <td class="p-4">API Specs, Admin Guide, Compliance Pack</td>
+                                                <td class="p-4">PDF / Markdown</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -755,16 +825,20 @@
 
                                 <!-- 5. ASSUMPTIONS -->
                                 <h2 class="text-[#C8A951] mt-12 mb-6">5. Assumptions</h2>
-                                <ul class="list-disc pl-6 mb-8 text-blue-200 space-y-2">
-                                    <li><strong>Launch States Only:</strong> Logic is strictly limited to Maryland,
-                                        Illinois, and Minnesota for V1.</li>
-                                    <li><strong>No Legal Advice:</strong> The "Shepherd" provides procedural guidance,
-                                        not legal advice. Disclaimer implementation is mandatory.</li>
-                                    <li><strong>Third-Party Costs:</strong> Client pays direct consumption costs for
-                                        Plaid, Lob, and Cloud IDs.</li>
-                                    <li><strong>Content:</strong> Client is responsible for final validation of court
-                                        form templates.</li>
-                                </ul>
+                                <div class="bg-white/5 p-8 rounded-lg border border-white/5">
+                                    <ul class="list-disc pl-6 text-blue-200 space-y-4">
+                                        <li><strong>Launch States Only:</strong> Logic is strictly limited to Maryland,
+                                            Illinois, and Minnesota for V1.</li>
+                                        <li><strong>No Legal Advice:</strong> The "Shepherd" provides procedural
+                                            guidance,
+                                            not legal advice. Disclaimer implementation is mandatory.</li>
+                                        <li><strong>Third-Party Costs:</strong> Client pays direct consumption costs for
+                                            Plaid, Lob, and Cloud IDs.</li>
+                                        <li><strong>Content:</strong> Client is responsible for final validation of
+                                            court
+                                            form templates.</li>
+                                    </ul>
+                                </div>
 
                             </div>
                         </div>

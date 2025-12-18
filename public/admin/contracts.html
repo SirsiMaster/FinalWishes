@@ -2477,24 +2477,41 @@
 
                     <!-- TAB 3: CONTRACT -->
                     <div id="contract" class="tab-content" style="position: relative;">
-                        <!-- MSA Action Buttons -->
-                        <div id="msa-action-bar"
-                            style="display: flex; gap: 12px; position: absolute; top: 20px; right: 20px; z-index: 10;">
-                            <button onclick="downloadMSAPdf()" class="download-btn-neo"
-                                style="display: flex; align-items: center; gap: 8px;">
-                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        <!-- MSA Floating Action Bar (Compact) -->
+                        <div id="msa-fab"
+                            style="position: fixed; right: 24px; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px;">
+                            <!-- Download PDF -->
+                            <button onclick="downloadMSAPdf(event)" title="Download as PDF"
+                                style="width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #C8A951, #E2C76B); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(200,169,81,0.4); transition: all 0.3s;"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 20px rgba(200,169,81,0.6)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(200,169,81,0.4)';">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#0f172a"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                 </svg>
-                                DOWNLOAD PDF
                             </button>
-                            <button onclick="emailMSAToSelf()" class="download-btn-neo"
-                                style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));">
-                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <!-- Email to Self -->
+                            <button onclick="emailMSAToSelf(event)" title="Email to myself"
+                                style="width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(200,169,81,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s;"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='#C8A951';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(200,169,81,0.3)';">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#C8A951"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
-                                EMAIL TO MYSELF
+                            </button>
+                            <!-- Print -->
+                            <button onclick="window.print()" title="Print"
+                                style="width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(200,169,81,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s;"
+                                onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='#C8A951';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(200,169,81,0.3)';">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#C8A951"
+                                    stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                                </svg>
                             </button>
                         </div>
 
@@ -3718,7 +3735,7 @@
         // ============================================
         // MSA DOWNLOAD & EMAIL FUNCTIONS
         // ============================================
-        function downloadMSAPdf() {
+        function downloadMSAPdf(e) {
             const contractDoc = document.getElementById('contract-document');
             if (!contractDoc) {
                 alert('Contract document not found.');
@@ -3726,9 +3743,9 @@
             }
 
             // Show loading state on button
-            const btn = event.target.closest('button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...';
+            const btn = e ? e.target.closest('button') : document.querySelector('#msa-fab button:first-child');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0f172a" stroke-width="3" opacity="0.3"></circle><path fill="#0f172a" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             btn.disabled = true;
 
             // Clone the document and apply print-friendly styles
@@ -3796,18 +3813,18 @@
 
             html2pdf().set(opt).from(clone).save().then(() => {
                 document.body.removeChild(clone);
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalHTML;
                 btn.disabled = false;
             }).catch(err => {
                 console.error('PDF generation error:', err);
                 document.body.removeChild(clone);
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalHTML;
                 btn.disabled = false;
                 alert('Error generating PDF. Please try again.');
             });
         }
 
-        function emailMSAToSelf() {
+        function emailMSAToSelf(e) {
             // Get current user email from Firebase Auth
             const user = firebase.auth().currentUser;
             if (!user || !user.email) {
@@ -3826,9 +3843,9 @@
             if (!confirmSend) return;
 
             // Show loading state
-            const btn = event.target.closest('button');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
+            const btn = e ? e.target.closest('button') : document.querySelector('#msa-fab button:nth-child(2)');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#C8A951" stroke-width="3" opacity="0.3"></circle><path fill="#C8A951" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
             btn.disabled = true;
 
             // Generate PDF as base64

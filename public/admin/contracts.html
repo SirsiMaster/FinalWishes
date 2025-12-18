@@ -1093,39 +1093,49 @@
 
                     <!-- TAB 2: COST -->
                     <div id="cost" class="tab-content">
-                        <!-- TOP STATS -->
-                        <div class="grid grid-cols-4 gap-8 mb-16">
+                        <!-- TOP STATS - PROPER HIERARCHY -->
+                        <div
+                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
+
                             <!-- Gross Value -->
-                            <div class="stat-card contract-stat">
-                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">True Market
-                                    Value</div>
-                                <div class="text-3xl text-slate-400 line-through decoration-red-500/50 font-serif">
-                                    $650k+</div>
-                                <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Big Law Comparable
+                            <div
+                                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 1.5rem; text-align: center;">
+                                <div style="font-size: 16px; color: #C8A951; margin-bottom: 0.5rem; font-weight: 600;">
+                                    True Market Value</div>
+                                <div
+                                    style="font-size: 24px; font-family: Cinzel, serif; color: #64748b; text-decoration: line-through;">
+                                    $650,000+</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">"Big Law" Comparable
                                 </div>
                             </div>
+
                             <!-- Fixed Bid -->
                             <div
-                                class="stat-card contract-stat border-[#C8A951] bg-[#C8A951]/10 shadow-[0_0_20px_rgba(200,169,81,0.15)] relative overflow-hidden">
-                                <div class="absolute inset-0 bg-gradient-to-b from-[#C8A951]/5 to-transparent"></div>
-                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">Fixed Bid
-                                    Price</div>
-                                <div class="text-4xl font-bold font-serif text-white relative z-10">$200,000</div>
+                                style="background: rgba(200,169,81,0.1); border: 1px solid #C8A951; padding: 1.5rem; text-align: center;">
+                                <div style="font-size: 16px; color: #C8A951; margin-bottom: 0.5rem; font-weight: 600;">
+                                    Fixed Bid Price</div>
+                                <div
+                                    style="font-size: 28px; font-family: Cinzel, serif; color: white; font-weight: 600;">
+                                    $200,000</div>
                             </div>
+
                             <!-- Efficiency -->
-                            <div class="stat-card contract-stat">
-                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">Sirsi
-                                    Efficiency</div>
-                                <div class="text-3xl text-emerald-400 font-serif">Included</div>
-                                <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">SOC 2, Auth, Vault
+                            <div
+                                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 1.5rem; text-align: center;">
+                                <div style="font-size: 16px; color: #C8A951; margin-bottom: 0.5rem; font-weight: 600;">
+                                    Sirsi Efficiency</div>
+                                <div style="font-size: 24px; font-family: Cinzel, serif; color: #10b981;">Included</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">SOC 2, Auth, Vault
                                     Core</div>
                             </div>
+
                             <!-- Hours -->
-                            <div class="stat-card contract-stat">
-                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">Total Hours
-                                </div>
-                                <div class="text-3xl text-white font-serif">925+</div>
-                                <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Direct Engineering
+                            <div
+                                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 1.5rem; text-align: center;">
+                                <div style="font-size: 16px; color: #C8A951; margin-bottom: 0.5rem; font-weight: 600;">
+                                    Total Hours</div>
+                                <div style="font-size: 24px; font-family: Cinzel, serif; color: white;">925+</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">Direct Engineering
                                     Output</div>
                             </div>
                         </div>

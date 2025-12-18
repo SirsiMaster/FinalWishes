@@ -650,6 +650,115 @@
             color: #C8A951;
             font-weight: bold;
         }
+
+        /* REWRITTEN TABLE STYLES - HIGH SPECIFICITY */
+        #market-analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', sans-serif;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            /* Match previous backdrop */
+            border-radius: 4px;
+            /* Previous rounded */
+            overflow: hidden;
+            /* Previous overflow-hidden */
+        }
+
+        #market-analysis-table thead tr {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+        }
+
+        #market-analysis-table th {
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.125rem;
+            /* text-lg */
+        }
+
+        #market-analysis-table th:nth-child(1) {
+            text-align: left;
+            color: #C8A951;
+            width: 25%;
+        }
+
+        #market-analysis-table th:nth-child(2) {
+            color: white;
+            width: 25%;
+        }
+
+        #market-analysis-table th:nth-child(3),
+        #market-analysis-table th:nth-child(4) {
+            color: #94a3b8;
+            /* slate-400 */
+            width: 25%;
+        }
+
+        #market-analysis-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.2s;
+        }
+
+        #market-analysis-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        #market-analysis-table td {
+            font-family: 'Inter', sans-serif !important;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1rem;
+            /* text-base */
+        }
+
+        #market-analysis-table td:nth-child(1) {
+            text-align: left;
+            font-weight: 700;
+            color: white;
+        }
+
+        #market-analysis-table td:nth-child(2) {
+            color: white;
+            background-color: rgba(200, 169, 81, 0.05);
+            border-left: 1px solid rgba(200, 169, 81, 0.1);
+            border-right: 1px solid rgba(200, 169, 81, 0.1);
+        }
+
+        #market-analysis-table td:nth-child(3),
+        #market-analysis-table td:nth-child(4) {
+            color: #cbd5e1;
+            /* slate-300 */
+        }
+
+        /* Special Values Helper Class */
+        .u-cinzel-accent {
+            font-family: 'Cinzel', serif !important;
+        }
+
+        .u-text-gold {
+            color: #C8A951 !important;
+        }
+
+        .u-text-emerald {
+            color: #10b981 !important;
+        }
+
+        /* Allocation Text */
+        #allocation-text {
+            text-align: center;
+            width: 100%;
+            display: block;
+            margin: 0 auto 48px auto;
+            font-family: 'Inter', sans-serif !important;
+            font-style: italic;
+            font-size: 20px;
+            color: white;
+        }
     </style>
 </head>
 
@@ -1221,78 +1330,54 @@
                                 <div class="h-px bg-white/10 flex-1"></div>
                             </div>
 
-                            <div class="overflow-hidden rounded border border-white/10 bg-white/5 backdrop-blur-sm">
-                                <table class="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr class="bg-black/20 border-b border-[#C8A951]/30">
-                                            <th
-                                                class="p-6 text-[#C8A951] font-sans font-bold tracking-wider uppercase text-lg w-1/4 text-left">
-                                                Metric</th>
-                                            <th
-                                                class="p-6 text-white font-sans font-bold tracking-wider uppercase text-lg w-1/4 text-center">
-                                                FinalWishes (111 VS)</th>
-                                            <th
-                                                class="p-6 text-slate-400 font-sans font-bold tracking-wider uppercase text-lg w-1/4 text-center">
-                                                "Big Law" Custom Tech</th>
-                                            <th
-                                                class="p-6 text-slate-400 font-sans font-bold tracking-wider uppercase text-lg w-1/4 text-center">
-                                                Typical Dev Agency</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-white/5 text-base font-sans">
-                                        <!-- text-base for body, font-sans global -->
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white text-left">Total Cost</td>
-                                            <td
-                                                class="p-6 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10 font-serif text-center">
-                                                $200,000 (Fixed)</td>
-                                            <td class="p-6 text-slate-300 font-serif text-center">$650,000+</td>
-                                            <td class="p-6 text-slate-300 font-serif text-center">$350,000+</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white text-left">Time to Market</td>
-                                            <td
-                                                class="p-6 font-bold text-[#C8A951] bg-[#C8A951]/5 border-x border-[#C8A951]/10 text-center">
-                                                5 Months</td>
-                                            <td class="p-6 text-slate-300 text-center">18-24 Months</td>
-                                            <td class="p-6 text-slate-300 text-center">9-12 Months</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white text-left">Model</td>
-                                            <td
-                                                class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10 text-center">
-                                                Co-Founder/Partner</td>
-                                            <td class="p-6 text-slate-300 text-center">Billable Hour ($800/hr)</td>
-                                            <td class="p-6 text-slate-300 text-center">Time & Materials</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white text-left">IP Ownership</td>
-                                            <td
-                                                class="p-6 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10 text-center">
-                                                100% Client Owned</td>
-                                            <td class="p-6 text-slate-300 text-center">Firm Retains IP</td>
-                                            <td class="p-6 text-slate-300 text-center">Vendor Lock-in</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white text-left">Security</td>
-                                            <td
-                                                class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10 text-center">
-                                                SOC 2
-                                                Type II Ready</td>
-                                            <td class="p-6 text-slate-300 text-center">"Enterprise" bloat</td>
-                                            <td class="p-6 text-slate-300 text-center">Basic / Afterthought</td>
-                                        </tr>
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-6 font-bold text-white text-left">AI Capability</td>
-                                            <td
-                                                class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10 text-center">
-                                                Gemini 3.0 Native</td>
-                                            <td class="p-6 text-slate-300 text-center">None / Rigid Logic</td>
-                                            <td class="p-6 text-slate-300 text-center">Generic Chatbot</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table id="market-analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>FinalWishes (111 VS)</th>
+                                        <th>"Big Law" Custom Tech</th>
+                                        <th>Typical Dev Agency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Total Cost</td>
+                                        <td class="u-cinzel-accent u-text-emerald">$200,000 (Fixed)</td>
+                                        <td class="u-cinzel-accent">$650,000+</td>
+                                        <td class="u-cinzel-accent">$350,000+</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Time to Market</td>
+                                        <td class="u-text-gold">5 Months</td>
+                                        <td>18-24 Months</td>
+                                        <td>9-12 Months</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Model</td>
+                                        <td>Co-Founder/Partner</td>
+                                        <td>Billable Hour ($800/hr)</td>
+                                        <td>Time & Materials</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IP Ownership</td>
+                                        <td class="u-text-emerald">100% Client Owned</td>
+                                        <td>Firm Retains IP</td>
+                                        <td>Vendor Lock-in</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Security</td>
+                                        <td>SOC 2 Type II Ready</td>
+                                        <td>"Enterprise" bloat</td>
+                                        <td>Basic / Afterthought</td>
+                                    </tr>
+                                    <tr>
+                                        <td>AI Capability</td>
+                                        <td>Gemini 3.0 Native</td>
+                                        <td>None / Rigid Logic</td>
+                                        <td>Generic Chatbot</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                         <!-- 2. ATOMIC DEVELOPMENT BREAKDOWN -->
@@ -1304,8 +1389,7 @@
                                     2. Atomic Development Breakdown</h2>
                                 <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
                             </div>
-                            <p
-                                style="text-align: center; color: white; margin-bottom: 48px; font-style: italic; font-size: 20px; font-family: Inter, sans-serif; width: 100%; margin-left: auto; margin-right: auto;">
+                            <p id="allocation-text">
                                 Transparent allocation of <strong style="color: white;">925 hours</strong> across 5 key
                                 phases.</p>
 

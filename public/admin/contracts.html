@@ -21,31 +21,53 @@
     <link rel="stylesheet" href="../assets/css/admin-layout.css">
     <style>
         /* CRITICAL OVERRIDES FOR CONTRACT HIERARCHY */
-        .contract-immersive-wrapper h3 {
-            font-family: 'Inter', sans-serif !important;
-            font-size: 0.875rem !important;
-            /* text-sm */
-            line-height: 1.25rem !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.2em !important;
-            color: #93c5fd !important;
-            /* blue-300 */
-            margin-top: 3rem !important;
-            margin-bottom: 1rem !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding-bottom: 0.5rem !important;
-        }
 
-        /* Ensure H2s are dominant */
+        /* Level 1: Main Page Title (H1) - Handled in layout */
+
+        /* Level 2: Section Headers (e.g. "2. Detailed Scope") */
         .contract-immersive-wrapper h2 {
             font-family: 'Cinzel', serif !important;
             color: #C8A951 !important;
             font-size: 2.25rem !important;
-            /* text-4xl */
+            /* text-4xl (36px) */
             margin-top: 4rem !important;
             margin-bottom: 2rem !important;
             text-transform: none !important;
             border: none !important;
+            line-height: 2.5rem !important;
+        }
+
+        /* Level 3: Subsections (e.g. "2.1 Core Vault") */
+        /* FIX: Making this larger than H4 */
+        .contract-immersive-wrapper h3 {
+            font-family: 'Cinzel', serif !important;
+            /* Switch back to Serif for importance */
+            font-size: 1.5rem !important;
+            /* text-2xl (24px) */
+            line-height: 2rem !important;
+            font-weight: 400 !important;
+            text-transform: none !important;
+            /* Normal case */
+            letter-spacing: normal !important;
+            color: #FFFFFF !important;
+            /* White to distinguish from Gold H2/H4 */
+            margin-top: 3rem !important;
+            margin-bottom: 1.5rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            padding-bottom: 0.5rem !important;
+        }
+
+        /* Level 4: Item Groups (e.g. "A. Identity") */
+        .contract-immersive-wrapper h4 {
+            font-family: 'Inter', sans-serif !important;
+            color: #C8A951 !important;
+            font-size: 1.125rem !important;
+            /* text-lg (18px) - Clearly smaller than H3 */
+            font-weight: 700 !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 0.5rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
         }
 
         /* Fix list spacing */
@@ -54,12 +76,13 @@
         }
 
         .contract-immersive-wrapper li {
-            margin-bottom: 1rem !important;
+            margin-bottom: 0.75rem !important;
         }
 
         /* Force left alignment on text */
         .contract-immersive-wrapper p {
             text-align: left !important;
+            margin-bottom: 1.5rem !important;
         }
     </style>
     <link rel="stylesheet" href="../finalwishes.css">

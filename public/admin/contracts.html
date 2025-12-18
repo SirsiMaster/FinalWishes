@@ -651,52 +651,64 @@
             font-weight: bold;
         }
 
-        /* REWRITTEN TABLE STYLES - HIGH SPECIFICITY */
+        /* REWRITTEN TABLE STYLES - SINGLE FONT SOURCE OF TRUTH */
         #market-analysis-table {
             width: 100%;
             border-collapse: collapse;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif !important;
+            /* FORCE INTER */
             border: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(255, 255, 255, 0.05);
-            /* Match previous backdrop */
             border-radius: 4px;
-            /* Previous rounded */
             overflow: hidden;
-            /* Previous overflow-hidden */
+            border-spacing: 0;
         }
 
         #market-analysis-table thead tr {
-            background-color: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid rgba(200, 169, 81, 0.3);
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Darker header */
+            border-bottom: 2px solid rgba(200, 169, 81, 0.4);
+            /* Stronger separator */
         }
 
         #market-analysis-table th {
             font-family: 'Inter', sans-serif !important;
-            font-weight: 700;
+            font-weight: 800;
+            /* Extra Bold Headers */
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 1.5rem;
+            letter-spacing: 0.05em;
+            padding: 2rem 1.5rem;
+            /* More vertical padding */
             text-align: center;
-            font-size: 1.125rem;
-            /* text-lg */
+            font-size: 1.25rem !important;
+            /* 20px - Larger Headers */
+            line-height: 1.2;
         }
 
         #market-analysis-table th:nth-child(1) {
             text-align: left;
             color: #C8A951;
             width: 25%;
+            font-size: 1.1rem !important;
+            /* Slightly smaller for 'METRIC' label */
+            opacity: 0.8;
         }
 
         #market-analysis-table th:nth-child(2) {
             color: white;
-            width: 25%;
+            width: 28%;
+            /* Give hero column more space */
+            background: rgba(255, 255, 255, 0.05);
+            /* Highlight Hero Header */
         }
 
         #market-analysis-table th:nth-child(3),
         #market-analysis-table th:nth-child(4) {
             color: #94a3b8;
-            /* slate-400 */
-            width: 25%;
+            width: 23.5%;
+            font-weight: 600;
+            font-size: 1.1rem !important;
+            /* De-emphasize competitors */
         }
 
         #market-analysis-table tbody tr {
@@ -710,29 +722,38 @@
 
         #market-analysis-table td {
             font-family: 'Inter', sans-serif !important;
-            padding: 1.5rem;
+            padding: 1.75rem 1.5rem;
+            /* Larger cells */
             text-align: center;
-            font-size: 1rem;
-            /* text-base */
+            font-size: 1.125rem !important;
+            /* 18px Body Text */
+            color: rgba(255, 255, 255, 0.9);
+            vertical-align: middle;
         }
 
         #market-analysis-table td:nth-child(1) {
             text-align: left;
             font-weight: 700;
             color: white;
+            font-size: 1.25rem !important;
+            /* Metric Name Large */
         }
 
         #market-analysis-table td:nth-child(2) {
             color: white;
-            background-color: rgba(200, 169, 81, 0.05);
-            border-left: 1px solid rgba(200, 169, 81, 0.1);
-            border-right: 1px solid rgba(200, 169, 81, 0.1);
+            font-weight: 600;
+            background-color: rgba(200, 169, 81, 0.08);
+            /* Stronger Highlight */
+            border-left: 1px solid rgba(200, 169, 81, 0.15);
+            border-right: 1px solid rgba(200, 169, 81, 0.15);
+            font-size: 1.25rem !important;
+            /* Hero Values Large */
         }
 
         #market-analysis-table td:nth-child(3),
         #market-analysis-table td:nth-child(4) {
             color: #cbd5e1;
-            /* slate-300 */
+            font-weight: 400;
         }
 
         /* Special Values Helper Class */
@@ -750,14 +771,13 @@
 
         /* Allocation Text */
         #allocation-text {
-            text-align: center;
-            width: 100%;
-            display: block;
-            margin: 0 auto 48px auto;
+            text-align: center !important;
             font-family: 'Inter', sans-serif !important;
             font-style: italic;
-            font-size: 20px;
+            font-size: 22px !important;
+            /* Larger */
             color: white;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -1342,9 +1362,9 @@
                                 <tbody>
                                     <tr>
                                         <td>Total Cost</td>
-                                        <td class="u-cinzel-accent u-text-emerald">$200,000 (Fixed)</td>
-                                        <td class="u-cinzel-accent">$650,000+</td>
-                                        <td class="u-cinzel-accent">$350,000+</td>
+                                        <td class="u-text-emerald">$200,000 (Fixed)</td>
+                                        <td>$650,000+</td>
+                                        <td>$350,000+</td>
                                     </tr>
                                     <tr>
                                         <td>Time to Market</td>
@@ -1389,9 +1409,13 @@
                                     2. Atomic Development Breakdown</h2>
                                 <div style="height: 1px; background: rgba(255,255,255,0.1); flex: 1;"></div>
                             </div>
-                            <p id="allocation-text">
-                                Transparent allocation of <strong style="color: white;">925 hours</strong> across 5 key
-                                phases.</p>
+                            <div
+                                style="width: 100%; text-align: center; display: flex; justify-content: center; margin-bottom: 48px;">
+                                <p id="allocation-text" style="text-align: center !important; margin: 0;">
+                                    Transparent allocation of <strong style="color: white;">925 hours</strong> across 5
+                                    key phases.
+                                </p>
+                            </div>
 
                             <div
                                 style="display: flex; flex-direction: column; gap: 24px; max-width: 900px; margin: 0 auto;">

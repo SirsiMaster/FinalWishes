@@ -28,24 +28,68 @@
             color: #FFFFFF !important;
         }
 
-        /* Enforce White Text on these elements even if admin-layout tries to force dark */
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        p,
-        li,
-        span,
-        div,
-        strong,
-        td,
-        th {
-            color: inherit !important;
-            /* Allow cascading from body or specific classes */
+        /* ==========================================================================
+           CRITICAL SCOPED RESET: .contract-immersive-wrapper
+           Quarantines the contract page from the global admin-layout.css theme.
+           ========================================================================== */
+
+        /* 1. RESET TYPOGRAPHY & SPACING (Fixes "Crushed" Text) */
+        .contract-immersive-wrapper {
+            line-height: 1.6 !important;
+            font-family: 'Inter', sans-serif !important;
+            color: rgba(255, 255, 255, 0.9) !important;
         }
 
+        .contract-immersive-wrapper * {
+            box-sizing: border-box !important;
+        }
+
+        .contract-immersive-wrapper h1,
+        .contract-immersive-wrapper h2,
+        .contract-immersive-wrapper h3,
+        .contract-immersive-wrapper h4 {
+            line-height: 1.3 !important;
+            margin-bottom: 1rem !important;
+            color: inherit !important;
+            /* Let specific classes override color, but default to inherit */
+        }
+
+        .contract-immersive-wrapper p,
+        .contract-immersive-wrapper li,
+        .contract-immersive-wrapper span,
+        .contract-immersive-wrapper div {
+            line-height: inherit !important;
+            /* Prevent "crushed" 1.0 line-height */
+            color: inherit !important;
+        }
+
+        /* 2. RESET TABLES (Fixes Light Theme Borders & Colors) */
+        .contract-immersive-wrapper table {
+            border-collapse: separate !important;
+            border-spacing: 0 !important;
+            width: 100% !important;
+        }
+
+        .contract-immersive-wrapper td,
+        .contract-immersive-wrapper th {
+            color: inherit !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            /* Force Dark Mode Border */
+            padding: 1rem !important;
+            vertical-align: top !important;
+            /* Fix alignment */
+        }
+
+        /* 3. RESET GENERIC CARD STYLES (Fixes hidden backgrounds) */
+        .contract-immersive-wrapper .card,
+        .contract-immersive-wrapper .stat-card {
+            background: transparent !important;
+            /* Disable admin-layout white bg */
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 4. UTILITY HELPERS (Reinforce Tailwind) */
         .text-white {
             color: #ffffff !important;
         }
@@ -61,6 +105,14 @@
         .text-blue-300 {
             color: #93c5fd !important;
         }
+
+        .font-serif {
+            font-family: 'Georgia', serif !important;
+        }
+
+        /* Restore serif for quotes */
+
+        /* Rest of overrides... */
 
         /* Rest of overrides */
 

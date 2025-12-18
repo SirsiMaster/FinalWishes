@@ -543,6 +543,7 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             z-index: 1;
+            border-radius: 2.5rem !important;
         }
 
         .plan-card-anim:hover {
@@ -553,11 +554,35 @@
         }
 
         .plan-card-anim.selected-anim {
-            transform: scale(1.05);
+            transform: scale(1.02);
             border-color: #C8A951 !important;
             background: linear-gradient(135deg, rgba(200, 169, 81, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%) !important;
             box-shadow: 0 0 40px rgba(200, 169, 81, 0.2);
             z-index: 10;
+        }
+
+        /* PLAN CARD BUTTONS */
+        .select-plan-btn {
+            border-radius: 9999px !important;
+            background: linear-gradient(to right, #C8A951, #E2C76B) !important;
+            color: #000 !important;
+            font-weight: 700 !important;
+            box-shadow: 0 10px 15px -3px rgba(200, 169, 81, 0.2);
+        }
+
+        .select-plan-btn:hover {
+            box-shadow: 0 10px 25px -3px rgba(200, 169, 81, 0.4);
+            transform: scale(1.02);
+        }
+
+        /* Plan C green button */
+        #card-plan-c .select-plan-btn {
+            background: linear-gradient(to right, #10B981, #34D399) !important;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
+        }
+
+        #card-plan-c .select-plan-btn:hover {
+            box-shadow: 0 10px 25px -3px rgba(16, 185, 129, 0.4);
         }
 
         /* DOWNLOAD BUTTONS */
@@ -2471,7 +2496,7 @@
                             <!-- CARDS (Hyper-Modern) -->
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <!-- PLAN A -->
-                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
+                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 relative transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
                                     id="card-plan-a">
                                     <div
                                         class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -2512,7 +2537,7 @@
                                 </div>
 
                                 <!-- PLAN B -->
-                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
+                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 relative transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
                                     id="card-plan-b">
                                     <div
                                         class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -2560,7 +2585,7 @@
                                 </div>
 
                                 <!-- PLAN C -->
-                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 rounded-[2.5rem] relative overflow-hidden transition-all duration-500 hover:border-[#10B981]/50 hover:shadow-2xl hover:shadow-[#10B981]/10"
+                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 relative transition-all duration-500 hover:border-[#10B981]/50 hover:shadow-2xl hover:shadow-[#10B981]/10"
                                     id="card-plan-c">
                                     <div
                                         class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">

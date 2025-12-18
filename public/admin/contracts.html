@@ -639,7 +639,7 @@
                 <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative max-w-[1400px] mx-auto">
 
                     <!-- Title -->
-                    <div class="text-center max-w-4xl">
+                    <div class="text-center max-w-4xl mx-auto">
                         <h1 class="text-[#C8A951] mb-4 text-5xl md:text-6xl font-serif tracking-tight drop-shadow-2xl">
                             Technical Partnership Agreement
                         </h1>
@@ -1118,57 +1118,39 @@
 
                     <!-- TAB 2: COST -->
                     <div id="cost" class="tab-content">
-                        <!-- TOP STATS - PROPER HIERARCHY -->
-                        <div
-                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
-
-                            <!-- Gross Value -->
-                            <div
-                                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 1.5rem; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                                    True Market Value</div>
-                                <div
-                                    style="font-size: 14px; font-family: Cinzel, serif; color: #64748b; text-decoration: line-through; font-weight: 600;">
-                                    $650,000+</div>
-                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">"Big Law" Comparable
+                        <!-- TOP STATS - RESTORED ORIGINAL STYLING -->
+                        <div class="grid grid-cols-4 gap-6 mb-12">
+                            <!-- True Market Value -->
+                            <div class="bg-white/5 border border-white/10 p-6 text-center rounded">
+                                <div class="text-sm text-[#C8A951] uppercase tracking-widest mb-2">True Market Value
+                                </div>
+                                <div class="text-xl font-serif text-slate-400 line-through">$650k+</div>
+                                <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Big Law Comparable
                                 </div>
                             </div>
 
-                            <!-- Fixed Bid -->
+                            <!-- Fixed Bid Price - HERO -->
                             <div
-                                style="background: rgba(200,169,81,0.1); border: 1px solid #C8A951; padding: 1.5rem; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                                    Fixed Bid Price</div>
-                                <div
-                                    style="font-size: 14px; font-family: Cinzel, serif; color: white; font-weight: 700;">
-                                    $200,000</div>
+                                class="bg-[#C8A951]/10 border-2 border-[#C8A951] p-6 text-center rounded shadow-[0_0_30px_rgba(200,169,81,0.15)]">
+                                <div class="text-base text-[#C8A951] uppercase tracking-widest mb-2 font-semibold">Fixed
+                                    Bid Price</div>
+                                <div class="text-xl font-serif text-white font-bold">$200,000</div>
                             </div>
 
-                            <!-- Efficiency -->
-                            <div
-                                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 1.5rem; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                                    Sirsi Efficiency</div>
-                                <div
-                                    style="font-size: 14px; font-family: Cinzel, serif; color: #10b981; font-weight: 600;">
-                                    Included</div>
-                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">SOC 2, Auth, Vault
+                            <!-- Sirsi Efficiency -->
+                            <div class="bg-white/5 border border-white/10 p-6 text-center rounded">
+                                <div class="text-sm text-[#C8A951] uppercase tracking-widest mb-2">Sirsi Efficiency
+                                </div>
+                                <div class="text-xl font-serif text-emerald-400">Included</div>
+                                <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">SOC 2, Auth, Vault
                                     Core</div>
                             </div>
 
-                            <!-- Hours -->
-                            <div
-                                style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 1.5rem; text-align: center;">
-                                <div
-                                    style="font-size: 14px; color: #C8A951; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
-                                    Total Hours</div>
-                                <div
-                                    style="font-size: 14px; font-family: Cinzel, serif; color: white; font-weight: 600;">
-                                    925+</div>
-                                <div style="font-size: 12px; color: #64748b; margin-top: 0.25rem;">Direct Engineering
+                            <!-- Total Hours -->
+                            <div class="bg-white/5 border border-white/10 p-6 text-center rounded">
+                                <div class="text-sm text-[#C8A951] uppercase tracking-widest mb-2">Total Hours</div>
+                                <div class="text-xl font-serif text-white">925+</div>
+                                <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Direct Engineering
                                     Output</div>
                             </div>
                         </div>
@@ -1262,7 +1244,7 @@
                             <p class="text-center text-slate-400 mb-12 italic">Transparent allocation of <strong
                                     class="text-white">925 hours</strong> across 5 key phases.</p>
 
-                            <div class="space-y-6">
+                            <div class="space-y-6 max-w-4xl mx-auto">
                                 <!-- PHASE 0 -->
                                 <div
                                     class="group border border-white/10 rounded-lg bg-white/5 hover:border-[#C8A951]/50 transition-all duration-300">

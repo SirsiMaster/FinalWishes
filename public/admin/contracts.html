@@ -2482,152 +2482,140 @@
                         </button>
 
                         <!-- STEP 1: PLAN SELECTION -->
-                        <div id="selection-phase" class="mb-24 mt-12 w-full max-w-6xl mx-auto">
-                            <!-- HEADER (Aligned) -->
-                            <div class="text-center mb-12">
-                                <h2
-                                    class="font-serif text-3xl text-[#C8A951] mb-6 uppercase tracking-[0.2em] drop-shadow-md">
-                                    Step 1: Select Your Partnership Plan</h2>
-                                <p class="text-slate-400 max-w-2xl mx-auto font-light leading-relaxed text-sm">Please
-                                    choose a financial
-                                    structure below to live-amend the agreement. You will be able to review and sign
-                                    once a
-                                    selection is made.</p>
-                            </div>
+                        <div id="selection-phase"
+                            style="margin-bottom: 64px; margin-top: 48px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                            <h2
+                                style="text-align: center; font-family: Cinzel, serif; font-size: 28px; color: #C8A951; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.15em;">
+                                Step 1: Select Your Partnership Plan</h2>
+                            <p
+                                style="text-align: center; color: #94a3b8; margin-bottom: 48px; max-width: 600px; margin-left: auto; margin-right: auto; font-size: 14px; line-height: 1.6;">
+                                Please choose a financial structure below to live-amend the agreement. You will be able
+                                to review and sign once a selection is made.</p>
 
-                            <!-- CARDS (Hyper-Modern) -->
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
                                 <!-- PLAN A -->
-                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 relative transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
-                                    id="card-plan-a">
+                                <div id="card-plan-a" class="plan-card-static"
+                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;"
+                                    onmouseover="this.style.borderColor='#C8A951'; this.style.boxShadow='0 0 30px rgba(200,169,81,0.2)';"
+                                    onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.boxShadow='none';">
+                                    <h3
+                                        style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
+                                        Plan A</h3>
+                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">50/50 Split</p>
+
                                     <div
-                                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                    </div>
-
-                                    <div class="flex-grow">
-                                        <div class="flex justify-between items-start mb-8">
-                                            <h4 class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">PLAN
-                                                A</h4>
-                                            <div class="h-1 w-8 bg-[#C8A951] rounded-full"></div>
+                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $100,000</div>
+                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
                                         </div>
-
-                                        <div class="space-y-8">
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                                                    Signing</div>
-                                                <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
-                                            </div>
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                                                    Launch</div>
-                                                <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
-                                            </div>
+                                        <div>
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $100,000</div>
+                                            <div style="font-size: 14px; color: white;">Due at Launch</div>
                                         </div>
                                     </div>
 
-                                    <div class="mt-12">
-                                        <div class="flex justify-between items-center mb-6 px-1">
-                                            <span class="text-[10px] uppercase tracking-widest text-white/40">Total
-                                                Value</span>
-                                            <span class="text-white font-serif tracking-wider">$200k</span>
-                                        </div>
-                                        <button onclick="selectContractPlan('Plan A', this)"
-                                            class="w-full py-4 rounded-full bg-gradient-to-r from-[#C8A951] to-[#E2C76B] text-black font-bold text-xs uppercase tracking-[0.25em] shadow-lg shadow-[#C8A951]/20 hover:shadow-[#C8A951]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 select-plan-btn">
+                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                                        <div style="font-size: 14px; color: white; margin-bottom: 0.5rem;">Total</div>
+                                        <div
+                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1.5rem;">
+                                            $200,000</div>
+                                        <button onclick="selectContractPlan('Plan A', this)" class="select-plan-btn"
+                                            style="width: 100%; padding: 14px 24px; background: linear-gradient(to right, #C8A951, #E2C76B); color: #000; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">
                                             Select Plan
                                         </button>
                                     </div>
                                 </div>
 
                                 <!-- PLAN B -->
-                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 relative transition-all duration-500 hover:border-[#C8A951]/50 hover:shadow-2xl hover:shadow-[#C8A951]/10"
-                                    id="card-plan-b">
+                                <div id="card-plan-b" class="plan-card-static"
+                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;"
+                                    onmouseover="this.style.borderColor='#C8A951'; this.style.boxShadow='0 0 30px rgba(200,169,81,0.2)';"
+                                    onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.boxShadow='none';">
+                                    <h3
+                                        style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
+                                        Plan B</h3>
+                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Trimester Payments
+                                    </p>
+
                                     <div
-                                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                    </div>
-
-                                    <div class="flex-grow">
-                                        <div class="flex justify-between items-start mb-8">
-                                            <h4 class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">PLAN
-                                                B</h4>
-                                            <div
-                                                class="h-1 w-8 bg-white/10 rounded-full group-hover:bg-[#C8A951] transition-colors duration-500">
-                                            </div>
+                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $66,666.66</div>
+                                            <div style="font-size: 14px; color: white;">Due at Signing</div>
                                         </div>
-
-                                        <div class="space-y-6">
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-1">
-                                                    Signing</div>
-                                                <div class="text-white text-4xl font-thin tracking-tight">$66.6k</div>
-                                            </div>
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-1">
-                                                    Month 2</div>
-                                                <div class="text-white text-4xl font-thin tracking-tight">$66.6k</div>
-                                            </div>
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-1">
-                                                    Month 4</div>
-                                                <div class="text-white text-4xl font-thin tracking-tight">$66.6k</div>
-                                            </div>
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $66,666.67</div>
+                                            <div style="font-size: 14px; color: white;">Due Month 2</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $66,666.67</div>
+                                            <div style="font-size: 14px; color: white;">Due Month 4</div>
                                         </div>
                                     </div>
 
-                                    <div class="mt-12">
-                                        <div class="flex justify-between items-center mb-6 px-1">
-                                            <span class="text-[10px] uppercase tracking-widest text-white/40">Total
-                                                Value</span>
-                                            <span class="text-white font-serif tracking-wider">$200k</span>
-                                        </div>
-                                        <button onclick="selectContractPlan('Plan B', this)"
-                                            class="w-full py-4 rounded-full bg-gradient-to-r from-[#C8A951] to-[#E2C76B] text-black font-bold text-xs uppercase tracking-[0.25em] shadow-lg shadow-[#C8A951]/20 hover:shadow-[#C8A951]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 select-plan-btn">
+                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                                        <div style="font-size: 14px; color: white; margin-bottom: 0.5rem;">Total</div>
+                                        <div
+                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1.5rem;">
+                                            $200,000</div>
+                                        <button onclick="selectContractPlan('Plan B', this)" class="select-plan-btn"
+                                            style="width: 100%; padding: 14px 24px; background: linear-gradient(to right, #C8A951, #E2C76B); color: #000; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">
                                             Select Plan
                                         </button>
                                     </div>
                                 </div>
 
                                 <!-- PLAN C -->
-                                <div class="plan-card-static plan-card-anim group flex flex-col bg-black/80 backdrop-blur-xl border border-white/10 p-10 relative transition-all duration-500 hover:border-[#10B981]/50 hover:shadow-2xl hover:shadow-[#10B981]/10"
-                                    id="card-plan-c">
+                                <div id="card-plan-c" class="plan-card-static"
+                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;"
+                                    onmouseover="this.style.borderColor='#C8A951'; this.style.boxShadow='0 0 30px rgba(200,169,81,0.2)';"
+                                    onmouseout="this.style.borderColor='rgba(255,255,255,0.15)'; this.style.boxShadow='none';">
+                                    <h3
+                                        style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
+                                        Plan C</h3>
+                                    <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Partnership +
+                                        Equity</p>
+
                                     <div
-                                        class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                    </div>
-
-                                    <div class="flex-grow">
-                                        <div class="flex justify-between items-start mb-8">
-                                            <h4 class="text-white/50 text-sm font-bold uppercase tracking-[0.3em]">PLAN
-                                                C</h4>
-                                            <div class="h-1 w-8 bg-[#10B981] rounded-full"></div>
+                                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $75,000</div>
+                                            <div style="font-size: 14px; color: white;">Due at Close</div>
                                         </div>
-
-                                        <div class="space-y-8">
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                                                    Cash Deposit</div>
-                                                <div class="text-white text-5xl font-thin tracking-tight">$75k</div>
-                                            </div>
-                                            <div>
-                                                <div class="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-                                                    Follow-ups</div>
-                                                <div class="text-white text-5xl font-thin tracking-tight">$100k</div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <div class="text-[10px] uppercase tracking-widest text-[#10B981] mb-2">
-                                                    Equity Stake</div>
-                                                <div class="text-[#10B981] text-4xl font-light tracking-tight">2.5%
-                                                </div>
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $50,000</div>
+                                            <div style="font-size: 14px; color: white;">Follow-up 1</div>
+                                        </div>
+                                        <div style="margin-bottom: 1rem;">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                $50,000</div>
+                                            <div style="font-size: 14px; color: white;">Follow-up 2</div>
+                                        </div>
+                                        <div
+                                            style="background: rgba(200,169,81,0.1); padding: 0.75rem; border: 1px solid rgba(200,169,81,0.3);">
+                                            <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
+                                                2.5% Equity</div>
+                                            <div style="font-size: 14px; color: white;">Stake in FinalWishes Platform
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="mt-12">
-                                        <div class="flex justify-between items-center mb-6 px-1">
-                                            <span class="text-[10px] uppercase tracking-widest text-white/40">Cash
-                                                Value</span>
-                                            <span class="text-white font-serif tracking-wider">$175k</span>
+                                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                                        <div style="font-size: 14px; color: white; margin-bottom: 0.5rem;">Cash Total
                                         </div>
-                                        <button onclick="selectContractPlan('Plan C', this)"
-                                            class="w-full py-4 rounded-full bg-gradient-to-r from-[#10B981] to-[#34D399] text-black font-bold text-xs uppercase tracking-[0.25em] shadow-lg shadow-[#10B981]/20 hover:shadow-[#10B981]/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 select-plan-btn">
+                                        <div
+                                            style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1.5rem;">
+                                            $175,000</div>
+                                        <button onclick="selectContractPlan('Plan C', this)" class="select-plan-btn"
+                                            style="width: 100%; padding: 14px 24px; background: linear-gradient(to right, #C8A951, #E2C76B); color: #000; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">
                                             Select Plan
                                         </button>
                                     </div>

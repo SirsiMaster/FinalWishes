@@ -20,101 +20,7 @@
     <!-- Admin Layout Styles -->
     <link rel="stylesheet" href="../assets/css/admin-layout.css">
     <style>
-        /* CRITICAL: FORCE DARK ROYAL THEME (Overrides admin-layout.css) */
-        body {
-            background: radial-gradient(circle at 50% 0%, #2563eb 0%, #1e3a8a 40%, #0f172a 80%) !important;
-            background-color: #0f172a !important;
-            background-attachment: fixed !important;
-            color: #FFFFFF !important;
-        }
-
-        /* ==========================================================================
-           CRITICAL SCOPED RESET: .contract-immersive-wrapper
-           Quarantines the contract page from the global admin-layout.css theme.
-           ========================================================================== */
-
-        /* 1. RESET TYPOGRAPHY & SPACING (Fixes "Crushed" Text) */
-        .contract-immersive-wrapper {
-            line-height: 1.6 !important;
-            font-family: 'Inter', sans-serif !important;
-            color: rgba(255, 255, 255, 0.9) !important;
-        }
-
-        .contract-immersive-wrapper * {
-            box-sizing: border-box !important;
-        }
-
-        .contract-immersive-wrapper h1,
-        .contract-immersive-wrapper h2,
-        .contract-immersive-wrapper h3,
-        .contract-immersive-wrapper h4 {
-            line-height: 1.3 !important;
-            margin-bottom: 1rem !important;
-            color: inherit !important;
-            /* Let specific classes override color, but default to inherit */
-        }
-
-        .contract-immersive-wrapper p,
-        .contract-immersive-wrapper li,
-        .contract-immersive-wrapper span,
-        .contract-immersive-wrapper div {
-            line-height: inherit !important;
-            /* Prevent "crushed" 1.0 line-height */
-            color: inherit !important;
-        }
-
-        /* 2. RESET TABLES (Fixes Light Theme Borders & Colors) */
-        .contract-immersive-wrapper table {
-            border-collapse: separate !important;
-            border-spacing: 0 !important;
-            width: 100% !important;
-        }
-
-        .contract-immersive-wrapper td,
-        .contract-immersive-wrapper th {
-            color: inherit !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-            /* Force Dark Mode Border */
-            padding: 1rem !important;
-            vertical-align: top !important;
-            /* Fix alignment */
-        }
-
-        /* 3. RESET GENERIC CARD STYLES (Fixes hidden backgrounds) */
-        .contract-immersive-wrapper .card,
-        .contract-immersive-wrapper .stat-card {
-            background: transparent !important;
-            /* Disable admin-layout white bg */
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        /* 4. UTILITY HELPERS (Reinforce Tailwind) */
-        .text-white {
-            color: #ffffff !important;
-        }
-
-        .text-gray-200 {
-            color: #e5e7eb !important;
-        }
-
-        .text-gray-400 {
-            color: #9ca3af !important;
-        }
-
-        .text-blue-300 {
-            color: #93c5fd !important;
-        }
-
-        .font-serif {
-            font-family: 'Georgia', serif !important;
-        }
-
-        /* Restore serif for quotes */
-
-        /* Rest of overrides... */
-
-        /* Rest of overrides */
+        /* CONTRACT WRAPPER OVERRIDES REMOVED */
 
         /* Ensure table text is readable */
         td,
@@ -179,41 +85,26 @@
         }
 
         .neo-glass-panel {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-radius: 8px !important;
-        }
-
-        /* RESTITUTION OF PRIMARY OBJECTIVE STYLING */
-        /* Overrides the generic neo-glass-panel !important rules */
-        .neo-glass-gold {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(245, 158, 11, 0.3) !important;
-            /* amber-500/30 */
-            box-shadow: 0 10px 15px -3px rgba(120, 53, 15, 0.2), 0 4px 6px -2px rgba(120, 53, 15, 0.1) !important;
-            /* shadow-amber-900/20 */
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
         }
 
         .neo-stat-card-base {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-radius: 8px !important;
-            padding: 32px 24px !important;
-            text-align: center !important;
-        }
-
-        /* Ensure main content is transparent so body gradient shows */
-        .main-content {
-            background: transparent !important;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 32px 24px;
+            text-align: center;
         }
 
         .neo-stat-card-hero {
-            background: rgba(200, 169, 81, 0.08) !important;
-            border: 2px solid #C8A951 !important;
-            border-radius: 8px !important;
-            padding: 32px 24px !important;
-            text-align: center !important;
-            box-shadow: 0 0 40px rgba(200, 169, 81, 0.15) !important;
+            background: rgba(200, 169, 81, 0.08);
+            border: 2px solid #C8A951;
+            border-radius: 8px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(200, 169, 81, 0.15);
         }
 
         .neo-section-divider {
@@ -223,56 +114,56 @@
         }
 
         .neo-section-title {
-            font-size: 28px !important;
-            font-family: 'Cinzel', serif !important;
-            color: #C8A951 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.15em !important;
+            font-size: 28px;
+            font-family: 'Cinzel', serif;
+            color: #C8A951;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
         }
 
         /* ATOMIC PHASE CARDS */
         .neo-phase-card {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-radius: 12px !important;
-            overflow: hidden !important;
-            margin-bottom: 24px !important;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
         }
 
         .neo-phase-header {
-            padding: 24px 32px !important;
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            cursor: pointer !important;
-            background: rgba(255, 255, 255, 0.03) !important;
-            transition: background 0.2s !important;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            transition: background 0.2s;
         }
 
         .neo-phase-header:hover {
-            background: rgba(255, 255, 255, 0.08) !important;
+            background: rgba(255, 255, 255, 0.08);
             /* slight hover effect */
         }
 
         .neo-phase-number {
-            height: 48px !important;
-            width: 48px !important;
-            border-radius: 4px !important;
-            background: rgba(200, 169, 81, 0.1) !important;
-            border: 1px solid #C8A951 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #C8A951 !important;
-            font-family: 'Cinzel', serif !important;
-            font-weight: bold !important;
-            font-size: 20px !important;
+            height: 48px;
+            width: 48px;
+            border-radius: 4px;
+            background: rgba(200, 169, 81, 0.1);
+            border: 1px solid #C8A951;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #C8A951;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 20px;
         }
 
         .neo-phase-content {
-            border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding: 24px 32px !important;
-            background: rgba(0, 0, 0, 0.2) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px 32px;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         /*
@@ -993,26 +884,20 @@
                             <div class="col-span-12">
                                 <!-- HEADER -->
                                 <div class="border-b border-white/10 pb-8 mb-12 text-center">
-                                    <h2 class="text-4xl neo-text-gold mb-8 font-serif">Statement of Work (SOW)</h2>
-                                    <div
-                                        class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm font-mono text-blue-300 max-w-5xl mx-auto">
-                                        <div class="text-center md:text-left"><strong
-                                                class="text-white block md:inline">Project:</strong> <span
-                                                class="block md:inline">FinalWishes Platform</span></div>
-                                        <div class="text-center"><strong class="text-white">Date:</strong> December 17,
-                                            2025</div>
-                                        <div class="text-center"><strong class="text-white">Ref:</strong> SOW-2025-001
-                                        </div>
-                                        <div class="text-center md:text-right"><strong class="text-white">MSA:</strong>
-                                            MSA-2025-111-FW</div>
+                                    <h2 class="text-4xl text-[#C8A951] mb-6 font-serif">Statement of Work (SOW)</h2>
+                                    <div class="flex flex-wrap justify-center gap-8 text-sm font-mono text-blue-300">
+                                        <div><strong class="text-white">Project:</strong> FinalWishes Platform
+                                            Development</div>
+                                        <div><strong class="text-white">Date:</strong> December 17, 2025</div>
+                                        <div><strong class="text-white">Ref:</strong> SOW-2025-001</div>
+                                        <div><strong class="text-white">MSA:</strong> MSA-2025-111-FW</div>
                                     </div>
                                 </div>
 
                                 <!-- 1. EXECUTIVE OVERVIEW -->
                                 <h2
-                                    class="neo-text-gold mt-12 mb-8 text-3xl font-bold uppercase tracking-widest text-center font-cinzel">
-                                    1. Executive Overview
-                                </h2>
+                                    class="text-[#C8A951] mt-12 mb-8 text-3xl font-extrabold uppercase tracking-widest text-center">
+                                    1. Executive Overview</h2>
 
                                 <p class="mb-8 text-lg leading-relaxed text-gray-200 max-w-4xl mx-auto">This Statement
                                     of Work
@@ -1034,11 +919,11 @@
 
                                 <!-- OBJECTIVE BAR (GOLD BOX) -->
                                 <div
-                                    class="neo-glass-panel neo-glass-gold py-12 px-8 mb-16 text-center relative max-w-4xl mx-auto border border-amber-500/20 shadow-lg shadow-amber-900/10">
+                                    class="neo-glass-panel py-12 px-8 mb-16 text-center relative max-w-4xl mx-auto border border-amber-500/20 shadow-lg shadow-amber-900/10">
                                     <div
                                         class="uppercase tracking-[0.25em] neo-text-gold text-xs font-bold mb-6 opacity-90">
                                         Primary Objective</div>
-                                    <p
+                                    <h3
                                         class="mb-0 text-white text-2xl max-w-3xl mx-auto leading-relaxed font-serif italic font-light">
                                         "Deliver a dual-purpose platform that empowers the Living to <span
                                             class="neo-text-gold not-italic font-medium border-b border-amber-500/30 pb-0.5">Curate
@@ -1047,7 +932,7 @@
                                             class="neo-text-gold not-italic font-medium border-b border-amber-500/30 pb-0.5">Automate
                                             the Estate</span> (Probate &
                                         Assets)."
-                                    </p>
+                                    </h3>
                                 </div>
 
                                 <!-- 2. DETAILED SCOPE -->

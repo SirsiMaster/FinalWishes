@@ -156,21 +156,21 @@
         }
 
         #cost .stat-card.contract-stat>div:first-child {
-            /* Label */
+            /* Label - LARGER for readability */
             font-family: 'Inter', sans-serif !important;
-            font-size: 11px !important;
-            font-weight: 700 !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
             text-transform: uppercase !important;
-            letter-spacing: 0.1em !important;
+            letter-spacing: 0.08em !important;
             color: #C8A951 !important;
             margin-bottom: 0.5rem !important;
         }
 
         #cost .stat-card.contract-stat>div:nth-child(2) {
-            /* Main Value */
+            /* Main Value - proportional */
             font-family: 'Cinzel', serif !important;
-            font-size: 28px !important;
-            font-weight: 600 !important;
+            font-size: 24px !important;
+            font-weight: 500 !important;
             color: white !important;
             line-height: 1.2 !important;
         }
@@ -178,10 +178,10 @@
         #cost .stat-card.contract-stat>div:last-child:not(:nth-child(2)) {
             /* Sublabel */
             font-family: 'Inter', sans-serif !important;
-            font-size: 10px !important;
+            font-size: 12px !important;
             text-transform: uppercase !important;
             letter-spacing: 0.05em !important;
-            color: #64748b !important;
+            color: #94a3b8 !important;
             margin-top: 0.25rem !important;
         }
 
@@ -222,30 +222,28 @@
             color: white !important;
         }
 
-        /* DISCOUNT REALIZATION BOX - Strict Layout */
+        /* DISCOUNT REALIZATION BOX - Balanced Professional Layout */
         #cost .discount-box-container {
-            background: rgba(0, 0, 0, 0.5) !important;
-            border: 2px solid #C8A951 !important;
-            padding: 2.5rem !important;
-            max-width: 700px !important;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(200, 169, 81, 0.5) !important;
+            padding: 2rem !important;
+            max-width: 600px !important;
             margin: 0 auto !important;
         }
 
         #cost .discount-box-container .discount-label {
-            font-family: 'Cinzel', serif !important;
-            font-size: 14px !important;
-            font-weight: 600 !important;
-            color: #C8A951 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.1em !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            color: #e2e8f0 !important;
             text-align: left !important;
         }
 
         #cost .discount-box-container .discount-value {
             font-family: 'Cinzel', serif !important;
-            font-size: 24px !important;
+            font-size: 20px !important;
             font-weight: 500 !important;
-            color: white !important;
+            color: #C8A951 !important;
             text-align: right !important;
         }
 
@@ -256,17 +254,17 @@
         }
 
         #cost .discount-box-container .discount-final-label {
-            font-family: 'Cinzel', serif !important;
-            font-size: 20px !important;
-            color: #C8A951 !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 18px !important;
+            font-weight: 600 !important;
+            color: #e2e8f0 !important;
         }
 
         #cost .discount-box-container .discount-final-value {
             font-family: 'Cinzel', serif !important;
-            font-size: 48px !important;
-            font-weight: 700 !important;
-            color: white !important;
-            text-shadow: 0 0 30px rgba(200, 169, 81, 0.4) !important;
+            font-size: 32px !important;
+            font-weight: 600 !important;
+            color: #C8A951 !important;
         }
 
         /* PARTNERSHIP PLAN CARDS */
@@ -614,17 +612,6 @@
 
                 <!-- Header Component -->
                 <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative max-w-[1400px] mx-auto">
-                    <!-- Back Link (Positioned Safe) -->
-                    <div class="w-full flex justify-start mb-8">
-                        <a href="dashboard.html"
-                            class="text-[#C8A951] hover:text-white flex items-center gap-2 transition-all group uppercase tracking-widest text-xs font-bold border border-[#C8A951]/30 px-6 py-3 rounded-sm hover:bg-[#C8A951]/10">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" class="group-hover:-translate-x-1 transition-transform">
-                                <path d="M19 12H5M12 19l-7-7 7-7" />
-                            </svg>
-                            Back to Dashboard
-                        </a>
-                    </div>
 
                     <!-- Title -->
                     <div class="text-center max-w-4xl">
@@ -1632,12 +1619,18 @@
                                             <td class="p-5 font-serif text-[#C8A951]">$1.50/check</td>
                                             <td class="p-5">Fraud prevention</td>
                                         </tr>
+                                        <tr>
+                                            <td class="p-5 font-bold text-white">Maintenance</td>
+                                            <td class="p-5">111 Venture Studio</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$1,500/mo</td>
+                                            <td class="p-5">Ongoing support, updates, monitoring</td>
+                                        </tr>
                                     </tbody>
                                     <tfoot class="bg-[#C8A951]/10">
                                         <tr>
                                             <td colspan="4"
                                                 class="p-5 text-center font-bold text-[#C8A951] uppercase tracking-widest text-lg">
-                                                Total Estimated OpEx: ~$60/month + Usage
+                                                Total Estimated OpEx: ~$1,560/month + Usage
                                             </td>
                                         </tr>
                                     </tfoot>

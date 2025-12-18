@@ -3731,20 +3731,76 @@
             btn.innerHTML = '<svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...';
             btn.disabled = true;
 
+            // Clone the document and apply print-friendly styles
+            const clone = contractDoc.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            clone.style.top = '0';
+            clone.style.width = '800px';
+            clone.style.background = '#FFFFFF';
+            clone.style.backdropFilter = 'none';
+            clone.style.color = '#1e293b';
+            clone.style.padding = '40px';
+            clone.style.border = 'none';
+            clone.style.boxShadow = 'none';
+
+            // Apply print-friendly colors to all child elements
+            clone.querySelectorAll('*').forEach(el => {
+                const computed = window.getComputedStyle(el);
+                // Fix transparent/semi-transparent backgrounds
+                if (computed.backgroundColor.includes('rgba') || computed.backgroundColor === 'transparent') {
+                    el.style.backgroundColor = 'transparent';
+                }
+                // Make text dark for print
+                if (el.tagName !== 'BUTTON' && el.tagName !== 'A') {
+                    const color = computed.color;
+                    if (color.includes('rgba(255') || color === 'white' || color === 'rgb(255, 255, 255)') {
+                        el.style.color = '#1e293b';
+                    }
+                }
+                // Remove backdrop filters
+                el.style.backdropFilter = 'none';
+                el.style.webkitBackdropFilter = 'none';
+            });
+
+            // Style headers for print
+            clone.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(h => {
+                h.style.color = '#0f172a';
+            });
+
+            // Gold accents stay gold
+            clone.querySelectorAll('[style*="C8A951"]').forEach(el => {
+                el.style.color = '#b8860b';
+            });
+
+            // Remove any duplicate elements (step labels, acknowledgment blocks)
+            const elementsToRemove = clone.querySelectorAll('#step-1-label, #msa-acknowledgment-block, #selection-phase, #pricing-selection-phase, .step-3-execution');
+            elementsToRemove.forEach(el => el.remove());
+
+            document.body.appendChild(clone);
+
             const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5],
+                margin: [0.75, 0.75, 0.75, 0.75],
                 filename: 'Legacy_Estate_OS_Master_Services_Agreement.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                image: { type: 'jpeg', quality: 0.95 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#FFFFFF',
+                    logging: false,
+                    letterRendering: true
+                },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            html2pdf().set(opt).from(contractDoc).save().then(() => {
+            html2pdf().set(opt).from(clone).save().then(() => {
+                document.body.removeChild(clone);
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }).catch(err => {
                 console.error('PDF generation error:', err);
+                document.body.removeChild(clone);
                 btn.innerHTML = originalText;
                 btn.disabled = false;
                 alert('Error generating PDF. Please try again.');

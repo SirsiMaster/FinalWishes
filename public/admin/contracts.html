@@ -1293,50 +1293,72 @@
                         </div>
 
                         <!-- 3. DISCOUNT REALIZATION WATERFALL -->
-                        <div class="mb-24 relative">
+                        <div class="mb-32 relative">
+                            <!-- Background Glow -->
                             <div
-                                class="absolute inset-0 bg-gradient-to-r from-transparent via-[#C8A951]/5 to-transparent blur-3xl">
+                                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#C8A951]/10 blur-[100px] rounded-full">
                             </div>
-                            <div
-                                class="relative bg-black/40 p-10 rounded-xl border border-[#C8A951]/20 max-w-4xl mx-auto backdrop-blur-md">
+
+                            <div class="relative max-w-5xl mx-auto">
                                 <h2
-                                    class="text-center mb-10 text-3xl font-serif text-[#C8A951] uppercase tracking-widest border-b border-white/5 pb-6">
+                                    class="text-center mb-12 text-4xl font-serif text-[#C8A951] uppercase tracking-[0.2em] drop-shadow-lg">
                                     3. Discount Realization</h2>
 
-                                <div class="space-y-6 font-serif max-w-2xl mx-auto">
-                                    <div
-                                        class="flex justify-between items-center text-slate-300 text-lg border-b border-white/10 pb-4">
-                                        <span class="tracking-wide">Gross Market Value (Agency Average)</span>
-                                        <span class="font-bold text-white">$450,000</span>
-                                    </div>
-
-                                    <div class="flex justify-between items-center text-emerald-400 text-lg">
-                                        <div class="flex items-center gap-2">
-                                            <span
-                                                class="bg-emerald-500/10 p-1 rounded text-xs px-2 border border-emerald-500/20">EFFICIENCY</span>
-                                            <span>SirsiNexus Asset Efficiency</span>
+                                <div
+                                    class="bg-black/60 border border-[#C8A951]/30 backdrop-blur-xl rounded-sm p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                                    <!-- Header -->
+                                    <div class="flex justify-between items-end border-b-2 border-[#C8A951] pb-6 mb-8">
+                                        <div>
+                                            <div class="text-sm text-[#C8A951] uppercase tracking-widest mb-1">Market
+                                                Standard</div>
+                                            <div class="text-3xl text-slate-200 font-serif">Gross Market Value</div>
                                         </div>
-                                        <span>-$150,000</span>
+                                        <div
+                                            class="text-5xl text-slate-500 font-bold decoration-red-500/50 line-through decoration-4">
+                                            $450,000</div>
                                     </div>
 
-                                    <div
-                                        class="flex justify-between items-center text-emerald-400 text-lg border-b border-white/10 pb-4">
-                                        <div class="flex items-center gap-2">
-                                            <span
-                                                class="bg-emerald-500/10 p-1 rounded text-xs px-2 border border-emerald-500/20">PARTNER</span>
-                                            <span>"Project 111" Partnership Credit</span>
+                                    <!-- Discounts -->
+                                    <div class="space-y-6 mb-12">
+                                        <div
+                                            class="flex justify-between items-center p-6 bg-emerald-900/10 border border-emerald-500/20 rounded-lg hover:bg-emerald-900/20 transition-colors group">
+                                            <div class="flex items-center gap-6">
+                                                <div
+                                                    class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 font-bold px-4 py-2 text-sm uppercase tracking-wider rounded-sm shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                                    Efficiency</div>
+                                                <span
+                                                    class="text-2xl text-emerald-300 font-serif group-hover:text-emerald-200 transition-colors">SirsiNexus
+                                                    Asset Efficiency</span>
+                                            </div>
+                                            <span class="text-3xl text-emerald-400 font-mono font-bold">-$150,000</span>
                                         </div>
-                                        <span>-$100,000</span>
+
+                                        <div
+                                            class="flex justify-between items-center p-6 bg-emerald-900/10 border border-emerald-500/20 rounded-lg hover:bg-emerald-900/20 transition-colors group">
+                                            <div class="flex items-center gap-6">
+                                                <div
+                                                    class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 font-bold px-4 py-2 text-sm uppercase tracking-wider rounded-sm shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                                    Partner</div>
+                                                <span
+                                                    class="text-2xl text-emerald-300 font-serif group-hover:text-emerald-200 transition-colors">"Project
+                                                    111" Partnership Credit</span>
+                                            </div>
+                                            <span class="text-3xl text-emerald-400 font-mono font-bold">-$100,000</span>
+                                        </div>
                                     </div>
 
-                                    <div class="flex justify-between items-center pt-6">
-                                        <span class="text-[#C8A951] text-xl uppercase tracking-widest font-bold">Net
-                                            Contract Price</span>
-                                        <div class="text-right">
-                                            <div class="text-5xl font-bold text-white leading-none">$200,000</div>
-                                            <div class="text-xs text-[#C8A951] uppercase tracking-wider mt-1">Fixed Bid
+                                    <!-- Total -->
+                                    <div class="flex justify-between items-center pt-10 border-t border-white/10">
+                                        <div class="text-right flex-1 pr-12">
+                                            <div
+                                                class="text-[#C8A951] uppercase tracking-[0.2em] mb-2 font-bold text-lg">
+                                                Net Contract Price</div>
+                                            <div class="text-base text-slate-400 font-serif italic">Fixed Bid Execution
                                             </div>
                                         </div>
+                                        <div
+                                            class="text-7xl font-bold text-white drop-shadow-[0_0_25px_rgba(200,169,81,0.6)] font-serif border-l-2 border-[#C8A951] pl-12">
+                                            $200,000</div>
                                     </div>
                                 </div>
                             </div>
@@ -1425,109 +1447,127 @@
                         </div>
 
                         <!-- 5. PARTNERSHIP PLANS -->
-                        <div class="mt-24 pt-12 border-t border-white/10">
-                            <h2 class="text-center mb-16 text-4xl font-serif text-[#C8A951]">5. Select Your Partnership
-                                Plan</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto px-4">
+                        <!-- 5. PARTNERSHIP PLANS -->
+                        <div class="mt-32 pt-16 border-t border-[#C8A951]/30">
+                            <h2 class="text-center mb-20 text-5xl font-serif text-[#C8A951] drop-shadow-md">5. Select
+                                Your Partnership Plan</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-[1400px] mx-auto px-6">
 
                                 <!-- PLAN A -->
                                 <div
-                                    class="p-8 rounded-xl border border-white/10 bg-white/5 hover:border-[#C8A951]/50 transition-all group relative overflow-hidden backdrop-blur-sm flex flex-col">
-                                    <div class="flex-1">
-                                        <h3 class="text-2xl text-white font-bold mb-3 font-serif">Plan A: Standard Split
-                                        </h3>
-                                        <div
-                                            class="text-[#C8A951] text-base font-mono mb-8 bg-[#C8A951]/10 inline-block px-3 py-1 rounded border border-[#C8A951]/20">
-                                            50% / 50%</div>
-                                        <ul class="text-base text-slate-300 space-y-4 mb-10">
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$100,000</strong> due
-                                                    at Signing</div>
-                                            </li>
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$100,000</strong> due
-                                                    at Beta Launch</div>
-                                            </li>
-                                            <li class="flex items-start gap-3 border-t border-white/10 pt-3"><span
-                                                    class="text-[#C8A951] mt-1">➤</span>
-                                                <div class="font-bold text-white">Total Cash: $200,000</div>
-                                            </li>
-                                        </ul>
+                                    class="bg-white/5 border border-white/10 hover:border-[#C8A951] p-8 rounded-sm transition-all duration-300 group flex flex-col hover:-translate-y-2">
+                                    <div class="mb-8 border-b border-white/10 pb-6">
+                                        <h3 class="text-3xl text-white font-serif mb-2">Plan A</h3>
+                                        <div class="text-slate-400 uppercase tracking-widest text-sm">Standard Split
+                                        </div>
                                     </div>
+
+                                    <ul class="space-y-6 flex-1 mb-10">
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45"></div>
+                                            <div class="text-xl text-slate-200"><strong
+                                                    class="text-white">$100,000</strong> due at Signing</div>
+                                        </li>
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45"></div>
+                                            <div class="text-xl text-slate-200"><strong
+                                                    class="text-white">$100,000</strong> due at Launch</div>
+                                        </li>
+                                        <li class="mt-8 pt-6 border-t border-white/10">
+                                            <div class="text-sm text-slate-400 uppercase tracking-wider mb-1">Total Cash
+                                            </div>
+                                            <div class="text-4xl text-white font-serif">$200,000</div>
+                                        </li>
+                                    </ul>
+
                                     <button onclick="selectPlan('Plan A')"
-                                        class="w-full py-4 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-widest text-sm transition-all rounded">
+                                        class="w-full py-5 border border-[#C8A951]/50 text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-[0.2em] transition-all text-lg">
                                         Select Plan A
                                     </button>
                                 </div>
 
                                 <!-- PLAN B -->
                                 <div
-                                    class="p-8 rounded-xl border border-white/10 bg-white/5 hover:border-[#C8A951]/50 transition-all group relative overflow-hidden backdrop-blur-sm flex flex-col">
-                                    <div class="flex-1">
-                                        <h3 class="text-2xl text-white font-bold mb-3 font-serif">Plan B: Trimester</h3>
-                                        <div
-                                            class="text-[#C8A951] text-base font-mono mb-8 bg-[#C8A951]/10 inline-block px-3 py-1 rounded border border-[#C8A951]/20">
-                                            33% / 33% / 33%</div>
-                                        <ul class="text-base text-slate-300 space-y-4 mb-10">
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$66,666</strong> due
-                                                    at Signing</div>
-                                            </li>
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$66,666</strong> due
-                                                    Month 2</div>
-                                            </li>
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$66,668</strong> due
-                                                    Month 4</div>
-                                            </li>
-                                        </ul>
+                                    class="bg-white/5 border border-white/10 hover:border-[#C8A951] p-8 rounded-sm transition-all duration-300 group flex flex-col hover:-translate-y-2">
+                                    <div class="mb-8 border-b border-white/10 pb-6">
+                                        <h3 class="text-3xl text-white font-serif mb-2">Plan B</h3>
+                                        <div class="text-slate-400 uppercase tracking-widest text-sm">Trimester</div>
                                     </div>
+
+                                    <ul class="space-y-6 flex-1 mb-10">
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45"></div>
+                                            <div class="text-xl text-slate-200"><strong
+                                                    class="text-white">$66,666</strong> due at Signing</div>
+                                        </li>
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45"></div>
+                                            <div class="text-xl text-slate-200"><strong
+                                                    class="text-white">$66,666</strong> due Month 2</div>
+                                        </li>
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45"></div>
+                                            <div class="text-xl text-slate-200"><strong
+                                                    class="text-white">$66,668</strong> due Month 4</div>
+                                        </li>
+                                        <li class="mt-8 pt-6 border-t border-white/10">
+                                            <div class="text-sm text-slate-400 uppercase tracking-wider mb-1">Total Cash
+                                            </div>
+                                            <div class="text-4xl text-white font-serif">$200,000</div>
+                                        </li>
+                                    </ul>
+
                                     <button onclick="selectPlan('Plan B')"
-                                        class="w-full py-4 border border-[#C8A951] text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-widest text-sm transition-all rounded">
+                                        class="w-full py-5 border border-[#C8A951]/50 text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-[0.2em] transition-all text-lg">
                                         Select Plan B
                                     </button>
                                 </div>
 
                                 <!-- PLAN C -->
                                 <div
-                                    class="p-8 rounded-xl border-2 border-[#C8A951] bg-gradient-to-b from-[#C8A951]/20 to-black/80 transform scale-105 shadow-[0_0_50px_rgba(200,169,81,0.2)] relative overflow-hidden backdrop-blur-md flex flex-col z-10">
+                                    class="bg-gradient-to-b from-[#C8A951]/20 to-black border-2 border-[#C8A951] p-8 rounded-sm transform scale-110 shadow-[0_0_60px_rgba(200,169,81,0.2)] z-10 flex flex-col relative">
                                     <div
-                                        class="absolute top-0 right-0 bg-[#C8A951] text-black text-xs font-bold px-4 py-1.5 font-sans tracking-widest uppercase">
-                                        Best Value</div>
-                                    <div class="flex-1">
-                                        <h3
-                                            class="text-2xl text-white font-bold mb-3 font-serif flex items-center gap-2">
-                                            Plan C: Partnership <span
-                                                class="text-xs bg-white text-black px-2 py-0.5 rounded-full">-12.5%</span>
-                                        </h3>
-                                        <div
-                                            class="text-[#C8A951] text-base font-mono mb-8 bg-black/40 inline-block px-3 py-1 rounded border border-[#C8A951]">
-                                            Cash + Equity</div>
-                                        <ul class="text-base text-slate-200 space-y-4 mb-10">
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$87,500</strong> due
-                                                    at Signing</div>
-                                            </li>
-                                            <li class="flex items-start gap-3"><span
-                                                    class="text-[#C8A951] mt-1">✦</span>
-                                                <div><strong class="text-white block text-lg mb-1">$87,500</strong> due
-                                                    Month 3</div>
-                                            </li>
-                                            <li class="flex items-start gap-3 border-t border-[#C8A951]/30 pt-3"><span
-                                                    class="text-[#C8A951] mt-1">★</span>
-                                                <div class="font-bold text-[#C8A951]">2.5% Equity Stake</div>
-                                            </li>
-                                        </ul>
+                                        class="absolute top-0 right-0 bg-[#C8A951] text-black font-bold px-4 py-2 text-sm uppercase tracking-widest">
+                                        Recommended</div>
+
+                                    <div class="mb-8 border-b border-[#C8A951]/30 pb-6">
+                                        <h3 class="text-4xl text-white font-serif mb-2 drop-shadow-md">Plan C</h3>
+                                        <div class="text-[#C8A951] uppercase tracking-widest text-sm font-bold">
+                                            Partnership Model</div>
                                     </div>
+
+                                    <ul class="space-y-6 flex-1 mb-10">
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45 shadow-[0_0_10px_#C8A951]">
+                                            </div>
+                                            <div class="text-xl text-white"><strong
+                                                    class="text-[#C8A951]">$87,500</strong> due at Signing</div>
+                                        </li>
+                                        <li class="flex items-start gap-4">
+                                            <div class="mt-1 h-2 w-2 bg-[#C8A951] rotate-45 shadow-[0_0_10px_#C8A951]">
+                                            </div>
+                                            <div class="text-xl text-white"><strong
+                                                    class="text-[#C8A951]">$87,500</strong> due Month 3</div>
+                                        </li>
+                                        <li
+                                            class="flex items-start gap-4 bg-[#C8A951]/10 p-3 rounded border border-[#C8A951]/30">
+                                            <div class="text-2xl mt-0.5">🤝</div>
+                                            <div>
+                                                <div class="text-lg text-[#C8A951] font-bold">2.5% Equity Stake</div>
+                                                <div class="text-sm text-slate-300">In lieu of $25,000 cash</div>
+                                            </div>
+                                        </li>
+                                        <li class="mt-8 pt-6 border-t border-[#C8A951]/30">
+                                            <div class="text-sm text-[#C8A951] uppercase tracking-wider mb-1">Total Cash
+                                            </div>
+                                            <div class="text-5xl text-white font-serif font-bold">$175,000</div>
+                                            <div class="text-sm text-emerald-400 mt-1 font-bold">($25,000 INSTANT
+                                                SAVINGS)</div>
+                                        </li>
+                                    </ul>
+
                                     <button onclick="selectPlan('Plan C')"
-                                        class="w-full py-4 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-widest text-base transition-all shadow-[0_0_20px_rgba(200,169,81,0.4)] rounded hover:scale-[1.02]">
+                                        class="w-full py-5 bg-[#C8A951] text-black hover:bg-white border-2 border-[#C8A951] font-bold uppercase tracking-[0.2em] transition-all text-lg shadow-[0_0_20px_rgba(200,169,81,0.4)] hover:shadow-[0_0_40px_rgba(200,169,81,0.6)]">
                                         Select & Sign
                                     </button>
                                 </div>

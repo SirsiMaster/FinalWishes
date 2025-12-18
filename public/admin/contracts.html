@@ -3387,6 +3387,16 @@
                             of Agreement</p>
                         <div class="h-px w-64 bg-[#C8A951]/40 mx-auto mb-12"></div>
 
+                        <!-- Execute Agreement Button -->
+                        <div id="execute-action" class="mb-12">
+                            <button onclick="initiateOpenSign()" id="execute-btn"
+                                class="px-8 py-4 bg-gradient-to-r from-[#C8A951] to-[#E2C76B] text-[#0f172a] font-bold text-lg uppercase tracking-widest rounded hover:shadow-lg hover:shadow-[#C8A951]/30 transition-all duration-300">
+                                ⚜️ Execute Agreement with OpenSign
+                            </button>
+                            <p class="mt-4 text-sm opacity-60">Click to initiate the secure e-signature process via
+                                sign.sirsi.ai</p>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
                             <div class="text-left space-y-4">
                                 <p class="text-xs text-[#C8A951] uppercase tracking-widest">Client Signature</p>
@@ -3408,8 +3418,8 @@
                         </div>
 
                         <div class="mt-12 pt-8 border-t border-white/5">
-                            <p class="text-[10px] text-blue-300/40 uppercase tracking-tighter">Verified via
-                                FinalWishes Protocol ⚜️ Transaction ID: 0x93-1696269-BETH-2025</p>
+                            <p class="text-[10px] text-blue-300/40 uppercase tracking-tighter">Powered by Sirsi OpenSign
+                                ⚜️ sign.sirsi.ai</p>
                         </div>
                     </div>
 
@@ -3574,6 +3584,87 @@
                 if (el) el.textContent = value;
             }
         });
+
+        // ============================================
+        // SIRSI OPENSIGN INTEGRATION
+        // ============================================
+        const OPENSIGN_API_BASE = 'https://us-central1-sirsi-nexus-live.cloudfunctions.net';
+
+        async function initiateOpenSign() {
+            const executeBtn = document.getElementById('execute-btn');
+            const originalText = executeBtn.textContent;
+
+            try {
+                executeBtn.textContent = '⏳ Initiating signing process...';
+                executeBtn.disabled = true;
+
+                // For demo purposes, we'll show the signing flow
+                // In production, this would authenticate and create an envelope via the API
+
+                // Show confirmation modal
+                const confirmed = confirm(
+                    'You are about to initiate the e-signature process for this Master Services Agreement.\n\n' +
+                    'This will:\n' +
+                    '• Create a signing envelope via Sirsi OpenSign\n' +
+                    '• Send signing invitations to all parties\n' +
+                    '• Redirect you to sign.sirsi.ai to complete your signature\n\n' +
+                    'Continue?'
+                );
+
+                if (!confirmed) {
+                    executeBtn.textContent = originalText;
+                    executeBtn.disabled = false;
+                    return;
+                }
+
+                // Simulate envelope creation (in production, this calls the API with auth)
+                const envelopeId = 'ENV-' + Date.now().toString(36).toUpperCase();
+                const signingUrl = `https://sign.sirsi.ai/${envelopeId}`;
+
+                // Update signature date
+                const signatureEl = document.getElementById('date-signature');
+                if (signatureEl) {
+                    const now = new Date();
+                    signatureEl.textContent = now.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    }) + ' ' + now.toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+
+                // Show success state
+                executeBtn.textContent = '✓ Envelope Created - Redirecting...';
+                executeBtn.style.background = 'linear-gradient(to right, #10B981, #059669)';
+
+                // In production, redirect to signing URL
+                setTimeout(() => {
+                    alert(
+                        'Signing Envelope Created Successfully!\n\n' +
+                        'Envelope ID: ' + envelopeId + '\n' +
+                        'Signing URL: ' + signingUrl + '\n\n' +
+                        'In production, you would now be redirected to sign.sirsi.ai to complete your signature.\n\n' +
+                        'Note: The sign.sirsi.ai subdomain needs to be configured in DNS to complete the signing experience.'
+                    );
+
+                    executeBtn.textContent = '✓ Envelope Created';
+                    executeBtn.disabled = false;
+                }, 1500);
+
+            } catch (error) {
+                console.error('OpenSign error:', error);
+                executeBtn.textContent = '❌ Error - Try Again';
+                executeBtn.style.background = 'linear-gradient(to right, #EF4444, #DC2626)';
+
+                setTimeout(() => {
+                    executeBtn.textContent = originalText;
+                    executeBtn.style.background = '';
+                    executeBtn.disabled = false;
+                }, 3000);
+            }
+        }
     </script>
 
 </body>

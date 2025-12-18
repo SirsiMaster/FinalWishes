@@ -650,6 +650,86 @@
             color: #C8A951;
             font-weight: bold;
         }
+
+        /* ========================================
+           UNIFIED TYPOGRAPHY SYSTEM
+           Based on "Perfect" Top Stat Cards
+        ========================================= */
+
+        /* Section Headers: Cinzel 28px/600/Gold */
+        .u-section-header {
+            font-family: 'Cinzel', serif !important;
+            font-size: 28px !important;
+            font-weight: 600 !important;
+            color: #C8A951 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        /* Card Titles: Cinzel 24px/600/White */
+        .u-card-title {
+            font-family: 'Cinzel', serif !important;
+            font-size: 24px !important;
+            font-weight: 600 !important;
+            color: white !important;
+            margin: 0;
+        }
+
+        /* Card Values: Cinzel 24px/700/White */
+        .u-card-value {
+            font-family: 'Cinzel', serif !important;
+            font-size: 24px !important;
+            font-weight: 700 !important;
+            color: white !important;
+        }
+
+        /* Sublabels: Inter 14px/500/Gold */
+        .u-sublabel {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            color: #C8A951 !important;
+        }
+
+        /* Body Text: Inter 20px/400/White */
+        .u-body {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 400 !important;
+            color: white !important;
+        }
+
+        /* Table Headers: Inter 16px/700/Gold */
+        .u-table-header {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #C8A951 !important;
+        }
+
+        /* Table Body: Inter 20px/400/White */
+        .u-table-body {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 400 !important;
+            color: white !important;
+        }
+
+        /* Value (money) in tables: Cinzel 20px/400/Green */
+        .u-table-value {
+            font-family: 'Cinzel', serif !important;
+            font-size: 20px !important;
+            font-weight: 400 !important;
+            color: #10b981 !important;
+        }
+
+        /* Golden Value: Cinzel 24px/600/Gold */
+        .u-gold-value {
+            font-family: 'Cinzel', serif !important;
+            font-size: 24px !important;
+            font-weight: 600 !important;
+            color: #C8A951 !important;
+        }
     </style>
 </head>
 
@@ -1333,41 +1413,76 @@
                                     </div>
                                     <div class="hidden"
                                         style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 16px; text-align: center;">Activity</th>
-                                                <th style="padding-bottom: 16px; text-align: center;">Role</th>
-                                                <th style="padding-bottom: 16px; text-align: center;">Hrs</th>
-                                                <th style="padding-bottom: 16px; text-align: center;">Cost</th>
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                                <th
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 16px; font-weight: 700; color: #C8A951; text-align: left;">
+                                                    Activity</th>
+                                                <th
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 16px; font-weight: 700; color: #C8A951; text-align: center;">
+                                                    Role</th>
+                                                <th
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 16px; font-weight: 700; color: #C8A951; text-align: center;">
+                                                    Hrs</th>
+                                                <th
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 16px; font-weight: 700; color: #C8A951; text-align: right;">
+                                                    Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 16px 0; color: white; text-align: center;">Brand
-                                                    Identity (Logo, Typography)</td>
-                                                <td style="color: white; text-align: center;">Sr. Designer</td>
-                                                <td style="color: white; text-align: center;">40</td>
-                                                <td style="color: #10b981; text-align: center;">$6,000</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: left;">
+                                                    Brand Identity (Logo, Typography)</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    Sr. Designer</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    40</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Cinzel, serif; font-size: 20px; font-weight: 400; color: #10b981; text-align: right;">
+                                                    $6,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 16px 0; color: white; text-align: center;">UX/UI
-                                                    Design System</td>
-                                                <td style="color: white; text-align: center;">Sr. Designer</td>
-                                                <td style="color: white; text-align: center;">80</td>
-                                                <td style="color: #10b981; text-align: center;">$12,000</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: left;">
+                                                    UX/UI Design System</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    Sr. Designer</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    80</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Cinzel, serif; font-size: 20px; font-weight: 400; color: #10b981; text-align: right;">
+                                                    $12,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 16px 0; color: white; text-align: center;">
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: left;">
                                                     High-Fidelity Prototyping</td>
-                                                <td style="color: white; text-align: center;">Product Design</td>
-                                                <td style="color: white; text-align: center;">40</td>
-                                                <td style="color: #10b981; text-align: center;">$6,000</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    Product Design</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    40</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Cinzel, serif; font-size: 20px; font-weight: 400; color: #10b981; text-align: right;">
+                                                    $6,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 16px 0; color: white; text-align: center;">Asset
-                                                    Production</td>
-                                                <td style="color: white; text-align: center;">Visual Design</td>
-                                                <td style="color: white; text-align: center;">40</td>
-                                                <td style="color: #10b981; text-align: center;">$6,000</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: left;">
+                                                    Asset Production</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    Visual Design</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Inter, sans-serif; font-size: 20px; font-weight: 400; color: white; text-align: center;">
+                                                    40</td>
+                                                <td
+                                                    style="padding: 12px 0; font-family: Cinzel, serif; font-size: 20px; font-weight: 400; color: #10b981; text-align: right;">
+                                                    $6,000</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1400,46 +1515,66 @@
                                     </div>
                                     <div class="hidden"
                                         style="border-top: 1px solid rgba(255,255,255,0.1); padding: 24px 32px; background: rgba(0,0,0,0.2);">
-                                        <table
-                                            style="width: 100%; font-size: 24px; text-align: center; border-collapse: collapse;">
-                                            <tr style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                                <th style="padding-bottom: 12px;">Activity</th>
-                                                <th style="padding-bottom: 12px;">Role</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Hrs</th>
-                                                <th style="padding-bottom: 12px; text-align: right;">Cost</th>
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                                <th class="u-table-header" style="padding: 12px 0; text-align: left;">
+                                                    Activity</th>
+                                                <th class="u-table-header" style="padding: 12px 0; text-align: center;">
+                                                    Role</th>
+                                                <th class="u-table-header" style="padding: 12px 0; text-align: center;">
+                                                    Hrs</th>
+                                                <th class="u-table-header" style="padding: 12px 0; text-align: right;">
+                                                    Cost</th>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">System Architecture (VPC,
-                                                    Encryption)</td>
-                                                <td style="color: white;">Sr. Architect</td>
-                                                <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$7,000</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="padding: 12px 0; color: white;">Schema Design (SQL/NoSQL)
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: left;">
+                                                    System Architecture (VPC, Encryption)</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">
+                                                    Sr. Architect</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">40
                                                 </td>
-                                                <td style="color: white;">Backend Eng</td>
-                                                <td style="text-align: right; color: white;">30</td>
-                                                <td style="text-align: right; color: #10b981;">$4,500</td>
+                                                <td class="u-table-value" style="padding: 12px 0; text-align: right;">
+                                                    $7,000</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Vault Implementation (KMS)
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: left;">
+                                                    Schema Design (SQL/NoSQL)</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">
+                                                    Backend Eng</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">30
                                                 </td>
-                                                <td style="color: white;">Security Eng</td>
-                                                <td style="text-align: right; color: white;">35</td>
-                                                <td style="text-align: right; color: #10b981;">$6,125</td>
+                                                <td class="u-table-value" style="padding: 12px 0; text-align: right;">
+                                                    $4,500</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">DocuSeal Setup</td>
-                                                <td style="color: white;">DevOps</td>
-                                                <td style="text-align: right; color: white;">15</td>
-                                                <td style="text-align: right; color: #10b981;">$2,250</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: left;">
+                                                    Vault Implementation (KMS)</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">
+                                                    Security Eng</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">35
+                                                </td>
+                                                <td class="u-table-value" style="padding: 12px 0; text-align: right;">
+                                                    $6,125</td>
                                             </tr>
                                             <tr>
-                                                <td style="padding: 12px 0; color: white;">Frontend Shell (React)</td>
-                                                <td style="color: white;">Frontend Eng</td>
-                                                <td style="text-align: right; color: white;">40</td>
-                                                <td style="text-align: right; color: #10b981;">$6,000</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: left;">
+                                                    DocuSeal Setup</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">
+                                                    DevOps</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">15
+                                                </td>
+                                                <td class="u-table-value" style="padding: 12px 0; text-align: right;">
+                                                    $2,250</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: left;">
+                                                    Frontend Shell (React)</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">
+                                                    Frontend Eng</td>
+                                                <td class="u-table-body" style="padding: 12px 0; text-align: center;">40
+                                                </td>
+                                                <td class="u-table-value" style="padding: 12px 0; text-align: right;">
+                                                    $6,000</td>
                                             </tr>
                                         </table>
                                     </div>

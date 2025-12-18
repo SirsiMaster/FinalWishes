@@ -402,22 +402,29 @@
             <!-- Immersive Contract View -->
             <div class="contract-immersive-wrapper pb-48">
 
-                <div class="relative mb-16 pt-10 px-4">
-                    <a href="dashboard.html"
-                        class="absolute left-0 top-0 text-[#C8A951] hover:text-white flex items-center gap-2 transition-all group uppercase tracking-widest text-xs font-bold border border-[#C8A951]/30 px-4 py-2 rounded hover:bg-[#C8A951]/10">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" class="group-hover:-translate-x-1 transition-transform">
-                            <path d="M19 12H5M12 19l-7-7 7-7" />
-                        </svg>
-                        Back to Dashboard
-                    </a>
-                    <div class="text-center">
-                        <h1 class="gold-text mb-2 text-5xl font-serif tracking-tight drop-shadow-2xl">Technical
-                            Partnership Agreement</h1>
+                <!-- Header Component -->
+                <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative max-w-[1400px] mx-auto">
+                    <!-- Back Link (Positioned Safe) -->
+                    <div class="w-full flex justify-start mb-8">
+                        <a href="dashboard.html"
+                            class="text-[#C8A951] hover:text-white flex items-center gap-2 transition-all group uppercase tracking-widest text-xs font-bold border border-[#C8A951]/30 px-6 py-3 rounded-sm hover:bg-[#C8A951]/10">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" class="group-hover:-translate-x-1 transition-transform">
+                                <path d="M19 12H5M12 19l-7-7 7-7" />
+                            </svg>
+                            Back to Dashboard
+                        </a>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="text-center max-w-4xl">
+                        <h1 class="text-[#C8A951] mb-4 text-5xl md:text-6xl font-serif tracking-tight drop-shadow-2xl">
+                            Technical Partnership Agreement
+                        </h1>
                         <div class="h-px w-32 bg-[#C8A951] mx-auto opacity-50 my-6"></div>
-                        <p class="text-blue-100 uppercase tracking-[0.3em] font-medium text-sm">Prepared for Tameeka
-                            Lockhart •
-                            December 17, 2025</p>
+                        <p class="text-blue-100 uppercase tracking-[0.3em] font-medium text-sm">
+                            Prepared for Tameeka Lockhart • December 17, 2025
+                        </p>
                     </div>
                 </div>
 
@@ -891,29 +898,38 @@
                     <div id="cost" class="tab-content">
                         <!-- TOP STATS -->
                         <div class="grid grid-cols-4 gap-8 mb-16">
+                            <!-- Gross Value -->
                             <div class="stat-card contract-stat">
-                                <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">True Market Value
+                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">True Market
+                                    Value</div>
+                                <div class="text-3xl text-slate-400 line-through decoration-red-500/50 font-serif">
+                                    $650k+</div>
+                                <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Big Law Comparable
                                 </div>
-                                <div class="text-3xl text-slate-400 line-through decoration-red-500/50">$650k+</div>
-                                <div class="text-[10px] text-slate-500 mt-1">Based on Big Law comparables</div>
                             </div>
+                            <!-- Fixed Bid -->
                             <div
                                 class="stat-card contract-stat border-[#C8A951] bg-[#C8A951]/10 shadow-[0_0_20px_rgba(200,169,81,0.15)] relative overflow-hidden">
                                 <div class="absolute inset-0 bg-gradient-to-b from-[#C8A951]/5 to-transparent"></div>
                                 <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">Fixed Bid
                                     Price</div>
-                                <div class="text-4xl font-bold text-white relative z-10">$200,000</div>
+                                <div class="text-4xl font-bold font-serif text-white relative z-10">$200,000</div>
                             </div>
+                            <!-- Efficiency -->
                             <div class="stat-card contract-stat">
-                                <div class="text-xs text-emerald-400 uppercase tracking-widest mb-3">Sirsi Efficiency
+                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">Sirsi
+                                    Efficiency</div>
+                                <div class="text-3xl text-emerald-400 font-serif">Included</div>
+                                <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">SOC 2, Auth, Vault
+                                    Core</div>
+                            </div>
+                            <!-- Hours -->
+                            <div class="stat-card contract-stat">
+                                <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-3 font-bold">Total Hours
                                 </div>
-                                <div class="text-3xl text-emerald-400">Included</div>
-                                <div class="text-[10px] text-slate-500 mt-1">SOC 2, Auth, Vault Core</div>
-                            </div>
-                            <div class="stat-card contract-stat">
-                                <div class="text-xs text-blue-200 uppercase tracking-widest mb-3">Total Hours</div>
-                                <div class="text-3xl text-white">925+</div>
-                                <div class="text-[10px] text-slate-500 mt-1">Direct Engineering Output</div>
+                                <div class="text-3xl text-white font-serif">925+</div>
+                                <div class="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">Direct Engineering
+                                    Output</div>
                             </div>
                         </div>
 
@@ -921,7 +937,7 @@
                         <div class="mb-20">
                             <div class="flex items-center gap-4 mb-8">
                                 <div class="h-px bg-white/10 flex-1"></div>
-                                <h2 class="text-2xl font-serif text-[#C8A951] uppercase tracking-widest">1. Comparative
+                                <h2 class="text-3xl font-serif text-[#C8A951] uppercase tracking-widest">1. Comparative
                                     Market Analysis</h2>
                                 <div class="h-px bg-white/10 flex-1"></div>
                             </div>
@@ -931,64 +947,64 @@
                                     <thead>
                                         <tr class="bg-black/20 border-b border-[#C8A951]/30">
                                             <th
-                                                class="p-4 text-[#C8A951] font-serif tracking-wider uppercase text-sm w-1/4">
+                                                class="p-6 text-[#C8A951] font-serif tracking-wider uppercase text-lg w-1/4">
                                                 Metric</th>
                                             <th
-                                                class="p-4 text-slate-400 font-serif tracking-wider uppercase text-sm w-1/4">
+                                                class="p-6 text-white font-serif tracking-wider uppercase text-lg w-1/4">
                                                 FinalWishes (111 VS)</th>
                                             <th
-                                                class="p-4 text-slate-400 font-serif tracking-wider uppercase text-sm w-1/4">
+                                                class="p-6 text-slate-400 font-serif tracking-wider uppercase text-lg w-1/4">
                                                 "Big Law" Custom Tech</th>
                                             <th
-                                                class="p-4 text-slate-400 font-serif tracking-wider uppercase text-sm w-1/4">
+                                                class="p-6 text-slate-400 font-serif tracking-wider uppercase text-lg w-1/4">
                                                 Typical Dev Agency</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-white/5 text-sm">
+                                    <tbody class="divide-y divide-white/5 text-base"> <!-- text-base for body -->
                                         <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-4 font-bold text-white">Total Cost</td>
+                                            <td class="p-6 font-bold text-white">Total Cost</td>
                                             <td
-                                                class="p-4 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10">
+                                                class="p-6 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10 font-serif">
                                                 $200,000 (Fixed)</td>
-                                            <td class="p-4 text-slate-300">$650,000+</td>
-                                            <td class="p-4 text-slate-300">$350,000+</td>
+                                            <td class="p-6 text-slate-300 font-serif">$650,000+</td>
+                                            <td class="p-6 text-slate-300 font-serif">$350,000+</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-4 font-bold text-white">Time to Market</td>
+                                            <td class="p-6 font-bold text-white">Time to Market</td>
                                             <td
-                                                class="p-4 font-bold text-[#C8A951] bg-[#C8A951]/5 border-x border-[#C8A951]/10">
+                                                class="p-6 font-bold text-[#C8A951] bg-[#C8A951]/5 border-x border-[#C8A951]/10">
                                                 5 Months</td>
-                                            <td class="p-4 text-slate-300">18-24 Months</td>
-                                            <td class="p-4 text-slate-300">9-12 Months</td>
+                                            <td class="p-6 text-slate-300">18-24 Months</td>
+                                            <td class="p-6 text-slate-300">9-12 Months</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-4 font-bold text-white">Model</td>
-                                            <td class="p-4 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">
+                                            <td class="p-6 font-bold text-white">Model</td>
+                                            <td class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">
                                                 Co-Founder/Partner</td>
-                                            <td class="p-4 text-slate-300">Billable Hour ($800/hr)</td>
-                                            <td class="p-4 text-slate-300">Time & Materials</td>
+                                            <td class="p-6 text-slate-300">Billable Hour ($800/hr)</td>
+                                            <td class="p-6 text-slate-300">Time & Materials</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-4 font-bold text-white">IP Ownership</td>
+                                            <td class="p-6 font-bold text-white">IP Ownership</td>
                                             <td
-                                                class="p-4 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10">
+                                                class="p-6 font-bold text-emerald-400 bg-[#C8A951]/5 border-x border-[#C8A951]/10">
                                                 100% Client Owned</td>
-                                            <td class="p-4 text-slate-300">Firm Retains IP</td>
-                                            <td class="p-4 text-slate-300">Vendor Lock-in</td>
+                                            <td class="p-6 text-slate-300">Firm Retains IP</td>
+                                            <td class="p-6 text-slate-300">Vendor Lock-in</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-4 font-bold text-white">Security</td>
-                                            <td class="p-4 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">SOC 2
+                                            <td class="p-6 font-bold text-white">Security</td>
+                                            <td class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">SOC 2
                                                 Type II Ready</td>
-                                            <td class="p-4 text-slate-300">"Enterprise" bloat</td>
-                                            <td class="p-4 text-slate-300">Basic / Afterthought</td>
+                                            <td class="p-6 text-slate-300">"Enterprise" bloat</td>
+                                            <td class="p-6 text-slate-300">Basic / Afterthought</td>
                                         </tr>
                                         <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="p-4 font-bold text-white">AI Capability</td>
-                                            <td class="p-4 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">
+                                            <td class="p-6 font-bold text-white">AI Capability</td>
+                                            <td class="p-6 text-white bg-[#C8A951]/5 border-x border-[#C8A951]/10">
                                                 Gemini 3.0 Native</td>
-                                            <td class="p-4 text-slate-300">None / Rigid Logic</td>
-                                            <td class="p-4 text-slate-300">Generic Chatbot</td>
+                                            <td class="p-6 text-slate-300">None / Rigid Logic</td>
+                                            <td class="p-6 text-slate-300">Generic Chatbot</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1298,59 +1314,48 @@
                         </div>
 
                         <!-- 3. DISCOUNT REALIZATION WATERFALL -->
-                        <!-- 3. DISCOUNT REALIZATION (THE GOLDEN INVOICE) -->
+                        <!-- 3. DISCOUNT REALIZATION (THE GOLDEN INVOICE REFINED) -->
                         <div class="mb-32">
                             <h2
                                 class="text-center mb-12 text-3xl font-serif text-[#C8A951] uppercase tracking-[0.2em] border-y border-[#C8A951]/20 py-6">
                                 3. Discount Realization</h2>
 
                             <div
-                                class="max-w-4xl mx-auto bg-black/40 border border-[#C8A951] p-16 relative overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)]">
-                                <!-- Watermark -->
-                                <div
-                                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border-[50px] border-[#C8A951]/5 rounded-full pointer-events-none">
-                                </div>
-
+                                class="max-w-2xl mx-auto bg-black/40 border border-[#C8A951] p-12 shadow-[0_0_100px_rgba(0,0,0,0.5)]">
                                 <!-- Metric 1: Market Value -->
-                                <div class="flex justify-between items-end mb-10 pb-6 border-b border-white/10">
-                                    <div class="text-left">
-                                        <div class="text-[#C8A951] font-bold uppercase tracking-widest text-sm mb-2">
+                                <div class="flex justify-between items-end mb-8 border-b border-white/10 pb-6">
+                                    <div>
+                                        <div class="text-[#C8A951] font-bold uppercase tracking-widest text-xs mb-2">
                                             Market Standard</div>
-                                        <div class="text-3xl font-serif text-white">Gross Market Value</div>
-                                        <div class="text-slate-500 text-sm mt-1">("Big Law" Comparable)</div>
+                                        <div class="text-2xl font-serif text-white">Gross Market Value</div>
+                                        <div class="text-slate-500 text-xs mt-1">("Big Law" Comparable)</div>
                                     </div>
                                     <div
-                                        class="text-5xl font-bold text-slate-400 line-through decoration-red-500/50 decoration-2 font-serif">
+                                        class="text-4xl font-bold text-slate-400 line-through decoration-red-500/50 decoration-2 font-serif text-right">
                                         $650,000</div>
                                 </div>
 
                                 <!-- Metric 2: Discounts -->
-                                <div class="space-y-6 mb-12">
+                                <div class="space-y-4 mb-10">
                                     <div class="flex justify-between items-center group">
-                                        <div class="flex items-center gap-4">
-                                            <div class="h-px w-8 bg-[#C8A951]/50"></div>
-                                            <div class="text-xl text-slate-300 font-serif">SirsiNexus Efficiency</div>
-                                        </div>
-                                        <div class="text-3xl text-white font-mono">-$350,000</div>
+                                        <div class="text-lg text-slate-300 font-serif">SirsiNexus Efficiency</div>
+                                        <div class="text-2xl text-white font-serif text-right">-$350,000</div>
                                     </div>
                                     <div class="flex justify-between items-center group">
-                                        <div class="flex items-center gap-4">
-                                            <div class="h-px w-8 bg-[#C8A951]/50"></div>
-                                            <div class="text-xl text-slate-300 font-serif">"Project 111" Credit</div>
-                                        </div>
-                                        <div class="text-3xl text-white font-mono">-$100,000</div>
+                                        <div class="text-lg text-slate-300 font-serif">"Project 111" Credit</div>
+                                        <div class="text-2xl text-white font-serif text-right">-$100,000</div>
                                     </div>
                                 </div>
 
                                 <!-- Metric 3: Total -->
                                 <div class="flex justify-between items-center pt-8 border-t-2 border-[#C8A951]">
-                                    <div class="text-left">
-                                        <div class="text-2xl font-serif text-[#C8A951] mb-1">Net Contract Price</div>
-                                        <div class="text-sm text-slate-400 uppercase tracking-wider">Fixed Bid Execution
+                                    <div>
+                                        <div class="text-3xl font-serif text-[#C8A951] mb-1">Net Contract Price</div>
+                                        <div class="text-xs text-slate-400 uppercase tracking-wider">Fixed Bid Execution
                                         </div>
                                     </div>
                                     <div
-                                        class="text-7xl font-bold text-white font-serif drop-shadow-[0_0_30px_rgba(200,169,81,0.4)]">
+                                        class="text-6xl font-bold text-white font-serif drop-shadow-[0_0_30px_rgba(200,169,81,0.4)] text-right">
                                         $200,000</div>
                                 </div>
                             </div>
@@ -1369,67 +1374,69 @@
                                 <table class="w-full text-left border-collapse">
                                     <thead>
                                         <tr
-                                            class="bg-black/20 border-b border-white/10 text-xs uppercase tracking-wider text-slate-400">
-                                            <th class="p-4">Service</th>
-                                            <th class="p-4">Specific Item</th>
-                                            <th class="p-4">Est. Unit Cost</th>
-                                            <th class="p-4">Purpose</th>
+                                            class="bg-black/20 border-b border-white/10 text-sm font-bold uppercase tracking-wider text-[#C8A951]">
+                                            <!-- BUMP FONT SIZE -->
+                                            <th class="p-5">Service</th>
+                                            <th class="p-5">Specific Item</th>
+                                            <th class="p-5">Est. Unit Cost</th>
+                                            <th class="p-5">Purpose</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-white/5 text-sm text-slate-300">
+                                    <tbody class="divide-y divide-white/5 text-base text-slate-300">
+                                        <!-- BUMP FONT SIZE -->
                                         <tr>
-                                            <td class="p-4 font-bold text-white">Compute</td>
-                                            <td class="p-4">Google Cloud Run</td>
-                                            <td class="p-4 font-mono text-[#C8A951]">$18/mo</td>
-                                            <td class="p-4">Serverless backend</td>
+                                            <td class="p-5 font-bold text-white">Compute</td>
+                                            <td class="p-5">Google Cloud Run</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$18/mo</td>
+                                            <td class="p-5">Serverless backend</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">Database</td>
-                                            <td class="p-4">Cloud SQL (Postgres)</td>
-                                            <td class="p-4 font-mono text-[#C8A951]">$9/mo</td>
-                                            <td class="p-4">Secure PII storage</td>
+                                            <td class="p-5 font-bold text-white">Database</td>
+                                            <td class="p-5">Cloud SQL (Postgres)</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$9/mo</td>
+                                            <td class="p-5">Secure PII storage</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">NoSQL</td>
-                                            <td class="p-4">Firestore</td>
-                                            <td class="p-4 font-mono text-emerald-400">Free Tier</td>
-                                            <td class="p-4">User metadata</td>
+                                            <td class="p-5 font-bold text-white">NoSQL</td>
+                                            <td class="p-5">Firestore</td>
+                                            <td class="p-5 font-serif text-emerald-400">Free Tier</td>
+                                            <td class="p-5">User metadata</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">Storage</td>
-                                            <td class="p-4">Cloud Storage</td>
-                                            <td class="p-4 font-mono text-[#C8A951]">$0.026/GB</td>
-                                            <td class="p-4">Encrypted vault</td>
+                                            <td class="p-5 font-bold text-white">Storage</td>
+                                            <td class="p-5">Cloud Storage</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$0.026/GB</td>
+                                            <td class="p-5">Encrypted vault</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">AI</td>
-                                            <td class="p-4">Vertex AI (Gemini)</td>
-                                            <td class="p-4 font-mono text-[#C8A951]">$5/1M tokens</td>
-                                            <td class="p-4">Legal guidance</td>
+                                            <td class="p-5 font-bold text-white">AI</td>
+                                            <td class="p-5">Vertex AI (Gemini)</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$5/1M tokens</td>
+                                            <td class="p-5">Legal guidance</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">E-Sign</td>
-                                            <td class="p-4">DocuSeal (Self-Hosted)</td>
-                                            <td class="p-4 font-mono text-emerald-400">$0 (OSS)</td>
-                                            <td class="p-4">Unlimited signing</td>
+                                            <td class="p-5 font-bold text-white">E-Sign</td>
+                                            <td class="p-5">DocuSeal (Self-Hosted)</td>
+                                            <td class="p-5 font-serif text-emerald-400">$0 (OSS)</td>
+                                            <td class="p-5">Unlimited signing</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">Mail</td>
-                                            <td class="p-4">Lob API</td>
-                                            <td class="p-4 font-mono text-[#C8A951]">$1.55/letter</td>
-                                            <td class="p-4">Certified mail</td>
+                                            <td class="p-5 font-bold text-white">Mail</td>
+                                            <td class="p-5">Lob API</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$1.55/letter</td>
+                                            <td class="p-5">Certified mail</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-4 font-bold text-white">Identity</td>
-                                            <td class="p-4">Persona / Jumio</td>
-                                            <td class="p-4 font-mono text-[#C8A951]">$1.50/check</td>
-                                            <td class="p-4">Fraud prevention</td>
+                                            <td class="p-5 font-bold text-white">Identity</td>
+                                            <td class="p-5">Persona / Jumio</td>
+                                            <td class="p-5 font-serif text-[#C8A951]">$1.50/check</td>
+                                            <td class="p-5">Fraud prevention</td>
                                         </tr>
                                     </tbody>
                                     <tfoot class="bg-[#C8A951]/10">
                                         <tr>
                                             <td colspan="4"
-                                                class="p-4 text-center font-bold text-[#C8A951] uppercase tracking-widest">
+                                                class="p-5 text-center font-bold text-[#C8A951] uppercase tracking-widest text-lg">
                                                 Total Estimated OpEx: ~$60/month + Usage
                                             </td>
                                         </tr>
@@ -1445,119 +1452,110 @@
                             <h2 class="text-center mb-24 text-5xl font-serif text-[#C8A951] drop-shadow-md">5. Select
                                 Your Partnership Plan</h2>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-[1400px] mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-[1400px] mx-auto px-6">
 
-                                <!-- PLAN A -->
-                                <div
-                                    class="bg-white/5 border border-white/10 hover:border-[#C8A951] p-10 rounded-sm transition-all duration-300 group flex flex-col hover:-translate-y-2 text-center relative h-full">
-                                    <div class="mb-10 pb-8 border-b border-white/10">
-                                        <h3 class="text-4xl text-white font-serif mb-3">Plan A</h3>
-                                        <div class="text-slate-400 uppercase tracking-[0.2em] text-xs font-bold">
-                                            Standard Split</div>
-                                    </div>
+    <!-- PLAN A -->
+    <div
+        class="bg-white/5 border border-white/10 hover:border-[#C8A951] p-10 rounded-sm transition-all duration-300 group flex flex-col hover:-translate-y-2 text-center relative h-full">
+        <div class="mb-10 pb-8 border-b border-white/10">
+            <h3 class="text-4xl text-white font-serif mb-3">Plan A</h3>
+            <div class="text-slate-400 uppercase tracking-[0.2em] text-xs font-bold">Standard Split</div>
+        </div>
 
-                                    <div class="flex-1 flex flex-col justify-center gap-8 mb-12">
-                                        <div>
-                                            <div class="text-[#C8A951] text-lg font-bold mb-1">$100,000</div>
-                                            <div class="text-slate-300 text-sm">Due at Signing</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[#C8A951] text-lg font-bold mb-1">$100,000</div>
-                                            <div class="text-slate-300 text-sm">Due at Launch</div>
-                                        </div>
-                                    </div>
+        <div class="flex-1 flex flex-col justify-center gap-8 mb-12">
+            <div>
+                <div class="text-[#C8A951] text-lg font-bold mb-1">$100,000</div>
+                <div class="text-slate-300 text-sm">Due at Signing</div>
+            </div>
+            <div>
+                <div class="text-[#C8A951] text-lg font-bold mb-1">$100,000</div>
+                <div class="text-slate-300 text-sm">Due at Launch</div>
+            </div>
+        </div>
 
-                                    <div class="mt-auto pt-8 border-t border-white/10">
-                                        <div class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total
-                                            Investment</div>
-                                        <div class="text-3xl text-white font-serif mb-8">$200,000</div>
-                                        <button onclick="selectPlan('Plan A')"
-                                            class="w-full py-4 border border-[#C8A951]/50 text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-[0.2em] transition-all text-sm">
-                                            Select Plan A
-                                        </button>
-                                    </div>
-                                </div>
+        <div class="mt-auto pt-8 border-t border-white/10">
+            <div class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total Investment</div>
+            <div class="text-3xl text-white font-serif mb-8">$200,000</div>
+            <button onclick="selectPlan('Plan A')"
+                class="w-full py-4 border border-[#C8A951]/50 text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-[0.2em] transition-all text-sm">
+                Select Plan A
+            </button>
+        </div>
+    </div>
 
-                                <!-- PLAN B -->
-                                <div
-                                    class="bg-white/5 border border-white/10 hover:border-[#C8A951] p-10 rounded-sm transition-all duration-300 group flex flex-col hover:-translate-y-2 text-center relative h-full">
-                                    <div class="mb-10 pb-8 border-b border-white/10">
-                                        <h3 class="text-4xl text-white font-serif mb-3">Plan B</h3>
-                                        <div class="text-slate-400 uppercase tracking-[0.2em] text-xs font-bold">
-                                            Trimester</div>
-                                    </div>
+    <!-- PLAN B (RECOMMENDED) -->
+    <div
+        class="bg-black/80 border-2 border-[#C8A951] p-10 rounded-sm transform scale-105 shadow-[0_0_80px_rgba(200,169,81,0.25)] z-10 flex flex-col text-center relative h-full">
+        <div class="absolute top-0 inset-x-0 bg-[#C8A951] text-black font-bold py-2 text-xs uppercase tracking-[0.3em]">
+            Recommended</div>
 
-                                    <div class="flex-1 flex flex-col justify-center gap-8 mb-12">
-                                        <div>
-                                            <div class="text-[#C8A951] text-lg font-bold mb-1">$66,666</div>
-                                            <div class="text-slate-300 text-sm">Due at Signing</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[#C8A951] text-lg font-bold mb-1">$66,666</div>
-                                            <div class="text-slate-300 text-sm">Due Month 2</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[#C8A951] text-lg font-bold mb-1">$66,668</div>
-                                            <div class="text-slate-300 text-sm">Due Month 4</div>
-                                        </div>
-                                    </div>
+        <div class="mb-10 pb-8 border-b border-[#C8A951]/30 mt-6">
+            <h3 class="text-5xl text-white font-serif mb-3 drop-shadow-lg">Plan B</h3>
+            <div class="text-[#C8A951] uppercase tracking-[0.2em] text-xs font-bold">Trimester Model</div>
+        </div>
 
-                                    <div class="mt-auto pt-8 border-t border-white/10">
-                                        <div class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total
-                                            Investment</div>
-                                        <div class="text-3xl text-white font-serif mb-8">$200,000</div>
-                                        <button onclick="selectPlan('Plan B')"
-                                            class="w-full py-4 border border-[#C8A951]/50 text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-[0.2em] transition-all text-sm">
-                                            Select Plan B
-                                        </button>
-                                    </div>
-                                </div>
+        <div class="flex-1 flex flex-col justify-center gap-8 mb-12">
+            <div>
+                <div class="text-white text-xl font-serif font-bold mb-1">$66,666</div>
+                <div class="text-slate-400 text-sm">Due at Signing</div>
+            </div>
+            <div>
+                <div class="text-white text-xl font-serif font-bold mb-1">$66,666</div>
+                <div class="text-slate-400 text-sm">Due Month 2</div>
+            </div>
+            <div>
+                <div class="text-white text-xl font-serif font-bold mb-1">$66,668</div>
+                <div class="text-slate-400 text-sm">Due Month 4</div>
+            </div>
+        </div>
 
-                                <!-- PLAN C -->
-                                <div
-                                    class="bg-black/80 border-2 border-[#C8A951] p-10 rounded-sm transform scale-105 shadow-[0_0_80px_rgba(200,169,81,0.25)] z-10 flex flex-col text-center relative h-full">
-                                    <div
-                                        class="absolute top-0 inset-x-0 bg-[#C8A951] text-black font-bold py-2 text-xs uppercase tracking-[0.3em]">
-                                        Recommended</div>
+        <div class="mt-auto pt-8 border-t border-[#C8A951]/30">
+            <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-2 font-bold">Total Investment</div>
+            <div class="text-4xl text-white font-serif font-bold mb-8">$200,000</div>
+            <button onclick="selectPlan('Plan B')"
+                class="w-full py-5 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-[0.2em] transition-all text-base shadow-[0_0_30px_rgba(200,169,81,0.4)] hover:shadow-[0_0_50px_rgba(200,169,81,0.6)]">
+                Select & Sign
+            </button>
+        </div>
+    </div>
 
-                                    <div class="mb-10 pb-8 border-b border-[#C8A951]/30 mt-6">
-                                        <h3 class="text-5xl text-white font-serif mb-3 drop-shadow-lg">Plan C</h3>
-                                        <div class="text-[#C8A951] uppercase tracking-[0.2em] text-xs font-bold">
-                                            Partnership Model</div>
-                                    </div>
+    <!-- PLAN C -->
+    <div
+        class="bg-white/5 border border-white/10 hover:border-[#C8A951] p-10 rounded-sm transition-all duration-300 group flex flex-col hover:-translate-y-2 text-center relative h-full">
+        <div class="mb-10 pb-8 border-b border-white/10">
+            <h3 class="text-4xl text-white font-serif mb-3">Plan C</h3>
+            <div class="text-slate-400 uppercase tracking-[0.2em] text-xs font-bold">Partnership Model</div>
+        </div>
 
-                                    <div class="flex-1 flex flex-col justify-center gap-8 mb-12">
-                                        <div>
-                                            <div class="text-white text-xl font-bold mb-1">$87,500</div>
-                                            <div class="text-slate-400 text-sm">Due at Signing</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-white text-xl font-bold mb-1">$87,500</div>
-                                            <div class="text-slate-400 text-sm">Due Month 3</div>
-                                        </div>
-                                        <div class="bg-[#C8A951]/10 p-4 rounded border border-[#C8A951]/30 mx-4">
-                                            <div class="text-[#C8A951] text-xl font-bold mb-1">2.5% Equity</div>
-                                            <div class="text-slate-300 text-xs uppercase tracking-wider">In lieu of $25k
-                                                Cash</div>
-                                        </div>
-                                    </div>
+        <div class="flex-1 flex flex-col justify-center gap-8 mb-12">
+            <div>
+                <div class="text-[#C8A951] text-lg font-bold mb-1">$87,500</div>
+                <div class="text-slate-300 text-sm">Due at Signing</div>
+            </div>
+            <div>
+                <div class="text-[#C8A951] text-lg font-bold mb-1">$87,500</div>
+                <div class="text-slate-300 text-sm">Due Month 3</div>
+            </div>
+            <div class="bg-[#C8A951]/10 p-4 rounded border border-[#C8A951]/30 mx-4">
+                <div class="text-[#C8A951] text-xl font-bold mb-1">2.5% Equity</div>
+                <div class="text-slate-300 text-xs uppercase tracking-wider">In lieu of $25k Cash</div>
+            </div>
+        </div>
 
-                                    <div class="mt-auto pt-8 border-t border-[#C8A951]/30">
-                                        <div class="text-xs text-[#C8A951] uppercase tracking-widest mb-2 font-bold">
-                                            Total Cash Investment</div>
-                                        <div class="text-4xl text-white font-serif font-bold mb-2">$175,000</div>
-                                        <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-8">
-                                            ($25,000 Instant Savings)</div>
+        <div class="mt-auto pt-8 border-t border-white/10">
+            <div class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-bold">Total Cash Investment</div>
+            <div class="text-4xl text-white font-serif font-bold mb-2">$175,000</div>
+            <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider mb-8">($25,000 Instant Savings)
+            </div>
 
-                                        <button onclick="selectPlan('Plan C')"
-                                            class="w-full py-5 bg-[#C8A951] text-black hover:bg-white font-bold uppercase tracking-[0.2em] transition-all text-base shadow-[0_0_30px_rgba(200,169,81,0.4)] hover:shadow-[0_0_50px_rgba(200,169,81,0.6)]">
-                                            Select & Sign
-                                        </button>
-                                    </div>
-                                </div>
+            <button onclick="selectPlan('Plan C')"
+                class="w-full py-4 border border-[#C8A951]/50 text-[#C8A951] hover:bg-[#C8A951] hover:text-black font-bold uppercase tracking-[0.2em] transition-all text-sm">
+                Select Plan C
+            </button>
+        </div>
+    </div>
 
-                            </div>
-                        </div>
+</div>                        </div>
                     </div>
 
                     <!-- TAB 3: CONTRACT -->

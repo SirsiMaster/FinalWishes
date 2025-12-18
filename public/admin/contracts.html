@@ -126,21 +126,28 @@
             font-size: 1rem !important;
         }
 
-        /* GLOBAL: Increase all blue body text sizes */
+        /* GLOBAL: Standardize ALL body text sizes in contract wrapper */
+        .contract-immersive-wrapper p,
+        .contract-immersive-wrapper li,
+        .contract-immersive-wrapper td,
+        .contract-immersive-wrapper th,
+        .contract-immersive-wrapper span:not(.neo-text-gold),
         .text-blue-200,
-        .text-blue-100 {
+        .text-blue-100,
+        .text-slate-300 {
             font-size: 1.125rem !important;
+            line-height: 1.75 !important;
         }
 
-        /* Keep small text small where explicitly set */
-        .text-sm.text-blue-200,
-        .text-xs.text-blue-200 {
+        /* Preserve small labels and badges */
+        .text-xs,
+        .text-sm {
             font-size: inherit !important;
         }
 
-        /* Lists with blue text */
-        ul.text-blue-200 li,
-        .text-blue-200 li {
+        /* Ensure table cells match */
+        .contract-immersive-wrapper table td,
+        .contract-immersive-wrapper table th {
             font-size: 1.125rem !important;
         }
 

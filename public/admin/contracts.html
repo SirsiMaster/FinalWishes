@@ -3866,12 +3866,12 @@
                     documentType: 'Master Services Agreement'
                 });
             }).then(() => {
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalHTML;
                 btn.disabled = false;
                 alert(`✅ Agreement sent to ${user.email}!`);
             }).catch(err => {
                 console.error('Email send error:', err);
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalHTML;
                 btn.disabled = false;
                 alert('Error sending email. Please try downloading instead.');
             });

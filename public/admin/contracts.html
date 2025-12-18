@@ -3389,12 +3389,22 @@
 
                         <!-- Execute Agreement Button -->
                         <div id="execute-action" class="mb-12">
-                            <button onclick="initiateOpenSign()" id="execute-btn"
-                                class="px-8 py-4 bg-gradient-to-r from-[#C8A951] to-[#E2C76B] text-[#0f172a] font-bold text-lg uppercase tracking-widest rounded hover:shadow-lg hover:shadow-[#C8A951]/30 transition-all duration-300">
+                            <!-- Acknowledgment Checkbox -->
+                            <div id="acknowledge-block" class="mb-6 p-4 border border-[#C8A951]/30 rounded bg-white/5">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" id="msa-acknowledge" onchange="toggleExecuteButton()"
+                                        class="w-5 h-5 accent-[#C8A951] cursor-pointer">
+                                    <span class="text-sm text-white/80">I have read and agree to the Master Services
+                                        Agreement, Statement of Work, and all Exhibits above.</span>
+                                </label>
+                            </div>
+
+                            <button onclick="initiateOpenSign()" id="execute-btn" disabled
+                                style="background: linear-gradient(to right, #C8A951, #E2C76B); color: #0f172a; padding: 16px 32px; font-weight: bold; font-size: 18px; text-transform: uppercase; letter-spacing: 0.1em; border-radius: 8px; border: none; cursor: not-allowed; opacity: 0.5; transition: all 0.3s;">
                                 ⚜️ Execute Agreement with OpenSign
                             </button>
-                            <p class="mt-4 text-sm opacity-60">Click to initiate the secure e-signature process via
-                                sign.sirsi.ai</p>
+                            <p class="mt-4 text-sm opacity-60">You must acknowledge reading the agreement before
+                                executing via sign.sirsi.ai</p>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
@@ -3538,11 +3548,10 @@
             dynamicBlock.style.background = 'rgba(200, 169, 81, 0.05)';
             dynamicBlock.style.borderColor = 'rgba(200, 169, 81, 0.5)';
 
-            // 5. Scroll to amended Exhibit B
+            // 5. Scroll to Step 2 (MSA Document) - User must read through
             setTimeout(() => {
-                dynamicBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                dynamicBlock.style.boxShadow = '0 0 30px rgba(200,169,81,0.2)';
-            }, 500);
+                step2Label.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
         }
 
         // Dynamic Date Population
@@ -3584,6 +3593,28 @@
                 if (el) el.textContent = value;
             }
         });
+
+        // ============================================
+        // ACKNOWLEDGMENT TOGGLE
+        // ============================================
+        function toggleExecuteButton() {
+            const checkbox = document.getElementById('msa-acknowledge');
+            const button = document.getElementById('execute-btn');
+
+            if (checkbox && button) {
+                if (checkbox.checked) {
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                    button.style.cursor = 'pointer';
+                    button.style.boxShadow = '0 4px 20px rgba(200, 169, 81, 0.3)';
+                } else {
+                    button.disabled = true;
+                    button.style.opacity = '0.5';
+                    button.style.cursor = 'not-allowed';
+                    button.style.boxShadow = 'none';
+                }
+            }
+        }
 
         // ============================================
         // SIRSI OPENSIGN INTEGRATION

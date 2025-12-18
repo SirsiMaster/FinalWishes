@@ -1089,7 +1089,7 @@
                         </div>
                         <p
                             style="font-size: 16px; color: white; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600; text-align: center; font-family: 'Inter', sans-serif !important;">
-                            Prepared for Tameeka Lockhart • December 17, 2025
+                            Prepared for Tameeka Lockhart • <span id="date-proposal"></span>
                         </p>
                     </div>
                 </div>
@@ -1124,9 +1124,11 @@
                                     <div class="flex flex-wrap justify-center gap-8 text-sm font-mono text-blue-300">
                                         <div><strong class="text-white">Project:</strong> FinalWishes Platform
                                             Development</div>
-                                        <div><strong class="text-white">Date:</strong> December 17, 2025</div>
-                                        <div><strong class="text-white">Ref:</strong> SOW-2025-001</div>
-                                        <div><strong class="text-white">MSA:</strong> MSA-2025-111-FW</div>
+                                        <div><strong class="text-white">Date:</strong> <span id="date-sow"></span></div>
+                                        <div><strong class="text-white">Ref:</strong> SOW-<span
+                                                id="year-ref"></span>-001</div>
+                                        <div><strong class="text-white">MSA:</strong> MSA-<span
+                                                id="year-msa"></span>-111-FW</div>
                                     </div>
                                 </div>
 
@@ -2634,12 +2636,14 @@
                         <!-- MSA HEADER -->
                         <div class="text-center mb-12 pb-12 border-b border-gray-200">
                             <h2>MASTER SERVICES AGREEMENT</h2>
-                            <p class="text-center opacity-60">Global Effective Date: December 11, 2025</p>
+                            <p class="text-center opacity-60">Global Effective Date: <span id="date-msa-global"></span>
+                            </p>
                         </div>
 
                         <div class="mb-12 p-8 bg-white/5 border border-white/10 rounded-lg">
                             <p class="mb-4 italic opacity-80">This <strong>Master Services Agreement</strong> (this
-                                "Agreement") is entered into as of December 11, 2025 (the "Effective Date") by and
+                                "Agreement") is entered into as of <span id="date-msa-effective"></span> (the "Effective
+                                Date") by and
                                 between:</p>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div class="p-4 bg-white/5 rounded border border-white/5">
@@ -2968,8 +2972,10 @@
                             <h2 class="text-center font-serif text-3xl text-[#C8A951] mb-12">Exhibit A:
                                 Statement of Work (SOW)</h2>
                             <p class="text-center opacity-60 mb-12">Project Name: FinalWishes Platform
-                                Development<br>SOW Reference: SOW-2025-001 | Associated MSA:
-                                MSA-2025-111-FW<br>Date: December 11, 2025</p>
+                                Development<br>SOW Reference: SOW-<span id="year-sow-exhibit"></span>-001 | Associated
+                                MSA:
+                                MSA-<span id="year-msa-exhibit"></span>-111-FW<br>Date: <span
+                                    id="date-exhibit-a"></span></p>
 
                             <h3>1. Executive Overview</h3>
                             <p>This Statement of Work ("SOW") defines the comprehensive scope for the
@@ -3207,7 +3213,8 @@
                             <div class="mb-12 p-6 bg-white/5 border border-white/10 rounded text-center">
                                 <p class="text-xl font-serif text-[#C8A951]">Project Budget: $200,000 (Standard) /
                                     $175,000 (Equity)</p>
-                                <p class="font-mono text-sm opacity-60 mt-2">Effective: December 11, 2025 | Launch
+                                <p class="font-mono text-sm opacity-60 mt-2">Effective: <span
+                                        id="date-exhibit-b"></span> | Launch
                                     Target: 20 Weeks</p>
                             </div>
 
@@ -3386,7 +3393,8 @@
                                 <div class="py-4 border-b border-white/10">
                                     <p class="font-serif italic text-3xl text-white">Tameeka Lockhart</p>
                                 </div>
-                                <p class="text-sm opacity-60 font-mono">Digitally Verified: 12/11/2025</p>
+                                <p class="text-sm opacity-60 font-mono">Digitally Verified: <span
+                                        id="date-signature"></span></p>
                             </div>
                             <div class="text-left space-y-4">
                                 <p class="text-xs text-[#C8A951] uppercase tracking-widest">Provider Signature
@@ -3526,6 +3534,46 @@
                 dynamicBlock.style.boxShadow = '0 0 30px rgba(200,169,81,0.2)';
             }, 500);
         }
+
+        // Dynamic Date Population
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date();
+            const year = today.getFullYear();
+
+            // Format: December 18, 2025
+            const longDate = today.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Format: 12/18/2025
+            const shortDate = today.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+
+            // Populate all date elements
+            const dateElements = {
+                'date-proposal': longDate,
+                'date-sow': longDate,
+                'year-ref': year,
+                'year-msa': year,
+                'date-msa-global': longDate,
+                'date-msa-effective': longDate,
+                'year-sow-exhibit': year,
+                'year-msa-exhibit': year,
+                'date-exhibit-a': longDate,
+                'date-exhibit-b': longDate,
+                'date-signature': 'Pending Execution'
+            };
+
+            for (const [id, value] of Object.entries(dateElements)) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            }
+        });
     </script>
 
 </body>

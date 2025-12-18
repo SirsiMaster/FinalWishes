@@ -432,12 +432,12 @@
                                 <!-- HEADER -->
                                 <div class="border-b border-white/10 pb-8 mb-12 text-center">
                                     <h2 class="text-4xl text-[#C8A951] mb-6 font-serif">Statement of Work (SOW)</h2>
-                                    <div
-                                        class="grid grid-cols-2 gap-4 text-sm font-mono text-blue-300 max-w-lg mx-auto text-left">
-                                        <div><strong>Project:</strong> FinalWishes Platform Development</div>
-                                        <div><strong>Date:</strong> December 17, 2025</div>
-                                        <div><strong>Ref:</strong> SOW-2025-001</div>
-                                        <div><strong>MSA:</strong> MSA-2025-111-FW</div>
+                                    <div class="flex flex-wrap justify-center gap-8 text-sm font-mono text-blue-300">
+                                        <div><strong class="text-white">Project:</strong> FinalWishes Platform
+                                            Development</div>
+                                        <div><strong class="text-white">Date:</strong> December 17, 2025</div>
+                                        <div><strong class="text-white">Ref:</strong> SOW-2025-001</div>
+                                        <div><strong class="text-white">MSA:</strong> MSA-2025-111-FW</div>
                                     </div>
                                 </div>
 
@@ -458,20 +458,24 @@
                                     Minnesota) where electronic filing or substantial digitization is possible.
                                 </p>
 
-                                <p class="mb-6">
+                                <p class="mb-12">
                                     We serve two distinct but linked personas: the <strong>Principal</strong> (Who plans
                                     and preserves) and the <strong>Executor</strong> (Who administers and settles). This
                                     platform bridges the gap between them, ensuring that a lifetime of assets and
                                     memories are not lost in transition.
                                 </p>
 
-                                <div class="bg-blue-900/40 border-l-4 border-[#C8A951] p-6 pl-8 mb-12 rounded-r-lg">
-                                    <p class="mb-0 text-white text-lg"><strong>Objective:</strong> deliver a
-                                        "Vault-Grade"
-                                        secure
-                                        platform that guides users through the 18+ month probate process, automating
-                                        form
-                                        generation, asset discovery, and stakeholder communication.</p>
+                                <!-- OBJECTIVE BAR (IMPROVED) -->
+                                <div
+                                    class="relative bg-gradient-to-r from-blue-900/20 via-blue-900/40 to-blue-900/20 border-y border-[#C8A951]/30 py-10 px-8 mb-16 text-center">
+                                    <div class="uppercase tracking-[0.2em] text-[#C8A951] text-sm font-bold mb-4">
+                                        Primary Objective</div>
+                                    <p
+                                        class="mb-0 text-white text-2xl font-serif italic max-w-4xl mx-auto leading-relaxed">
+                                        "Deliver a Vault-Grade secure platform that guides users through the <span
+                                            class="text-[#C8A951]">18+ month probate process</span>, automating form
+                                        generation, asset discovery, and stakeholder communication."
+                                    </p>
                                 </div>
 
                                 <!-- 2. DETAILED SCOPE -->
@@ -506,50 +510,66 @@
                                 <p class="mb-8">Provider will build automation or manual guidance paths for the
                                     following specific document categories:</p>
 
-                                <!-- Grid Layout for Categories -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                                <!-- Grid Layout for Categories (BALANCED 2x2) -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
 
                                     <!-- A: Identity -->
-                                    <div class="bg-white/5 p-6 rounded-lg border border-white/5">
+                                    <div
+                                        class="bg-white/5 p-8 rounded-lg border border-white/5 hover:border-[#C8A951]/30 transition-colors">
                                         <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
                                             A. Identity & Vital Records</h4>
                                         <ul class="list-disc pl-5 text-sm text-blue-200 space-y-3">
                                             <li><strong class="text-white">Death Certificate:</strong> Manual upload/OCR
-                                                processing (No State API exists).</li>
+                                                processing.</li>
                                             <li><strong class="text-white">Social Security:</strong> Secure entry &
                                                 validation.</li>
+                                            <li><strong class="text-white">Driver's License:</strong> Identity
+                                                verification scan.</li>
                                         </ul>
                                     </div>
 
                                     <!-- B: Probate Court -->
-                                    <div class="bg-white/5 p-6 rounded-lg border border-white/5">
+                                    <div
+                                        class="bg-white/5 p-8 rounded-lg border border-white/5 hover:border-[#C8A951]/30 transition-colors">
                                         <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
                                             B. Probate Court Filings</h4>
                                         <ul class="list-disc pl-5 text-sm text-blue-200 space-y-3">
                                             <li><strong class="text-white">Maryland:</strong> Integration/Guidance for
-                                                <strong>MDEC</strong>.
-                                            </li>
+                                                <strong>MDEC</strong>.</li>
                                             <li><strong class="text-white">Illinois:</strong> Guidance for
-                                                <strong>eCourt</strong> (Cook County).
-                                            </li>
+                                                <strong>eCourt</strong> (Cook County).</li>
                                             <li><strong class="text-white">Minnesota:</strong> Guidance for
-                                                <strong>MNCIS</strong>.
-                                            </li>
+                                                <strong>MNCIS</strong>.</li>
                                         </ul>
                                     </div>
 
-                                    <!-- C: Financial (Full Width) -->
-                                    <div class="bg-white/5 p-6 rounded-lg border border-white/5 md:col-span-2">
+                                    <!-- C: Financial Assets (Split) -->
+                                    <div
+                                        class="bg-white/5 p-8 rounded-lg border border-white/5 hover:border-[#C8A951]/30 transition-colors">
                                         <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
-                                            C. Financial & Asset Documents</h4>
-                                        <ul
-                                            class="list-disc pl-5 text-sm text-blue-200 space-y-3 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <li class="md:col-span-1"><strong class="text-white">Asset
-                                                    Discovery:</strong> Plaid integration (12,000+ institutions).</li>
-                                            <li class="md:col-span-1"><strong class="text-white">Life
-                                                    Insurance:</strong> "Notice of Death" generation.</li>
-                                            <li class="md:col-span-1"><strong class="text-white">Real Estate:</strong>
-                                                Zillow/Redfin valuation integration.</li>
+                                            C. Financial Assets</h4>
+                                        <ul class="list-disc pl-5 text-sm text-blue-200 space-y-3">
+                                            <li><strong class="text-white">Asset Discovery:</strong> Plaid integration
+                                                (12,000+ institutions).</li>
+                                            <li><strong class="text-white">Bank Accounts:</strong> Balance checks &
+                                                beneficiary validation.</li>
+                                            <li><strong class="text-white">Investments:</strong> Portfolio valuation
+                                                snapshots.</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- D: Property & Insurance (New) -->
+                                    <div
+                                        class="bg-white/5 p-8 rounded-lg border border-white/5 hover:border-[#C8A951]/30 transition-colors">
+                                        <h4 class="text-[#C8A951] font-bold mb-4 text-lg border-b border-white/10 pb-2">
+                                            D. Property & Insurance</h4>
+                                        <ul class="list-disc pl-5 text-sm text-blue-200 space-y-3">
+                                            <li><strong class="text-white">Real Estate:</strong> Zillow/Redfin valuation
+                                                integration.</li>
+                                            <li><strong class="text-white">Life Insurance:</strong> "Notice of Death"
+                                                generation.</li>
+                                            <li><strong class="text-white">Personal Property:</strong> Inventory logic &
+                                                photo vault.</li>
                                         </ul>
                                     </div>
                                 </div>

@@ -4423,6 +4423,53 @@
         }
     </script>
 
+    <!-- Guest Signer Modal -->
+    <div id="guest-signer-modal"
+        class="fixed inset-0 z-[100000] hidden items-center justify-center bg-black/80 backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div
+            class="relative w-full max-w-md transform rounded-2xl border border-gold/30 bg-[#0f172a] p-8 shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-all duration-300 scale-95 opacity-0">
+            <!-- Modal Header -->
+            <div class="mb-6 text-center">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gold/10 text-gold">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-2xl text-gold">Signer Identity</h3>
+                <p class="mt-2 text-sm text-gray-400">Please provide your details to authenticate this digital
+                    signature.</p>
+            </div>
+
+            <!-- Modal Form -->
+            <div class="space-y-4">
+                <div>
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-500">Full
+                        Name</label>
+                    <input type="text" id="guest-name"
+                        class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-600 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                        placeholder="e.g. John Doe">
+                </div>
+                <div>
+                    <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-500">Email
+                        Address</label>
+                    <input type="email" id="guest-email"
+                        class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-600 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                        placeholder="e.g. john@example.com">
+                </div>
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="mt-8 flex gap-3">
+                <button onclick="cancelGuestModal()"
+                    class="flex-1 rounded-lg border border-white/10 bg-white/5 py-3 text-sm font-semibold text-gray-400 hover:bg-white/10 transition-colors">Cancel</button>
+                <button onclick="confirmGuestModal()"
+                    class="flex-1 rounded-lg bg-gold py-3 text-sm font-semibold text-black hover:bg-[#D4AF37] transition-colors shadow-lg shadow-gold/20">Continue
+                    to Sign</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK (Modular) -->
     <script type="module">
         import { AuthService } from '../assets/js/firebase-init.js';
@@ -4430,6 +4477,73 @@
     </script>
 
     <script>
+        // ============================================
+        // VISUAL MODAL LOGIC
+        // ============================================
+        let guestModalResolve = null;
+        let guestModalReject = null;
+
+        function showGuestModal() {
+            return new Promise((resolve, reject) => {
+                guestModalResolve = resolve;
+                guestModalReject = reject;
+
+                const modal = document.getElementById('guest-signer-modal');
+                const content = modal.querySelector('div');
+
+                modal.classList.remove('hidden');
+                // Small delay for transition
+                requestAnimationFrame(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                });
+
+                document.getElementById('guest-name').focus();
+            });
+        }
+
+        function hideGuestModal() {
+            const modal = document.getElementById('guest-signer-modal');
+            const content = modal.querySelector('div');
+
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('guest-name').value = '';
+                document.getElementById('guest-email').value = '';
+            }, 300);
+        }
+
+        function confirmGuestModal() {
+            const name = document.getElementById('guest-name').value.trim();
+            const email = document.getElementById('guest-email').value.trim();
+
+            if (!name || !email) {
+                alert('Both Name and Email are required.');
+                return;
+            }
+            if (!email.includes('@')) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            if (guestModalResolve) {
+                guestModalResolve({ name, email });
+                hideGuestModal();
+            }
+        }
+
+        function cancelGuestModal() {
+            if (guestModalResolve) {
+                guestModalResolve(null); // Return null to indicate cancellation
+                hideGuestModal();
+            }
+        }
+
         // ============================================
         // SIRSI OPENSIGN INTEGRATION
         // ============================================
@@ -4442,21 +4556,36 @@
             const signatureBlock = document.getElementById('signature-block');
 
             try {
-                // 1. Authenticate User (Modular SDK)
-                // Use window.AuthService if available, otherwise fallback (or error if not loaded)
+                // 1. Authenticate or Identify User
                 const user = window.AuthService ? window.AuthService.getCurrentUser() : null;
 
-                if (!user) {
-                    console.error('AuthService not ready or user not logged in');
-                    alert('You must be logged in to sign this agreement. Please refresh or log in.');
-                    return;
+                let signerName = '';
+                let signerEmail = '';
+                let idToken = null;
+
+                if (user) {
+                    signerName = user.displayName || 'Valued Client';
+                    signerEmail = user.email;
+                    idToken = await user.getIdToken();
+                } else {
+                    // NO USER -> SHOW GUEST MODAL
+                    const guestData = await showGuestModal();
+
+                    if (!guestData) {
+                        // User cancelled
+                        return;
+                    }
+
+                    signerName = guestData.name;
+                    signerEmail = guestData.email;
                 }
 
                 // 2. UI Loading State
                 executeBtn.innerHTML = '<span>⏳ Processing...</span>';
                 executeBtn.disabled = true;
 
-                // 3. Confirm Intent
+                // 3. Confirm Intent (Standard Browser Confirm is fine for final legal check)
+                // Or we can assume the Modal was intent enough? Let's keep it safe.
                 const confirmed = confirm(
                     'Legally Binding Action\n\n' +
                     'You are about to initiate the electronic signature process for the Master Services Agreement. ' +
@@ -4471,23 +4600,24 @@
                     return;
                 }
 
-                // 4. Get Auth Token
-                const idToken = await user.getIdToken();
+                // 4. Prepare Headers (Auth vs Guest)
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (idToken) {
+                    headers['Authorization'] = `Bearer ${idToken}`;
+                }
 
                 // 5. Create Envelope via API
-                // URL: https://us-central1-sirsi-nexus-live.cloudfunctions.net/createEnvelope
                 const response = await fetch(`${OPENSIGN_API_BASE}/createEnvelope`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${idToken}`
-                    },
+                    headers: headers,
                     body: JSON.stringify({
                         docType: 'MSA',
                         recipients: [
                             {
-                                name: user.displayName || 'Valued Client',
-                                email: user.email,
+                                name: signerName,
+                                email: signerEmail,
                                 role: 'Client',
                                 type: 'signer'
                             },
@@ -4516,7 +4646,7 @@
                 // 6. Handle Success
                 console.log('Envelope Created:', result.envelopeId);
 
-                // Update UI to "Executed" state immediately (optimistic update)
+                // Optimistic UI Update
                 if (signatureBlock) {
                     const signatureEl = document.getElementById('date-signature');
                     if (signatureEl) signatureEl.textContent = new Date().toLocaleDateString();

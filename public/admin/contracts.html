@@ -4672,9 +4672,11 @@
                 class="absolute right-16 top-1/2 -translate-y-1/2 bg-[#0f172a]/95 backdrop-blur-md border border-white/20 px-5 py-3 rounded-lg font-serif text-[11px] uppercase tracking-[0.25em] text-white/60 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0 shadow-2xl">Execute</span>
         </div>
     </div>
-    <!-- Guest Signer Modal - Native Dialog -->
+
+    <!-- Guest Signer Modal - Native Dialog with explicit centering -->
     <dialog id="guest-signer-modal"
-        class="backdrop:bg-black/80 bg-transparent p-0 backdrop:backdrop-blur-sm rounded-2xl border-none shadow-2xl outline-none m-auto overflow-hidden">
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0;"
+        class="backdrop:bg-black/80 bg-transparent p-0 backdrop:backdrop-blur-sm rounded-2xl border-none shadow-2xl outline-none overflow-hidden">
         <div class="w-full max-w-md bg-[#0f172a] p-8 rounded-2xl border border-gold/30 text-left relative">
             <!-- Modal Header -->
             <div class="mb-6 text-center">

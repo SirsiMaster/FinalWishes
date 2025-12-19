@@ -1252,7 +1252,7 @@
                 data-search-placeholder="Search contract terms..."></header>
 
             <!-- Immersive Contract View -->
-            <div class="contract-immersive-wrapper pb-48">
+            <div id="contract-immersive-wrapper" class="contract-immersive-wrapper pb-48">
 
                 <!-- Header Component -->
                 <div class="flex flex-col items-center justify-center mb-20 pt-10 px-4 relative w-full mx-auto">
@@ -2638,9 +2638,9 @@
                     <!-- TAB 3: CONTRACT -->
                     <div id="contract" class="tab-content" style="position: relative;">
 
-                        <!-- Workflow Stepper (Sticky Top) -->
+                        <!-- Workflow Stepper (Fixed Top) -->
                         <div id="workflow-stepper"
-                            class="sticky top-[80px] z-[90] bg-[#0f172a]/95 backdrop-blur-md border-b border-gold/20 py-6 mb-12 no-print opacity-0 transition-opacity duration-1000">
+                            class="fixed top-[70px] left-0 md:left-[260px] w-full md:w-[calc(100%-260px)] z-[90] bg-[#0f172a]/95 backdrop-blur-md border-b border-gold/20 py-6 mb-12 no-print opacity-0 transition-opacity duration-1000 hidden">
                             <div class="max-w-4xl mx-auto flex justify-between items-center px-12 relative">
                                 <!-- Connection Lines (Background) -->
                                 <div class="absolute top-5 left-24 right-24 h-[1px] bg-white/10 z-0"></div>
@@ -3755,6 +3755,16 @@
             if (tabId === 'sow') buttons[0].classList.add('active');
             if (tabId === 'cost') buttons[1].classList.add('active');
             if (tabId === 'contract') buttons[2].classList.add('active');
+
+            // Handle Stepper Visibility
+            const stepper = document.getElementById('workflow-stepper');
+            if (stepper) {
+                if (tabId === 'contract') {
+                    stepper.classList.remove('hidden');
+                } else {
+                    stepper.classList.add('hidden');
+                }
+            }
         }
 
         function selectContractPlan(planName, btnElement) {
@@ -3927,27 +3937,31 @@
             // ============================================
             // SCROLL PROGRESS TRACKING
             // ============================================
-            window.addEventListener('scroll', function () {
+            const scrollingContainer = document.getElementById('contract-immersive-wrapper') || window;
+            
+            scrollingContainer.addEventListener('scroll', function () {
                 const contractTab = document.getElementById('contract');
                 if (!contractTab || contractTab.style.display === 'none') return;
+                
+                const scrollTop = scrollingContainer === window ? window.scrollY : scrollingContainer.scrollTop;
 
                 // Show/Hide Stepper based on scroll position (reveals as you start reading)
-                if (window.scrollY > 200) {
+                if (scrollTop > 100) {
+                    workflowStepper.classList.remove('hidden');
                     workflowStepper.classList.add('opacity-100');
                     workflowStepper.classList.remove('opacity-0');
+                } else {
+                    workflowStepper.classList.add('opacity-0');
+                    workflowStepper.classList.remove('opacity-100');
                 }
-
-                const winScroll = window.scrollY;
-                const docHeight = contractTab.scrollHeight;
-                const winHeight = window.innerHeight;
 
                 // Calculate progress through Step 1 (Reading)
                 // We map progress from the start of the MSA to the acknowledgment block
                 const startPos = contractDoc.offsetTop;
                 const endPos = msaAckBlock.offsetTop;
                 const totalReadingHeight = endPos - startPos;
-                const currentReadingPos = winScroll - startPos + (winHeight * 0.5);
-
+                const currentReadingPos = scrollTop - startPos + (window.innerHeight * 0.4);
+                
                 let progress = (currentReadingPos / totalReadingHeight) * 100;
                 progress = Math.max(0, Math.min(100, progress));
 

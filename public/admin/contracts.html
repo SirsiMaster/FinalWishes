@@ -3839,22 +3839,29 @@
             btnElement.style.backgroundColor = btnElement.classList.contains('border-[#10B981]') ? '#10B981' : '#C8A951';
             btnElement.style.color = '#000000';
 
-            step3Label.classList.add('opacity-100');
+            // 3. Update Step 3 Label safely
+            const step3Label = document.getElementById('step-3-label');
+            if (step3Label) {
+                step3Label.classList.remove('opacity-0');
+                step3Label.classList.add('opacity-100');
+            }
 
-            // 5. Reveal MSA Action Bar (Draft State)
+            // 5b. Ensure Signature Block is Visible
+            const signatureBlock = document.getElementById('signature-block');
+            if (signatureBlock) {
+                // Ensure it's visible even if CSS is fighting us
+                signatureBlock.style.opacity = '1';
+                signatureBlock.style.pointerEvents = 'auto';
+                signatureBlock.classList.remove('opacity-0', 'pointer-events-none');
+                signatureBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // 5. Reveal MSA Action Bar (Draft State) if it exists
             const msaFab = document.getElementById('msa-fab');
             if (msaFab) {
                 msaFab.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-8');
                 msaFab.classList.add('opacity-100', 'translate-y-0');
                 updateMSAState('draft'); // Set to draft explicitly
-            }
-
-            // 5b. Reveal Signature Block
-            const signatureBlock = document.getElementById('signature-block');
-            if (signatureBlock) {
-                signatureBlock.classList.remove('opacity-0', 'pointer-events-none');
-                signatureBlock.classList.add('opacity-100');
-                signatureBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
             // 4. Update Exhibit B

@@ -4421,7 +4421,15 @@
                 }
             }
         }
+    </script>
 
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { AuthService } from '../assets/js/firebase-init.js';
+        window.AuthService = AuthService;
+    </script>
+
+    <script>
         // ============================================
         // SIRSI OPENSIGN INTEGRATION
         // ============================================
@@ -4434,10 +4442,13 @@
             const signatureBlock = document.getElementById('signature-block');
 
             try {
-                // 1. Authenticate User
-                const user = firebase.auth().currentUser;
+                // 1. Authenticate User (Modular SDK)
+                // Use window.AuthService if available, otherwise fallback (or error if not loaded)
+                const user = window.AuthService ? window.AuthService.getCurrentUser() : null;
+
                 if (!user) {
-                    alert('You must be logged in to sign this agreement.');
+                    console.error('AuthService not ready or user not logged in');
+                    alert('You must be logged in to sign this agreement. Please refresh or log in.');
                     return;
                 }
 

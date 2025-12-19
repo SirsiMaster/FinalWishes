@@ -1057,10 +1057,150 @@
             color: white;
             line-height: 1.5;
         }
+
+        /* ============================================
+           PRINT / PDF STYLES
+           These override all glassmorphism for clean print output
+           ============================================ */
+        @media print {
+
+            /* Reset page settings */
+            @page {
+                size: letter;
+                margin: 0.75in;
+            }
+
+            /* Hide non-essential UI */
+            #sidebar-root,
+            #universal-header-root,
+            .tab-container,
+            #msa-fab,
+            #msa-action-bar,
+            #msa-acknowledgment-block,
+            #selection-phase,
+            #signature-block,
+            #step-1-label,
+            #step-2-label,
+            #step-3-label,
+            .no-print,
+            button,
+            nav,
+            header,
+            footer,
+            .sidebar {
+                display: none !important;
+            }
+
+            /* Reset body and backgrounds */
+            body,
+            html {
+                background: white !important;
+                color: #1e293b !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .admin-wrapper,
+            .main-content,
+            .contract-immersive-wrapper,
+            .contract-tabs-wrapper,
+            .tab-content {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Make the contract tab always visible */
+            .tab-content#contract {
+                display: block !important;
+                opacity: 1 !important;
+            }
+
+            /* Strip glassmorphism from legal-viewer */
+            .legal-viewer,
+            #contract-document {
+                background: white !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                color: #1e293b !important;
+            }
+
+            /* Typography for print */
+            .legal-viewer h2,
+            .legal-viewer h3,
+            .legal-viewer h4 {
+                color: #0f172a !important;
+                border-bottom-color: #0f172a !important;
+                page-break-after: avoid;
+            }
+
+            .legal-viewer p,
+            .legal-viewer li,
+            .legal-viewer td {
+                color: #1e293b !important;
+                font-size: 11pt !important;
+                line-height: 1.6 !important;
+            }
+
+            .legal-viewer ul li::before {
+                color: #0f172a !important;
+            }
+
+            /* Tables for print */
+            .legal-viewer table {
+                background: white !important;
+                border: 1px solid #cbd5e1 !important;
+            }
+
+            .legal-viewer th {
+                background: #f1f5f9 !important;
+                color: #0f172a !important;
+                border-bottom: 2px solid #0f172a !important;
+            }
+
+            .legal-viewer td {
+                border-bottom: 1px solid #e2e8f0 !important;
+            }
+
+            /* Gold accents become dark gold/brown for print */
+            [style*="C8A951"] {
+                color: #92710d !important;
+            }
+
+            /* Prevent page breaks in awkward places */
+            h2,
+            h3,
+            h4 {
+                page-break-after: avoid;
+            }
+
+            p,
+            li {
+                orphans: 3;
+                widows: 3;
+            }
+
+            section {
+                page-break-inside: avoid;
+            }
+
+            /* Exhibit blocks for print */
+            #exhibit-b-dynamic {
+                background: #f8fafc !important;
+                border: 1px solid #cbd5e1 !important;
+                color: #1e293b !important;
+            }
+        }
     </style>
 
-    <!-- PDF Generation Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Note: PDF generation now uses browser's native print dialog with @media print CSS -->
+    <!-- Future: OpenSign API will provide server-side PDF generation for signed documents -->
 </head>
 
 <body>
@@ -3736,92 +3876,29 @@
         // MSA DOWNLOAD & EMAIL FUNCTIONS
         // ============================================
         function downloadMSAPdf(e) {
-            const contractDoc = document.getElementById('contract-document');
-            if (!contractDoc) {
-                alert('Contract document not found.');
-                return;
+            // Using browser's native print function with @media print CSS
+            // This provides 100% CSS fidelity and leverages OS-level PDF generation
+            // Future: Integrate with OpenSign PDF API for pre-sign and post-sign documents
+
+            const btn = e ? e.target.closest('button') : null;
+            const originalHTML = btn ? btn.innerHTML : '';
+
+            if (btn) {
+                btn.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0f172a" stroke-width="3" opacity="0.3"></circle><path fill="#0f172a" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+                btn.disabled = true;
             }
 
-            // Show loading state on button
-            const btn = e ? e.target.closest('button') : document.querySelector('#msa-fab button:first-child');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0f172a" stroke-width="3" opacity="0.3"></circle><path fill="#0f172a" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-            btn.disabled = true;
+            // Small delay to show loading state, then trigger print
+            setTimeout(() => {
+                // Trigger browser print dialog - user can select "Save as PDF"
+                window.print();
 
-            // Clone the document and apply print-friendly styles
-            const clone = contractDoc.cloneNode(true);
-            clone.style.position = 'absolute';
-            clone.style.left = '-9999px';
-            clone.style.top = '0';
-            clone.style.width = '800px';
-            clone.style.background = '#FFFFFF';
-            clone.style.backdropFilter = 'none';
-            clone.style.color = '#1e293b';
-            clone.style.padding = '40px';
-            clone.style.border = 'none';
-            clone.style.boxShadow = 'none';
-
-            // Apply print-friendly colors to all child elements
-            clone.querySelectorAll('*').forEach(el => {
-                const computed = window.getComputedStyle(el);
-                // Fix transparent/semi-transparent backgrounds
-                if (computed.backgroundColor.includes('rgba') || computed.backgroundColor === 'transparent') {
-                    el.style.backgroundColor = 'transparent';
+                // Restore button state
+                if (btn) {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
                 }
-                // Make text dark for print
-                if (el.tagName !== 'BUTTON' && el.tagName !== 'A') {
-                    const color = computed.color;
-                    if (color.includes('rgba(255') || color === 'white' || color === 'rgb(255, 255, 255)') {
-                        el.style.color = '#1e293b';
-                    }
-                }
-                // Remove backdrop filters
-                el.style.backdropFilter = 'none';
-                el.style.webkitBackdropFilter = 'none';
-            });
-
-            // Style headers for print
-            clone.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(h => {
-                h.style.color = '#0f172a';
-            });
-
-            // Gold accents stay gold
-            clone.querySelectorAll('[style*="C8A951"]').forEach(el => {
-                el.style.color = '#b8860b';
-            });
-
-            // Remove any duplicate elements (step labels, acknowledgment blocks)
-            const elementsToRemove = clone.querySelectorAll('#step-1-label, #msa-acknowledgment-block, #selection-phase, #pricing-selection-phase, .step-3-execution');
-            elementsToRemove.forEach(el => el.remove());
-
-            document.body.appendChild(clone);
-
-            const opt = {
-                margin: [0.75, 0.75, 0.75, 0.75],
-                filename: 'Legacy_Estate_OS_Master_Services_Agreement.pdf',
-                image: { type: 'jpeg', quality: 0.95 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#FFFFFF',
-                    logging: false,
-                    letterRendering: true
-                },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-
-            html2pdf().set(opt).from(clone).save().then(() => {
-                document.body.removeChild(clone);
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-            }).catch(err => {
-                console.error('PDF generation error:', err);
-                document.body.removeChild(clone);
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                alert('Error generating PDF. Please try again.');
-            });
+            }, 300);
         }
 
         function emailMSAToSelf(e) {

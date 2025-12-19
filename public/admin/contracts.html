@@ -2636,55 +2636,46 @@
                     </div>
 
                     <!-- TAB 3: CONTRACT -->
-                    <div id="contract" class="tab-content" style="position: relative; padding-top: 140px;">
+                    <div id="contract" class="tab-content" style="position: relative;">
 
-                        <!-- Workflow Stepper (Fixed Top) -->
-                        <div id="workflow-stepper"
-                            class="fixed top-[70px] left-0 md:left-[260px] w-full md:w-[calc(100%-260px)] z-[90] bg-[#0f172a] border-b border-gold/20 py-2 no-print opacity-0 transition-all duration-500 hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                            <div class="max-w-4xl mx-auto flex justify-between items-center px-12 relative">
-                                <!-- Connection Lines (Background) -->
-                                <div class="absolute top-4 left-24 right-24 h-[1px] bg-white/10 z-0"></div>
-                                <div id="stepper-progress-line"
-                                    class="absolute top-4 left-24 h-[1px] bg-gold z-0 transition-all duration-700"
-                                    style="width: 0%;"></div>
+                        <!-- Vertical Workflow Guide (Fixed Right) -->
+                        <div id="vertical-workflow-guide"
+                            class="fixed right-6 md:right-12 top-1/2 -translate-y-1/2 z-[100] flex flex-col items-center gap-12 no-print transition-all duration-1000 opacity-0 pointer-events-none hidden">
+                            <!-- Vertical Progress Line (Background) -->
+                            <div class="absolute top-4 bottom-4 w-[2px] bg-white/5 z-0"></div>
+                            <div id="v-progress-fill"
+                                class="absolute top-4 w-[2px] bg-gold z-0 transition-all duration-300 shadow-[0_0_10px_rgba(200,169,81,0.5)]"
+                                style="height: 0%;"></div>
 
-                                <!-- Step 1: Review -->
-                                <div id="step-1-node"
-                                    class="flex flex-col items-center gap-2 z-10 transition-all duration-500">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500 text-sm">
-                                        1</div>
-                                    <span
-                                        class="text-[9px] font-serif uppercase tracking-[0.2em] text-gold font-bold">Review
-                                        MSA</span>
-                                </div>
-
-                                <!-- Step 2: Select -->
-                                <div id="step-2-node"
-                                    class="flex flex-col items-center gap-2 z-10 opacity-30 grayscale transition-all duration-500">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold text-sm">
-                                        2</div>
-                                    <span class="text-[9px] font-serif uppercase tracking-[0.2em] text-white/50">Select
-                                        Plan</span>
-                                </div>
-
-                                <!-- Step 3: Execute -->
-                                <div id="step-3-node"
-                                    class="flex flex-col items-center gap-2 z-10 opacity-30 grayscale transition-all duration-500">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold text-sm">
-                                        3</div>
-                                    <span
-                                        class="text-[9px] font-serif uppercase tracking-[0.2em] text-white/50">Execute</span>
-                                </div>
+                            <!-- Step 1: Review -->
+                            <div id="v-step-1" class="relative z-10 group flex flex-col items-center">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500 scale-110">
+                                    1</div>
+                                <span
+                                    class="absolute right-14 top-1/2 -translate-y-1/2 bg-[#0f172a]/90 backdrop-blur-md border border-gold/30 px-4 py-2 rounded font-serif text-[10px] uppercase tracking-[0.2em] text-gold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">Review
+                                    MSA</span>
                             </div>
 
-                            <!-- Detailed Scroll Progress Bar (Bottom of Stepper) -->
-                            <div class="absolute bottom-0 left-0 h-[2px] bg-white/5 w-full">
-                                <div id="scroll-progress-fill"
-                                    class="h-full bg-gold transition-all duration-100 shadow-[0_0_10px_rgba(200,169,81,0.5)]"
-                                    style="width: 0%;"></div>
+                            <!-- Step 2: Select -->
+                            <div id="v-step-2"
+                                class="relative z-10 group flex flex-col items-center opacity-30 grayscale transition-all duration-500">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500">
+                                    2</div>
+                                <span
+                                    class="absolute right-14 top-1/2 -translate-y-1/2 bg-[#0f172a]/90 backdrop-blur-md border border-white/10 px-4 py-2 rounded font-serif text-[10px] uppercase tracking-[0.2em] text-white/50 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">Select
+                                    Plan</span>
+                            </div>
+
+                            <!-- Step 3: Execute -->
+                            <div id="v-step-3"
+                                class="relative z-10 group flex flex-col items-center opacity-30 grayscale transition-all duration-500">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500">
+                                    3</div>
+                                <span
+                                    class="absolute right-14 top-1/2 -translate-y-1/2 bg-[#0f172a]/90 backdrop-blur-md border border-white/10 px-4 py-2 rounded font-serif text-[10px] uppercase tracking-[0.2em] text-white/50 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">Execute</span>
                             </div>
                         </div>
 
@@ -3757,12 +3748,12 @@
             if (tabId === 'contract') buttons[2].classList.add('active');
 
             // Handle Stepper Visibility
-            const stepper = document.getElementById('workflow-stepper');
-            if (stepper) {
+            const verticalGuide = document.getElementById('vertical-workflow-guide');
+            if (verticalGuide) {
                 if (tabId === 'contract') {
-                    stepper.classList.remove('hidden');
+                    verticalGuide.classList.remove('hidden');
                 } else {
-                    stepper.classList.add('hidden');
+                    verticalGuide.classList.add('hidden');
                 }
             }
         }
@@ -3902,7 +3893,7 @@
             const msaAckBlock = document.getElementById('msa-acknowledgment-block');
             const msaAckLabel = document.getElementById('msa-ack-label');
             const msaCheckbox = document.getElementById('msa-read-acknowledge');
-            const workflowStepper = document.getElementById('workflow-stepper');
+            const verticalGuide = document.getElementById('vertical-workflow-guide');
 
             if (contractDoc) {
                 // Use IntersectionObserver to detect when user scrolls to bottom
@@ -3935,7 +3926,7 @@
             }
 
             // ============================================
-            // SCROLL PROGRESS TRACKING
+            // VERTICAL PROGRESS TRACKING
             // ============================================
             const scrollingContainer = document.getElementById('contract-immersive-wrapper') || window;
 
@@ -3945,18 +3936,16 @@
 
                 const scrollTop = scrollingContainer === window ? window.scrollY : scrollingContainer.scrollTop;
 
-                // Show/Hide Stepper based on scroll position (reveals as you start reading)
+                // Show/Hide Vertical Guide based on scroll
                 if (scrollTop > 100) {
-                    workflowStepper.classList.remove('hidden');
-                    workflowStepper.classList.add('opacity-100');
-                    workflowStepper.classList.remove('opacity-0');
+                    verticalGuide.classList.remove('opacity-0', 'pointer-events-none');
+                    verticalGuide.classList.add('opacity-100', 'pointer-events-auto');
                 } else {
-                    workflowStepper.classList.add('opacity-0');
-                    workflowStepper.classList.remove('opacity-100');
+                    verticalGuide.classList.add('opacity-0', 'pointer-events-none');
+                    verticalGuide.classList.remove('opacity-100', 'pointer-events-auto');
                 }
 
-                // Calculate progress through Step 1 (Reading)
-                // We map progress from the start of the MSA to the acknowledgment block
+                // Calculate vertical progress through Step 1 (Reading)
                 const startPos = contractDoc.offsetTop;
                 const endPos = msaAckBlock.offsetTop;
                 const totalReadingHeight = endPos - startPos;
@@ -3965,20 +3954,27 @@
                 let progress = (currentReadingPos / totalReadingHeight) * 100;
                 progress = Math.max(0, Math.min(100, progress));
 
-                const progressFill = document.getElementById('scroll-progress-fill');
-                if (progressFill) progressFill.style.width = progress + "%";
+                // Map 0-100% progress to the first segment of the vertical line (0 to ~33%)
+                // Since this is just Step 1, we represent the progress within the first segment
+                const progressFill = document.getElementById('v-progress-fill');
+                if (progressFill) {
+                    // Total guide height is roughly shared by 3 steps. 
+                    // To keep it simple, we'll just track the 100% of Step 1 as the first 33%.
+                    // But for now, let's just make it fill to the current step.
+                    progressFill.style.height = (progress / 3) + "%";
+                }
             });
         });
 
         function updateStepperStatus(step) {
-            const nodes = [
-                document.getElementById('step-1-node'),
-                document.getElementById('step-2-node'),
-                document.getElementById('step-3-node')
+            const vNodes = [
+                document.getElementById('v-step-1'),
+                document.getElementById('v-step-2'),
+                document.getElementById('v-step-3')
             ];
-            const progressLine = document.getElementById('stepper-progress-line');
+            const vProgressFill = document.getElementById('v-progress-fill');
 
-            nodes.forEach((node, idx) => {
+            vNodes.forEach((node, idx) => {
                 if (!node) return;
                 const circle = node.querySelector('div');
                 const label = node.querySelector('span');
@@ -3987,39 +3983,28 @@
                     // Completed Steps
                     node.classList.remove('opacity-30', 'grayscale');
                     circle.innerHTML = '✓';
-                    circle.style.backgroundColor = '#10B981';
-                    circle.style.borderColor = '#10B981';
-                    circle.style.color = '#fff';
-                    circle.style.boxShadow = 'none';
+                    circle.className = "w-10 h-10 rounded-full bg-[#10B981] border border-[#10B981] text-white flex items-center justify-center font-bold transition-all duration-500 scale-100";
                     label.style.color = '#10B981';
-                    label.classList.add('font-bold');
+                    label.className = label.className.replace('text-gold', 'text-[#10B981]').replace('text-white/50', 'text-[#10B981]');
                 } else if (idx === step - 1) {
                     // Current Step
                     node.classList.remove('opacity-30', 'grayscale');
                     circle.innerHTML = idx + 1;
-                    circle.style.backgroundColor = '#C8A951';
-                    circle.style.borderColor = '#C8A951';
-                    circle.style.color = '#0f172a';
-                    circle.style.boxShadow = '0 0 20px rgba(200, 169, 81, 0.3)';
+                    circle.className = "w-10 h-10 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500 scale-110";
                     label.style.color = '#C8A951';
-                    label.classList.add('font-bold');
                 } else {
                     // Future Steps
                     node.classList.add('opacity-30', 'grayscale');
                     circle.innerHTML = idx + 1;
-                    circle.style.backgroundColor = '#0f172a';
-                    circle.style.borderColor = 'rgba(255,255,255,0.2)';
-                    circle.style.color = '#fff';
-                    circle.style.boxShadow = 'none';
+                    circle.className = "w-10 h-10 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500 scale-100";
                     label.style.color = 'rgba(255,255,255,0.5)';
-                    label.classList.remove('font-bold');
                 }
             });
 
-            if (progressLine) {
-                if (step === 1) progressLine.style.width = '0%';
-                if (step === 2) progressLine.style.width = '50%';
-                if (step === 3) progressLine.style.width = '100%';
+            if (vProgressFill) {
+                if (step === 1) vProgressFill.style.height = '0%'; // Handled by scroll listener for micro-progress
+                if (step === 2) vProgressFill.style.height = '50%';
+                if (step === 3) vProgressFill.style.height = '100%';
             }
         }
 

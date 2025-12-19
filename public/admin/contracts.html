@@ -1485,18 +1485,23 @@
                 margin-bottom: 0 !important;
             }
 
-            /* Stat cards grid - 2 column on mobile, with proper sizing */
+            /* Stat cards - horizontal scroll on mobile, keep 4 side by side */
             .grid-cols-4,
             [style*="grid-template-columns: repeat(4"],
             #cost>div:first-child {
-                display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
                 gap: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
             }
 
-            /* Stat card children - ensure proper sizing */
+            /* Stat card children - fixed width for horizontal scroll */
             #cost>div:first-child>div {
-                padding: 1rem 0.75rem !important;
+                flex: 0 0 140px !important;
+                min-width: 140px !important;
+                padding: 0.75rem 0.5rem !important;
             }
 
             /* Stat card values - scale down fonts */
@@ -1507,11 +1512,11 @@
 
             #cost>div:first-child>div [style*="font-size: 14px"],
             #cost>div:first-child>div [style*="font-size: 16px"] {
-                font-size: 0.65rem !important;
+                font-size: 0.6rem !important;
             }
 
             #cost>div:first-child>div [style*="font-size: 12px"] {
-                font-size: 0.55rem !important;
+                font-size: 0.5rem !important;
             }
 
             /* Category cards (Identity, Probate, etc.) */

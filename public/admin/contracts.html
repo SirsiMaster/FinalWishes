@@ -5553,6 +5553,76 @@
             </form>
         </div>
     </dialog>
+
+    <!-- OpenSign Modal Fix - Aggressive Centering -->
+    <script>
+        // ============================================
+        // AGGRESSIVE MODAL CENTERING FIX (MutationObserver)
+        // ============================================
+        (function () {
+            // Function to forcibly center an element
+            function forceCenterElement(el) {
+                if (!el || !el.style) return;
+
+                // key heuristics to identify the rogue modal
+                // 1. It's likely fixed or absolute
+                // 2. It has a high z-index
+                // 3. It might contain text like "Sign" or "Contract" or be an iframe or a dialog
+
+                const style = window.getComputedStyle(el);
+                const isFixedOrAbs = style.position === 'fixed' || style.position === 'absolute';
+                const isHighZ = parseInt(style.zIndex) > 100;
+                // Check if it matches OpenSign signatures
+                const isOpenSign = el.id?.toString().toLowerCase().includes('opensign') ||
+                    el.className?.toString().toLowerCase().includes('opensign') ||
+                    el.tagName === 'IFRAME' ||
+                    el.tagName === 'DIALOG' ||
+                    (el.textContent && el.textContent.includes('Continue to Sign'));
+
+                if ((isFixedOrAbs && isOpenSign) || (isFixedOrAbs && isHighZ && el.tagName === 'DIV')) {
+                    // Force styles directly on the element to assert dominance
+                    el.style.setProperty('position', 'fixed', 'important');
+                    el.style.setProperty('top', '50%', 'important');
+                    el.style.setProperty('left', '50%', 'important');
+                    el.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
+                    el.style.setProperty('margin', '0', 'important');
+                    el.style.setProperty('max-width', '95vw', 'important');
+                    el.style.setProperty('max-height', '95vh', 'important');
+                    el.style.setProperty('inset', 'auto', 'important'); // Reset inset/right/bottom
+                    el.style.setProperty('right', 'auto', 'important');
+                    el.style.setProperty('bottom', 'auto', 'important');
+
+                    // Also maintain it on resize/scroll
+                    const keepCentered = () => {
+                        el.style.setProperty('top', '50%', 'important');
+                        el.style.setProperty('left', '50%', 'important');
+                        el.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
+                    };
+                    window.addEventListener('resize', keepCentered);
+                    window.addEventListener('scroll', keepCentered);
+                }
+            }
+
+            // 1. Check existing elements immediately
+            setTimeout(() => {
+                document.querySelectorAll('body > div, body > iframe, body > dialog').forEach(forceCenterElement);
+            }, 500);
+
+            // 2. Observe for new elements
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // ELEMENT_NODE
+                            forceCenterElement(node);
+                        }
+                    });
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+            console.log('OpenSign Fix: MutationObserver active');
+        })();
+    </script>
 </body>
 
 </html>

@@ -16,6 +16,8 @@
     <!-- Dependencies -->
     <link href="../assets/css/tailwind.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- HTML to PDF - Simple, client-side PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <!-- Admin Layout Styles -->
     <link rel="stylesheet" href="../assets/css/admin-layout.css">
@@ -4331,11 +4333,43 @@
                 ? 'Legacy_Estate_OS_Master_Agreement_EXECUTED.pdf'
                 : 'Legacy_Estate_OS_Master_Agreement_DRAFT.pdf';
 
-            if (msaExecuted) {
-                console.log('Fetching Executed Document from OpenSign Vault...');
+            const contractDoc = document.getElementById('contract-document');
+            if (!contractDoc) {
+                alert('Contract document not found.');
+                return;
             }
 
-            return downloadTabPdf(e, 'contract', filename);
+            const btn = e ? e.target.closest('button') : null;
+            const originalHTML = btn ? btn.innerHTML : '';
+
+            if (btn) {
+                btn.innerHTML = '<svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.3"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+                btn.disabled = true;
+            }
+
+            try {
+                // Use html2pdf.js directly - simple and reliable
+                const opt = {
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                await html2pdf().set(opt).from(contractDoc).save();
+                console.log('✅ PDF generated via html2pdf.js');
+            } catch (err) {
+                console.error('PDF generation error:', err);
+                // Fallback to browser print
+                const usePrint = confirm('PDF generation failed. Use browser print instead?');
+                if (usePrint) window.print();
+            } finally {
+                if (btn) {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }
+            }
         }
 
         async function emailMSAToSelf(e) {
@@ -4675,7 +4709,7 @@
 
     <!-- Guest Signer Modal - Native Dialog with explicit centering -->
     <dialog id="guest-signer-modal"
-        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0;"
+        style="position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; margin: 0 !important; inset: unset !important;"
         class="backdrop:bg-black/80 bg-transparent p-0 backdrop:backdrop-blur-sm rounded-2xl border-none shadow-2xl outline-none overflow-hidden">
         <div class="w-full max-w-md bg-[#0f172a] p-8 rounded-2xl border border-gold/30 text-left relative">
             <!-- Modal Header -->

@@ -22,6 +22,39 @@
     <!-- Admin Layout Styles -->
     <link rel="stylesheet" href="../assets/css/admin-layout.css">
     <style>
+        /* ============================================
+           OPENSIGN POPUP/IFRAME CENTERING FIX
+           Force any dynamically injected elements to center
+           ============================================ */
+        /* Target OpenSign iframes, popups, and overlays */
+        iframe[src*="opensign"],
+        iframe[src*="sign"],
+        div[id*="opensign"],
+        div[class*="opensign"],
+        div[class*="signing"],
+        div[class*="popup"],
+        div[style*="position: fixed"],
+        div[style*="position:fixed"] {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            margin: 0 !important;
+            max-width: 95vw !important;
+            max-height: 95vh !important;
+            z-index: 999999 !important;
+        }
+
+        /* Override any left/top positioning that might be set inline */
+        body>div[style*="position: fixed"]:not([id="vertical-workflow-guide"]):not(.contract-immersive-wrapper),
+        body>div[style*="position:fixed"]:not([id="vertical-workflow-guide"]):not(.contract-immersive-wrapper) {
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            right: auto !important;
+            bottom: auto !important;
+        }
+
         /* CRITICAL OVERRIDES FOR CONTRACT HIERARCHY */
 
         /* Level 1: Main Page Title (H1) - Handled in layout */

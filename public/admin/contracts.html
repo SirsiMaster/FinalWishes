@@ -3847,6 +3847,7 @@
             }
 
             // 5b. Ensure Signature Block is Visible
+            const signatureBlock = document.getElementById('signature-block');
             if (signatureBlock) {
                 // Ensure it's visible - remove any utility classes that might hide it
                 // We rely on standard CSS/HTML visibility here, removing explicit 'hidden' states
@@ -4407,12 +4408,16 @@
                     button.disabled = false;
                     button.style.opacity = '1';
                     button.style.cursor = 'pointer';
+                    button.style.backgroundColor = '#C8A951'; // Force background
+                    button.style.color = '#000000';
                     button.style.boxShadow = '0 4px 20px rgba(200, 169, 81, 0.3)';
                 } else {
                     button.disabled = true;
                     button.style.opacity = '0.5';
                     button.style.cursor = 'not-allowed';
                     button.style.boxShadow = 'none';
+                    // Keep background but dim it via opacity
+                    button.style.backgroundColor = '#C8A951';
                 }
             }
         }
@@ -4424,7 +4429,8 @@
 
         async function initiateOpenSign() {
             const executeBtn = document.getElementById('execute-btn');
-            const originalText = executeBtn.textContent;
+            // Save innerHTML to preserve icon
+            const originalHTML = executeBtn.innerHTML;
             const signatureBlock = document.getElementById('signature-block');
 
             try {
@@ -4448,7 +4454,8 @@
                 );
 
                 if (!confirmed) {
-                    executeBtn.textContent = originalText;
+                    // Restore original HTML (icon + text)
+                    executeBtn.innerHTML = originalHTML;
                     executeBtn.disabled = false;
                     return;
                 }
@@ -4508,6 +4515,7 @@
                 updateStepperStatus(3);
 
                 executeBtn.textContent = '✓ Redirecting to Secure Sign...';
+                executeBtn.style.backgroundColor = '#10B981'; // Green
                 executeBtn.classList.remove('bg-[#C8A951]');
                 executeBtn.classList.add('bg-[#10B981]');
 
@@ -4524,9 +4532,8 @@
                 console.error('OpenSign Processing Error:', error);
                 alert('Electronic Signature Error: ' + error.message);
 
-                executeBtn.textContent = originalText;
-                executeBtn.classList.add('bg-[#C8A951]');
-                executeBtn.classList.remove('bg-[#10B981]');
+                executeBtn.innerHTML = originalHTML; // Restore
+                executeBtn.style.backgroundColor = '#C8A951'; // Restore Gold
                 executeBtn.disabled = false;
             }
         }

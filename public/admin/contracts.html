@@ -3450,10 +3450,11 @@
                         <div id="msa-acknowledgment-block"
                             class="p-8 bg-white/5 border border-[#C8A951]/30 rounded text-center my-8 opacity-40 transition-all duration-500"
                             style="pointer-events: none;">
-                            <p class="text-lg text-white/80 mb-4">📜 Master Services Agreement Review Complete</p>
-                            <p id="scroll-notice" class="text-sm text-red-400 mb-4">⚠️ Please scroll to the bottom of
-                                the
-                                agreement to continue.</p>
+                            <p id="msa-status-line" class="text-white/90 font-medium mb-6">
+                                ⏳ <span class="text-[#C8A951] uppercase tracking-wider text-xs">Step 1 of 3:</span>
+                                <span id="msa-status-text">Please scroll to the bottom of the agreement to
+                                    continue.</span>
+                            </p>
                             <label id="msa-ack-label" class="flex items-center justify-center gap-3 cursor-pointer mb-4"
                                 style="pointer-events: none; opacity: 0.5;">
                                 <input type="checkbox" id="msa-read-acknowledge" onchange="unlockPlanSelection()"
@@ -3834,7 +3835,8 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const contractDoc = document.getElementById('contract-document');
-            const scrollNotice = document.getElementById('scroll-notice');
+            const msaStatusLine = document.getElementById('msa-status-line');
+            const msaStatusText = document.getElementById('msa-status-text');
             const msaAckBlock = document.getElementById('msa-acknowledgment-block');
             const msaAckLabel = document.getElementById('msa-ack-label');
             const msaCheckbox = document.getElementById('msa-read-acknowledge');
@@ -3850,9 +3852,10 @@
                             msaAckBlock.style.opacity = '1';
                             msaAckBlock.style.pointerEvents = 'auto';
 
-                            // Update scroll notice
-                            scrollNotice.textContent = '✅ Agreement review complete. Please acknowledge below.';
-                            scrollNotice.style.color = '#10B981';
+                            // Update Status
+                            if (msaStatusLine) {
+                                msaStatusLine.innerHTML = `✅ <span class="text-[#10B981] uppercase tracking-wider text-xs">Step 1 of 3:</span> <span id="msa-status-text">Agreement Read. Please check the box below to acknowledge.</span>`;
+                            }
 
                             // Enable the checkbox
                             msaAckLabel.style.pointerEvents = 'auto';
@@ -3872,6 +3875,7 @@
         function unlockPlanSelection() {
             const checkbox = document.getElementById('msa-read-acknowledge');
             const proceedBtn = document.getElementById('proceed-to-step2');
+            const msaStatusLine = document.getElementById('msa-status-line');
 
             if (checkbox && proceedBtn) {
                 if (checkbox.checked) {
@@ -3879,11 +3883,19 @@
                     proceedBtn.style.opacity = '1';
                     proceedBtn.style.cursor = 'pointer';
                     proceedBtn.style.boxShadow = '0 4px 20px rgba(200, 169, 81, 0.3)';
+
+                    if (msaStatusLine) {
+                        msaStatusLine.innerHTML = `✨ <span class="text-[#10B981] uppercase tracking-wider text-xs">Step 1 Complete:</span> <span id="msa-status-text">Acknowledged. You may now proceed.</span>`;
+                    }
                 } else {
                     proceedBtn.disabled = true;
                     proceedBtn.style.opacity = '0.5';
                     proceedBtn.style.cursor = 'not-allowed';
                     proceedBtn.style.boxShadow = 'none';
+
+                    if (msaStatusLine) {
+                        msaStatusLine.innerHTML = `✅ <span class="text-[#10B981] uppercase tracking-wider text-xs">Step 1 of 3:</span> <span id="msa-status-text">Agreement Read. Please check the box below to acknowledge.</span>`;
+                    }
                 }
             }
         }

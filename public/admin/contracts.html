@@ -1631,11 +1631,58 @@
                 white-space: nowrap !important;
             }
 
-            /* Market analysis table */
-            #market-analysis-table th,
+            /* Market analysis table - balanced mobile typography */
+            #market-analysis-table {
+                font-size: 0.6rem !important;
+            }
+
+            #market-analysis-table th {
+                font-size: 0.5rem !important;
+                padding: 0.375rem 0.25rem !important;
+                letter-spacing: 0.02em !important;
+            }
+
+            /* First column header - METRIC label */
+            #market-analysis-table th:nth-child(1) {
+                font-size: 0.45rem !important;
+            }
+
+            /* Hero column header - FinalWishes */
+            #market-analysis-table th:nth-child(2) {
+                font-size: 0.55rem !important;
+                color: #C8A951 !important;
+            }
+
+            /* Competitor headers */
+            #market-analysis-table th:nth-child(3),
+            #market-analysis-table th:nth-child(4) {
+                font-size: 0.45rem !important;
+                color: #94a3b8 !important;
+            }
+
             #market-analysis-table td {
-                font-size: 0.7rem !important;
-                padding: 0.5rem 0.375rem !important;
+                font-size: 0.55rem !important;
+                padding: 0.375rem 0.25rem !important;
+            }
+
+            /* Metric names - first column */
+            #market-analysis-table td:nth-child(1) {
+                font-size: 0.55rem !important;
+                font-weight: 600 !important;
+            }
+
+            /* Hero values - FinalWishes column */
+            #market-analysis-table td:nth-child(2) {
+                font-size: 0.6rem !important;
+                font-weight: 600 !important;
+                color: white !important;
+            }
+
+            /* Competitor values - muted */
+            #market-analysis-table td:nth-child(3),
+            #market-analysis-table td:nth-child(4) {
+                font-size: 0.5rem !important;
+                color: #94a3b8 !important;
             }
 
             /* ===== STEP LABELS (MSA TAB) ===== */

@@ -3727,55 +3727,50 @@
                         </div>
 
                         <div id="signature-block"
-                            class="border border-[#C8A951]/30 rounded-lg mt-6 scroll-mt-32 opacity-0 pointer-events-none transition-all duration-1000"
-                            style="background: linear-gradient(180deg, #0f172a 0%, #0a0f18 100%);">
-
-                            <!-- Header -->
-                            <div class="flex items-center justify-between px-6 py-3 border-b border-white/10">
-                                <span class="text-[#C8A951] font-serif text-base">Execution of Agreement</span>
-                                <button onclick="downloadMSAPdf(event)" title="Download"
-                                    class="p-1.5 rounded bg-white/5 hover:bg-[#C8A951]/20 transition-all">
-                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#C8A951"
-                                        stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Action -->
-                            <div class="px-6 py-4">
-                                <label class="flex items-center gap-3 cursor-pointer mb-3">
+                            class="mt-6 scroll-mt-32 opacity-0 pointer-events-none transition-all duration-1000">
+                            <!-- Sign Button -->
+                            <div class="text-center mb-6">
+                                <label class="inline-flex items-center gap-2 cursor-pointer text-white/60 text-sm mb-4">
                                     <input type="checkbox" id="msa-acknowledge" onchange="toggleExecuteButton()"
-                                        class="w-4 h-4 accent-[#C8A951] cursor-pointer">
-                                    <span class="text-white/70 text-sm">I have read and agree to the Master Services
-                                        Agreement, Statement of Work, and all Exhibits.</span>
+                                        class="accent-[#C8A951]">
+                                    I agree to the terms above
                                 </label>
-                                <button onclick="initiateOpenSign()" id="execute-btn" disabled
-                                    class="w-full py-3 bg-gradient-to-r from-[#C8A951] to-[#d4b85d] text-[#0f172a] font-bold text-sm uppercase tracking-wide rounded transition-all disabled:cursor-not-allowed">
-                                    Click here to sign
-                                </button>
+                                <div>
+                                    <button onclick="initiateOpenSign()" id="execute-btn" disabled
+                                        class="inline-flex items-center gap-2 px-8 py-3 bg-[#C8A951] text-[#0f172a] font-semibold rounded-full transition-all hover:bg-[#d4b85d] disabled:opacity-60 disabled:cursor-not-allowed">
+                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                        Sign Agreement
+                                    </button>
+                                </div>
                             </div>
 
-                            <!-- Signatures -->
-                            <div class="px-6 py-4 border-t border-white/10">
-                                <div class="flex gap-8">
-                                    <div class="flex-1">
-                                        <p class="text-[#C8A951]/60 text-[10px] uppercase tracking-widest mb-1">Client
-                                        </p>
-                                        <p class="font-serif italic text-lg text-white border-b border-white/20 pb-1">
-                                            Tameeka Lockhart</p>
-                                        <p class="text-white/30 text-[11px] mt-1"><span
-                                                id="date-signature">Pending</span></p>
+                            <!-- Signature Lines -->
+                            <div class="flex gap-12 max-w-xl mx-auto">
+                                <div class="flex-1 text-center">
+                                    <div class="border-b border-[#C8A951]/50 pb-1 mb-2">
+                                        <span class="font-serif italic text-white text-lg">Tameeka Lockhart</span>
                                     </div>
-                                    <div class="flex-1">
-                                        <p class="text-[#C8A951]/60 text-[10px] uppercase tracking-widest mb-1">Provider
-                                        </p>
-                                        <p class="font-serif italic text-lg text-white border-b border-white/20 pb-1">
-                                            Cylton Collymore</p>
-                                        <p class="text-white/30 text-[11px] mt-1">CEO, Sirsi Technologies</p>
-                                    </div>
+                                    <span class="text-white/40 text-xs">Client · <span
+                                            id="date-signature">Pending</span></span>
                                 </div>
+                                <div class="flex-1 text-center">
+                                    <div class="border-b border-[#C8A951]/50 pb-1 mb-2">
+                                        <span class="font-serif italic text-white text-lg">Cylton Collymore</span>
+                                    </div>
+                                    <span class="text-white/40 text-xs">Provider · Sirsi Technologies</span>
+                                </div>
+                            </div>
+
+                            <!-- Download Link -->
+                            <div class="text-center mt-4">
+                                <button onclick="downloadMSAPdf(event)"
+                                    class="text-[#C8A951]/60 text-xs hover:text-[#C8A951] transition-colors underline">
+                                    Download PDF
+                                </button>
                             </div>
                         </div>
 

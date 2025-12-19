@@ -3847,12 +3847,13 @@
             }
 
             // 5b. Ensure Signature Block is Visible
-            const signatureBlock = document.getElementById('signature-block');
             if (signatureBlock) {
-                // Ensure it's visible even if CSS is fighting us
-                signatureBlock.style.opacity = '1';
+                // Ensure it's visible - remove any utility classes that might hide it
+                // We rely on standard CSS/HTML visibility here, removing explicit 'hidden' states
+                signatureBlock.classList.remove('opacity-0', 'pointer-events-none', 'hidden', 'invisible');
+                signatureBlock.style.opacity = '1'; // Ensure opacity is up for transition
                 signatureBlock.style.pointerEvents = 'auto';
-                signatureBlock.classList.remove('opacity-0', 'pointer-events-none');
+
                 signatureBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
@@ -4424,22 +4425,26 @@
         async function initiateOpenSign() {
             const executeBtn = document.getElementById('execute-btn');
             const originalText = executeBtn.textContent;
+            const signatureBlock = document.getElementById('signature-block');
 
             try {
-                executeBtn.textContent = '⏳ Initiating signing process...';
+                // 1. Authenticate User
+                const user = firebase.auth().currentUser;
+                if (!user) {
+                    alert('You must be logged in to sign this agreement.');
+                    return;
+                }
+
+                // 2. UI Loading State
+                executeBtn.innerHTML = '<span>⏳ Processing...</span>';
                 executeBtn.disabled = true;
 
-                // For demo purposes, we'll show the signing flow
-                // In production, this would authenticate and create an envelope via the API
-
-                // Show confirmation modal
+                // 3. Confirm Intent
                 const confirmed = confirm(
-                    'You are about to initiate the e-signature process for this Master Services Agreement.\n\n' +
-                    'This will:\n' +
-                    '• Create a signing envelope via Sirsi OpenSign\n' +
-                    '• Send signing invitations to all parties\n' +
-                    '• Redirect you to sign.sirsi.ai to complete your signature\n\n' +
-                    'Continue?'
+                    'Legally Binding Action\n\n' +
+                    'You are about to initiate the electronic signature process for the Master Services Agreement. ' +
+                    'This will create a digital envelope and redirect you to our secure signing portal.\n\n' +
+                    'Are you ready to proceed?'
                 );
 
                 if (!confirmed) {
@@ -4448,58 +4453,81 @@
                     return;
                 }
 
-                // Simulate envelope creation (in production, this calls the API with auth)
-                const envelopeId = 'ENV-' + Date.now().toString(36).toUpperCase();
-                const signingUrl = `https://sign.sirsi.ai/${envelopeId}`;
+                // 4. Get Auth Token
+                const idToken = await user.getIdToken();
 
-                // Update signature date
-                const signatureEl = document.getElementById('date-signature');
-                if (signatureEl) {
-                    const now = new Date();
-                    signatureEl.textContent = now.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                    }) + ' ' + now.toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
+                // 5. Create Envelope via API
+                // URL: https://us-central1-sirsi-nexus-live.cloudfunctions.net/createEnvelope
+                const response = await fetch(`${OPENSIGN_API_BASE}/createEnvelope`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${idToken}`
+                    },
+                    body: JSON.stringify({
+                        docType: 'MSA',
+                        recipients: [
+                            {
+                                name: user.displayName || 'Valued Client',
+                                email: user.email,
+                                role: 'Client',
+                                type: 'signer'
+                            },
+                            {
+                                name: 'Sirsi Legal',
+                                email: 'legal@sirsi.ai',
+                                role: 'Provider',
+                                type: 'copy'
+                            }
+                        ],
+                        metadata: {
+                            source: 'admin_portal',
+                            contractId: 'MSA-V1',
+                            plan: document.querySelector('.select-plan-btn.selected')?.getAttribute('data-plan') || 'Custom'
+                        },
+                        callbackUrl: window.location.href // Return here after signing
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Failed to create envelope');
                 }
 
-                // Show success state
-                executeBtn.textContent = '✓ Envelope Created - Redirecting...';
-                executeBtn.style.background = 'linear-gradient(to right, #10B981, #059669)';
+                // 6. Handle Success
+                console.log('Envelope Created:', result.envelopeId);
 
-                // Transition FAB to Executed state
+                // Update UI to "Executed" state immediately (optimistic update)
+                if (signatureBlock) {
+                    const signatureEl = document.getElementById('date-signature');
+                    if (signatureEl) signatureEl.textContent = new Date().toLocaleDateString();
+                }
+
                 updateMSAState('executed');
-
-                // Update Stepper
                 updateStepperStatus(3);
 
-                // In production, redirect to signing URL
-                setTimeout(() => {
-                    alert(
-                        'Signing Envelope Created Successfully!\n\n' +
-                        'Envelope ID: ' + envelopeId + '\n' +
-                        'Signing URL: ' + signingUrl + '\n\n' +
-                        'In production, you would now be redirected to sign.sirsi.ai to complete your signature.\n\n' +
-                        'Note: The sign.sirsi.ai subdomain needs to be configured in DNS to complete the signing experience.'
-                    );
+                executeBtn.textContent = '✓ Redirecting to Secure Sign...';
+                executeBtn.classList.remove('bg-[#C8A951]');
+                executeBtn.classList.add('bg-[#10B981]');
 
-                    executeBtn.textContent = '✓ Envelope Created';
-                    executeBtn.disabled = false;
-                }, 1500);
+                // 7. Redirect to Signing Portal
+                if (result.signingUrl) {
+                    setTimeout(() => {
+                        window.location.href = result.signingUrl;
+                    }, 1000);
+                } else {
+                    throw new Error('No signing URL returned');
+                }
 
             } catch (error) {
-                console.error('OpenSign error:', error);
-                executeBtn.textContent = '❌ Error - Try Again';
-                executeBtn.style.background = 'linear-gradient(to right, #EF4444, #DC2626)';
+                console.error('OpenSign Processing Error:', error);
+                alert('Electronic Signature Error: ' + error.message);
 
-                setTimeout(() => {
-                    executeBtn.textContent = originalText;
-                    executeBtn.style.background = '';
-                    executeBtn.disabled = false;
-                }, 3000);
+                executeBtn.textContent = originalText;
+                executeBtn.classList.add('bg-[#C8A951]');
+                executeBtn.classList.remove('bg-[#10B981]');
+                executeBtn.disabled = false;
             }
         }
     </script>

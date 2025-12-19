@@ -1087,8 +1087,32 @@
             nav,
             header,
             footer,
-            .sidebar {
+            .sidebar,
+            .nav-tabs,
+            .download-btn-neo,
+            .floating-action-bar,
+            .admin-sidebar,
+            .main-header,
+            #msa-fab {
                 display: none !important;
+            }
+
+            /* Hide ALL tab contents by default during print */
+            .tab-content {
+                display: none !important;
+                visibility: hidden !important;
+            }
+
+            /* ONLY show the active tab content */
+            .tab-content.active {
+                display: block !important;
+                visibility: visible !important;
+                background: white !important;
+                color: black !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
             }
 
             /* Reset body and backgrounds */
@@ -1195,6 +1219,17 @@
                 background: #f8fafc !important;
                 border: 1px solid #cbd5e1 !important;
                 color: #1e293b !important;
+            }
+
+            body {
+                background: white !important;
+            }
+
+            .main-card {
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
             }
         }
     </style>
@@ -2645,8 +2680,9 @@
                                 </svg>
                             </button>
                             <!-- Print -->
-                            <button onclick="window.print()" title="Print"
-                                style="width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(200,169,81,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s;"
+                            <button onclick="downloadTabPdf(event, 'contract', 'Legacy_Estate_OS_Master_Agreement.pdf')"
+                                title="Print"
+                                style="width: 44px; height: 44px; border-radius: 50%; background: rgba(30, 41, 59, 0.95); border: 1px solid rgba(200, 169, 81, 0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s;"
                                 onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='#C8A951';"
                                 onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(200,169,81,0.3)';">
                                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#C8A951"
@@ -3888,6 +3924,7 @@
             if (btn) {
                 btn.innerHTML = '<svg class="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.3"></circle><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
                 btn.disabled = true;
+                btn.title = "Generating High-Fidelity PDF...";
             }
 
             try {
@@ -3903,15 +3940,19 @@
                     link.download = filename;
                     link.click();
                 } else {
-                    window.print();
+                    console.warn('OpenSign Render returned no data, falling back to browser print.');
+                    const usePrint = confirm('High-fidelity PDF generation failed or timed out.\n\nWould you like to use the browser\'s standard print dialog instead?');
+                    if (usePrint) window.print();
                 }
             } catch (err) {
                 console.error('Download error:', err);
-                window.print();
+                const usePrint = confirm('An error occurred during PDF generation.\n\nUse browser standard print instead?');
+                if (usePrint) window.print();
             } finally {
                 if (btn) {
                     btn.innerHTML = originalHTML;
                     btn.disabled = false;
+                    btn.title = tabId === 'contract' ? 'Download as PDF' : 'Download PDF';
                 }
             }
         }

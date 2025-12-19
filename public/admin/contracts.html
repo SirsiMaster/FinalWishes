@@ -1093,7 +1093,8 @@
             .floating-action-bar,
             .admin-sidebar,
             .main-header,
-            #msa-fab {
+            #msa-fab,
+            #workflow-stepper {
                 display: none !important;
             }
 
@@ -2636,6 +2637,57 @@
 
                     <!-- TAB 3: CONTRACT -->
                     <div id="contract" class="tab-content" style="position: relative;">
+
+                        <!-- Workflow Stepper (Sticky Top) -->
+                        <div id="workflow-stepper"
+                            class="sticky top-[80px] z-[90] bg-[#0f172a]/95 backdrop-blur-md border-b border-gold/20 py-6 mb-12 no-print opacity-0 transition-opacity duration-1000">
+                            <div class="max-w-4xl mx-auto flex justify-between items-center px-12 relative">
+                                <!-- Connection Lines (Background) -->
+                                <div class="absolute top-5 left-24 right-24 h-[1px] bg-white/10 z-0"></div>
+                                <div id="stepper-progress-line"
+                                    class="absolute top-5 left-24 h-[1px] bg-gold z-0 transition-all duration-700"
+                                    style="width: 0%;"></div>
+
+                                <!-- Step 1: Review -->
+                                <div id="step-1-node"
+                                    class="flex flex-col items-center gap-3 z-10 transition-all duration-500">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500">
+                                        1</div>
+                                    <span
+                                        class="text-[10px] font-serif uppercase tracking-[0.2em] text-gold font-bold">Review
+                                        MSA</span>
+                                </div>
+
+                                <!-- Step 2: Select -->
+                                <div id="step-2-node"
+                                    class="flex flex-col items-center gap-3 z-10 opacity-30 grayscale transition-all duration-500">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold">
+                                        2</div>
+                                    <span class="text-[10px] font-serif uppercase tracking-[0.2em] text-white/50">Select
+                                        Plan</span>
+                                </div>
+
+                                <!-- Step 3: Execute -->
+                                <div id="step-3-node"
+                                    class="flex flex-col items-center gap-3 z-10 opacity-30 grayscale transition-all duration-500">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold">
+                                        3</div>
+                                    <span
+                                        class="text-[10px] font-serif uppercase tracking-[0.2em] text-white/50">Execute</span>
+                                </div>
+                            </div>
+
+                            <!-- Detailed Scroll Progress Bar (Bottom of Stepper) -->
+                            <div class="absolute bottom-0 left-0 h-[2px] bg-white/5 w-full">
+                                <div id="scroll-progress-fill"
+                                    class="h-full bg-gold transition-all duration-100 shadow-[0_0_10px_rgba(200,169,81,0.5)]"
+                                    style="width: 0%;"></div>
+                            </div>
+                        </div>
+
                         <!-- MSA Floating Action Bar (Compact) -->
                         <div id="msa-fab"
                             class="opacity-0 pointer-events-none transition-all duration-500 translate-y-8"
@@ -3840,6 +3892,7 @@
             const msaAckBlock = document.getElementById('msa-acknowledgment-block');
             const msaAckLabel = document.getElementById('msa-ack-label');
             const msaCheckbox = document.getElementById('msa-read-acknowledge');
+            const workflowStepper = document.getElementById('workflow-stepper');
 
             if (contractDoc) {
                 // Use IntersectionObserver to detect when user scrolls to bottom
@@ -3870,7 +3923,91 @@
                     observer.observe(msaAckBlock);
                 }
             }
+
+            // ============================================
+            // SCROLL PROGRESS TRACKING
+            // ============================================
+            window.addEventListener('scroll', function () {
+                const contractTab = document.getElementById('contract');
+                if (!contractTab || contractTab.style.display === 'none') return;
+
+                // Show/Hide Stepper based on scroll position (reveals as you start reading)
+                if (window.scrollY > 200) {
+                    workflowStepper.classList.add('opacity-100');
+                    workflowStepper.classList.remove('opacity-0');
+                }
+
+                const winScroll = window.scrollY;
+                const docHeight = contractTab.scrollHeight;
+                const winHeight = window.innerHeight;
+
+                // Calculate progress through Step 1 (Reading)
+                // We map progress from the start of the MSA to the acknowledgment block
+                const startPos = contractDoc.offsetTop;
+                const endPos = msaAckBlock.offsetTop;
+                const totalReadingHeight = endPos - startPos;
+                const currentReadingPos = winScroll - startPos + (winHeight * 0.5);
+
+                let progress = (currentReadingPos / totalReadingHeight) * 100;
+                progress = Math.max(0, Math.min(100, progress));
+
+                const progressFill = document.getElementById('scroll-progress-fill');
+                if (progressFill) progressFill.style.width = progress + "%";
+            });
         });
+
+        function updateStepperStatus(step) {
+            const nodes = [
+                document.getElementById('step-1-node'),
+                document.getElementById('step-2-node'),
+                document.getElementById('step-3-node')
+            ];
+            const progressLine = document.getElementById('stepper-progress-line');
+
+            nodes.forEach((node, idx) => {
+                if (!node) return;
+                const circle = node.querySelector('div');
+                const label = node.querySelector('span');
+
+                if (idx < step - 1) {
+                    // Completed Steps
+                    node.classList.remove('opacity-30', 'grayscale');
+                    circle.innerHTML = '✓';
+                    circle.style.backgroundColor = '#10B981';
+                    circle.style.borderColor = '#10B981';
+                    circle.style.color = '#fff';
+                    circle.style.boxShadow = 'none';
+                    label.style.color = '#10B981';
+                    label.classList.add('font-bold');
+                } else if (idx === step - 1) {
+                    // Current Step
+                    node.classList.remove('opacity-30', 'grayscale');
+                    circle.innerHTML = idx + 1;
+                    circle.style.backgroundColor = '#C8A951';
+                    circle.style.borderColor = '#C8A951';
+                    circle.style.color = '#0f172a';
+                    circle.style.boxShadow = '0 0 20px rgba(200, 169, 81, 0.3)';
+                    label.style.color = '#C8A951';
+                    label.classList.add('font-bold');
+                } else {
+                    // Future Steps
+                    node.classList.add('opacity-30', 'grayscale');
+                    circle.innerHTML = idx + 1;
+                    circle.style.backgroundColor = '#0f172a';
+                    circle.style.borderColor = 'rgba(255,255,255,0.2)';
+                    circle.style.color = '#fff';
+                    circle.style.boxShadow = 'none';
+                    label.style.color = 'rgba(255,255,255,0.5)';
+                    label.classList.remove('font-bold');
+                }
+            });
+
+            if (progressLine) {
+                if (step === 1) progressLine.style.width = '0%';
+                if (step === 2) progressLine.style.width = '50%';
+                if (step === 3) progressLine.style.width = '100%';
+            }
+        }
 
         function unlockPlanSelection() {
             const checkbox = document.getElementById('msa-read-acknowledge');
@@ -3914,6 +4051,9 @@
                     planLockNotice.textContent = '✅ Step 1 Complete. Select your plan below.';
                     planLockNotice.style.color = '#10B981';
                 }
+
+                // Update Stepper
+                updateStepperStatus(2);
 
                 // Scroll to plan selection
                 selectionPhase.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -4213,6 +4353,9 @@
 
                 // Transition FAB to Executed state
                 updateMSAState('executed');
+
+                // Update Stepper
+                updateStepperStatus(3);
 
                 // In production, redirect to signing URL
                 setTimeout(() => {

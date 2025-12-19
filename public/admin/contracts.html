@@ -4906,6 +4906,94 @@
                 executeBtn.disabled = false;
             }
         }
+
+        // ============================================
+        // POST-SIGNATURE PAYMENT REDIRECT
+        // ============================================
+        // Check URL for signature completion callback
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // OpenSign will redirect back with status parameters
+            if (urlParams.get('signature_complete') === 'true' ||
+                urlParams.get('event') === 'signing_complete') {
+
+                // Update UI to show completion
+                const signatureBlock = document.getElementById('signature-block');
+                const executeBtn = document.getElementById('execute-btn');
+                const signatureDateEl = document.getElementById('date-signature');
+
+                if (signatureDateEl) {
+                    signatureDateEl.textContent = new Date().toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+
+                if (executeBtn) {
+                    executeBtn.innerHTML = '✓ Agreement Executed';
+                    executeBtn.disabled = true;
+                    executeBtn.style.backgroundColor = '#10B981';
+                    executeBtn.classList.remove('bg-[#C8A951]');
+                    executeBtn.classList.add('bg-[#10B981]');
+                }
+
+                updateMSAState('executed');
+                updateStepperStatus(3);
+
+                // Show payment redirect modal
+                setTimeout(() => {
+                    showPaymentRedirectModal();
+                }, 1500);
+            }
+        });
+
+        // Payment redirect modal
+        function showPaymentRedirectModal() {
+            // Create modal dynamically
+            const modal = document.createElement('dialog');
+            modal.id = 'payment-redirect-modal';
+            modal.style.cssText = 'position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; margin: 0 !important; inset: unset !important;';
+            modal.className = 'backdrop:bg-black/80 bg-transparent p-0 backdrop:backdrop-blur-sm rounded-2xl border-none shadow-2xl outline-none overflow-hidden';
+
+            modal.innerHTML = `
+                <div class="w-full max-w-lg bg-[#0f172a] p-8 rounded-2xl border border-[#10B981]/30 text-center relative">
+                    <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#10B981]/10 text-[#10B981]">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-3xl text-[#10B981] mb-2">Agreement Executed!</h3>
+                    <p class="text-gray-300 mb-6">Your Master Services Agreement has been successfully signed.</p>
+                    
+                    <div class="bg-white/5 border border-white/10 rounded-lg p-6 mb-6 text-left">
+                        <h4 class="text-[#C8A951] font-semibold uppercase text-sm tracking-wider mb-3">Next Step: Payment</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Per your selected payment plan, please remit the initial payment within Net 15 days.
+                        </p>
+                        <div class="text-2xl font-serif text-white mb-2">Amount Due: <span class="text-[#C8A951]" id="payment-amount">$100,000</span></div>
+                        <p class="text-xs text-gray-500">Wire/ACH instructions will be sent to your email</p>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button onclick="this.closest('dialog').close()" 
+                            class="flex-1 rounded-lg border border-white/10 bg-white/5 py-3 text-sm font-semibold text-gray-400 hover:bg-white/10 transition-colors">
+                            Review Later
+                        </button>
+                        <button onclick="window.open('https://www.chase.com/business/online-banking', '_blank'); this.closest('dialog').close();"
+                            class="flex-1 rounded-lg bg-[#10B981] py-3 text-sm font-semibold text-white hover:bg-[#059669] transition-colors shadow-lg">
+                            Proceed to Payment
+                        </button>
+                    </div>
+                    
+                    <p class="text-xs text-gray-600 mt-4">A signed copy has been emailed to all parties</p>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.showModal();
+        }
     </script>
 
 

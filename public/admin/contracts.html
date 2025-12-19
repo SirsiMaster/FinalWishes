@@ -1816,6 +1816,52 @@
                 display: none !important;
             }
 
+            /* ===== MODAL - MOBILE CENTERING ===== */
+            dialog,
+            #guest-signer-modal,
+            #payment-redirect-modal {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                margin: 0 !important;
+                inset: unset !important;
+                max-width: 90vw !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Modal content container */
+            #guest-signer-modal>div,
+            dialog>div {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 1.25rem !important;
+            }
+
+            /* Modal form elements */
+            #guest-signer-modal input,
+            dialog input {
+                font-size: 0.875rem !important;
+                padding: 0.625rem !important;
+            }
+
+            #guest-signer-modal h3,
+            dialog h3 {
+                font-size: 1.125rem !important;
+            }
+
+            #guest-signer-modal p,
+            dialog p {
+                font-size: 0.75rem !important;
+            }
+
+            #guest-signer-modal button,
+            dialog button {
+                font-size: 0.75rem !important;
+                padding: 0.625rem 1rem !important;
+            }
+
             /* ===== UTILITY OVERRIDES ===== */
             /* Max-width containers - full width on mobile */
             [style*="max-width: 600px"],

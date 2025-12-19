@@ -367,4 +367,35 @@ tr:hover td {
     .main-content {
         margin-left: 0 !important;
     }
+
+    /* Header fixes for mobile */
+    .admin-header {
+        flex-wrap: wrap !important;
+        height: auto !important;
+        min-height: 60px !important;
+        padding: 0.75rem 1rem !important;
+        gap: 0.5rem !important;
+    }
+
+    .admin-header .header-left {
+        flex: 1 1 100% !important;
+        text-align: center !important;
+    }
+
+    .admin-header .header-left h1 {
+        font-size: 1rem !important;
+    }
+
+    .admin-header .header-left p {
+        font-size: 0.75rem !important;
+    }
+
+    /* Hide search bar on mobile */
+    .admin-header .search-bar {
+        display: none !important;
+    }
+
+    .admin-header .header-right {
+        display: none !important;
+    }
 }

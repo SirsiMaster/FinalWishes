@@ -2636,47 +2636,47 @@
                     </div>
 
                     <!-- TAB 3: CONTRACT -->
-                    <div id="contract" class="tab-content" style="position: relative;">
+                    <div id="contract" class="tab-content" style="position: relative; padding-top: 140px;">
 
                         <!-- Workflow Stepper (Fixed Top) -->
                         <div id="workflow-stepper"
-                            class="fixed top-[70px] left-0 md:left-[260px] w-full md:w-[calc(100%-260px)] z-[90] bg-[#0f172a]/95 backdrop-blur-md border-b border-gold/20 py-6 mb-12 no-print opacity-0 transition-opacity duration-1000 hidden">
+                            class="fixed top-[70px] left-0 md:left-[260px] w-full md:w-[calc(100%-260px)] z-[90] bg-[#0f172a] border-b border-gold/20 py-2 no-print opacity-0 transition-all duration-500 hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
                             <div class="max-w-4xl mx-auto flex justify-between items-center px-12 relative">
                                 <!-- Connection Lines (Background) -->
-                                <div class="absolute top-5 left-24 right-24 h-[1px] bg-white/10 z-0"></div>
+                                <div class="absolute top-4 left-24 right-24 h-[1px] bg-white/10 z-0"></div>
                                 <div id="stepper-progress-line"
-                                    class="absolute top-5 left-24 h-[1px] bg-gold z-0 transition-all duration-700"
+                                    class="absolute top-4 left-24 h-[1px] bg-gold z-0 transition-all duration-700"
                                     style="width: 0%;"></div>
 
                                 <!-- Step 1: Review -->
                                 <div id="step-1-node"
-                                    class="flex flex-col items-center gap-3 z-10 transition-all duration-500">
+                                    class="flex flex-col items-center gap-2 z-10 transition-all duration-500">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500">
+                                        class="w-8 h-8 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500 text-sm">
                                         1</div>
                                     <span
-                                        class="text-[10px] font-serif uppercase tracking-[0.2em] text-gold font-bold">Review
+                                        class="text-[9px] font-serif uppercase tracking-[0.2em] text-gold font-bold">Review
                                         MSA</span>
                                 </div>
 
                                 <!-- Step 2: Select -->
                                 <div id="step-2-node"
-                                    class="flex flex-col items-center gap-3 z-10 opacity-30 grayscale transition-all duration-500">
+                                    class="flex flex-col items-center gap-2 z-10 opacity-30 grayscale transition-all duration-500">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold">
+                                        class="w-8 h-8 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold text-sm">
                                         2</div>
-                                    <span class="text-[10px] font-serif uppercase tracking-[0.2em] text-white/50">Select
+                                    <span class="text-[9px] font-serif uppercase tracking-[0.2em] text-white/50">Select
                                         Plan</span>
                                 </div>
 
                                 <!-- Step 3: Execute -->
                                 <div id="step-3-node"
-                                    class="flex flex-col items-center gap-3 z-10 opacity-30 grayscale transition-all duration-500">
+                                    class="flex flex-col items-center gap-2 z-10 opacity-30 grayscale transition-all duration-500">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold">
+                                        class="w-8 h-8 rounded-full bg-navy border border-white/20 text-white flex items-center justify-center font-bold text-sm">
                                         3</div>
                                     <span
-                                        class="text-[10px] font-serif uppercase tracking-[0.2em] text-white/50">Execute</span>
+                                        class="text-[9px] font-serif uppercase tracking-[0.2em] text-white/50">Execute</span>
                                 </div>
                             </div>
 
@@ -3938,11 +3938,11 @@
             // SCROLL PROGRESS TRACKING
             // ============================================
             const scrollingContainer = document.getElementById('contract-immersive-wrapper') || window;
-            
+
             scrollingContainer.addEventListener('scroll', function () {
                 const contractTab = document.getElementById('contract');
                 if (!contractTab || contractTab.style.display === 'none') return;
-                
+
                 const scrollTop = scrollingContainer === window ? window.scrollY : scrollingContainer.scrollTop;
 
                 // Show/Hide Stepper based on scroll position (reveals as you start reading)
@@ -3961,7 +3961,7 @@
                 const endPos = msaAckBlock.offsetTop;
                 const totalReadingHeight = endPos - startPos;
                 const currentReadingPos = scrollTop - startPos + (window.innerHeight * 0.4);
-                
+
                 let progress = (currentReadingPos / totalReadingHeight) * 100;
                 progress = Math.max(0, Math.min(100, progress));
 

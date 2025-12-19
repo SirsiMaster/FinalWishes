@@ -4026,36 +4026,40 @@
             const verticalGuide = document.getElementById('vertical-workflow-guide');
 
             if (scrollBox) {
-                // Use IntersectionObserver specifically within the scroll box
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && !msaScrollComplete) {
-                            msaScrollComplete = true;
+                // Use scroll position check instead of IntersectionObserver
+                // because msaAckBlock is now OUTSIDE the scroll container
+                scrollBox.addEventListener('scroll', function () {
+                    if (msaScrollComplete) return;
 
-                            // Unlock the acknowledgment block
+                    const scrollTop = scrollBox.scrollTop;
+                    const scrollHeight = scrollBox.scrollHeight;
+                    const clientHeight = scrollBox.clientHeight;
+
+                    // Trigger when user is within 50px of the bottom
+                    if (scrollTop + clientHeight >= scrollHeight - 50) {
+                        msaScrollComplete = true;
+
+                        // Unlock the acknowledgment block
+                        if (msaAckBlock) {
                             msaAckBlock.style.opacity = '1';
                             msaAckBlock.style.pointerEvents = 'auto';
+                        }
 
-                            // Update Status
-                            if (msaStatusLine) {
-                                msaStatusLine.innerHTML = `✅ <span class="text-[#10B981] uppercase tracking-wider text-xs">Step 1 of 3:</span> <span id="msa-status-text">Agreement Read. Please check the box below to acknowledge.</span>`;
-                            }
+                        // Update Status
+                        if (msaStatusLine) {
+                            msaStatusLine.innerHTML = `✅ <span class="text-[#10B981] uppercase tracking-wider text-xs">Step 1 of 3:</span> <span id="msa-status-text">Agreement Read. Please check the box below to acknowledge.</span>`;
+                        }
 
-                            // Enable the checkbox
+                        // Enable the checkbox
+                        if (msaAckLabel) {
                             msaAckLabel.style.pointerEvents = 'auto';
                             msaAckLabel.style.opacity = '1';
+                        }
+                        if (msaCheckbox) {
                             msaCheckbox.disabled = false;
                         }
-                    });
-                }, {
-                    root: scrollBox, // Observe intersections relative to the scrollBox
-                    threshold: 0.1 // Trigger when 10% of the target is visible
+                    }
                 });
-
-                // Observe the MSA acknowledgment block (near bottom of document)
-                if (msaAckBlock) {
-                    observer.observe(msaAckBlock);
-                }
             }
 
             // ============================================

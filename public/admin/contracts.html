@@ -2638,47 +2638,6 @@
                     <!-- TAB 3: CONTRACT -->
                     <div id="contract" class="tab-content" style="position: relative;">
 
-                        <!-- Vertical Workflow Guide (Fixed Right) -->
-                        <div id="vertical-workflow-guide"
-                            class="fixed right-8 top-1/2 -translate-y-1/2 z-[9999] flex flex-col items-center gap-12 no-print transition-all duration-500 opacity-0 pointer-events-none">
-                            <!-- Vertical Progress Line (Background) -->
-                            <div class="absolute top-4 bottom-4 w-[2px] bg-white/5 z-0"></div>
-                            <div id="v-progress-fill"
-                                class="absolute top-4 w-[2px] bg-gold z-0 transition-all duration-300 shadow-[0_0_10px_rgba(200,169,81,0.5)]"
-                                style="height: 0%;"></div>
-
-                            <!-- Step 1: Review -->
-                            <div id="v-step-1" class="relative z-10 group flex flex-col items-center">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.3)] transition-all duration-500 scale-110">
-                                    1</div>
-                                <span
-                                    class="absolute right-14 top-1/2 -translate-y-1/2 bg-[#0f172a]/90 backdrop-blur-md border border-gold/30 px-4 py-2 rounded font-serif text-[10px] uppercase tracking-[0.2em] text-gold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">Review
-                                    MSA</span>
-                            </div>
-
-                            <!-- Step 2: Select -->
-                            <div id="v-step-2"
-                                class="relative z-10 group flex flex-col items-center opacity-30 grayscale transition-all duration-500">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500">
-                                    2</div>
-                                <span
-                                    class="absolute right-14 top-1/2 -translate-y-1/2 bg-[#0f172a]/90 backdrop-blur-md border border-white/10 px-4 py-2 rounded font-serif text-[10px] uppercase tracking-[0.2em] text-white/50 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">Select
-                                    Plan</span>
-                            </div>
-
-                            <!-- Step 3: Execute -->
-                            <div id="v-step-3"
-                                class="relative z-10 group flex flex-col items-center opacity-30 grayscale transition-all duration-500">
-                                <div
-                                    class="w-10 h-10 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500">
-                                    3</div>
-                                <span
-                                    class="absolute right-14 top-1/2 -translate-y-1/2 bg-[#0f172a]/90 backdrop-blur-md border border-white/10 px-4 py-2 rounded font-serif text-[10px] uppercase tracking-[0.2em] text-white/50 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0">Execute</span>
-                            </div>
-                        </div>
-
                         <!-- MSA Floating Action Bar (Compact) -->
                         <div id="msa-fab"
                             class="opacity-0 pointer-events-none transition-all duration-500 translate-y-8"
@@ -4387,6 +4346,48 @@
         }
     </script>
 
+
+    <!-- Vertical Workflow Guide (Fixed Right) -->
+    <div id="vertical-workflow-guide"
+        class="fixed right-8 top-1/2 -translate-y-1/2 z-[99999] flex flex-col items-center gap-12 no-print transition-all duration-500 opacity-0 pointer-events-none"
+        style="display: none;">
+        <!-- Vertical Progress Line (Background) -->
+        <div class="absolute top-4 bottom-4 w-[2px] bg-white/10 z-0"></div>
+        <div id="v-progress-fill"
+            class="absolute top-4 w-[2px] bg-gold z-0 transition-all duration-300 shadow-[0_0_10px_rgba(200,169,81,0.5)]"
+            style="height: 0%;"></div>
+
+        <!-- Step 1: Review -->
+        <div id="v-step-1" class="relative z-10 group flex flex-col items-center">
+            <div
+                class="w-12 h-12 rounded-full bg-gold border border-gold/50 text-navy flex items-center justify-center font-bold shadow-[0_0_20px_rgba(200,169,81,0.5)] transition-all duration-500 scale-110">
+                1</div>
+            <span
+                class="absolute right-16 top-1/2 -translate-y-1/2 bg-[#0f172a]/95 backdrop-blur-md border border-gold/40 px-5 py-3 rounded-lg font-serif text-[11px] uppercase tracking-[0.25em] text-gold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0 shadow-2xl">Review
+                MSA</span>
+        </div>
+
+        <!-- Step 2: Select -->
+        <div id="v-step-2"
+            class="relative z-10 group flex flex-col items-center opacity-30 grayscale transition-all duration-500">
+            <div
+                class="w-12 h-12 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500">
+                2</div>
+            <span
+                class="absolute right-16 top-1/2 -translate-y-1/2 bg-[#0f172a]/95 backdrop-blur-md border border-white/20 px-5 py-3 rounded-lg font-serif text-[11px] uppercase tracking-[0.25em] text-white/60 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0 shadow-2xl">Select
+                Plan</span>
+        </div>
+
+        <!-- Step 3: Execute -->
+        <div id="v-step-3"
+            class="relative z-10 group flex flex-col items-center opacity-30 grayscale transition-all duration-500">
+            <div
+                class="w-12 h-12 rounded-full bg-[#0f172a] border border-white/20 text-white flex items-center justify-center font-bold transition-all duration-500">
+                3</div>
+            <span
+                class="absolute right-16 top-1/2 -translate-y-1/2 bg-[#0f172a]/95 backdrop-blur-md border border-white/20 px-5 py-3 rounded-lg font-serif text-[11px] uppercase tracking-[0.25em] text-white/60 opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none translate-x-4 group-hover:translate-x-0 shadow-2xl">Execute</span>
+        </div>
+    </div>
 </body>
 
 </html>

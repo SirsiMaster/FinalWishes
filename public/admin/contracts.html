@@ -1094,7 +1094,7 @@
             .admin-sidebar,
             .main-header,
             #msa-fab,
-            #workflow-stepper {
+            #vertical-workflow-guide {
                 display: none !important;
             }
 
@@ -2640,7 +2640,7 @@
 
                         <!-- Vertical Workflow Guide (Fixed Right) -->
                         <div id="vertical-workflow-guide"
-                            class="fixed right-6 md:right-12 top-1/2 -translate-y-1/2 z-[100] flex flex-col items-center gap-12 no-print transition-all duration-1000 opacity-0 pointer-events-none hidden">
+                            class="fixed right-8 top-1/2 -translate-y-1/2 z-[9999] flex flex-col items-center gap-12 no-print transition-all duration-500 opacity-0 pointer-events-none">
                             <!-- Vertical Progress Line (Background) -->
                             <div class="absolute top-4 bottom-4 w-[2px] bg-white/5 z-0"></div>
                             <div id="v-progress-fill"
@@ -3751,9 +3751,9 @@
             const verticalGuide = document.getElementById('vertical-workflow-guide');
             if (verticalGuide) {
                 if (tabId === 'contract') {
-                    verticalGuide.classList.remove('hidden');
+                    verticalGuide.style.display = 'flex';
                 } else {
-                    verticalGuide.classList.add('hidden');
+                    verticalGuide.style.display = 'none';
                 }
             }
         }
@@ -3936,8 +3936,11 @@
 
                 const scrollTop = scrollingContainer === window ? window.scrollY : scrollingContainer.scrollTop;
 
+                // Always ensure it's unhidden when on the right tab
+                verticalGuide.style.display = 'flex';
+
                 // Show/Hide Vertical Guide based on scroll
-                if (scrollTop > 100) {
+                if (scrollTop > 20) {
                     verticalGuide.classList.remove('opacity-0', 'pointer-events-none');
                     verticalGuide.classList.add('opacity-100', 'pointer-events-auto');
                 } else {

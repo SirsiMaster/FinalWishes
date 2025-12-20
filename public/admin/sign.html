@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Signing | Sirsi Technologies</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Dependencies -->
+    <link href="../assets/css/tailwind.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin-layout.css">
+
+    <style>
+        body {
+            background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            /* Embed takes over */
+        }
+
+        .loader {
+            border: 3px solid rgba(200, 169, 81, 0.1);
+            border-left-color: #C8A951;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen">
+
+    <!-- Navbar Minimal -->
+    <nav class="border-b border-white/5 bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 flex-none h-16">
+        <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-6 h-6 bg-gradient-to-br from-[#C8A951] to-[#8A7130] rounded-sm transform rotate-45"></div>
+                <span class="font-serif font-bold text-lg tracking-widest text-[#C8A951]">SIRSI</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-mono text-gray-500">
+                <div class="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></div>
+                SECURE SIGNING TUNNEL
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow relative bg-white">
+        <!-- Loader Overlay -->
+        <div id="loader-overlay"
+            class="absolute inset-0 z-10 bg-[#0f172a] flex flex-col items-center justify-center transition-opacity duration-500">
+            <div class="loader mb-4"></div>
+            <p class="text-sm text-gray-400 tracking-widest uppercase">Establishing Secure Connection...</p>
+        </div>
+
+        <!-- Iframe Container -->
+        <iframe id="signing-frame" class="w-full h-full border-none" allow="camera; microphone; fullscreen"></iframe>
+
+        <!-- Error State -->
+        <div id="error-screen"
+            class="hidden absolute inset-0 z-20 bg-[#0f172a] flex flex-col items-center justify-center text-center p-8">
+            <h1 class="font-serif text-2xl text-red-400 mb-2">Connection Failed</h1>
+            <p class="text-gray-400 mb-6">Could not retrieve signing session.</p>
+            <a href="contracts.html"
+                class="px-6 py-2 rounded border border-white/20 hover:bg-white/5 transition-colors text-sm">Return to
+                Dashboard</a>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const frame = document.getElementById('signing-frame');
+            const loader = document.getElementById('loader-overlay');
+            const errorScreen = document.getElementById('error-screen');
+
+            // 1. Retrieve URL from session (secure handoff)
+            const signingUrl = sessionStorage.getItem('signingUrl');
+
+            if (!signingUrl) {
+                console.error("No signing URL found in session.");
+                loader.classList.add('hidden');
+                errorScreen.classList.remove('hidden');
+                return;
+            }
+
+            // 2. Load Frame
+            frame.src = signingUrl;
+
+            // 3. Handle Load Event
+            frame.onload = () => {
+                // Fade out loader
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                }, 500);
+            };
+
+            // 4. Handle Errors (limited cross-origin)
+            frame.onerror = () => {
+                loader.classList.add('hidden');
+                errorScreen.classList.remove('hidden');
+            };
+        });
+    </script>
+</body>
+
+</html>

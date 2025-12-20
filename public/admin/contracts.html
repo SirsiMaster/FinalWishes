@@ -5329,7 +5329,7 @@
                             contractId: 'MSA-V1',
                             plan: document.querySelector('.select-plan-btn.selected')?.getAttribute('data-plan') || 'Custom'
                         },
-                        callbackUrl: window.location.href // Return here after signing
+                        callbackUrl: window.location.origin + '/admin/payment.html' // OpenSign redirects here on completion
                     })
                 });
 
@@ -5356,11 +5356,10 @@
                 executeBtn.classList.remove('bg-[#C8A951]');
                 executeBtn.classList.add('bg-[#10B981]');
 
-                // 7. Redirect to Signing Portal
+                // 7. Redirect to Secure Signing Tunnel
                 if (result.signingUrl) {
-                    setTimeout(() => {
-                        window.location.href = result.signingUrl;
-                    }, 1000);
+                    sessionStorage.setItem('signingUrl', result.signingUrl);
+                    window.location.href = 'sign.html';
                 } else {
                     throw new Error('No signing URL returned');
                 }

@@ -19,6 +19,12 @@
 
     <link href="../assets/css/admin-layout.css" rel="stylesheet">
 
+    <!-- Firebase SDK (Modular) -->
+    <script type="module">
+        import { AuthService } from '../assets/js/firebase-init.js';
+        window.AuthService = AuthService;
+    </script>
+
     <script>
         // Frame Breaker: Ensure we are not stuck inside sign.html iframe
         if (window.top !== window.self) {
@@ -380,7 +386,65 @@
         function generatePDF() {
             // 1. Populate Template
             const template = document.createElement('div');
-            template.innerHTML = `
+            template.innerHTML = getInvoiceTemplateHTML();
+
+            const opt = {
+                margin: 0.5,
+                filename: `Invoice_${ref}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(template).save();
+        }
+
+        async function emailReceipt() {
+            const user = firebase.auth().currentUser;
+            if (!user || !user.email) {
+                console.warn('User not logged in, cannot email receipt automatically.');
+                return;
+            }
+
+            const btn = document.getElementById('email-receipt-btn');
+            if (btn) btn.innerHTML = 'Sending...';
+
+            try {
+                // 1. Generate PDF Base64
+                // Re-use logic from generatePDF but get output
+                const template = document.createElement('div');
+                template.innerHTML = getInvoiceTemplateHTML(); // Extracted helper
+
+                const opt = {
+                    margin: 0.5,
+                    filename: `Invoice_${ref}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                };
+
+                // html2pdf output to base64
+                const pdfBase64 = await html2pdf().set(opt).from(template).outputPdf('datauristring').then(d => d.split(',')[1]);
+
+                // 2. Send via Firebase Function
+                const sendContractEmail = firebase.functions().httpsCallable('sendContractEmail');
+                await sendContractEmail({
+                    email: user.email,
+                    pdfBase64: pdfBase64,
+                    documentType: 'Payment Receipt'
+                });
+
+                console.log('✅ Receipt emailed successfully.');
+                if (btn) btn.innerHTML = '✓ Receipt Emailed';
+
+            } catch (err) {
+                console.error('Email Receipt Error:', err);
+                if (btn) btn.innerHTML = 'Email Failed';
+            }
+        }
+
+        function getInvoiceTemplateHTML() {
+            return `
                 <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; padding: 40px;">
                     <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #C8A951; padding-bottom: 20px; margin-bottom: 30px;">
                         <div>
@@ -432,20 +496,22 @@
                     </div>
                 </div>
             `;
-
-            const opt = {
-                margin: 0.5,
-                filename: `Invoice_${ref}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(template).save();
         }
 
         // Auto-select Stripe by default
         selectPayment('stripe');
+
+        // Check Auth and Auto-Email
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for Auth to init
+            setTimeout(() => {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    console.log('User detected, attempting auto-receipt email...');
+                    emailReceipt();
+                }
+            }, 2000);
+        });
     </script>
 </body>
 

@@ -4528,6 +4528,13 @@
             }
         }
 
+        // ============================================
+        // GLOBAL STATE
+        // ============================================
+        let currentStep = 1;
+        let msaExecuted = false;
+
+
         function selectContractPlan(planName, btnElement) {
             currentStep = 3; // Move to Step 3
             updateStepperStatus(3);
@@ -4625,8 +4632,9 @@
             dynamicBlock.style.borderColor = 'rgba(200, 169, 81, 0.5)';
 
             // 5. Scroll to Step 3 (Signature Block)
+            // 5. Scroll to Step 3 (Signature Block)
             setTimeout(() => {
-                step3Label.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (step3Label) step3Label.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 300);
         }
 
@@ -4893,12 +4901,6 @@
                 selectionPhase.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
-
-        // ============================================
-        // MSA DOWNLOAD & EMAIL FUNCTIONS (V4 - OpenSign)
-        // ============================================
-        let msaExecuted = false;
-        let currentStep = 1;
 
         function updateMSAState(state) {
             const msaDownloadLabel = document.getElementById('msa-download-label');
@@ -5297,6 +5299,10 @@
                 }
 
                 // 4. Prepare Headers (Auth vs Guest)
+                // Fallback to storage if not authenticated via service
+                if (!idToken) {
+                    idToken = sessionStorage.getItem('token') || sessionStorage.getItem('idToken');
+                }
                 const headers = {
                     'Content-Type': 'application/json'
                 };
@@ -5577,7 +5583,7 @@
                 observer.observe(document.body, {childList: true, subtree: true });
                 console.log('OpenSign Fix: MutationObserver active');
         })();
-    </script>
-</body>
+            </script>
+</body >
 
-</html>
+</html >

@@ -40,6 +40,7 @@ These files are the absolute authority. All project progress is measured against
 | **26** | `docs/ADR-INDEX.md` | **Index.** Master list of all ADRs. |
 | **27** | `docs/DOCUMENTATION_INDEX.md` | **Index.** This file. Master map of documentation. |
 | **28** | `docs/ADR-TEMPLATE.md` | **Template.** Standard format for new decisions. |
+| **29** | `docs/SIRSI_RECIPE_LEGAL_FINANCIAL_FLOW.md` | **Component Recipe.** Reusable Three-Step Legal/Financial Flow. |
 
 ---
 

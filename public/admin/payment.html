@@ -220,12 +220,12 @@
                                     <div>
                                         <div class="text-[10px] uppercase text-gray-500 tracking-wider mb-1">Bank Name
                                         </div>
-                                        <div class="font-semibold text-white">JPMORGAN CHASE BANK, N.A.</div>
+                                        <div class="font-semibold text-white">JPMORGAN CHASE BANK, N.A. (001)</div>
                                     </div>
                                     <div>
                                         <div class="text-[10px] uppercase text-gray-500 tracking-wider mb-1">Beneficiary
                                         </div>
-                                        <div class="font-semibold text-white">SIRSI TECHNOLOGIES INC</div>
+                                        <div class="font-semibold text-white">Sirsi Technologies Inc</div>
                                     </div>
                                     <div>
                                         <div class="text-[10px] uppercase text-gray-500 tracking-wider mb-1">Routing
@@ -235,7 +235,7 @@
                                     <div>
                                         <div class="text-[10px] uppercase text-gray-500 tracking-wider mb-1">Account
                                             Number</div>
-                                        <div class="font-mono text-white">XXXXXXXX9088</div>
+                                        <div class="font-mono text-white">2905276162</div>
                                     </div>
                                 </div>
                             </div>
@@ -377,10 +377,30 @@
 
         // --- 3. ACTIONS ---
         function handleStripeRedirect() {
-            // In production, this would call backend to create session
-            // For now, redirect to a generic link component with pre-fill params
-            const stripeUrl = `https://buy.stripe.com/test_placeholder?prefilled_email=client@example.com&client_reference_id=${ref}`;
-            window.open(stripeUrl, '_blank');
+            // Configuration: Map Amounts to Stripe Payment Links
+            // UPDATED: 2025-12-23 (Live Test Links)
+            const STRIPE_LINKS = {
+                '100000': 'https://buy.stripe.com/test_fZu4gz17k7WO9sx3Mgfw400',   // Plan A (Milestone)
+                '66666.66': 'https://buy.stripe.com/test_3cI00j6rE5OGgUZdmQfw401', // Plan B (Trimester)
+                '75000': 'https://buy.stripe.com/test_8x28wP3fs4KCdIN82wfw402',    // Plan C (Bundle)
+                '175000': 'https://buy.stripe.com/test_fZu4gz17k7WO9sx3Mgfw400'    // Fallback
+            };
+
+            // Fuzzy match amount (remove decimals/formatting) to find key
+            // We use the raw 'amount' string from URL params
+            let targetUrl = STRIPE_LINKS[amount];
+
+            // If exact match fails, try simple fallback logic
+            if (!targetUrl) {
+                if (amount.startsWith('100000')) targetUrl = STRIPE_LINKS['100000'];
+                else if (amount.startsWith('66')) targetUrl = STRIPE_LINKS['66666.66'];
+                else if (amount.startsWith('75')) targetUrl = STRIPE_LINKS['75000'];
+                else targetUrl = STRIPE_LINKS['175000'];
+            }
+
+            // Append tracking
+            const finalUrl = `${targetUrl}?prefilled_email=client@example.com&client_reference_id=${ref}`;
+            window.open(finalUrl, '_blank');
         }
 
         function generatePDF() {
@@ -488,10 +508,10 @@
                     <div style="background: #f0f7ff; border: 1px solid #cce5ff; padding: 20px; border-radius: 4px;">
                         <h3 style="margin: 0 0 10px; color: #117ACA; font-size: 14px;">WIRE TRANSFER INSTRUCTIONS</h3>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; gap: 10px;">
-                            <div><strong>Bank:</strong> JPMORGAN CHASE BANK, N.A.</div>
-                            <div><strong>Beneficiary:</strong> SIRSI TECHNOLOGIES INC</div>
+                            <div><strong>Bank:</strong> JPMORGAN CHASE BANK, N.A. (001)</div>
+                            <div><strong>Beneficiary:</strong> Sirsi Technologies Inc</div>
                             <div><strong>Routing:</strong> 021000021</div>
-                            <div><strong>Account:</strong> XXXXXXXX9088</div>
+                            <div><strong>Account:</strong> 2905276162</div>
                         </div>
                     </div>
                 </div>

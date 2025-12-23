@@ -103,5 +103,12 @@ Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the 
 *   **Artifacts**: Use `task_boundary` and `implementation_plan.md` to structure complex thought.
 
 ---
+
+## 7. Agent Capabilities (Self-Awareness)
+*   **CLI Access**: I have full CLI access to GitHub and Firebase/Firestore. I can execute git commands and deploy functions/sites directly.
+*   **Pipeline Visibility**: I can see and manipulate the full CI/CD pipeline. Use me to verify build statuses and deployment health.
+*   **Push Protocol**: ALWAYS run `git status` -> `git add` -> `git commit` -> `git push` sequence. Never assume files are committed.
+
+---
 **Signed,**
 **Antigravity (The Agent)**

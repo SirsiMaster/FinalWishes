@@ -76,3 +76,44 @@ To use this component in another project:
 ## Customization
 - **Theme**: Uses CSS variables in `admin-layout.css`.
 - **Products**: Modify `selectContractPlan` content in `contracts.html` to change pricing/terms.
+
+## Configuration Guide (Activating Payments)
+
+To go live, you must update the placeholder values in `payment.html`.
+
+### 1. Activating Stripe (Recurring Configuration)
+
+To achieve the "Set and Forget" automation, we use **Recurring** intervals.
+
+#### **Link 1: Plan A (Launch Milestone)**
+- **Type**: Recurring (**Custom -> Every 5 Months**)
+- **Price**: `$100,000.00`
+- **Name**: "Plan A: Milestone Subscription"
+- **Logic**: Charges $100k Today. Next charge is in ~5 months (approx May). Admin can cancel after 2nd payment.
+
+#### **Link 2: Plan B (Trimester)**
+- **Type**: Recurring (**Custom -> Every 2 Months**)
+- **Price**: `$66,666.67`
+- **Name**: "Plan B: Trimester Subscription"
+- **Logic**: Charges $66k Today. Next charge in 2 months (Feb), then 4 months (Apr).
+
+#### **Link 3: Plan C (Equity Bundle)**
+*This relies on bundling a One-Time fee with a Subscription.*
+1.  **Product 1 (The Adjustment)**:
+    - Type: **One-Time**
+    - Price: `$25,000.00`
+2.  **Product 2 (The Core)**:
+    - Type: **Recurring (Custom -> Every 2 Months)**
+    - Price: `$50,000.00`
+- **Logic**: Today = $75k ($25k + $50k). Future = $50k every 2 months.
+
+
+
+### 2. Activating Chase (Wire Transfer)
+1.  Obtain your **Incoming Wire Instructions** from Chase Commercial Banking.
+2.  In `payment.html`, update the HTML text in the "Chase Option" section:
+    - **Bank Name**: Replace `JPMORGAN CHASE BANK, N.A.`
+    - **Beneficiary**: Replace `SIRSI TECHNOLOGIES INC`
+    - **Routing Number**: Replace `021000021`
+    - **Account Number**: Replace `XXXXXXXX9088`
+3.  **Important**: Also update the `getInvoiceTemplateHTML()` function so the generated PDF receipts match the displayed instructions.

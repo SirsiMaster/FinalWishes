@@ -13,6 +13,7 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"github.com/sirsi-technologies/finalwishes-api/internal/docuseal"
 )
 
 func main() {
@@ -71,6 +72,11 @@ func main() {
 		// Document routes
 		r.Route("/documents", func(r chi.Router) {
 			// TODO: Implement document handlers
+		})
+
+		// DocuSeal routes
+		r.Route("/docuseal", func(r chi.Router) {
+			r.Post("/create-submission", docuseal.CreateSubmissionHandler)
 		})
 	})
 

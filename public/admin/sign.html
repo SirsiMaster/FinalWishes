@@ -65,16 +65,16 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow relative bg-white">
+    <main class="flex-grow relative bg-white h-full">
         <!-- Loader Overlay -->
         <div id="loader-overlay"
             class="absolute inset-0 z-10 bg-[#0f172a] flex flex-col items-center justify-center transition-opacity duration-500">
             <div class="loader mb-4"></div>
-            <p class="text-sm text-gray-400 tracking-widest uppercase">Establishing Secure Connection...</p>
+            <p class="text-sm text-gray-400 tracking-widest uppercase">Loading Secure Document...</p>
         </div>
 
-        <!-- Iframe Container -->
-        <iframe id="signing-frame" class="w-full h-full border-none" allow="camera; microphone; fullscreen"></iframe>
+        <!-- DocuSeal Embed -->
+        <docuseal-form id="docuseal-form" class="w-full h-full" data-src=""></docuseal-form>
 
         <!-- Error State -->
         <div id="error-screen"
@@ -87,39 +87,42 @@
         </div>
     </main>
 
+    <!-- DocuSeal Script -->
+    <script src="https://cdna.docuseal.com/js/form.js"></script> <!-- Use CDN for Prod -->
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const frame = document.getElementById('signing-frame');
+            const form = document.querySelector('docuseal-form');
             const loader = document.getElementById('loader-overlay');
             const errorScreen = document.getElementById('error-screen');
 
-            // 1. Retrieve URL from session (secure handoff)
-            const signingUrl = sessionStorage.getItem('signingUrl');
+            // 1. Retrieve Config from Session
+            const slug = sessionStorage.getItem('docusealSlug');
+            const redirectUrl = sessionStorage.getItem('postSignRedirect') || 'payment.html';
 
-            if (!signingUrl) {
-                console.error("No signing URL found in session.");
+            if (!slug) {
+                console.error("No signing slug found.");
                 loader.classList.add('hidden');
                 errorScreen.classList.remove('hidden');
                 return;
             }
 
-            // 2. Load Frame
-            frame.src = signingUrl;
+            // 2. Initialize Form
+            // Production: sign.sirsi.ai
+            const docusealBase = 'https://sign.sirsi.ai';
+            form.setAttribute('data-src', `${docusealBase}/s/${slug}`);
 
-            // 3. Handle Load Event
-            frame.onload = () => {
-                // Fade out loader
+            // 3. Handle Events
+            form.addEventListener('completed', (e) => {
+                console.log('Signing Completed:', e.detail);
+                // Redirect to payment
+                window.location.href = redirectUrl;
+            });
+
+            form.addEventListener('loaded', () => {
                 loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.classList.add('hidden');
-                }, 500);
-            };
-
-            // 4. Handle Errors (limited cross-origin)
-            frame.onerror = () => {
-                loader.classList.add('hidden');
-                errorScreen.classList.remove('hidden');
-            };
+                setTimeout(() => loader.classList.add('hidden'), 500);
+            });
         });
     </script>
 </body>

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  docuseal:
+    image: docuseal/docuseal:latest
+    container_name: docuseal
+    ports:
+      - "3000:3000"
+    environment:
+      - DOCUSEAL_URL=http://localhost:3000
+    volumes:
+      - docuseal_data:/data
+    restart: unless-stopped
+
+volumes:
+  docuseal_data:

@@ -2542,6 +2542,34 @@
                                     </ul>
                                 </div>
 
+                                <!-- NEXT BUTTON (SOW -> COST) -->
+                                <div class="w-full flex justify-center mt-16 mb-12 relative z-10">
+                                    <button onclick="switchTab('cost'); window.scrollTo({top: 0, behavior: 'smooth'});"
+                                        class="group relative inline-flex items-center justify-center gap-6 h-14 min-w-[400px] px-14 overflow-hidden bg-gradient-to-r from-[#D4AF37] to-[#C8A951] text-[#050b14] shadow-[0_4px_20px_rgba(200,169,81,0.4)] hover:shadow-[0_0_40px_rgba(200,169,81,0.8)] transition-all duration-500 ease-out border border-[#C8A951] rounded-sm">
+
+                                        <!-- Hover Fill Effect -->
+                                        <div
+                                            class="absolute inset-0 w-full h-full bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out skew-x-12 origin-left">
+                                        </div>
+
+                                        <!-- TEXT -->
+                                        <span
+                                            class="relative z-10 font-serif font-bold text-lg tracking-[0.25em] uppercase translate-x-2 group-hover:translate-x-0 transition-transform duration-500">
+                                            Next
+                                        </span>
+
+                                        <!-- ICON (Elegant Arrow) -->
+                                        <div
+                                            class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full border border-[#050b14]/10 group-hover:border-[#050b14]/30 transition-colors duration-300">
+                                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-500"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -3383,6 +3411,36 @@
                                             style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1rem;">
                                             $175,000</div>
                                     </div>
+                                </div>
+
+                                <!-- NEXT BUTTON (COST -> CONTRACT) -->
+                                <div class="w-full flex justify-center mt-16 mb-12 relative z-10"
+                                    style="grid-column: 1 / -1;">
+                                    <button
+                                        onclick="switchTab('contract'); window.scrollTo({top: 0, behavior: 'smooth'});"
+                                        class="group relative inline-flex items-center justify-center gap-6 h-14 min-w-[400px] px-14 overflow-hidden bg-gradient-to-r from-[#D4AF37] to-[#C8A951] text-[#050b14] shadow-[0_4px_20px_rgba(200,169,81,0.4)] hover:shadow-[0_0_40px_rgba(200,169,81,0.8)] transition-all duration-500 ease-out border border-[#C8A951] rounded-sm">
+
+                                        <!-- Hover Fill Effect -->
+                                        <div
+                                            class="absolute inset-0 w-full h-full bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out skew-x-12 origin-left">
+                                        </div>
+
+                                        <!-- TEXT -->
+                                        <span
+                                            class="relative z-10 font-serif font-bold text-lg tracking-[0.25em] uppercase translate-x-2 group-hover:translate-x-0 transition-transform duration-500">
+                                            Next
+                                        </span>
+
+                                        <!-- ICON (Elegant Arrow) -->
+                                        <div
+                                            class="relative z-10 flex items-center justify-center w-8 h-8 rounded-full border border-[#050b14]/10 group-hover:border-[#050b14]/30 transition-colors duration-300">
+                                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-500"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+                                            </svg>
+                                        </div>
+                                    </button>
                                 </div>
 
                             </div>
@@ -4449,7 +4507,7 @@
                                     I agree to the terms above
                                 </label>
                                 <div>
-                                    <button onclick="initiateOpenSign()" id="execute-btn" disabled
+                                    <button onclick="initiateDocuSeal()" id="execute-btn" disabled
                                         class="inline-flex items-center gap-2 px-8 py-3 bg-[#C8A951] text-[#0f172a] font-semibold rounded-full transition-all hover:bg-[#d4b85d] disabled:cursor-not-allowed">
                                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24"
                                             stroke="currentColor" stroke-width="2">
@@ -5243,156 +5301,85 @@
         }
 
         // ============================================
-        // SIRSI OPENSIGN INTEGRATION
+        // DOCUSEAL INTEGRATION
         // ============================================
-        const OPENSIGN_API_BASE = 'https://us-central1-sirsi-nexus-live.cloudfunctions.net';
-
-        async function initiateOpenSign() {
+        async function initiateDocuSeal() {
             const executeBtn = document.getElementById('execute-btn');
-            // Save innerHTML to preserve icon
             const originalHTML = executeBtn.innerHTML;
             const signatureBlock = document.getElementById('signature-block');
 
             try {
-                // 1. Authenticate or Identify User
+                // 1. Identify Signer
                 const user = window.AuthService ? window.AuthService.getCurrentUser() : null;
-
-                let signerName = '';
                 let signerEmail = '';
-                let idToken = null;
 
                 if (user) {
-                    signerName = user.displayName || 'Valued Client';
                     signerEmail = user.email;
-                    idToken = await user.getIdToken();
                 } else {
-                    // NO USER -> SHOW GUEST MODAL
                     const guestData = await showGuestModal();
-
-                    if (!guestData) {
-                        // User cancelled
-                        return;
-                    }
-
-                    signerName = guestData.name;
+                    if (!guestData) return;
                     signerEmail = guestData.email;
                 }
 
                 // 2. UI Loading State
-                executeBtn.innerHTML = '<span>⏳ Processing...</span>';
+                executeBtn.innerHTML = '<span>⏳ Initializing Vault...</span>';
                 executeBtn.disabled = true;
 
-                // 3. Confirm Intent (Standard Browser Confirm is fine for final legal check)
-                // Or we can assume the Modal was intent enough? Let's keep it safe.
-                const confirmed = confirm(
-                    'Legally Binding Action\n\n' +
-                    'You are about to initiate the electronic signature process for the Master Services Agreement. ' +
-                    'This will create a digital envelope and redirect you to our secure signing portal.\n\n' +
-                    'Are you ready to proceed?'
-                );
-
-                if (!confirmed) {
-                    // Restore original HTML (icon + text)
-                    executeBtn.innerHTML = originalHTML;
-                    executeBtn.disabled = false;
-                    return;
-                }
-
-                // 4. Prepare Headers (Auth vs Guest)
-                // Fallback to storage if not authenticated via service
-                if (!idToken) {
-                    idToken = sessionStorage.getItem('token') || sessionStorage.getItem('idToken');
-                }
-                const headers = {
-                    'Content-Type': 'application/json'
-                };
-                if (idToken) {
-                    headers['Authorization'] = `Bearer ${idToken}`;
-                }
-
-                // 5. Create Envelope via API
-                const response = await fetch(`${OPENSIGN_API_BASE}/createEnvelope`, {
+                // 3. Create Submission via Backend Proxy
+                // We use our local Go backend to communicate with the DocuSeal container
+                const response = await fetch('/api/v1/docuseal/create-submission', {
                     method: 'POST',
-                    headers: headers,
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        docType: 'MSA',
-                        recipients: [
-                            {
-                                name: signerName,
-                                email: signerEmail,
-                                role: 'Client',
-                                type: 'signer'
-                            },
-                            {
-                                name: 'Sirsi Legal',
-                                email: 'legal@sirsi.ai',
-                                role: 'Provider',
-                                type: 'copy'
-                            }
-                        ],
-                        metadata: {
-                            source: 'admin_portal',
-                            contractId: 'MSA-V1',
-                            plan: document.querySelector('.select-plan-btn.selected')?.getAttribute('data-plan') || 'Custom'
-                        },
-                        callbackUrl: (function () {
-                            const plan = document.querySelector('.select-plan-btn.selected')?.getAttribute('data-plan') || 'Plan C';
-                            let amt = '175000'; // Fallback
-                            // Calculate Initial Payment based on Plan
-                            if (plan === 'Plan A') amt = '100000';      // 50% of 200k
-                            if (plan === 'Plan B') amt = '66666.66';    // 1/3 of 200k
-                            if (plan === 'Plan C') amt = '75000';       // 100k - Wait, user said 100k today for Plan C? Let me re-read prompt.
-                            // Prompt: "$175K based on equity distribution... with a $100K payment "today""
-                            // My previous analysis said 75k logic was in the HTML.
-                            // Let's stick to the HTML logic I viewed earlier for Plan C: "$75,000" (Milestone 1).
-                            // Re-checking the HTML view from earlier...
-                            // "Milestone 1: Partnership Close ... $75,000"
-                            // Okay, sticking to code truth ($75k) unless user overrides.
-                            if (plan === 'Plan C') amt = '75000';
-
-                            return window.location.origin + `/admin/payment.html?amount=${amt}&ref=MSA-V1`;
-                        })()
+                        template_id: 1, // Default template (must exist in DocuSeal)
+                        submitters: [{
+                            email: signerEmail,
+                            role: 'Signer'
+                        }]
                     })
                 });
 
                 const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Failed to create signing session');
 
-                if (!response.ok) {
-                    throw new Error(result.message || 'Failed to create envelope');
-                }
+                console.log('DocuSeal Session:', result.slug);
 
-                // 6. Handle Success
-                console.log('Envelope Created:', result.envelopeId);
-
-                // Optimistic UI Update
+                // 4. Update UI Optimistically
                 if (signatureBlock) {
                     const signatureEl = document.getElementById('date-signature');
                     if (signatureEl) signatureEl.textContent = new Date().toLocaleDateString();
                 }
-
                 updateMSAState('executed');
                 updateStepperStatus(3);
 
                 executeBtn.textContent = '✓ Redirecting to Secure Sign...';
-                executeBtn.style.backgroundColor = '#10B981'; // Green
+                executeBtn.style.backgroundColor = '#10B981';
                 executeBtn.classList.remove('bg-[#C8A951]');
                 executeBtn.classList.add('bg-[#10B981]');
 
-                // 7. Redirect to Secure Signing Tunnel
-                if (result.signingUrl) {
-                    sessionStorage.setItem('signingUrl', result.signingUrl);
+                // 5. Prepare Post-Signature Redirect
+                const plan = document.querySelector('.select-plan-btn.selected')?.getAttribute('data-plan') || 'Plan C';
+                let amt = '75000'; // Default per Plan C truth
+                if (plan === 'Plan A') amt = '100000';
+                if (plan === 'Plan B') amt = '66666.66';
+                if (plan === 'Custom') amt = '175000'; // Fallback
+
+                sessionStorage.setItem('postSignRedirect', `payment.html?amount=${amt}&ref=MSA-V1`);
+
+                // 6. Redirect to Signing Page
+                if (result.slug) {
+                    sessionStorage.setItem('docusealSlug', result.slug);
                     window.location.href = 'sign.html';
                 } else {
-                    throw new Error('No signing URL returned');
+                    throw new Error('No signing slug returned');
                 }
 
             } catch (error) {
-                console.error('OpenSign Processing Error:', error);
-                alert('Electronic Signature Error: ' + error.message);
-
-                executeBtn.innerHTML = originalHTML; // Restore
-                executeBtn.style.backgroundColor = '#C8A951'; // Restore Gold
+                console.error('DocuSeal Error:', error);
+                alert('Signature Initialization Error: ' + error.message);
+                executeBtn.innerHTML = originalHTML;
                 executeBtn.disabled = false;
+                executeBtn.style.backgroundColor = '#C8A951';
             }
         }
 

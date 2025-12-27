@@ -317,11 +317,11 @@ This document provides:
 | **OpenSign** | E-signature | ✅ Yes | ~$50/mo (Requires MongoDB) |
 | **DocuSign** | E-signature | ✅ Yes | $25-65/user/month |
 
-**Decision:** Use **DocuSeal** (Self-Hosted).
-- **Architecture Synergy:** DocuSeal supports **PostgreSQL**. We are already running Cloud SQL (PostgreSQL). OpenSign requires MongoDB, which would add a new database engine and cost.
-- **Control:** Data stays in our infrastructure (Cloud SQL/Storage).
-- **Cost:** Fixed infrastructure cost vs per-envelope pricing.
-- **Licensing:** Open Source.
+**Decision:** Use **OpenSign** (Self-Hosted/Community).
+- **Cost:** Community edition is free, avoiding DocuSeal Pro costs.
+- **Architecture:** Will require MongoDB (managed via Atlas Free Tier or self-hosted container).
+- **Experience:** Previous integration (ADR-003) proved viable with frontend tweaks.
+- **Control:** Full code ownership.
 
 **Remote Online Notarization (RON) Status by State:**
 

@@ -5301,9 +5301,9 @@
         }
 
         // ============================================
-        // DOCUSEAL INTEGRATION
+        // OPENSIGN INTEGRATION
         // ============================================
-        async function initiateDocuSeal() {
+        async function initiateOpenSign() {
             const executeBtn = document.getElementById('execute-btn');
             const originalHTML = executeBtn.innerHTML;
             const signatureBlock = document.getElementById('signature-block');
@@ -5312,37 +5312,39 @@
                 // 1. Identify Signer
                 const user = window.AuthService ? window.AuthService.getCurrentUser() : null;
                 let signerEmail = '';
+                let signerName = 'Guest Signer';
 
                 if (user) {
                     signerEmail = user.email;
+                    signerName = user.displayName || 'Valued Client';
                 } else {
                     const guestData = await showGuestModal();
                     if (!guestData) return;
                     signerEmail = guestData.email;
+                    signerName = guestData.name;
                 }
 
                 // 2. UI Loading State
                 executeBtn.innerHTML = '<span>⏳ Initializing Vault...</span>';
                 executeBtn.disabled = true;
 
-                // 3. Create Submission via Backend Proxy
-                // We use our local Go backend to communicate with the DocuSeal container
-                const response = await fetch('/api/v1/docuseal/create-submission', {
+                // 3. Create Envelope via Backend Proxy
+                // We use our local Go backend to communicate with the OpenSign container
+                const response = await fetch('/api/v1/opensign/create-envelope', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        template_id: 1, // Default template (must exist in DocuSeal)
-                        submitters: [{
-                            email: signerEmail,
-                            role: 'Signer'
-                        }]
+                        templateId: "default_msa_template", // Replace with actual template ID
+                        signerName: signerName,
+                        signerEmail: signerEmail,
+                        redirectUrl: window.location.origin + "/payment.html"
                     })
                 });
 
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Failed to create signing session');
 
-                console.log('DocuSeal Session:', result.slug);
+                console.log('OpenSign Session:', result);
 
                 // 4. Update UI Optimistically
                 if (signatureBlock) {
@@ -5367,15 +5369,15 @@
                 sessionStorage.setItem('postSignRedirect', `payment.html?amount=${amt}&ref=MSA-V1`);
 
                 // 6. Redirect to Signing Page
-                if (result.slug) {
-                    sessionStorage.setItem('docusealSlug', result.slug);
+                if (result.signingUrl) {
+                    sessionStorage.setItem('openSignUrl', result.signingUrl);
                     window.location.href = 'sign.html';
                 } else {
-                    throw new Error('No signing slug returned');
+                    throw new Error('No signing URL returned');
                 }
 
             } catch (error) {
-                console.error('DocuSeal Error:', error);
+                console.error('OpenSign Error:', error);
                 alert('Signature Initialization Error: ' + error.message);
                 executeBtn.innerHTML = originalHTML;
                 executeBtn.disabled = false;

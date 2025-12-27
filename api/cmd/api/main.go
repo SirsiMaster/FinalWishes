@@ -14,6 +14,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/sirsi-technologies/finalwishes-api/internal/docuseal"
+	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
 )
 
 func main() {
@@ -77,6 +78,11 @@ func main() {
 		// DocuSeal routes
 		r.Route("/docuseal", func(r chi.Router) {
 			r.Post("/create-submission", docuseal.CreateSubmissionHandler)
+		})
+
+		// OpenSign routes
+		r.Route("/opensign", func(r chi.Router) {
+			r.Post("/create-envelope", opensign.CreateEnvelopeHandler)
 		})
 	})
 

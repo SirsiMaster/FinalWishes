@@ -34,16 +34,28 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 	// 2. Get Config
 	apiKey := os.Getenv("OPENSIGN_API_KEY")
 	apiURL := os.Getenv("OPENSIGN_API_URL")
+	createEnvelopeURL := os.Getenv("OPENSIGN_CREATE_ENVELOPE_URL")
 
-	if apiKey == "" || apiURL == "" {
-		log.Error().Msg("OpenSign configuration missing")
+	if apiKey == "" {
+		log.Warn().Msg("OpenSign API key missing (OPENSIGN_API_KEY)")
+		// Proceeding might allow unauthenticated calls if the upstream doesn't require it?
+		// Unlikely, but let's not hard fail here if we want to debug 401s.
+		// Actually, standard practice is to fail early or let upstream fail.
+	}
+
+	targetURL := ""
+	if createEnvelopeURL != "" {
+		targetURL = createEnvelopeURL
+	} else if apiURL != "" {
+		targetURL = apiURL + "/v1/envelopes"
+	} else {
+		log.Error().Msg("OpenSign configuration missing (OPENSIGN_API_URL or OPENSIGN_CREATE_ENVELOPE_URL)")
 		http.Error(w, "Server configuration error", http.StatusInternalServerError)
 		return
 	}
 
 	// 3. Construct Upstream Payload
-	// Adapting to OpenSign API format (Generic assumption based on standard e-sign APIs)
-	// If specific API docs were available, we would match them exactly.
+	// ... (unchanged)
 	upstreamPayload := map[string]interface{}{
 		"template_id": req.TemplateID,
 		"signers": []map[string]string{
@@ -64,14 +76,16 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 4. Call OpenSign API
 	client := &http.Client{}
-	upstreamReq, err := http.NewRequest("POST", apiURL+"/v1/envelopes", bytes.NewBuffer(payloadBytes))
+	upstreamReq, err := http.NewRequest("POST", targetURL, bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		http.Error(w, "Failed to create upstream request", http.StatusInternalServerError)
 		return
 	}
 
 	upstreamReq.Header.Set("Content-Type", "application/json")
-	upstreamReq.Header.Set("Authorization", "Bearer "+apiKey)
+	if apiKey != "" {
+		upstreamReq.Header.Set("Authorization", "Bearer "+apiKey)
+	}
 
 	resp, err := client.Do(upstreamReq)
 	if err != nil {

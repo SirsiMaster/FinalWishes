@@ -108,8 +108,8 @@
             }
 
             // 2. Initialize Form
-            // Production: Cloud Run URL (Until DNS verified)
-            const docusealBase = 'https://docuseal-signer-210890802638.us-central1.run.app';
+            // Production: Custom Domain
+            const docusealBase = 'https://sign.sirsi.ai';
             form.setAttribute('data-src', `${docusealBase}/s/${slug}`);
 
             // 3. Handle Events

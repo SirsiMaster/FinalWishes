@@ -39,7 +39,7 @@ func CreateSubmissionHandler(w http.ResponseWriter, r *http.Request) {
 	// 2. Config
 	docusealURL := os.Getenv("DOCUSEAL_URL")
 	if docusealURL == "" {
-		docusealURL = "https://docuseal-signer-210890802638.us-central1.run.app"
+		docusealURL = "https://sign.sirsi.ai"
 	}
 	// Auth via X-Auth-Token if configured, but for local dev with no auth set up yet, might be open or using a generated token.
 	// For now, we'll assume we might need a token if the user set one up, otherwise we try without or use a placeholder.

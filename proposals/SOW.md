@@ -47,7 +47,7 @@ Provider shall integrate the following third-party services to achieve automatio
 | Service | Purpose | Integration Level |
 | :--- | :--- | :--- |
 | **Plaid** | Financial Account Linking | **Deep Integration** (Transactions, Liabilities, Investments) |
-| **DocuSeal** | E-Signatures | **Self-Hosted** (Full API, embedded signing) |
+| **OpenSign** | E-Signatures | **Self-Hosted** (Full API, embedded signing) |
 | **Lob** | Certified Mail / Physical Letters | **API Triggered** (Address verification, tracking) |
 | **SendGrid** | Transactional Email | **API Triggered** (Notifications, summaries) |
 | **Google Document AI** | OCR / Data Extraction | **API Integrated** (Receipts, Forms) |
@@ -71,7 +71,7 @@ Provider shall build a logic engine ("The Shepherd") that:
 *   **1.4 Schema:** Design Relational (Heirs) vs Document (Metadata) schemas.
 *   **1.5 Vault:** Implement AES-256 crypto service and Signed URL logic.
 *   **1.6 Web:** React + Vite + "Light Royal Neo-Deco" Design System.
-*   **1.7 E-Sign:** Deploy Self-Hosted DocuSeal.
+*   **1.7 E-Sign:** Deploy Self-Hosted OpenSign.
 
 ### **PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)**
 *   **2.1 Asset Module:** Plaid Link integration & manual asset overrides.

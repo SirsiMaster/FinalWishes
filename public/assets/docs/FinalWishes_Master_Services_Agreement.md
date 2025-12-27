@@ -250,7 +250,7 @@ Provider shall build the "Soul" of the platform—a secure, dedicated module for
 | Service | Purpose | Integration Level |
 |---------|---------|-------------------|
 | Plaid | Financial Account Linking | Deep Integration |
-| DocuSeal | E-Signatures | Self-Hosted (Full API) |
+| OpenSign | E-Signatures | Self-Hosted (Full API) |
 | Lob | Certified Mail / Physical Letters | API Triggered |
 | SendGrid | Transactional Email | API Triggered |
 | Google Document AI | OCR / Data Extraction | API Integrated |
@@ -282,7 +282,7 @@ Provider shall build a logic engine ("The Shepherd") that:
 - 1.4 Schema: Design Relational (Heirs) vs Document (Metadata).
 - 1.5 Vault: Implement AES-256 crypto service.
 - 1.6 Web: React + Vite + "Light Royal Neo-Deco" Design.
-- 1.7 E-Sign: Deploy Self-Hosted DocuSeal.
+- 1.7 E-Sign: Deploy Self-Hosted OpenSign.
 
 ### PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)
 - 2.1 Asset Module: Plaid Link integration & data overrides.
@@ -367,7 +367,7 @@ This proposal offers a transparent, atomic breakdown of the investment required 
 - System Architecture: $8,000
 - Cloud SQL / Firestore Schema: $5,500
 - Vault Implementation (AES-256): $7,250
-- DocuSeal Setup: $2,250
+- OpenSign Setup: $2,250
 - Frontend Shell: $7,000
 
 ### Phase 2: Core Logic & "The Shepherd" (Weeks 5-10) - $35,000
@@ -403,7 +403,7 @@ This proposal offers a transparent, atomic breakdown of the investment required 
 | NoSQL | Firestore | Free Tier | User metadata |
 | Storage | Cloud Storage | $0.026/GB | Document vault |
 | AI | Vertex AI | ~$5/1M tokens | Legal logic |
-| E-Sign | DocuSeal | $0 (OSS) | Unlimited signatures |
+| E-Sign | OpenSign | $0 (OSS) | Unlimited signatures |
 
 ---
 

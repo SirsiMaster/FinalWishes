@@ -130,7 +130,7 @@ Provider to deliver a "Vault-Grade" estate settlement platform launching in **Ma
 | Phase | Duration | Deliverables |
 | :--- | :--- | :--- |
 | **1. Foundation** | Month 1 | Cloud Architecture, Auth, Design System, Vault Security. |
-| **2. Core Logic** | Months 2-3 | "The Shepherd" Engine, MD/IL/MN State Rules, DocuSeal Integration. |
+| **2. Core Logic** | Months 2-3 | "The Shepherd" Engine, MD/IL/MN State Rules, OpenSign Integration. |
 | **3. Mobile & Finance** | Months 4-5 | **iOS/Android Apps**, Stripe Payments, Plaid Integration, Asset Discovery. |
 | **4. Launch** | Month 6 | Pen Testing, Auditor Review, App Store Submission, Go-Live. |
 
@@ -170,7 +170,7 @@ How we arrive at the **$200,000** partnership price:
 Estimated monthly running costs (paid to providers):
 - **Google Cloud:** ~$60/mo (Scales with usage)
 - **LOB (Mail):** $1.55 per letter sent
-- **DocuSeal:** Free (Self-Hosted)
+- **OpenSign:** Free (Self-Hosted)
 - **Vertex AI:** ~$5 per 1M tokens
 
 ---

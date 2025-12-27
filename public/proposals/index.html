@@ -559,7 +559,7 @@
                 <div class="adr-content-injection">
                     <h3 class="gold-heading">Executive Summary</h3>
                     <p>This Statement of Work documents the <strong>refined implementation plan</strong> for
-                        FinalWishes. It solidifies the decision to self-host key infrastructure (DocuSeal) and leverage
+                        FinalWishes. It solidifies the decision to self-host key infrastructure (OpenSign) and leverage
                         the latest AI models (Gemini 3.0) to maximize efficiency and reduce operating costs.</p>
                     <p><strong>The Reality:</strong> Most estate settlement is still paper-based. There are no unified
                         government APIs. Financial institutions have proprietary or non-existent programmatic
@@ -573,7 +573,7 @@
                         <li>Full automation for states WITH e-filing (MD, IL, MN)</li>
                         <li>Form library covering ~45 probate forms across 3 states</li>
                         <li>Complete user guidance through every step (manual or automated)</li>
-                        <li>Self-hosted DocuSeal for e-signatures (Postgres compatible, Cost saving vs DocuSign)</li>
+                        <li>Self-hosted OpenSign for e-signatures (Postgres compatible, Cost saving vs DocuSign)</li>
                     </ul>
 
                     <h3 class="gold-heading">2. Complete Document Inventory</h3>
@@ -758,10 +758,10 @@
 
                     <h3 class="gold-heading">4. Technical Stack & Architecture</h3>
 
-                    <h4 class="gold-heading">4.1 E-Signature (DocuSeal)</h4>
-                    <p><strong>Decision:</strong> Use <strong>DocuSeal</strong> (Self-Hosted).</p>
+                    <h4 class="gold-heading">4.1 E-Signature (OpenSign)</h4>
+                    <p><strong>Decision:</strong> Use <strong>OpenSign</strong> (Self-Hosted).</p>
                     <ul>
-                        <li><strong>Architecture Synergy:</strong> DocuSeal supports <strong>PostgreSQL</strong> (Cloud
+                        <li><strong>Architecture Synergy:</strong> OpenSign supports <strong>PostgreSQL</strong> (Cloud
                             SQL).</li>
                         <li><strong>Control:</strong> Data stays in our infrastructure (Cloud SQL/Storage).</li>
                         <li><strong>Cost:</strong> Fixed infrastructure cost (~$50/mo) vs per-envelope pricing.</li>
@@ -837,7 +837,7 @@
                             Task tracking.</li>
                         <li><strong>Document Generation:</strong> Notification letters, Court forms (PDF), Certified
                             mail.</li>
-                        <li><strong>Full Integrations:</strong> Plaid (Account discovery), DocuSeal (Self-hosted), Lob,
+                        <li><strong>Full Integrations:</strong> Plaid (Account discovery), OpenSign (Self-hosted), Lob,
                             Vertex AI (Gemini 3.0).</li>
                         <li><strong>Mobile Apps:</strong> React Native iOS + Android with document capture.</li>
                     </ol>
@@ -968,7 +968,7 @@
                                 <td>$6,125</td>
                             </tr>
                             <tr>
-                                <td>DocuSeal Self-Hosted Setup</td>
+                                <td>OpenSign Self-Hosted Setup</td>
                                 <td>DevOps</td>
                                 <td>15</td>
                                 <td>$2,250</td>
@@ -1184,7 +1184,7 @@
                             </tr>
                             <tr>
                                 <td><strong>E-Sign</strong></td>
-                                <td>DocuSeal (Self-Hosted)</td>
+                                <td>OpenSign (Self-Hosted)</td>
                                 <td>$0 (OSS)</td>
                                 <td>Unlimited signatures</td>
                             </tr>

@@ -59,7 +59,7 @@ We estimate **1,150 engineering & design hours** to deliver the MVP. At a blende
 | **System Architecture** (VPC, Encryption, Auth) | Sr. Architect | 40 | $7,000 |
 | **Cloud SQL / Firestore Schema Design** | Backend Eng | 30 | $4,500 |
 | **Vault Implemention** (AES-256 + KMS) | Security Eng | 35 | $6,125 |
-| **DocuSeal Self-Hosted Setup** | DevOps | 15 | $2,250 |
+| **OpenSign Self-Hosted Setup** | DevOps | 15 | $2,250 |
 | **Frontend Shell (React/Vite)** | Frontend Eng | 40 | $6,000 |
 | **Phase 1 Total** | | **160 hrs** | **$25,875** |
 
@@ -114,7 +114,7 @@ Estimated monthly run-rate for the platform.
 | **Media** | Cloud Storage (Nearline) | $0.01/GB | Multimedia memoirs (cheaper tier) |
 | **Secrets** | Secret Manager | $0.06/version | API Key management |
 | **AI** | Vertex AI (Gemini Flash) | ~$5/1M tokens | Legal logic processing |
-| **E-Sign** | DocuSeal (Self-Hosted) | $0 (OSS) | Unlimited signatures vs DocuSign |
+| **E-Sign** | OpenSign (Self-Hosted) | $0 (OSS) | Unlimited signatures vs DocuSign |
 | **Mail** | Lob API | $1.55 / letter | Physical certified mailings |
 | **Identity** | Persona / Jumio | ~$1.50 / check | Fraud prevention |
 

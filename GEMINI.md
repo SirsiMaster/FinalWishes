@@ -79,7 +79,7 @@ Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the 
 | **Auth** | **Firebase Auth** | MFA (TOTP) Required |
 | **Security** | **SOC 2 + KMS** | Software Keys (No HSM), AES-256 |
 | **AI** | **Gemini 3.0 (Vertex AI)** | The "Guidance Engine" (Not just a chatbot) |
-| **E-Sign** | **DocuSeal (Self-Hosted)** | **The Legal Vault** (Data Sovereignty) |
+| **E-Sign** | **OpenSign (Community)** | **Self-Hosted** (Google Cloud Run) |
 
 ## 4. Design System: "Royal Neo-Deco"
 *   **Aesthetic**: "Opulent, Permanent, Guardian-Like"

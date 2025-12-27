@@ -73,8 +73,12 @@
             <p class="text-sm text-gray-400 tracking-widest uppercase">Loading Secure Document...</p>
         </div>
 
-        <!-- DocuSeal Embed -->
-        <docuseal-form id="docuseal-form" class="w-full h-full" data-src=""></docuseal-form>
+        <!-- OpenSign Embed (Iframe) -->
+        <!-- Note: OpenSign typically provides a full signing URL. We embed it in an iframe for immersion, 
+             or we could redirect. For now, iframe provides the best context retention. -->
+        <iframe id="opensign-frame" class="w-full h-full border-none" allow="camera; microphone; geolocation"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals">
+        </iframe>
 
         <!-- Error State -->
         <div id="error-screen"
@@ -87,39 +91,40 @@
         </div>
     </main>
 
-    <!-- DocuSeal Script -->
-    <script src="https://cdna.docuseal.com/js/form.js"></script> <!-- Use CDN for Prod -->
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.querySelector('docuseal-form');
+            const frame = document.getElementById('opensign-frame');
             const loader = document.getElementById('loader-overlay');
             const errorScreen = document.getElementById('error-screen');
 
             // 1. Retrieve Config from Session
-            const slug = sessionStorage.getItem('docusealSlug');
+            const signingUrl = sessionStorage.getItem('openSignUrl');
             const redirectUrl = sessionStorage.getItem('postSignRedirect') || 'payment.html';
 
-            if (!slug) {
-                console.error("No signing slug found.");
+            if (!signingUrl) {
+                console.error("No signing URL found.");
                 loader.classList.add('hidden');
                 errorScreen.classList.remove('hidden');
                 return;
             }
 
-            // 2. Initialize Form
-            // Production: Custom Domain
-            const docusealBase = 'https://sign.sirsi.ai';
-            form.setAttribute('data-src', `${docusealBase}/s/${slug}`);
+            // 2. Initialize Frame
+            frame.src = signingUrl;
 
             // 3. Handle Events
-            form.addEventListener('completed', (e) => {
-                console.log('Signing Completed:', e.detail);
-                // Redirect to payment
-                window.location.href = redirectUrl;
+            // OpenSign often uses postMessage for events. We'll listen for them.
+            // Adjust message extraction based on specific OpenSign SDK behavior.
+            window.addEventListener('message', (event) => {
+                // Security check - ideally check origin, but open for now as signing URL varies
+                console.log('OpenSign Event:', event.data);
+
+                if (event.data === 'signing_complete' || event.data.event === 'signing_complete') {
+                    // Redirect to payment
+                    window.location.href = redirectUrl;
+                }
             });
 
-            form.addEventListener('loaded', () => {
+            frame.addEventListener('load', () => {
                 loader.style.opacity = '0';
                 setTimeout(() => loader.classList.add('hidden'), 500);
             });

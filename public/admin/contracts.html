@@ -5701,11 +5701,26 @@
                 executeBtn.innerHTML = '<span>⏳ Initializing Vault...</span>';
                 executeBtn.disabled = true;
 
-                // 3. Create Envelope via Backend Proxy
-                // We use our local Go backend to communicate with the OpenSign container
-                const response = await fetch('/api/v1/opensign/create-envelope', {
+                // 3. Create Envelope via OpenSign Cloud Function
+                // Call the Firebase Cloud Function directly with ID token
+                const OPENSIGN_FUNCTION = 'https://opensigncreateenvelope-6kdf4or4qq-uc.a.run.app';
+
+                // Get Firebase ID token for authentication
+                let authToken = null;
+                // Access Firebase Auth directly since AuthService wrapper may not expose getIdToken()
+                const firebaseUser = firebase.auth().currentUser;
+                if (firebaseUser) {
+                    authToken = await firebaseUser.getIdToken();
+                }
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (authToken) {
+                    headers['Authorization'] = `Bearer ${authToken}`;
+                }
+
+                const response = await fetch(OPENSIGN_FUNCTION, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: headers,
                     body: JSON.stringify({
                         templateId: "default_msa_template", // Replace with actual template ID
                         signerName: signerName,

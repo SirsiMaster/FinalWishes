@@ -44,28 +44,20 @@
             z-index: 999999 !important;
         }
 
-        /* CRITICAL: Ensure native dialogs work correctly */
-        dialog {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            margin: 0 !important;
-            z-index: 1000000 !important;
-            border: none !important;
-            background: transparent !important;
+        /* Modal styling - simple flexbox centering */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            z-index: 1000000;
         }
 
-        dialog::backdrop {
-            background: rgba(0, 0, 0, 0.85) !important;
-            backdrop-filter: blur(8px) !important;
-            -webkit-backdrop-filter: blur(8px) !important;
-        }
-
-        dialog[open] {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* CRITICAL OVERRIDES FOR CONTRACT HIERARCHY */
@@ -1873,48 +1865,28 @@
                 display: none !important;
             }
 
-            /* ===== MODAL - MOBILE CENTERING ===== */
-            dialog,
-            #guest-signer-modal,
-            #payment-redirect-modal {
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                margin: 0 !important;
-                inset: unset !important;
+            /* ===== MODAL - MOBILE ADJUSTMENTS ===== */
+            .modal-overlay>div {
                 max-width: 90vw !important;
                 max-height: 90vh !important;
                 overflow-y: auto !important;
-            }
-
-            /* Modal content container */
-            #guest-signer-modal>div,
-            dialog>div {
-                max-width: 100% !important;
-                width: 100% !important;
                 padding: 1.25rem !important;
             }
 
-            /* Modal form elements */
-            #guest-signer-modal input,
-            dialog input {
+            .modal-overlay input {
                 font-size: 0.875rem !important;
                 padding: 0.625rem !important;
             }
 
-            #guest-signer-modal h3,
-            dialog h3 {
+            .modal-overlay h3 {
                 font-size: 1.125rem !important;
             }
 
-            #guest-signer-modal p,
-            dialog p {
+            .modal-overlay p {
                 font-size: 0.75rem !important;
             }
 
-            #guest-signer-modal button,
-            dialog button {
+            .modal-overlay button {
                 font-size: 0.75rem !important;
                 padding: 0.625rem 1rem !important;
             }
@@ -5623,39 +5595,24 @@
 
     <script>
         // ============================================
-        // VISUAL MODAL LOGIC (Native Dialog)
+        // MODAL LOGIC (Simple div-based)
         // ============================================
         let guestModalResolve = null;
-        let guestModalReject = null;
 
         function showGuestModal() {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 guestModalResolve = resolve;
-                guestModalReject = reject;
-
                 const modal = document.getElementById('guest-signer-modal');
-                if (modal && typeof modal.showModal === "function") {
-                    modal.showModal();
-                    document.getElementById('guest-name').focus();
-                } else {
-                    console.error("Dialog API not supported or element not found");
-                    // Fallback
-                    const name = prompt("Name:");
-                    const email = prompt("Email:");
-                    if (name && email) resolve({ name, email });
-                    else resolve(null);
-                }
+                modal.classList.add('active');
+                document.getElementById('guest-name').focus();
             });
         }
 
         function hideGuestModal() {
             const modal = document.getElementById('guest-signer-modal');
-            if (modal) {
-                modal.close();
-                // Clear inputs
-                document.getElementById('guest-name').value = '';
-                document.getElementById('guest-email').value = '';
-            }
+            modal.classList.remove('active');
+            document.getElementById('guest-name').value = '';
+            document.getElementById('guest-email').value = '';
         }
 
         function confirmGuestModal() {
@@ -5858,11 +5815,9 @@
         </div>
     </div>
 
-    <!-- Guest Signer Modal - Native Dialog with explicit centering -->
-    <dialog id="guest-signer-modal"
-        style="position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; margin: 0 !important; inset: unset !important;"
-        class="backdrop:bg-black/80 bg-transparent p-0 backdrop:backdrop-blur-sm rounded-2xl border-none shadow-2xl outline-none overflow-hidden">
-        <div class="w-full max-w-md bg-[#0f172a] p-8 rounded-2xl border border-gold/30 text-left relative">
+    <!-- Guest Signer Modal - Simple div-based, no native dialog quirks -->
+    <div id="guest-signer-modal" class="modal-overlay">
+        <div class="w-full max-w-md bg-[#0f172a] p-8 rounded-2xl border border-gold/30 text-left">
             <!-- Modal Header -->
             <div class="mb-6 text-center">
                 <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gold/10 text-gold">
@@ -5877,20 +5832,20 @@
             </div>
 
             <!-- Modal Form -->
-            <form method="dialog" class="space-y-4">
+            <div class="space-y-4">
                 <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-500">Full
                         Name</label>
                     <input type="text" id="guest-name"
                         class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-600 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
-                        placeholder="e.g. John Doe" required>
+                        placeholder="e.g. John Doe">
                 </div>
                 <div>
                     <label class="mb-1 block text-xs font-semibold uppercase tracking-wider text-gray-500">Email
                         Address</label>
                     <input type="email" id="guest-email"
                         class="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-gray-600 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
-                        placeholder="e.g. john@example.com" required>
+                        placeholder="e.g. john@example.com">
                 </div>
 
                 <!-- Modal Actions -->
@@ -5901,9 +5856,9 @@
                         class="flex-1 rounded-lg bg-gold py-3 text-sm font-semibold text-black hover:bg-[#D4AF37] transition-colors shadow-lg shadow-gold/20">Continue
                         to Sign</button>
                 </div>
-            </form>
+            </div>
         </div>
-    </dialog>
+    </div>
 
 </body>
 

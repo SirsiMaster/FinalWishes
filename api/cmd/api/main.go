@@ -82,6 +82,10 @@ func main() {
 		})
 	})
 
+	// Guest-accessible routes (no auth required) - for flexibility
+	r.Post("/api/guest/envelopes", opensign.CreateEnvelopeHandler)
+	r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
+
 	// Create server
 	srv := &http.Server{
 		Addr:         ":" + port,

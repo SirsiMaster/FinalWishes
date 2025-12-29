@@ -5712,29 +5712,20 @@
                     authToken = await firebaseUser.getIdToken();
                 }
 
-                // Determine which endpoint to use
-                // - Authenticated users: /api/envelopes (requires Firebase token)
-                // - Guest users: /api/guest/envelopes (no token required)
-                const isGuest = !authToken;
-                const endpoint = isGuest
-                    ? `${OPENSIGN_API_BASE}/api/guest/envelopes`
-                    : `${OPENSIGN_API_BASE}/api/envelopes`;
+                // Use the correct backend endpoint for envelope creation
+                const endpoint = `${OPENSIGN_API_BASE}/api/v1/opensign/create-envelope`;
 
                 const headers = { 'Content-Type': 'application/json' };
                 if (authToken) {
                     headers['Authorization'] = `Bearer ${authToken}`;
                 }
 
-                // Build request body based on endpoint
-                const requestBody = isGuest ? {
-                    docType: 'legacy-msa',
+                // Build request body matching the Go handler's expected format
+                const requestBody = {
+                    templateId: 'legacy-msa',
                     signerName: signerName,
                     signerEmail: signerEmail,
-                    callbackUrl: window.location.origin + '/payment.html'
-                } : {
-                    docType: 'legacy-msa',
-                    recipients: [{ name: signerName, email: signerEmail, role: 'signer' }],
-                    callbackUrl: window.location.origin + '/payment.html'
+                    redirectUrl: window.location.origin + '/admin/payment.html'
                 };
 
                 const response = await fetch(endpoint, {

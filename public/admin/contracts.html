@@ -25,16 +25,15 @@
         /* ============================================
            OPENSIGN POPUP/IFRAME CENTERING FIX
            Force any dynamically injected elements to center
+           EXCLUDES: dialogs, workflow guides, and page wrappers
            ============================================ */
-        /* Target OpenSign iframes, popups, and overlays */
+        /* Target OpenSign iframes, popups, and overlays - NOT dialogs */
         iframe[src*="opensign"],
         iframe[src*="sign"],
         div[id*="opensign"],
         div[class*="opensign"],
         div[class*="signing"],
-        div[class*="popup"],
-        div[style*="position: fixed"],
-        div[style*="position:fixed"] {
+        div[class*="popup"]:not(dialog *) {
             position: fixed !important;
             top: 50% !important;
             left: 50% !important;
@@ -45,14 +44,28 @@
             z-index: 999999 !important;
         }
 
-        /* Override any left/top positioning that might be set inline */
-        body>div[style*="position: fixed"]:not([id="vertical-workflow-guide"]):not(.contract-immersive-wrapper),
-        body>div[style*="position:fixed"]:not([id="vertical-workflow-guide"]):not(.contract-immersive-wrapper) {
-            left: 50% !important;
+        /* CRITICAL: Ensure native dialogs work correctly */
+        dialog {
+            position: fixed !important;
             top: 50% !important;
+            left: 50% !important;
             transform: translate(-50%, -50%) !important;
-            right: auto !important;
-            bottom: auto !important;
+            margin: 0 !important;
+            z-index: 1000000 !important;
+            border: none !important;
+            background: transparent !important;
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.85) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+        }
+
+        dialog[open] {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         /* CRITICAL OVERRIDES FOR CONTRACT HIERARCHY */
@@ -3345,7 +3358,7 @@
                             style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
 
                             <!-- PLAN A -->
-                            <div class="plan-card-static"
+                            <div id="cost-card-plan-a" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column;">
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
@@ -3380,8 +3393,9 @@
                             </div>
 
                             <!-- PLAN B -->
-                            <div class="plan-card-static"
+                            <div id="cost-card-plan-b" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column;">
+
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan B</h3>
@@ -3420,8 +3434,9 @@
                             </div>
 
                             <!-- PLAN C -->
-                            <div class="plan-card-static"
+                            <div id="cost-card-plan-c" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column;">
+
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan C</h3>
@@ -4835,6 +4850,8 @@
         // Select plan from COST tab and navigate to MSA
         function selectPlanFromCost(planName, btnElement) {
             selectedPlan = planName;
+            // Persist plan selection to sessionStorage for page navigation
+            sessionStorage.setItem('selectedPlan', planName);
 
             // Reset all buttons in COST tab
             const costTab = document.getElementById('cost');
@@ -4991,7 +5008,7 @@
             }, 300);
         }
 
-        // Dynamic Date Population
+        // Dynamic Date Population & Plan State Restoration
         document.addEventListener('DOMContentLoaded', function () {
             const today = new Date();
             const year = today.getFullYear();
@@ -5029,7 +5046,42 @@
                 const el = document.getElementById(id);
                 if (el) el.textContent = value;
             }
+
+            // RESTORE SELECTED PLAN FROM SESSION STORAGE
+            const storedPlan = sessionStorage.getItem('selectedPlan');
+            if (storedPlan) {
+                selectedPlan = storedPlan;
+                // Update the selected plan display in signature block
+                const selectedPlanDisplay = document.getElementById('selected-plan-display');
+                if (selectedPlanDisplay) {
+                    selectedPlanDisplay.textContent = storedPlan;
+                }
+                // Update plan lock notice if exists
+                const planLockNotice = document.getElementById('plan-lock-notice');
+                if (planLockNotice) {
+                    planLockNotice.style.color = '#10B981';
+                    planLockNotice.innerHTML = `✓ ${storedPlan} Selected`;
+                }
+                // Mark the correct plan card as selected in Cost tab
+                const costTab = document.getElementById('cost');
+                if (costTab) {
+                    const planMap = { 'Plan A': 'cost-card-plan-a', 'Plan B': 'cost-card-plan-b', 'Plan C': 'cost-card-plan-c' };
+
+                    const cardId = planMap[storedPlan];
+                    if (cardId) {
+                        const card = document.getElementById(cardId);
+                        if (card) {
+                            card.style.borderColor = '#C8A951';
+                            card.style.boxShadow = '0 0 30px rgba(200,169,81,0.3)';
+                            const btn = card.querySelector('.select-plan-btn');
+                            if (btn) btn.innerHTML = '✓ SELECTED';
+                        }
+                    }
+                }
+                console.log('Restored plan from session:', storedPlan);
+            }
         });
+
 
         // ============================================
         // SCROLL DETECTION FOR MSA

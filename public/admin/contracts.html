@@ -4801,10 +4801,19 @@
             if (verticalGuide) {
                 if (tabId === 'contract') {
                     verticalGuide.style.display = 'flex';
-                    // If a plan was selected, we're on Step 2 (Review MSA)
-                    if (selectedPlan) {
+                    // FIX 4: Properly sync stepper based on full state
+                    const storedPlan = sessionStorage.getItem('selectedPlan') || selectedPlan;
+                    const msaAcknowledged = document.getElementById('msa-read-acknowledge')?.checked;
+
+                    if (storedPlan && msaAcknowledged) {
+                        currentStep = 3;
+                        updateStepperStatus(3);
+                    } else if (storedPlan) {
                         currentStep = 2;
                         updateStepperStatus(2);
+                    } else {
+                        currentStep = 1;
+                        updateStepperStatus(1);
                     }
                 } else {
                     verticalGuide.style.display = 'none';
@@ -5023,6 +5032,13 @@
             const storedPlan = sessionStorage.getItem('selectedPlan');
             if (storedPlan) {
                 selectedPlan = storedPlan;
+
+                // FIX 1: Hide plan selection in MSA since already selected
+                const selectionPhase = document.getElementById('selection-phase');
+                if (selectionPhase) {
+                    selectionPhase.style.display = 'none';
+                }
+
                 // Update the selected plan display in signature block
                 const selectedPlanDisplay = document.getElementById('selected-plan-display');
                 if (selectedPlanDisplay) {
@@ -5238,11 +5254,27 @@
             const step3Label = document.getElementById('step-3-label');
             const signatureBlock = document.getElementById('signature-block');
 
+            // FIX 2 & 3: Validate that a plan was selected before allowing Step 3
+            const storedPlan = sessionStorage.getItem('selectedPlan') || selectedPlan;
+
+            if (!storedPlan) {
+                console.warn('Cannot proceed to Step 3 without selecting a plan first');
+                if (checkbox) checkbox.checked = false;
+                alert('Please select a plan from the Cost & Valuation tab before proceeding.');
+                return;
+            }
+
             if (checkbox && proceedBtn) {
                 if (checkbox.checked) {
                     // MSA acknowledged - move to Step 3
                     currentStep = 3;
                     updateStepperStatus(3);
+
+                    // Ensure plan is displayed in Step 3
+                    const selectedPlanDisplay = document.getElementById('selected-plan-display');
+                    if (selectedPlanDisplay) {
+                        selectedPlanDisplay.textContent = storedPlan;
+                    }
 
                     proceedBtn.disabled = false;
                     proceedBtn.style.opacity = '1';

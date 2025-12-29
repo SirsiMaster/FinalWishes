@@ -5702,31 +5702,45 @@
                 executeBtn.disabled = true;
 
                 // 3. Create Envelope via OpenSign Cloud Function
-                // Call the Firebase Cloud Function directly with ID token
-                const OPENSIGN_FUNCTION = 'https://opensigncreateenvelope-6kdf4or4qq-uc.a.run.app';
+                // Sirsi OpenSign API - shared signing service
+                const OPENSIGN_API_BASE = 'https://api-6kdf4or4qq-uc.a.run.app';
 
-                // Get Firebase ID token for authentication
+                // Get Firebase ID token for authentication (if logged in)
                 let authToken = null;
-                // Access Firebase Auth directly since AuthService wrapper may not expose getIdToken()
-                const firebaseUser = firebase.auth().currentUser;
+                const firebaseUser = window.firebaseAuth?.currentUser;
                 if (firebaseUser) {
                     authToken = await firebaseUser.getIdToken();
                 }
+
+                // Determine which endpoint to use
+                // - Authenticated users: /api/envelopes (requires Firebase token)
+                // - Guest users: /api/guest/envelopes (no token required)
+                const isGuest = !authToken;
+                const endpoint = isGuest
+                    ? `${OPENSIGN_API_BASE}/api/guest/envelopes`
+                    : `${OPENSIGN_API_BASE}/api/envelopes`;
 
                 const headers = { 'Content-Type': 'application/json' };
                 if (authToken) {
                     headers['Authorization'] = `Bearer ${authToken}`;
                 }
 
-                const response = await fetch(OPENSIGN_FUNCTION, {
+                // Build request body based on endpoint
+                const requestBody = isGuest ? {
+                    docType: 'legacy-msa',
+                    signerName: signerName,
+                    signerEmail: signerEmail,
+                    callbackUrl: window.location.origin + '/payment.html'
+                } : {
+                    docType: 'legacy-msa',
+                    recipients: [{ name: signerName, email: signerEmail, role: 'signer' }],
+                    callbackUrl: window.location.origin + '/payment.html'
+                };
+
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: headers,
-                    body: JSON.stringify({
-                        templateId: "default_msa_template", // Replace with actual template ID
-                        signerName: signerName,
-                        signerEmail: signerEmail,
-                        redirectUrl: window.location.origin + "/payment.html"
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 const result = await response.json();

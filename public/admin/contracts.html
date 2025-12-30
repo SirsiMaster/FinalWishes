@@ -5701,32 +5701,38 @@
                 executeBtn.innerHTML = '<span>⏳ Initializing Vault...</span>';
                 executeBtn.disabled = true;
 
-                // 3. Create Envelope via OpenSign Cloud Function
-                // Sirsi OpenSign API - shared signing service
-                const OPENSIGN_API_BASE = 'https://api-6kdf4or4qq-uc.a.run.app';
+                // 3. Create Envelope via Firebase Functions (sirsi-nexus-live API)
+                // Uses sirsi-nexus-live project API since legacy-estate-os doesn't have functions deployed
+                const API_BASE = 'https://api-6kdf4or4qq-uc.a.run.app';
+                const firebaseUser = window.firebase?.auth?.()?.currentUser || window.firebaseAuth?.currentUser;
+                const isGuest = !firebaseUser;
 
-                // Get Firebase ID token for authentication (if logged in)
-                let authToken = null;
-                const firebaseUser = window.firebaseAuth?.currentUser;
-                if (firebaseUser) {
-                    authToken = await firebaseUser.getIdToken();
-                }
-
-                // Use the correct backend endpoint for envelope creation
-                const endpoint = `${OPENSIGN_API_BASE}/api/v1/opensign/create-envelope`;
-
+                const endpoint = isGuest ? `${API_BASE}/api/guest/envelopes` : `${API_BASE}/api/envelopes`;
                 const headers = { 'Content-Type': 'application/json' };
-                if (authToken) {
+
+
+                if (!isGuest) {
+                    const authToken = await firebaseUser.getIdToken();
                     headers['Authorization'] = `Bearer ${authToken}`;
                 }
 
-                // Build request body matching the Go handler's expected format
+                // Get selected plan from sessionStorage or from global state
+                const storedPlan = sessionStorage.getItem('selectedPlan') || selectedPlan || 'Plan C';
+
+                // Build request body matching Firebase Functions expected format
                 const requestBody = {
-                    templateId: 'legacy-msa',
+                    docType: 'legacy-msa',
                     signerName: signerName,
                     signerEmail: signerEmail,
-                    redirectUrl: window.location.origin + '/admin/payment.html'
+                    redirectUrl: window.location.origin + '/admin/payment.html',
+                    metadata: {
+                        selectedPlan: storedPlan,
+                        msaVersion: 'v1.0',
+                        signedAt: new Date().toISOString()
+                    }
                 };
+
+                console.log('Creating envelope:', { endpoint, isGuest, requestBody });
 
                 const response = await fetch(endpoint, {
                     method: 'POST',
@@ -5736,6 +5742,7 @@
 
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.message || 'Failed to create signing session');
+
 
                 console.log('OpenSign Session:', result);
 
@@ -5752,22 +5759,25 @@
                 executeBtn.classList.remove('bg-[#C8A951]');
                 executeBtn.classList.add('bg-[#10B981]');
 
-                // 5. Prepare Post-Signature Redirect
-                const plan = document.querySelector('.select-plan-btn.selected')?.getAttribute('data-plan') || 'Plan C';
+                // 5. Prepare Post-Signature Redirect  
                 let amt = '75000'; // Default per Plan C truth
-                if (plan === 'Plan A') amt = '100000';
-                if (plan === 'Plan B') amt = '66666.66';
-                if (plan === 'Custom') amt = '175000'; // Fallback
+                if (storedPlan === 'Plan A') amt = '100000';
+                if (storedPlan === 'Plan B') amt = '66666.66';
+                if (storedPlan.includes('Custom')) amt = '175000';
 
                 sessionStorage.setItem('postSignRedirect', `payment.html?amount=${amt}&ref=MSA-V1`);
+                sessionStorage.setItem('selectedPlan', storedPlan);
 
-                // 6. Redirect to Signing Page
-                if (result.signingUrl) {
-                    sessionStorage.setItem('openSignUrl', result.signingUrl);
-                    window.location.href = 'sign.html';
+                // 6. Store envelope info and redirect to Signing Page
+                // The signingUrl from Firebase Functions points to sign.html?envelope=<id>
+                if (result.signingUrl || result.envelopeId) {
+                    sessionStorage.setItem('openSignUrl', result.signingUrl || '');
+                    sessionStorage.setItem('envelopeId', result.envelopeId || '');
+                    window.location.href = result.signingUrl || `sign.html?envelope=${result.envelopeId}`;
                 } else {
-                    throw new Error('No signing URL returned');
+                    throw new Error('No signing URL or envelope ID returned');
                 }
+
 
             } catch (error) {
                 console.error('OpenSign Error:', error);

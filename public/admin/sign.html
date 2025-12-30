@@ -23,8 +23,6 @@
             min-height: 100vh;
             color: white;
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            /* Embed takes over */
         }
 
         .loader {
@@ -45,10 +43,47 @@
                 transform: rotate(360deg);
             }
         }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Signature Canvas */
+        .signature-canvas {
+            background: #fff;
+            border: 2px solid rgba(200, 169, 81, 0.5);
+            border-radius: 8px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .signature-canvas:hover {
+            border-color: #C8A951;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
     </style>
 </head>
 
-<body class="flex flex-col h-screen">
+<body class="flex flex-col min-h-screen">
 
     <!-- Navbar Minimal -->
     <nav class="border-b border-white/5 bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 flex-none h-16">
@@ -65,70 +100,366 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow relative bg-white h-full">
+    <main class="flex-grow flex items-center justify-center p-6 relative overflow-hidden">
+        <!-- Background Decor -->
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#C8A951] opacity-[0.03] blur-[120px] rounded-full pointer-events-none">
+        </div>
+
         <!-- Loader Overlay -->
         <div id="loader-overlay"
-            class="absolute inset-0 z-10 bg-[#0f172a] flex flex-col items-center justify-center transition-opacity duration-500">
+            class="fixed inset-0 z-50 bg-[#0f172a] flex flex-col items-center justify-center transition-opacity duration-500">
             <div class="loader mb-4"></div>
             <p class="text-sm text-gray-400 tracking-widest uppercase">Loading Secure Document...</p>
         </div>
 
-        <!-- OpenSign Embed (Iframe) -->
-        <!-- Note: OpenSign typically provides a full signing URL. We embed it in an iframe for immersion, 
-             or we could redirect. For now, iframe provides the best context retention. -->
-        <iframe id="opensign-frame" class="w-full h-full border-none" allow="camera; microphone; geolocation"
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals">
-        </iframe>
-
         <!-- Error State -->
         <div id="error-screen"
-            class="hidden absolute inset-0 z-20 bg-[#0f172a] flex flex-col items-center justify-center text-center p-8">
+            class="hidden fixed inset-0 z-50 bg-[#0f172a] flex flex-col items-center justify-center text-center p-8">
             <h1 class="font-serif text-2xl text-red-400 mb-2">Connection Failed</h1>
-            <p class="text-gray-400 mb-6">Could not retrieve signing session.</p>
+            <p id="error-message" class="text-gray-400 mb-6">Could not retrieve signing session.</p>
             <a href="contracts.html"
                 class="px-6 py-2 rounded border border-white/20 hover:bg-white/5 transition-colors text-sm">Return to
                 Dashboard</a>
         </div>
+
+        <!-- Signing Interface -->
+        <div id="signing-interface" class="hidden w-full max-w-2xl animate-fadeIn">
+            <div class="glass-panel rounded-2xl p-8 border-t-4 border-t-[#C8A951]">
+
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div
+                        class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#C8A951]/10 text-[#C8A951]">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="font-serif text-2xl text-white mb-2">Sign Document</h1>
+                    <p class="text-sm text-gray-400">Please draw your signature below to execute the Master Services
+                        Agreement</p>
+                </div>
+
+                <!-- Signer Info Display -->
+                <div class="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500 uppercase text-xs tracking-wider">Signer</span>
+                            <p id="signer-name" class="text-white font-medium">Loading...</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 uppercase text-xs tracking-wider">Email</span>
+                            <p id="signer-email" class="text-white font-medium">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signature Pad -->
+                <div class="mb-6">
+                    <label class="block text-sm text-gray-400 mb-2">Your Signature</label>
+                    <canvas id="signature-canvas" class="signature-canvas w-full" height="200"></canvas>
+                    <div class="flex justify-between items-center mt-2">
+                        <button id="clear-btn" type="button"
+                            class="text-sm text-gray-500 hover:text-white transition-colors">
+                            ✕ Clear
+                        </button>
+                        <span class="text-xs text-gray-600">Draw with mouse or touch</span>
+                    </div>
+                </div>
+
+                <!-- Legal Acknowledgment -->
+                <div class="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="legal-checkbox" class="mt-1 w-4 h-4 accent-[#C8A951]">
+                        <span class="text-sm text-gray-400">
+                            I acknowledge that by signing above, I am executing a legally binding electronic signature
+                            pursuant to the ESIGN Act and UETA, equivalent to a handwritten signature.
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="submit-btn" disabled
+                    class="w-full py-4 rounded-xl bg-[#C8A951] text-[#0f172a] font-bold tracking-wide shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-[0_0_30px_rgba(200,169,81,0.4)]">
+                    Complete Signature
+                </button>
+
+                <!-- Footer Note -->
+                <div class="mt-6 text-center">
+                    <p class="text-xs text-gray-600">
+                        Secured by Sirsi Technologies • SOC 2 Compliant
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="success-screen"
+            class="hidden fixed inset-0 z-50 bg-[#0f172a] flex flex-col items-center justify-center text-center p-8">
+            <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#10B981]/20 text-[#10B981]">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h1 class="font-serif text-3xl text-white mb-2">Signature Complete</h1>
+            <p class="text-gray-400 mb-6">Your document has been signed successfully.</p>
+            <p class="text-sm text-gray-500 mb-6">Redirecting to payment...</p>
+            <div class="loader"></div>
+        </div>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const frame = document.getElementById('opensign-frame');
+        // ============================================
+        // SIGNING PAGE CONTROLLER
+        // ============================================
+
+        // API Base URL for sirsi-nexus-live OpenSign functions
+        const API_BASE = 'https://api-6kdf4or4qq-uc.a.run.app';
+
+        let canvas, ctx, isDrawing = false, lastX = 0, lastY = 0;
+        let envelopeId = null;
+        let envelopeData = null;
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
             const loader = document.getElementById('loader-overlay');
             const errorScreen = document.getElementById('error-screen');
+            const errorMessage = document.getElementById('error-message');
+            const signingInterface = document.getElementById('signing-interface');
+            const successScreen = document.getElementById('success-screen');
 
-            // 1. Retrieve Config from Session
-            const signingUrl = sessionStorage.getItem('openSignUrl');
+            // 1. Get envelope ID from URL or sessionStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            envelopeId = urlParams.get('envelope') || sessionStorage.getItem('envelopeId');
             const redirectUrl = sessionStorage.getItem('postSignRedirect') || 'payment.html';
 
-            if (!signingUrl) {
-                console.error("No signing URL found.");
+            if (!envelopeId) {
+                console.error("No envelope ID found.");
+                errorMessage.textContent = "No signing session found. Please return to the contract page.";
                 loader.classList.add('hidden');
                 errorScreen.classList.remove('hidden');
                 return;
             }
 
-            // 2. Initialize Frame
-            frame.src = signingUrl;
+            // 2. Fetch envelope details from sirsi-nexus-live API
+            const isGuest = urlParams.get('guest') === 'true';
+            const envelopeEndpoint = isGuest
+                ? `${API_BASE}/api/guest/envelopes/${envelopeId}`
+                : `${API_BASE}/api/envelopes/${envelopeId}`;
 
-            // 3. Handle Events
-            // OpenSign often uses postMessage for events. We'll listen for them.
-            // Adjust message extraction based on specific OpenSign SDK behavior.
-            window.addEventListener('message', (event) => {
-                // Security check - ideally check origin, but open for now as signing URL varies
-                console.log('OpenSign Event:', event.data);
+            try {
+                const response = await fetch(envelopeEndpoint);
 
-                if (event.data === 'signing_complete' || event.data.event === 'signing_complete') {
-                    // Redirect to payment
-                    window.location.href = redirectUrl;
+                if (!response.ok) {
+                    throw new Error('Envelope not found or expired');
                 }
+                const result = await response.json();
+                envelopeData = result.envelope || result; // Handle nested response
+                envelopeData.isGuest = isGuest; // Store for later use in submit
+
+                // Populate signer info
+                const signerName = envelopeData.signerName || envelopeData.recipients?.[0]?.name || 'Signer';
+                const signerEmail = envelopeData.createdByEmail || envelopeData.signerEmail || envelopeData.recipients?.[0]?.email || 'Unknown';
+                document.getElementById('signer-name').textContent = signerName;
+                document.getElementById('signer-email').textContent = signerEmail;
+
+
+                // Show signing interface
+                loader.classList.add('hidden');
+                signingInterface.classList.remove('hidden');
+
+                // Initialize signature canvas
+                initSignatureCanvas();
+
+            } catch (error) {
+                console.error('Error fetching envelope:', error);
+                errorMessage.textContent = error.message || 'Failed to load signing session.';
+                loader.classList.add('hidden');
+                errorScreen.classList.remove('hidden');
+            }
+
+            // 3. Setup form controls
+            const checkbox = document.getElementById('legal-checkbox');
+            const submitBtn = document.getElementById('submit-btn');
+            const clearBtn = document.getElementById('clear-btn');
+
+            checkbox.addEventListener('change', () => {
+                updateSubmitButton();
             });
 
-            frame.addEventListener('load', () => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.classList.add('hidden'), 500);
+            clearBtn.addEventListener('click', () => {
+                clearCanvas();
             });
+
+            submitBtn.addEventListener('click', async () => {
+                await submitSignature();
+            });
+
+            // Handle redirect URL for success
+            window.redirectAfterSuccess = () => {
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 2000);
+            };
         });
+
+        // ============================================
+        // SIGNATURE CANVAS LOGIC
+        // ============================================
+        function initSignatureCanvas() {
+            canvas = document.getElementById('signature-canvas');
+            ctx = canvas.getContext('2d');
+
+            // Set canvas to full width
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = 200;
+
+            // Style
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Mouse events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = getPosition(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+
+            const [x, y] = getPosition(e);
+
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            [lastX, lastY] = [x, y];
+            updateSubmitButton();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            startDrawing(mouseEvent);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            draw(mouseEvent);
+        }
+
+        function getPosition(e) {
+            const rect = canvas.getBoundingClientRect();
+            return [
+                e.clientX - rect.left,
+                e.clientY - rect.top
+            ];
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateSubmitButton();
+        }
+
+        function isCanvasEmpty() {
+            const pixelData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            for (let i = 3; i < pixelData.length; i += 4) {
+                if (pixelData[i] > 0) return false;
+            }
+            return true;
+        }
+
+        function updateSubmitButton() {
+            const checkbox = document.getElementById('legal-checkbox');
+            const submitBtn = document.getElementById('submit-btn');
+
+            const isValid = checkbox.checked && !isCanvasEmpty();
+            submitBtn.disabled = !isValid;
+        }
+
+        // ============================================
+        // SIGNATURE SUBMISSION
+        // ============================================
+        async function submitSignature() {
+            const submitBtn = document.getElementById('submit-btn');
+            const signingInterface = document.getElementById('signing-interface');
+            const successScreen = document.getElementById('success-screen');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="animate-pulse">Processing...</span>';
+
+            try {
+                // Get signature as base64 image
+                const signatureImage = canvas.toDataURL('image/png');
+
+                // Submit to Firebase Function (sirsi-nexus-live API)
+                // Use guest endpoint if this is a guest signing
+                const signEndpoint = envelopeData.isGuest
+                    ? `${API_BASE}/api/guest/envelopes/${envelopeId}/sign`
+                    : `${API_BASE}/api/envelopes/${envelopeId}/sign`;
+
+                const response = await fetch(signEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        signatureImage: signatureImage,
+                        signatureData: {
+                            timestamp: new Date().toISOString(),
+                            userAgent: navigator.userAgent,
+                            ipAddress: 'client-side' // Will be captured server-side
+                        },
+                        signerName: document.getElementById('signer-name').textContent,
+                        signerEmail: document.getElementById('signer-email').textContent
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to submit signature');
+                }
+
+                // Show success and redirect
+                signingInterface.classList.add('hidden');
+                successScreen.classList.remove('hidden');
+                window.redirectAfterSuccess();
+
+            } catch (error) {
+                console.error('Signature submission error:', error);
+                alert('Error submitting signature: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Complete Signature';
+            }
+        }
     </script>
 </body>
 

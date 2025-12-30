@@ -237,11 +237,11 @@
             let redirectUrl = sessionStorage.getItem('postSignRedirect');
             if (!redirectUrl || redirectUrl === 'payment.html') {
                 // Fallback: Calculate from selectedPlan in sessionStorage
+                // First month payment amounts based on plan structure
                 const storedPlan = sessionStorage.getItem('selectedPlan') || 'Plan C';
-                let amt = '75000'; // Default Plan C
-                if (storedPlan === 'Plan A') amt = '100000';
-                if (storedPlan === 'Plan B') amt = '66666.66';
-                if (storedPlan.includes('Custom')) amt = '175000';
+                let amt = '33333.33'; // Default Plan C: $200K / 6 months
+                if (storedPlan === 'Plan A') amt = '50000';    // $200K / 4 months = $50K/mo
+                if (storedPlan === 'Plan B') amt = '40000';    // $200K / 5 months = $40K/mo
                 redirectUrl = `payment.html?amount=${amt}&ref=MSA-V1`;
                 console.log('Calculated redirect URL from selectedPlan:', storedPlan, redirectUrl);
             }

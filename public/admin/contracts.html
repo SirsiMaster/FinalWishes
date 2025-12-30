@@ -4,7 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposal & Agreement | Admin Console</title>
+    <title>Redirecting to Sirsi Sign... | Admin Console</title>
+
+    <!-- REDIRECT TO UNIFIED WORKFLOW -->
+    <!-- The contract signing workflow has been unified at sirsi-sign.web.app -->
+    <!-- This ensures same-origin authentication for guest signing -->
+    <script>
+        // Redirect to unified OpenSign workflow at sirsi-sign.web.app
+        window.location.replace('https://sirsi-sign.web.app/contracts/finalwishes/');
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=https://sirsi-sign.web.app/contracts/finalwishes/">
+    </noscript>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3329,25 +3340,23 @@
                         <div
                             style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto;">
 
-                            <!-- PLAN A -->
+                            <!-- PLAN A: 4 Monthly Payments -->
                             <div id="cost-card-plan-a" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column;">
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan A</h3>
-                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">50/50 Split</p>
+                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">4 Monthly Payments</p>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
                                     <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $100,000</div>
-                                        <div style="font-size: 14px; color: white;">Due at Signing</div>
+                                        <div style="font-size: 32px; font-family: Cinzel, serif; color: #C8A951;">
+                                            $50,000</div>
+                                        <div style="font-size: 14px; color: white;">per month × 4 months</div>
                                     </div>
-                                    <div>
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $100,000</div>
-                                        <div style="font-size: 14px; color: white;">Due at Launch</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                                        First payment due at signing
                                     </div>
                                 </div>
 
@@ -3364,31 +3373,24 @@
                                 </div>
                             </div>
 
-                            <!-- PLAN B -->
+                            <!-- PLAN B: 5 Monthly Payments -->
                             <div id="cost-card-plan-b" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column;">
 
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan B</h3>
-                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Trimester Payments</p>
+                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">5 Monthly Payments</p>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
                                     <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $66,666.66</div>
-                                        <div style="font-size: 14px; color: white;">Due at Signing</div>
+                                        <div style="font-size: 32px; font-family: Cinzel, serif; color: #C8A951;">
+                                            $40,000</div>
+                                        <div style="font-size: 14px; color: white;">per month × 5 months</div>
                                     </div>
-                                    <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $66,666.67</div>
-                                        <div style="font-size: 14px; color: white;">Due Month 2</div>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $66,666.67</div>
-                                        <div style="font-size: 14px; color: white;">Due Month 4</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                                        First payment due at signing
                                     </div>
                                 </div>
 
@@ -3405,47 +3407,33 @@
                                 </div>
                             </div>
 
-                            <!-- PLAN C -->
+                            <!-- PLAN C: 6 Monthly Payments -->
                             <div id="cost-card-plan-c" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column;">
 
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan C</h3>
-                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Partnership + Equity
-                                </p>
+                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">6 Monthly Payments</p>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
                                     <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $75,000</div>
-                                        <div style="font-size: 14px; color: white;">Due at Close</div>
+                                        <div style="font-size: 32px; font-family: Cinzel, serif; color: #C8A951;">
+                                            $33,333.33</div>
+                                        <div style="font-size: 14px; color: white;">per month × 6 months</div>
                                     </div>
-                                    <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $50,000</div>
-                                        <div style="font-size: 14px; color: white;">Follow-up 1</div>
-                                    </div>
-                                    <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $50,000</div>
-                                        <div style="font-size: 14px; color: white;">Follow-up 2</div>
-                                    </div>
-                                    <div
-                                        style="background: rgba(200,169,81,0.1); padding: 0.75rem; border: 1px solid rgba(200,169,81,0.3);">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            2.5% Equity</div>
-                                        <div style="font-size: 14px; color: white;">Stake in FinalWishes Platform</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                                        First payment due at signing
                                     </div>
                                 </div>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-top: auto;">
-                                    <div style="font-size: 14px; color: white; margin-bottom: 0.5rem;">Cash Total</div>
+                                    <div style="font-size: 16px; color: white; margin-bottom: 0.5rem;">Total</div>
                                     <div
                                         style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1.5rem;">
-                                        $175,000</div>
+                                        $200,000</div>
                                     <button onclick="selectPlanFromCost('Plan C', this)" class="select-plan-btn"
                                         style="width: 100%; padding: 14px 24px; background: linear-gradient(to right, #C8A951, #E2C76B); color: #000; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">
                                         Select Plan
@@ -4528,7 +4516,7 @@
                         </p>
 
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
-                            <!-- PLAN A -->
+                            <!-- PLAN A: 4 Monthly Payments -->
                             <div id="card-plan-a" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;"
                                 onmouseover="this.style.borderColor='#C8A951'; this.style.boxShadow='0 0 30px rgba(200,169,81,0.2)';"
@@ -4536,19 +4524,17 @@
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan A</h3>
-                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">50/50 Split</p>
+                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">4 Monthly Payments</p>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
                                     <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $100,000</div>
-                                        <div style="font-size: 14px; color: white;">Due at Signing</div>
+                                        <div style="font-size: 32px; font-family: Cinzel, serif; color: #C8A951;">
+                                            $50,000</div>
+                                        <div style="font-size: 14px; color: white;">per month × 4 months</div>
                                     </div>
-                                    <div>
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $100,000</div>
-                                        <div style="font-size: 14px; color: white;">Due at Launch</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                                        First payment due at signing
                                     </div>
                                 </div>
 
@@ -4565,7 +4551,7 @@
                                 </div>
                             </div>
 
-                            <!-- PLAN B -->
+                            <!-- PLAN B: 5 Monthly Payments -->
                             <div id="card-plan-b" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;"
                                 onmouseover="this.style.borderColor='#C8A951'; this.style.boxShadow='0 0 30px rgba(200,169,81,0.2)';"
@@ -4573,26 +4559,17 @@
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan B</h3>
-                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Trimester
-                                    Payments
-                                </p>
+                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">5 Monthly Payments</p>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
                                     <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $66,666.66</div>
-                                        <div style="font-size: 14px; color: white;">Due at Signing</div>
+                                        <div style="font-size: 32px; font-family: Cinzel, serif; color: #C8A951;">
+                                            $40,000</div>
+                                        <div style="font-size: 14px; color: white;">per month × 5 months</div>
                                     </div>
-                                    <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $66,666.67</div>
-                                        <div style="font-size: 14px; color: white;">Due Month 2</div>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $66,666.67</div>
-                                        <div style="font-size: 14px; color: white;">Due Month 4</div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                                        First payment due at signing
                                     </div>
                                 </div>
 
@@ -4609,7 +4586,7 @@
                                 </div>
                             </div>
 
-                            <!-- PLAN C -->
+                            <!-- PLAN C: 6 Monthly Payments -->
                             <div id="card-plan-c" class="plan-card-static"
                                 style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15); padding: 2rem; text-align: center; display: flex; flex-direction: column; transition: all 0.3s ease; cursor: pointer;"
                                 onmouseover="this.style.borderColor='#C8A951'; this.style.boxShadow='0 0 30px rgba(200,169,81,0.2)';"
@@ -4617,43 +4594,26 @@
                                 <h3
                                     style="font-size: 24px; font-family: Cinzel, serif; color: white; margin-bottom: 0.5rem;">
                                     Plan C</h3>
-                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">Partnership +
-                                    Equity</p>
+                                <p style="font-size: 14px; color: white; margin-bottom: 1.5rem;">6 Monthly Payments</p>
 
                                 <div
                                     style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; margin-bottom: 1.5rem; flex-grow: 1;">
                                     <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $75,000</div>
-                                        <div style="font-size: 14px; color: white;">Due at Close</div>
+                                        <div style="font-size: 32px; font-family: Cinzel, serif; color: #C8A951;">
+                                            $33,333.33</div>
+                                        <div style="font-size: 14px; color: white;">per month × 6 months</div>
                                     </div>
-                                    <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $50,000</div>
-                                        <div style="font-size: 14px; color: white;">Follow-up 1</div>
-                                    </div>
-                                    <div style="margin-bottom: 1rem;">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            $50,000</div>
-                                        <div style="font-size: 14px; color: white;">Follow-up 2</div>
-                                    </div>
-                                    <div
-                                        style="background: rgba(200,169,81,0.1); padding: 0.75rem; border: 1px solid rgba(200,169,81,0.3);">
-                                        <div style="font-size: 24px; font-family: Cinzel, serif; color: #C8A951;">
-                                            2.5% Equity</div>
-                                        <div style="font-size: 14px; color: white;">Stake in FinalWishes
-                                            Platform
-                                        </div>
+                                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+                                        First payment due at signing
                                     </div>
                                 </div>
 
                                 <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
-                                    <div style="font-size: 14px; color: white; margin-bottom: 0.5rem;">Cash
-                                        Total
+                                    <div style="font-size: 14px; color: white; margin-bottom: 0.5rem;">Total
                                     </div>
                                     <div
                                         style="font-size: 20px; font-family: Cinzel, serif; color: white; font-weight: 600; margin-bottom: 1.5rem;">
-                                        $175,000</div>
+                                        $200,000</div>
                                     <button onclick="selectContractPlan('Plan C', this)" class="select-plan-btn"
                                         style="width: 100%; padding: 14px 24px; background: linear-gradient(to right, #C8A951, #E2C76B); color: #000; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.15em; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s ease;">
                                         Select Plan
@@ -4944,36 +4904,42 @@
 
             if (planName === 'Plan A') {
                 planContent = `
-                    <h3>5. Payment Schedule (Option A: 50/50)</h3>
-                    <p>Standard engineering engagement with payments tied to initiation and successful launch.</p>
+                    <h3>5. Payment Schedule (Option A: 4 Monthly Payments)</h3>
+                    <p>Monthly payment structure spread across 4 months for consistent cash flow management.</p>
                     <table class="w-full text-left border-collapse mt-4">
-                        <tr class="border-b border-white/10"><td class="py-2">Milestone 1: Execution (Signing)</td><td class="text-right text-[#C8A951]">$100,000</td></tr>
-                        <tr><td class="py-2">Milestone 2: Functional Delivery (Launch)</td><td class="text-right text-[#C8A951]">$100,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 1 (Signing)</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 2</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 3</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
+                        <tr><td class="py-2">Month 4</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
                     </table>
                     <p class="mt-4 text-sm font-bold opacity-60">Total Contract Value: $200,000 USD</p>
                 `;
             } else if (planName === 'Plan B') {
                 planContent = `
-                    <h3>5. Payment Schedule (Option B: Trimester)</h3>
-                    <p>Deferred payment structure focused on month-over-month delivery velocity.</p>
+                    <h3>5. Payment Schedule (Option B: 5 Monthly Payments)</h3>
+                    <p>Extended payment structure across 5 months for greater flexibility.</p>
                     <table class="w-full text-left border-collapse mt-4">
-                        <tr class="border-b border-white/10"><td class="py-2">Milestone 1: Execution (Signing)</td><td class="text-right text-[#C8A951]">$66,666.66</td></tr>
-                        <tr class="border-b border-white/10"><td class="py-2">Milestone 2: Sprint Audit (Month 2)</td><td class="text-right text-[#C8A951]">$66,666.67</td></tr>
-                        <tr><td class="py-2">Milestone 3: Final Integration (Month 4)</td><td class="text-right text-[#C8A951]">$66,666.67</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 1 (Signing)</td><td class="text-right text-[#C8A951]">$40,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 2</td><td class="text-right text-[#C8A951]">$40,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 3</td><td class="text-right text-[#C8A951]">$40,000</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 4</td><td class="text-right text-[#C8A951]">$40,000</td></tr>
+                        <tr><td class="py-2">Month 5</td><td class="text-right text-[#C8A951]">$40,000</td></tr>
                     </table>
                     <p class="mt-4 text-sm font-bold opacity-60">Total Contract Value: $200,000 USD</p>
                 `;
             } else if (planName === 'Plan C') {
                 planContent = `
-                    <h3>5. Payment Schedule (Option C: Equity Bundle)</h3>
-                    <p>Strategic partnership model with reduced cash requirements in exchange for long-term alignment.</p>
+                    <h3>5. Payment Schedule (Option C: 6 Monthly Payments)</h3>
+                    <p>Maximum flexibility with lowest monthly payment spread across 6 months.</p>
                     <table class="w-full text-left border-collapse mt-4">
-                        <tr class="border-b border-white/10"><td class="py-2">Milestone 1: Partnership Close</td><td class="text-right text-[#C8A951]">$75,000</td></tr>
-                        <tr class="border-b border-white/10"><td class="py-2">Milestone 2: Core Engineering</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
-                        <tr class="border-b border-white/10"><td class="py-2">Milestone 3: Launch Readiness</td><td class="text-right text-[#C8A951]">$50,000</td></tr>
-                        <tr><td class="py-2 font-bold text-[#10B981]">Equity Grant (2.5%)</td><td class="text-right text-[#10B981]">Vesting over 12mo</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 1 (Signing)</td><td class="text-right text-[#C8A951]">$33,333.33</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 2</td><td class="text-right text-[#C8A951]">$33,333.33</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 3</td><td class="text-right text-[#C8A951]">$33,333.33</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 4</td><td class="text-right text-[#C8A951]">$33,333.33</td></tr>
+                        <tr class="border-b border-white/10"><td class="py-2">Month 5</td><td class="text-right text-[#C8A951]">$33,333.33</td></tr>
+                        <tr><td class="py-2">Month 6</td><td class="text-right text-[#C8A951]">$33,333.35</td></tr>
                     </table>
-                    <p class="mt-4 text-sm font-bold opacity-60">Total Cash Value: $175,000 USD + Equity</p>
+                    <p class="mt-4 text-sm font-bold opacity-60">Total Contract Value: $200,000 USD</p>
                 `;
             }
 
@@ -5760,10 +5726,10 @@
                 executeBtn.classList.add('bg-[#10B981]');
 
                 // 5. Prepare Post-Signature Redirect  
-                let amt = '75000'; // Default per Plan C truth
-                if (storedPlan === 'Plan A') amt = '100000';
-                if (storedPlan === 'Plan B') amt = '66666.66';
-                if (storedPlan.includes('Custom')) amt = '175000';
+                // First month payment amounts based on new plan structure
+                let amt = '33333.33'; // Default Plan C: $200K / 6 months
+                if (storedPlan === 'Plan A') amt = '50000';    // $200K / 4 months = $50K/mo
+                if (storedPlan === 'Plan B') amt = '40000';    // $200K / 5 months = $40K/mo
 
                 sessionStorage.setItem('postSignRedirect', `payment.html?amount=${amt}&ref=MSA-V1`);
                 sessionStorage.setItem('selectedPlan', storedPlan);

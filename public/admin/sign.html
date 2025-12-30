@@ -232,7 +232,19 @@
             // 1. Get envelope ID from URL or sessionStorage
             const urlParams = new URLSearchParams(window.location.search);
             envelopeId = urlParams.get('envelope') || sessionStorage.getItem('envelopeId');
-            const redirectUrl = sessionStorage.getItem('postSignRedirect') || 'payment.html';
+
+            // Calculate redirect URL - try postSignRedirect first, then compute from selectedPlan
+            let redirectUrl = sessionStorage.getItem('postSignRedirect');
+            if (!redirectUrl || redirectUrl === 'payment.html') {
+                // Fallback: Calculate from selectedPlan in sessionStorage
+                const storedPlan = sessionStorage.getItem('selectedPlan') || 'Plan C';
+                let amt = '75000'; // Default Plan C
+                if (storedPlan === 'Plan A') amt = '100000';
+                if (storedPlan === 'Plan B') amt = '66666.66';
+                if (storedPlan.includes('Custom')) amt = '175000';
+                redirectUrl = `payment.html?amount=${amt}&ref=MSA-V1`;
+                console.log('Calculated redirect URL from selectedPlan:', storedPlan, redirectUrl);
+            }
 
             if (!envelopeId) {
                 console.error("No envelope ID found.");

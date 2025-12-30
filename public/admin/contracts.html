@@ -5769,13 +5769,16 @@
                 sessionStorage.setItem('selectedPlan', storedPlan);
 
                 // 6. Store envelope info and redirect to Signing Page
-                // The signingUrl from Firebase Functions points to sign.html?envelope=<id>
-                if (result.signingUrl || result.envelopeId) {
-                    sessionStorage.setItem('openSignUrl', result.signingUrl || '');
-                    sessionStorage.setItem('envelopeId', result.envelopeId || '');
-                    window.location.href = result.signingUrl || `sign.html?envelope=${result.envelopeId}`;
+                // IMPORTANT: Always redirect to local sign.html, NOT the backend's signingUrl
+                // The backend signingUrl may point to incorrect domains (e.g., sign.sirsi.ai)
+                if (result.envelopeId) {
+                    sessionStorage.setItem('envelopeId', result.envelopeId);
+                    // Always use local sign.html with envelope ID and guest parameter
+                    const localSignUrl = `sign.html?envelope=${result.envelopeId}&guest=${isGuest}`;
+                    console.log('Redirecting to local sign page:', localSignUrl);
+                    window.location.href = localSignUrl;
                 } else {
-                    throw new Error('No signing URL or envelope ID returned');
+                    throw new Error('No envelope ID returned from server');
                 }
 
 

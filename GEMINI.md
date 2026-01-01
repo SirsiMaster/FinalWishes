@@ -111,5 +111,12 @@ Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the 
 *   **Push Protocol**: ALWAYS run `git status` -> `git add` -> `git commit` -> `git push` sequence. Never assume files are committed.
 
 ---
+
+## 8. Test Credentials
+Use these credentials for all testing and demo flows:
+*   **Name**: Cylton Collymore  
+*   **Email**: cylton@sirsi.ai
+
+---
 **Signed,**
 **Antigravity (The Agent)**

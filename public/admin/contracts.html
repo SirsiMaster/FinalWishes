@@ -11,7 +11,8 @@
     <!-- URL Pattern: /projectname/contracts -->
     <script>
         // Redirect to unified OpenSign workflow at sirsi-sign.web.app
-        window.location.replace('https://sirsi-sign.web.app/finalwishes/contracts/');
+        const params = window.location.search;
+        window.location.replace('https://sirsi-sign.web.app/finalwishes/contracts/' + params);
     </script>
     <noscript>
         <meta http-equiv="refresh" content="0;url=https://sirsi-sign.web.app/finalwishes/contracts/">

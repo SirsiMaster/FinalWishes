@@ -1,0 +1,250 @@
+/**
+ * SIRSI PROFESSIONAL PRINT TEMPLATE
+ * =================================
+ * 
+ * This CSS template provides professional legal document formatting for print.
+ * Use this for any document that needs to be printed or saved as PDF.
+ * 
+ * Features:
+ * - 1-inch margins on all sides
+ * - Page headers and footers
+ * - Page breaks before every section (h1/h2)
+ * - Professional typography (Cinzel + Merriweather)
+ * - CONFIDENTIAL watermark
+ * - Page numbering (Page X of Y)
+ * 
+ * Usage:
+ * 1. Include this CSS in your HTML document
+ * 2. Use h1 for major sections (Exhibits) - each gets its own page
+ * 3. Use h2 for numbered sections - each gets its own page
+ * 4. Use h3/h4 for subsections - flow with content
+ * 5. Print with Cmd+P or Ctrl+P
+ * 
+ * Created: January 6, 2026
+ * Author: Sirsi Technologies
+ */
+
+/* ========================================
+   FONT IMPORTS
+   ======================================== */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+/* ========================================
+   BASE DOCUMENT STYLING
+   ======================================== */
+html {
+  font-size: 11pt;
+}
+
+body {
+  font-family: "Merriweather", "Times New Roman", serif;
+  line-height: 1.6;
+  color: #000;
+  max-width: 8.5in;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: white;
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+h1, h2, h3, h4 {
+  font-family: "Cinzel", "Merriweather", serif;
+  color: #2c3e50;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 22pt;
+  text-align: center;
+  text-transform: uppercase;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 14pt;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+  margin-top: 2em;
+}
+
+h3 {
+  font-size: 12pt;
+}
+
+h4 {
+  font-size: 11pt;
+}
+
+p {
+  text-align: justify;
+  margin-bottom: 1em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* ========================================
+   TABLES
+   ======================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+/* ========================================
+   HORIZONTAL RULES
+   ======================================== */
+hr {
+  border: 0;
+  border-top: 1px solid #000;
+  margin: 2em 0;
+}
+
+/* ========================================
+   SIGNATURE BLOCKS
+   ======================================== */
+.signature-block {
+  margin-top: 50px;
+  page-break-inside: avoid;
+}
+
+/* ========================================
+   PRINTABLE CHECKBOXES (for forms)
+   ======================================== */
+.checkbox {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #000;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ========================================
+   PRINT SPECIFICS - PROFESSIONAL FORMAT
+   ======================================== */
+@media print {
+  /* Professional 1-inch margins all around */
+  @page {
+    size: letter;
+    margin: 1in 1in 1in 1in;
+    
+    /* Header - customize per document */
+    @top-center {
+      content: "Master Services Agreement — FinalWishes Platform";
+      font-family: 'Inter', sans-serif;
+      font-size: 9pt;
+      color: #666;
+    }
+    
+    /* Footer with page number */
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: 'Inter', sans-serif;
+      font-size: 9pt;
+      color: #666;
+    }
+    
+    /* Confidential notice */
+    @bottom-left {
+      content: "CONFIDENTIAL";
+      font-family: 'Inter', sans-serif;
+      font-size: 8pt;
+      color: #999;
+    }
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+
+  /* Every H1 (Exhibits/Major Sections) starts on new page */
+  h1 {
+    page-break-before: always;
+    font-size: 18pt;
+    margin-top: 0;
+  }
+
+  /* First H1 should NOT have page break */
+  h1:first-of-type {
+    page-break-before: auto;
+  }
+
+  /* Every H2 (Numbered Section) starts on new page */
+  h2 {
+    page-break-before: always;
+    font-size: 13pt;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  /* Prevent headers from being orphaned at bottom of page */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  /* Tables stay together */
+  table {
+    page-break-inside: avoid;
+  }
+
+  .signature-block {
+    page-break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  th {
+    background-color: #f0f0f0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Force page break before an element */
+.page-break-before {
+  page-break-before: always !important;
+}
+
+/* Force page break after an element */
+.page-break-after {
+  page-break-after: always !important;
+}
+
+/* Prevent element from breaking across pages */
+.no-break {
+  page-break-inside: avoid !important;
+}
+
+/* Keep element with following content */
+.keep-with-next {
+  page-break-after: avoid !important;
+}

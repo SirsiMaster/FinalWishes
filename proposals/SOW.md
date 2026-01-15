@@ -3,7 +3,7 @@
 **Project Name:** FinalWishes Platform Development
 **SOW Reference:** SOW-2025-001  
 **Associated MSA:** MSA-2025-111-FW  
-**Date:** December 11, 2025  
+**Date:** January 6, 2026  
 
 ---
 
@@ -22,6 +22,12 @@ Provider shall implement a **Multi-Tenant, Zero-Knowledge** architecture to ensu
 *   **Storage Layer:** Hybrid approach using **Cloud SQL (PostgreSQL)** for structured PII (Encrypted) and **Firestore** for real-time document metadata.
 *   **File Vault:** **Cloud Storage** buckets with per-tenant isolation boundaries. All files encrypted at rest using **Cloud KMS** (AES-256).
 *   **Security:** Implementation of **SOC 2 Type II** controls, including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).
+
+### 2.2 Technology Stack (SirsiNexus V4)
+*   **Frontend:** **React 18** (Vite), **Tanstack** (Query, Router, Table), **shadcn/ui** (Radix Primitives + Tailwind).
+*   **Backend:** **Go (Golang)** on **Cloud Run** (Serverless), **Firebase Auth**.
+*   **Database:** **Cloud SQL** (PostgreSQL) + **Firestore** (Real-time).
+*   **Mobile:** **React Native** (Expo) sharing core business logic.
 
 ### 2.2 Document Inventory & Automation Scope
 Provider will build automation or manual guidance paths for the following specific document categories:
@@ -70,7 +76,7 @@ Provider shall build a logic engine ("The Shepherd") that:
 *   **1.3 Auth:** Firebase Auth + MFA + Custom Claims.
 *   **1.4 Schema:** Design Relational (Heirs) vs Document (Metadata) schemas.
 *   **1.5 Vault:** Implement AES-256 crypto service and Signed URL logic.
-*   **1.6 Web:** React + Vite + "Light Royal Neo-Deco" Design System.
+*   **1.6 Web:** **React 18** + **Tanstack** (Router/Query) + **shadcn/ui** Component System (No Next.js).
 *   **1.7 E-Sign:** Deploy Self-Hosted OpenSign.
 
 ### **PHASE 2: CORE LOGIC & STATE ENGINES (Weeks 5-10)**

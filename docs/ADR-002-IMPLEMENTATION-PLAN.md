@@ -1,5 +1,5 @@
 # Architecture Decision Record (ADR-002)
-## Implementation Plan: DocuSeal, Gemini 3.0 & Launch Scope
+## Implementation Plan: Sirsi OpenSign, Gemini 3.0 & Launch Scope
 
 **Document Version:** 3.0.0
 **Date:** December 11, 2025
@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-This ADR documents the **refined implementation plan** for FinalWishes. It solidifies the decision to self-host key infrastructure (DocuSeal) and leverage the latest AI models (Gemini 3.0) to maximize efficiency and reduce operating costs.
+This ADR documents the **refined implementation plan** for FinalWishes. It solidifies the decision to self-host key infrastructure (Sirsi OpenSign) and leverage the latest AI models (Gemini 3.0) to maximize efficiency and reduce operating costs.
 
 **The Reality:** Most estate settlement is still paper-based. There are no unified government APIs. Financial institutions have proprietary or non-existent programmatic interfaces. Court systems vary by county, not just state.
 
@@ -30,7 +30,7 @@ This document provides:
 - Full automation for states WITH e-filing (MD, IL, MN)
 - Form library covering ~45 probate forms across 3 states
 - Complete user guidance through every step (manual or automated)
-- Self-hosted DocuSeal for e-signatures (Postgres compatible, Cost saving vs DocuSign)
+- Self-hosted Sirsi OpenSign for e-signatures (Postgres compatible, Cost saving vs DocuSign)
 
 ---
 
@@ -313,12 +313,12 @@ This document provides:
 
 | Service | Capability | API | Cost |
 |---------|-----------|-----|------|
-| **DocuSeal** | E-signature | ✅ Full API | ~$50/mo (Cloud Run) |
+| **Sirsi OpenSign** | E-signature | ✅ Full API | ~$50/mo (Cloud Run) |
 | **OpenSign** | E-signature | ✅ Yes | ~$50/mo (Requires MongoDB) |
 | **DocuSign** | E-signature | ✅ Yes | $25-65/user/month |
 
 **Decision:** Use **OpenSign** (Self-Hosted/Community).
-- **Cost:** Community edition is free, avoiding DocuSeal Pro costs.
+- **Cost:** Community edition is free, avoiding Sirsi OpenSign Pro costs.
 - **Architecture:** Will require MongoDB (managed via Atlas Free Tier or self-hosted container).
 - **Experience:** Previous integration (ADR-003) proved viable with frontend tweaks.
 - **Control:** Full code ownership.
@@ -654,7 +654,7 @@ This ensures that even a database breach doesn't expose all estates' data with a
 
 5. **Full Integrations (Day One)**
    - Plaid for account discovery (all products)
-   - **DocuSeal** for e-signature (Self-hosted)
+   - **Sirsi OpenSign** for e-signature (Self-hosted)
    - Lob for certified mail automation
    - SendGrid for email
    - **Vertex AI (Gemini 3.0)** for intelligent process guidance
@@ -803,7 +803,7 @@ The competitive moat is:
 | 1.0.0 | 2025-12-05 | Claude (AI Stack Leader) | Initial external integration analysis |
 | 2.0.0 | 2025-12-05 | Claude | Updated integration strategy |
 | 3.0.0 | 2025-12-11 | FinalWishes Team | Implementation Plan: OpenSign, Gemini 2.0, 3-State Scope |
-| **4.0.0** | **2025-12-11** | **FinalWishes Team** | **Refinement: Gemini 3.0 & DocuSeal (PostgreSQL)** |
+| **4.0.0** | **2025-12-11** | **FinalWishes Team** | **Refinement: Gemini 3.0 & Sirsi OpenSign (PostgreSQL)** |
 | 5.0.0 | Future | FinalWishes Team | **Roadmap Expansion**: Fundraising, Family Tree, Money Tracking, Digital Vault |
 
 ---

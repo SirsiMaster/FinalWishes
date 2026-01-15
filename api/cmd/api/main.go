@@ -74,7 +74,6 @@ func main() {
 			// TODO: Implement document handlers
 		})
 
-		// DocuSeal routes
 
 		// OpenSign routes
 		r.Route("/opensign", func(r chi.Router) {

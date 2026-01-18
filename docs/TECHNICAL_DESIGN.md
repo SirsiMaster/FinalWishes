@@ -1,71 +1,59 @@
 # Technical Design Document
-## FinalWishes - The Estate Operating System
-**Version:** 3.0.0
-**Date:** December 5, 2025
+## Sirsi Infrastructure Layer (The Nexus Engine)
+**Version:** 4.2.0 (Infrastructure Pivot)
+**Date:** January 17, 2026
 
 ---
 
 ## 1. Overview
 
-This document provides detailed technical design specifications for key system components, integration patterns, and implementation guidelines.
+This document defines the technical specifications for the **Sirsi Infrastructure Layer**, implemented within the **Sirsi Nexus App** repository (`github.com/SirsiMaster/SirsiNexus`). It provides the foundational logic, gRPC service boundaries, and security patterns used by all portfolio tenants (FinalWishes, Assiduous).
 
-**Technology Stack:**
-- Backend: Go on Cloud Run
-- Frontend: React 18 + Vite
-- Mobile: React Native + Expo
-- Database: Firestore + Cloud SQL
-- Auth: Firebase Authentication
-- Storage: Cloud Storage + Cloud KMS
+**Technology Stack (Stack V4):**
+- **Backend**: Go on Cloud Run (**gRPC + Protobuf**)
+- **Frontend**: React 18 + Vite (**gRPC-Web**)
+- **Mobile**: React Native + Expo (**gRPC + Protobuf**)
+- **Database**: Firestore + Cloud SQL
+- **Auth**: Firebase Authentication (MFA Required)
+- **Security**: SOC 2 Compliance + Cloud KMS (AES-256)
 
 ---
 
 ## 2. Authentication & Authorization
 
-### 2.1 Firebase Auth Integration
+### 2.1 gRPC Auth Interceptor (Go)
 
-**Configuration:**
+All incoming gRPC requests are intercepted for authentication via Firebase ID tokens.
+
 ```go
-// Firebase Auth configuration
-import (
-    firebase "firebase.google.com/go/v4"
-    "firebase.google.com/go/v4/auth"
-)
+// AuthInterceptor validates tokens for gRPC methods
+func AuthInterceptor(authClient *auth.Client) grpc.UnaryServerInterceptor {
+    return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+        // Extract metadata from context
+        md, ok := metadata.FromIncomingContext(ctx)
+        if !ok {
+            return nil, status.Error(codes.Unauthenticated, "missing metadata")
+        }
 
-func initFirebaseAuth(ctx context.Context) (*auth.Client, error) {
-    app, err := firebase.NewApp(ctx, nil)
-    if err != nil {
-        return nil, fmt.Errorf("error initializing firebase: %v", err)
-    }
-    return app.Auth(ctx)
-}
-```
+        // Get Authorization header
+        values := md.Get("authorization")
+        if len(values) == 0 || !strings.HasPrefix(values[0], "Bearer ") {
+            return nil, status.Error(codes.Unauthenticated, "missing authorization token")
+        }
 
-**Token Validation Middleware:**
-```go
-func AuthMiddleware(authClient *auth.Client) func(http.Handler) http.Handler {
-    return func(next http.Handler) http.Handler {
-        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-            // Extract token from Authorization header
-            authHeader := r.Header.Get("Authorization")
-            if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-                respondError(w, 401, "Missing authorization token")
-                return
-            }
-            
-            idToken := strings.TrimPrefix(authHeader, "Bearer ")
-            
-            // Verify Firebase ID token
-            token, err := authClient.VerifyIDToken(r.Context(), idToken)
-            if err != nil {
-                respondError(w, 401, "Invalid token")
-                return
-            }
-            
-            // Add user context
-            ctx := context.WithValue(r.Context(), "uid", token.UID)
-            ctx = context.WithValue(ctx, "email", token.Claims["email"])
-            next.ServeHTTP(w, r.WithContext(ctx))
-        })
+        idToken := strings.TrimPrefix(values[0], "Bearer ")
+
+        // Verify Firebase ID token
+        token, err := authClient.VerifyIDToken(ctx, idToken)
+        if err != nil {
+            return nil, status.Error(codes.Unauthenticated, "invalid token")
+        }
+
+        // Add user context
+        newCtx := context.WithValue(ctx, "uid", token.UID)
+        newCtx = context.WithValue(newCtx, "email", token.Claims["email"])
+        
+        return handler(newCtx, req)
     }
 }
 ```
@@ -690,10 +678,57 @@ service cloud.firestore {
 
 ---
 
+## 9. Sirsi Infrastructure Layer (Global)
+
+### 9.1 Multi-Project Reference Architecture
+
+The Sirsi lifecycle engine is designed as a standalone, project-agnostic service. Individual portfolio projects (e.g., FinalWishes) act as "tenants" within this workflow.
+
+**Handoff Pattern:**
+1. **Source Project**: Initiates a request to the Sirsi Offerings Engine.
+2. **Offerings Engine**: Loads `catalog-data.js` for the specific `PROJECT_ID`.
+3. **CLM Portal**: Renders the contract using project-specific scope and legal descriptions fetched from the catalog.
+4. **Execution Layer**: Routes signatures to OpenSign and payments to Stripe with project-specific metadata for attribution.
+
+**The Project Registry (`lib/offerings/catalog-data.js`):**
+```javascript
+const projectRegistry = {
+    'finalwishes': {
+        name: 'FinalWishes',
+        legalMetadata: {
+            disclosureAI: true,
+            disclosureFinancial: true
+        },
+        templateKeys: {
+            coreScope: 'finalwishes-core-scope',
+            appendix: 'finalwishes-appendix-a'
+        }
+    }
+}
+```
+
+### 9.2 Infrastructure Control Plane (The Nexus Bridge)
+
+To manage multi-tenant growth, a centralized **Infrastructure Control Plane** is utilized to authorize and configure portfolio projects. 
+
+**Core Responsibilities:**
+- **Onboarding**: Registration of new projects via the specialized Admin UI.
+- **Metadata Management**: Controlling legal disclosures, jurisdictional terms, and branding across the ecosystem.
+- **Ecological Economics**: Configuration of project-specific pricing multipliers and value realization labels.
+- **Migration Path**: Built as a decoupled module to be integrated into the **Sirsi Nexus** core application.
+
+**Architecture:**
+- **UI**: Located at `/admin/infrastructure/projects.html`.
+- **Logic**: Dynamic form-to-JSON engine with standardized export/import schema for the project registry.
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Go/GCP/Firebase Auth/Cloud KMS stack |
-| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to FinalWishes** |
+| 3.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes |
+| 4.0.0 | 2026-01-17 | Antigravity | Added Sirsi Infrastructure Layer & Multi-Project Design |
+| **4.1.0** | **2026-01-17** | **Antigravity** | **Introduced Infrastructure Control Plane (Nexus Bridge)** |

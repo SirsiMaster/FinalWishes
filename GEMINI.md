@@ -1,7 +1,7 @@
 # GEMINI.md
 **Operational Directive for Gemini Agent**
-**Version:** 5.0.0 (Unified)
-**Date:** December 11, 2025
+**Version:** 5.1.0 (Infrastructure Pivot)
+**Date:** January 17, 2026
 
 ---
 
@@ -20,6 +20,11 @@ You are not a passive code generator. You are a **Critical Partner**.
 *   **Follow the Pipeline (Rule 4)**: Local -> GitHub -> Production. Never skip CI/CD.
 *   **Always Push & Verify (Rule 5)**: ALWAYS push changes to production via git. Verify the push status immediately.
 *   **ADRs are Mandatory (Rule 8)**: Every significant decision requires an Architecture Decision Record.
+*   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals, whether they appear in `.html`, `.pdf`, or any other format. All approved legal language **MUST** be displayed and printed in full in both interactive (`index.html`) and printable (`printable-msa.html`) templates. They must always match precisely.
+*   **Infrastructure Ownership (Rule 10)**: Every project (like FinalWishes) is an onboarded tenant of the **Sirsi Infrastructure Layer**. Do not build project-specific payment or signing silos. Build for the Portfolio.
+*   **Repository Hierarchy (Rule 11)**: 
+    - **Sirsi Nexus App** is the primary repository for the core Sirsi engine and architectural implementations (Infrastructure, gRPC services, AI agents).
+    - **111-Venture-Projects** is the Studio Governance repository, managing project-specific configs, MSA/SOW generation, and portfolio-wide documentation.
 
 ## 2.1 Canonical Sources of Truth (Benchmark of Progress)
 The following 28 files serve as the immutable benchmark for all project directives and progress. All code and decisions MUST align with them.
@@ -73,9 +78,9 @@ Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the 
 
 | Layer | Technology | Decision |
 | :--- | :--- | :--- |
-| **Logic** | **Go (Golang)** | Cloud Run, Chi Router, Official Firebase Admin SDK |
-| **Web** | **React 18 + Vite** | TailwindCSS, Glassmorphism, Zustand |
-| **Mobile** | **React Native + Expo** | Shared logic with Web, iOS/Android |
+| **Logic** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf**, Official Firebase Admin SDK |
+| **Web** | **React 18 + Vite** | **gRPC-Web**, TailwindCSS, Glassmorphism, Zustand |
+| **Mobile** | **React Native + Expo** | **gRPC + Protobuf**, Shared logic with Web, iOS/Android |
 | **Database** | **Cloud SQL + Firestore** | Hybrid: SQL for PII/Vault, NoSQL for real-time |
 | **Auth** | **Firebase Auth** | MFA (TOTP) Required |
 | **Security** | **SOC 2 + KMS** | Software Keys (No HSM), AES-256 |

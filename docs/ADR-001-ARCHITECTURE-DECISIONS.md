@@ -458,6 +458,36 @@ For estate access after death verification:
 
 ---
 
+## ADR-007: Sirsi Infrastructure Layer Strategy
+
+### Context
+Sirsi operates as a venture studio onboarding multiple portfolio companies (FinalWishes, etc.). Traditionally, each project builds its own contract lifecycle management (CLM) and payment flows. This creates technical debt, integration rework, and siloed data.
+
+### Decision: **Centralized Sirsi Infrastructure Layer**
+
+We will build a unified, multi-tenant pipeline for:
+1. **Offerings Discovery**: Catalog-driven product selection.
+2. **Contract Generation**: Dynamic, templated legal execution.
+3. **Electronic Signature**: Sirsi OpenSign integration.
+4. **Payment Processing**: Centralized Stripe routing.
+
+### Justification
+- **Portfolio-Wide Reusability**: A new project can onboard in < 24 hours by simply adding its metadata to the Sirsi Catalog.
+- **Cost Efficiency**: Shared engineering costs across the portfolio.
+- **Evidence Centralization**: The Sirsi Vault acts as a single source of legal truth for all executed agreements across the venture studio.
+
+### Implementation Pattern
+- **Project Agnostic View**: `contracts/index.html` becomes a pure renderer fetching data from `catalog-data.js` via `PROJECT_ID`.
+- **Project Handoff**: Projects "route to and through" the Sirsi layer using a standardized state object in `sessionStorage`.
+
+### Consequences
+- ✅ Eliminated rework for every new venture.
+- ✅ Standardized legal evidence (Vault) across all portfolio companies.
+- ✅ Accelerated "Time to Revenue" for new launches.
+- ❌ Requires slightly more complex data mapping in the initial build.
+
+---
+
 ## Summary of Decisions
 
 | Decision | Choice | Primary Justification |
@@ -468,6 +498,7 @@ For estate access after death verification:
 | Backend | Go on Cloud Run | Official Firebase SDK, AI-friendly |
 | Frontend | React + React Native | Code sharing, ecosystem, AI-friendly |
 | Security Architecture | Defense-in-Depth | Layered, auditable, compliant |
+| **Lifecycle Infrastructure** | **Sirsi Infrastructure Layer** | **Multi-tenant portfolio scalability** |
 
 ---
 
@@ -476,6 +507,7 @@ For estate access after death verification:
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-12-05 | Claude (AI Stack Leader) | Initial architecture decisions |
+| 2.1.0 | 2026-01-17 | Antigravity (Agent) | Added ADR-007 (Sirsi Infrastructure Layer) |
 
 ---
 

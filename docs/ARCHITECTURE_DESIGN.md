@@ -1,76 +1,50 @@
 # Architecture Design Document
-## FinalWishes - The Estate Operating System
-**Version:** 4.0.0
-**Date:** December 5, 2025
+## Sirsi Infrastructure Layer (The Nexus Layer)
+**Version:** 5.0.0 (Infrastructure Pivot)
+**Date:** January 17, 2026
 
 ---
 
 ## 1. Architecture Overview
 
-### 1.1 Development Model
-**AI-Assisted Development** - This platform is built using Claude and AI tools as the development team, with human oversight only. No traditional human development team.
+### 1.1 The Sirsi Paradigm
+**Infrastructure Ownership (Rule 10)**: All portfolio projects (FinalWishes, Assiduous) are onboarded as **tenants** of the **Sirsi Infrastructure Layer**. We do not build siloed solutions; we build modular Logic Assets within the **Sirsi Nexus App** ecosystem and expose them to project-specific frontends.
 
-### 1.2 System Context
+### 1.2 System Context (Multi-Tenant)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                           EXTERNAL SYSTEMS                               │
+│                           SIRSI NEXUS APP CORE                           │
+│                 (github.com/SirsiMaster/SirsiNexus)                      │
 ├─────────────────────────────────────────────────────────────────────────┤
-│  Stripe    SendGrid    Vertex AI    Firebase Auth    App Stores          │
+│  gRPC Engine    Service Mesh    Security Interceptors    AI Hypervisor   │
 └────────┬──────────┬─────────┬───────────┬───────────────┬───────────────┘
          │          │         │           │               │
-         └──────────┴─────────┴───────────┴───────────────┘
-                              │
-┌─────────────────────────────┴─────────────────────────────┐
-│                    FINALWISHES PLATFORM                    │
-├───────────────────────────────────────────────────────────┤
-│   ┌─────────────────────────────────────────────────┐     │
-│   │              Client Applications                 │     │
-│   │  ┌─────────────┐ ┌─────────┐ ┌─────────────┐   │     │
-│   │  │ React Web   │ │ React   │ │ React       │   │     │
-│   │  │ (Vite)      │ │ Native  │ │ Native      │   │     │
-│   │  │             │ │ iOS     │ │ Android     │   │     │
-│   │  └─────────────┘ └─────────┘ └─────────────┘   │     │
-│   └──────────────────────┬──────────────────────────┘     │
-│                          │                                │
-│   ┌──────────────────────┴──────────────────────────┐    │
-│   │                  Go API (Cloud Run)              │    │
-│   │     Chi Router + Domain Services + Repository    │    │
-│   └──────────────────────┬──────────────────────────┘    │
-│                          │                                │
-│          ┌───────────────┼───────────────┐                │
-│          │               │               │                │
-│   ┌──────┴──────┐ ┌──────┴──────┐ ┌──────┴──────┐        │
-│   │  Firestore  │ │  Cloud SQL  │ │   Cloud     │        │
-│   │ (Real-time) │ │   (PII)     │ │   Storage   │        │
-│   └─────────────┘ └─────────────┘ └─────────────┘        │
-│                          │                                │
-│                   ┌──────┴──────┐                         │
-│                   │  Cloud KMS  │                         │
-│                   │ (Encryption)│                         │
-│                   └─────────────┘                         │
-│                          │                                │
-│                   ┌──────┴──────┐                         │
-│                   │  Vertex AI  │                         │
-│                   │  (LLM Agent)│                         │
-│                   └─────────────┘                         │
-└───────────────────────────────────────────────────────────┘
+         ▼          ▼         ▼           ▼               ▼
+┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐
+│   TENANT:         │ │   TENANT:         │ │   TENANT:         │
+│   FinalWishes     │ │   Assiduous       │ │   [New Project]   │
+├───────────────────┤ ├───────────────────┤ ├───────────────────┤
+│  Estate Settlement│ │  Business Audit   │ │  Mod. Logic      │
+│  UI / Logic       │ │  UI / Logic       │ │  Assets         │
+└───────────────────┘ └───────────────────┘ └───────────────────┘
 ```
 
-### 1.3 Technology Stack (GCP)
+### 1.3 Repository Hierarchy (Rule 11)
+- **Sirsi Nexus App**: The central engine. Contains the Go/Rust core-engine, shared gRPC Protobuf definitions, and global infrastructure logic.
+- **111-Venture-Projects**: The studio governance layer. Manages tenant-specific configurations (CMS/Catalog), project management, and studio-wide directives.
 
-| Layer | Technology | Justification |
-|-------|------------|---------------|
-| **Web Frontend** | React 18 + Vite | Fast builds, modern React, excellent DX |
-| **Mobile Apps** | React Native + Expo | 60-70% code sharing, native performance |
-| **Backend API** | Go on Cloud Run | Official Firebase SDK, fast cold starts, AI-friendly |
-| **Database** | Firestore + Cloud SQL | Real-time sync + relational PII storage |
-| **Auth** | Firebase Authentication | MFA support, multiple providers, secure |
-| **Storage** | Cloud Storage | Client-side encrypted documents |
-| **Key Management** | Cloud KMS (software) | AES-256 encryption, $13K/yr cheaper than HSM |
-| **Hosting** | Firebase Hosting | Global CDN, automatic SSL |
-| **AI/LLM** | Vertex AI | Process intelligence, document understanding |
-| **CI/CD** | GitHub Actions | Automated deployment to Cloud Run + Firebase |
+### 1.4 Technology Stack (Stack V4)
+All implementations within the Sirsi ecosystem MUST leverage these technologies:
+
+| Layer | Technology | Decision |
+| :--- | :--- | :--- |
+| **Logic** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf**, Official Firebase Admin SDK |
+| **Web** | **React 18 + Vite** | **gRPC-Web**, TailwindCSS, Glassmorphism, Zustand |
+| **Mobile** | **React Native + Expo** | **gRPC + Protobuf**, Shared logic with Web, iOS/Android |
+| **Database** | **Cloud SQL + Firestore** | Hybrid: SQL for PII/Vault |
+| **Security** | **SOC 2 + KMS** | Software Keys (AES-256) |
+| **AI** | **Gemini 3.0 (Vertex AI)** | The "Guidance Engine" (Sirsi Persona) |
 
 **Architecture Decision Records:** See `docs/ADR-001-ARCHITECTURE-DECISIONS.md`
 

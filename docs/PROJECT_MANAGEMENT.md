@@ -1,7 +1,7 @@
 # Project Management Plan
 ## Legacy - The Estate Operating System
-**Version:** 1.0.0
-**Date:** November 26, 2025
+**Version:** 1.1.0 (Infrastructure Pivot)
+**Date:** January 17, 2026
 **Methodology:** Agile (Scrum)
 
 ---
@@ -102,12 +102,12 @@
 ### 3.3 Sprint Schedule
 
 ```
-Sprint 1 (Weeks 1-2):   Foundation - Infrastructure & Auth
+Sprint 1 (Weeks 1-2):   Foundation - Sirsi Infrastructure Layer Onboarding
 Sprint 2 (Weeks 3-4):   Foundation - Data Models & Basic CRUD
 Sprint 3 (Weeks 5-6):   Core - Estate Profile & Document Vault
 Sprint 4 (Weeks 7-8):   Core - Verify & Notify Phases
-Sprint 5 (Weeks 9-10):  Mobile - Flutter Apps & Native Features
-Sprint 6 (Weeks 11-12): Polish - Testing, A11y, Performance
+Sprint 5 (Weeks 9-10):  Mobile - React Native Components & Features
+Sprint 6 (Weeks 11-12): Polish - Testing, SOC 2 Evidence, Performance
 Week 13:                Launch - Store Submission & Go-Live
 ```
 
@@ -118,10 +118,9 @@ Week 13:                Launch - Store Submission & Go-Live
 ### 4.1 Phase 1: Foundation (Sprints 1-2)
 
 #### Sprint 1 Goals
-- [ ] AWS infrastructure provisioned (VPC, ECS, RDS, S3)
-- [ ] CI/CD pipeline operational (GitHub Actions)
-- [ ] Go API skeleton with health endpoints
-- [ ] Auth0/Clerk integration complete
+- 1.1 GCP Infrastructure: Provision Cloud Run, Cloud SQL, Firestore, VPC, Cloud Armor.
+- 1.2 Sirsi Infrastructure: Onboard to the Sirsi Multi-Tenant Lifecycle Layer (CLM, Sign, Pay).
+- 1.3 Auth: Firebase Auth + MFA + Custom Claims.
 - [ ] Next.js app scaffold with routing
 - [ ] Design system components started
 

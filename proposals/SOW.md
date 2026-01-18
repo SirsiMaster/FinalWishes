@@ -3,21 +3,26 @@
 **Project Name:** FinalWishes Platform Development
 **SOW Reference:** SOW-2025-001  
 **Associated MSA:** MSA-2025-111-FW  
-**Date:** January 6, 2026  
+**Date:** January 17, 2026  
 
 ---
 
 ## 1. Executive Overview
 
-This Statement of Work ("SOW") defines the comprehensive scope for the **FinalWishes Estate Operating System**. This project aims to digitize and automate the estate settlement process, focusing on "Launch States" (Maryland, Illinois, Minnesota) where electronic filing or substantial digitization is possible.
-
-**Objective:** deliver a "Vault-Grade" secure platform that guides users through the 18+ month probate process, automating form generation, asset discovery, and stakeholder communication.
+This Statement of Work ("SOW") defines the comprehensive scope for the **FinalWishes Estate Operating System**. This project is built as a tenant of the **Sirsi Infrastructure Layer**, leveraging standardized modules for contracting, signing, and payment.
 
 ---
 
 ## 2. Detailed Scope of Services
 
-### 2.1 Core Vault & Data Architecture
+### 2.1 Sirsi Infrastructure Integration (Lifecycle Engine)
+Provider shall onboard FinalWishes into the **Sirsi Multi-Tenant Lifecycle Infrastructure**. 
+*   **Offerings Engine:** Utilization of the project-agnostic offerings portal.
+*   **Contract Portal:** Dynamic MSA/SOW generation driven by the Sirsi Engineering Catalog.
+*   **Signature Layer:** Integration with self-hosted Sirsi OpenSign.
+*   **Payment Layer:** Standardized Stripe routing for recursive and milestone payments.
+
+### 2.2 Core Vault & Data Architecture
 Provider shall implement a **Multi-Tenant, Zero-Knowledge** architecture to ensure total data privacy.
 *   **Storage Layer:** Hybrid approach using **Cloud SQL (PostgreSQL)** for structured PII (Encrypted) and **Firestore** for real-time document metadata.
 *   **File Vault:** **Cloud Storage** buckets with per-tenant isolation boundaries. All files encrypted at rest using **Cloud KMS** (AES-256).

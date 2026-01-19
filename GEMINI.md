@@ -23,8 +23,8 @@ You are not a passive code generator. You are a **Critical Partner**.
 *   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals, whether they appear in `.html`, `.pdf`, or any other format. All approved legal language **MUST** be displayed and printed in full in both interactive (`index.html`) and printable (`printable-msa.html`) templates. They must always match precisely.
 *   **Infrastructure Ownership (Rule 10)**: Every project (like FinalWishes) is an onboarded tenant of the **Sirsi Infrastructure Layer**. Do not build project-specific payment or signing silos. Build for the Portfolio.
 *   **Repository Hierarchy (Rule 11)**: 
-    - **Sirsi Nexus App** is the primary repository for the core Sirsi engine and architectural implementations (Infrastructure, gRPC services, AI agents).
-    - **111-Venture-Projects** is the Studio Governance repository, managing project-specific configs, MSA/SOW generation, and portfolio-wide documentation.
+    - **Sirsi Nexus App (The Monorepo)**: The single, unified repository for the core engine, gRPC services, AI agents, and all shared UI components (`packages/sirsi-ui`) and services (`packages/sirsi-opensign`).
+    - **111-Venture-Projects**: The studio governance repository, managing tenant-specific configs and portfolio-wide documentation.
 
 ## 2.1 Canonical Sources of Truth (Benchmark of Progress)
 The following 28 files serve as the immutable benchmark for all project directives and progress. All code and decisions MUST align with them.

@@ -723,6 +723,31 @@ To manage multi-tenant growth, a centralized **Infrastructure Control Plane** is
 
 ---
 
+### 9.3 FinalWishes Contracts Workflow UI (React 19)
+
+The **FinalWishes Partnership Agreement Generator** is a full-stack React application that replaces the legacy static HTML contract workflow with a dynamic, state-managed solution.
+
+**Stack:**
+- **React 19** + **Vite 7** + **TypeScript**
+- **Zustand** for state management (persisted to localStorage)
+- **TailwindCSS** + custom Royal Neo-Deco styling
+- **Catalog-based Architecture** (`catalog.ts` is the single source of truth)
+
+**Tab Layout:**
+1. **Executive Summary** — Strategic positioning and project context
+2. **Configure Solution** — Bundle selection (Core Platform vs À La Carte)
+3. **Strategic Add-Ons** — Toggle additional modules with real-time pricing
+4. **Statement of Work** — Dynamic scope generation from selected products
+5. **Cost & Valuation** — Itemized breakdown with WBS phases
+6. **Master Agreement (MSA)** — Legal terms and signature blocks
+7. **Sirsi Vault** — Document storage and signing workflow
+
+**Deployment:**
+- Builds to `/dist/` via `npm run build`
+- Deploy via Firebase Hosting to production
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
@@ -731,4 +756,5 @@ To manage multi-tenant growth, a centralized **Infrastructure Control Plane** is
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Go/GCP/Firebase Auth/Cloud KMS stack |
 | 3.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes |
 | 4.0.0 | 2026-01-17 | Antigravity | Added Sirsi Infrastructure Layer & Multi-Project Design |
-| **4.1.0** | **2026-01-17** | **Antigravity** | **Introduced Infrastructure Control Plane (Nexus Bridge)** |
+| 4.1.0 | 2026-01-17 | Antigravity | Introduced Infrastructure Control Plane (Nexus Bridge) |
+| **4.2.0** | **2026-01-20** | **Antigravity** | **Added FinalWishes Contracts Workflow UI section (React 19 + Vite + Zustand)** |

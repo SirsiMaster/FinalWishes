@@ -480,6 +480,46 @@ mobile/
 
 ---
 
+### 3.4 FinalWishes Contracts Workflow UI
+
+The **FinalWishes Partnership Contract Generator** is a React 19 + Vite + TypeScript application that enables dynamic contract creation with real-time pricing and scope generation.
+
+**Location:** `packages/finalwishes-contracts/`
+
+**Architecture:**
+```
+finalwishes-contracts/
+├── src/
+│   ├── components/
+│   │   ├── tabs/                   # Tab-based workflow
+│   │   │   ├── ExecutiveSummary.tsx
+│   │   │   ├── ConfigureSolution.tsx  # Product selection
+│   │   │   ├── StatementOfWork.tsx    # Dynamic SOW generation
+│   │   │   ├── CostValuation.tsx      # Pricing breakdown
+│   │   │   ├── MasterAgreement.tsx    # MSA legal terms
+│   │   │   └── SirsiVault.tsx         # Document vault
+│   │   ├── layout/                 # Sidebar, header, tabs
+│   │   └── ui/                     # Reusable components
+│   ├── data/
+│   │   └── catalog.ts              # Single source of truth (products, bundles, WBS)
+│   ├── store/
+│   │   └── useConfigStore.ts       # Zustand state management
+│   └── styles/
+│       ├── admin-layout.css
+│       └── contract.css
+└── package.json
+```
+
+**Key Features:**
+- **Universal Offerings Engine:** All products, bundles, and pricing defined in `catalog.ts`
+- **Real-Time Contract Propagation:** Changes to cart instantly update all tabs
+- **Zustand State Management:** Persisted to localStorage for session continuity
+- **Printable MSA:** Syncs with `sirsi-opensign/public/finalwishes/contracts/printable-msa.html`
+
+**Design System:** Royal Neo-Deco (Deep Blue + Gold + Glassmorphism)
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
@@ -487,4 +527,5 @@ mobile/
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 2.0.0 | 2025-11-26 | Legacy Team | Added Go backend structure |
 | 3.0.0 | 2025-12-05 | Claude | Complete rewrite for React+Go+React Native, GCP-only, FinalWishes branding |
-| **4.0.0** | **2025-12-05** | **Claude** | **Rebranded to FinalWishes** |
+| 4.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes |
+| **5.1.0** | **2026-01-20** | **Antigravity** | **Added FinalWishes Contracts Workflow UI section (React 19 + Vite)** |

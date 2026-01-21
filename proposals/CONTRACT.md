@@ -11,8 +11,8 @@
 
 This **Master Services Agreement** (this "Agreement") is entered into by and between:
 
-**FinalWishes Inc.**, a Delaware Corporation with its principal place of business at [Address] ("Client"), acting as CEO **Tameeka Lockhart**, and  
-**Sirsi Technologies, Inc.**, a Delaware corporation (FEIN: 93-1696269), with its principal place of business at 909 Rose Avenue, Suite 400, North Bethesda MD 20852 ("Provider" or "Sirsi").
+**FinalWishes Inc.**, a Delaware Corporation with its principal place of business at [Address] ("Client"), represented by **Tameeka Lockhart**, CEO, and  
+**Sirsi Technologies, Inc.**, a Delaware corporation (FEIN: 93-1696269), with its principal place of business at 909 Rose Avenue, Suite 400, North Bethesda MD 20852 ("Provider" or "Sirsi"), represented by **Cylton Collymore**, CEO.
 
 Client and Provider may be referred to individually as a "Party" and collectively as the "Parties."
 
@@ -185,5 +185,5 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 | :--- | :--- |
 | **Signature:** ___________________ | **Signature:** ___________________ |
 | **Name:** Tameeka Lockhart | **Name:** Cylton Collymore |
-| **Title:** CEO, FinalWishes Inc. | **Title:** Lead Architect |
+| **Title:** CEO, FinalWishes Inc. | **Title:** CEO, Sirsi Technologies, Inc. |
 | **Date:** January 6, 2026 | **Date:** January 6, 2026 |

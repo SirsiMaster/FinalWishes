@@ -26,8 +26,8 @@ Why build with Sirsi Technologies vs. alternatives?
 | :--- | :--- | :--- | :--- |
 | **Total Cost** | **$175,000** (Fixed) | **$650,000+** | **$350,000+** |
 | **Time to Market** | **5 Months** | 18-24 Months | 9-12 Months |
-| **Model** | Co-Founder/Partner | Billable Hour ($800/hr) | Time & Materials |
-| **IP Ownership** | **100% Client Owned** | Firm Retains IP | Vendor Lock-in |
+| **Model** | Infrastructure Partner | Billable Hour ($800/hr) | Time & Materials |
+| **IP Ownership** | **Vertical License + Work Product** | Firm Retains IP | Vendor Lock-in |
 | **Security** | **SOC 2 Type II Ready** | "Enterprise" bloat | Basic / Afterthought |
 | **AI Capability** | **Gemini 3.0 Native** | None / Rigid Logic | Generic Chatbot |
 | **Integrations** | Custom Connectors | Manual Office Work | Standard APIs Only |

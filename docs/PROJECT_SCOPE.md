@@ -1,7 +1,7 @@
 # Project Scope Document
 ## FinalWishes - The Estate Operating System
-**Version:** 4.0.0
-**Date:** December 12, 2025
+**Version:** 5.0.0 (Infrastructure Pivot)
+**Date:** January 21, 2026
 **Project Duration:** 5 Months (20 Weeks)
 
 ---
@@ -290,4 +290,5 @@ The project is considered complete when:
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope (IL, MI, MN, DC, VA, MD), 4-month timeline, Firebase/GCP stack |
 | 2.0.0 | 2025-12-05 | Claude | FinalWishes rebrand, 5-month timeline, React+Go+React Native stack |
-| **4.0.0** | **2025-12-11** | **FinalWishes Team** | **Launch Scope reduced to 3 states (MD, IL, MN); AI upgraded to Gemini 3.0; E-Signature switched to OpenSign (self-hosted)** |
+| 4.0.0 | 2025-12-11 | FinalWishes Team | Launch Scope reduced to 3 states (MD, IL, MN); AI upgraded to Gemini 3.0; E-Signature switched to OpenSign (self-hosted) |
+| **5.0.0** | **2026-01-21** | **Antigravity** | **Formalized Infrastructure License & Services Model; Limited free maintenance to 60-day Review and Close period.** |

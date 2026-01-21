@@ -24,6 +24,7 @@ Each ADR follows this structure:
 | [ADR-002](ADR-002-IMPLEMENTATION-PLAN.md) | Implementation Plan: OpenSign, Gemini & Scope | Accepted | 2025-12-11 | — |
 | [ADR-003](../../../../sirsi-opensign/docs/ADR-003-HMAC-SECURITY-LAYER.md) | HMAC-Based Security Layer (See Sirsi Repository) | Accepted | 2025-12-31 | — |
 | [ADR-010](ADR-010-OFFERINGS-ENGINE-INTEGRATION.md) | Universal Offerings Engine Integration | Accepted | 2026-01-18 | — |
+| [ADR-011](ADR-011-INFRASTRUCTURE-LICENSE-MODEL.md) | Infrastructure License & Services Model | Accepted | 2026-01-21 | — |
 
 ## Categories
 

@@ -151,7 +151,7 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 
 **10.4 Effect of Termination.** Upon termination: (i) Client shall pay all outstanding undisputed invoices; (ii) Provider shall deliver to Client all completed and partially completed Deliverables; and (iii) each Party shall return or destroy the other Party’s Confidential Information.
 
-**10.5 Survival.** Sections 2, 4, 5, 6, 7.3, 8, 9, 11, and 12 shall survive any termination or expiration of this Agreement.
+**10.5 Survival.** Sections 2, 4, 5, 6, 7.3, 8, 9, and 11 shall survive any termination or expiration of this Agreement.
 
 ---
 

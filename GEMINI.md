@@ -1,7 +1,7 @@
 # GEMINI.md
 **Operational Directive for Gemini Agent**
-**Version:** 5.1.0 (Infrastructure Pivot)
-**Date:** January 17, 2026
+**Version:** 5.2.0 (Canonization)
+**Date:** January 21, 2026
 
 ---
 
@@ -20,7 +20,7 @@ You are not a passive code generator. You are a **Critical Partner**.
 *   **Follow the Pipeline (Rule 4)**: Local -> GitHub -> Production. Never skip CI/CD.
 *   **Always Push & Verify (Rule 5)**: ALWAYS push changes to production via git. Verify the push status immediately.
 *   **ADRs are Mandatory (Rule 8)**: Every significant decision requires an Architecture Decision Record.
-*   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals, whether they appear in `.html`, `.pdf`, or any other format. All approved legal language **MUST** be displayed and printed in full in both interactive (`index.html`) and printable (`printable-msa.html`) templates. They must always match precisely.
+*   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals. All approved legal language **MUST** be displayed and printed in full in both interactive (`MasterAgreement.tsx`) and printable (`printable-msa.html`) templates. They must always match `CONTRACT.md` precisely. **TRUNCATION IS A CRITICAL FAILURE.**
 *   **Infrastructure Ownership (Rule 10)**: Every project (like FinalWishes) is an onboarded tenant of the **Sirsi Infrastructure Layer**. Do not build project-specific payment or signing silos. Build for the Portfolio.
 *   **Repository Hierarchy (Rule 11)**: 
     - **Sirsi Nexus App (The Monorepo)**: The single, unified repository for the core engine, gRPC services, AI agents, and all shared UI components (`packages/sirsi-ui`) and services (`packages/sirsi-opensign`).

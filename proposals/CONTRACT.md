@@ -1,5 +1,11 @@
 # MASTER SERVICES AGREEMENT (MSA)
 
+> **CANONICAL NOTICE: FULL-FIDELITY ENFORCEMENT**
+> This document is the Absolute Source of Truth for the FinalWishes Master Services Agreement. 
+> **PER RULE 9:** Under no circumstances shall this legal language be abridged, truncated, summarized, or otherwise shortened. 
+> The interactive (`MasterAgreement.tsx`) and printable (`printable-msa.html`) versions MUST match this document verbatim in all 11 articles.
+> **MODIFICATION RESTRICTION:** Truncation or replacement of sections is strictly prohibited unless explicitly instructed by the Lead Architect.
+
 **This Master Services Agreement ("Agreement") is entered into as of January 6, 2026 (the "Effective Date") by and between:**
 
 - **Tameeka Lockhart**, an individual with a principal address at [Address], acting as CEO of **FinalWishes Inc.** ("Client"); and

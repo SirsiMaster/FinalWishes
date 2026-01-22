@@ -25,6 +25,7 @@ Each ADR follows this structure:
 | [ADR-003](../../../../sirsi-opensign/docs/ADR-003-HMAC-SECURITY-LAYER.md) | HMAC-Based Security Layer (See Sirsi Repository) | Accepted | 2025-12-31 | — |
 | [ADR-010](ADR-010-OFFERINGS-ENGINE-INTEGRATION.md) | Universal Offerings Engine Integration | Accepted | 2026-01-18 | — |
 | [ADR-011](ADR-011-INFRASTRUCTURE-LICENSE-MODEL.md) | Infrastructure License & Services Model | Accepted | 2026-01-21 | — |
+| [ADR-012](ADR-012-DYNAMIC-FINANCIAL-CALCULATION.md) | Dynamic Financial Calculation & Multipliers | Accepted | 2026-01-22 | — |
 
 ## Categories
 

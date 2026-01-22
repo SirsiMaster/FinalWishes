@@ -193,3 +193,84 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 | **Name:** Tameeka Lockhart | **Name:** Cylton Collymore |
 | **Title:** Project CEO | **Title:** CEO, Sirsi Technologies, Inc. |
 | **Date:** ___________________ | **Date:** January 6, 2026 |
+---
+
+## EXHIBIT A: STATEMENT OF WORK (SOW)
+
+**Project Name:** FinalWishes Platform Development  
+**SOW Reference:** SOW-2025-001  
+**Associated MSA:** MSA-2026-111-FW  
+**Date:** January 6, 2026  
+
+---
+
+### 1. EXECUTIVE OVERVIEW
+This Statement of Work (“SOW”) defines the comprehensive scope for the **FinalWishes Legacy Management System**. This project aims to build foundational legacy management infrastructure with foundational support for future expansion into estate settlement capabilities in jurisdictions such as Maryland, Illinois, and Minnesota.
+
+**Objective:** deliver a “Vault-Grade” secure platform that guides users through the 18+ month probate process, automating form generation, asset discovery, and stakeholder communication.
+
+---
+
+### 2. DETAILED SCOPE OF SERVICES
+
+#### 2.1 Core Vault & Data Architecture
+Provider shall implement a **Multi-Tenant, Zero-Knowledge** architecture to ensure total data privacy.
+- **Storage Layer:** Hybrid approach using **Cloud SQL (PostgreSQL)** for structured PII (Encrypted) and **Firestore** for real-time document metadata.
+- **File Vault:** **Cloud Storage** buckets with per-tenant isolation boundaries. All files encrypted at rest using **Cloud KMS** (AES-256).
+- **Security:** Implementation of **SOC 2 Type II** controls, including strict IAM roles, audit logging, and encryption in transit (TLS 1.3).
+
+#### 2.2 Technology Stack (SirsiNexus V4)
+- **Frontend:** **React 18** (Vite), **Tanstack** (Query, Router, Table), **shadcn/ui** (Radix Primitives + Tailwind).
+- **Backend:** **Go (Golang)** on **Cloud Run** (Serverless), **Firebase Auth**.
+- **Database:** **Cloud SQL** (PostgreSQL) + **Firestore** (Real-time).
+- **Mobile:** **React Native** (Expo) sharing core business logic.
+
+#### 2.3 Document Inventory & Automation Scope
+Provider will build automation or manual guidance paths for the following specific document categories:
+- **A. Identity & Vital Records:** Death Certificate (Manual upload/OCR processing); Social Security/Gov ID (Secure entry & validation).
+- **B. Future State Engine Framework (Expansion):** Maryland/Illinois/Minnesota: Foundational logic mapping for future expansion into MDEC (Maryland), eCourt (Illinois), and MNCIS (Minnesota) e-filing guidance. *Note: Active development of direct court filing automation is reserved for future statement(s) of work.*
+- **C. Financial & Asset Documents:** Asset Discovery (Plaid integration for 12,000+ institutions); Life Insurance/Retirement (Standard claim letter generation); Real Estate (Manual tracking + valuation APIs).
+
+#### 2.4 System Integrations
+| Service | Purpose | Integration Level |
+| :--- | :--- | :--- |
+| **Plaid** | Financial Account Linking | Deep Integration |
+| **OpenSign** | E-Signatures | Self-Hosted API |
+| **Lob** | Physical Mail | API Triggered |
+| **Vertex AI** | Process Guidance | RAG Pipeline |
+
+---
+
+### 3. WORK BREAKDOWN STRUCTURE (WBS)
+
+#### PHASE 1: FOUNDATION & VAULT ARCHITECTURE (Weeks 1-4)
+- GCP Infrastructure provisioning (Run, SQL, Firestore)
+- Firebase Auth + MFA implementation
+- AES-256 Vault crypto service implementation
+- React 18 Component System & CI/CD Setup
+
+#### PHASE 2: CORE LOGIC & FOUNDATIONAL ENGINES (Weeks 5-10)
+- Plaid Link integration & Asset Module
+- "The Shepherd" Engine & Future State Framework mapping
+- Gemini RAG pipeline for legal context
+- Go-based PDF form stamper service
+
+#### PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)
+- React Native Expo development (iOS/Android)
+- Biometric Auth & Native Camera modules
+- Full Webhook handling for Plaid/Stripe/Lob
+- Offline sync engine for mobile resilience
+
+#### PHASE 4: AUDIT, SECURITY & LAUNCH (Weeks 17-20)
+- Internal security audit & SOC 2 evidence collection
+- Load testing (k6) to 1,000 concurrent users
+- App Store & Play Store submission
+- Production migration & DNS switchover
+
+---
+
+### 4. ASSUMPTIONS
+1. **Future Expansion Support:** Logic is focused on foundational legacy management, with future support planned for Maryland, Illinois, and Minnesota.
+2. **No Legal Advice:** The “Shepherd” provides procedural guidance, not legal advice.
+3. **Third-Party Costs:** Client pays direct consumption costs for Stripe, Plaid, Lob, and Google Cloud.
+4. **Content:** Client is responsible for final validation of court form templates.

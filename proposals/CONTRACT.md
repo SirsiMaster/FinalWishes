@@ -251,7 +251,7 @@ Provider will build automation or manual guidance paths for the following specif
 
 #### PHASE 2: LEGACY LOGIC & ASSET FRAMEWORK (Weeks 5-10)
 - 2.1 Asset Module: Plaid Integration & Legacy Inventory.
-- 2.2 Beneficiary Logic: Secure Access Delegation & Instruction Engine.
+- 2.2 The Shepherd: Site & Application Logic Guidance.
 - 2.3 Gemini RAG: Legacy Framework Context & Guidance.
 - 2.4 Notification System: Life-Event Triggering Logic.
 
@@ -271,6 +271,6 @@ Provider will build automation or manual guidance paths for the following specif
 
 ### 4. ASSUMPTIONS
 1. **Future Expansion Support:** Logic is focused on foundational legacy management, with future support planned for Maryland, Illinois, and Minnesota.
-2. **No Legal Advice:** The “Shepherd” provides procedural guidance, not legal advice.
+2. **No Legal Advice:** The “Shepherd” guides users through site and application logic and provides procedural guidance, not legal advice.
 3. **Third-Party Costs:** Client pays direct consumption costs for Stripe, Plaid, Lob, and Google Cloud.
 4. **Content:** Client is responsible for final validation of court form templates.

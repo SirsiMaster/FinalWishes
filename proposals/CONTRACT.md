@@ -274,3 +274,18 @@ Provider will build automation or manual guidance paths for the following specif
 2. **No Legal Advice:** The “Shepherd” guides users through site and application logic and provides procedural guidance, not legal advice.
 3. **Third-Party Costs:** Client pays direct consumption costs for Stripe, Plaid, Lob, and Google Cloud.
 4. **Content:** Client is responsible for final validation of court form templates.
+
+---
+
+## EXHIBIT B: COST & VALUATION ANALYSIS
+
+### 1. DISCOUNT & VALUATION REALIZATION
+The FinalWishes project leverages the **Sirsi Nexus V4 Framework** to achieve enterprise-grade results at a fraction of typical market costs. By utilizing pre-validated logic engines and infrastructure-as-code deployments, we realize significant savings.
+
+The total investment is calculated dynamically based on the specific modules and bundles selected by the Client. The calculation logic follows this methodology:
+
+1.  **Gross Development Value (Market Valuation):** Representing the true market cost if built by a traditional custom enterprise agency (Blended market rate: $250/hr).
+2.  **SirsiNexus Efficiency Discount (25%):** Predictable savings realized through the use of the pre-validated SirsiNexus architectural core.
+3.  **Strategic Partnership Discount:** A negotiated strategic service reduction to align risk/reward for the FinalWishes launch.
+
+**TOTAL PROJECT INVESTMENT:** Refer to the "Total Investment" figure in signed execution documents.

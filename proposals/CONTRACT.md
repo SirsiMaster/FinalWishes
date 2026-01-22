@@ -20,7 +20,7 @@ Client and Provider may be referred to individually as a "Party" and collectivel
 
 ## 1. RECITALS
 
-**WHEREAS**, Client desires to engage Provider to design, develop, and implement a **legacy management system** known as **FinalWishes** (the "Platform"), with sufficient foundational infrastructure to allow for future expansion into estate settlement capabilities starting with Maryland, Illinois, and Minnesota; and
+**WHEREAS**, Client desires to engage Provider to design, develop, and implement a **legacy management system** known as **FinalWishes** (the "Platform"), with sufficient foundational infrastructure to support future expansion into estate settlement capabilities in jurisdictions such as Maryland, Illinois, and Minnesota; and
 
 **WHEREAS**, Provider (Sirsi Technologies, Inc) possesses the requisite technical expertise, personnel, and infrastructure, including expertise in artificial intelligence, cloud architecture, and secure software development, to perform the Services; and
 
@@ -187,9 +187,9 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 
 **IN WITNESS WHEREOF**, the Parties have executed this Agreement by their duly authorized representatives as of the Effective Date.
 
-| **CLIENT: FinalWishes Inc.** | **PROVIDER: Sirsi Technologies, Inc.** |
+| **CLIENT: FinalWishes** | **PROVIDER: Sirsi Technologies, Inc.** |
 | :--- | :--- |
 | **Signature:** ___________________ | **Signature:** ___________________ |
 | **Name:** Tameeka Lockhart | **Name:** Cylton Collymore |
-| **Title:** CEO, FinalWishes Inc. | **Title:** CEO, Sirsi Technologies, Inc. |
-| **Date:** January 6, 2026 | **Date:** January 6, 2026 |
+| **Title:** Project CEO | **Title:** CEO, Sirsi Technologies, Inc. |
+| **Date:** ___________________ | **Date:** January 6, 2026 |

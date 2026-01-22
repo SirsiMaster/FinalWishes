@@ -249,11 +249,11 @@ Provider will build automation or manual guidance paths for the following specif
 - AES-256 Vault crypto service implementation
 - React 18 Component System & CI/CD Setup
 
-#### PHASE 2: CORE LOGIC & FOUNDATIONAL ENGINES (Weeks 5-10)
-- Plaid Link integration & Asset Module
-- "The Shepherd" Legacy Guidance Engine & Asset Framework
-- Gemini RAG pipeline for legal context
-- Go-based PDF form stamper service
+#### PHASE 2: LEGACY LOGIC & ASSET FRAMEWORK (Weeks 5-10)
+- 2.1 Asset Module: Plaid Integration & Legacy Inventory.
+- 2.2 Beneficiary Logic: Secure Access Delegation & Instruction Engine.
+- 2.3 Gemini RAG: Legacy Framework Context & Guidance.
+- 2.4 Notification System: Life-Event Triggering Logic.
 
 #### PHASE 3: MOBILE & DEEP INTEGRATIONS (Weeks 11-16)
 - React Native Expo development (iOS/Android)

@@ -11,7 +11,7 @@
 
 This **Master Services Agreement** (this "Agreement") is entered into by and between:
 
-**FinalWishes Inc.**, a Delaware Corporation with its principal place of business at [Address] ("Client"), represented by **Tameeka Lockhart**, CEO, and  
+**Tameeka Lockhart**, an individual with principal place of business at [Address] ("Client"), and  
 **Sirsi Technologies, Inc.**, a Delaware corporation (FEIN: 93-1696269), with its principal place of business at 909 Rose Avenue, Suite 400, North Bethesda MD 20852 ("Provider" or "Sirsi"), represented by **Cylton Collymore**, CEO.
 
 Client and Provider may be referred to individually as a "Party" and collectively as the "Parties."
@@ -20,7 +20,7 @@ Client and Provider may be referred to individually as a "Party" and collectivel
 
 ## 1. RECITALS
 
-**WHEREAS**, Client desires to engage Provider to design, develop, and implement a comprehensive estate settlement software platform known as **FinalWishes** (the "Platform"); and
+**WHEREAS**, Client desires to engage Provider to design, develop, and implement a **legacy management system** known as **FinalWishes** (the "Platform"), with sufficient foundational infrastructure to allow for future expansion into estate settlement capabilities starting with Maryland, Illinois, and Minnesota; and
 
 **WHEREAS**, Provider (Sirsi Technologies, Inc) possesses the requisite technical expertise, personnel, and infrastructure, including expertise in artificial intelligence, cloud architecture, and secure software development, to perform the Services; and
 
@@ -81,6 +81,12 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 **4.4 Late Payments.** Undisputed payments not received by the due date shall accrue interest at the lesser of one and one-half percent (1.5%) per month or the maximum rate permitted by law, calculated from the due date until paid in full.
 
 **4.5 Taxes.** Fees do not include any sales, use, value-added, or similar taxes. Client shall be responsible for paying all such taxes properly levied on the Services, excluding taxes based on Provider’s net income, property, or employees.
+
+**4.6 Sirsi Backend Services.** As part of Provider's Background Technology, the Platform shall integrate with third-party services including but not limited to **OpenSign** (e-signatures), **Plaid** (financial account linking), and **Stripe** (payment processing) through the **Sirsi Backend Service Architecture**. These integrations shall route through Provider's infrastructure to reduce cost complexity and time to market, unless otherwise indicated in writing or upon termination of any maintenance contract between the Parties.
+
+**4.7 Merchant Fees.** Provider does not pay merchant fees for making payment processing available to the Platform. All payment processing fees (including but not limited to Stripe transaction fees, chargeback fees, and related merchant service charges) shall be **passed through to Client**. Provider shall not pass through any other costs related to infrastructure maintenance and availability.
+
+**4.8 Future Migration.** If at some time in the future Client opts for its own full signatory and payments integrations independent of Provider's Payment Backend Service Architecture, Provider shall migrate a working implementation to Client for a **nominal fee not to exceed One Thousand Dollars ($1,000.00)**.
 
 ---
 

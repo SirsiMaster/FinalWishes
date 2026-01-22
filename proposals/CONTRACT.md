@@ -7,7 +7,7 @@
 > **MODIFICATION RESTRICTION:** Truncation or replacement of sections is strictly prohibited unless explicitly instructed by the Lead Architect.
 
 **AGREEMENT NUMBER:** MSA-2026-111-FW  
-**EFFECTIVE DATE:** January 6, 2026  
+**EFFECTIVE DATE:** January 22, 2026  
 
 This **Master Services Agreement** (this "Agreement") is entered into by and between:
 
@@ -192,22 +192,22 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 | **Signature:** ___________________ | **Signature:** ___________________ |
 | **Name:** Tameeka Lockhart | **Name:** Cylton Collymore |
 | **Title:** Project CEO | **Title:** CEO, Sirsi Technologies, Inc. |
-| **Date:** ___________________ | **Date:** January 6, 2026 |
+| **Date:** ___________________ | **Date:** January 22, 2026 |
 ---
 
 ## EXHIBIT A: STATEMENT OF WORK (SOW)
 
 **Project Name:** FinalWishes Platform Development  
-**SOW Reference:** SOW-2025-001  
+**SOW Reference:** SOW-2026-001  
 **Associated MSA:** MSA-2026-111-FW  
-**Date:** January 6, 2026  
+**Date:** January 22, 2026  
 
 ---
 
 ### 1. EXECUTIVE OVERVIEW
 This Statement of Work (“SOW”) defines the comprehensive scope for the **FinalWishes Legacy Management System**. This project aims to build foundational legacy management infrastructure with foundational support for future expansion into estate settlement capabilities in jurisdictions such as Maryland, Illinois, and Minnesota.
 
-**Objective:** deliver a “Vault-Grade” secure platform that guides users through the 18+ month probate process, automating form generation, asset discovery, and stakeholder communication.
+**Objective:** deliver a “Vault-Grade” secure platform that allows users to securely organize, document, and manage their legacy assets and final wishes, providing a permanent, cryptographically-secure repository for digital inheritance and beneficiary instructions.
 
 ---
 
@@ -251,7 +251,7 @@ Provider will build automation or manual guidance paths for the following specif
 
 #### PHASE 2: CORE LOGIC & FOUNDATIONAL ENGINES (Weeks 5-10)
 - Plaid Link integration & Asset Module
-- "The Shepherd" Engine & Future State Framework mapping
+- "The Shepherd" Legacy Guidance Engine & Asset Framework
 - Gemini RAG pipeline for legal context
 - Go-based PDF form stamper service
 

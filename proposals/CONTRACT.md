@@ -44,7 +44,7 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 
 **2.4 "Deliverables"** means all documents, work product, code, software, reports, and other materials that are specifically created for and delivered to Client by Provider pursuant to a Statement of Work.
 
-**2.5 "Foreground IP"** means the Intellectual Property Rights in the specific business logic, probate-specific scripts, and configurations developed strictly and exclusively for FinalWishes, excluding any Background Technology.
+**2.5 "Foreground IP"** means the Intellectual Property Rights in the specific business logic, legacy-management scripts, and configurations developed strictly and exclusively for FinalWishes, excluding any Background Technology.
 
 **2.6 "Intellectual Property Rights"** means all patent rights, copyright rights, mask work rights, moral rights, rights of publicity, trademark, trade dress and service mark rights, goodwill, trade secret rights and other intellectual property rights as may now exist or hereafter come into existence, and all applications therefore and registrations, renewals and extensions thereof, under the laws of any state, country, territory or other jurisdiction.
 
@@ -92,9 +92,9 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 
 ## 5. INTELLECTUAL PROPERTY RIGHTS
 
-**5.1 Work Made for Hire (Foreground IP).** Provider agrees that the **Foreground IP** (specific probate scripts, brand assets, and business logic created exclusively for Client) shall be considered "works made for hire" and owned 100% by Client upon payment of all fees. To the extent that any Deliverable does not qualify as a work made for hire under applicable law, Provider hereby irrevocably helps, transfers, commercializes and assigns to Client all right, title, and interest in and to such Deliverable, including all Intellectual Property Rights therein, free and clear of all liens and encumbrances.
+**5.1 Work Made for Hire (Foreground IP).** Provider agrees that the **Foreground IP** (specific legacy scripts, brand assets, and business logic created exclusively for Client) shall be considered "works made for hire" and owned 100% by Client upon payment of all fees. To the extent that any Deliverable does not qualify as a work made for hire under applicable law, Provider hereby irrevocably helps, transfers, commercializes and assigns to Client all right, title, and interest in and to such Deliverable, including all Intellectual Property Rights therein, free and clear of all liens and encumbrances.
 
-**5.2 Background Technology (Sirsi Nexus V4 Retention).** Notwithstanding Section 5.1, Provider retains all right, title, and interest in and to its **Background Technology** (the Sirsi Nexus V4 Framework). Provider hereby grants to Client a **perpetual, irrevocable, worldwide, royalty-free, and exclusive vertical license** to use, reproduce, and exploit the Background Technology *within the field of Estate Settlement and Probate Automation* for the purpose of operating the Platform.
+**5.2 Background Technology (Sirsi Nexus V4 Retention).** Notwithstanding Section 5.1, Provider retains all right, title, and interest in and to its **Background Technology** (the Sirsi Nexus V4 Framework). Provider hereby grants to Client a **perpetual, irrevocable, worldwide, royalty-free, and exclusive vertical license** to use, reproduce, and exploit the Background Technology *within the field of Legacy Management and Digital Inheritance Automation* for the purpose of operating the Platform.
 
 **5.3 Third-Party and Open Source Software.** The Deliverables may contain third-party software or open source software. Provider warrants that its use of such software will comply with the applicable licenses (e.g., AGPL-3.0, MIT, Apache 2.0). Provider shall identify any "Copyleft" libraries (that would mandate disclosure of Client’s source code) prior to integration and obtain Client’s approval.
 
@@ -165,7 +165,7 @@ For purposes of this Agreement, the following terms shall have the meanings set 
 
 **11.1 Independent Contractor.** Provider is an independent contractor. Nothing in this Agreement shall be construed to create a partnership, joint venture, agency, or employment relationship between the Parties.
 
-**11.2 Market Vertical Non-Competition.** Provider agrees that during the term of this Agreement and for a period of **three (3) years** thereafter, Provider shall not directly develop, market, or provide services for a competing **Estate Settlement, Probate Automation, or Legacy Planning** platform. This does not restrict Provider from using its foundational tech in unrelated market verticals.
+**11.2 Market Vertical Non-Competition.** Provider agrees that during the term of this Agreement and for a period of **three (3) years** thereafter, Provider shall not directly develop, market, or provide services for a competing **Legacy Management or Digital Inheritance** platform. This does not restrict Provider from using its foundational tech in unrelated market verticals.
 
 **11.3 Force Majeure.** Neither Party shall be liable for any delay or failure to perform (excluding payment obligations) due to causes beyond its reasonable control, including acts of God, war, terrorism, riot, embargoes, acts of civil or military authorities, fire, floods, or accidents.
 

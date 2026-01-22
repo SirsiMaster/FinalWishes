@@ -9,7 +9,7 @@
 
 ## 1. Executive Overview
 
-This Statement of Work ("SOW") defines the comprehensive scope for the **FinalWishes Estate Operating System**. This project is built as a tenant of the **Sirsi Infrastructure Layer**, leveraging standardized modules for contracting, signing, and payment.
+This Statement of Work ("SOW") defines the comprehensive scope for the **FinalWishes Legacy Management System**. This project is built as a tenant of the **Sirsi Infrastructure Layer**, leveraging standardized modules for contracting, signing, and payment.
 
 ---
 

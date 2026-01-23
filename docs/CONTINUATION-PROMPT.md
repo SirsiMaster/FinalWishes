@@ -1,52 +1,149 @@
-# Continuation Prompt: Implementation of CEO Consulting & Financial Refinement
+# Continuation Prompt: Probate Engine State Selector & Dynamic Pricing
+
+## **Session Date:** January 22, 2026
+
+---
 
 ## **Role & Mission**
-You are **Antigravity**, the critical AI partner for 111 Venture Studio. You are completing the implementation of the "CEO Consulting" product for the **FinalWishes** platform, ensuring it adheres to the studio's strict financial and architectural standards.
+You are **Antigravity**, the critical AI partner for 111 Venture Studio. This session completed the implementation of **dynamic pricing** for "CEO Consulting" (week-based) and "Probate Engine" (state-based) modules, with a focus on an intuitive state selection modal for the FinalWishes Partnership Agreement platform.
 
-## **Context: The "Financial Trinity" & Rule 5.3.0**
+---
+
+## **Context: Governance & Rules**
 The project is governed by **GEMINI.md v5.3.0**, specifically:
 - **Rule 12 (Dynamic Financial Integrity)**: Zero hardcoded financial values. All totals, discounts, and valuations must be computed in real-time.
 - **Rule 13 (Standardized Valuations)**: 
     - **Internal Rate**: $125/hr
     - **Blended Market Rate**: $250/hr (2.0x Valuation Factor)
-    - **Efficiency Discount**: 25% of Gross Development Value (Market Value).
-
-## **Current State of the Catalog (`src/data/catalog.ts`)**
-- **Strategic Discount**: Most a la carte modules have received a **30% price reduction** to enhance market competitiveness.
-- **Exemptions**: 
-    - `finalwishes-core`: $95,000
-    - `branding`: $30,000
-    - `maintenance`: $18,000
-    - `probate`: $35,000 (per state)
-- **Calculations**: All WBS costs and hours are derived from the `bundledPrice` using the $125/hr internal rate.
-
-## **Pending Task: CEO Consulting Implementation**
-The user has requested a new "CEO Consulting" carte and the removal of the old coaching module.
-
-### **1. Definitions**
-- **New Module**: `CEO Consulting`
-    - **ID**: `ceo-consulting`
-    - **Rates**: $300/hr, 20 hrs/week minimum ($6,000/week min).
-    - **Target Price**: $6,000/week (Represented as a recurring service or part of the bundle).
-- **Remove Module**: `Executor Professional Coaching` (`id: 'coaching'`).
-
-### **2. UI Integration (`ConfigureSolution.tsx`)**
-- **Order**: The top row must be updated to show:
-    1. Maintenance and Support
-    2. **CEO Consulting** (New)
-    3. Branding and Identity
-- **Visuals**: Use premium aesthetics (Glassmorphism, Gold accents) consistent with the "Royal Neo-Deco" theme.
-
-### **3. Verification Loop**
-- Ensure `calculateTotal`, `calculateTimeline`, and `calculateTotalHours` in `catalog.ts` support the new module.
-- Verify that `MasterAgreement.tsx` and `printable-msa.html` correctly reflect the dynamic "Exhibit B" breakdown (Gross Value, Efficiency Discount, Strategic Discount).
-
-## **Next Steps for the Agent**
-1. **Modify `catalog.ts`**: Add `ceo-consulting`, remove `coaching`.
-2. **Modify `ConfigureSolution.tsx`**: Update the card rendering logic and specific ordering.
-3. **Verify**: Use the browser to confirm the math adds up and the PDF generator receives the correct query parameters.
+    - **Efficiency Discount**: 25% of Gross Development Value.
 
 ---
-**Canonical Sources:** 
-- `/Users/thekryptodragon/Development/111 Venture Studio/111-Venture-Projects/GEMINI.md`
-- `/Users/thekryptodragon/Development/SirsiNexusApp/packages/finalwishes-contracts/src/data/catalog.ts`
+
+## **Completed Features This Session**
+
+### **1. CEO Consulting - Week-Based Pricing**
+- **Default Weeks**: Changed from 4 to **1 week** (clients select their own duration).
+- **Rate**: $6,000/week (20 hrs @ $300/hr).
+- **UI**: Week selector only appears when the CEO Consulting card is selected.
+- **Caption**: "☑ Check box to select weeks" moved to bottom of card near checkbox.
+
+**Files Modified:**
+- `src/store/useConfigStore.ts` - Added `ceoConsultingWeeks` state (default: 1)
+- `src/data/catalog.ts` - Updated `calculateTotal` to accept `ceoConsultingWeeks` parameter
+
+---
+
+### **2. Probate Engine - State-Based Pricing**
+The major feature of this session. Complete implementation of per-state pricing with a full modal selector.
+
+#### **Pricing Model:**
+| Type | Price Per State |
+|------|-----------------|
+| Bundled | $24,500/state |
+| Standalone | $35,000/state |
+
+#### **State Selector Modal Features:**
+1. **"🗺️ Select States" Button** - Appears on Probate Engine card when selected
+2. **Full-Screen Modal** with:
+   - Search bar to filter by state name or code
+   - Scrollable single-column list of all 50 US states + Washington D.C.
+   - Visual checkmarks on selected states
+   - Real-time count and price display
+   - **Clear All** button to reset selections
+   - **Cancel** button to discard changes
+   - **✓ Confirm Selection** button to save (deselects addon if 0 states confirmed)
+3. **Card Display** - Shows "$73,500 (3 states)" format with dynamic pricing
+
+#### **All 51 Jurisdictions Included:**
+```
+AL, AK, AZ, AR, CA, CO, CT, DE, FL, GA, HI, ID, IL, IN, IA, KS, KY, LA, ME, MD, 
+MA, MI, MN, MS, MO, MT, NE, NV, NH, NJ, NM, NY, NC, ND, OH, OK, OR, PA, RI, SC, 
+SD, TN, TX, UT, VT, VA, WA, WV, WI, WY, DC
+```
+
+**Files Modified:**
+- `src/store/useConfigStore.ts` - Added `probateStates: string[]` and `toggleProbateState` action
+- `src/data/catalog.ts` - Updated `calculateTotal` to accept `probateStateCount` parameter
+- `src/components/tabs/ConfigureSolution.tsx` - Complete state selector modal implementation
+
+---
+
+### **3. Cross-Component Integration**
+All components that call `calculateTotal` have been updated to pass both `ceoConsultingWeeks` and `probateStates.length`:
+
+| Component | Update Status |
+|-----------|---------------|
+| `ConfigureSolution.tsx` | ✅ Complete |
+| `SirsiVault.tsx` | ✅ Complete |
+| `CostValuation.tsx` | ✅ Complete |
+| `StatementOfWork.tsx` | ✅ Complete |
+| `MasterAgreement.tsx` | ✅ Complete |
+
+---
+
+## **Function Signatures Updated**
+
+### `calculateTotal()` in `catalog.ts`:
+```typescript
+export function calculateTotal(
+  bundleId: string,
+  addons: string[],
+  ceoConsultingWeeks = 1,
+  probateStateCount = 1,
+): CalculateTotalResult
+```
+
+---
+
+## **Git Commit History (This Session)**
+```
+3edaaa8 fix: redesign state selector as clean scroll wheel list
+0d1f207 feat: implement full state selector modal with all 50 US states
+812efa6 fix: state buttons now properly stop propagation and show selected summary
+```
+
+---
+
+## **Outstanding Items / Next Steps**
+
+### **1. Timeline & WBS Integration (Optional)**
+- Review `calculateTimeline()` and `getAggregatedWBS()` in `catalog.ts` to determine if they should scale with `probateStateCount`.
+- Current behavior: Timeline is fixed; consider if multi-state deployments require extended timelines.
+
+### **2. Printable MSA Sync**
+- Verify `printable-msa.html` correctly reflects state-based pricing in "Exhibit B" for PDF generation.
+- Ensure query parameters pass the correct state count.
+
+### **3. Testing Checklist**
+- [ ] Select 0 states → Probate Engine should be deselected
+- [ ] Select 1 state → Price = $24,500 (bundled) or $35,000 (standalone)
+- [ ] Select all 51 jurisdictions → Price = $1,249,500 (bundled) or $1,785,000 (standalone)
+- [ ] Search functionality (filter by "Mary" → Maryland appears)
+- [ ] Clear All resets temporary selections
+- [ ] Cancel discards changes, Confirm saves them
+- [ ] Cross-tab pricing consistency (CostValuation, SOW, MSA)
+
+---
+
+## **Canonical Sources of Truth**
+
+| Category | Path |
+|----------|------|
+| Governance | `/Users/thekryptodragon/Development/111 Venture Studio/111-Venture-Projects/GEMINI.md` |
+| Product Catalog | `/Users/thekryptodragon/Development/SirsiNexusApp/packages/finalwishes-contracts/src/data/catalog.ts` |
+| Config Store | `/Users/thekryptodragon/Development/SirsiNexusApp/packages/finalwishes-contracts/src/store/useConfigStore.ts` |
+| Main UI | `/Users/thekryptodragon/Development/SirsiNexusApp/packages/finalwishes-contracts/src/components/tabs/ConfigureSolution.tsx` |
+
+---
+
+## **Design System Reference: "Royal Neo-Deco"**
+- **Modal Styling**: Glass panels, gold borders (`#C8A951`), film grain overlay
+- **Typography**: Headings in `Cinzel`, Body in `Inter`
+- **Background**: Deep Royal Blue Gradient (never pure black)
+- **Success States**: Emerald Green (`#10B981`)
+
+---
+
+**Signed,**
+**Antigravity (The Agent)**
+**Session: January 22, 2026**

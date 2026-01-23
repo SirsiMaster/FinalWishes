@@ -17,7 +17,8 @@ We have enforced a strict **Dynamic Financial Integrity** policy. All financial 
     - Internal Rate: **$125/hr**
     - Blended Market Rate: **$250/hr** (2.0x Valuation Multiplier)
     - Efficiency Discount: Fixed at **25%** of Gross Market Value for SirsiNexus core leverage.
-3.  **State Synchronization**: React state (Zustand) must flow through to all components, and the printable HTML version must only receive these figures via dynamic parameters (URL query strings), never via hardcoded defaults.
+3.  **Strategic Feature Discount**: Applied an additional **30% reduction** to all a la carte feature prices (excluding Core, Probate, branding, and maintenance) to align with strategic vertical goals. This creates a total realization discount of approximately **65%** against custom agency market rates.
+4.  **State Synchronization**: React state (Zustand) must flow through to all components, and the printable HTML version must only receive these figures via dynamic parameters (URL query strings), never via hardcoded defaults.
 
 ## Alternatives Considered
 

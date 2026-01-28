@@ -282,7 +282,7 @@ Provider will build automation or manual guidance paths for the following specif
 ### 1. DISCOUNT & VALUATION REALIZATION
 The FinalWishes project leverages the **Sirsi Nexus V4 Framework** to achieve enterprise-grade results at a fraction of typical market costs. By utilizing pre-validated logic engines and infrastructure-as-code deployments, we realize significant savings.
 
-The total investment is calculated dynamically based on the specific modules and bundles selected by the Client. The calculation logic follows this methodology:
+The total investment is calculated dynamically based on the specific modules and bundles selected by the Client, as defined in the **Sirsi Product Catalog** (`catalog.ts`). This catalog serves as the absolute source of truth for all product parameters, bundled pricing, and Work Breakdown Structure (WBS) allocations. The calculation logic follows this methodology:
 
 1.  **Gross Development Value (Market Valuation):** Representing the true market cost if built by a traditional custom enterprise agency (Blended market rate: $250/hr).
 2.  **SirsiNexus Efficiency Discount (25%):** Predictable savings realized through the use of the pre-validated SirsiNexus architectural core.

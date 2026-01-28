@@ -38,7 +38,7 @@ Why build with Sirsi Technologies vs. alternatives?
 
 ## 3. Atomic Development Cost Breakdown
 
-We estimate **1,150 engineering & design hours** to deliver the MVP. At a blended boutique rate of ~$152/hr, this aligns with the $175k budget.
+We utilize the **Sirsi Product Catalog** (`catalog.ts`) as the single source of truth for all valuations, hourly allocations, and Work Breakdown Structure (WBS) phases.
 
 ### Phase 0: Design & Identity (Weeks 1-4)
 **Goal:** World-class "Light Royal Neo-Deco" visual identity for App & Web.

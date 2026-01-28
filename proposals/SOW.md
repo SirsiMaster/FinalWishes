@@ -18,7 +18,7 @@ This Statement of Work ("SOW") defines the comprehensive scope for the **FinalWi
 ### 2.1 Sirsi Infrastructure Integration (Lifecycle Engine)
 Provider shall onboard FinalWishes into the **Sirsi Multi-Tenant Lifecycle Infrastructure**. 
 *   **Offerings Engine:** Utilization of the project-agnostic offerings portal.
-*   **Contract Portal:** Dynamic MSA/SOW generation driven by the Sirsi Engineering Catalog.
+*   **Contract Portal:** Dynamic MSA/SOW generation driven by the **Sirsi Product Catalog** (`catalog.ts`), which defines the technical scope, timeline, and Work Breakdown Structure (WBS) for each module.
 *   **Signature Layer:** Integration with self-hosted Sirsi OpenSign.
 *   **Payment Layer:** Standardized Stripe routing for recursive and milestone payments.
 

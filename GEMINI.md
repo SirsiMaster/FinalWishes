@@ -25,11 +25,11 @@ You are not a passive code generator. You are a **Critical Partner**.
 *   **Repository Hierarchy (Rule 11)**: 
     - **Sirsi Nexus App (The Monorepo)**: The single, unified repository for the core engine, gRPC services, AI agents, and all shared UI components (`packages/sirsi-ui`) and services (`packages/sirsi-opensign`).
     - **111-Venture-Projects**: The studio governance repository, managing tenant-specific configs and portfolio-wide documentation.
-*   **Dynamic Financial Integrity (Rule 12)**: Hardcoded financial values in legal documents or UI are strictly prohibited. All pricing, discounts, and valuations MUST be computed dynamically in real-time based on the user's active configuration (e.g., `calculateTotal`). Parity must be maintained across all formats (React, HTML, Markdown).
+*   **Dynamic Financial Integrity (Rule 12)**: Hardcoded financial values in legal documents or UI are strictly prohibited. All pricing, discounts, and valuations MUST be computed dynamically in real-time based on the user's active configuration provided by the `catalog.ts` source of truth. Parity must be maintained across all formats (React, HTML, Markdown).
 *   **Standardized Valuations (Rule 13)**: The "Sirsi Multiplier" for market valuation realization must remain consistent across the platform: **Internal Rate: $125/hr**, **Blended Market Rate: $250/hr** (2.0x Valuation Factor). All "Discount Realization" breakdowns must strictly follow this math.
 
 ## 2.1 Canonical Sources of Truth (Benchmark of Progress)
-The following 28 files serve as the immutable benchmark for all project directives and progress. All code and decisions MUST align with them.
+The following 29 files serve as the immutable benchmark for all project directives and progress. All code and decisions MUST align with them.
 
 ### 🏛 The Financial Trinity (3)
 1.  `proposals/CONTRACT.md`
@@ -70,10 +70,11 @@ The following 28 files serve as the immutable benchmark for all project directiv
 24. `docs/ADR-002-IMPLEMENTATION-PLAN.md`
 25. `docs/POST_IMPLEMENTATION_REVIEW.md`
 
-### 📚 Indices (3)
+### 📚 Indices (4)
 26. `docs/ADR-INDEX.md`
 27. `docs/DOCUMENTATION_INDEX.md`
 28. `docs/ADR-TEMPLATE.md`
+29. `packages/finalwishes-contracts/src/data/catalog.ts` (The Product & Pricing Core)
 
 ## 3. The Single Source of Truth (Stack V4)
 Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the **Absolute Truth**:

@@ -2,8 +2,8 @@
 ## Implementation Plan: Sirsi OpenSign, Gemini 3.0 & Launch Scope
 
 **Document Version:** 3.0.0
-**Date:** December 11, 2025
-**Status:** ACCEPTED
+**Date:** January 28, 2026
+**Status:** ACCEPTED / IN-PROGRESS (Phase 8.1 Active)
 **Decision Makers:** Project Leadership, AI Stack Leader (Gemini)
 
 ---
@@ -715,7 +715,7 @@ This ensures that even a database breach doesn't expose all estates' data with a
 
 **NOT achievable in 5 months:**
 - Full 50-state coverage
-- Direct court e-filing
+- Direct court e-filing (Wait: Phase 8.1 Admin Portal now provides the manual control plane for these)
 - Financial institution integrations beyond Plaid read
 - Credit bureau integration
 - Tax software integration

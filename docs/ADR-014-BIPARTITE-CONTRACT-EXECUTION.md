@@ -3,7 +3,10 @@
 **Status:** Accepted  
 **Date:** 2026-02-07  
 **Decision Makers:** Cylton Collymore (CTO), Antigravity (Agent)  
-**Supersedes:** Partial content in `SIGNING_PAYMENT_FLOW.md` v1.0.0
+**Supersedes:** Partial content in `SIGNING_PAYMENT_FLOW.md` v1.0.0  
+
+> **📍 Canonical Source:** `SirsiNexusApp/docs/ADR-014-BIPARTITE-CONTRACT-EXECUTION.md`  
+> This copy in `111-Venture-Projects` is a governance mirror. The implementation-authoritative version lives in the monorepo alongside the code it documents (per Rule 11: Repository Hierarchy).
 
 ## Context
 

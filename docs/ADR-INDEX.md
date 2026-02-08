@@ -26,6 +26,7 @@ Each ADR follows this structure:
 | [ADR-010](ADR-010-OFFERINGS-ENGINE-INTEGRATION.md) | Universal Offerings Engine Integration | Accepted | 2026-01-18 | — |
 | [ADR-011](ADR-011-INFRASTRUCTURE-LICENSE-MODEL.md) | Infrastructure License & Services Model | Accepted | 2026-01-21 | — |
 | [ADR-012](ADR-012-DYNAMIC-FINANCIAL-CALCULATION.md) | Dynamic Financial Calculation & Multipliers | Accepted | 2026-01-22 | — |
+| [ADR-014](ADR-014-BIPARTITE-CONTRACT-EXECUTION.md) | Bipartite Contract Execution Protocol | Accepted | 2026-02-07 | — |
 
 ## Categories
 
@@ -48,6 +49,12 @@ Each ADR follows this structure:
 - ADR-002 §4: Document Generation (DocuSign, Lob, OCR)
 - ADR-002 §5: State-Specific Requirements (MD, DC, VA, IL, MN)
 
+### Contract Execution
+- ADR-014: Bipartite Dual-Signature Ceremony
+- ADR-014: Role-Aware Provider/Client Workflows
+- ADR-014: Cryptographic Evidence Chain (SHA-256)
+- ADR-014: Contract Status Lifecycle (DRAFT → FULLY_EXECUTED)
+
 ### Scope & Feasibility
 - ADR-002 §7: Scope Assessment ($95K/5mo achievable with boundaries)
 - ADR-002 §8: MVP Decision (guidance platform, NOT integration platform)
@@ -62,4 +69,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-01-28*
+*Last updated: 2026-02-07*

@@ -1,5 +1,5 @@
 # FinalWishes Documentation Index
-**Last Updated:** December 5, 2025
+**Last Updated:** February 9, 2026
 
 This document clarifies the purpose and authority of each document in the FinalWishes project to avoid duplication and inconsistency.
 
@@ -42,6 +42,7 @@ These files are the absolute authority. All project progress is measured against
 | **28** | `docs/ADR-TEMPLATE.md` | **Template.** Standard format for new decisions. |
 | **29** | `docs/SIRSI_RECIPE_LEGAL_FINANCIAL_FLOW.md` | **Component Recipe.** Reusable Three-Step Legal/Financial Flow. |
 | **30** | `../../../../sirsi-opensign/docs/ADR-003-HMAC-SECURITY-LAYER.md` | **Security Component.** Reusable HMAC-based vault security. |
+| **31** | `docs/ADR-015-OPENSIGN-CONVERGENCE.md` | **Integration Architecture.** OpenSign Dual-Client Convergence. |
 
 ---
 

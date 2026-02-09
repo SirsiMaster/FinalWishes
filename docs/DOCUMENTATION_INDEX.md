@@ -7,7 +7,7 @@ This document clarifies the purpose and authority of each document in the FinalW
 
 ## Document Hierarchy
 
-### Tier 1: Canonical Sources of Truth (The 28 Benchmark Files)
+### Tier 1: Canonical Sources of Truth (The 35 Benchmark Files)
 These files are the absolute authority. All project progress is measured against them.
 
 | ID | Document | Purpose & Authority |
@@ -41,8 +41,12 @@ These files are the absolute authority. All project progress is measured against
 | **27** | `docs/DOCUMENTATION_INDEX.md` | **Index.** This file. Master map of documentation. |
 | **28** | `docs/ADR-TEMPLATE.md` | **Template.** Standard format for new decisions. |
 | **29** | `docs/SIRSI_RECIPE_LEGAL_FINANCIAL_FLOW.md` | **Component Recipe.** Reusable Three-Step Legal/Financial Flow. |
-| **30** | `../../../../sirsi-opensign/docs/ADR-003-HMAC-SECURITY-LAYER.md` | **Security Component.** Reusable HMAC-based vault security. |
-| **31** | `docs/ADR-015-OPENSIGN-CONVERGENCE.md` | **Integration Architecture.** OpenSign Dual-Client Convergence. |
+| **30** | `docs/ADR-003-OPENSIGN-INTEGRATION.md` | **Security Component.** HMAC-based vault security. |
+| **31** | `docs/ADR-004-CONTRACTS-GRPC-SERVICE.md` | **Backend Service.** gRPC contract CRUD on Cloud Run. |
+| **32** | `docs/ADR-005-PRINTABLE-MSA-VIEWER.md` | **Legal Artifact.** Self-contained MSA/SOW print viewer. |
+| **33** | `docs/ADR-006-TANSTACK-MIGRATION.md` | **Stack Evolution.** Next.js → Vite + TanStack. |
+| **34** | `docs/ADR-007-REPOSITORY-UNIFICATION.md` | **Repo Strategy.** Monorepo unification. |
+| **35** | `docs/ADR-013-SIRSI-SIGN-HIERARCHY.md` | **Platform Architecture.** Multi-tenant vault hierarchy. |
 
 ---
 

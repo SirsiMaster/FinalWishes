@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADR) Index
 
-This document indexes all Architecture Decision Records for the FinalWishes platform.
+This document indexes all Architecture Decision Records for the Sirsi Nexus platform.
 
 ## What is an ADR?
 
@@ -22,10 +22,17 @@ Each ADR follows this structure:
 |-------|-------|--------|------|------------|
 | [ADR-001](ADR-001-ARCHITECTURE-DECISIONS.md) | Platform Architecture Decisions | Accepted | 2025-12-05 | — |
 | [ADR-002](ADR-002-IMPLEMENTATION-PLAN.md) | Implementation Plan: OpenSign, Gemini & Scope | Accepted | 2025-12-11 | — |
-| [ADR-003](../../../../sirsi-opensign/docs/ADR-003-HMAC-SECURITY-LAYER.md) | HMAC-Based Security Layer (See Sirsi Repository) | Accepted | 2025-12-31 | — |
+| [ADR-003](ADR-003-OPENSIGN-INTEGRATION.md) | HMAC-Based Security Layer | Accepted | 2025-12-31 | — |
+| [ADR-004](ADR-004-CONTRACTS-GRPC-SERVICE.md) | Contracts gRPC Service (Cloud Run) | Accepted | 2025-12-31 | — |
+| [ADR-005](ADR-005-PRINTABLE-MSA-VIEWER.md) | Printable MSA Viewer Component | Accepted | 2026-01-21 | — |
+| [ADR-006](ADR-006-TANSTACK-MIGRATION.md) | TanStack Migration — Replacing Next.js | Accepted | 2026-01-20 | — |
+| [ADR-007](ADR-007-REPOSITORY-UNIFICATION.md) | Sirsi Repository Unification (Monorepo) | Accepted | 2026-01-20 | — |
+| [ADR-008](ADR-008-INFRASTRUCTURE-CONTROL-PLANE.md) | Infrastructure Control Plane (The Nexus Bridge) | Proposed | 2026-01-17 | — |
+| [ADR-009](ADR-009-GRPC-ARCHITECTURE.md) | Transition to gRPC and Protocol Buffers | Proposed | 2026-01-17 | — |
 | [ADR-010](ADR-010-OFFERINGS-ENGINE-INTEGRATION.md) | Universal Offerings Engine Integration | Accepted | 2026-01-18 | — |
 | [ADR-011](ADR-011-INFRASTRUCTURE-LICENSE-MODEL.md) | Infrastructure License & Services Model | Accepted | 2026-01-21 | — |
 | [ADR-012](ADR-012-DYNAMIC-FINANCIAL-CALCULATION.md) | Dynamic Financial Calculation & Multipliers | Accepted | 2026-01-22 | — |
+| [ADR-013](ADR-013-SIRSI-SIGN-HIERARCHY.md) | Sirsi Sign Unified Vault & Multi-Tenant Architecture | Accepted | 2026-02-02 | — |
 | [ADR-014](ADR-014-BIPARTITE-CONTRACT-EXECUTION.md) | Bipartite Contract Execution Protocol | Accepted | 2026-02-07 | — |
 | [ADR-015](ADR-015-OPENSIGN-CONVERGENCE.md) | OpenSign Convergence — Dual-Client Architecture | Accepted | 2026-02-07 | — |
 
@@ -36,13 +43,19 @@ Each ADR follows this structure:
 - ADR-001 §2: Cloud KMS Software Keys (not HSM)
 - ADR-001 §6: Defense-in-Depth Security Architecture
 - ADR-002 §6: Data Architecture & Estate Sequestration
+- ADR-003: HMAC-Based Vault Security Layer
 
 ### Infrastructure
 - ADR-001 §3: Google Cloud Platform (vs AWS/Azure)
+- ADR-007: Monorepo Unification (all sirsi-XXX → SirsiNexusApp)
+- ADR-008: Infrastructure Control Plane (Nexus Bridge)
+- ADR-010: Universal Offerings Engine Integration
 
 ### Technology Stack
 - ADR-001 §4: Go Backend (vs Rust)
 - ADR-001 §5: React + React Native Frontend
+- ADR-006: TanStack Migration — Next.js → Vite + TanStack
+- ADR-009: gRPC + Protocol Buffers Architecture
 
 ### External Integrations
 - ADR-002 §1-2: Document Types & Government Agencies (NO useful APIs)
@@ -52,10 +65,15 @@ Each ADR follows this structure:
 - ADR-015: OpenSign Dual-Client Architecture (gRPC + REST SDK)
 
 ### Contract Execution
+- ADR-004: Contracts gRPC Service (Cloud Run)
+- ADR-005: Printable MSA Viewer (Deep URL Sync)
+- ADR-011: Infrastructure License & Services Model
+- ADR-012: Dynamic Financial Calculation & Multipliers
 - ADR-014: Bipartite Dual-Signature Ceremony
-- ADR-014: Role-Aware Provider/Client Workflows
 - ADR-014: Cryptographic Evidence Chain (SHA-256)
-- ADR-014: Contract Status Lifecycle (DRAFT → FULLY_EXECUTED)
+
+### Platform Architecture
+- ADR-013: Sirsi Sign Unified Vault & Multi-Tenant Hierarchy
 
 ### Scope & Feasibility
 - ADR-002 §7: Scope Assessment ($95K/5mo achievable with boundaries)

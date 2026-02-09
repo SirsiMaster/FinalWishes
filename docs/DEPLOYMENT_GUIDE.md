@@ -1,291 +1,208 @@
 # Deployment Guide
-## Legacy - The Estate Operating System
-**Version:** 1.0.0
-**Date:** November 26, 2025
+## Sirsi Sign — The Professional Document Vault
+**Version:** 2.0.0 | **Date:** February 9, 2026
 
 ---
 
 ## 1. Overview
 
-This guide covers the deployment procedures for the Legacy platform infrastructure, applications, and services.
+This guide documents the **verified deployment procedures** for the Sirsi Sign platform. All infrastructure runs on Google Cloud, with Firebase Hosting as the CDN edge and Cloud Run as the backend compute layer.
+
+**Live Domain:** `https://sign.sirsi.ai`
+**Firebase Project:** `sirsi-nexus-live`
+**Backend Service:** `contracts-grpc` on Cloud Run (`us-east4`)
 
 ---
 
-## 2. Infrastructure Setup (Terraform)
+## 2. Repository Architecture
 
-### 2.1 Prerequisites
-- AWS CLI configured with appropriate credentials
-- Terraform v1.5+
-- Access to AWS account
+| Repository | Purpose | Branch |
+|:---|:---|:---|
+| `SirsiNexusApp` (Monorepo) | Core engine, gRPC services, UI packages | `main` |
+| `111-Venture-Projects` | Studio governance, tenant configs, canonical docs | `main` |
 
-### 2.2 Initial Setup
+### Key Packages (within SirsiNexusApp)
+
+| Package | Role |
+|:---|:---|
+| `packages/finalwishes-contracts` | React 18 + Vite contract workflow application |
+| `packages/sirsi-opensign` | Firebase Hosting + Cloud Functions deployment target |
+| `packages/sirsi-ui` | Shared component library (Sirsi First — Rule 1) |
+
+---
+
+## 3. Frontend Deployment Pipeline
+
+### 3.1 Build → Sync → Deploy (Manual)
+
+The verified deployment sequence for the contract workflow UI:
+
 ```bash
-# Clone infrastructure repository
-git clone git@github.com:legacy/infrastructure.git
-cd infrastructure
+# Step 1: Build the React application
+cd packages/finalwishes-contracts
+npx vite build
 
-# Initialize Terraform
-terraform init
+# Step 2: Sync build artifacts to hosting target
+rsync -av --delete dist/ ../sirsi-opensign/public/
 
-# Create workspace for environment
-terraform workspace new staging
-terraform workspace new production
-
-# Deploy staging
-terraform workspace select staging
-terraform plan -var-file=environments/staging.tfvars
-terraform apply -var-file=environments/staging.tfvars
-
-# Deploy production
-terraform workspace select production
-terraform plan -var-file=environments/production.tfvars
-terraform apply -var-file=environments/production.tfvars
+# Step 3: Deploy to Firebase Hosting
+cd ../sirsi-opensign
+npx firebase deploy --only hosting
 ```
 
-### 2.3 Key Resources Created
-- VPC with public/private/data subnets
-- ECS cluster (Fargate)
-- RDS PostgreSQL instance
-- ElastiCache Redis cluster
-- S3 buckets (documents, logs)
-- CloudFront distribution
-- ALB with SSL termination
-- KMS keys
-- Security groups
+**Result:** `sirsi-sign.web.app` (served via `sign.sirsi.ai`)
+
+### 3.2 Critical Asset Sync Points
+
+Static assets must be synchronized across these paths to prevent "technical drift":
+
+| Source | Target |
+|:---|:---|
+| `finalwishes-contracts/public/assets/js/security-init.js` | `sirsi-opensign/public/assets/js/security-init.js` |
+| `finalwishes-contracts/public/finalwishes/contracts/printable-msa.html` | `sirsi-opensign/public/finalwishes/contracts/printable-msa.html` |
+
+The `rsync --delete` in Step 2 handles this automatically when syncing from the Vite `dist/` output.
+
+### 3.3 Domain Mapping
+
+| Domain | Target | Method |
+|:---|:---|:---|
+| `sign.sirsi.ai` | `sirsi-sign.web.app` | Firebase Hosting custom domain (DNS A/TXT verified) |
 
 ---
 
-## 3. CI/CD Pipeline (GitHub Actions)
+## 4. Backend Deployment (Cloud Run)
 
-### 3.1 Pipeline Overview
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy
-on:
-  push:
-    branches: [main, staging]
+### 4.1 gRPC Service (`contracts-grpc`)
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run tests
-        run: make test
-      
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Docker image
-        run: docker build -t legacy-api .
-      - name: Push to ECR
-        run: |
-          aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_REGISTRY
-          docker tag legacy-api:latest $ECR_REGISTRY/legacy-api:${{ github.sha }}
-          docker push $ECR_REGISTRY/legacy-api:${{ github.sha }}
-          
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to ECS
-        run: |
-          aws ecs update-service --cluster legacy-$ENV --service api --force-new-deployment
-```
-
-### 3.2 Environment Variables
-- `AWS_ACCESS_KEY_ID` - AWS credentials
-- `AWS_SECRET_ACCESS_KEY` - AWS credentials
-- `ECR_REGISTRY` - ECR registry URL
-- `ENV` - Environment (staging/production)
-
----
-
-## 4. Backend Deployment
-
-### 4.1 Docker Build
-```dockerfile
-# Dockerfile
-FROM golang:1.21-alpine AS builder
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /api cmd/api/main.go
-
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-COPY --from=builder /api /api
-EXPOSE 8080
-CMD ["/api"]
-```
-
-### 4.2 ECS Task Definition
-```json
-{
-  "family": "legacy-api",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "512",
-  "memory": "1024",
-  "containerDefinitions": [{
-    "name": "api",
-    "image": "${ECR_REGISTRY}/legacy-api:${TAG}",
-    "portMappings": [{"containerPort": 8080}],
-    "environment": [
-      {"name": "ENV", "value": "production"},
-      {"name": "DB_HOST", "value": "${DB_HOST}"}
-    ],
-    "secrets": [
-      {"name": "DB_PASSWORD", "valueFrom": "${DB_PASSWORD_ARN}"}
-    ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "/ecs/legacy-api",
-        "awslogs-region": "us-east-1"
-      }
-    }
-  }]
-}
-```
-
----
-
-## 5. Web Deployment (Vercel)
-
-### 5.1 Vercel Configuration
-```json
-// vercel.json
-{
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "framework": "nextjs",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "@api_url"
-  }
-}
-```
-
-### 5.2 Deployment
 ```bash
-# Install Vercel CLI
-npm i -g vercel
+# From packages/sirsi-opensign/services/contracts-grpc
+gcloud run deploy contracts-grpc \
+  --source . \
+  --region us-east4 \
+  --project sirsi-nexus-live \
+  --allow-unauthenticated
+```
 
-# Deploy to preview
-vercel
+**Live Endpoint:** `https://contracts-grpc-210890802638.us-east4.run.app`
 
-# Deploy to production
-vercel --prod
+### 4.2 Service Capabilities
+
+| Endpoint | Method | Purpose |
+|:---|:---|:---|
+| `CreateContract` | gRPC | Create new agreement in Firestore |
+| `UpdateContract` | gRPC | Update status, amounts, signatures |
+| `ListContracts` | gRPC | Query agreements by user/status |
+| `DeleteContract` | gRPC | Remove agreement (admin) |
+| `/stripe/create-checkout` | REST | Initialize Stripe Checkout Session |
+| `/webhook` | REST | Stripe webhook receiver (payment confirmation) |
+
+### 4.3 Environment Configuration
+
+Secrets are managed via Cloud Run environment variables and Firestore vault:
+
+| Variable | Source | Purpose |
+|:---|:---|:---|
+| `STRIPE_SECRET_KEY` | Cloud Run env | Stripe API authentication |
+| `STRIPE_WEBHOOK_SECRET` | Cloud Run env | Webhook signature verification |
+| `FIREBASE_PROJECT_ID` | Cloud Run env | Firestore connection |
+
+---
+
+## 5. Financial Rails
+
+### 5.1 Stripe (Card Payments)
+
+| Item | Status |
+|:---|:---|
+| Checkout Integration | ✅ Live |
+| Webhook Registration | ✅ Active (11 events) |
+| Live Mode | ✅ Enabled |
+| Payment Methods | Card, Apple Pay (pending domain verification) |
+
+### 5.2 Wire Transfer (Out-of-Band)
+
+| Item | Status |
+|:---|:---|
+| Chase Instructions | ✅ Embedded in printable MSA |
+| Settlement | Out-of-band, manual reconciliation |
+
+### 5.3 Plaid ACH (Deferred)
+
+| Item | Status |
+|:---|:---|
+| Link Infrastructure | 🔲 Scaffolded, not wired |
+| Target | Weeks out |
+
+---
+
+## 6. Authentication & Security
+
+| Component | Implementation | Status |
+|:---|:---|:---|
+| Firebase Auth | `browserLocalPersistence` | ✅ Live |
+| MFA (TOTP) | Gate component exists | ⏳ Known issues (deferred) |
+| CSP Headers | Stripe + Firebase whitelisted | ✅ Hardened |
+| E-Signatures | SHA-256 hash + timestamp + envelopeId | ✅ Rule 18 compliant |
+
+---
+
+## 7. Rollback Procedures
+
+### 7.1 Frontend Rollback
+
+```bash
+# Revert to previous commit
+cd packages/finalwishes-contracts
+git revert HEAD
+npx vite build
+rsync -av --delete dist/ ../sirsi-opensign/public/
+cd ../sirsi-opensign
+npx firebase deploy --only hosting
+```
+
+### 7.2 Backend Rollback
+
+```bash
+# Revert to previous Cloud Run revision
+gcloud run services update-traffic contracts-grpc \
+  --to-revisions=PREVIOUS_REVISION=100 \
+  --region us-east4 \
+  --project sirsi-nexus-live
+```
+
+### 7.3 Firebase Hosting Rollback
+
+```bash
+# Roll back to previous hosting version via Console
+# Firebase Console → Hosting → Release History → Roll back
 ```
 
 ---
 
-## 6. Mobile Deployment
+## 8. Pre-Deployment Checklist
 
-### 6.1 iOS (App Store Connect)
-```bash
-# Build iOS release
-flutter build ios --release
+- [ ] `npx vite build` succeeds with zero errors
+- [ ] `rsync` from `dist/` to `sirsi-opensign/public/`
+- [ ] `firebase deploy --only hosting` succeeds
+- [ ] Git commit with descriptive message
+- [ ] Git push to `origin main`
+- [ ] Verify live at `https://sign.sirsi.ai`
 
-# Archive and upload
-cd ios
-xcodebuild archive -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath build/Runner.xcarchive
-xcodebuild -exportArchive -archivePath build/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build
+## 9. Post-Deployment Verification
 
-# Upload to App Store Connect
-xcrun altool --upload-app -f build/Runner.ipa -t ios -u $APPLE_ID -p $APP_SPECIFIC_PASSWORD
-```
-
-### 6.2 Android (Google Play)
-```bash
-# Build Android release
-flutter build appbundle --release
-
-# Upload to Play Console via Fastlane
-fastlane android deploy
-```
-
----
-
-## 7. Database Migrations
-
-### 7.1 Running Migrations
-```bash
-# Run migrations
-migrate -database "postgres://..." -path ./migrations up
-
-# Rollback
-migrate -database "postgres://..." -path ./migrations down 1
-```
-
-### 7.2 Migration Safety
-- Always backup before migrations
-- Test migrations on staging first
-- Use transaction-safe migrations
-- Have rollback plan ready
-
----
-
-## 8. Monitoring Setup
-
-### 8.1 CloudWatch Dashboards
-- API latency metrics
-- Error rates
-- Database connections
-- Cache hit rates
-
-### 8.2 Alerts
-- P95 latency > 500ms
-- Error rate > 1%
-- Database connections > 80%
-- Disk usage > 80%
-
----
-
-## 9. Rollback Procedures
-
-### 9.1 Application Rollback
-```bash
-# Revert to previous ECS task definition
-aws ecs update-service --cluster legacy-production --service api --task-definition legacy-api:PREVIOUS_VERSION
-
-# Or force previous image
-aws ecs update-service --cluster legacy-production --service api --force-new-deployment
-```
-
-### 9.2 Database Rollback
-```bash
-# Point-in-time recovery
-aws rds restore-db-instance-to-point-in-time \
-  --source-db-instance-identifier legacy-production \
-  --target-db-instance-identifier legacy-production-restored \
-  --restore-time "2025-01-01T00:00:00Z"
-```
-
----
-
-## 10. Checklist
-
-### 10.1 Pre-Deployment
-- [ ] All tests passing
-- [ ] Code reviewed and approved
-- [ ] Environment variables configured
-- [ ] Database migrations tested
-- [ ] Rollback plan documented
-
-### 10.2 Post-Deployment
-- [ ] Smoke tests passing
-- [ ] Monitoring verified
-- [ ] Performance acceptable
-- [ ] No error spikes
-- [ ] Stakeholders notified
+- [ ] Landing page renders at `sign.sirsi.ai`
+- [ ] Contract workflow loads at `/contracts/finalwishes`
+- [ ] Printable MSA hydrates from URL params
+- [ ] No console errors in DevTools
+- [ ] Stripe Checkout redirects correctly
+- [ ] Vault Dashboard loads at `/vault`
 
 ---
 
 ## Document Control
 
 | Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+|:--------|:-----|:-------|:--------|
+| 1.0.0 | 2025-11-26 | Legacy Team | Initial draft (AWS/Terraform) |
+| 2.0.0 | 2026-02-09 | Antigravity | **Complete rewrite** for Stack V4 (GCP/Firebase/Cloud Run) |

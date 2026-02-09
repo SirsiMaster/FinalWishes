@@ -27,6 +27,7 @@ Each ADR follows this structure:
 | [ADR-011](ADR-011-INFRASTRUCTURE-LICENSE-MODEL.md) | Infrastructure License & Services Model | Accepted | 2026-01-21 | — |
 | [ADR-012](ADR-012-DYNAMIC-FINANCIAL-CALCULATION.md) | Dynamic Financial Calculation & Multipliers | Accepted | 2026-01-22 | — |
 | [ADR-014](ADR-014-BIPARTITE-CONTRACT-EXECUTION.md) | Bipartite Contract Execution Protocol | Accepted | 2026-02-07 | — |
+| [ADR-015](ADR-015-OPENSIGN-CONVERGENCE.md) | OpenSign Convergence — Dual-Client Architecture | Accepted | 2026-02-07 | — |
 
 ## Categories
 
@@ -48,6 +49,7 @@ Each ADR follows this structure:
 - ADR-002 §3: Financial Institution Integration (Plaid for read-only)
 - ADR-002 §4: Document Generation (DocuSign, Lob, OCR)
 - ADR-002 §5: State-Specific Requirements (MD, DC, VA, IL, MN)
+- ADR-015: OpenSign Dual-Client Architecture (gRPC + REST SDK)
 
 ### Contract Execution
 - ADR-014: Bipartite Dual-Signature Ceremony
@@ -69,4 +71,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-02-07*
+*Last updated: 2026-02-09*

@@ -76,18 +76,20 @@ The following 29 files serve as the immutable benchmark for all project directiv
 28. `docs/ADR-TEMPLATE.md`
 29. `packages/finalwishes-contracts/src/data/catalog.ts` (The Product & Pricing Core)
 
-## 3. The Single Source of Truth (Stack V4)
-Ignore legacy references to AWS, Flutter, or Node.js in older docs. This is the **Absolute Truth**:
+## 3. The Single Source of Truth (Stack V5)
+Ignore legacy references to AWS, Node.js, or raw HTML in older docs. This is the **Absolute Truth**:
 
 | Layer | Technology | Decision |
 | :--- | :--- | :--- |
-| **Logic** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf**, Official Firebase Admin SDK |
-| **Web** | **React 18 + Vite** | **gRPC-Web**, TailwindCSS, Glassmorphism, Zustand |
-| **Mobile** | **React Native + Expo** | **gRPC + Protobuf**, Shared logic with Web, iOS/Android |
-| **Database** | **Cloud SQL + Firestore** | Hybrid: SQL for PII/Vault, NoSQL for real-time |
-| **Auth** | **Firebase Auth** | MFA (TOTP) Required |
-| **Security** | **SOC 2 + KMS** | Software Keys (No HSM), AES-256 |
-| **AI** | **Gemini 3.0 (Vertex AI)** | The "Guidance Engine" (Not just a chatbot) |
+| **01 Core** | **Rust (WASM)** | Schema/Consensus, Cryptographic Primitives, SHA-256 |
+| **02 Logic** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf**, Official Firebase Admin SDK |
+| **03 Trust** | **Hedera (HCS)** | DLT/Verification, Audit Anchoring |
+| **04 Web** | **React 19 + Vite** | **ConnectRPC**, TailwindCSS, Glassmorphism, Zustand |
+| **05 Mobile** | **React Native + Expo**| **gRPC-Web**, Shared logic with Web, iOS/Android |
+| **06 Database**| **SQL + Firestore** | Hybrid: SQL for PII/Vault, NoSQL for real-time |
+| **07 Data** | **TanStack** | Query (Telemetry), Router (Type-safe), Table (Grids) |
+| **08 Auth** | **Firebase Auth** | Bipartite MFA (TOTP/SMS/Email) |
+| **09 AI** | **Vertex AI (Gemini)**| The "Guidance Engine" (Sirsi Persona) |
 | **E-Sign** | **OpenSign (Community)** | **Self-Hosted** (Google Cloud Run) |
 
 ## 4. Design System: "Royal Neo-Deco"

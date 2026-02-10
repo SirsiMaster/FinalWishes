@@ -748,6 +748,30 @@ The **FinalWishes Partnership Agreement Generator** is a full-stack React applic
 
 ---
 
+## 10. Admin Infrastructure Engineering (v2.0)
+
+The Admin Control Plane provides high-fidelity governance across the Sirsi portfolio, transitioning from "simulated" monitoring to a live, gRPC-backed operational environment.
+
+### 10.1 Live Telemetry Stream (gRPC)
+The `AdminService.ListAuditTrail` RPC provides a pull-based telemetry stream for the Admin Portal.
+- **Backend Implementation**: Go service fetches security and system events from the primary audit log.
+- **Frontend Integration**: React `useAuditTrail` hook with TanStack Query for polling/streaming management.
+- **Data Model**: `AuditLogEntry` includes `id`, `timestamp` (Int64), `level`, `source`, and `message`.
+
+### 10.2 Vault Storage Listing
+The Data Room utilizes a backend indexing service to explore the physical secure storage without bypassing PII protections.
+- **Endpoint**: `GET /api/vault/list` (Authenticated).
+- **Functionality**: Lists objects with the `vault/` prefix in Google Cloud Storage.
+- **Metadata Extraction**: Returns `id`, `name`, `size`, `type` (MIME-map), and `updated` timestamp.
+
+### 10.3 Asynchronous Payment Rails
+Refined Stripe integration to handle the "Settlement Lag" inherent in professional asset transfers (ACH/Wire).
+- **Webhook Logic**: Distinguishes between card-based `completed` and bank-based `async_payment_succeeded`.
+- **State Guard**: Provisioning is deferred globally until funds are settled.
+- **Reversion**: `async_payment_failed` triggers automatic contract status reversion from `waiting_for_payment` to `failed`.
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
@@ -757,4 +781,5 @@ The **FinalWishes Partnership Agreement Generator** is a full-stack React applic
 | 3.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes |
 | 4.0.0 | 2026-01-17 | Antigravity | Added Sirsi Infrastructure Layer & Multi-Project Design |
 | 4.1.0 | 2026-01-17 | Antigravity | Introduced Infrastructure Control Plane (Nexus Bridge) |
-| **4.2.0** | **2026-01-20** | **Antigravity** | **Added FinalWishes Contracts Workflow UI section (React 19 + Vite + Zustand)** |
+| 4.2.0 | 2026-01-20 | Antigravity | Added FinalWishes Contracts Workflow UI section |
+| **4.3.0** | **2026-02-10** | **Antigravity** | **Added Section 10: Admin Infrastructure Engineering (gRPC Telemetry & Async Rails)** |

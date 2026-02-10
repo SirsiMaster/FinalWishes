@@ -757,7 +757,18 @@ The competitive moat is:
 - Court e-filing (state by state)
 - Tax software partnerships
 
-### 8.3 Risk Assessment
+### 8.3 Infrastructure Control Plane (The Nexus Admin)
+
+**New Addition (Feb 2026):**
+The platform now includes an **Administrative Control Plane**, built to manage the complex, multi-tenant estate data and the "Asynchronous Financial Rails" required for large-scale asset settlement.
+
+**Core Administrative Capabilities:**
+1.  **Live Telemetry (gRPC)**: The Admin Portal streams real infrastructure events via the `AdminService` gRPC audit trail. Every developer action, vault access, and payment event is captured in a permanent, high-fidelity ledger.
+2.  **Vault Transparency**: A secure storage indexing service (`/api/vault/list`) provides direct visibility into the `vault/` storage bucket, allowing administrators to audit executed legal documents and evidence without exposing PII to unsecured channels.
+3.  **Async Payment Rails**: The system now explicitly manages the multi-day settlement window for ACH and Wire transfers. Provisioning is automatically gated by the `async_payment_succeeded` webhook event, preventing financial exposure during the settlement lag.
+4.  **Operational Truth**: By transitioning from mock-based administration to live gRPC/Storage feeds, the platform now provides a "Truthful Dashboard" for studio governance.
+
+### 8.4 Risk Assessment
 
 | Risk | Probability | Impact | Mitigation |
 |------|-------------|--------|------------|

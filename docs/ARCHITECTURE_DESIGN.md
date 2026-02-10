@@ -520,6 +520,29 @@ finalwishes-contracts/
 
 ---
 
+## 10. Sirsi Admin & Audit Infrastructure (Nexus Control Plane)
+
+The **Sirsi Admin Portal** serves as the central control plane for the Sirsi ecosystem, providing high-fidelity governance across all multi-tenant estates.
+
+**Location:** `packages/finalwishes-contracts/src/components/admin/`
+
+### 10.1 Live Telemetry & Audit Stream
+The Admin system is decoupled from transient frontend state and is backed by a persistent **gRPC Audit Trail** (`AdminService`). 
+- **Telemetry Source**: All developer actions, security events, and system health checks are streamed in real-time from the backend.
+- **Durable Records**: Logs are immutable and stored for forensics and compliance (SOC 2).
+
+### 10.2 Vault Storage Indexing
+The platform provides a secure window into the **Cryptographic Vault** without circumventing PII protections.
+- **Direct Indexing**: The Data Room uses a dedicated `/api/vault/list` endpoint to list real objects in the Cloud Storage `vault/` bucket.
+- **Artifact Verification**: Admin can verify the presence of executed PDFs and their SHA-256 hashes directly from the source of truth.
+
+### 10.3 Asynchronous Financial Rails
+To support professional estate settlement (ACH/Wire), the architecture explicitly handles **Asynchronous Payment Finality**.
+- **Webhook Bridge**: The Stripe webhook handler manages the gap between "payment initiation" and "fund settlement."
+- **Status Normalization**: Contracts are placed in `waiting_for_payment` and only provisioned upon receipt of the `async_payment_succeeded` event, eliminating financial float risk.
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
@@ -528,4 +551,5 @@ finalwishes-contracts/
 | 2.0.0 | 2025-11-26 | Legacy Team | Added Go backend structure |
 | 3.0.0 | 2025-12-05 | Claude | Complete rewrite for React+Go+React Native, GCP-only, FinalWishes branding |
 | 4.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes |
-| **5.1.0** | **2026-01-20** | **Antigravity** | **Added FinalWishes Contracts Workflow UI section (React 19 + Vite)** |
+| 5.1.0 | 2026-01-20 | Antigravity | Added FinalWishes Contracts Workflow UI section |
+| **5.2.0** | **2026-02-10** | **Antigravity** | **Added Section 10: Sirsi Admin & Audit Infrastructure (gRPC Telemetry & Async Rails)** |

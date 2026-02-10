@@ -35,6 +35,8 @@ Each ADR follows this structure:
 | [ADR-013](ADR-013-SIRSI-SIGN-HIERARCHY.md) | Sirsi Sign Unified Vault & Multi-Tenant Architecture | Accepted | 2026-02-02 | — |
 | [ADR-014](ADR-014-BIPARTITE-CONTRACT-EXECUTION.md) | Bipartite Contract Execution Protocol | Accepted | 2026-02-07 | — |
 | [ADR-015](ADR-015-OPENSIGN-CONVERGENCE.md) | OpenSign Convergence — Dual-Client Architecture | Accepted | 2026-02-07 | — |
+| [ADR-016](ADR-016-ASYNC-PAYMENT-SETTLEMENT-AND-TELEMETRY.md) | Async Payment Settlement & Live Telemetry Stream | Accepted | 2026-02-10 | — |
+| [ADR-017](ADR-017-STACK-CONVERGENCE.md) | Stack Convergence — One Unified Tech Stack | Accepted | 2026-02-10 | — |
 
 ## Categories
 
@@ -44,18 +46,21 @@ Each ADR follows this structure:
 - ADR-001 §6: Defense-in-Depth Security Architecture
 - ADR-002 §6: Data Architecture & Estate Sequestration
 - ADR-003: HMAC-Based Vault Security Layer
+- ADR-016: Live Infrastructure Telemetry & Audit Stream
 
 ### Infrastructure
 - ADR-001 §3: Google Cloud Platform (vs AWS/Azure)
 - ADR-007: Monorepo Unification (all sirsi-XXX → SirsiNexusApp)
 - ADR-008: Infrastructure Control Plane (Nexus Bridge)
 - ADR-010: Universal Offerings Engine Integration
+- ADR-016: Live Infrastructure Telemetry & Audit Stream
 
 ### Technology Stack
 - ADR-001 §4: Go Backend (vs Rust)
 - ADR-001 §5: React + React Native Frontend
 - ADR-006: TanStack Migration — Next.js → Vite + TanStack
 - ADR-009: gRPC + Protocol Buffers Architecture
+- ADR-017: Stack Convergence — One Unified Tech Stack
 
 ### External Integrations
 - ADR-002 §1-2: Document Types & Government Agencies (NO useful APIs)
@@ -71,6 +76,7 @@ Each ADR follows this structure:
 - ADR-012: Dynamic Financial Calculation & Multipliers
 - ADR-014: Bipartite Dual-Signature Ceremony
 - ADR-014: Cryptographic Evidence Chain (SHA-256)
+- ADR-016: Async Payment Settlement Logic
 
 ### Platform Architecture
 - ADR-013: Sirsi Sign Unified Vault & Multi-Tenant Hierarchy

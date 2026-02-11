@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.6.0] - 2026-02-10
+
+### Hierarchical Routing & Multi-Tenant Differentiation
+- **Status**: Implemented & Canonized (ADR-013)
+- **Domain Divergence**: Implemented automatic UI differentiation for `sign.sirsi.ai`. Sidebar and admin headers are now strictly suppressed on the signing domain to provide an immersive client experience.
+- **Hierarchical Vault**: Standardized deep-link routing for `contracts` and `vault` using dynamic project/user parameters.
+- **Hosting Integrity**: Updated global `firebase.json` with SPA-aware rewrite rules and standardized `cleanUrls/trailingSlash` settings across all portfolio sites.
+- **Admin Preservation**: Established `admin/contracts` sub-routes to maintain administrative dashboard functionality within the Sirsi Nexus portal.
+
 ## [3.5.0] - 2025-12-01
 
 ### Light/Dark Theme Toggle System

@@ -1,5 +1,46 @@
 # Changelog
 
+## [3.7.0] - 2026-02-13
+
+### Contract Integrity & Flow Simplification
+
+#### Critical Fixes
+- **Pricing Integrity**: Fixed critical 2x pricing bug where `sirsiMultiplier` (default `2.0`) was being incorrectly applied to canonical contract prices. Locked `syncConfig` to always use `1.0x` for database writes. The `2.0x` Valuation Factor is now strictly display-only for market comparison views.
+- **Public Contract Access**: Removed `ProtectedRoute` wrapper from `/contracts` and `/contracts/$projectId` routes. Client-facing contract links (e.g., `sign.sirsi.ai/contracts/finalwishes`) are now publicly accessible without Firebase Auth or MFA — as intended for the client signing experience.
+- **Stale Asset Purge**: Discovered and removed stale `index.html` files in `packages/sirsi-opensign/public/partnership/`, `public/contracts/`, and `public/finalwishes/`. These files contained outdated asset hashes and were being served by Firebase Hosting *before* the SPA rewrite rule, causing MIME type errors and blank pages on contract-specific routes.
+
+#### Deployment Pipeline Fix
+- **`deploy-contracts.sh` Hardened**: Removed lines 32-33 which explicitly copied `index.html` into `public/partnership/finalwishes/` on every deploy — the root cause of recurring stale `index.html` files. Replaced with an active cleanup (`rm -rf public/partnership public/contracts public/finalwishes`) to prevent future regressions. Firebase's `"**" → "/index.html"` rewrite rule handles all SPA routing.
+
+#### UX Simplification
+- **6 Tabs → 4 Tabs**: Removed the standalone "Statement of Work" and "Cost & Valuation" tabs from the contract workflow. Their content is fully duplicated inside the MSA tab as **Exhibit A** (SOW) and **Exhibit B** (Cost & Valuation Analysis). This eliminates redundant click-through steps.
+- **New Tab Flow**: Executive Summary → Configure Solution → Master Agreement (MSA) → Sirsi Vault
+- **Dead Code Removed**: Deleted `StatementOfWork.tsx` (245 lines) and `CostValuation.tsx` (416 lines). Updated `ContractTabs.tsx`, `AgreementWorkflow.tsx`, `ConfigureSolution.tsx`, and `useConfigStore.ts` to remove all references.
+
+#### Data Verification
+- **Tameeka Lockhart Contract**: Verified Firestore record `AbPyLVMd5Tp31CAfbHsk` shows `totalAmount: 13700000` ($137,000.00 in cents) — correct and consistent with catalog calculation at 1.0x.
+
+#### Files Modified
+| File | Change |
+|------|--------|
+| `useConfigStore.ts` | `sirsiMultiplier` default → `1.0`; `syncConfig` locked to `1.0x`; `TabId` reduced to 4 values |
+| `router.config.tsx` | `ProtectedRoute` removed from `/contracts` routes |
+| `ContractTabs.tsx` | SOW + Cost tabs removed from tab array |
+| `AgreementWorkflow.tsx` | SOW + Cost imports and switch cases removed |
+| `ConfigureSolution.tsx` | "Next" button → `setTab('msa')`, label → "Review Master Agreement" |
+| `deploy-contracts.sh` | Subdirectory copy removed, cleanup safeguard added |
+| `StatementOfWork.tsx` | **Deleted** |
+| `CostValuation.tsx` | **Deleted** |
+
+#### Git Commits (in order)
+1. `f2797da` — `fix(critical): kill 2.0x multiplier on contract pricing — canonical 1.0x only`
+2. `a6ac52a` — `fix(critical): unblock Tameeka's contract link`
+3. `a77f564` — `refactor: streamline contract flow to 4 tabs (remove SOW + Cost)`
+4. `2f8c2a2` — `fix: purge stale subdirectory index.html (again)`
+5. `e73fdd1` — `fix: stop deploy script from creating stale subdirectory index.html`
+
+---
+
 ## [3.6.0] - 2026-02-10
 
 ### Hierarchical Routing & Multi-Tenant Differentiation

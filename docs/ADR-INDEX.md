@@ -37,6 +37,7 @@ Each ADR follows this structure:
 | [ADR-015](ADR-015-OPENSIGN-CONVERGENCE.md) | OpenSign Convergence — Dual-Client Architecture | Accepted | 2026-02-07 | — |
 | [ADR-016](ADR-016-ASYNC-PAYMENT-SETTLEMENT-AND-TELEMETRY.md) | Async Payment Settlement & Live Telemetry Stream | Accepted | 2026-02-10 | — |
 | [ADR-017](ADR-017-STACK-CONVERGENCE.md) | Stack Convergence — One Unified Tech Stack | Accepted | 2026-02-10 | — |
+| [ADR-018](ADR-018-GOVERNANCE-CONSOLE.md) | Sirsi Governance Console & Dynamic Catalog Store | Proposed | 2026-02-13 | — |
 
 ## Categories
 
@@ -80,6 +81,7 @@ Each ADR follows this structure:
 
 ### Platform Architecture
 - ADR-013: Sirsi Sign Unified Vault & Multi-Tenant Hierarchy
+- ADR-018: Sirsi Governance Console & Dynamic Catalog Store
 
 ### Scope & Feasibility
 - ADR-002 §7: Scope Assessment ($95K/5mo achievable with boundaries)
@@ -95,4 +97,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-02-09*
+*Last updated: 2026-02-13*

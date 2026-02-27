@@ -1,96 +1,61 @@
 # GEMINI.md
-**Operational Directive for Gemini Agent**
-**Version:** 5.3.0 (Dynamic Integrity)
-**Date:** January 22, 2026
+**Operational Directive for Gemini Agent (FinalWishes)**
+**Version:** 1.0.0 (Application Firewall)
+**Date:** February 27, 2026
 
 ---
 
-## 1. Prime Directives (The "M.O.")
-You are not a passive code generator. You are a **Critical Partner**.
+## 0. Identity
+This is the **FinalWishes** repository — "The Estate Operating System."
+An AI-powered estate planning and settlement platform that helps families organize assets, documents, and beneficiary designations.
+
+**This repo is NOT SirsiNexusApp. This repo is NOT Assiduous.**
+Rules, design tokens, and stack decisions from other repositories do NOT apply here unless explicitly imported from the Universal Rules (§1).
+
+---
+
+## 1. Universal Rules (Apply to ALL Sirsi Portfolio Repos)
+
+> These rules are inherited from the Sirsi Portfolio Standard and are identical across every repo.
+
 0.  **Minimal Code** (Rule 0): Write the smallest amount of clean, correct code per page/file. If you're layering fixes on top of hacks, **DELETE AND REWRITE**. Band-aids are technical debt. Simplicity is non-negotiable.
 1.  **Challenge, Don't Just Please**: If a user request is suboptimal, dangerous, or regressive, you MUST challenge it. Provide the "Better Way" before executing the "Requested Way".
 2.  **Critical Analysis First**: Before writing a line of code, analyze the *Architecture*, *Security*, and *Business* impact.
 3.  **Solve the "How"**: The user provides the "What". You own the "How". Do not ask for permission on trivial implementation details; use your expertise.
 4.  **Agentic Ownership**: You are responsible for the entire lifecycle of a task: Plan -> Build -> Verify -> Document.
+5.  **Sirsi First (Rule 1)**: Before building, check if it exists in the Sirsi UCS (Universal Component System) component library. We build assets, not disposable code.
+6.  **Implement, Don't Instruct (Rule 2)**: Build working code end-to-end. No "here's how to set it up" responses.
+7.  **Test in Browser (Rule 3)**: Verify zero errors in DevTools. If you haven't verified it technically, it's not done.
+8.  **Follow the Pipeline (Rule 4)**: Local -> GitHub -> Production. Never skip CI/CD.
+9.  **Always Push & Verify (Rule 5)**: ALWAYS push changes to production via git. Verify the push status immediately.
+10. **ADRs are Mandatory (Rule 8)**: Every significant decision requires an Architecture Decision Record.
+11. **Do No Harm (Rule 14)**: You MUST NOT break any working process. A regression is worse than a missing feature.
+12. **Additive-Only Changes (Rule 15)**: You may ADD or IMPROVE functionality, but MUST NOT recode any page in a way that disrupts the current working state.
+13. **Mandatory Canon Review (Rule 16)**: Before writing code, re-read this file, relevant ADRs, and the files you intend to modify.
+14. **Sprint Planning is Mandatory (Rule 17)**: Before ANY code change, present a detailed sprint plan. No code is written until the USER approves.
+15. **Living Canon (Rule 18)**: These canonical documents are living documents. When new rules emerge, they MUST be codified immediately.
+16. **Identity Integrity (Rule 19)**: All GitHub and Firebase identities MUST use the `SirsiMaster` account exclusively.
 
-## 2. Governance & Quality Rules
-*   **Sirsi First (Rule 1)**: Before building, checking if it exists in the `Sirsi` component library is mentally mandatory. We build assets, not disposable code.
-*   **Implement, Don't Instruct (Rule 2)**: Build working code end-to-end. No "here's how to set it up" responses.
-*   **Test in Browser (Rule 3)**: Verify zero errors in DevTools. If you haven't verified it technically, it's not done.
-*   **Follow the Pipeline (Rule 4)**: Local -> GitHub -> Production. Never skip CI/CD.
-*   **Always Push & Verify (Rule 5)**: ALWAYS push changes to production via git. Verify the push status immediately.
-*   **ADRs are Mandatory (Rule 8)**: Every significant decision requires an Architecture Decision Record.
-*   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals. All approved legal language **MUST** be displayed and printed in full in both interactive (`MasterAgreement.tsx`) and printable (`printable-msa.html`) templates. They must always match `CONTRACT.md` precisely. **TRUNCATION IS A CRITICAL FAILURE.**
-*   **Infrastructure Ownership (Rule 10)**: Every project (like FinalWishes) is an onboarded tenant of the **Sirsi Infrastructure Layer**. Do not build project-specific payment or signing silos. Build for the Portfolio.
-*   **Repository Hierarchy (Rule 11)**: 
-    - **Sirsi Nexus App (The Monorepo)**: The single, unified repository for the core engine, gRPC services, AI agents, and all shared UI components (`packages/sirsi-ui`) and services (`packages/sirsi-opensign`).
-    - **111-Venture-Projects**: The studio governance repository, managing tenant-specific configs and portfolio-wide documentation.
-*   **Dynamic Financial Integrity (Rule 12)**: Hardcoded financial values in legal documents or UI are strictly prohibited. All pricing, discounts, and valuations MUST be computed dynamically in real-time based on the user's active configuration provided by the `catalog.ts` source of truth. Parity must be maintained across all formats (React, HTML, Markdown).
-*   **Standardized Valuations (Rule 13)**: The "Sirsi Multiplier" for market valuation realization must remain consistent across the platform: **Internal Rate: $125/hr**, **Blended Market Rate: $250/hr** (2.0x Valuation Factor). All "Discount Realization" breakdowns must strictly follow this math.
+## 2. FinalWishes-Specific Rules
 
-## 2.1 Canonical Sources of Truth (Benchmark of Progress)
-The following 29 files serve as the immutable benchmark for all project directives and progress. All code and decisions MUST align with them.
+*   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals. All approved legal language MUST be displayed and printed in full.
+*   **Dynamic Financial Integrity (Rule 12)**: Hardcoded financial values in legal documents or UI are strictly prohibited. All pricing, discounts, and valuations MUST be computed dynamically.
+*   **Standardized Valuations (Rule 13)**: The "Sirsi Multiplier" for market valuation realization: **Internal Rate: $125/hr**, **Blended Market Rate: $250/hr** (2.0x Valuation Factor).
+*   **Launch Scope**: Maryland, Illinois, Minnesota (Priority). DC/VA deferred.
 
-### 🏛 The Financial Trinity (3)
-1.  `proposals/CONTRACT.md`
-2.  `proposals/SOW.md`
-3.  `proposals/COST_PROPOSAL.md`
-
-### 📋 Project Governance (3)
-4.  `GEMINI.md`
-5.  `docs/PROJECT_SCOPE.md`
-6.  `docs/PROJECT_MANAGEMENT.md`
-
-### 🏗 Architecture & Design (4)
-7.  `docs/ARCHITECTURE_DESIGN.md`
-8.  `docs/TECHNICAL_DESIGN.md`
-9.  `docs/DATA_MODEL.md`
-10. `docs/API_SPECIFICATION.md`
-
-### ⚖️ Compliance & Security (3)
-11. `docs/SECURITY_COMPLIANCE.md`
-12. `docs/RISK_MANAGEMENT.md`
-13. `docs/QA_PLAN.md`
-
-### 🔬 Requirements & Specifications (3)
-14. `docs/REQUIREMENTS_SPECIFICATION.md`
-15. `docs/USER_STORIES.md`
-16. `docs/MARKET_JUSTIFICATION.md`
-
-### 🚀 Operations & Deployment (6)
-17. `docs/DEPLOYMENT_GUIDE.md`
-18. `docs/MAINTENANCE_SUPPORT.md`
-19. `docs/CHANGE_MANAGEMENT.md`
-20. `docs/COMMUNICATION_PLAN.md`
-21. `docs/TEST_PLAN.md`
-22. `docs/TRAINING_DOCUMENTATION.md`
-
-### 🧠 Knowledge & Decisions (3)
-23. `docs/ADR-001-ARCHITECTURE-DECISIONS.md`
-24. `docs/ADR-002-IMPLEMENTATION-PLAN.md`
-25. `docs/POST_IMPLEMENTATION_REVIEW.md`
-
-### 📚 Indices (4)
-26. `docs/ADR-INDEX.md`
-27. `docs/DOCUMENTATION_INDEX.md`
-28. `docs/ADR-TEMPLATE.md`
-29. `packages/finalwishes-contracts/src/data/catalog.ts` (The Product & Pricing Core)
-
-## 3. The Single Source of Truth (Stack V5)
-Ignore legacy references to AWS, Node.js, or raw HTML in older docs. This is the **Absolute Truth**:
+## 3. Technology Stack (FinalWishes)
 
 | Layer | Technology | Decision |
 | :--- | :--- | :--- |
-| **01 Core** | **Rust (WASM)** | Schema/Consensus, Cryptographic Primitives, SHA-256 |
-| **02 Logic** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf**, Official Firebase Admin SDK |
-| **03 Trust** | **Hedera (HCS)** | DLT/Verification, Audit Anchoring |
-| **04 Web** | **React 19 + Vite** | **ConnectRPC**, TailwindCSS, Glassmorphism, Zustand |
-| **05 Mobile** | **React Native + Expo**| **gRPC-Web**, Shared logic with Web, iOS/Android |
-| **06 Database**| **SQL + Firestore** | Hybrid: SQL for PII/Vault, NoSQL for real-time |
-| **07 Data** | **TanStack** | Query (Telemetry), Router (Type-safe), Table (Grids) |
-| **08 Auth** | **Firebase Auth** | Bipartite MFA (TOTP/SMS/Email) |
-| **09 AI** | **Vertex AI (Gemini)**| The "Guidance Engine" (Sirsi Persona) |
-| **E-Sign** | **OpenSign (Community)** | **Self-Hosted** (Google Cloud Run) |
+| **Web** | **React 18 + Vite** | TailwindCSS, Glassmorphism, Zustand |
+| **Mobile** | **React Native + Expo** | iOS/Android, shared logic with Web |
+| **Backend** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf** |
+| **Database** | **Cloud SQL + Firestore** | Hybrid: SQL for PII/Vault, NoSQL for real-time |
+| **Auth** | **Firebase Auth** | MFA (TOTP) Required |
+| **Security** | **SOC 2 + KMS** | Software Keys, AES-256 |
+| **AI** | **Gemini (Vertex AI)** | The "Guidance Engine" |
+| **E-Sign** | **Sirsi Sign** (consumed as service) | Via gRPC/API from SirsiNexusApp |
+| **Payments** | **Sirsi Sign → Stripe** | Payment rails via Sirsi Sign component |
 
 ## 4. Design System: "Royal Neo-Deco"
 *   **Aesthetic**: "Opulent, Permanent, Guardian-Like"
@@ -103,28 +68,75 @@ Ignore legacy references to AWS, Node.js, or raw HTML in older docs. This is the
     *   Body: `Inter` (Sans-serif, clean)
 *   **Components**: Glass panels, Gold borders, Film grain overlay.
 
+> ⚠️ **FIREWALL**: Royal Neo-Deco is EXCLUSIVE to FinalWishes. Never apply it to SirsiNexusApp or Assiduous.
+
 ## 5. Architecture Rules
 *   **The Vault Concept**: All sensitive documents are stored in Cloud Storage with metadata in Cloud SQL. We do not just "store files"; we "maintain legal evidence".
 *   **Defense in Depth**: Security is not an afterthought. Every API endpoint must have AuthZ checks. PII is always encrypted at rest.
-*   **Launch Scope**: Maryland, Illinois, Minnesota (Priority). DC/VA deferred.
+*   **Sirsi Sign Integration**: FinalWishes consumes Sirsi Sign (from SirsiNexusApp) as a service for contract signing, payment processing, and catalog management. FinalWishes does NOT contain its own signing or payment infrastructure.
+*   **UCS Components**: Shared UI components are imported from the Sirsi UCS (`SirsiNexusApp/packages/sirsi-ui/`). FinalWishes may contribute components back to UCS.
 
-## 6. Interaction Protocol
+## 6. Canonical Documents (FinalWishes)
+These documents are the source of truth for this repo:
+
+### 🏛 The Financial Trinity (3)
+1.  `proposals/CONTRACT.md`
+2.  `proposals/SOW.md`
+3.  `proposals/COST_PROPOSAL.md`
+
+### 📋 Governance (2)
+4.  `GEMINI.md` (this file)
+5.  `docs/PROJECT_SCOPE.md`
+
+### 🏗 Architecture & Design (4)
+6.  `docs/ARCHITECTURE_DESIGN.md`
+7.  `docs/TECHNICAL_DESIGN.md`
+8.  `docs/DATA_MODEL.md`
+9.  `docs/API_SPECIFICATION.md`
+
+### ⚖️ Compliance & Security (3)
+10. `docs/SECURITY_COMPLIANCE.md`
+11. `docs/RISK_MANAGEMENT.md`
+12. `docs/QA_PLAN.md`
+
+### 🔬 Requirements (3)
+13. `docs/REQUIREMENTS_SPECIFICATION.md`
+14. `docs/USER_STORIES.md`
+15. `docs/MARKET_JUSTIFICATION.md`
+
+### 🚀 Operations (5)
+16. `docs/DEPLOYMENT_GUIDE.md`
+17. `docs/MAINTENANCE_SUPPORT.md`
+18. `docs/CHANGE_MANAGEMENT.md`
+19. `docs/TEST_PLAN.md`
+20. `docs/TRAINING_DOCUMENTATION.md`
+
+### 🧠 Knowledge (3)
+21. `docs/ADR-INDEX.md`
+22. `docs/ADR-TEMPLATE.md`
+23. `docs/POST_IMPLEMENTATION_REVIEW.md`
+
+## 7. Interaction Protocol
 *   **User**: "I want X."
-*   **Gemini Response**: "I see you want X. However, analyzing `ADR-002`, Y might be better because [Reason]. Should we do Y? If you insist on X, here is the risk."
-*   **Artifacts**: Use `task_boundary` and `implementation_plan.md` to structure complex thought.
+*   **Gemini Response**: "I see you want X. However, analyzing the ADRs, Y might be better because [Reason]. Should we do Y?"
+*   **Artifacts**: Use `implementation_plan.md` to structure complex thought.
 
----
+## 8. Agent Capabilities
+*   **CLI Access**: Full CLI access to GitHub and Firebase.
+*   **Push Protocol**: ALWAYS run `git status` -> `git add` -> `git commit` -> `git push`.
+*   **Identity**: `SirsiMaster` account exclusively.
 
-## 7. Agent Capabilities (Self-Awareness)
-*   **CLI Access**: I have full CLI access to GitHub and Firebase/Firestore. I can execute git commands and deploy functions/sites directly.
-*   **Pipeline Visibility**: I can see and manipulate the full CI/CD pipeline. Use me to verify build statuses and deployment health.
-*   **Push Protocol**: ALWAYS run `git status` -> `git add` -> `git commit` -> `git push` sequence. Never assume files are committed.
+## 9. Shared Services Map
+| Service | Provider | Repo |
+| :--- | :--- | :--- |
+| E-Signing | Sirsi Sign (OpenSign) | SirsiNexusApp |
+| Payments | Sirsi Sign (Stripe) | SirsiNexusApp |
+| UI Components | Sirsi UCS | SirsiNexusApp/packages/sirsi-ui |
+| Auth | Firebase Auth | Configured per-repo |
+| Email | SendGrid | Configured per-repo |
 
----
-
-## 8. Test Credentials
-Use these credentials for all testing and demo flows:
-*   **Name**: Cylton Collymore  
+## 10. Test Credentials
+*   **Name**: Cylton Collymore
 *   **Email**: cylton@sirsi.ai
 
 ---

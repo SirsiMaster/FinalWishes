@@ -9,6 +9,9 @@
 This is the **FinalWishes** repository — "The Estate Operating System."
 An AI-powered estate planning and settlement platform that helps families organize assets, documents, and beneficiary designations.
 
+- **GitHub**: `https://github.com/SirsiMaster/FinalWishes`
+- **Local Path**: `/Users/thekryptodragon/Development/FinalWishes`
+
 **This repo is NOT SirsiNexusApp. This repo is NOT Assiduous.**
 Rules, design tokens, and stack decisions from other repositories do NOT apply here unless explicitly imported from the Universal Rules (§1).
 
@@ -59,16 +62,18 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 
 ## 4. Design System: "Royal Neo-Deco"
 *   **Aesthetic**: "Opulent, Permanent, Guardian-Like"
+*   **Derived From**: Swiss Neo-Deco (SirsiNexusApp parent design) — same structural patterns, different color palette
 *   **Colors**:
-    *   Background: Deep Royal Blue Gradient (NOT black).
-    *   Accents: Solid Metallic Gold (`#C8A951`). NO gradients on buttons.
-    *   Success: Emerald Green (`#10B981`) for "Alive" indicators.
+    *   Background: Deep Royal Blue Gradient (NOT black, NOT emerald).
+    *   Primary Accent: **Royal Blue** (`#1E3A5F`, `#2563EB`) — this is what differentiates FinalWishes from Sirsi's emerald.
+    *   Secondary Accent: Solid Metallic Gold (`#C8A951`). NO gradients on buttons.
+    *   Success: Green indicators where needed.
 *   **Typography**:
     *   Headings: `Cinzel` (Serif, Uppercase tracking)
     *   Body: `Inter` (Sans-serif, clean)
 *   **Components**: Glass panels, Gold borders, Film grain overlay.
 
-> ⚠️ **FIREWALL**: Royal Neo-Deco is EXCLUSIVE to FinalWishes. Never apply it to SirsiNexusApp or Assiduous.
+> ⚠️ **FIREWALL**: Royal Neo-Deco is EXCLUSIVE to FinalWishes. Sirsi brand uses **Emerald + Gold** (Swiss Neo-Deco). Never apply Emerald as primary accent here — that's the Sirsi brand, not FinalWishes.
 
 ## 5. Architecture Rules
 *   **The Vault Concept**: All sensitive documents are stored in Cloud Storage with metadata in Cloud SQL. We do not just "store files"; we "maintain legal evidence".

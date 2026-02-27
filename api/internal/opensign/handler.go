@@ -122,8 +122,10 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	json.NewEncoder(w).Encode(CreateEnvelopeResponse{
+	if err := json.NewEncoder(w).Encode(CreateEnvelopeResponse{
 		EnvelopeID: envelopeID,
 		SigningURL: signingURL,
-	})
+	}); err != nil {
+		log.Error().Err(err).Msg("Failed to encode response")
+	}
 }

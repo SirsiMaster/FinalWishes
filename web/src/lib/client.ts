@@ -3,8 +3,12 @@ import { createClient } from "@connectrpc/connect";
 import { EstateService } from "../gen/estate/v1/estate_pb";
 
 // The transport defines how the client talks to the backend
+const baseUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+  ? "http://localhost:8080" 
+  : "https://legacy-estate-os.web.app/api";
+
 const transport = createConnectTransport({
-  baseUrl: "http://localhost:8080", // Local API port
+  baseUrl: baseUrl,
 });
 
 // We create a client for each service

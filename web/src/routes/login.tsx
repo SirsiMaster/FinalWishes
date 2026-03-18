@@ -1,10 +1,39 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import React, { useState } from 'react'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
 })
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Protocol Check: Tameeka116 / Tameekalockhart@gmail.com / 123-456-7890 / ML6824!
+    const isTameeka = (username === 'Tameeka116' || username === 'Tameekalockhart@gmail.com' || username === '123-456-7890') && password === 'ML6824!';
+    
+    if (isTameeka) {
+      // Initialize Session Shard for Tameeka Lockhart (SuperAdmin)
+      localStorage.setItem('finalwishes_user', JSON.stringify({
+        id: 'user_tameeka',
+        name: 'Tameeka Lockhart',
+        email: 'Tameekalockhart@gmail.com',
+        phone: '123-456-7890',
+        login: 'Tameeka116',
+        profilePhotoUrl: '/assets/tameeka/mom dance.jpg', // The dance photo as profile
+        primaryEstateId: 'estate_lockhart',
+        primaryEstateName: 'Lockhart Estate'
+      }));
+      navigate({ to: '/dashboard' });
+    } else {
+      setError('Invalid identity protocol. Clear secure keys and try again.');
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background Orbs */}
@@ -29,30 +58,36 @@ function LoginPage() {
           <p className="text-white/60 text-sm">Secure authorization for the Estate OS</p>
         </div>
 
-        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+        <form className="space-y-6" onSubmit={handleLogin}>
           <div className="space-y-2">
-            <label className="text-[0.65rem] uppercase tracking-widest text-gold font-bold ml-1">Email Address</label>
+            <label className="text-[0.65rem] uppercase tracking-widest text-gold font-bold ml-1">Identity Login</label>
             <input 
-              type="email" 
-              placeholder="cylton@sirsi.ai"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:border-gold/50 focus:bg-white/10 transition-all outline-none"
+              type="text" 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Tameeka116"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:border-gold/50 focus:bg-white/10 transition-all outline-none font-bold"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-[0.65rem] uppercase tracking-widest text-gold font-bold ml-1">Password</label>
+            <label className="text-[0.65rem] uppercase tracking-widest text-gold font-bold ml-1">Vault Key (Password)</label>
             <input 
               type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:border-gold/50 focus:bg-white/10 transition-all outline-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:border-gold/50 focus:bg-white/10 transition-all outline-none font-bold"
             />
           </div>
 
-          <Link
-            to="/dashboard"
-            className="block w-full bg-gold text-black text-center py-3.5 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all no-underline"
+          {error && <div className="text-[10px] text-red-400 font-black uppercase tracking-[0.12em] text-center">{error}</div>}
+
+          <button
+            type="submit"
+            className="block w-full bg-gold text-black text-center py-3.5 rounded-xl font-[family-name:var(--font-cinzel)] font-black text-xs uppercase tracking-[0.2em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all shadow-xl active:scale-95"
           >
             Access Vault
-          </Link>
+          </button>
 
           <div className="flex items-center justify-between text-[0.65rem] text-white/40 uppercase tracking-widest font-bold px-1">
             <a href="#" className="hover:text-gold transition-colors">Forgot Password?</a>

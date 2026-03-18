@@ -86,10 +86,10 @@ function Home() {
         {/* Hero background image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1476234251651-f353703a034d?w=3840&h=2160&fit=crop&crop=faces"
-            alt="Multi-generational family moment"
+            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=3840&auto=format&fit=crop"
+            alt="Happy African American multi-generational family embracing"
             className="w-full h-full object-cover"
-            style={{ objectPosition: "center 30%" }}
+            style={{ objectPosition: "center 20%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-[#0f172a]/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/30 via-transparent to-transparent" />
@@ -542,7 +542,7 @@ function Home() {
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
       <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1476234251651-f353703a034d?w=1600&h=900&fit=crop&crop=faces" alt="Grandmother and grandchild sharing moment" className="w-full h-full object-cover" style={{ objectPosition: "center center" }} />
+          <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1600&auto=format&fit=crop" alt="The Lockhart Legacy family" className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/60 to-[#0f172a]/40" />
         </div>
 

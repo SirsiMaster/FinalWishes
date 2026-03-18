@@ -128,9 +128,17 @@ func (s *Server) AddBeneficiary(ctx context.Context, req *connect.Request[estate
 
 func (s *Server) ListEstates(ctx context.Context, req *connect.Request[estatev1.ListEstatesRequest]) (*connect.Response[estatev1.ListEstatesResponse], error) {
 	if s.fs == nil {
-		estates := []*estatev1.EstateSummary{
-			{Id: "estate-77b", Name: "The Collymore Portfolio", Role: "Owner"},
-			{Id: "estate-99c", Name: "The Collymore Dynasty Trust", Role: "Executor"},
+		var estates []*estatev1.EstateSummary
+		if req.Msg.UserId == "user_tameeka" || req.Msg.UserId == "Tameeka116" {
+			estates = []*estatev1.EstateSummary{
+				{Id: "estate_lockhart", Name: "Lockhart Estate", Role: "Owner"},
+				{Id: "trust_lockhart", Name: "Lockhart Dynasty Trust", Role: "Executor"},
+			}
+		} else {
+			estates = []*estatev1.EstateSummary{
+				{Id: "estate-77b", Name: "The Lockhart Estate Shard", Role: "Owner"},
+				{Id: "estate-99c", Name: "The Lockhart Global Trust", Role: "Executor"},
+			}
 		}
 		return connect.NewResponse(&estatev1.ListEstatesResponse{Estates: estates}), nil
 	}
@@ -187,13 +195,13 @@ func (s *Server) RegisterEstate(ctx context.Context, req *connect.Request[estate
 
 func (s *Server) GetEstateMetadata(ctx context.Context, req *connect.Request[estatev1.GetEstateMetadataRequest]) (*connect.Response[estatev1.GetEstateMetadataResponse], error) {
 	if s.fs == nil {
+		name := "Lockhart Estate"
+		completion := int32(100)
 		return connect.NewResponse(&estatev1.GetEstateMetadataResponse{
+			Id:                   req.Msg.EstateId,
+			Name:                 name,
 			Status:               "Active",
-			CompletionPercentage: 34,
-			Tier:                 "Concierge",
-			MfaEnabled:           true,
-			LastLogin:            timestamppb.Now(),
-			NextReviewDate:       timestamppb.Now(),
+			CompletionPercentage: completion,
 			AuthorityMode:        estatev1.AuthorityMode_AUTHORITY_MODE_OWNER,
 		}), nil
 	}
@@ -218,9 +226,19 @@ func (s *Server) GetEstateMetadata(ctx context.Context, req *connect.Request[est
 
 func (s *Server) ListAssets(ctx context.Context, req *connect.Request[estatev1.ListAssetsRequest]) (*connect.Response[estatev1.ListAssetsResponse], error) {
 	if s.fs == nil {
-		assets := []*estatev1.Asset{
-			{Name: "Family Home", Type: "Real Estate", Value: "$485,000", Status: "Verified"},
-			{Name: "Savings Account (Chase)", Type: "Cash", Value: "$124,500", Status: "Pending"},
+		var assets []*estatev1.Asset
+		if req.Msg.EstateId == "estate_lockhart" {
+			assets = []*estatev1.Asset{
+				{Name: "Lockhart Family Residence (Chicago)", Type: "Real Estate", Value: "$1,250,000", Status: "Verified"},
+				{Name: "Lockhart Heritage Investment Fund", Type: "Securities", Value: "$2,450,000", Status: "Verified"},
+				{Name: "Chase Private Client - Savings", Type: "Cash", Value: "$425,000", Status: "Verified"},
+				{Name: "Digital Vault - Rare Collectibles", Type: "Digital Assets", Value: "$85,000", Status: "Verified"},
+			}
+		} else {
+			assets = []*estatev1.Asset{
+				{Name: "Family Home", Type: "Real Estate", Value: "$485,000", Status: "Verified"},
+				{Name: "Savings Account (Chase)", Type: "Cash", Value: "$124,500", Status: "Pending"},
+			}
 		}
 		return connect.NewResponse(&estatev1.ListAssetsResponse{Assets: assets, TotalCount: int32(len(assets))}), nil
 	}
@@ -273,8 +291,18 @@ func (s *Server) AddAsset(ctx context.Context, req *connect.Request[estatev1.Add
 
 func (s *Server) ListVaultDocuments(ctx context.Context, req *connect.Request[estatev1.ListVaultDocumentsRequest]) (*connect.Response[estatev1.ListVaultDocumentsResponse], error) {
 	if s.fs == nil {
-		docs := []*estatev1.VaultDocument{
-			{Name: "Last_Will_Testament_2025.pdf", Date: "Mar 14, 2025", Size: "2.4 MB", Category: "Legal"},
+		var docs []*estatev1.VaultDocument
+		if req.Msg.EstateId == "estate_lockhart" {
+			docs = []*estatev1.VaultDocument{
+				{Name: "Lockhart_Master_Trust_2026.pdf", Date: "Feb 10, 2026", Size: "4.2 MB", Category: "Legal"},
+				{Name: "Estate_Tax_Clearance_IL.pdf", Date: "Mar 01, 2026", Size: "1.1 MB", Category: "Tax"},
+				{Name: "Family_Heritage_Deed.pdf", Date: "Jan 15, 2026", Size: "8.5 MB", Category: "Property"},
+				{Name: "Final_Wishes_Protocol_Auth.pdf", Date: "Mar 17, 2026", Size: "0.5 MB", Category: "Protocol"},
+			}
+		} else {
+			docs = []*estatev1.VaultDocument{
+				{Name: "Last_Will_Testament_2025.pdf", Date: "Mar 14, 2025", Size: "2.4 MB", Category: "Legal"},
+			}
 		}
 		return connect.NewResponse(&estatev1.ListVaultDocumentsResponse{Documents: docs}), nil
 	}
@@ -302,8 +330,18 @@ func (s *Server) ListVaultDocuments(ctx context.Context, req *connect.Request[es
 
 func (s *Server) ListMemoirs(ctx context.Context, req *connect.Request[estatev1.ListMemoirsRequest]) (*connect.Response[estatev1.ListMemoirsResponse], error) {
 	if s.fs == nil {
-		memoirs := []*estatev1.Memoir{
-			{Id: "1", Title: "Legacy Tape 01", Type: "video", Url: "/memoirs/legacy.mp4", DateAdded: "Today", Visibility: "private"},
+		var memoirs []*estatev1.Memoir
+		if req.Msg.EstateId == "estate_lockhart" {
+			memoirs = []*estatev1.Memoir{
+				{Id: "mem-1", Title: "Mommy - Legacy Tape 01", Type: "video", Url: "/assets/tameeka/mommy.mp4", DateAdded: "Mar 17, 2026", Visibility: "private"},
+				{Id: "mem-2", Title: "Musical Tribute - Live Session", Type: "video", Url: "/assets/tameeka/musical tribute.mp4", DateAdded: "Mar 17, 2026", Visibility: "all_heirs"},
+				{Id: "mem-3", Title: "Mom Memorial - Heritage Photo", Type: "photo", Url: "/assets/tameeka/mom memorial.jpg", DateAdded: "Feb 10, 2026", Visibility: "private"},
+				{Id: "mem-4", Title: "Mom Dance - Legacy Profile", Type: "photo", Url: "/assets/tameeka/mom dance.jpg", DateAdded: "Jan 15, 2026", Visibility: "private"},
+			}
+		} else {
+			memoirs = []*estatev1.Memoir{
+				{Id: "1", Title: "Legacy Tape 01", Type: "video", Url: "/memoirs/legacy.mp4", DateAdded: "Today", Visibility: "private"},
+			}
 		}
 		return connect.NewResponse(&estatev1.ListMemoirsResponse{Memoirs: memoirs}), nil
 	}
@@ -360,9 +398,15 @@ func (s *Server) UploadMemoir(ctx context.Context, req *connect.Request[estatev1
 
 func (s *Server) GetObituary(ctx context.Context, req *connect.Request[estatev1.GetObituaryRequest]) (*connect.Response[estatev1.GetObituaryResponse], error) {
 	if s.fs == nil {
+		content := "Marcus Aurelius was a philosopher-king."
+		status := "Draft"
+		if req.Msg.EstateId == "estate_lockhart" {
+			content = "Tameeka Lockhart, the guardian of the Lockhart Legacy, has established this final record as a testament to strength, family, and the enduring spirit of the Lockhart Estate. Her contributions to the community and her family remain indelible."
+			status = "Verified"
+		}
 		return connect.NewResponse(&estatev1.GetObituaryResponse{
-			Content:     "Marcus Aurelius was a philosopher-king.",
-			Status:      "Draft",
+			Content:     content,
+			Status:      status,
 			LastUpdated: timestamppb.Now(),
 		}), nil
 	}
@@ -404,11 +448,14 @@ func (s *Server) SaveObituary(ctx context.Context, req *connect.Request[estatev1
 }
 
 func (s *Server) GetAIInsight(ctx context.Context, req *connect.Request[estatev1.GetAIInsightRequest]) (*connect.Response[estatev1.GetAIInsightResponse], error) {
-	insight := "Your estate is currently 34% complete. We've detected that you have registered beneficiaries but haven't assigned their specific shares. Legally, unassigned shares default to statutory probate in many jurisdictions, which may not align with your wishes."
+	insight := "Heritage Protocol Synchronized. Your estate is 100% complete and secured via the Protocol Ledger. All shards are active and verified."
+	if req.Msg.EstateId != "estate_lockhart" {
+		insight = "Protocol Optimization Required. Your estate is 34% complete. Assigning remaining beneficiary shares will activate the full Guardian Protocol."
+	}
 	return connect.NewResponse(&estatev1.GetAIInsightResponse{
 		Insight:     insight,
-		ActionLabel: "Assign Shares",
-		ActionUrl:   "/dashboard/beneficiaries",
+		ActionLabel: "View Ledger",
+		ActionUrl:   "/dashboard/notifications",
 	}), nil
 }
 

@@ -13,7 +13,7 @@ function ObituaryPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSigned, setIsSigned] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [estateId, setEstateId] = useState('test-estate');
+  const [estateId, setEstateId ] = useState('');
   const [userName, setUserName] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);

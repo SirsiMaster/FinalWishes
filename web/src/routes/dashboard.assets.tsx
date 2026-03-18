@@ -10,7 +10,7 @@ export const Route = createFileRoute('/dashboard/assets')({
 function AssetsPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [estateId, setEstateId] = useState('test-estate');
+  const [estateId, setEstateId] = useState('estate_lockhart');
 
   useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');
@@ -52,49 +52,49 @@ function AssetsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-4">
         <div>
-          <h2 className="text-2xl font-bold text-navy">Asset Inventory</h2>
-          <p className="text-sm text-text-muted">Track and designate your global holdings.</p>
+          <h2 className="text-2xl font-black text-navy uppercase tracking-tight font-[family-name:var(--font-cinzel)]">Asset Inventory</h2>
+          <p className="text-sm text-text-muted">Track and designate your global holdings in the estate ledger.</p>
         </div>
         <button 
           onClick={() => setModalOpen(true)}
-          className="bg-gold text-black px-6 py-2.5 rounded-xl font-bold text-[0.7rem] uppercase tracking-widest hover:scale-105 transition-transform"
+          className="bg-gold text-black px-8 py-3 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest hover:scale-105 transition-all shadow-lg active:scale-95"
         >
           + Add Asset
         </button>
       </div>
 
-      <div className="bg-white rounded-3xl border border-border-light overflow-hidden shadow-sm">
+      <div className="bg-white rounded-[2rem] border border-border-light overflow-hidden shadow-sm">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-navy/5 text-[0.65rem] uppercase tracking-widest font-bold text-navy">
-              <th className="px-8 py-5">Asset Name</th>
-              <th className="px-8 py-5">Type</th>
-              <th className="px-8 py-5">Valuation</th>
-              <th className="px-8 py-5 text-center">Status</th>
-              <th className="px-8 py-5 text-right">Actions</th>
+            <tr className="bg-navy/5 text-[0.65rem] uppercase tracking-widest font-black text-navy">
+              <th className="px-8 py-6">Asset Name</th>
+              <th className="px-8 py-6">Type</th>
+              <th className="px-8 py-6">Valuation</th>
+              <th className="px-8 py-6 text-center">Status Shard</th>
+              <th className="px-8 py-6 text-right">Ledger Actions</th>
             </tr>
           </thead>
           <tbody className="text-sm text-text-secondary">
             {assets.map((a, i) => (
               <tr key={i} className="border-t border-border-light hover:bg-royal-subtle transition-colors group">
-                <td className="px-8 py-5 font-semibold text-navy">{a.name}</td>
-                <td className="px-8 py-5 font-mono text-[0.8rem] text-text-muted">{a.type}</td>
-                <td className="px-8 py-5 font-bold text-navy">{a.value}</td>
-                <td className="px-8 py-5 text-center">
-                  <span className={`px-2.5 py-1 rounded-full text-[9px] uppercase font-bold ${a.status === 'Verified' ? 'bg-green-100 text-green-700' : 'bg-gold-dim text-gold'}`}>
+                <td className="px-8 py-6 font-bold text-navy truncate max-w-[200px]">{a.name}</td>
+                <td className="px-8 py-6 font-black text-[0.65rem] text-royal uppercase tracking-widest">{a.type}</td>
+                <td className="px-8 py-6 font-black text-navy">{a.value}</td>
+                <td className="px-8 py-6 text-center">
+                  <span className={`px-3 py-1.5 rounded-lg text-[8px] uppercase font-black tracking-widest border transition-all ${a.status === 'Verified' ? 'bg-green-50 text-green-700 border-green-100' : 'bg-gold-dim text-gold border-gold/10'}`}>
                     {a.status}
                   </span>
                 </td>
-                <td className="px-8 py-5 text-right">
-                  <button className="text-royal font-bold text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 hover:underline transition-opacity">Edit</button>
+                <td className="px-8 py-6 text-right">
+                  <button className="text-royal font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 hover:underline transition-all">Audit Element</button>
                 </td>
               </tr>
             ))}
             {assets.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-8 py-20 text-center text-text-muted italic">No assets registered in this estate protocol.</td>
+                <td colSpan={5} className="px-8 py-24 text-center text-text-muted italic font-medium bg-navy/5">No assets registered in this governance shard.</td>
               </tr>
             )}
           </tbody>
@@ -103,9 +103,9 @@ function AssetsPage() {
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full border border-border-light shadow-2xl animate-in fade-in zoom-in duration-200">
-            <h3 className="text-xl font-bold text-navy mb-2 uppercase tracking-wide">Add New Asset</h3>
-            <p className="text-sm text-text-muted mb-6">Enter details for the new holding in your estate.</p>
+          <div className="bg-white rounded-[2.5rem] p-10 max-w-md w-full border border-border-light shadow-2xl animate-in zoom-in duration-300">
+            <h3 className="text-2xl font-[family-name:var(--font-cinzel)] font-black text-navy mb-2 uppercase tracking-wide">Register New Asset</h3>
+            <p className="text-sm text-text-muted mb-8 italic">Synchronize a new holding with the estate's verified ledger.</p>
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
@@ -114,29 +114,31 @@ function AssetsPage() {
                 type: formData.get('type') as string,
                 value: formData.get('value') as string
               });
-            }} className="space-y-4">
+            }} className="space-y-6">
               <div>
-                <label className="text-[0.65rem] font-bold text-navy uppercase tracking-widest mb-1.5 block">Asset Name</label>
-                <input name="name" required className="w-full px-4 py-3 rounded-xl border border-border-light focus:border-royal focus:ring-1 focus:ring-royal outline-none" placeholder="e.g. Chase Savings" />
+                <label className="text-[0.65rem] font-black text-navy opacity-40 uppercase tracking-[0.2em] mb-1.5 block">Asset Identifier</label>
+                <input name="name" required className="w-full px-5 py-4 rounded-2xl border border-border-light bg-gray-50 focus:bg-white focus:border-royal focus:ring-4 focus:ring-royal/5 outline-none font-bold text-navy transition-all placeholder:text-navy/20" placeholder="e.g. Chase Savings 0422" />
               </div>
               <div>
-                <label className="text-[0.65rem] font-bold text-navy uppercase tracking-widest mb-1.5 block">Asset Type</label>
-                <select name="type" required className="w-full px-4 py-3 rounded-xl border border-border-light focus:border-royal focus:ring-1 focus:ring-royal outline-none">
-                  <option value="Real Estate">Real Estate</option>
-                  <option value="Cash">Cash / Savings</option>
-                  <option value="Securities">Securities / Stocks</option>
-                  <option value="Personal Property">Personal Property</option>
-                  <option value="Digital Assets">Digital Assets</option>
-                </select>
+                <label className="text-[0.65rem] font-black text-navy opacity-40 uppercase tracking-[0.2em] mb-1.5 block">Holding Type Shard</label>
+                <div className="relative">
+                  <select name="type" required className="w-full px-5 py-4 rounded-2xl border border-border-light bg-gray-50 focus:bg-white outline-none font-bold text-navy appearance-none cursor-pointer">
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Cash">Cash / Savings</option>
+                    <option value="Securities">Securities / Stocks</option>
+                    <option value="Personal Property">Personal Property</option>
+                    <option value="Digital Assets">Digital Assets</option>
+                  </select>
+                </div>
               </div>
               <div>
-                <label className="text-[0.65rem] font-bold text-navy uppercase tracking-widest mb-1.5 block">Estimated Valuation</label>
-                <input name="value" required className="w-full px-4 py-3 rounded-xl border border-border-light focus:border-royal focus:ring-1 focus:ring-royal outline-none" placeholder="e.g. $100,000" />
+                <label className="text-[0.65rem] font-black text-navy opacity-40 uppercase tracking-[0.2em] mb-1.5 block">Estimated Valuation (Dynamic)</label>
+                <input name="value" required className="w-full px-5 py-4 rounded-2xl border border-border-light bg-gray-50 focus:bg-white focus:border-royal focus:ring-4 focus:ring-royal/5 outline-none font-bold text-navy transition-all placeholder:text-navy/20" placeholder="e.g. $125,000" />
               </div>
-              <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-3 rounded-xl border border-border-light font-bold text-text-secondary text-sm hover:bg-gray-50 uppercase tracking-widest transition-colors">Cancel</button>
-                <button type="submit" disabled={addAssetMutation.isPending} className="flex-1 py-3 rounded-xl bg-royal text-white font-bold text-sm hover:bg-navy uppercase tracking-widest transition-colors">
-                  {addAssetMutation.isPending ? 'Adding...' : 'Register Asset'}
+              <div className="flex gap-4 pt-4">
+                <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-4 rounded-2xl border border-border-light font-black text-navy text-xs uppercase tracking-[0.15em] hover:bg-gray-50 transition-colors">Discard</button>
+                <button type="submit" disabled={addAssetMutation.isPending} className="flex-1 py-4 rounded-2xl bg-navy text-white font-black text-xs uppercase tracking-[0.15em] hover:bg-black shadow-xl transition-all disabled:opacity-50 active:scale-95">
+                  {addAssetMutation.isPending ? 'Synchronizing...' : 'Register Asset'}
                 </button>
               </div>
             </form>

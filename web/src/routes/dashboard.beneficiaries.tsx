@@ -10,7 +10,7 @@ export const Route = createFileRoute('/dashboard/beneficiaries')({
 function BeneficiariesPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [estateId, setEstateId] = useState('test-estate');
+  const [estateId, setEstateId] = useState('');
 
   useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');

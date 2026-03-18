@@ -12,7 +12,7 @@ function MemoirsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [estateId, setEstateId ] = useState('test-estate');
+  const [estateId, setEstateId ] = useState('');
   const [selectedMemoir, setSelectedMemoir] = useState<any>(null);
 
   useEffect(() => {
@@ -50,14 +50,14 @@ function MemoirsPage() {
 
       // 3. Save Metadata to Firestore
       return estateClient.uploadMemoir({
-        estateId: 'test-estate',
+        estateId: estateId,
         title: vars.title,
         type: vars.type,
         url: finalUrl || `/memoirs/placeholder.${vars.type === 'video' ? 'mp4' : 'jpg'}`
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['memoirs'] });
+      queryClient.invalidateQueries({ queryKey: ['memoirs', estateId] });
       setModalOpen(false);
       setUploading(false);
     },
@@ -264,15 +264,18 @@ function MemoirsPage() {
 }
 
 function VideoCard({ memoir, onClick }: any) {
+  // Use a hack to force a preview frame if autoplay is blocked
+  const videoUrl = memoir.url ? `${memoir.url}#t=0.001` : null;
+
   return (
     <div 
       onClick={onClick}
       className="bg-white rounded-3xl border border-border-light overflow-hidden shadow-sm group hover:border-royal/40 hover:shadow-2xl transition-all relative cursor-pointer"
     >
       <div className="aspect-video bg-navy relative flex items-center justify-center overflow-hidden">
-        {memoir.url ? (
+        {videoUrl ? (
            <video 
-             src={memoir.url} 
+             src={videoUrl} 
              className="w-full h-full object-cover" 
              autoPlay 
              muted 

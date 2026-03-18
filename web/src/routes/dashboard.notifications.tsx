@@ -8,13 +8,14 @@ export const Route = createFileRoute('/dashboard/notifications')({
 })
 
 function NotificationsPage() {
-  const [estateId, setEstateId] = useState('test-estate');
+  const [estateId, setEstateId] = useState('');
 
   useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');
     if (session) {
       const u = JSON.parse(session);
-      setEstateId(u.primaryEstateId || 'test-estate');
+      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
+      setEstateId(preferredId);
     }
   }, []);
 

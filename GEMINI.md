@@ -133,6 +133,7 @@ These documents are the source of truth for this repo:
 *   **CLI Access**: Full CLI access to GitHub and Firebase.
 *   **Push Protocol**: ALWAYS run `git status` -> `git add` -> `git commit` -> `git push`.
 *   **Identity**: `SirsiMaster` account exclusively.
+*   **Browser Profile (Rule 28)**: ALL browser subagent work MUST execute in the **`ccollymo@alumni.chicagobooth.edu`** Chrome profile. No exceptions. Every browser_subagent task prompt MUST include instructions to use this profile. See `.agent/workflows/browser-testing.md` for full protocol.
 
 ## 9. Shared Services Map
 | Service | Provider | Repo |

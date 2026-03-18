@@ -52,11 +52,9 @@ body {
 
 /* ── Identity Contexts ── */
 .royal-theme {
-  background-color: #1E3A8A;
+  background-color: #1A347A;
   background-image:
-    radial-gradient(ellipse 130% 90% at 50% -15%, rgba(59, 130, 246, 0.45) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 60% at 85% 110%, rgba(200, 169, 81, 0.1) 0%, transparent 50%),
-    radial-gradient(at 50% 50%, #1D4ED8 0%, #1E3A8A 100%);
+    radial-gradient(ellipse 130% 80% at 50% 0%, #2563EB 0%, #1A347A 55%, #152B65 100%);
   background-attachment: fixed;
   color: #FFFFFF;
 
@@ -69,8 +67,8 @@ body {
   --border-light: rgba(255, 255, 255, 0.15);
 
   /* Backgrounds */
-  --bg-primary: #1E3A8A;
-  --bg-secondary: rgba(30, 64, 175, 0.55);
+  --bg-primary: #1A347A;
+  --bg-secondary: rgba(26, 52, 122, 0.65);
   --bg-dashboard-tint: none;
 
   /* Glass Card System — Luminous */

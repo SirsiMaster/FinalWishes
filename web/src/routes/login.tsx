@@ -14,9 +14,12 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // Revert to normal identity (light)
-    document.body.classList.remove('royal-theme');
+    // Revert to Royal Blue Identity (Dark)
+    document.body.classList.add('royal-theme');
     document.body.classList.remove('dashboard-theme');
+    return () => {
+      document.body.classList.remove('royal-theme');
+    };
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -43,7 +46,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#F8FAFB]">
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background Orbs — Royal Neo-Deco Protocol */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-royal/30 blur-[120px] rounded-full animate-pulse" />
@@ -54,16 +57,16 @@ function LoginPage() {
         <div className="text-center mb-10">
           <Link to="/" className="inline-block mb-6 no-underline hover:scale-105 transition-transform">
             <div className="flex items-center justify-center gap-3">
-              <svg viewBox="0 0 24 24" className="w-10 h-10 text-royal fill-current">
+              <svg viewBox="0 0 24 24" className="w-10 h-10 text-gold fill-current">
                 <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" transform="scale(0.24)" />
               </svg>
-              <span className="font-[family-name:var(--font-cinzel)] text-2xl tracking-[0.15em] font-black text-navy">
+              <span className="font-[family-name:var(--font-cinzel)] text-2xl tracking-[0.15em] font-black themed-text-primary">
                 FINALWISHES
               </span>
             </div>
           </Link>
-          <h1 className="text-2xl font-[family-name:var(--font-cinzel)] font-black text-navy mb-2 uppercase tracking-wide">Identity Check</h1>
-          <p className="text-navy/40 text-[0.65rem] font-black uppercase tracking-[0.2em]">Secured Access Protocol for the Estate OS</p>
+          <h1 className="text-2xl font-[family-name:var(--font-cinzel)] font-black themed-text-primary mb-2 uppercase tracking-wide">Identity Check</h1>
+          <p className="themed-text-muted text-[0.65rem] font-black uppercase tracking-[0.2em]">Secured Access Protocol for the Estate OS</p>
         </div>
 
         <form className="space-y-6" onSubmit={handleLogin}>
@@ -74,7 +77,7 @@ function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="e.g. Tameeka116"
-              className="w-full bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl px-5 py-4 text-navy placeholder:text-navy/30 focus:border-royal/50 focus:bg-white transition-all outline-none font-bold text-sm"
+              className="w-full themed-input rounded-xl px-5 py-4 transition-all outline-none font-bold text-sm"
             />
           </div>
           <div className="space-y-2 relative">
@@ -85,12 +88,12 @@ function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl px-5 py-4 pr-12 text-navy placeholder:text-navy/30 focus:border-royal/50 focus:bg-white transition-all outline-none font-bold text-sm relative z-0"
+                className="w-full themed-input rounded-xl px-5 py-4 pr-12 transition-all outline-none font-bold text-sm relative z-0"
               />
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-navy/30 hover:text-royal transition-colors z-10"
+                className="absolute right-4 top-1/2 -translate-y-1/2 themed-icon z-10"
               >
                 {showPassword ? (
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -105,25 +108,25 @@ function LoginPage() {
 
           <button
             type="submit"
-            className="block w-full bg-navy text-white text-center py-3.5 rounded-xl font-[family-name:var(--font-cinzel)] font-black text-xs uppercase tracking-[0.2em] hover:bg-navy-mid hover:shadow-xl transition-all active:scale-95"
+            className="block w-full bg-gold text-black text-center py-3.5 rounded-xl font-[family-name:var(--font-cinzel)] font-black text-xs uppercase tracking-[0.2em] hover:bg-gold-bright hover:shadow-xl transition-all active:scale-95"
           >
             Access Vault
           </button>
 
-          <div className="flex items-center justify-between text-[0.65rem] text-navy/40 uppercase tracking-widest font-bold px-1">
-            <a href="#" className="hover:text-royal transition-colors">Forgot Password?</a>
-            <a href="#" className="hover:text-royal transition-colors">Request Access</a>
+          <div className="flex items-center justify-between text-[0.65rem] themed-text-muted uppercase tracking-widest font-bold px-1">
+            <a href="#" className="hover:text-gold transition-colors">Forgot Password?</a>
+            <a href="#" className="hover:text-gold transition-colors">Request Access</a>
           </div>
         </form>
 
-        <div className="mt-10 pt-8 border-t border-navy/5 flex items-center justify-center gap-4">
+        <div className="mt-10 pt-8 border-t border-white/5 flex items-center justify-center gap-4">
           <div className="flex items-center gap-1.5">
-            <div className="status-dot scale-75 !bg-navy/20" />
-            <span className="text-[0.6rem] text-navy/30 uppercase tracking-widest">AES-256</span>
+            <div className="status-dot scale-75 !bg-white/20" />
+            <span className="text-[0.6rem] themed-text-muted uppercase tracking-widest">AES-256</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="status-dot scale-75 !bg-navy/20" />
-            <span className="text-[0.6rem] text-navy/30 uppercase tracking-widest">Bipartite MFA</span>
+            <div className="status-dot scale-75 !bg-white/20" />
+            <span className="text-[0.6rem] themed-text-muted uppercase tracking-widest">Bipartite MFA</span>
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@
 
 :root {
   /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
-  --navy: #0F172A;
+  --navy: #1B263B; /* Deep Indigo Shard (Not black) */
   --navy-mid: #1E3A5F; /* The "Heritage Royal" */
   --royal: #2563EB; /* The "Royal Accent" */
   --royal-bright: #3B82F6;
@@ -79,14 +79,31 @@ body {
 
 /* ── Identity Contexts ── */
 .royal-theme {
-  background-color: var(--navy);
-  background-image: var(--bg-royal);
+  background-color: var(--navy-mid);
+  background-image: radial-gradient(at 50% 0px, var(--royal) 0%, var(--navy-mid) 65%, var(--navy) 100%);
   background-attachment: fixed;
   color: #FFFFFF;
   --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.8);
-  --text-muted: rgba(255, 255, 255, 0.6);
-  --border-light: rgba(255, 255, 255, 0.1);
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.65);
+  --border-light: rgba(255, 255, 255, 0.15);
+  
+  /* Royal Card Protocol — Vibrant Blue Glass Shard */
+  --card-bg: rgba(30, 58, 95, 0.7); /* Refined Royal Blue (var(--navy-mid) based) */
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
+  --card-shadow-hover: 0 40px 70px -12px rgba(37, 99, 235, 0.4);
+  --card-backdrop: blur(25px);
+
+  /* Royal Input Protocol — Refined Shards */
+  --input-bg: rgba(255, 255, 255, 0.08);
+  --input-border: rgba(255, 255, 255, 0.15);
+  --input-text: #FFFFFF;
+  --input-placeholder: rgba(255, 255, 255, 0.4);
+  --input-focus-bg: rgba(255, 255, 255, 0.12);
+  
+  --icon-color: #94A3B8;
+  --icon-hover: var(--gold);
 }
 
 .dashboard-theme {
@@ -98,6 +115,57 @@ body {
   --text-secondary: #334155;
   --text-muted: #64748B;
   --border-light: var(--border-dashboard);
+
+  /* Dashboard Card Protocol */
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: var(--border-dashboard);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --card-backdrop: none;
+
+  /* Dashboard Input Protocol */
+  --input-bg: #F3F4F6;
+  --input-border: #E5E7EB;
+  --input-text: var(--navy);
+  --input-placeholder: rgba(15, 23, 42, 0.3);
+  --input-focus-bg: #FFFFFF;
+
+  --icon-color: var(--gold); /* Gold for white background */
+  --icon-hover: var(--gold-bright);
+}
+
+/* ── Themed Input Utilities ── */
+.themed-input {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--input-text);
+  transition: all 0.3s ease;
+}
+.themed-input::placeholder {
+  color: var(--input-placeholder);
+}
+.themed-input:focus {
+  background-color: var(--input-focus-bg);
+  border-color: var(--royal);
+}
+
+/* ── Themed Text Utilities ── */
+.themed-text-primary {
+  color: var(--text-primary);
+}
+.themed-text-secondary {
+  color: var(--text-secondary);
+}
+.themed-text-muted {
+  color: var(--text-muted);
+}
+
+.themed-icon {
+  color: var(--icon-color);
+  transition: color 0.3s ease;
+}
+.themed-icon:hover {
+  color: var(--icon-hover);
 }
 
 /* ── Film Grain Texture ── */
@@ -115,8 +183,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0px 1000px #0F172A inset !important;
-  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-text) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 

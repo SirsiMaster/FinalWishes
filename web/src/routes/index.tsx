@@ -89,7 +89,7 @@ function Home() {
         {/* Hero background image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=3840&auto=format&fit=crop"
+            src="/assets/images/hero-family.jpg"
             alt="Happy African American multi-generational family portrait"
             className="w-full h-full object-cover"
             style={{ objectPosition: "center 30%" }}

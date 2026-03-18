@@ -280,7 +280,7 @@ input::-webkit-contacts-auto-fill-button {
 
 /* ── Section Divider ── */
 .section-divider {
-  height: 40px;
+  height: 20px;
   background: transparent;
   position: relative;
 }

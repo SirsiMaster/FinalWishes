@@ -85,7 +85,7 @@ function Home() {
       </nav>
 
       {/* ═══════════════════ HERO ═══════════════════ */}
-      <header className="relative min-h-[75vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
+      <header className="relative min-h-[65vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
         {/* Hero background image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -150,7 +150,7 @@ function Home() {
 
       {/* ═══════════════════ PROBLEM SECTION ═══════════════════ */}
       <section id="problem" className="relative z-10 grid md:grid-cols-2">
-        <div className="relative h-[500px] md:h-auto overflow-hidden">
+        <div className="relative h-[320px] md:h-auto overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=3840&auto=format&fit=crop"
             alt="Old photographs and letters"
@@ -163,7 +163,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center px-6 md:px-12 py-12 glass-panel">
+        <div className="flex flex-col justify-center px-6 md:px-10 py-10 glass-panel">
           <div className="max-w-lg mx-auto">
             <h2 className="text-2xl md:text-4xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
               Two Tragedies:<br />
@@ -185,7 +185,7 @@ function Home() {
       <div className="section-divider" />
 
       {/* ═══════════════════ VALUE PROPOSITION ═══════════════════ */}
-      <section id="value" className="py-16 relative z-10 overflow-hidden">
+      <section id="value" className="py-10 relative z-10 overflow-hidden">
         <div className="max-w-4xl mx-auto px-5 relative z-10 text-center">
           <p className="text-base md:text-lg text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
             We automate the chaotic administration of loss—so your family can grieve in peace, not paperwork.
@@ -220,7 +220,7 @@ function Home() {
       <div className="section-divider" />
 
       {/* ═══════════════════ PROTOCOL — 4 Steps ═══════════════════ */}
-      <section id="protocol" className="py-16 relative z-10 overflow-hidden">
+      <section id="protocol" className="py-12 relative z-10 overflow-hidden">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
@@ -232,7 +232,7 @@ function Home() {
           <div className="space-y-0">
             {/* Step 1: BUILD LEGACY */}
             <div className="grid md:grid-cols-2 gap-0">
-              <div className="relative h-[400px] overflow-hidden">
+              <div className="relative h-[280px] overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?w=800&h=600&fit=crop" alt="Grandfather recording memoir" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
@@ -265,7 +265,7 @@ function Home() {
                   <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Death Cert Verification</li>
                 </ul>
               </div>
-              <div className="relative h-[400px] overflow-hidden order-1 md:order-2">
+              <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
                 <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Security Lock" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
@@ -277,7 +277,7 @@ function Home() {
 
             {/* Step 3: NOTIFY */}
             <div className="grid md:grid-cols-2 gap-0">
-              <div className="relative h-[400px] overflow-hidden">
+              <div className="relative h-[280px] overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal Letters" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
@@ -314,7 +314,7 @@ function Home() {
                   Start Your Protocol
                 </Link>
               </div>
-              <div className="relative h-[400px] overflow-hidden order-1 md:order-2">
+              <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
                 <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Happy African American family embracing" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
@@ -334,7 +334,7 @@ function Home() {
       <div className="section-divider" />
 
       {/* ═══════════════════ SECURITY — Swiss Vault ═══════════════════ */}
-      <section id="security" className="relative min-h-[60vh] flex items-center overflow-hidden z-10">
+      <section id="security" className="relative min-h-[45vh] flex items-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3840&auto=format&fit=crop" alt="Secure data center vault" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
@@ -415,7 +415,7 @@ function Home() {
       <div className="section-divider" />
 
       {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
-      <section id="stories" className="py-16 relative overflow-hidden z-10">
+      <section id="stories" className="py-12 relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
@@ -453,7 +453,7 @@ function Home() {
       <div className="section-divider" />
 
       {/* ═══════════════════ ROADMAP ═══════════════════ */}
-      <section id="roadmap" className="py-16 relative overflow-hidden z-10">
+      <section id="roadmap" className="py-12 relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <div className="text-center mb-10">
             <div className="flex items-center justify-center gap-2 mb-3">
@@ -478,7 +478,7 @@ function Home() {
       <div className="section-divider" />
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10">
+      <section id="pricing" className="py-12 relative overflow-hidden z-10">
         <div className="max-w-5xl mx-auto px-5 relative z-10">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
@@ -543,7 +543,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden z-10">
+      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1600&auto=format&fit=crop" alt="The Lockhart Legacy family" className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
@@ -555,7 +555,7 @@ function Home() {
         <div className="deco-corner bottom-left" />
         <div className="deco-corner bottom-right" />
 
-        <div className="relative z-10 text-center px-5 max-w-3xl mx-auto flex flex-col items-center justify-center py-16">
+        <div className="relative z-10 text-center px-5 max-w-3xl mx-auto flex flex-col items-center justify-center py-10">
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="w-16 h-px bg-gradient-to-r from-transparent to-gold" />
             <div className="w-2 h-2 bg-gold rotate-45" />

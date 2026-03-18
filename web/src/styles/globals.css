@@ -23,14 +23,14 @@
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  /* Swiss Neo Deco Shard (Light Theme) */
-  --bg-primary: #fcfdfe;
-  --bg-secondary: #ffffff;
-  --bg-gradient: radial-gradient(circle at top right, #fcfdfe 0%, #edf1f7 100%);
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --border-light: rgba(15, 23, 42, 0.08);
+  /* Swiss Neo Deco Shard (Dashboard Surface Protocol) */
+  --bg-primary: transparent;
+  --bg-secondary: rgba(255, 255, 255, 0.85);
+  --bg-gradient: radial-gradient(at 50% 0px, #2563EB 0%, #1E3A8A 35%, #0F172A 75%);
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border-light: rgba(255, 255, 255, 0.1);
 
   /* Glass Card System (Opulent) */
   --card-bg: rgba(255, 255, 255, 0.8);
@@ -68,7 +68,9 @@
 
 /* ── Body: Deep Blue Gradient ── */
 body {
-  background: var(--bg-gradient);
+  background-color: var(--navy);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
@@ -127,8 +129,10 @@ input::-webkit-contacts-auto-fill-button {
 /* ── Glass Panel ── */
 .glass-panel {
   background: var(--bg-secondary);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-light);
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 /* ── Gold Divider ── */
@@ -228,6 +232,6 @@ input::-webkit-contacts-auto-fill-button {
 
 /* ── Dashboard Shell ── */
 .dashboard-shell {
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
 }

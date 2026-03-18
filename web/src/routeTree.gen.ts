@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as EstatesEstateIdRouteImport } from './routes/estates.$estateId'
 import { Route as DashboardVaultRouteImport } from './routes/dashboard.vault'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardObituaryRouteImport } from './routes/dashboard.obituary'
@@ -21,6 +22,15 @@ import { Route as DashboardMemoirsRouteImport } from './routes/dashboard.memoirs
 import { Route as DashboardEstatesRouteImport } from './routes/dashboard.estates'
 import { Route as DashboardBeneficiariesRouteImport } from './routes/dashboard.beneficiaries'
 import { Route as DashboardAssetsRouteImport } from './routes/dashboard.assets'
+import { Route as EstatesEstateIdVaultRouteImport } from './routes/estates.$estateId.vault'
+import { Route as EstatesEstateIdSettingsRouteImport } from './routes/estates.$estateId.settings'
+import { Route as EstatesEstateIdObituaryRouteImport } from './routes/estates.$estateId.obituary'
+import { Route as EstatesEstateIdNotificationsRouteImport } from './routes/estates.$estateId.notifications'
+import { Route as EstatesEstateIdMemoirsRouteImport } from './routes/estates.$estateId.memoirs'
+import { Route as EstatesEstateIdEstatesRouteImport } from './routes/estates.$estateId.estates'
+import { Route as EstatesEstateIdDashboardRouteImport } from './routes/estates.$estateId.dashboard'
+import { Route as EstatesEstateIdBeneficiariesRouteImport } from './routes/estates.$estateId.beneficiaries'
+import { Route as EstatesEstateIdAssetsRouteImport } from './routes/estates.$estateId.assets'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -41,6 +51,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const EstatesEstateIdRoute = EstatesEstateIdRouteImport.update({
+  id: '/estates/$estateId',
+  path: '/estates/$estateId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardVaultRoute = DashboardVaultRouteImport.update({
   id: '/vault',
@@ -82,6 +97,54 @@ const DashboardAssetsRoute = DashboardAssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => DashboardRoute,
 } as any)
+const EstatesEstateIdVaultRoute = EstatesEstateIdVaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
+const EstatesEstateIdSettingsRoute = EstatesEstateIdSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
+const EstatesEstateIdObituaryRoute = EstatesEstateIdObituaryRouteImport.update({
+  id: '/obituary',
+  path: '/obituary',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
+const EstatesEstateIdNotificationsRoute =
+  EstatesEstateIdNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => EstatesEstateIdRoute,
+  } as any)
+const EstatesEstateIdMemoirsRoute = EstatesEstateIdMemoirsRouteImport.update({
+  id: '/memoirs',
+  path: '/memoirs',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
+const EstatesEstateIdEstatesRoute = EstatesEstateIdEstatesRouteImport.update({
+  id: '/estates',
+  path: '/estates',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
+const EstatesEstateIdDashboardRoute =
+  EstatesEstateIdDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => EstatesEstateIdRoute,
+  } as any)
+const EstatesEstateIdBeneficiariesRoute =
+  EstatesEstateIdBeneficiariesRouteImport.update({
+    id: '/beneficiaries',
+    path: '/beneficiaries',
+    getParentRoute: () => EstatesEstateIdRoute,
+  } as any)
+const EstatesEstateIdAssetsRoute = EstatesEstateIdAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,7 +158,17 @@ export interface FileRoutesByFullPath {
   '/dashboard/obituary': typeof DashboardObituaryRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
+  '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
+  '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
+  '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
+  '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
+  '/estates/$estateId/memoirs': typeof EstatesEstateIdMemoirsRoute
+  '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
+  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
+  '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
+  '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -108,7 +181,17 @@ export interface FileRoutesByTo {
   '/dashboard/obituary': typeof DashboardObituaryRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
+  '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
+  '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
+  '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
+  '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
+  '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
+  '/estates/$estateId/memoirs': typeof EstatesEstateIdMemoirsRoute
+  '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
+  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
+  '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
+  '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -123,7 +206,17 @@ export interface FileRoutesById {
   '/dashboard/obituary': typeof DashboardObituaryRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
+  '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/dashboard/': typeof DashboardIndexRoute
+  '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
+  '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
+  '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
+  '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
+  '/estates/$estateId/memoirs': typeof EstatesEstateIdMemoirsRoute
+  '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
+  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
+  '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
+  '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -139,7 +232,17 @@ export interface FileRouteTypes {
     | '/dashboard/obituary'
     | '/dashboard/settings'
     | '/dashboard/vault'
+    | '/estates/$estateId'
     | '/dashboard/'
+    | '/estates/$estateId/assets'
+    | '/estates/$estateId/beneficiaries'
+    | '/estates/$estateId/dashboard'
+    | '/estates/$estateId/estates'
+    | '/estates/$estateId/memoirs'
+    | '/estates/$estateId/notifications'
+    | '/estates/$estateId/obituary'
+    | '/estates/$estateId/settings'
+    | '/estates/$estateId/vault'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -152,7 +255,17 @@ export interface FileRouteTypes {
     | '/dashboard/obituary'
     | '/dashboard/settings'
     | '/dashboard/vault'
+    | '/estates/$estateId'
     | '/dashboard'
+    | '/estates/$estateId/assets'
+    | '/estates/$estateId/beneficiaries'
+    | '/estates/$estateId/dashboard'
+    | '/estates/$estateId/estates'
+    | '/estates/$estateId/memoirs'
+    | '/estates/$estateId/notifications'
+    | '/estates/$estateId/obituary'
+    | '/estates/$estateId/settings'
+    | '/estates/$estateId/vault'
   id:
     | '__root__'
     | '/'
@@ -166,13 +279,24 @@ export interface FileRouteTypes {
     | '/dashboard/obituary'
     | '/dashboard/settings'
     | '/dashboard/vault'
+    | '/estates/$estateId'
     | '/dashboard/'
+    | '/estates/$estateId/assets'
+    | '/estates/$estateId/beneficiaries'
+    | '/estates/$estateId/dashboard'
+    | '/estates/$estateId/estates'
+    | '/estates/$estateId/memoirs'
+    | '/estates/$estateId/notifications'
+    | '/estates/$estateId/obituary'
+    | '/estates/$estateId/settings'
+    | '/estates/$estateId/vault'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
+  EstatesEstateIdRoute: typeof EstatesEstateIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +328,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/estates/$estateId': {
+      id: '/estates/$estateId'
+      path: '/estates/$estateId'
+      fullPath: '/estates/$estateId'
+      preLoaderRoute: typeof EstatesEstateIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/dashboard/vault': {
       id: '/dashboard/vault'
@@ -261,6 +392,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAssetsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/estates/$estateId/vault': {
+      id: '/estates/$estateId/vault'
+      path: '/vault'
+      fullPath: '/estates/$estateId/vault'
+      preLoaderRoute: typeof EstatesEstateIdVaultRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/settings': {
+      id: '/estates/$estateId/settings'
+      path: '/settings'
+      fullPath: '/estates/$estateId/settings'
+      preLoaderRoute: typeof EstatesEstateIdSettingsRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/obituary': {
+      id: '/estates/$estateId/obituary'
+      path: '/obituary'
+      fullPath: '/estates/$estateId/obituary'
+      preLoaderRoute: typeof EstatesEstateIdObituaryRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/notifications': {
+      id: '/estates/$estateId/notifications'
+      path: '/notifications'
+      fullPath: '/estates/$estateId/notifications'
+      preLoaderRoute: typeof EstatesEstateIdNotificationsRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/memoirs': {
+      id: '/estates/$estateId/memoirs'
+      path: '/memoirs'
+      fullPath: '/estates/$estateId/memoirs'
+      preLoaderRoute: typeof EstatesEstateIdMemoirsRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/estates': {
+      id: '/estates/$estateId/estates'
+      path: '/estates'
+      fullPath: '/estates/$estateId/estates'
+      preLoaderRoute: typeof EstatesEstateIdEstatesRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/dashboard': {
+      id: '/estates/$estateId/dashboard'
+      path: '/dashboard'
+      fullPath: '/estates/$estateId/dashboard'
+      preLoaderRoute: typeof EstatesEstateIdDashboardRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/beneficiaries': {
+      id: '/estates/$estateId/beneficiaries'
+      path: '/beneficiaries'
+      fullPath: '/estates/$estateId/beneficiaries'
+      preLoaderRoute: typeof EstatesEstateIdBeneficiariesRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/assets': {
+      id: '/estates/$estateId/assets'
+      path: '/assets'
+      fullPath: '/estates/$estateId/assets'
+      preLoaderRoute: typeof EstatesEstateIdAssetsRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
   }
 }
 
@@ -292,10 +486,39 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface EstatesEstateIdRouteChildren {
+  EstatesEstateIdAssetsRoute: typeof EstatesEstateIdAssetsRoute
+  EstatesEstateIdBeneficiariesRoute: typeof EstatesEstateIdBeneficiariesRoute
+  EstatesEstateIdDashboardRoute: typeof EstatesEstateIdDashboardRoute
+  EstatesEstateIdEstatesRoute: typeof EstatesEstateIdEstatesRoute
+  EstatesEstateIdMemoirsRoute: typeof EstatesEstateIdMemoirsRoute
+  EstatesEstateIdNotificationsRoute: typeof EstatesEstateIdNotificationsRoute
+  EstatesEstateIdObituaryRoute: typeof EstatesEstateIdObituaryRoute
+  EstatesEstateIdSettingsRoute: typeof EstatesEstateIdSettingsRoute
+  EstatesEstateIdVaultRoute: typeof EstatesEstateIdVaultRoute
+}
+
+const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
+  EstatesEstateIdAssetsRoute: EstatesEstateIdAssetsRoute,
+  EstatesEstateIdBeneficiariesRoute: EstatesEstateIdBeneficiariesRoute,
+  EstatesEstateIdDashboardRoute: EstatesEstateIdDashboardRoute,
+  EstatesEstateIdEstatesRoute: EstatesEstateIdEstatesRoute,
+  EstatesEstateIdMemoirsRoute: EstatesEstateIdMemoirsRoute,
+  EstatesEstateIdNotificationsRoute: EstatesEstateIdNotificationsRoute,
+  EstatesEstateIdObituaryRoute: EstatesEstateIdObituaryRoute,
+  EstatesEstateIdSettingsRoute: EstatesEstateIdSettingsRoute,
+  EstatesEstateIdVaultRoute: EstatesEstateIdVaultRoute,
+}
+
+const EstatesEstateIdRouteWithChildren = EstatesEstateIdRoute._addFileChildren(
+  EstatesEstateIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
+  EstatesEstateIdRoute: EstatesEstateIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

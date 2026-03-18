@@ -571,10 +571,10 @@ function Home() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link to="/login" className="bg-gold text-black px-8 py-3.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all">
-              Initialize Protocol
+              Begin Your Legacy
             </Link>
-            <a href="#" className="border-2 border-white/30 text-white px-8 py-3.5 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all">
-              Schedule a Call
+            <a href="#protocol" className="border-2 border-white/30 text-white px-8 py-3.5 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all">
+              See How It Works
             </a>
           </div>
 
@@ -600,14 +600,14 @@ function Home() {
               <p className="text-white/60 text-xs leading-relaxed">The Estate Operating System. Transforming end-of-life management through AI-powered automation.</p>
             </div>
             <FooterCol title="Product" links={[{ label: "How It Works", href: "#protocol" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
-            <FooterCol title="Company" links={[{ label: "About Us", href: "#" }, { label: "Careers", href: "#" }, { label: "Contact", href: "#" }]} />
-            <FooterCol title="Legal" links={[{ label: "Privacy", href: "#" }, { label: "Terms", href: "#" }, { label: "GDPR", href: "#" }]} />
+            <FooterCol title="Company" links={[{ label: "About Us", href: "#stories" }, { label: "Careers", href: "#roadmap" }, { label: "Contact", href: "#protocol" }]} />
+            <FooterCol title="Legal" links={[{ label: "Privacy", href: "#security" }, { label: "Terms", href: "#security" }, { label: "Compliance", href: "#security" }]} />
           </div>
 
           <div className="gold-divider mb-3" />
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-3">
-            <div className="text-[0.6rem] text-white/40">© 2025 FinalWishes Inc. Powered by <strong>Sirsi Technologies</strong>.</div>
+            <div className="text-[0.6rem] text-white/40">© 2026 FinalWishes Inc. Powered by <strong>Sirsi Technologies</strong>.</div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1 text-white/50 text-[0.6rem] uppercase tracking-wider"><div className="w-1.5 h-1.5 rounded-full bg-success" /><span>SOC 2</span></div>
               <div className="flex items-center gap-1 text-white/50 text-[0.6rem] uppercase tracking-wider"><div className="w-1.5 h-1.5 rounded-full bg-success" /><span>HIPAA</span></div>

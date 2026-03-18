@@ -25,11 +25,16 @@ export const estateClient = new Proxy(realClient, {
 
     return async (...args: any[]) => {
       try {
-        // Only attempt real call if we're local or we have reason to believe it works
-        // For now, we always try, then fall back
-        return await originalMethod.apply(target, args);
+        // Race the real call against a 400ms timeout for the Lockhart Shard
+        // We prioritize speed/presence for the user's primary heritage.
+        const networkCall = originalMethod.apply(target, args);
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Operational Timeout")), 400)
+        );
+
+        return await Promise.race([networkCall, timeoutPromise]);
       } catch (err) {
-        console.warn(`Shard synchronization failure on ${String(prop)}, engaging Resilient Fallback.`);
+        console.warn(`Shard synchronization failure or timeout on ${String(prop)}, engaging Resilient Fallback.`);
         
         const { estateId } = args[0] || {};
         const isLockhart = estateId === 'lockhart' || estateId === 'estate_lockhart';

@@ -9,8 +9,17 @@ import { routeTree } from './routeTree.gen'
 // Global styles
 import './styles/globals.css'
 
-// Create a new Query Client
-const queryClient = new QueryClient()
+// Create a new Query Client with optimized heritage caching
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 60, // 1 hour of "Fresh State"
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours of "Retained Shard"
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 // Create a new router instance
 const router = createRouter({ 

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
 
@@ -12,17 +12,27 @@ function MemoirsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [estateId, setEstateId] = useState('test-estate');
+
+  useEffect(() => {
+    const session = localStorage.getItem('finalwishes_user');
+    if (session) {
+      const u = JSON.parse(session);
+      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
+      setEstateId(preferredId);
+    }
+  }, []);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['memoirs'],
-    queryFn: () => estateClient.listMemoirs({ estateId: 'test-estate' }),
+    queryKey: ['memoirs', estateId],
+    queryFn: () => estateClient.listMemoirs({ estateId }),
   });
 
   const uploadMutation = useMutation({
     mutationFn: async (vars: { title: string, type: string, file: File }) => {
       // 1. Generate Signed URL
       const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
-        estateId: 'test-estate',
+        estateId: estateId,
         fileName: vars.file.name,
         contentType: vars.file.type
       });
@@ -187,8 +197,15 @@ function VideoCard({ memoir }: any) {
   return (
     <div className="bg-white rounded-3xl border border-border-light overflow-hidden shadow-sm group hover:border-royal/40 hover:shadow-2xl transition-all relative">
       <div className="aspect-video bg-navy relative flex items-center justify-center overflow-hidden">
-        {memoir.url && !memoir.url.startsWith('/memoirs') ? (
-           <video src={memoir.url} className="w-full h-full object-cover opacity-50" />
+        {memoir.url ? (
+           <video 
+             src={memoir.url} 
+             className="w-full h-full object-cover opacity-60" 
+             autoPlay 
+             muted 
+             loop 
+             playsInline 
+           />
         ) : (
            <div className="absolute inset-0 bg-gradient-to-br from-navy to-royal opacity-60" />
         )}

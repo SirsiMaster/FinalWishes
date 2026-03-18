@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
 
@@ -11,10 +11,20 @@ function VaultPage() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [estateId, setEstateId] = useState('test-estate');
+
+  useEffect(() => {
+    const session = localStorage.getItem('finalwishes_user');
+    if (session) {
+      const u = JSON.parse(session);
+      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
+      setEstateId(preferredId);
+    }
+  }, []);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['vaultDocuments'],
-    queryFn: () => estateClient.listVaultDocuments({ estateId: 'test-estate' }),
+    queryKey: ['vaultDocuments', estateId],
+    queryFn: () => estateClient.listVaultDocuments({ estateId }),
   });
 
   const uploadMutation = useMutation({
@@ -23,7 +33,7 @@ function VaultPage() {
       
       // 1. Get Signed URL from Backend
       const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
-        estateId: 'test-estate',
+        estateId: estateId,
         fileName: file.name,
         contentType: file.type
       });
@@ -44,7 +54,7 @@ function VaultPage() {
       return finalUrl;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vaultDocuments'] });
+      queryClient.invalidateQueries({ queryKey: ['vaultDocuments', estateId] });
       setUploadStatus(null);
       alert('Vault Document Secured via GCS');
     },

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
 
@@ -13,16 +13,30 @@ function ObituaryPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isSigned, setIsSigned] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [estateId, setEstateId] = useState('test-estate');
+  const [userName, setUserName] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+
+  useEffect(() => {
+    const session = localStorage.getItem('finalwishes_user');
+    if (session) {
+      const u = JSON.parse(session);
+      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
+      setEstateId(preferredId);
+      setUserName(u.name || '');
+      setProfilePhoto('/assets/tameeka/mom memorial.jpg'); // The memorial photo for obituary
+    }
+  }, []);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['obituary'],
-    queryFn: () => estateClient.getObituary({ estateId: 'test-estate' }),
+    queryKey: ['obituary', estateId],
+    queryFn: () => estateClient.getObituary({ estateId }),
   });
 
   const saveMutation = useMutation({
-    mutationFn: (content: string) => estateClient.saveObituary({ estateId: 'test-estate', content }),
+    mutationFn: (content: string) => estateClient.saveObituary({ estateId, content }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['obituary'] });
+      queryClient.invalidateQueries({ queryKey: ['obituary', estateId] });
       setEditing(false);
     }
   });
@@ -63,10 +77,14 @@ function ObituaryPage() {
         {/* Profile/Media */}
         <div className="space-y-6">
           <div className="aspect-[3/4] rounded-2xl bg-navy relative border-4 border-gold group overflow-hidden shadow-2xl">
-             <div className="absolute inset-0 flex items-center justify-center text-white/5 bg-gradient-to-b from-navy/50 to-navy text-center p-8">
-               <svg viewBox="0 0 24 24" className="w-20 h-20 mb-4 mx-auto" fill="none" stroke="currentColor" strokeWidth="1"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
-               <span className="text-xs font-bold uppercase tracking-widest">Profile Portrait Placeholder</span>
-             </div>
+             {profilePhoto ? (
+               <img src={profilePhoto} className="absolute inset-0 w-full h-full object-cover" alt="Portrait" />
+             ) : (
+               <div className="absolute inset-0 flex items-center justify-center text-white/5 bg-gradient-to-b from-navy/50 to-navy text-center p-8">
+                 <svg viewBox="0 0 24 24" className="w-20 h-20 mb-4 mx-auto" fill="none" stroke="currentColor" strokeWidth="1"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                 <span className="text-xs font-bold uppercase tracking-widest">Heritage Portrait Placeholder</span>
+               </div>
+             )}
              <button className="absolute bottom-4 left-4 right-4 py-2.5 bg-gold/90 backdrop-blur-md rounded-xl text-black font-bold text-[0.65rem] uppercase tracking-widest translate-y-12 group-hover:translate-y-0 transition-transform">Update Photo</button>
           </div>
           
@@ -141,7 +159,7 @@ function ObituaryPage() {
             <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200 mb-8">
                <label className="text-[0.65rem] font-black text-navy uppercase tracking-[0.2em] mb-4 block opacity-40 text-center">Protocol Signature Area</label>
                <div className="h-20 border-b-2 border-navy/40 flex items-center justify-center text-navy/20 font-serif italic text-3xl select-none">
-                  {isSigned ? <span className="text-navy font-[family-name:var(--font-cinzel)] opacity-100">Marcus Aurelius</span> : 'Sign here with owner key'}
+                  {isSigned ? <span className="text-navy font-[family-name:var(--font-cinzel)] opacity-100">{userName || 'Legal Guardian'}</span> : 'Sign here with owner key'}
                </div>
             </div>
 

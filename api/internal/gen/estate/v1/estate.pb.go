@@ -379,6 +379,8 @@ type GetEstateMetadataResponse struct {
 	LastLogin            *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=last_login,json=lastLogin,proto3" json:"last_login,omitempty"`
 	NextReviewDate       *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=next_review_date,json=nextReviewDate,proto3" json:"next_review_date,omitempty"`
 	AuthorityMode        AuthorityMode          `protobuf:"varint,7,opt,name=authority_mode,json=authorityMode,proto3,enum=estate.v1.AuthorityMode" json:"authority_mode,omitempty"`
+	Id                   string                 `protobuf:"bytes,8,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string                 `protobuf:"bytes,9,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -460,6 +462,20 @@ func (x *GetEstateMetadataResponse) GetAuthorityMode() AuthorityMode {
 		return x.AuthorityMode
 	}
 	return AuthorityMode_AUTHORITY_MODE_UNSPECIFIED
+}
+
+func (x *GetEstateMetadataResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *GetEstateMetadataResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
 }
 
 type ListAssetsRequest struct {
@@ -2218,7 +2234,7 @@ const file_estate_v1_estate_proto_rawDesc = "" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
 	"\x04role\x18\x03 \x01(\tR\x04role\"7\n" +
 	"\x18GetEstateMetadataRequest\x12\x1b\n" +
-	"\testate_id\x18\x01 \x01(\tR\bestateId\"\xdf\x02\n" +
+	"\testate_id\x18\x01 \x01(\tR\bestateId\"\x83\x03\n" +
 	"\x19GetEstateMetadataResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\tR\x06status\x123\n" +
 	"\x15completion_percentage\x18\x02 \x01(\x05R\x14completionPercentage\x12\x12\n" +
@@ -2228,7 +2244,9 @@ const file_estate_v1_estate_proto_rawDesc = "" +
 	"\n" +
 	"last_login\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tlastLogin\x12D\n" +
 	"\x10next_review_date\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x0enextReviewDate\x12?\n" +
-	"\x0eauthority_mode\x18\a \x01(\x0e2\x18.estate.v1.AuthorityModeR\rauthorityMode\"0\n" +
+	"\x0eauthority_mode\x18\a \x01(\x0e2\x18.estate.v1.AuthorityModeR\rauthorityMode\x12\x0e\n" +
+	"\x02id\x18\b \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\t \x01(\tR\x04name\"0\n" +
 	"\x11ListAssetsRequest\x12\x1b\n" +
 	"\testate_id\x18\x01 \x01(\tR\bestateId\"]\n" +
 	"\x05Asset\x12\x12\n" +

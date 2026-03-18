@@ -79,6 +79,8 @@ message GetEstateMetadataResponse {
   google.protobuf.Timestamp last_login = 5;
   google.protobuf.Timestamp next_review_date = 6;
   AuthorityMode authority_mode = 7;
+  string id = 8;
+  string name = 9;
 }
 
 message ListAssetsRequest {

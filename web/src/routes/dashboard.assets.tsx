@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
 
@@ -10,22 +10,32 @@ export const Route = createFileRoute('/dashboard/assets')({
 function AssetsPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
+  const [estateId, setEstateId] = useState('test-estate');
+
+  useEffect(() => {
+    const session = localStorage.getItem('finalwishes_user');
+    if (session) {
+      const u = JSON.parse(session);
+      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
+      setEstateId(preferredId);
+    }
+  }, []);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['assets'],
-    queryFn: () => estateClient.listAssets({ estateId: 'test-estate' }),
+    queryKey: ['assets', estateId],
+    queryFn: () => estateClient.listAssets({ estateId }),
   });
 
   const addAssetMutation = useMutation({
     mutationFn: (vars: { name: string, type: string, value: string }) => 
       estateClient.addAsset({
-        estateId: 'test-estate',
+        estateId: estateId,
         name: vars.name,
         type: vars.type,
         value: vars.value
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assets'] });
+      queryClient.invalidateQueries({ queryKey: ['assets', estateId] });
       setModalOpen(false);
     }
   });

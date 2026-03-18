@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export function AdminHeader({
   title,
@@ -9,26 +9,48 @@ export function AdminHeader({
   subtitle?: string;
 }) {
   const [mode, setMode] = useState<'Owner' | 'Incapacity' | 'Settlement'>('Owner');
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const session = localStorage.getItem('finalwishes_user');
+    if (session) {
+      setUser(JSON.parse(session));
+    } else {
+      setUser({
+        name: 'Tameeka Lockhart',
+        profilePhotoUrl: '/assets/tameeka/mom dance.jpg'
+      });
+    }
+  }, []);
+
+  const getInitials = (name: string) => {
+    return name?.split(' ').map(n => n[0]).join('') || 'TL';
+  };
 
   return (
     <header
-      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 bg-white/90 backdrop-blur-md"
+      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 bg-white/80 backdrop-blur-xl relative overflow-hidden"
       style={{
-        borderBottom: "1px solid #E5E7EB",
-        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
+        borderBottom: "1px solid rgba(0,0,0,0.05)",
+        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.04)",
       }}
     >
-      {/* Left — Title */}
-      <div className="shrink-0 mr-8 text-left">
-        <h1 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.1em] text-navy m-0 whitespace-nowrap">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="text-[#6b7280] text-[0.65rem] font-black uppercase tracking-[0.15em] m-0 whitespace-nowrap opacity-40">
-            {subtitle}
-          </p>
-        )}
-      </div>
+      {/* Film Grain Overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03] mix-blend-overlay" 
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }} />
+      
+      <div className="relative z-10 flex items-center justify-between w-full h-full">
+        {/* Left — Title */}
+        <div className="shrink-0 mr-8 text-left">
+          <h1 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.1em] text-navy m-0 whitespace-nowrap">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-[#6b7280] text-[0.65rem] font-black uppercase tracking-[0.15em] m-0 whitespace-nowrap opacity-40">
+              {subtitle}
+            </p>
+          )}
+        </div>
 
       {/* Center — Search */}
       <div className="flex-1 max-w-[350px] min-w-[150px] flex items-center gap-2 bg-[#F3F4F6] border border-[#E5E7EB] rounded-2xl py-2 px-5 focus-within:border-royal focus-within:bg-white focus-within:shadow-[0_0_0_2px_rgba(37,99,235,0.08)] transition-all">
@@ -99,9 +121,14 @@ export function AdminHeader({
         </button>
 
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gold to-gold-bright flex items-center justify-center text-black font-black text-[0.75rem] shadow-lg border border-white/50 cursor-pointer hover:scale-105 transition-transform">
-          CC
-        </div>
+        {user?.profilePhotoUrl ? (
+          <img src={user.profilePhotoUrl} className="w-10 h-10 rounded-2xl object-cover shadow-lg border border-white/50 cursor-pointer hover:scale-105 transition-transform" alt="Avatar" />
+        ) : (
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gold to-gold-bright flex items-center justify-center text-black font-black text-[0.75rem] shadow-lg border border-white/50 cursor-pointer hover:scale-105 transition-transform">
+            {getInitials(user?.name || 'TL')}
+          </div>
+        )}
+      </div>
       </div>
     </header>
   );

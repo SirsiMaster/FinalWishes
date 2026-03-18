@@ -8,11 +8,11 @@
 :root {
   /* Primary — Deep Royal Blue Gradient Palette */
   --navy: #0f172a;
-  --navy-mid: #1e3a5f;
-  --navy-deep: #0c1425;
-  --royal-blue: #2563eb;
-  --royal-bright: #3b82f6;
-  --royal-subtle: #1e3a8a;
+  --navy-mid: #14213d; /* Warmer navy */
+  --navy-deep: #080c17;
+  --royal-blue: #1E40AF; /* Slightly deeper than before for royalty */
+  --royal-bright: #2563EB;
+  --royal-subtle: rgba(37, 99, 235, 0.1);
 
   /* Gold (shared across Sirsi portfolio) */
   --gold: #C8A951;
@@ -224,20 +224,18 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ── Dashboard Overrides ──
-   The dashboard layout uses a light admin theme */
+/* ── Dashboard Shell ── */
 .dashboard-shell {
-  --bg-primary: #fcfdfe;
-  --text-primary: #0f1d3a;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
-  --border-light: rgba(15, 29, 58, 0.08);
-  --card-bg: #ffffff;
-  --card-border: rgba(15, 29, 58, 0.08);
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
-  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-  --card-backdrop: none;
-  background-color: #fcfdfe;
-  background-image: radial-gradient(circle at top right, #fcfdfe 0%, #edf1f7 100%);
-  color: #0f1d3a;
+  --bg-primary: var(--navy-deep);
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border-light: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --card-shadow-hover: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  --card-backdrop: blur(10px);
+  background: transparent; /* Let body gradient through */
+  color: #FFFFFF;
 }

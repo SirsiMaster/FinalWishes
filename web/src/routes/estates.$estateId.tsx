@@ -31,7 +31,6 @@ function EstateLayout() {
         className="transition-all duration-300 min-h-screen flex flex-col"
         style={{ 
           marginLeft: 'var(--sidebar-width)',
-          backgroundColor: '#fcfdfe'
         }}
       >
         <AdminHeader title="Operations Command" subtitle={`Estate: ${estateName} · Vault: Secured · Status: Active`} />

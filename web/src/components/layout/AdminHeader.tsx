@@ -31,16 +31,16 @@ export function AdminHeader({
 
   return (
     <header
-      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 bg-white/80 backdrop-blur-xl relative overflow-hidden"
+      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 bg-royal/10 backdrop-blur-3xl relative"
       style={{
-        borderBottom: "1px solid rgba(0,0,0,0.05)",
-        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.04)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+        boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.3)",
       }}
     >
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
         <div 
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-8 animate-in fade-in duration-300 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal-deep/40 backdrop-blur-2xl p-8 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 
@@ -80,7 +80,7 @@ export function AdminHeader({
       <div className="relative z-10 flex items-center justify-between w-full h-full">
         {/* Left — Title */}
         <div className="shrink-0 mr-8 text-left">
-          <h1 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.1em] text-navy m-0 whitespace-nowrap">
+          <h1 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.1em] text-white m-0 whitespace-nowrap">
             {title}
           </h1>
           {subtitle && (
@@ -108,17 +108,17 @@ export function AdminHeader({
         <input
           type="text"
           placeholder="Search protocols..."
-          className="flex-1 bg-transparent border-none outline-none text-[0.8rem] font-bold text-navy placeholder:text-[#9ca3af]/60"
+          className="flex-1 bg-white/5 border-white/10 outline-none text-[0.8rem] font-bold text-white placeholder:text-white/30"
         />
       </div>
       
       {/* Simulation Engine: Authority Mode */}
       <div className="flex items-center gap-4 px-5 py-2 bg-navy/5 border border-royal/10 rounded-2xl mx-8 shadow-inner">
         <div className="flex flex-col text-left">
-          <label className="text-[0.5rem] font-black text-navy opacity-30 uppercase tracking-[0.25em] whitespace-nowrap leading-none mb-1">State Simulator</label>
+          <label className="text-[0.5rem] font-black text-white/40 uppercase tracking-[0.25em] whitespace-nowrap leading-none mb-1">State Simulator</label>
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${mode === 'Owner' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]'}`} />
-            <span className="text-[9px] font-black uppercase tracking-tighter text-navy/70">{mode} Mode</span>
+            <span className="text-[9px] font-black uppercase tracking-tighter text-white/70">{mode} Mode</span>
           </div>
         </div>
         <div className="flex items-center gap-1 p-1 bg-white/50 backdrop-blur-sm rounded-xl border border-white">
@@ -128,8 +128,8 @@ export function AdminHeader({
               onClick={() => setMode(m)}
               className={`px-3 py-1.5 rounded-lg text-[0.55rem] font-black uppercase tracking-widest transition-all duration-300 ${
                 mode === m 
-                  ? "bg-navy text-white shadow-xl scale-105" 
-                  : "text-navy/40 hover:bg-white/80 hover:text-navy"
+                  ? "bg-gold text-black shadow-xl scale-105" 
+                  : "text-white/40 hover:bg-white/10 hover:text-white"
               }`}
             >
               {m}
@@ -163,7 +163,7 @@ export function AdminHeader({
           <img 
             src={user.profilePhotoUrl} 
             onClick={() => setShowPhotoModal(true)}
-            className="w-10 h-10 rounded-2xl object-cover shadow-lg border border-white/50 cursor-pointer hover:scale-110 active:scale-95 transition-all" 
+            className="w-10 h-10 rounded-xl object-cover border-2 border-gold/40 shadow-lg cursor-pointer hover:scale-110 active:scale-95 transition-all" 
             alt="Avatar" 
           />
         ) : (

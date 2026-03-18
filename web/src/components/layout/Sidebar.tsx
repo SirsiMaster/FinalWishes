@@ -167,14 +167,14 @@ export function Sidebar() {
       className="fixed left-0 top-0 h-screen overflow-y-auto z-[100] flex flex-col"
       style={{
         width: "var(--sidebar-width)",
-        background: "#1e3a5f",
+        background: "linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%)",
         borderRight: "1px solid rgba(255, 255, 255, 0.1)",
       }}
     >
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
         <div 
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-8 animate-in fade-in duration-300 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal-deep/40 backdrop-blur-2xl p-8 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 

@@ -64,35 +64,37 @@ function DashboardIndex() {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-navy to-royal text-white p-6 rounded-2xl mb-8 flex items-center justify-between shadow-lg border border-white/10 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-royal-blue to-royal-bright text-white p-8 rounded-[2.5rem] mb-10 flex items-center justify-between shadow-2xl border border-white/20 relative overflow-hidden group">
         <div className="z-10 flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-5 h-5 bg-gold rounded-full flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-3 h-3 text-navy fill-current"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-navy-deep fill-current"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
             </div>
-            <span className="font-bold text-[0.6rem] uppercase tracking-widest text-gold text-white/90">Guidance Engine Protocol</span>
+            <span className="font-black text-[0.7rem] uppercase tracking-[0.25em] text-gold-bright drop-shadow-md">Guidance Engine Shard</span>
           </div>
-          <p className="text-sm font-medium leading-relaxed max-w-2xl">
-            {userName && <span className="text-gold font-black uppercase tracking-widest mr-2">Welcome Back, {userName}.</span>}
+          <p className="text-lg font-bold leading-relaxed max-w-2xl drop-shadow-sm">
+            {userName && <span className="text-gold-bright font-black uppercase tracking-widest mr-2 underline decoration-gold/30">Protocol: {userName}.</span>}
             {insightData?.insight}
           </p>
         </div>
-        <div className="z-10 ml-6">
+        <div className="z-10 ml-8">
           <button 
             onClick={() => window.location.href = insightData?.actionUrl || '#'}
-            className="bg-white/15 h-10 px-6 rounded-lg font-bold text-[0.7rem] uppercase tracking-widest hover:bg-white/20 transition-colors backdrop-blur-sm border border-white/10 text-white"
+            className="bg-white/10 hover:bg-gold text-white hover:text-black h-12 px-8 rounded-xl font-black text-[0.75rem] uppercase tracking-[0.2em] transition-all backdrop-blur-md border border-white/20 hover:border-gold hover:shadow-[0_0_30px_rgba(200,169,81,0.4)]"
           >
             {insightData?.actionLabel}
           </button>
         </div>
-        <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-royal rounded-full blur-[100px] opacity-20 pointer-events-none" />
+        {/* Animated background highlights */}
+        <div className="absolute top-[-50%] right-[-10%] w-[400px] h-[400px] bg-white/20 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+        <div className="absolute bottom-[-20%] left-[10%] w-[200px] h-[200px] bg-gold/10 rounded-full blur-[80px] pointer-events-none" />
       </div>
 
-      <div className="grid grid-cols-4 gap-6 mb-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
+      <div className="grid grid-cols-4 gap-6 mb-10 max-lg:grid-cols-2 max-sm:grid-cols-1">
         <StatCard
           label="Shard Completion"
           value={`${metadata?.completionPercentage}%`}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>}
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-full h-full"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>}
           iconColor="blue"
           change="+8% Protocol Shift"
           changeDir="up"
@@ -100,14 +102,14 @@ function DashboardIndex() {
         <StatCard
           label="Total Assets"
           value={assetsData?.totalCount.toString() || "0"}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>}
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-full h-full"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>}
           iconColor="gold"
           change="Real-time Audit Active"
         />
         <StatCard
           label="Vault Evidence"
           value={vaultData?.documents.length.toString() || "0"}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>}
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-full h-full"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>}
           iconColor="green"
           change="Encrypted & Immutable"
           changeDir="up"
@@ -115,7 +117,7 @@ function DashboardIndex() {
         <StatCard
           label="Legal Heirs"
           value={beneData?.beneficiaries.length.toString() || "0"}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>}
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-full h-full"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>}
           iconColor="blue"
           change="Verified Lineage"
         />
@@ -169,44 +171,61 @@ function DashboardIndex() {
 }
 
 function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
-  const bgMap = { blue: "bg-royal-subtle", gold: "bg-gold-dim", green: "bg-[#ecfdf5]" };
-  const textMap = { blue: "text-royal", gold: "text-gold", green: "text-success" };
+  const bgMap = { blue: "bg-royal/20", gold: "bg-gold/20", green: "bg-success/20" };
+  const textMap = { blue: "text-royal-bright", gold: "text-gold", green: "text-success" };
+  const borderMap = { blue: "border-royal/30", gold: "border-gold/30", green: "border-success/30" };
+  
   return (
-    <div className="bg-white rounded-2xl p-6 border border-border-light shadow-[0_4px_6px_-1px_rgba(0,0,0,0.07)] transition-all hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)]">
-      <div className="flex items-center justify-between mb-5">
-        <span className="font-[family-name:var(--font-cinzel)] text-[0.8rem] font-black uppercase tracking-[0.1em] text-navy opacity-60">{label}</span>
-        <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center ${bgMap[iconColor as keyof typeof bgMap]} ${textMap[iconColor as keyof typeof textMap]}`}>
-          <span className="w-5 h-5">{icon}</span>
+    <div className={`glass-card rounded-[2rem] p-7 border ${borderMap[iconColor as keyof typeof borderMap]} bg-white/5 hover:bg-white/10 transition-all shadow-2xl group`}>
+      <div className="flex items-center justify-between mb-6">
+        <span className="font-[family-name:var(--font-cinzel)] text-[0.75rem] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-gold transition-colors">{label}</span>
+        <div className={`w-12 h-12 rounded-[14px] flex items-center justify-center ${bgMap[iconColor as keyof typeof bgMap]} ${textMap[iconColor as keyof typeof textMap]} shadow-inner group-hover:scale-110 transition-transform`}>
+          <span className="w-6 h-6">{icon}</span>
         </div>
       </div>
-      <div className="text-[2rem] font-black text-navy leading-none mb-1 tracking-tight">{value}</div>
-      {change && <div className={`text-[9px] font-black uppercase tracking-widest mt-2 ${changeDir === "up" ? "text-success" : changeDir === "down" ? "text-danger" : "text-text-muted"}`}>{change}</div>}
+      <div className="text-[2.2rem] font-black text-white leading-none mb-2 tracking-tight drop-shadow-lg">{value}</div>
+      {change && (
+        <div className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest mt-4 ${changeDir === "up" ? "text-success" : changeDir === "down" ? "text-danger" : "text-white/30"}`}>
+          <div className="w-1 h-1 rounded-full bg-current opacity-60" />
+          {change}
+        </div>
+      )}
     </div>
   );
 }
 
 function Card({ title, children }: any) {
   return (
-    <div className="bg-white rounded-[2rem] p-8 border border-border-light shadow-[0_4px_6px_-1px_rgba(0,0,0,0.07)]">
-      <div className="mb-6 flex items-center justify-between border-b border-gray-50 pb-4">
-        <h3 className="font-[family-name:var(--font-cinzel)] text-[1rem] font-black uppercase tracking-[0.15em] text-navy">{title}</h3>
-        <div className="w-2 h-2 rounded-full bg-royal/20" />
+    <div className="glass-card rounded-[2.5rem] p-10 border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-royal/10 blur-[80px] pointer-events-none" />
+      <div className="mb-8 flex items-center justify-between border-b border-white/5 pb-6">
+        <h3 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.25em] text-white hero-text">{title}</h3>
+        <div className="flex gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+          <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+          <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+        </div>
       </div>
-      {children}
+      <div className="relative z-10">
+        {children}
+      </div>
     </div>
   );
 }
 
 function ProgressRow({ label, percent, color }: any) {
-  const fillMap = { blue: "bg-royal", gold: "bg-gold", green: "bg-success" };
+  const fillMap = { blue: "bg-royal-bright shadow-[0_0_15px_rgba(37,99,235,0.5)]", gold: "bg-gold shadow-[0_0_15px_rgba(200,169,81,0.5)]", green: "bg-success shadow-[0_0_15px_rgba(16,185,129,0.5)]" };
   return (
-    <div>
-      <div className="flex justify-between items-center mb-1.5">
-        <span className="text-[0.65rem] font-black uppercase tracking-widest text-navy/40">{label}</span>
-        <span className="text-[0.65rem] font-black text-navy">{percent}%</span>
+    <div className="mb-6 last:mb-0">
+      <div className="flex justify-between items-center mb-2.5">
+        <span className="text-[0.7rem] font-black uppercase tracking-[0.2em] text-white/50">{label}</span>
+        <span className="text-[0.8rem] font-black text-gold-bright">{percent}%</span>
       </div>
-      <div className="w-full h-2 bg-gray-50 rounded-full overflow-hidden border border-gray-100 p-[2px]">
-        <div className={`h-full rounded-full transition-all duration-600 ${fillMap[color as keyof typeof fillMap]}`} style={{ width: `${percent}%` }} />
+      <div className="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/5 shadow-inner">
+        <div 
+          className={`h-full rounded-full transition-all duration-1000 ease-out ${fillMap[color as keyof typeof fillMap]}`} 
+          style={{ width: `${percent}%` }} 
+        />
       </div>
     </div>
   );
@@ -214,11 +233,15 @@ function ProgressRow({ label, percent, color }: any) {
 
 function ActivityItem({ text, time }: any) {
   return (
-    <div className="flex gap-4 py-4 border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 rounded-lg px-2 transition-colors">
-      <div className="w-2 h-2 rounded-full bg-gold/40 mt-1.5 shrink-0" />
+    <div className="flex gap-5 py-5 border-b border-white/5 last:border-b-0 group hover:bg-white/5 px-4 -mx-4 rounded-xl transition-all">
+      <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_10px_rgba(200,169,81,0.6)] mt-2 shrink-0 group-hover:scale-125 transition-transform" />
       <div className="flex-1">
-        <div className="text-[13px] text-navy font-medium leading-relaxed">{text}</div>
-        <div className="text-[10px] text-navy/30 font-black uppercase tracking-widest mt-1">{time}</div>
+        <div className="text-[14px] text-white/90 font-bold leading-relaxed">{text}</div>
+        <div className="text-[10px] text-gold/40 font-black uppercase tracking-[0.2em] mt-1.5 flex items-center gap-2">
+          <span>{time}</span>
+          <span className="w-1 h-1 rounded-full bg-white/10" />
+          <span>Verified Shard Access</span>
+        </div>
       </div>
     </div>
   );
@@ -226,19 +249,27 @@ function ActivityItem({ text, time }: any) {
 
 function QuickAction({ label, icon }: any) {
   return (
-    <button className="flex flex-col items-center gap-3 p-5 bg-[#FAFBFC] border border-[#E5E7EB] rounded-[1.5rem] cursor-pointer transition-all hover:bg-royal hover:border-royal hover:shadow-xl hover:shadow-royal/20 group">
-      <span className="w-6 h-6 text-royal group-hover:text-white transition-colors">{icon}</span>
-      <span className="text-[10px] font-black text-navy opacity-40 uppercase tracking-[0.1em] group-hover:text-white group-hover:opacity-100 transition-all">{label}</span>
+    <button className="flex flex-col items-center justify-center gap-4 p-7 bg-white/5 border border-white/10 rounded-[2rem] cursor-pointer transition-all hover:bg-gold hover:border-gold hover:shadow-[0_0_40px_rgba(200,169,81,0.3)] group">
+      <span className="w-7 h-7 text-royal-bright group-hover:text-black transition-colors">{icon}</span>
+      <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.2em] group-hover:text-black group-hover:opacity-100 transition-all">{label}</span>
     </button>
   );
 }
 
 function StatusRow({ label, value, color }: any) {
-  const badgeMap: Record<string, string> = { green: "bg-green-50 text-green-700 border border-green-100", gold: "bg-gold/5 text-gold border border-gold/10", blue: "bg-royal/5 text-royal border border-royal/10" };
+  const badgeMap: Record<string, string> = { 
+    green: "bg-success/20 text-success border border-success/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]", 
+    gold: "bg-gold/20 text-gold border border-gold/40 shadow-[0_0_10px_rgba(200,169,81,0.2)]", 
+    blue: "bg-royal/20 text-royal-bright border border-royal/40 shadow-[0_0_10px_rgba(37,99,235,0.2)]" 
+  };
   return (
-    <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-b-0">
-      <span className="text-[0.65rem] font-black uppercase tracking-widest text-navy/40">{label}</span>
-      {color ? <span className={`text-[0.6rem] font-black px-3 py-1 rounded-lg uppercase tracking-widest ${badgeMap[color]}`}>{value}</span> : <span className="text-[0.65rem] font-black text-navy uppercase tracking-widest">{value}</span>}
+    <div className="flex justify-between items-center py-4 border-b border-white/5 last:border-b-0 group">
+      <span className="text-[0.7rem] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-white/70 transition-colors">{label}</span>
+      {color ? (
+        <span className={`text-[0.65rem] font-black px-4 py-1.5 rounded-xl uppercase tracking-widest ${badgeMap[color]}`}>{value}</span>
+      ) : (
+        <span className="text-[0.75rem] font-black text-white uppercase tracking-widest drop-shadow-md">{value}</span>
+      )}
     </div>
   );
 }

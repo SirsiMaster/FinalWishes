@@ -78,7 +78,7 @@ function MemoirsPage() {
       {/* Full Fidelity Memoir Modal */}
       {selectedMemoir && (
         <div 
-          className="fixed inset-0 z-[300] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-4 animate-in fade-in duration-300 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal-deep/40 backdrop-blur-2xl p-4 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setSelectedMemoir(null)}
         >
           <div 
@@ -132,22 +132,23 @@ function MemoirsPage() {
           </div>
         </div>
       )}
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-navy uppercase tracking-tight">Memoirs & Legacy</h2>
-          <p className="text-sm text-text-muted">Curate your life story through video messages and photo troves.</p>
+      <div className="flex justify-between items-end border-b border-white/10 pb-10">
+        <div className="space-y-2">
+          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-white uppercase tracking-tight hero-text">Memoirs & Legacy</h2>
+          <p className="text-sm text-white/50 font-medium uppercase tracking-[0.1em]">Curate your life story through verified video messages and high-fidelity photo troves.</p>
         </div>
         <button 
           onClick={() => setModalOpen(true)}
-          className="bg-gold text-black px-8 py-3 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all"
+          className="bg-gold text-black px-10 py-4 rounded-[1.5rem] font-black text-[0.8rem] uppercase tracking-widest shadow-[0_0_30px_rgba(200,169,81,0.3)] hover:scale-105 active:scale-95 transition-all border border-gold/20"
         >
-          + Capture Memoir
+          + Capture Memoir Protocol
         </button>
       </div>
 
-      <section className="bg-white rounded-[2.5rem] p-8 border border-border-light shadow-sm">
-        <h3 className="text-xs font-black text-navy uppercase tracking-[0.2em] mb-6 flex items-center gap-3 opacity-60">
-          <div className="w-1.5 h-1.5 rounded-full bg-royal" />
+      <section className="glass-panel rounded-[3rem] p-10 border border-white/10 bg-white/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-royal/10 blur-[100px] pointer-events-none" />
+        <h3 className="text-xs font-black text-gold uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-royal animate-pulse" />
           The Legacy Tape Archive
         </h3>
         <div className="grid grid-cols-3 gap-8 max-md:grid-cols-1">
@@ -158,9 +159,10 @@ function MemoirsPage() {
         </div>
       </section>
 
-      <section className="bg-white rounded-[2.5rem] p-8 border border-border-light shadow-sm">
-        <h3 className="text-xs font-black text-navy uppercase tracking-[0.2em] mb-6 flex items-center gap-3 opacity-60">
-          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
+      <section className="glass-panel rounded-[3rem] p-10 border border-white/10 bg-white/5 relative overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold/5 blur-[100px] pointer-events-none" />
+        <h3 className="text-xs font-black text-gold uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />
           Documentary Photo Trove
         </h3>
         <div className="grid grid-cols-4 gap-6 max-md:grid-cols-2">

@@ -292,7 +292,7 @@ function PhotoCard({ memoir, onClick }: any) {
       className="bg-white rounded-3xl border border-border-light overflow-hidden shadow-sm group hover:border-gold/40 hover:shadow-2xl transition-all relative cursor-pointer"
     >
       <div className="aspect-square bg-gray-50 relative overflow-hidden">
-        {memoir.url && !memoir.url.startsWith('/memoirs') ? (
+        {memoir.url ? (
            <img src={memoir.url} alt={memoir.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
         ) : (
            <div className="absolute inset-0 flex items-center justify-center text-navy/5">

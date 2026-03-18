@@ -94,8 +94,8 @@ function Home() {
             className="w-full h-full object-cover"
             style={{ objectPosition: "center 20%" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-[#0f172a]/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/30 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A8A]/80 via-[#1E3A8A]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1E3A8A]/30 via-transparent to-transparent" />
         </div>
 
         {/* Art Deco corners */}
@@ -234,7 +234,7 @@ function Home() {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[400px] overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?w=800&h=600&fit=crop" alt="Grandfather recording memoir" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0f172a]/50" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#1E3A8A]/50" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
                   <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">01</span>
@@ -267,7 +267,7 @@ function Home() {
               </div>
               <div className="relative h-[400px] overflow-hidden order-1 md:order-2">
                 <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Security Lock" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0f172a]/50" />
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#1E3A8A]/50" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">02</span>
                   <div className="status-dot" />
@@ -279,7 +279,7 @@ function Home() {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[400px] overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal Letters" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0f172a]/50" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#1E3A8A]/50" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
                   <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">03</span>
@@ -316,7 +316,7 @@ function Home() {
               </div>
               <div className="relative h-[400px] overflow-hidden order-1 md:order-2">
                 <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Happy African American family embracing" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0f172a]/50" />
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#1E3A8A]/50" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-gold/30 font-[family-name:var(--font-cinzel)]">04</span>
                   <div className="status-dot" />
@@ -337,7 +337,7 @@ function Home() {
       <section id="security" className="relative min-h-[60vh] flex items-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3840&auto=format&fit=crop" alt="Secure data center vault" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0f172a]/95 via-[#0f172a]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1E3A8A]/95 via-[#1E3A8A]/70 to-transparent" />
         </div>
 
         {/* Animated Shield (desktop) */}
@@ -546,7 +546,7 @@ function Home() {
       <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1600&auto=format&fit=crop" alt="The Lockhart Legacy family" className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/60 to-[#0f172a]/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A8A] via-[#1E3A8A]/60 to-[#1E3A8A]/40" />
         </div>
 
         {/* Art Deco corners */}
@@ -588,7 +588,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-[#0a0f1e] border-t border-gold/20 py-6 relative z-10">
+      <footer className="bg-[#162D6B] border-t border-gold/20 py-6 relative z-10">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid md:grid-cols-5 gap-6 mb-4">
             <div className="md:col-span-2">
@@ -628,7 +628,7 @@ function TestimonialCard({ image, name, tag, value, quote }: { image: string; na
     <div className="glass-card rounded-2xl overflow-hidden">
       <div className="relative h-56 overflow-hidden">
         <img src={image} alt={name} className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0f172a] to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#1E3A8A] to-transparent" />
         <div className="absolute top-4 right-4 glass-card rounded-lg px-3 py-1.5 flex items-center gap-2">
           <div className="status-dot" />
           <span className="text-xs text-white uppercase tracking-widest font-semibold">Verified</span>

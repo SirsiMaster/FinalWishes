@@ -52,11 +52,11 @@ body {
 
 /* ── Identity Contexts ── */
 .royal-theme {
-  background-color: #0B1A3E;
+  background-color: #1E3A8A;
   background-image:
-    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(37, 99, 235, 0.35) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 60% at 80% 110%, rgba(200, 169, 81, 0.08) 0%, transparent 50%),
-    radial-gradient(at 50% 50%, #102050 0%, #0B1A3E 100%);
+    radial-gradient(ellipse 130% 90% at 50% -15%, rgba(59, 130, 246, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 60% at 85% 110%, rgba(200, 169, 81, 0.1) 0%, transparent 50%),
+    radial-gradient(at 50% 50%, #1D4ED8 0%, #1E3A8A 100%);
   background-attachment: fixed;
   color: #FFFFFF;
 
@@ -66,34 +66,34 @@ body {
   --text-muted: rgba(255, 255, 255, 0.6);
 
   /* Borders */
-  --border-light: rgba(255, 255, 255, 0.12);
+  --border-light: rgba(255, 255, 255, 0.15);
 
   /* Backgrounds */
-  --bg-primary: #0B1A3E;
-  --bg-secondary: rgba(20, 40, 100, 0.6);
+  --bg-primary: #1E3A8A;
+  --bg-secondary: rgba(30, 64, 175, 0.55);
   --bg-dashboard-tint: none;
 
   /* Glass Card System — Luminous */
-  --card-bg: rgba(255, 255, 255, 0.07);
-  --card-border: rgba(255, 255, 255, 0.14);
-  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.3), 0 0 30px rgba(200, 169, 81, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.16);
+  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.2), 0 0 30px rgba(200, 169, 81, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   --card-backdrop: blur(16px) saturate(1.4);
 
   /* Input System */
-  --input-bg: rgba(255, 255, 255, 0.06);
-  --input-border: rgba(255, 255, 255, 0.15);
+  --input-bg: rgba(255, 255, 255, 0.08);
+  --input-border: rgba(255, 255, 255, 0.18);
   --input-text: #FFFFFF;
-  --input-placeholder: rgba(255, 255, 255, 0.3);
-  --input-focus-bg: rgba(255, 255, 255, 0.1);
+  --input-placeholder: rgba(255, 255, 255, 0.35);
+  --input-focus-bg: rgba(255, 255, 255, 0.12);
 
   /* Icon System */
-  --icon-color: rgba(255, 255, 255, 0.6);
+  --icon-color: rgba(255, 255, 255, 0.65);
   --icon-hover: #FFFFFF;
 
   /* Header Bar */
   --header-text: #FFFFFF;
-  --header-text-muted: rgba(255, 255, 255, 0.5);
+  --header-text-muted: rgba(255, 255, 255, 0.55);
 }
 
 .dashboard-theme {

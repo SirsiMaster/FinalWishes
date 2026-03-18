@@ -145,7 +145,7 @@ function MemoirsPage() {
         </button>
       </div>
 
-      <section className="glass-panel rounded-[3rem] p-10 border border-white/10 bg-white/5 relative overflow-hidden">
+      <section className="glass-panel rounded-[3rem] p-10 border border-white/10 bg-navy-mid/60 relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-royal/10 blur-[100px] pointer-events-none" />
         <h3 className="text-xs font-black text-gold uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-royal animate-pulse" />
@@ -159,7 +159,7 @@ function MemoirsPage() {
         </div>
       </section>
 
-      <section className="glass-panel rounded-[3rem] p-10 border border-white/10 bg-white/5 relative overflow-hidden">
+      <section className="glass-panel rounded-[3rem] p-10 border border-white/10 bg-navy-mid/60 relative overflow-hidden shadow-2xl">
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold/5 blur-[100px] pointer-events-none" />
         <h3 className="text-xs font-black text-gold uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-gold animate-pulse" />

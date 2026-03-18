@@ -7,11 +7,11 @@
 
 :root {
   /* Primary — Deep Royal Blue Gradient Palette */
-  --navy: #0f172a;
-  --navy-mid: #14213d; /* Warmer navy */
-  --navy-deep: #080c17;
-  --royal-blue: #1E40AF; /* Slightly deeper than before for royalty */
-  --royal-bright: #2563EB;
+  --navy: #0F172A;
+  --navy-mid: #1E3A8A; /* The "Royal Deep" from landing page */
+  --navy-deep: #080C17;
+  --royal-blue: #2563EB; /* The "Royal Vibrant" from landing page */
+  --royal-bright: #3B82F6;
   --royal-subtle: rgba(37, 99, 235, 0.1);
 
   /* Gold (shared across Sirsi portfolio) */

@@ -171,14 +171,14 @@ function DashboardIndex() {
 }
 
 function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
-  const bgMap = { blue: "bg-royal/20", gold: "bg-gold/20", green: "bg-success/20" };
+  const bgMap = { blue: "bg-royal/30", gold: "bg-gold/20", green: "bg-success/20" };
   const textMap = { blue: "text-royal-bright", gold: "text-gold", green: "text-success" };
-  const borderMap = { blue: "border-royal/30", gold: "border-gold/30", green: "border-success/30" };
+  const borderMap = { blue: "border-royal/40", gold: "border-gold/30", green: "border-success/30" };
   
   return (
-    <div className={`glass-card rounded-[2rem] p-7 border ${borderMap[iconColor as keyof typeof borderMap]} bg-white/5 hover:bg-white/10 transition-all shadow-2xl group`}>
+    <div className={`glass-card rounded-[2rem] p-7 border ${borderMap[iconColor as keyof typeof borderMap]} bg-navy-mid/40 hover:bg-navy-mid/60 transition-all shadow-2xl group`}>
       <div className="flex items-center justify-between mb-6">
-        <span className="font-[family-name:var(--font-cinzel)] text-[0.75rem] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-gold transition-colors">{label}</span>
+        <span className="font-[family-name:var(--font-cinzel)] text-[0.75rem] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-gold transition-colors">{label}</span>
         <div className={`w-12 h-12 rounded-[14px] flex items-center justify-center ${bgMap[iconColor as keyof typeof bgMap]} ${textMap[iconColor as keyof typeof textMap]} shadow-inner group-hover:scale-110 transition-transform`}>
           <span className="w-6 h-6">{icon}</span>
         </div>
@@ -196,7 +196,7 @@ function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
 
 function Card({ title, children }: any) {
   return (
-    <div className="glass-card rounded-[2.5rem] p-10 border border-white/10 bg-white/5 shadow-2xl relative overflow-hidden">
+    <div className="glass-panel rounded-[2.5rem] p-10 border border-white/10 bg-navy-mid/60 shadow-2xl relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-royal/10 blur-[80px] pointer-events-none" />
       <div className="mb-8 flex items-center justify-between border-b border-white/5 pb-6">
         <h3 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.25em] text-white hero-text">{title}</h3>
@@ -249,7 +249,7 @@ function ActivityItem({ text, time }: any) {
 
 function QuickAction({ label, icon }: any) {
   return (
-    <button className="flex flex-col items-center justify-center gap-4 p-7 bg-white/5 border border-white/10 rounded-[2rem] cursor-pointer transition-all hover:bg-gold hover:border-gold hover:shadow-[0_0_40px_rgba(200,169,81,0.3)] group">
+    <button className="flex flex-col items-center justify-center gap-4 p-7 bg-navy/20 border border-white/10 rounded-[2rem] cursor-pointer transition-all hover:bg-gold hover:border-gold hover:shadow-[0_0_40px_rgba(200,169,81,0.3)] group">
       <span className="w-7 h-7 text-royal-bright group-hover:text-black transition-colors">{icon}</span>
       <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.2em] group-hover:text-black group-hover:opacity-100 transition-all">{label}</span>
     </button>

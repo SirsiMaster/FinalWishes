@@ -8,12 +8,17 @@ import (
 	"syscall"
 	"time"
 
+	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/storage"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+
+	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
+	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
 )
 
 func main() {
@@ -39,10 +44,10 @@ func main() {
 
 	// CORS configuration
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://legacy-estate-os.web.app", "http://localhost:*"},
+		AllowedOrigins:   []string{"*"}, // For local development, will be restricted in production
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Request-ID"},
-		ExposedHeaders:   []string{"Link"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Request-ID", "Connect-Protocol-Version"},
+		ExposedHeaders:   []string{"Link", "Connect-Error-Code", "Connect-Error-Message"},
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
@@ -54,34 +59,48 @@ func main() {
 		_, _ = w.Write([]byte("FinalWishes API is running"))
 	})
 
-	// API routes will be added here
+	// Initialize Google Firestore Client
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if projectID == "" {
+		log.Warn().Msg("GOOGLE_CLOUD_PROJECT not set, running in mock mode")
+	}
+
+	var fs *firestore.Client
+	var sc *storage.Client
+
+	if projectID != "" {
+		ctx := context.Background()
+		var err error
+		
+		// Firestore
+		fs, err = firestore.NewClient(ctx, projectID)
+		if err != nil {
+			log.Fatal().Err(err).Msg("Failed to initialize Firestore client")
+		}
+		defer fs.Close()
+		log.Info().Str("project", projectID).Msg("Firestore client initialized")
+
+		// Storage
+		sc, err = storage.NewClient(ctx)
+		if err != nil {
+			log.Fatal().Err(err).Msg("Failed to initialize Storage client")
+		}
+		defer sc.Close()
+		log.Info().Str("project", projectID).Msg("Storage client initialized")
+	}
+
+	// ConnectRPC Services
+	estateService := estate.NewServer(fs, sc)
+	path, handler := estatev1connect.NewEstateServiceHandler(estateService)
+	r.Handle(path+"*", handler)
+
+	// API routes
 	r.Route("/api/v1", func(r chi.Router) {
-		// Protected routes will require authentication middleware
-		// r.Use(authMiddleware)
-
-		// Estate routes
-		r.Route("/estates", func(r chi.Router) {
-			// TODO: Implement estate handlers
-		})
-
-		// User routes
-		r.Route("/users", func(r chi.Router) {
-			// TODO: Implement user handlers
-		})
-
-		// Document routes
-		r.Route("/documents", func(r chi.Router) {
-			// TODO: Implement document handlers
-		})
-
-
-		// OpenSign routes
 		r.Route("/opensign", func(r chi.Router) {
 			r.Post("/create-envelope", opensign.CreateEnvelopeHandler)
 		})
 	})
 
-	// Guest-accessible routes (no auth required) - for flexibility
 	r.Post("/api/guest/envelopes", opensign.CreateEnvelopeHandler)
 	r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
 
@@ -94,7 +113,7 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	// Start server in goroutine
+	// Start server
 	go func() {
 		log.Info().Str("port", port).Msg("Starting FinalWishes API server")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

@@ -6,11 +6,12 @@
    ============================================ */
 
 :root {
-  /* Primary Palette — Blue tint (replaces Sirsi green) */
-  --navy: #0f1d3a;
-  --navy-mid: #1e3a5f;
-  --navy-light: #2563eb;
-  --navy-subtle: #eff6ff;
+  /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
+  --navy: #0F172A;
+  --navy-mid: #1E3A5F; /* The "Heritage Royal" */
+  --royal: #2563EB; /* The "Royal Accent" */
+  --royal-bright: #3B82F6;
+  --navy-subtle: rgba(30, 58, 138, 0.08);
 
   /* Gold (shared across Sirsi portfolio) */
   --gold: #C8A951;
@@ -26,10 +27,10 @@
   --bg-primary: #fcfdfe;
   --bg-secondary: #ffffff;
   --bg-gradient: radial-gradient(circle at top right, #fcfdfe 0%, #edf1f7 100%);
-  --text-primary: #0f1d3a;
+  --text-primary: #0F172A;
   --text-secondary: #334155;
   --text-muted: #64748b;
-  --border-light: rgba(15, 29, 58, 0.08);
+  --border-light: rgba(15, 23, 42, 0.08);
 
   /* Glass Card System (Opulent) */
   --card-bg: rgba(255, 255, 255, 0.8);
@@ -48,7 +49,8 @@
   --color-foreground: var(--text-primary);
   --color-navy: var(--navy);
   --color-navy-mid: var(--navy-mid);
-  --color-navy-light: var(--navy-light);
+  --color-royal: var(--royal);
+  --color-royal-bright: var(--royal-bright);
   --color-navy-subtle: var(--navy-subtle);
   --color-gold: var(--gold);
   --color-gold-bright: var(--gold-bright);

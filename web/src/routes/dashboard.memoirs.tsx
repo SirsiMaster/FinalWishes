@@ -116,7 +116,7 @@ function MemoirsPage() {
               </div>
             </div>
             
-            <div className="w-full md:w-[350px] p-10 bg-gradient-to-br from-navy to-[#1e3a5f] border-l border-white/10 flex flex-col shrink-0 overflow-y-auto">
+            <div className="w-full md:w-[350px] p-10 bg-gradient-to-br from-navy to-navy-mid border-l border-white/10 flex flex-col shrink-0 overflow-y-auto">
               <div className="mb-auto">
                 <div className="flex items-center gap-2 mb-6">
                   <div className={`w-2 h-2 rounded-full ${selectedMemoir.type === 'video' ? 'bg-royal shadow-[0_0_8px_rgba(37,99,235,0.5)]' : 'bg-gold shadow-[0_0_8px_rgba(200,169,81,0.5)]'}`} />

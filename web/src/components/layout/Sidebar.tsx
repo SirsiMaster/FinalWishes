@@ -10,13 +10,13 @@ interface NavItem {
   to: string;
 }
 
-const getNavItems = (estateId: string): NavItem[] => [
+const getNavItems = (): NavItem[] => [
   // MAIN
   {
     id: "dashboard",
     label: "Dashboard",
     section: "OVERVIEW",
-    to: `/estates/${estateId}/dashboard`,
+    to: `/dashboard`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <rect x="3" y="3" width="7" height="7" />
@@ -30,7 +30,7 @@ const getNavItems = (estateId: string): NavItem[] => [
     id: "estates",
     label: "My Estates",
     section: "OVERVIEW",
-    to: `/estates/${estateId}/estates`,
+    to: `/dashboard/estates`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -42,7 +42,7 @@ const getNavItems = (estateId: string): NavItem[] => [
     id: "assets",
     label: "Assets",
     section: "OVERVIEW",
-    to: `/estates/${estateId}/assets`,
+    to: `/dashboard/assets`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <line x1="12" y1="1" x2="12" y2="23" />
@@ -54,7 +54,7 @@ const getNavItems = (estateId: string): NavItem[] => [
     id: "memoirs",
     label: "Memories",
     section: "OVERVIEW",
-    to: `/estates/${estateId}/memoirs`,
+    to: `/dashboard/memoirs`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M23 7l-7 5 7 5V7z" />
@@ -62,12 +62,23 @@ const getNavItems = (estateId: string): NavItem[] => [
       </svg>
     ),
   },
-  // MANAGEMENT
+  {
+    id: "obituary",
+    label: "Final Record",
+    section: "MANAGE",
+    to: `/dashboard/obituary`,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+    ),
+  },
   {
     id: "vault",
     label: "Documents",
     section: "MANAGE",
-    to: `/estates/${estateId}/vault`,
+    to: `/dashboard/vault`,
     badge: "SOC 2",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -77,22 +88,10 @@ const getNavItems = (estateId: string): NavItem[] => [
     ),
   },
   {
-    id: "obituary",
-    label: "Final Record",
-    section: "MANAGE",
-    to: `/estates/${estateId}/obituary`,
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      </svg>
-    ),
-  },
-  {
     id: "beneficiaries",
     label: "Beneficiaries",
     section: "MANAGE",
-    to: `/estates/${estateId}/beneficiaries`,
+    to: `/dashboard/beneficiaries`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -106,7 +105,7 @@ const getNavItems = (estateId: string): NavItem[] => [
     id: "notifications",
     label: "Notifications",
     section: "MANAGE",
-    to: `/estates/${estateId}/notifications`,
+    to: `/dashboard/notifications`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -118,7 +117,7 @@ const getNavItems = (estateId: string): NavItem[] => [
     id: "settings",
     label: "Settings",
     section: "MANAGE",
-    to: `/estates/${estateId}/settings`,
+    to: `/dashboard/settings`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <circle cx="12" cy="12" r="3" />
@@ -149,7 +148,7 @@ export function Sidebar() {
     }
   }, []);
 
-  const navItems = getNavItems(estateId);
+  const navItems = getNavItems();
 
   // Group by section
   const sections = navItems.reduce((acc, item) => {
@@ -250,7 +249,7 @@ export function Sidebar() {
               {section}
             </div>
             {items.map((item) => {
-              const isActive = location.pathname === item.to || (item.to === `/estates/${estateId}/dashboard` && location.pathname.endsWith('/dashboard'));
+              const isActive = location.pathname === item.to;
               return (
                 <Link
                   key={item.id}

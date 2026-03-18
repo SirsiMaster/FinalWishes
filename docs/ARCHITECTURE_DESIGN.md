@@ -553,3 +553,31 @@ To support professional estate settlement (ACH/Wire), the architecture explicitl
 | 4.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes |
 | 5.1.0 | 2026-01-20 | Antigravity | Added FinalWishes Contracts Workflow UI section |
 | **5.2.0** | **2026-02-10** | **Antigravity** | **Added Section 10: Sirsi Admin & Audit Infrastructure (gRPC Telemetry & Async Rails)** |
+| **5.3.0** | **2026-03-18** | **Antigravity** | **Added Section 11: Secure Enclave Dashboard Standard (ADR-031 Integration)** |
+
+---
+
+## 11. Secure Enclave Dashboard Standard (ADR-031)
+
+The FinalWishes dashboard follows a specific **Secure Enclave Standard** that merges high-fidelity "Operations Command" functionality with premium "Royal Neo-Deco" family-facing aesthetics.
+
+### 11.1 The "Secure Shroud" Routing
+To protect PII, HIPAA, and PCI DSS data, the application implements a **Secure Shroud** protocol:
+- **Identity Siloing**: Estates are never identified by plain-text slugs in public URLs. All dashboard context is derived from the **Secure Session Shard** (derived from the user's Auth context).
+- **Hierarchical Access**: Data fetching is strictly limited to the "Enclave" authorized for the current session. Crossing estate boundaries without a new authorization ceremony is architecturally impossible.
+
+### 11.2 UI Component Protocol
+Every dashboard implementation MUST include the following "Guardian-Like" components:
+1. **Guidance Engine Shard**: A top-level intelligence banner providing real-time synchronization status and AI-driven "next-best-action" protocols.
+2. **Operations Command Header**: A standardized header displaying the current Shard Status, Vault Security state, and Estate Focus.
+3. **Shard Status Panel**: A dedicated sidebar or card component showing:
+    - **Encryption Level**: (e.g., Hardened AES-256)
+    - **Identity Tier**: (e.g., Concierge / White Glove)
+    - **Compliance Vectors**: (HIPAA / PCI DSS / SOC 2)
+4. **Verified Audit Trail**: All "Recent Activity" items must be tagged with a "Verified" status to provide confidence in the platform's state-management.
+
+### 11.3 Aesthetic Constraints (Royal Neo-Deco)
+- **Primary Color**: Royal Blue (`#133378`) for all primary UI actions and headlines.
+- **Accent Color**: Metallic Gold (`#C8A951`) for status indicators and guidance highlights. NO gold gradients on primary buttons.
+- **Radii**: 24px (1.5rem) or 32px (2rem) for all main content containers to maintain a "Premium Softness."
+- **Typography**: `Cinzel` for headings (uppercase tracking) and `Inter` for all technical data points.

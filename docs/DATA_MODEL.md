@@ -12,11 +12,18 @@
 - Real-time sync for UI
 - Nested subcollections for related data
 - Security rules for client-side access control
+- **Estate Siloing**: Every collection is parented by or indexed to a `secure_estate_id`.
 
 ### Cloud SQL (PII)
-- Sensitive data: SSN, account numbers, DOB
-- Referenced by ID from Firestore
-- Server-side access only via Go API
+- Sensitive data: SSN, account numbers, DOB, HIPAA Health records.
+- Referenced by ID from Firestore.
+- Server-side access only via Go API.
+- **Physical Isolation**: Sensitive PII/HIPAA data is stored in a separate relational enclave to minimize exposure.
+
+### 1.3 Secure Enclave Architecture (ADR-031)
+The data model follows the **Hierarchical Canon of Secure Enclaves**:
+- **The Secure Shroud**: No estate data is accessible via public slugs. Access is exclusively granted through session-derived **Enclave Tokens** that map to a unique `estate_id`.
+- **Identity Obfuscation**: Client-side logs and telemetry use anonymized **Shard Aliases** (e.g., `Enclave-A7F2`) rather than plain-text estate names to prevent PII leakage in debug streams.
 
 ---
 

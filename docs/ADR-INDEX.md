@@ -38,8 +38,14 @@ Each ADR follows this structure:
 | [ADR-016](ADR-016-ASYNC-PAYMENT-SETTLEMENT-AND-TELEMETRY.md) | Async Payment Settlement & Live Telemetry Stream | Accepted | 2026-02-10 | — |
 | [ADR-017](ADR-017-STACK-CONVERGENCE.md) | Stack Convergence — One Unified Tech Stack | Accepted | 2026-02-10 | — |
 | [ADR-018](ADR-018-GOVERNANCE-CONSOLE.md) | Sirsi Governance Console & Dynamic Catalog Store | Proposed | 2026-02-13 | — |
+| [ADR-031](ADR-031-SECURE-ENCLAVE-DASHBOARD-STANDARD.md) | Secure Enclave Dashboard Standard | Accepted | 2026-03-18 | — |
 
 ## Categories
+
+### Consumer Experience & Data Privacy
+- ADR-031: Secure Enclave Dashboard Standard (Industrial-Consumer Merge)
+- ADR-031 §2: Secure Shroud — Session-Based Estate Siloing
+- ADR-031 §3: Shard Status — Visibility for Encryption (AES-256) & Compliance
 
 ### Security
 - ADR-001 §1: SOC 2 + AES-256 (not FIPS 140-3)

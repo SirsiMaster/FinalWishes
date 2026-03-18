@@ -1,7 +1,7 @@
 # GEMINI.md
 **Operational Directive for Gemini Agent (FinalWishes)**
-**Version:** 1.0.0 (Application Firewall)
-**Date:** February 27, 2026
+**Version:** 1.1.0 (Secure Enclave Hardened)
+**Date:** March 18, 2026
 
 ---
 
@@ -44,6 +44,9 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 *   **Full Fidelity for Legal Documents (Rule 9)**: You are **NOT** permitted to abridge, truncate, summarize, or otherwise shorten any element of the Contracts, SOW, MSA, or Proposals. All approved legal language MUST be displayed and printed in full.
 *   **Dynamic Financial Integrity (Rule 12)**: Hardcoded financial values in legal documents or UI are strictly prohibited. All pricing, discounts, and valuations MUST be computed dynamically.
 *   **Standardized Valuations (Rule 13)**: The "Sirsi Multiplier" for market valuation realization: **Internal Rate: $125/hr**, **Blended Market Rate: $250/hr** (2.0x Valuation Factor).
+*   **Secure Enclave Dashboard Standard (Rule 25/ADR-031)**: All dashboard routes must use session-based estate identification (the "Secure Shroud"). URL-based slugs for sensitive data are strictly prohibited. 
+*   **PII/HIPAA Siloing (Rule 26)**: Raw PII, HIPAA, or PCI DSS data MUST NEVER be exposed in public-facing state, URLs, or client-side telemetry. Use anonymized Shard Aliases (e.g., `Enclave-XXXX`) for all logging.
+*   **Royal Neo-Deco Fidelity (Rule 27)**: Dashboard components must adhere to 24px/32px rounded glass cards, Royal Blue headers (`#133378`), and Metallic Gold accents (`#C8A951`). Slate/Grey text is strictly forbidden for primary and secondary content.
 *   **Launch Scope**: Maryland, Illinois, Minnesota (Priority). DC/VA deferred.
 
 ## 3. Technology Stack (FinalWishes)

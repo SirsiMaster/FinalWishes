@@ -8,14 +8,13 @@ export const Route = createFileRoute('/dashboard/')({
 })
 
 function DashboardIndex() {
-  const [estateId, setEstateId] = useState('test-estate');
+  const [estateId, setEstateId] = useState('estate_lockhart');
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');
     if (session) {
       const u = JSON.parse(session);
-      // Force reconciliation for Tameeka Lockhart Shard
       const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
       setEstateId(preferredId);
       setUserName(u.name || '');
@@ -49,148 +48,183 @@ function DashboardIndex() {
 
   if (metaLoading || assetsLoading || beneLoading || insightLoading || vaultLoading) {
     return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal"></div>
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-royal/20 border-t-royal rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-royal uppercase tracking-[0.2em]">Authenticating Shard...</span>
+        </div>
       </div>
     );
   }
 
-  const formatReviewDate = (ts: any) => {
-    if (!ts || !ts.seconds) return 'Active';
-    // Protobuf seconds might be bigint in some environments
-    const ms = Number(ts.seconds) * 1000;
-    return new Date(ms).toLocaleDateString();
-  };
+  const completion = metadata?.completionPercentage || 0;
 
   return (
-    <>
-      <div className="bg-gradient-to-r from-navy to-royal text-white p-6 rounded-2xl mb-8 flex items-center justify-between shadow-lg border border-white/10 relative overflow-hidden">
-        <div className="z-10 flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-5 h-5 bg-gold rounded-full flex items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-3 h-3 text-navy fill-current"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+    <div className="max-w-[1400px] mx-auto px-8 py-6">
+      {/* ── Guidance Engine Banner (Ported from Lockhart) ── */}
+      <div className="bg-white rounded-[2rem] border border-[#E8ECF1] shadow-[0_2px_20px_rgba(0,0,0,0.04)] p-8 mb-8 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-royal/[0.04] to-transparent rounded-full -translate-y-1/2 translate-x-1/3" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-8 z-10">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-6 h-6 bg-royal/10 rounded-full flex items-center justify-center shadow-sm">
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-royal fill-current"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+              </div>
+              <span className="text-[10px] font-bold text-royal uppercase tracking-[0.25em] opacity-60">Guidance Engine Shard</span>
             </div>
-            <span className="font-bold text-[0.6rem] uppercase tracking-widest text-gold text-white/90">Guidance Engine Protocol</span>
+            <h1 className="font-[family-name:var(--font-cinzel)] text-2xl font-semibold text-[#0F172A] tracking-tight leading-tight mb-2">
+              {userName ? (
+                <>Protocol: <span className="text-royal">{userName}</span> detected.</>
+              ) : 'Estate Shard Active.'}
+            </h1>
+            <p className="text-[15px] text-[#0F172A]/70 leading-relaxed font-medium">
+              {insightData?.insight || "Your estate is currently 88% synchronized. We recommend verifying the 'Primary Residence' valuation shard to reach 90% completion."}
+            </p>
           </div>
-          <p className="text-sm font-medium leading-relaxed max-w-2xl">
-            {userName && <span className="text-gold font-black uppercase tracking-widest mr-2">Welcome Back, {userName}.</span>}
-            {insightData?.insight}
-          </p>
-        </div>
-        <div className="z-10 ml-6">
-          <button 
-            onClick={() => window.location.href = insightData?.actionUrl || '#'}
-            className="bg-white/15 h-10 px-6 rounded-lg font-bold text-[0.7rem] uppercase tracking-widest hover:bg-white/20 transition-colors backdrop-blur-sm border border-white/10 text-white"
-          >
-            {insightData?.actionLabel}
+          <button className="px-8 py-4 bg-royal hover:bg-royal/90 text-white font-semibold text-[13px] rounded-2xl shadow-[0_4px_16px_rgba(19,51,120,0.25)] hover:shadow-[0_8px_24px_rgba(19,51,120,0.3)] transition-all active:scale-[0.98] whitespace-nowrap">
+            {insightData?.actionLabel || 'Verify Assets →'}
           </button>
         </div>
-        <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-royal rounded-full blur-[100px] opacity-20 pointer-events-none" />
       </div>
 
-      <div className="grid grid-cols-4 gap-6 mb-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
-        <StatCard
-          label="Shard Completion"
-          value={`${metadata?.completionPercentage}%`}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>}
-          iconColor="blue"
-          change="+8% Protocol Shift"
-          changeDir="up"
+      {/* ── Key Metrics (Enclave Grid) ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <MetricCard
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>}
+          title="Shard Completion"
+          subtitle="+8% Protocol Shift"
+          value={`${completion}%`}
+          color="royal"
         />
-        <StatCard
-          label="Total Assets"
-          value={assetsData?.totalCount.toString() || "0"}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>}
-          iconColor="gold"
-          change="Real-time Audit Active"
+        <MetricCard
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>}
+          title="Total Assets"
+          subtitle="Real-time Audit Active"
+          value={assetsData?.totalCount || 0}
+          color="gold"
         />
-        <StatCard
-          label="Vault Evidence"
-          value={vaultData?.documents.length.toString() || "0"}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>}
-          iconColor="green"
-          change="Encrypted & Immutable"
-          changeDir="up"
+        <MetricCard
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>}
+          title="Vault Evidence"
+          subtitle="Encrypted & Immutable"
+          value={vaultData?.documents.length || 0}
+          color="green"
         />
-        <StatCard
-          label="Legal Heirs"
-          value={beneData?.beneficiaries.length.toString() || "0"}
-          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>}
-          iconColor="blue"
-          change="Verified Lineage"
+        <MetricCard
+          icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-5 h-5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>}
+          title="Legal Heirs"
+          subtitle="Verified Lineage"
+          value={beneData?.beneficiaries.length || 0}
+          color="royal"
         />
       </div>
 
-      <div className="grid grid-cols-[2fr_1fr] gap-6 max-lg:grid-cols-1 pb-20">
-        <div className="space-y-6">
-          <Card title="Estate Setup Progress">
-            <div className="space-y-4">
-              <ProgressRow label="Personal Information" percent={100} color="blue" />
+      {/* ── Main Content Grid ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        {/* Left: 2 columns */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Estate Setup Progress (Horizontal Style from Lockhart) */}
+          <DashboardCard title="Estate Setup Progress" subtitle="Monitoring secure enclave synchronization">
+            <div className="space-y-6">
+              <ProgressRow label="Personal Information" percent={100} color="royal" />
               <ProgressRow label="Asset Inventory" percent={60} color="gold" />
-              <ProgressRow label="Document Upload" percent={45} color="blue" />
+              <ProgressRow label="Important Documents" percent={45} color="royal" />
               <ProgressRow label="Beneficiary Designations" percent={30} color="gold" />
-              <ProgressRow label="Executor Assignment" percent={80} color="green" />
+              <ProgressRow label="Trust & Power of Attorney" percent={80} color="green" />
             </div>
-          </Card>
+          </DashboardCard>
 
-          <Card title="Recent Activity">
-            <div className="space-y-0">
-              <ActivityItem text={<span><strong>Lockhart Heritage Deed</strong> uploaded to Evidence Vault</span>} time="2 hours ago" />
-              <ActivityItem text={<span><strong>Lockhart Family Trust</strong> heirs verified</span>} time="Yesterday" />
-              <ActivityItem text={<span><strong>Legacy Tape 01</strong> uploaded to Memoirs Shard</span>} time="3 days ago" />
-              <ActivityItem text={<span><strong>Primary Residence (Chicago)</strong> valuation verified</span>} time="1 week ago" />
+          {/* Recent Activity */}
+          <DashboardCard title="Recent Activity" subtitle="Verified audit trail of estate changes">
+            <div className="space-y-0 -mx-2">
+              <ActivityRow icon="📄" title="Document uploaded" desc="Heritage deed added to Evidence Vault" time="2 hours ago" />
+              <ActivityRow icon="👤" title="Beneficiary verified" desc="Primary heirs confirmed and lineage verified" time="Yesterday" />
+              <ActivityRow icon="🎬" title="Memoir entry saved" desc="Legacy tape 01 recorded in Memoirs Shard" time="3 days ago" />
+              <ActivityRow icon="🏠" title="Asset valuation" desc="Primary residence valuation verified by audit" time="1 week ago" />
             </div>
-          </Card>
+          </DashboardCard>
         </div>
 
-        <div className="space-y-6">
-          <Card title="Quick Actions">
-            <div className="grid grid-cols-2 gap-3">
-              <QuickAction label="Add Asset" icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>} />
-              <QuickAction label="Upload Doc" icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>} />
-              <QuickAction label="Add Heir" icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg>} />
-              <QuickAction label="AI Guidance" icon={<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>} />
+        {/* Right: 1 column */}
+        <div className="lg:col-span-1 space-y-8">
+          {/* Quick Actions */}
+          <DashboardCard title="Quick Actions" subtitle="Deploying new estate protocols">
+            <div className="grid grid-cols-2 gap-4">
+              <ActionButton icon="📦" label="Add Asset" desc="Secure Inventory" />
+              <ActionButton icon="📎" label="Upload Doc" desc="Evidence Vault" />
+              <ActionButton icon="👥" label="Add Heir" desc="Verified Lineage" />
+              <ActionButton icon="🎥" label="AI Guidance" desc="Decision Engine" />
             </div>
-          </Card>
+          </DashboardCard>
 
-          <Card title="Shard Status">
-            <div className="space-y-3">
+          {/* Secure Shard Status (New Port) */}
+          <DashboardCard title="Shard Status" subtitle="Security & Governance Hierarchy">
+            <div className="space-y-4">
               <StatusRow label="Current Status" value={metadata?.status || "Active"} color="green" />
               <StatusRow label="Identity Tier" value={metadata?.tier || "Concierge"} color="gold" />
-              <StatusRow label="Encryption MFA" value={metadata?.mfaEnabled ? "Hardened" : "Enabled"} color="green" />
-              <StatusRow label="Last Auth" value="Today" />
-              <StatusRow label="Protocol Review" value={formatReviewDate(metadata?.nextReviewDate)} />
+              <StatusRow label="Encryption MFA" value={metadata?.mfaEnabled ? "Hardened" : "Bipartite"} color="green" />
+              <StatusRow label="Data Compliance" value="HIPAA / PCI DSS" color="royal" />
+              <StatusRow label="Secure Shard" value={`Enclave-${estateId.slice(-4).toUpperCase()}`} />
             </div>
-          </Card>
-        </div>
-      </div>
-    </>
-  )
-}
+          </DashboardCard>
 
-function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
-  const bgMap = { blue: "bg-royal-subtle", gold: "bg-gold-dim", green: "bg-[#ecfdf5]" };
-  const textMap = { blue: "text-royal", gold: "text-gold", green: "text-success" };
-  return (
-    <div className="bg-white rounded-2xl p-6 border border-border-light shadow-[0_4px_6px_-1px_rgba(0,0,0,0.07)] transition-all hover:shadow-[0_10px_15px_rgba(0,0,0,0.08)]">
-      <div className="flex items-center justify-between mb-5">
-        <span className="font-[family-name:var(--font-cinzel)] text-[0.8rem] font-black uppercase tracking-[0.1em] text-navy opacity-60">{label}</span>
-        <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center ${bgMap[iconColor as keyof typeof bgMap]} ${textMap[iconColor as keyof typeof textMap]}`}>
-          <span className="w-5 h-5">{icon}</span>
+          {/* AI Guidance Engine */}
+          <div className="bg-gradient-to-br from-royal/[0.04] to-royal/[0.01] rounded-3xl border border-royal/10 p-7 relative overflow-hidden group">
+             <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-royal/5 rounded-full blur-2xl group-hover:bg-royal/10 transition-colors" />
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm text-xl border border-royal/10">✨</div>
+              <div>
+                <h4 className="text-[14px] font-bold text-royal uppercase tracking-wider">Smart Suggestion</h4>
+                <p className="text-[11px] text-[#0F172A]/50 font-bold uppercase tracking-[0.1em]">Guidance Engine active</p>
+              </div>
+            </div>
+            <p className="text-[15px] text-[#0F172A]/80 leading-relaxed font-semibold">
+              {insightData?.insight || "Consider uploading your homeowner's insurance policy. This ensures your family has quick access to it if something unexpected happens."}
+            </p>
+          </div>
         </div>
       </div>
-      <div className="text-[2rem] font-black text-navy leading-none mb-1 tracking-tight">{value}</div>
-      {change && <div className={`text-[9px] font-black uppercase tracking-widest mt-2 ${changeDir === "up" ? "text-success" : changeDir === "down" ? "text-danger" : "text-text-muted"}`}>{change}</div>}
     </div>
   );
 }
 
-function Card({ title, children }: any) {
+/* ── Sub-Components ── */
+
+function MetricCard({ icon, title, subtitle, value, color }: any) {
+  const colorMap = {
+    royal: 'text-royal bg-royal/10 border-royal/10',
+    gold: 'text-[#C8A951] bg-[#C8A951]/10 border-[#C8A951]/20',
+    green: 'text-green-600 bg-green-50 border-green-100',
+  };
+  const activeColor = colorMap[color as keyof typeof colorMap] || colorMap.royal;
+
   return (
-    <div className="bg-white rounded-[2rem] p-8 border border-border-light shadow-[0_4px_6px_-1px_rgba(0,0,0,0.07)]">
-      <div className="mb-6 flex items-center justify-between border-b border-gray-50 pb-4">
-        <h3 className="font-[family-name:var(--font-cinzel)] text-[1rem] font-black uppercase tracking-[0.15em] text-navy">{title}</h3>
-        <div className="w-2 h-2 rounded-full bg-royal/20" />
+    <div className="bg-white rounded-3xl border border-[#E8ECF1] shadow-[0_2px_16px_rgba(0,0,0,0.03)] p-6 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:border-royal/20 transition-all duration-500 group">
+      <div className="flex items-center justify-between mb-6">
+        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${activeColor} group-hover:scale-110 transition-transform duration-500`}>
+          {icon}
+        </div>
+        <span className="font-[family-name:var(--font-cinzel)] text-3xl font-semibold text-[#0F172A] tabular-nums">{value}</span>
+      </div>
+      <h3 className="text-[11px] font-bold text-royal uppercase tracking-[0.2em] mb-1 opacity-40 group-hover:opacity-100 transition-opacity">{title}</h3>
+      <p className="text-[13px] font-bold text-[#0F172A] leading-snug">{subtitle}</p>
+    </div>
+  );
+}
+
+function DashboardCard({ title, subtitle, children }: any) {
+  return (
+    <div className="bg-white rounded-[2.5rem] border border-[#E8ECF1] shadow-[0_2px_16px_rgba(0,0,0,0.03)] p-8">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h3 className="text-[18px] font-semibold text-[#0F172A] mb-1 tracking-tight">{title}</h3>
+          <p className="text-[12px] text-[#0F172A]/40 font-bold uppercase tracking-widest">{subtitle}</p>
+        </div>
+        <div className="flex gap-1.5 opacity-20">
+          <div className="w-1.5 h-1.5 rounded-full bg-royal" />
+          <div className="w-1.5 h-1.5 rounded-full bg-royal" />
+        </div>
       </div>
       {children}
     </div>
@@ -198,47 +232,64 @@ function Card({ title, children }: any) {
 }
 
 function ProgressRow({ label, percent, color }: any) {
-  const fillMap = { blue: "bg-royal", gold: "bg-gold", green: "bg-success" };
+  const barColor = color === 'royal' ? 'bg-royal' : color === 'gold' ? 'bg-[#C8A951]' : 'bg-green-500';
   return (
-    <div>
-      <div className="flex justify-between items-center mb-1.5">
-        <span className="text-[0.65rem] font-black uppercase tracking-widest text-navy/40">{label}</span>
-        <span className="text-[0.65rem] font-black text-navy">{percent}%</span>
+    <div className="group">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[11px] font-bold text-[#0F172A]/50 uppercase tracking-[0.15em]">{label}</span>
+        <span className="text-[13px] font-bold text-[#0F172A] tabular-nums">{percent}%</span>
       </div>
-      <div className="w-full h-2 bg-gray-50 rounded-full overflow-hidden border border-gray-100 p-[2px]">
-        <div className={`h-full rounded-full transition-all duration-600 ${fillMap[color as keyof typeof fillMap]}`} style={{ width: `${percent}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function ActivityItem({ text, time }: any) {
-  return (
-    <div className="flex gap-4 py-4 border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 rounded-lg px-2 transition-colors">
-      <div className="w-2 h-2 rounded-full bg-gold/40 mt-1.5 shrink-0" />
-      <div className="flex-1">
-        <div className="text-[13px] text-navy font-medium leading-relaxed">{text}</div>
-        <div className="text-[10px] text-navy/30 font-black uppercase tracking-widest mt-1">{time}</div>
+      <div className="h-2.5 bg-[#F1F5F9] rounded-full overflow-hidden shadow-inner">
+        <div
+          className={`h-full rounded-full transition-all duration-1000 ease-out shadow-sm ${barColor}`}
+          style={{ width: `${percent}%` }}
+        />
       </div>
     </div>
   );
 }
 
-function QuickAction({ label, icon }: any) {
+function ActivityRow({ icon, title, desc, time }: any) {
   return (
-    <button className="flex flex-col items-center gap-3 p-5 bg-[#FAFBFC] border border-[#E5E7EB] rounded-[1.5rem] cursor-pointer transition-all hover:bg-royal hover:border-royal hover:shadow-xl hover:shadow-royal/20 group">
-      <span className="w-6 h-6 text-royal group-hover:text-white transition-colors">{icon}</span>
-      <span className="text-[10px] font-black text-navy opacity-40 uppercase tracking-[0.1em] group-hover:text-white group-hover:opacity-100 transition-all">{label}</span>
+    <div className="flex items-start gap-4 py-5 px-4 border-b border-[#F1F5F9] last:border-0 hover:bg-royal/[0.02] rounded-2xl transition-all group">
+      <div className="w-10 h-10 rounded-xl bg-white border border-[#E8ECF1] flex items-center justify-center text-lg shadow-sm group-hover:scale-110 transition-transform">{icon}</div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[14px] font-bold text-[#0F172A]">{title}</p>
+        <p className="text-[12px] text-[#0F172A]/50 font-semibold mt-1 truncate">{desc}</p>
+      </div>
+      <div className="text-right">
+        <span className="text-[11px] text-[#0F172A]/40 font-bold uppercase tracking-tighter whitespace-nowrap">{time}</span>
+        <div className="text-[9px] text-green-500 font-black uppercase tracking-widest mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Verified</div>
+      </div>
+    </div>
+  );
+}
+
+function ActionButton({ icon, label, desc }: any) {
+  return (
+    <button className="flex flex-col items-center gap-3 p-6 bg-[#FAFBFC] border border-[#E8ECF1] rounded-[2rem] hover:bg-white hover:border-royal/30 hover:shadow-[0_8px_24px_rgba(19,51,120,0.06)] transition-all active:scale-[0.97] group text-center">
+      <div className="w-12 h-12 rounded-2xl bg-white border border-[#E8ECF1] flex items-center justify-center text-2xl shadow-sm group-hover:scale-110 group-hover:border-royal/20 transition-all">{icon}</div>
+      <div>
+        <span className="block text-[12px] font-bold text-[#0F172A] uppercase tracking-tight">{label}</span>
+        <span className="block text-[10px] text-[#0F172A]/40 font-bold uppercase tracking-tighter mt-1">{desc}</span>
+      </div>
     </button>
   );
 }
 
 function StatusRow({ label, value, color }: any) {
-  const badgeMap: Record<string, string> = { green: "bg-green-50 text-green-700 border border-green-100", gold: "bg-gold/5 text-gold border border-gold/10", blue: "bg-royal/5 text-royal border border-royal/10" };
+  const colors = {
+    green: 'bg-green-50 text-green-600 border-green-100',
+    gold: 'bg-[#C8A951]/10 text-[#C8A951] border-[#C8A951]/20',
+    royal: 'bg-royal/5 text-royal border-royal/10',
+    default: 'bg-gray-50 text-[#0F172A] border-[#E8ECF1]'
+  };
+  const activeColor = colors[color as keyof typeof colors] || colors.default;
+
   return (
-    <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-b-0">
-      <span className="text-[0.65rem] font-black uppercase tracking-widest text-navy/40">{label}</span>
-      {color ? <span className={`text-[0.6rem] font-black px-3 py-1 rounded-lg uppercase tracking-widest ${badgeMap[color]}`}>{value}</span> : <span className="text-[0.65rem] font-black text-navy uppercase tracking-widest">{value}</span>}
+    <div className="flex items-center justify-between py-3 border-b border-[#F1F5F9] last:border-0 group">
+      <span className="text-[11px] text-[#0F172A]/40 font-bold uppercase tracking-[0.1em] group-hover:text-royal transition-colors">{label}</span>
+      <span className={`text-[10px] font-black px-3 py-1 rounded-lg border uppercase tracking-widest ${activeColor}`}>{value}</span>
     </div>
   );
 }

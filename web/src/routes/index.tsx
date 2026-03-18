@@ -85,7 +85,7 @@ function Home() {
       </nav>
 
       {/* ═══════════════════ HERO ═══════════════════ */}
-      <header className="relative min-h-screen flex flex-col items-center justify-center pt-16 overflow-hidden">
+      <header className="relative min-h-[75vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
         {/* Hero background image */}
         <div className="absolute inset-0 z-0">
           <img

@@ -140,18 +140,15 @@ body {
   --icon-color: var(--royal);
   --icon-hover: var(--royal-bright);
 
-  /* Light Header */
-  --header-bg: #FFFFFF;
-  --header-text: #0F172A;
-  --header-text-muted: #64748B;
-  --sidebar-bg: #FFFFFF;
-}
-
-.royal-theme {
-  --header-bg: rgba(30, 58, 95, 0.7);
+  /* Royal Header & Sidebar */
+  --header-bg: #133378;
   --header-text: #FFFFFF;
   --header-text-muted: rgba(255, 255, 255, 0.6);
+  --sidebar-bg: #0F172A;
+  --sidebar-text: #FFFFFF;
+  --sidebar-text-muted: rgba(255, 255, 255, 0.6);
 }
+
 
 /* Light sidebar overrides for dashboard-theme */
 .dashboard-theme .themed-surface {

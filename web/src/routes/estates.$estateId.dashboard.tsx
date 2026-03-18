@@ -193,9 +193,9 @@ function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
 
 function Card({ title, children }: any) {
   return (
-    <div className="bg-white rounded-[2.5rem] p-10 border border-border-light shadow-sm relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-navy-subtle blur-[80px] pointer-events-none" />
-      <div className="mb-8 flex items-center justify-between border-b border-gray-50 pb-6">
+    <div className="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-10 border border-white/10 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-royal/10 blur-[80px] pointer-events-none" />
+      <div className="mb-8 flex items-center justify-between border-b border-gray-100 pb-6">
         <h3 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.25em] text-navy">{title}</h3>
         <div className="flex gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-gold" />
@@ -203,7 +203,7 @@ function Card({ title, children }: any) {
           <div className="w-1.5 h-1.5 rounded-full bg-navy/5" />
         </div>
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 text-navy">
         {children}
       </div>
     </div>

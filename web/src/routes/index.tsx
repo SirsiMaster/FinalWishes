@@ -89,13 +89,12 @@ function Home() {
         {/* Hero background image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=3840&auto=format&fit=crop"
-            alt="Happy African American multi-generational family embracing"
+            src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=3840&auto=format&fit=crop"
+            alt="Happy African American multi-generational family portrait"
             className="w-full h-full object-cover"
-            style={{ objectPosition: "center 20%" }}
+            style={{ objectPosition: "center 30%" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         </div>
 
         {/* Art Deco corners */}
@@ -150,7 +149,7 @@ function Home() {
 
       {/* ═══════════════════ PROBLEM SECTION ═══════════════════ */}
       <section id="problem" className="relative z-10 grid md:grid-cols-2">
-        <div className="relative h-[320px] md:h-auto overflow-hidden">
+        <div className="relative h-[260px] md:h-auto overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=3840&auto=format&fit=crop"
             alt="Old photographs and letters"
@@ -163,7 +162,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center px-6 md:px-10 py-10 glass-panel">
+        <div className="flex flex-col justify-center px-6 md:px-10 py-8 glass-panel">
           <div className="max-w-lg mx-auto">
             <h2 className="text-2xl md:text-4xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
               Two Tragedies:<br />
@@ -233,7 +232,7 @@ function Home() {
             {/* Step 1: BUILD LEGACY */}
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?w=800&h=600&fit=crop" alt="Grandfather recording memoir" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1516307365426-bea591f05011?w=800&h=600&fit=crop" alt="Old family photographs and letters" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
@@ -266,7 +265,7 @@ function Home() {
                 </ul>
               </div>
               <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Security Lock" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Digital security verification" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">02</span>
@@ -278,7 +277,7 @@ function Home() {
             {/* Step 3: NOTIFY */}
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal Letters" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal documents and notifications" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
@@ -315,7 +314,7 @@ function Home() {
                 </Link>
               </div>
               <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
-                <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Happy African American family embracing" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Family embracing together" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-gold/30 font-[family-name:var(--font-cinzel)]">04</span>

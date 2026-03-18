@@ -40,6 +40,7 @@ Each ADR follows this structure:
 | [ADR-018](ADR-018-GOVERNANCE-CONSOLE.md) | Sirsi Governance Console & Dynamic Catalog Store | Proposed | 2026-02-13 | — |
 | [ADR-031](ADR-031-SECURE-ENCLAVE-DASHBOARD-STANDARD.md) | Secure Enclave Dashboard Standard | Accepted | 2026-03-18 | — |
 | [ADR-032](ADR-032-UNIVERSAL-ENCLAVE-IMPLEMENTATION.md) | Universal Enclave Implementation (Web/Mobile/Desktop) | Accepted | 2026-03-18 | — |
+| [ADR-033](ADR-033-DESIGN-SYSTEM-ACCELERATION.md) | Design System Acceleration & Cross-Portfolio Reuse | Accepted | 2026-03-18 | — |
 
 ## Categories
 

@@ -22,6 +22,7 @@ import { Route as DashboardMemoirsRouteImport } from './routes/dashboard.memoirs
 import { Route as DashboardEstatesRouteImport } from './routes/dashboard.estates'
 import { Route as DashboardBeneficiariesRouteImport } from './routes/dashboard.beneficiaries'
 import { Route as DashboardAssetsRouteImport } from './routes/dashboard.assets'
+import { Route as EstatesEstateIdIndexRouteImport } from './routes/estates.$estateId.index'
 import { Route as EstatesEstateIdVaultRouteImport } from './routes/estates.$estateId.vault'
 import { Route as EstatesEstateIdSettingsRouteImport } from './routes/estates.$estateId.settings'
 import { Route as EstatesEstateIdObituaryRouteImport } from './routes/estates.$estateId.obituary'
@@ -97,6 +98,11 @@ const DashboardAssetsRoute = DashboardAssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => DashboardRoute,
 } as any)
+const EstatesEstateIdIndexRoute = EstatesEstateIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
 const EstatesEstateIdVaultRoute = EstatesEstateIdVaultRouteImport.update({
   id: '/vault',
   path: '/vault',
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
+  '/estates/$estateId/': typeof EstatesEstateIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -181,7 +188,6 @@ export interface FileRoutesByTo {
   '/dashboard/obituary': typeof DashboardObituaryRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
-  '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/dashboard': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
@@ -192,6 +198,7 @@ export interface FileRoutesByTo {
   '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
+  '/estates/$estateId': typeof EstatesEstateIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -217,6 +224,7 @@ export interface FileRoutesById {
   '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
+  '/estates/$estateId/': typeof EstatesEstateIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -243,6 +251,7 @@ export interface FileRouteTypes {
     | '/estates/$estateId/obituary'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/vault'
+    | '/estates/$estateId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -255,7 +264,6 @@ export interface FileRouteTypes {
     | '/dashboard/obituary'
     | '/dashboard/settings'
     | '/dashboard/vault'
-    | '/estates/$estateId'
     | '/dashboard'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/beneficiaries'
@@ -266,6 +274,7 @@ export interface FileRouteTypes {
     | '/estates/$estateId/obituary'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/vault'
+    | '/estates/$estateId'
   id:
     | '__root__'
     | '/'
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/estates/$estateId/obituary'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/vault'
+    | '/estates/$estateId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -391,6 +401,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/assets'
       preLoaderRoute: typeof DashboardAssetsRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/estates/$estateId/': {
+      id: '/estates/$estateId/'
+      path: '/'
+      fullPath: '/estates/$estateId/'
+      preLoaderRoute: typeof EstatesEstateIdIndexRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
     }
     '/estates/$estateId/vault': {
       id: '/estates/$estateId/vault'
@@ -496,6 +513,7 @@ interface EstatesEstateIdRouteChildren {
   EstatesEstateIdObituaryRoute: typeof EstatesEstateIdObituaryRoute
   EstatesEstateIdSettingsRoute: typeof EstatesEstateIdSettingsRoute
   EstatesEstateIdVaultRoute: typeof EstatesEstateIdVaultRoute
+  EstatesEstateIdIndexRoute: typeof EstatesEstateIdIndexRoute
 }
 
 const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
@@ -508,6 +526,7 @@ const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
   EstatesEstateIdObituaryRoute: EstatesEstateIdObituaryRoute,
   EstatesEstateIdSettingsRoute: EstatesEstateIdSettingsRoute,
   EstatesEstateIdVaultRoute: EstatesEstateIdVaultRoute,
+  EstatesEstateIdIndexRoute: EstatesEstateIdIndexRoute,
 }
 
 const EstatesEstateIdRouteWithChildren = EstatesEstateIdRoute._addFileChildren(

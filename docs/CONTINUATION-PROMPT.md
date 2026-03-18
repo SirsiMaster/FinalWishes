@@ -46,16 +46,23 @@ You are **Antigravity**, the AI agent for the **FinalWishes** repository. Your m
 
 ## **🚨 P0: CRITICAL — Must Do First**
 
-### 1. Hero Image Fix
-**Status**: The Unsplash URL `photo-1551836022-d5d88e9218df` renders as TWO WOMEN AT A LAPTOP (wrong image). The user wants the **multi-generational Black family facing the camera** — the image that was originally stored as `images/hero-family.jpg` in the git history.
+### 1. Hero Image — WRONG IMAGE DEPLOYED
+**Status**: The hero currently shows the WRONG image. The Unsplash URL `photo-1551836022-d5d88e9218df` does NOT resolve to the correct family photo — it resolves to a corporate stock photo of two women at a laptop.
 
-**The correct image** was confirmed visually by the user. It shows a multi-generational African American family (grandparents, parents, children) smiling and facing the camera with sun flare behind them.
+**The correct image** (confirmed visually by the user in conversation `60524584-e9c8-4a2c-b535-0f85c23fc2ab`, Step 1327):
+- **Description**: A **multi-generational African American family** (6 people) FACING THE CAMERA and smiling broadly
+- **People**: Grandmother (short hair, pink blouse, left), Father (bald, olive shirt, center-left), Daughter (~8yo, on father's back), Son (~11yo, blue shirt, center), Mother (curly hair, patterned top, center-right), Grandfather (grey beard, white shirt, right)
+- **Setting**: Outdoors, green trees behind them, golden sun flare from upper-left
+- **Mood**: Joyful, warm, multi-generational connection
+- **Current file**: `web/public/assets/images/hero-family.jpg` — THIS FILE IS WRONG, needs to be replaced
+- **Hero reference**: `web/src/routes/index.tsx` line 92 — currently uses `/assets/images/hero-family.jpg`
 
 **Action Required**:
-- The original `hero-family.jpg` exists in git history at commit `8f23790` under path `images/hero-family.jpg` (124KB JPEG, 1024x683)
-- Extract it: `git show 8f23790:images/hero-family.jpg > web/public/assets/images/hero-family.jpg`
-- Update `web/src/routes/index.tsx` hero `<img>` src to `/assets/images/hero-family.jpg`
-- The user explicitly confirmed the image content — this is the single most important visual fix
+- The user MUST provide the correct image file, OR
+- Search for the exact image on stock photo sites matching the description above
+- Save to `web/public/assets/images/hero-family.jpg` (overwrite the wrong one)
+- The git history version at `8f23790:images/hero-family.jpg` is ALSO the wrong image (family facing AWAY from camera)
+- Do NOT use any Unsplash URL — serve locally only
 
 ### 2. Landing Page Link Audit
 **Every link on the landing page must work**:

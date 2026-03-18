@@ -36,15 +36,15 @@ export const estateClient = new Proxy(realClient, {
         
         if (isLockhart) {
           switch(prop) {
-            case 'getEstateMetadata': return { metadata: { 
-              estateId: 'estate_lockhart', 
+            case 'getEstateMetadata': return { 
+              id: 'estate_lockhart', 
               name: 'Tameeka Lockhart Estate', 
               status: 'Active Shard', 
               completionPercentage: 88, 
               tier: 'Concierge Protocol', 
               mfaEnabled: true,
-              nextReviewDate: { seconds: Math.floor(Date.now() / 1000) + 7776000 }
-            }};
+              nextReviewDate: { seconds: BigInt(Math.floor(Date.now() / 1000) + 7776000), nanos: 0 } as any
+            };
             case 'listAssets': return { assets: [
               { id: 'a1', category: 'Real Estate', name: 'Primary Residence (Chicago)', valuation: 750000, status: 'Verified' },
               { id: 'a2', category: 'Investment', name: 'Vanguard Index Cluster', valuation: 250000, status: 'Active Shard' }
@@ -55,15 +55,16 @@ export const estateClient = new Proxy(realClient, {
               { id: 'd3', category: 'Memoir', name: 'Legacy Tape 01 (Verified)', date: 'Mar 05, 2026', size: '48.2 MB' }
             ]};
             case 'listBeneficiaries': return { beneficiaries: [
-              { id: 'b1', name: 'Cylton Collymore', role: 'Primary Executor', allocation: '75%', email: 'cylton@sirsi.ai' },
-              { id: 'b2', name: 'Maya Lockhart', role: 'Heir', allocation: '25%', email: 'maya@lockhart.fam' }
+              { id: 'b1', name: 'Maya Lockhart', role: 'Primary Executor', allocation: '75%', email: 'maya@lockhart.fam' },
+              { id: 'b2', name: 'Andre Lockhart', role: 'Heir', allocation: '25%', email: 'andre@lockhart.fam' }
             ]};
             case 'listMemoirs': return { memoirs: [
-              { id: 'm1', type: 'video', url: '/assets/tameeka/mommy.mp4', title: 'A Message to Cylton', duration: '02:45' },
-              { id: 'm2', type: 'image', url: '/assets/tameeka/mom memorial.jpg', title: 'Grandma\'s Garden View', duration: 'Heritage Shard' },
-              { id: 'm3', type: 'video', url: '/assets/tameeka/musical tribute.mp4', title: 'Musical Legacy Pulse', duration: '03:12' }
+              { id: 'm1', type: 'video', url: '/assets/tameeka/mommy.mp4', title: 'A Message to Tameeka', duration: '02:45' },
+              { id: 'm2', type: 'photo', url: '/assets/tameeka/mom memorial.jpg', title: 'Grandma\'s Garden View', duration: 'Heritage Shard' },
+              { id: 'm3', type: 'photo', url: '/assets/tameeka/mom dance.jpg', title: 'Celebration of Life', duration: 'Heritage Shard' },
+              { id: 'm4', type: 'video', url: '/assets/tameeka/musical tribute.mp4', title: 'Musical Legacy Pulse', duration: '03:12' }
             ]};
-            case 'getAIInsight': return { 
+              case 'getAIInsight': return { 
               insight: "Protocol detected. Tameeka, your estate is 88% synchronized. We recommend verifying the 'Primary Residence' valuation shard to reach 90% completion.",
               actionLabel: 'Verify Asset Shard',
               actionUrl: '/estates/lockhart/assets'

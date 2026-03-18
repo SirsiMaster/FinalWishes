@@ -23,24 +23,26 @@
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  /* Swiss Neo Deco Shard (Dashboard Surface Protocol) */
-  --bg-primary: transparent;
-  --bg-secondary: rgba(248, 250, 255, 0.9);
-  --bg-gradient: radial-gradient(at 50% 0px, #2563EB 0%, #1E3A8A 35%, #0F172A 75%);
-  --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.8);
-  --text-muted: rgba(255, 255, 255, 0.6);
-  --border-light: rgba(255, 255, 255, 0.1);
+  /* Royal Neo-Deco (Website/Login Foundation) */
+  --bg-royal: radial-gradient(at 50% 0px, #2563EB 0%, #1E3A5F 35%, #0F172A 75%);
+  
+  /* Swiss Neo-Deco (Dashboard Surface Protocol) */
+  --bg-dashboard: #F8FAFF;
+  --bg-dashboard-tint: radial-gradient(circle at top right, #F8FAFF 0%, #EDF1F7 100%);
+  --text-navy: #0F172A;
+  --text-navy-light: #1E3A5F;
+  --border-dashboard: rgba(15, 23, 42, 0.08);
 
-  /* Glass Card System (Opulent) */
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(15, 29, 58, 0.06);
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --card-shadow-hover: 0 10px 15px -3px rgba(15, 29, 58, 0.1), 0 4px 6px -2px rgba(15, 29, 58, 0.05);
+  /* Semantic Default (Fallback to Light for safety) */
+  --bg-primary: #FFFFFF;
+  --text-primary: var(--text-navy);
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --border-light: var(--border-dashboard);
 
-  /* Layout */
-  --sidebar-width: 260px;
-  --header-height: 70px;
+  /* Glass Shard Tokens */
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 /* ── TailwindCSS v4 Theme Tokens ── */
@@ -68,13 +70,34 @@
 
 /* ── Body: Deep Blue Gradient ── */
 body {
-  background-color: var(--navy);
-  background-image: var(--bg-gradient);
-  background-attachment: fixed;
+  background-color: #FFFFFF;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
   font-family: var(--font-inter);
+}
+
+/* ── Identity Contexts ── */
+.royal-theme {
+  background-color: var(--navy);
+  background-image: var(--bg-royal);
+  background-attachment: fixed;
+  color: #FFFFFF;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --border-light: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-theme {
+  background-color: var(--bg-dashboard);
+  background-image: var(--bg-dashboard-tint);
+  background-attachment: fixed;
+  color: var(--text-navy);
+  --text-primary: var(--text-navy);
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --border-light: var(--border-dashboard);
 }
 
 /* ── Film Grain Texture ── */
@@ -232,6 +255,5 @@ input::-webkit-contacts-auto-fill-button {
 
 /* ── Dashboard Shell ── */
 .dashboard-shell {
-  background: transparent;
   color: var(--text-primary);
 }

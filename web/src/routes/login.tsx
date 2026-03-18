@@ -37,7 +37,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-navy">
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden royal-theme">
       {/* Background Orbs — Royal Neo-Deco Protocol */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-royal/30 blur-[120px] rounded-full animate-pulse" />

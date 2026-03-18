@@ -31,7 +31,7 @@ export function AdminHeader({
 
   return (
     <header
-      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 bg-navy/90 backdrop-blur-xl border-b border-white/5 shadow-xl relative"
+      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 bg-white/80 backdrop-blur-xl border-b border-border-light shadow-sm relative"
     >
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
@@ -76,24 +76,24 @@ export function AdminHeader({
       <div className="relative z-10 flex items-center justify-between w-full h-full">
         {/* Left — Title */}
         <div className="shrink-0 mr-8 text-left">
-          <h1 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.1em] text-white m-0 whitespace-nowrap">
+          <h1 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.1em] text-navy m-0 whitespace-nowrap">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-white/40 text-[0.65rem] font-black uppercase tracking-[0.15em] m-0 whitespace-nowrap">
+            <p className="text-[#6b7280] text-[0.65rem] font-black uppercase tracking-[0.15em] m-0 whitespace-nowrap opacity-40">
               {subtitle}
             </p>
           )}
         </div>
 
       {/* Center — Search */}
-      <div className="flex-1 max-w-[350px] min-w-[150px] flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl py-2 px-5 focus-within:border-gold/50 focus-within:bg-white/10 transition-all">
+      <div className="flex-1 max-w-[350px] min-w-[150px] flex items-center gap-2 bg-[#F3F4F6] border border-[#E5E7EB] rounded-2xl py-2 px-5 focus-within:border-royal focus-within:bg-white focus-within:shadow-[0_0_0_2px_rgba(37,99,235,0.08)] transition-all">
         <svg
           width="14"
           height="14"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="rgba(255,255,255,0.4)"
+          stroke="#9ca3af"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -104,20 +104,20 @@ export function AdminHeader({
         <input
           type="text"
           placeholder="Search protocols..."
-          className="flex-1 bg-transparent border-none outline-none text-[0.8rem] font-bold text-white placeholder:text-white/20"
+          className="flex-1 bg-transparent border-none outline-none text-[0.8rem] font-bold text-navy placeholder:text-navy/30"
         />
       </div>
       
       {/* Simulation Engine: Authority Mode */}
-      <div className="flex items-center gap-4 px-5 py-2 bg-white/5 border border-white/10 rounded-2xl mx-8 shadow-inner">
+      <div className="flex items-center gap-4 px-5 py-2 bg-navy/5 border border-royal/10 rounded-2xl mx-8 shadow-inner">
         <div className="flex flex-col text-left">
-          <label className="text-[0.5rem] font-black text-white/40 uppercase tracking-[0.25em] whitespace-nowrap leading-none mb-1">State Simulator</label>
+          <label className="text-[0.5rem] font-black text-navy/40 uppercase tracking-[0.25em] whitespace-nowrap leading-none mb-1">State Simulator</label>
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${mode === 'Owner' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.5)]'}`} />
-            <span className="text-[9px] font-black uppercase tracking-tighter text-white/60">{mode} Mode</span>
+            <span className="text-[9px] font-black uppercase tracking-tighter text-navy/70">{mode} Mode</span>
           </div>
         </div>
-        <div className="flex items-center gap-1 p-1 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
+        <div className="flex items-center gap-1 p-1 bg-white/50 backdrop-blur-sm rounded-xl border border-white">
           {(['Owner', 'Incapacity', 'Settlement'] as const).map((m) => (
             <button 
               key={m}
@@ -125,7 +125,7 @@ export function AdminHeader({
               className={`px-3 py-1.5 rounded-lg text-[0.55rem] font-black uppercase tracking-widest transition-all duration-300 ${
                 mode === m 
                   ? "bg-gold text-black shadow-lg scale-105" 
-                  : "text-white/40 hover:bg-white/5 hover:text-white"
+                  : "text-navy/40 hover:bg-navy/5 hover:text-navy"
               }`}
             >
               {m}

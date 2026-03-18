@@ -12,6 +12,14 @@ function EstateLayout() {
   const [estateName, setEstateName] = useState('Lockhart Estate');
 
   useEffect(() => {
+    document.body.classList.add('dashboard-theme');
+    document.body.classList.remove('royal-theme');
+    return () => {
+      document.body.classList.remove('dashboard-theme');
+    }
+  }, []);
+
+  useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');
     if (session) {
       const u = JSON.parse(session);

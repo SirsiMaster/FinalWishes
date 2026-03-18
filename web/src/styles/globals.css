@@ -7,15 +7,15 @@
 
 :root {
   /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
-  --royal: #2c54ab; /* Verified Vibrant Royal (#2c54ab) */
+  --royal: #133378; /* Verified Heritage Royal (#133378) */
   --navy: #1B263B;  /* Deep Indigo Shard */
   --navy-mid: #1E3A5F; /* Heritage Royal */
-  --royal-bright: #3B82F6;
-  --navy-subtle: rgba(30, 84, 171, 0.08);
+  --royal-bright: #1E40AF; /* Darker blue for highlights */
+  --navy-subtle: rgba(19, 51, 120, 0.08);
 
-  /* Sidebar/Header Layout Accents — MUST BE #2c54ab */
-  --sidebar-bg: #2c54ab;
-  --header-bg: #2c54ab;
+  /* Sidebar/Header Layout Accents — MUST BE #133378 */
+  --sidebar-bg: #133378;
+  --header-bg: #133378;
 
   /* Gold (shared across Sirsi portfolio) */
   --gold: #C8A951;
@@ -28,7 +28,7 @@
   --danger: #EF4444;
 
   /* Royal Neo-Deco (Website/Login Foundation) */
-  --bg-royal: radial-gradient(at 50% 0px, #2c54ab 0%, #1E3A5F 35%, #0F172A 75%);
+  --bg-royal: radial-gradient(at 50% 0px, #133378 0%, #1E3A5F 35%, #0F172A 75%);
   
   /* Swiss Neo-Deco (Dashboard Surface Protocol) */
   --bg-dashboard: #F8FAFF;
@@ -142,7 +142,7 @@ body {
   --icon-hover: var(--gold-bright);
 
   /* Target: AdminHeader / Identity Bar — Hardened Royal Shard for Dashboard */
-  --header-bg: #2c54ab; /* Verified Royal header */
+  --header-bg: #133378; /* Heritage Royal header */
   --header-text: #FFFFFF;
   --header-text-muted: rgba(255, 255, 255, 0.7);
 

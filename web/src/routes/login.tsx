@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -12,6 +12,14 @@ function LoginPage() {
   const [error, setError] = useState('');
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.add('royal-theme');
+    document.body.classList.remove('dashboard-theme');
+    return () => {
+      document.body.classList.remove('royal-theme');
+    }
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

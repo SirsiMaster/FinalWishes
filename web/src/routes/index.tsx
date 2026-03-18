@@ -1,16 +1,19 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-
-/* ─────────────────────────────────────────────
-   FinalWishes Landing Page
-   Royal Neo-Deco · Deep Blue · Glass Panels · Gold Accents
-   "Opulent, Permanent, Guardian-Like"
-   ───────────────────────────────────────────── */
+import React, { useEffect } from 'react'
 
 export const Route = createFileRoute('/')({
   component: Home,
 })
 
 function Home() {
+  useEffect(() => {
+    document.body.classList.add('royal-theme');
+    document.body.classList.remove('dashboard-theme');
+    return () => {
+      document.body.classList.remove('royal-theme');
+    }
+  }, []);
+
   return (
     <main className="min-h-screen text-white relative">
       {/* ── Floating Orbs (ambient depth) ── */}

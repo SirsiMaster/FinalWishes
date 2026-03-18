@@ -1,5 +1,5 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation, useParams } from "@tanstack/react-router";
 
 interface NavItem {
   id: string;
@@ -10,13 +10,13 @@ interface NavItem {
   to: string;
 }
 
-const navItems: NavItem[] = [
+const getNavItems = (estateId: string): NavItem[] => [
   // MAIN
   {
     id: "dashboard",
     label: "Dashboard",
     section: "MAIN",
-    to: "/dashboard",
+    to: `/estates/${estateId}/dashboard`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <rect x="3" y="3" width="7" height="7" />
@@ -30,7 +30,7 @@ const navItems: NavItem[] = [
     id: "estates",
     label: "Governance",
     section: "MAIN",
-    to: "/dashboard/estates",
+    to: `/estates/${estateId}/estates`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -42,7 +42,7 @@ const navItems: NavItem[] = [
     id: "assets",
     label: "Asset Inventory",
     section: "MAIN",
-    to: "/dashboard/assets",
+    to: `/estates/${estateId}/assets`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <line x1="12" y1="1" x2="12" y2="23" />
@@ -54,7 +54,7 @@ const navItems: NavItem[] = [
     id: "memoirs",
     label: "Legacy Tapes",
     section: "MAIN",
-    to: "/dashboard/memoirs",
+    to: `/estates/${estateId}/memoirs`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M23 7l-7 5 7 5V7z" />
@@ -67,7 +67,7 @@ const navItems: NavItem[] = [
     id: "vault",
     label: "Evidence Vault",
     section: "MANAGEMENT",
-    to: "/dashboard/vault",
+    to: `/estates/${estateId}/vault`,
     badge: "SOC 2",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -80,7 +80,7 @@ const navItems: NavItem[] = [
     id: "obituary",
     label: "The Final Record",
     section: "MANAGEMENT",
-    to: "/dashboard/obituary",
+    to: `/estates/${estateId}/obituary`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -92,7 +92,7 @@ const navItems: NavItem[] = [
     id: "beneficiaries",
     label: "Heirs Registry",
     section: "MANAGEMENT",
-    to: "/dashboard/beneficiaries",
+    to: `/estates/${estateId}/beneficiaries`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -106,7 +106,7 @@ const navItems: NavItem[] = [
     id: "notifications",
     label: "Protocol Ledger",
     section: "MANAGEMENT",
-    to: "/dashboard/notifications",
+    to: `/estates/${estateId}/notifications`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -114,11 +114,27 @@ const navItems: NavItem[] = [
       </svg>
     ),
   },
+  {
+    id: "settings",
+    label: "Settings",
+    section: "MANAGEMENT",
+    to: `/estates/${estateId}/settings`,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      </svg>
+    ),
+  },
 ];
 
 export function Sidebar() {
   const location = useLocation();
+  const params = useParams({ strict: false }) as any;
+  const estateId = params.estateId || "lockhart";
+  
   const [user, setUser] = useState<any>(null);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');
@@ -132,6 +148,8 @@ export function Sidebar() {
       });
     }
   }, []);
+
+  const navItems = getNavItems(estateId);
 
   // Group by section
   const sections = navItems.reduce((acc, item) => {
@@ -153,6 +171,41 @@ export function Sidebar() {
         borderRight: "1px solid rgba(255, 255, 255, 0.1)",
       }}
     >
+      {/* Photo Modal */}
+      {showPhotoModal && user?.profilePhotoUrl && (
+        <div 
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-8 animate-in fade-in duration-300 pointer-events-auto"
+          onClick={() => setShowPhotoModal(false)}
+        >
+          <div 
+            className="relative bg-black rounded-[3rem] overflow-hidden border-4 border-gold shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              src={user.profilePhotoUrl} 
+              className="max-w-full max-h-[80vh] object-contain block mx-auto" 
+              alt="Full Fidelity Portrait" 
+            />
+            <div className="absolute top-8 right-8">
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
+                className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-2xl"
+              >
+                <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <div className="p-10 bg-gradient-to-t from-navy to-navy/40 border-t border-white/10">
+              <div className="flex justify-between items-end">
+                <div>
+                  <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-white uppercase tracking-wider mb-2">Heritage Shard Portrait</h3>
+                  <p className="text-gold font-black text-xs uppercase tracking-[0.2em]">{user?.name || "Tameeka Lockhart"} · Identity Verification Shard</p>
+                </div>
+                <div className="px-5 py-2 bg-gold text-black rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg">4K Protocol</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Logo */}
       <Link
         to="/"
@@ -182,7 +235,7 @@ export function Sidebar() {
           <button className="w-full flex items-center justify-between gap-2 px-3.5 py-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-left overflow-hidden shadow-inner">
             <div className="flex-1 truncate">
               <div className="text-white text-[0.8rem] font-black truncate uppercase tracking-tight">{user?.primaryEstateName || "Lockhart Estate"}</div>
-              <div className="text-gold/40 text-[9px] font-black uppercase tracking-widest mt-0.5">Focus: {user?.primaryEstateName || "Lockhart Estate"}</div>
+              <div className="text-gold/40 text-[9px] font-black uppercase tracking-widest mt-0.5">Focus: {estateId}</div>
             </div>
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-gold shrink-0 opacity-40"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2"/></svg>
           </button>
@@ -197,7 +250,7 @@ export function Sidebar() {
               {section}
             </div>
             {items.map((item) => {
-              const isActive = location.pathname === item.to || (item.to === '/dashboard' && location.pathname === '/dashboard/');
+              const isActive = location.pathname === item.to || (item.to === `/estates/${estateId}/dashboard` && location.pathname.endsWith('/dashboard'));
               return (
                 <Link
                   key={item.id}
@@ -234,7 +287,12 @@ export function Sidebar() {
         style={{ borderTop: "1px solid rgba(255, 255, 255, 0.05)" }}
       >
         {user?.profilePhotoUrl ? (
-          <img src={user.profilePhotoUrl} className="w-10 h-10 rounded-xl object-cover border-2 border-gold/40 shadow-lg" alt="Profile" />
+          <img 
+            src={user.profilePhotoUrl} 
+            onClick={() => setShowPhotoModal(true)}
+            className="w-10 h-10 rounded-xl object-cover border-2 border-gold/40 shadow-lg cursor-pointer hover:scale-110 active:scale-95 transition-all" 
+            alt="Profile" 
+          />
         ) : (
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-gold-bright flex items-center justify-center text-black font-black text-xs shrink-0 shadow-lg">
             {getInitials(user?.name || 'TL')}

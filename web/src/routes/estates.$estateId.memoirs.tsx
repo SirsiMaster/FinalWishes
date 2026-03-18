@@ -1,28 +1,25 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
 
-export const Route = createFileRoute('/dashboard/memoirs')({
+export const Route = createFileRoute('/estates/$estateId/memoirs')({
   component: MemoirsPage,
 })
 
 function MemoirsPage() {
+  const { estateId: routeId } = useParams({ from: '/estates/$estateId/memoirs' });
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [estateId, setEstateId ] = useState('test-estate');
+  const [estateId, setEstateId ] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
   const [selectedMemoir, setSelectedMemoir] = useState<any>(null);
 
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
-      setEstateId(preferredId);
-    }
-  }, []);
+    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
+    setEstateId(preferredId);
+  }, [routeId]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['memoirs', estateId],
@@ -31,14 +28,12 @@ function MemoirsPage() {
 
   const uploadMutation = useMutation({
     mutationFn: async (vars: { title: string, type: string, file: File }) => {
-      // 1. Generate Signed URL
       const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
         estateId: estateId,
         fileName: vars.file.name,
         contentType: vars.file.type
       });
 
-      // 2. Upload to GCS
       if (uploadUrl && !uploadUrl.includes('localhost')) {
          const response = await fetch(uploadUrl, {
            method: 'PUT',
@@ -48,9 +43,8 @@ function MemoirsPage() {
          if (!response.ok) throw new Error('Failed to upload file to storage');
       }
 
-      // 3. Save Metadata to Firestore
       return estateClient.uploadMemoir({
-        estateId: 'test-estate',
+        estateId: estateId,
         title: vars.title,
         type: vars.type,
         url: finalUrl || `/memoirs/placeholder.${vars.type === 'video' ? 'mp4' : 'jpg'}`
@@ -84,68 +78,56 @@ function MemoirsPage() {
       {/* Full Fidelity Memoir Modal */}
       {selectedMemoir && (
         <div 
-          className="fixed inset-0 z-[300] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-8 animate-in fade-in duration-300 pointer-events-auto"
+          className="fixed inset-0 z-[300] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-4 animate-in fade-in duration-300 pointer-events-auto"
           onClick={() => setSelectedMemoir(null)}
         >
           <div 
-            className="relative max-w-6xl w-full bg-black rounded-[3rem] overflow-hidden border-4 border-gold shadow-2xl animate-in zoom-in duration-500 flex flex-col md:flex-row max-h-[90vh]"
+            className="relative bg-black rounded-[2rem] overflow-hidden border-2 border-gold/50 shadow-2xl animate-in zoom-in duration-500 max-w-[95vw] max-h-[95vh] flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex-[2] bg-black flex items-center justify-center relative min-h-[300px]">
+            <div className="relative group">
               {selectedMemoir.type === 'video' ? (
                 <video 
                   src={selectedMemoir.url} 
                   controls 
                   autoPlay 
-                  className="max-w-full max-h-[70vh] object-contain"
+                  className="max-w-full max-h-[85vh] block"
                 />
               ) : (
                 <img 
                   src={selectedMemoir.url} 
-                  className="max-w-full max-h-[70vh] object-contain" 
+                  className="max-w-full max-h-[85vh] object-contain block" 
                   alt={selectedMemoir.title} 
                 />
               )}
-              <div className="absolute top-8 right-8">
+              
+              {/* Close Action - Top Right */}
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button 
                   onClick={() => setSelectedMemoir(null)}
-                  className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-2xl"
+                  className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all"
                 >
-                  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
                 </button>
               </div>
             </div>
-            
-            <div className="w-full md:w-[350px] p-10 bg-gradient-to-br from-navy to-[#1e3a5f] border-l border-white/10 flex flex-col shrink-0 overflow-y-auto">
-              <div className="mb-auto">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className={`w-2 h-2 rounded-full ${selectedMemoir.type === 'video' ? 'bg-royal shadow-[0_0_8px_rgba(37,99,235,0.5)]' : 'bg-gold shadow-[0_0_8px_rgba(200,169,81,0.5)]'}`} />
-                  <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">{selectedMemoir.type} Shard · Lockhart Estate</span>
-                </div>
-                <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-white uppercase tracking-wider mb-4 leading-tight">{selectedMemoir.title}</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-[9px] font-black text-gold/60 uppercase tracking-widest block mb-1 opacity-50">Operational Status</label>
-                    <div className="text-white font-bold text-sm">Verified & Secured</div>
-                  </div>
-                  <div>
-                    <label className="text-[9px] font-black text-gold/60 uppercase tracking-widest block mb-1 opacity-50">Capture Date</label>
-                    <div className="text-white font-bold text-sm">{selectedMemoir.dateAdded}</div>
-                  </div>
-                  <div>
-                    <label className="text-[9px] font-black text-gold/60 uppercase tracking-widest block mb-1 opacity-50">Visibility Shard</label>
-                    <div className="px-3 py-1 bg-white/5 rounded-lg border border-white/10 inline-block text-[10px] text-gold font-black uppercase tracking-widest">
-                      {selectedMemoir.visibility === 'private' ? 'Owner Shard Only' : 'Unified Heirs Access'}
-                    </div>
-                  </div>
+
+            {/* Content Info Bar */}
+            <div className="w-full p-6 bg-gradient-to-t from-navy to-navy/80 border-t border-white/10 flex justify-between items-center group-hover:translate-y-0 transition-transform">
+              <div className="text-left">
+                <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-black text-white uppercase tracking-wider mb-1 leading-tight">{selectedMemoir.title}</h3>
+                <div className="flex items-center gap-3">
+                  <span className="text-[9px] font-black text-gold/60 uppercase tracking-widest">{selectedMemoir.type} Shard · Verified State</span>
+                  <div className="w-1 h-1 rounded-full bg-white/20" />
+                  <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">{selectedMemoir.dateAdded}</span>
                 </div>
               </div>
-              
-              <div className="pt-10 mt-10 border-t border-white/10">
-                <button className="w-full py-4 rounded-2xl bg-gold text-black font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl">
-                  Download 4K Shard
-                </button>
-              </div>
+              <button 
+                onClick={() => setSelectedMemoir(null)}
+                className="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white font-black text-[10px] uppercase tracking-widest transition-all"
+              >
+                Close Record
+              </button>
             </div>
           </div>
         </div>
@@ -163,7 +145,6 @@ function MemoirsPage() {
         </button>
       </div>
 
-      {/* Video Section */}
       <section className="bg-white rounded-[2.5rem] p-8 border border-border-light shadow-sm">
         <h3 className="text-xs font-black text-navy uppercase tracking-[0.2em] mb-6 flex items-center gap-3 opacity-60">
           <div className="w-1.5 h-1.5 rounded-full bg-royal" />
@@ -177,7 +158,6 @@ function MemoirsPage() {
         </div>
       </section>
 
-      {/* Photo Section */}
       <section className="bg-white rounded-[2.5rem] p-8 border border-border-light shadow-sm">
         <h3 className="text-xs font-black text-navy uppercase tracking-[0.2em] mb-6 flex items-center gap-3 opacity-60">
           <div className="w-1.5 h-1.5 rounded-full bg-gold" />
@@ -191,7 +171,6 @@ function MemoirsPage() {
         </div>
       </section>
 
-      {/* Upload Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-navy/80 backdrop-blur-md p-4">
           <div className="bg-white rounded-[2.5rem] p-10 max-w-lg w-full border border-border-light shadow-2xl animate-in zoom-in duration-300">
@@ -245,7 +224,7 @@ function MemoirsPage() {
                   <span className="text-[0.6rem] font-black text-navy/40 uppercase tracking-widest">
                     {fileInputRef.current?.files?.[0]?.name || "Drop Shard File (MP4, JPG, PNG)"}
                   </span>
-                  <input ref={fileInputRef} type="file" className="hidden" accept="video/*,image/*" onChange={() => setUploading(false) /* trigger redraw */} />
+                  <input ref={fileInputRef} type="file" className="hidden" accept="video/*,image/*" onChange={() => setUploading(false)} />
                 </div>
               </div>
 
@@ -264,15 +243,18 @@ function MemoirsPage() {
 }
 
 function VideoCard({ memoir, onClick }: any) {
+  // Use a hack to force a preview frame if autoplay is blocked
+  const videoUrl = memoir.url ? `${memoir.url}#t=0.001` : null;
+
   return (
     <div 
       onClick={onClick}
       className="bg-white rounded-3xl border border-border-light overflow-hidden shadow-sm group hover:border-royal/40 hover:shadow-2xl transition-all relative cursor-pointer"
     >
       <div className="aspect-video bg-navy relative flex items-center justify-center overflow-hidden">
-        {memoir.url ? (
+        {videoUrl ? (
            <video 
-             src={memoir.url} 
+             src={videoUrl} 
              className="w-full h-full object-cover" 
              autoPlay 
              muted 

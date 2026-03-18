@@ -33,7 +33,7 @@ function EstateLayout() {
   }, [estateId]);
 
   return (
-    <div className="dashboard-shell dashboard-theme min-h-screen">
+    <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
       <Sidebar />
       <div 
         className="transition-all duration-300 min-h-screen flex flex-col"

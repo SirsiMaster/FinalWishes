@@ -324,6 +324,65 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+/**
+ * ConnectRPC Mock Handlers for EstateService
+ * Provides data synchronization for the Lockhart Estate governance shard
+ */
+const mockShards = {
+  'estate_lockhart': {
+    metadata: {
+      estateId: 'estate_lockhart',
+      name: 'Tameeka Lockhart Estate',
+      status: 'Active Shard',
+      completionPercentage: 88,
+      tier: 'Concierge Protocol',
+      mfaEnabled: true,
+      nextReviewDate: { seconds: Math.floor(Date.now() / 1000) + 7776000 } // 90 days out
+    },
+    assets: [
+      { id: 'a1', category: 'Real Estate', name: 'Primary Residence (Chicago)', valuation: 750000, status: 'Verified' },
+      { id: 'a2', category: 'Investment', name: 'Vanguard Index Cluster', valuation: 250000, status: 'Active Shard' }
+    ],
+    documents: [
+      { id: 'd1', category: 'Legal', name: 'Lockhart Family Trust', date: 'Mar 15, 2026', size: '2.4 MB' },
+      { id: 'd2', category: 'Financial', name: 'Vanguard Q4 Statement', date: 'Mar 10, 2026', size: '1.1 MB' },
+      { id: 'd3', category: 'Memoir', name: 'Legacy Tape 01 (Verified)', date: 'Mar 05, 2026', size: '48.2 MB' }
+    ],
+    beneficiaries: [
+      { id: 'b1', name: 'Cylton Collymore', role: 'Primary Executor', allocation: '75%', email: 'cylton@sirsi.ai' },
+      { id: 'b2', name: 'Maya Lockhart', role: 'Heir', allocation: '25%', email: 'maya@lockhart.fam' }
+    ],
+    memoirs: [
+      { id: 'm1', type: 'video', url: '/assets/tameeka/mommy.mp4', title: 'A Message to Cylton', duration: '02:45' },
+      { id: 'm2', type: 'image', url: '/assets/tameeka/mom memorial.jpg', title: 'Grandma\'s Garden View', duration: 'Heritage Shard' },
+      { id: 'm3', type: 'video', url: '/assets/tameeka/musical tribute.mp4', title: 'Musical Legacy Pulse', duration: '03:12' }
+    ],
+    insight: "Protocol detected. Tameeka, your estate is 88% synchronized. We recommend verifying the 'Primary Residence' valuation shard to reach 90% completion."
+  }
+};
+
+const handleConnect = (req, res, data) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.json(data);
+};
+
+app.post('/api/estate.v1.EstateService/:method', (req, res) => {
+  const { method } = req.params;
+  const { estateId } = req.body;
+  const shard = mockShards[estateId] || mockShards['estate_lockhart'];
+
+  switch(method) {
+    case 'GetEstateMetadata': return handleConnect(req, res, { metadata: shard.metadata });
+    case 'ListAssets': return handleConnect(req, res, { assets: shard.assets, totalCount: shard.assets.length });
+    case 'ListVaultDocuments': return handleConnect(req, res, { documents: shard.documents });
+    case 'ListBeneficiaries': return handleConnect(req, res, { beneficiaries: shard.beneficiaries });
+    case 'ListMemoirs': return handleConnect(req, res, { memoirs: shard.memoirs });
+    case 'GetAIInsight': return handleConnect(req, res, { insight: shard.insight, actionLabel: 'Verify Asset Shard', actionUrl: '/estates/lockhart/assets' });
+    case 'GetGovernanceSettings': return handleConnect(req, res, { settings: { mfaEnabled: true, recoveryKeyStatus: 'ACTIVE', biometricRelease: true, emailAlerts: true, statusReportsFrequency: 'Weekly Epoch' } });
+    default: res.status(404).send('Method not synced');
+  }
+});
+
 // Export the Express app as a Firebase Gen 2 Function
 exports.api = onRequest(
     {

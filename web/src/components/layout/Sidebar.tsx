@@ -167,7 +167,7 @@ export function Sidebar() {
       className="fixed left-0 top-0 h-screen overflow-y-auto z-[100] flex flex-col shadow-2xl"
       style={{
         width: "var(--sidebar-width)",
-        background: "var(--navy)",
+        background: "var(--sidebar-bg)",
         borderRight: "1px solid var(--border-light)",
       }}
     >

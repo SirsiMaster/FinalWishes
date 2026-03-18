@@ -64,30 +64,27 @@ function DashboardIndex() {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-royal-blue to-royal-bright text-white p-8 rounded-[2.5rem] mb-10 flex items-center justify-between shadow-2xl border border-white/20 relative overflow-hidden group">
+      <div className="bg-white p-8 rounded-[2.5rem] mb-10 flex items-center justify-between shadow-sm border border-border-light relative overflow-hidden group">
         <div className="z-10 flex-1">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-6 h-6 bg-gold rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-navy-deep fill-current"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+            <div className="w-6 h-6 bg-navy rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-gold fill-current"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
             </div>
-            <span className="font-black text-[0.7rem] uppercase tracking-[0.25em] text-gold-bright drop-shadow-md">Guidance Engine Shard</span>
+            <span className="font-black text-[0.7rem] uppercase tracking-[0.25em] text-navy opacity-40">Guidance Engine Shard</span>
           </div>
-          <p className="text-lg font-bold leading-relaxed max-w-2xl drop-shadow-sm">
-            {userName && <span className="text-gold-bright font-black uppercase tracking-widest mr-2 underline decoration-gold/30">Protocol: {userName}.</span>}
+          <p className="text-lg font-bold leading-relaxed max-w-2xl text-navy">
+            {userName && <span className="text-gold font-black uppercase tracking-widest mr-2 underline decoration-gold/30">Protocol: {userName}.</span>}
             {insightData?.insight}
           </p>
         </div>
         <div className="z-10 ml-8">
           <button 
             onClick={() => window.location.href = insightData?.actionUrl || '#'}
-            className="bg-white/10 hover:bg-gold text-white hover:text-black h-12 px-8 rounded-xl font-black text-[0.75rem] uppercase tracking-[0.2em] transition-all backdrop-blur-md border border-white/20 hover:border-gold hover:shadow-[0_0_30px_rgba(200,169,81,0.4)]"
+            className="bg-navy hover:bg-black text-white h-12 px-8 rounded-xl font-black text-[0.75rem] uppercase tracking-[0.2em] transition-all shadow-lg"
           >
             {insightData?.actionLabel}
           </button>
         </div>
-        {/* Animated background highlights */}
-        <div className="absolute top-[-50%] right-[-10%] w-[400px] h-[400px] bg-white/20 rounded-full blur-[120px] pointer-events-none animate-pulse" />
-        <div className="absolute bottom-[-20%] left-[10%] w-[200px] h-[200px] bg-gold/10 rounded-full blur-[80px] pointer-events-none" />
       </div>
 
       <div className="grid grid-cols-4 gap-6 mb-10 max-lg:grid-cols-2 max-sm:grid-cols-1">
@@ -171,21 +168,21 @@ function DashboardIndex() {
 }
 
 function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
-  const bgMap = { blue: "bg-royal/30", gold: "bg-gold/20", green: "bg-success/20" };
-  const textMap = { blue: "text-royal-bright", gold: "text-gold", green: "text-success" };
-  const borderMap = { blue: "border-royal/40", gold: "border-gold/30", green: "border-success/30" };
+  const bgMap = { blue: "bg-navy-subtle", gold: "bg-gold/10", green: "bg-success/10" };
+  const textMap = { blue: "text-navy-light", gold: "text-gold", green: "text-success" };
+  const borderMap = { blue: "border-navy-light/10", gold: "border-gold/20", green: "border-success/20" };
   
   return (
-    <div className={`glass-card rounded-[2rem] p-7 border ${borderMap[iconColor as keyof typeof borderMap]} bg-navy-mid/40 hover:bg-navy-mid/60 transition-all shadow-2xl group`}>
+    <div className={`bg-white rounded-[2rem] p-7 border border-border-light hover:border-navy-light/20 transition-all shadow-sm group`}>
       <div className="flex items-center justify-between mb-6">
-        <span className="font-[family-name:var(--font-cinzel)] text-[0.75rem] font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-gold transition-colors">{label}</span>
+        <span className="font-[family-name:var(--font-cinzel)] text-[0.75rem] font-black uppercase tracking-[0.2em] text-navy/40 group-hover:text-gold transition-colors">{label}</span>
         <div className={`w-12 h-12 rounded-[14px] flex items-center justify-center ${bgMap[iconColor as keyof typeof bgMap]} ${textMap[iconColor as keyof typeof textMap]} shadow-inner group-hover:scale-110 transition-transform`}>
           <span className="w-6 h-6">{icon}</span>
         </div>
       </div>
-      <div className="text-[2.2rem] font-black text-white leading-none mb-2 tracking-tight drop-shadow-lg">{value}</div>
+      <div className="text-[2.2rem] font-black text-navy leading-none mb-2 tracking-tight">{value}</div>
       {change && (
-        <div className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest mt-4 ${changeDir === "up" ? "text-success" : changeDir === "down" ? "text-danger" : "text-white/30"}`}>
+        <div className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest mt-4 ${changeDir === "up" ? "text-success" : changeDir === "down" ? "text-danger" : "text-navy/20"}`}>
           <div className="w-1 h-1 rounded-full bg-current opacity-60" />
           {change}
         </div>
@@ -196,14 +193,14 @@ function StatCard({ label, value, icon, iconColor, change, changeDir }: any) {
 
 function Card({ title, children }: any) {
   return (
-    <div className="glass-panel rounded-[2.5rem] p-10 border border-white/10 bg-navy-mid/60 shadow-2xl relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-royal/10 blur-[80px] pointer-events-none" />
-      <div className="mb-8 flex items-center justify-between border-b border-white/5 pb-6">
-        <h3 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.25em] text-white hero-text">{title}</h3>
+    <div className="bg-white rounded-[2.5rem] p-10 border border-border-light shadow-sm relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-32 h-32 bg-navy-subtle blur-[80px] pointer-events-none" />
+      <div className="mb-8 flex items-center justify-between border-b border-gray-50 pb-6">
+        <h3 className="font-[family-name:var(--font-cinzel)] text-[1.1rem] font-black uppercase tracking-[0.25em] text-navy">{title}</h3>
         <div className="flex gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-          <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-          <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
+          <div className="w-1.5 h-1.5 rounded-full bg-navy/5" />
+          <div className="w-1.5 h-1.5 rounded-full bg-navy/5" />
         </div>
       </div>
       <div className="relative z-10">
@@ -214,14 +211,14 @@ function Card({ title, children }: any) {
 }
 
 function ProgressRow({ label, percent, color }: any) {
-  const fillMap = { blue: "bg-royal-bright shadow-[0_0_15px_rgba(37,99,235,0.5)]", gold: "bg-gold shadow-[0_0_15px_rgba(200,169,81,0.5)]", green: "bg-success shadow-[0_0_15px_rgba(16,185,129,0.5)]" };
+  const fillMap = { blue: "bg-navy-light shadow-lg", gold: "bg-gold shadow-lg", green: "bg-success shadow-lg" };
   return (
     <div className="mb-6 last:mb-0">
       <div className="flex justify-between items-center mb-2.5">
         <span className="text-[0.7rem] font-black uppercase tracking-[0.2em] text-white/50">{label}</span>
         <span className="text-[0.8rem] font-black text-gold-bright">{percent}%</span>
       </div>
-      <div className="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/5 shadow-inner">
+      <div className="w-full h-3 bg-navy-subtle rounded-full overflow-hidden border border-gray-100 shadow-inner">
         <div 
           className={`h-full rounded-full transition-all duration-1000 ease-out ${fillMap[color as keyof typeof fillMap]}`} 
           style={{ width: `${percent}%` }} 
@@ -233,13 +230,13 @@ function ProgressRow({ label, percent, color }: any) {
 
 function ActivityItem({ text, time }: any) {
   return (
-    <div className="flex gap-5 py-5 border-b border-white/5 last:border-b-0 group hover:bg-white/5 px-4 -mx-4 rounded-xl transition-all">
-      <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_10px_rgba(200,169,81,0.6)] mt-2 shrink-0 group-hover:scale-125 transition-transform" />
+    <div className="flex gap-5 py-5 border-b border-gray-50 last:border-b-0 group hover:bg-navy-subtle px-4 -mx-4 rounded-xl transition-all">
+      <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-sm mt-2 shrink-0 group-hover:scale-125 transition-transform" />
       <div className="flex-1">
-        <div className="text-[14px] text-white/90 font-bold leading-relaxed">{text}</div>
-        <div className="text-[10px] text-gold/40 font-black uppercase tracking-[0.2em] mt-1.5 flex items-center gap-2">
+        <div className="text-[14px] text-navy font-bold leading-relaxed">{text}</div>
+        <div className="text-[10px] text-navy/40 font-black uppercase tracking-[0.2em] mt-1.5 flex items-center gap-2">
           <span>{time}</span>
-          <span className="w-1 h-1 rounded-full bg-white/10" />
+          <span className="w-1 h-1 rounded-full bg-navy/10" />
           <span>Verified Shard Access</span>
         </div>
       </div>
@@ -249,26 +246,26 @@ function ActivityItem({ text, time }: any) {
 
 function QuickAction({ label, icon }: any) {
   return (
-    <button className="flex flex-col items-center justify-center gap-4 p-7 bg-navy/20 border border-white/10 rounded-[2rem] cursor-pointer transition-all hover:bg-gold hover:border-gold hover:shadow-[0_0_40px_rgba(200,169,81,0.3)] group">
-      <span className="w-7 h-7 text-royal-bright group-hover:text-black transition-colors">{icon}</span>
-      <span className="text-[11px] font-black text-white/40 uppercase tracking-[0.2em] group-hover:text-black group-hover:opacity-100 transition-all">{label}</span>
+    <button className="flex flex-col items-center justify-center gap-4 p-7 bg-white border border-border-light rounded-[2rem] cursor-pointer transition-all hover:bg-gold hover:border-gold hover:shadow-xl group">
+      <span className="w-7 h-7 text-navy-light group-hover:text-black transition-colors">{icon}</span>
+      <span className="text-[11px] font-black text-navy/40 uppercase tracking-[0.2em] group-hover:text-black transition-all">{label}</span>
     </button>
   );
 }
 
 function StatusRow({ label, value, color }: any) {
   const badgeMap: Record<string, string> = { 
-    green: "bg-success/20 text-success border border-success/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]", 
-    gold: "bg-gold/20 text-gold border border-gold/40 shadow-[0_0_10px_rgba(200,169,81,0.2)]", 
-    blue: "bg-royal/20 text-royal-bright border border-royal/40 shadow-[0_0_10px_rgba(37,99,235,0.2)]" 
+    green: "bg-success/10 text-success border border-success/20", 
+    gold: "bg-gold/10 text-gold border border-gold/20", 
+    blue: "bg-navy-subtle text-navy-light border border-navy-light/10" 
   };
   return (
-    <div className="flex justify-between items-center py-4 border-b border-white/5 last:border-b-0 group">
-      <span className="text-[0.7rem] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-white/70 transition-colors">{label}</span>
+    <div className="flex justify-between items-center py-4 border-b border-gray-50 last:border-b-0 group">
+      <span className="text-[0.7rem] font-black uppercase tracking-[0.2em] text-navy/40 group-hover:text-navy transition-colors">{label}</span>
       {color ? (
         <span className={`text-[0.65rem] font-black px-4 py-1.5 rounded-xl uppercase tracking-widest ${badgeMap[color]}`}>{value}</span>
       ) : (
-        <span className="text-[0.75rem] font-black text-white uppercase tracking-widest drop-shadow-md">{value}</span>
+        <span className="text-[0.75rem] font-black text-navy uppercase tracking-widest">{value}</span>
       )}
     </div>
   );

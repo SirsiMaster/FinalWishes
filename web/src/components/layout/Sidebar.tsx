@@ -163,21 +163,21 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen overflow-y-auto z-[100] flex flex-col shadow-2xl"
+      className="fixed left-0 top-0 h-screen overflow-y-auto z-[100] flex flex-col"
       style={{
         width: "var(--sidebar-width)",
         background: "var(--sidebar-bg)",
-        borderRight: "1px solid rgba(255,255,255,0.05)",
+        borderRight: "1px solid rgba(19, 51, 120, 0.1)",
       }}
     >
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
         <div 
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-black/40 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal/10 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 
-            className="relative bg-[#0F172A] overflow-hidden border border-white/10 shadow-3xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
+            className="relative bg-white overflow-hidden border border-royal/20 shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <img 
@@ -188,7 +188,7 @@ export function Sidebar() {
             <div className="absolute top-8 right-8">
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
-                className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md"
+                className="w-10 h-10 bg-white border border-royal/20 flex items-center justify-center text-royal hover:bg-royal/5 transition-all shadow-lg"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
@@ -200,39 +200,44 @@ export function Sidebar() {
       {/* Logo */}
       <Link
         to="/"
-        className="flex items-center gap-3 px-6 py-6 no-underline group"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+        className="flex items-center gap-3 px-5 py-6 no-underline"
+        style={{ borderBottom: "1px solid rgba(19, 51, 120, 0.1)" }}
       >
         <svg
-          viewBox="0 0 100 100"
-          className="w-8 h-8 fill-current text-gold group-hover:scale-110 transition-transform"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          className="w-6 h-6 text-royal drop-shadow-sm"
         >
-          <path d="M50 20 C55 20 58 25 58 30 C58 35 55 38 50 38 C45 38 42 35 42 30 C42 25 45 20 50 20 M50 40 C60 40 70 30 80 15 C85 25 85 45 70 55 L60 60 L65 90 L50 85 L35 90 L40 60 L30 55 C15 45 15 25 20 15 C30 30 40 40 50 40 Z" />
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
         </svg>
-        <span className="text-white text-[1.1rem] font-black uppercase tracking-[0.2em] font-[family-name:var(--font-cinzel)]">
+        <span className="text-royal text-[1rem] font-black uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
           FinalWishes
         </span>
       </Link>
 
       {/* Estate Switcher */}
-      <div className="px-5 py-6 border-b border-white/5 bg-white/2">
-        <label className="text-[9px] font-black text-white/30 uppercase tracking-[0.25em] mb-2.5 block">Governance Domain</label>
+      <div className="px-4 py-5 border-b border-royal/10 bg-royal/[0.01]">
+        <label className="text-[9px] font-bold text-royal/40 uppercase tracking-[0.2em] mb-2 block">Governance Domain</label>
         <div className="relative">
-          <button className="w-full flex items-center justify-between gap-3 px-4 py-3 bg-white/5 border border-white/10 hover:border-gold/30 transition-all text-left overflow-hidden group">
+          <button className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-white border border-royal/10 hover:border-royal/30 transition-all text-left overflow-hidden group">
             <div className="flex-1 truncate">
-              <div className="text-white text-[0.8rem] font-black truncate uppercase tracking-widest group-hover:text-gold transition-colors">{user?.primaryEstateName || "Lockhart Estate"}</div>
-              <div className="text-gold/50 text-[9px] font-black uppercase tracking-[0.2em] mt-0.5">Focus: {estateId}</div>
+              <div className="text-royal text-[0.8rem] font-black truncate uppercase tracking-tight group-hover:text-sapphire transition-colors">{user?.primaryEstateName || "Lockhart Estate"}</div>
+              <div className="text-royal/30 text-[9px] font-bold uppercase tracking-widest mt-0.5">Focus: {estateId}</div>
             </div>
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-white/20 group-hover:text-gold shrink-0 transition-colors"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-royal/20 group-hover:text-royal transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
           </button>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-6">
+      <nav className="flex-1 py-4">
         {Object.entries(sections).map(([section, items]) => (
-          <div key={section} className="mb-8">
-            <div className="text-[9px] font-black text-white/20 uppercase tracking-[0.3em] px-6 py-2 mb-1">
+          <div key={section} className="mb-6">
+            <div className="text-[9px] font-black text-royal/20 uppercase tracking-[0.25em] px-5 py-2">
               {section}
             </div>
             {items.map((item) => {
@@ -241,22 +246,22 @@ export function Sidebar() {
                 <Link
                   key={item.id}
                   to={item.to}
-                  className={`flex items-center gap-4 px-6 py-3 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
+                  className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                     isActive
-                      ? "text-gold bg-gold/5 border-l-gold font-black"
-                      : "text-white/40 border-l-transparent hover:text-white hover:bg-white/5"
+                      ? "text-royal bg-royal/5 border-l-royal font-black"
+                      : "text-royal/50 border-l-transparent hover:text-royal hover:bg-royal/[0.02]"
                   }`}
                 >
                   <span
-                    className={`w-[18px] h-[18px] shrink-0 transition-opacity ${
-                      isActive ? "opacity-100 text-gold" : "opacity-30"
+                    className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
+                      isActive ? "opacity-100 text-royal" : "opacity-30"
                     }`}
                   >
                     {item.icon}
                   </span>
-                  <span className={`uppercase tracking-[0.15em] text-[0.65rem] font-black ${isActive ? 'text-white' : ''}`}>{item.label}</span>
+                  <span className="uppercase tracking-widest text-[0.65rem] font-black">{item.label}</span>
                   {item.badge && (
-                    <span className="ml-auto bg-gold/10 border border-gold/30 text-gold px-1.5 py-0.5 text-[8px] font-black tracking-widest uppercase">
+                    <span className="ml-auto bg-royal/5 border border-royal/10 text-royal px-1.5 py-0.5 text-[8px] font-black tracking-tighter">
                       {item.badge}
                     </span>
                   )}
@@ -269,23 +274,23 @@ export function Sidebar() {
 
       {/* User Footer */}
       <div
-        className="flex items-center gap-4 p-5 mt-auto border-t border-white/5 bg-black/20"
+        className="flex items-center gap-3 p-4 mt-auto border-t border-royal/10 bg-royal/[0.01]"
       >
         {user?.profilePhotoUrl ? (
           <img 
             src={user.profilePhotoUrl} 
             onClick={() => setShowPhotoModal(true)}
-            className="w-10 h-10 object-cover border border-gold/30 shadow-xl cursor-pointer hover:border-gold transition-all" 
+            className="w-9 h-9 object-cover border border-royal/20 shadow-sm cursor-pointer hover:border-royal transition-all" 
             alt="Profile" 
           />
         ) : (
-          <div className="w-10 h-10 bg-gold/10 flex items-center justify-center text-gold font-black text-xs shrink-0 border border-gold/20">
+          <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-xs shrink-0 shadow-sm">
             {getInitials(user?.name || 'TL')}
           </div>
         )}
         <div className="min-w-0">
-          <div className="text-white text-[0.8rem] font-black uppercase tracking-widest truncate">{user?.name || "Tameeka Lockhart"}</div>
-          <div className="text-gold/50 text-[9px] font-black uppercase tracking-[0.2em] mt-0.5">Owner Shard</div>
+          <div className="text-royal text-[0.8rem] font-black uppercase tracking-tight truncate">{user?.name || "Tameeka Lockhart"}</div>
+          <div className="text-royal/30 text-[9px] font-bold uppercase tracking-widest">Estate Shard</div>
         </div>
       </div>
     </aside>

@@ -31,17 +31,17 @@ export function AdminHeader({
 
   return (
     <header
-      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 border-b border-white/10 relative shadow-lg"
+      className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-8 border-b border-royal/10 relative"
       style={{ background: 'var(--header-bg)' }}
     >
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
         <div 
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-black/40 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal/10 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 
-            className="relative bg-[#0F172A] overflow-hidden border border-white/10 shadow-3xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
+            className="relative bg-white overflow-hidden border border-royal/20 shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <img 
@@ -52,18 +52,10 @@ export function AdminHeader({
             <div className="absolute top-8 right-8">
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
-                className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all shadow-lg backdrop-blur-md"
+                className="w-10 h-10 bg-white border border-royal/20 flex items-center justify-center text-royal hover:bg-royal/5 transition-all shadow-lg"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
-            </div>
-            <div className="p-8 bg-[#0F172A] border-t border-white/10">
-              <div className="flex justify-between items-end">
-                <div>
-                  <h3 className="text-2xl font-bold text-white uppercase tracking-wider mb-2">Heritage Shard Portrait</h3>
-                  <p className="text-gold font-bold text-xs uppercase tracking-[0.2em]">{user?.name || "Tameeka Lockhart"} · Identity Verification Shard</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -72,18 +64,18 @@ export function AdminHeader({
       <div className="relative z-10 flex items-center justify-between w-full h-full">
         {/* Left — Title */}
         <div className="shrink-0 mr-8 text-left">
-          <h1 className="text-[0.9rem] font-black uppercase tracking-[0.15em] text-white m-0 whitespace-nowrap font-[family-name:var(--font-cinzel)]">
+          <h1 className="text-[1rem] font-black uppercase tracking-[0.1em] text-royal m-0 whitespace-nowrap font-[family-name:var(--font-cinzel)]">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 m-0 whitespace-nowrap mt-0.5">
+            <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-royal/40 m-0 whitespace-nowrap mt-0.5">
               {subtitle}
             </p>
           )}
         </div>
 
       {/* Center — Search */}
-      <div className="flex-1 max-w-[400px] min-w-[200px] flex items-center gap-2 bg-white/5 border border-white/10 py-2.5 px-4 focus-within:border-gold/50 transition-all backdrop-blur-sm">
+      <div className="flex-1 max-w-[350px] min-w-[150px] flex items-center gap-2 bg-royal/[0.03] border border-royal/10 py-2 px-4 focus-within:border-royal transition-all">
         <svg
           width="14"
           height="14"
@@ -93,7 +85,7 @@ export function AdminHeader({
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-white/40"
+          className="text-royal/30"
         >
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -101,31 +93,31 @@ export function AdminHeader({
         <input
           type="text"
           placeholder="Search protocols..."
-          className="flex-1 bg-transparent border-none outline-none text-[0.8rem] font-medium text-white placeholder:text-white/20"
+          className="flex-1 bg-transparent border-none outline-none text-[0.8rem] font-bold text-royal placeholder:text-royal/20"
         />
       </div>
       
       {/* Simulation Engine: Authority Mode */}
-      <div className="flex items-center gap-4 px-4 py-2 bg-white/5 border border-white/10 mx-10 backdrop-blur-sm">
+      <div className="flex items-center gap-4 px-4 py-2 bg-royal/[0.03] border border-royal/10 mx-8">
         <div className="flex flex-col text-left">
-          <label className="text-[9px] font-black text-gold/60 uppercase tracking-[0.2em] whitespace-nowrap leading-none mb-1">Estate Mode</label>
+          <label className="text-[9px] font-bold text-royal/60 uppercase tracking-[0.2em] whitespace-nowrap leading-none mb-1">View As</label>
           <div className="flex items-center gap-1.5">
-            <div className={`w-1.5 h-1.5 rounded-full ${mode === 'Owner' ? 'bg-success' : 'bg-warning animate-pulse'}`} />
-            <span className="text-[9px] font-black text-white/70 uppercase tracking-widest">{mode === 'Owner' ? 'Active Owner' : mode === 'Incapacity' ? 'Incapacity' : 'After Passing'}</span>
+            <div className={`w-1.5 h-1.5 rounded-full ${mode === 'Owner' ? 'bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gold animate-pulse'}`} />
+            <span className="text-[9px] font-black text-royal/70 uppercase tracking-widest leading-none">{mode === 'Owner' ? 'Active Owner' : mode === 'Incapacity' ? 'Incapacity' : 'After Passing'}</span>
           </div>
         </div>
-        <div className="flex items-center gap-1 p-1 bg-black/20 border border-white/10 rounded-xl">
+        <div className="flex items-center gap-1 p-1 bg-white border border-royal/10 rounded-xl">
           {(['Owner', 'Incapacity', 'Settlement'] as const).map((m) => (
             <button 
               key={m}
               onClick={() => setMode(m)}
               className={`px-3 py-1.5 rounded-lg text-[9px] font-black transition-all uppercase tracking-widest ${
                 mode === m 
-                  ? "bg-gold text-black shadow-lg" 
-                  : "text-white/40 hover:bg-white/10 hover:text-white"
+                  ? "bg-royal text-white shadow-md" 
+                  : "text-royal/40 hover:bg-royal/5 hover:text-royal"
               }`}
             >
-              {m === 'Owner' ? 'Active' : m === 'Settlement' ? 'Post-Passing' : m}
+              {m === 'Owner' ? 'Active' : m === 'Settlement' ? 'After Passing' : m}
             </button>
           ))}
         </div>
@@ -134,36 +126,33 @@ export function AdminHeader({
       {/* Right — Actions */}
       <div className="flex items-center gap-4">
         {/* Notification Bell */}
-        <button className="p-2.5 text-white/40 hover:bg-white/10 hover:text-white transition-all relative">
+        <button className="p-2 text-royal/30 hover:bg-royal/5 hover:text-royal transition-all relative">
           <svg
             width="18"
             height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2.5"
+            strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
-          <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-gold shadow-[0_0_8px_rgba(200,169,81,0.6)]" />
+          <span className="absolute top-2 right-2 w-2 h-2 bg-royal shadow-[0_0_5px_rgba(19,51,120,0.4)]" />
         </button>
 
         {/* Avatar */}
         {user?.profilePhotoUrl ? (
-          <div className="relative group">
-            <img 
-              src={user.profilePhotoUrl} 
-              onClick={() => setShowPhotoModal(true)}
-              className="w-10 h-10 object-cover border border-gold/30 cursor-pointer group-hover:border-gold transition-all shadow-xl" 
-              alt="Avatar" 
-            />
-            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-success border-2 border-[#133378] rounded-full" />
-          </div>
+          <img 
+            src={user.profilePhotoUrl} 
+            onClick={() => setShowPhotoModal(true)}
+            className="w-9 h-9 object-cover border border-royal/30 shadow-sm cursor-pointer hover:border-royal transition-all" 
+            alt="Avatar" 
+          />
         ) : (
-          <div className="w-10 h-10 bg-gold/20 flex items-center justify-center text-gold font-black text-[0.7rem] cursor-pointer hover:bg-gold/30 transition-all border border-gold/40">
+          <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-[0.7rem] cursor-pointer hover:bg-sapphire transition-all shadow-sm">
             {getInitials(user?.name || 'TL')}
           </div>
         )}

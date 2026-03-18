@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* ============================================
+   FinalWishes — "Royal Neo-Deco" Design System
+   Deep Royal Blue · Gold Accents · Glass Panels
+   ============================================ */
+
+:root {
+  /* Primary — Deep Royal Blue Gradient Palette */
+  --navy: #0f172a;
+  --navy-mid: #1e3a5f;
+  --navy-deep: #0c1425;
+  --royal-blue: #2563eb;
+  --royal-bright: #3b82f6;
+  --royal-subtle: #1e3a8a;
+
+  /* Gold (shared across Sirsi portfolio) */
+  --gold: #C8A951;
+  --gold-bright: #D4B85A;
+  --gold-dim: rgba(200, 169, 81, 0.15);
+
+  /* Semantic */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+
+  /* Dark Theme Surface — The Vault Feel */
+  --bg-primary: #0f172a;
+  --bg-secondary: rgba(30, 58, 138, 0.5);
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-faint: rgba(255, 255, 255, 0.35);
+
+  /* Glass Card System */
+  --card-bg: rgba(30, 58, 138, 0.4);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.3);
+  --card-backdrop: blur(20px);
+
+  /* Panels */
+  --panel-bg: rgba(30, 58, 138, 0.6);
+  --panel-border: rgba(255, 255, 255, 0.1);
+
+  /* Buttons */
+  --btn-outline-border: rgba(255, 255, 255, 0.4);
+  --btn-outline-text: #FFFFFF;
+  --btn-outline-hover-bg: rgba(255, 255, 255, 0.1);
+
+  /* Borders */
+  --border-light: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.25);
+
+  /* Section Alternating */
+  --section-bg-alt: rgba(30, 58, 138, 0.6);
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --header-height: 70px;
+}
+
+/* ── TailwindCSS v4 Theme Tokens ── */
+@theme inline {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --color-navy: var(--navy);
+  --color-navy-mid: var(--navy-mid);
+  --color-navy-deep: var(--navy-deep);
+  --color-royal: var(--royal-blue);
+  --color-royal-bright: var(--royal-bright);
+  --color-royal-subtle: var(--royal-subtle);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-dim: var(--gold-dim);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-border-light: var(--border-light);
+  --color-border-strong: var(--border-strong);
+  --font-heading: var(--font-cinzel);
+  --font-body: var(--font-inter);
+}
+
+/* ── Body: Deep Blue Gradient ── */
+body {
+  background-color: var(--bg-primary);
+  background-image: radial-gradient(ellipse at 50% 0%, #2563eb 0%, #1e3a8a 35%, #0f172a 75%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Film Grain Texture ── */
+.texture-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  z-index: 5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Glass Card ── */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: var(--card-backdrop);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* ── Glass Panel ── */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: var(--card-backdrop);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  border: 1px solid var(--panel-border);
+}
+
+/* ── Gold Divider ── */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(200, 169, 81, 0.4), transparent);
+}
+
+/* ── Art Deco Decoratives ── */
+.deco-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-color: var(--gold);
+  opacity: 0.5;
+  z-index: 20;
+}
+.deco-corner.top-left    { top: 20px; left: 20px; border-top: 2px solid; border-left: 2px solid; }
+.deco-corner.top-right   { top: 20px; right: 20px; border-top: 2px solid; border-right: 2px solid; }
+.deco-corner.bottom-left { bottom: 20px; left: 20px; border-bottom: 2px solid; border-left: 2px solid; }
+.deco-corner.bottom-right{ bottom: 20px; right: 20px; border-bottom: 2px solid; border-right: 2px solid; }
+
+/* ── Section Divider ── */
+.section-divider {
+  height: 40px;
+  background: transparent;
+  position: relative;
+}
+.section-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ── Floating Orb Animations ── */
+@keyframes float-1 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-30px) translateX(15px); }
+}
+@keyframes float-2 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(20px) translateX(-20px); }
+}
+@keyframes float-3 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(-10px); }
+}
+
+/* ── Status Pulse ── */
+@keyframes pulse-status {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse-status 2s ease-in-out infinite;
+}
+
+/* ── Reveal Animations ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Hero Text Shadows ── */
+.hero-text {
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    0 8px 40px rgba(0, 0, 0, 0.4);
+}
+.hero-text-gold {
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    0 0 30px rgba(200, 169, 81, 0.3);
+}
+
+/* ── Spin for shield decoration ── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Dashboard Overrides ──
+   The dashboard layout uses a light admin theme */
+.dashboard-shell {
+  --bg-primary: #fcfdfe;
+  --text-primary: #0f1d3a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border-light: rgba(15, 29, 58, 0.08);
+  --card-bg: #ffffff;
+  --card-border: rgba(15, 29, 58, 0.08);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+  --card-backdrop: none;
+  background-color: #fcfdfe;
+  background-image: radial-gradient(circle at top right, #fcfdfe 0%, #edf1f7 100%);
+  color: #0f1d3a;
+}

@@ -1,0 +1,17 @@
+version: v2
+managed:
+  enabled: true
+plugins:
+  # GO GENERATION
+  - remote: buf.build/protocolbuffers/go:v1.36.11
+    out: ../api/internal/gen
+    opt: paths=source_relative
+  - remote: buf.build/connectrpc/go:v1.18.1
+    out: ../api/internal/gen
+    opt: paths=source_relative
+
+  # TYPESCRIPT GENERATION (LATEST V2 - THE CLEAN WAY)
+  # In v2, the Protobuf-ES plugin generates both messages AND Connect-ES compatible service schemas.
+  - remote: buf.build/bufbuild/es:v2.2.3
+    out: ../web/src/gen
+    opt: target=ts

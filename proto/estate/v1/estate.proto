@@ -1,0 +1,251 @@
+syntax = "proto3";
+
+package estate.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1;estatev1";
+
+service EstateService {
+  // --- Core Estate Management ---
+  rpc ListEstates(ListEstatesRequest) returns (ListEstatesResponse);
+  rpc RegisterEstate(RegisterEstateRequest) returns (RegisterEstateResponse);
+  rpc GetEstateMetadata(GetEstateMetadataRequest) returns (GetEstateMetadataResponse);
+  rpc ListAssets(ListAssetsRequest) returns (ListAssetsResponse);
+  rpc AddAsset(AddAssetRequest) returns (AddAssetResponse);
+  rpc ListBeneficiaries(ListBeneficiariesRequest) returns (ListBeneficiariesResponse);
+  rpc AddBeneficiary(AddBeneficiaryRequest) returns (AddBeneficiaryResponse);
+
+  // --- The Vault (Legal Evidence) ---
+  rpc ListVaultDocuments(ListVaultDocumentsRequest) returns (ListVaultDocumentsResponse);
+  rpc GenerateUploadUrl(GenerateUploadUrlRequest) returns (GenerateUploadUrlResponse);
+
+  // --- Memoirs (Videos & Photos) ---
+  rpc ListMemoirs(ListMemoirsRequest) returns (ListMemoirsResponse);
+  rpc UploadMemoir(UploadMemoirRequest) returns (UploadMemoirResponse);
+
+  // --- Obituary Service ---
+  rpc GetObituary(GetObituaryRequest) returns (GetObituaryResponse);
+  rpc SaveObituary(SaveObituaryRequest) returns (SaveObituaryResponse);
+
+  // --- AI Guidance Engine (Gemini) ---
+  rpc GetAIInsight(GetAIInsightRequest) returns (GetAIInsightResponse);
+
+  // --- Governance & Security ---
+  rpc GetGovernanceSettings(GetGovernanceSettingsRequest) returns (GetGovernanceSettingsResponse);
+  rpc ListNotifications(ListNotificationsRequest) returns (ListNotificationsResponse);
+}
+
+enum AuthorityMode {
+  AUTHORITY_MODE_UNSPECIFIED = 0;
+  AUTHORITY_MODE_OWNER = 1;      // Normal operation
+  AUTHORITY_MODE_INCAPACITY = 2; // Executor/Proxy active
+  AUTHORITY_MODE_DEATH = 3;      // Settlement mode
+}
+
+message RegisterEstateRequest {
+  string user_id = 1;
+  string name = 2; // e.g. "The Collymore Portfolio"
+  string type = 3; // e.g. "Personal", "Family Trust"
+}
+
+message RegisterEstateResponse {
+  EstateSummary estate = 1;
+}
+
+message ListEstatesRequest {
+  string user_id = 1;
+}
+
+message ListEstatesResponse {
+  repeated EstateSummary estates = 1;
+}
+
+message EstateSummary {
+  string id = 1;
+  string name = 2;
+  string role = 3; // e.g. "Owner", "Executor", "Beneficiary"
+}
+
+message GetEstateMetadataRequest {
+  string estate_id = 1;
+}
+
+message GetEstateMetadataResponse {
+  string status = 1; // e.g. "Active", "Locked", "Settled"
+  int32 completion_percentage = 2;
+  string tier = 3;   // e.g. "Basic", "Concierge", "Concierge+"
+  bool mfa_enabled = 4;
+  google.protobuf.Timestamp last_login = 5;
+  google.protobuf.Timestamp next_review_date = 6;
+  AuthorityMode authority_mode = 7;
+}
+
+message ListAssetsRequest {
+  string estate_id = 1;
+}
+
+message Asset {
+  string name = 1;
+  string type = 2;
+  string value = 3;
+  string status = 4;
+}
+
+message ListAssetsResponse {
+  repeated Asset assets = 1;
+  int32 total_count = 2;
+}
+
+message AddAssetRequest {
+  string estate_id = 1;
+  string name = 2;
+  string type = 3;
+  string value = 4;
+}
+
+message AddAssetResponse {
+  Asset asset = 1;
+}
+
+message ListBeneficiariesRequest {
+  string estate_id = 1;
+}
+
+message Beneficiary {
+  string id = 1;
+  string name = 2;
+  string relation = 3;
+  string share = 4;
+  string status = 5;
+  string email = 6;
+}
+
+message ListBeneficiariesResponse {
+  repeated Beneficiary beneficiaries = 1;
+}
+
+message AddBeneficiaryRequest {
+  string estate_id = 1;
+  string name = 2;
+  string relation = 3;
+  string email = 4;
+}
+
+message AddBeneficiaryResponse {
+  Beneficiary beneficiary = 1;
+}
+
+message ListVaultDocumentsRequest {
+  string estate_id = 1;
+}
+
+message VaultDocument {
+  string name = 1;
+  string date = 2;
+  string size = 3;
+  string category = 4;
+}
+
+message ListVaultDocumentsResponse {
+  repeated VaultDocument documents = 1;
+}
+
+message GenerateUploadUrlRequest {
+  string estate_id = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message GenerateUploadUrlResponse {
+  string upload_url = 1; // Signed URL for direct GCS upload
+  string final_url = 2;  // The public or shared URL for display
+}
+
+message ListMemoirsRequest {
+  string estate_id = 1;
+}
+
+message Memoir {
+  string id = 1;
+  string title = 2;
+  string type = 3; // "video", "photo"
+  string url = 4;
+  string date_added = 5;
+  string visibility = 6; // "private", "all_heirs", "specific"
+}
+
+message ListMemoirsResponse {
+  repeated Memoir memoirs = 1;
+}
+
+message UploadMemoirRequest {
+  string estate_id = 1;
+  string title = 2;
+  string type = 3;
+  string url = 4;
+}
+
+message UploadMemoirResponse {
+  Memoir memoir = 1;
+}
+
+message GetObituaryRequest {
+  string estate_id = 1;
+}
+
+message GetObituaryResponse {
+  string content = 1;
+  string status = 2; // "Draft", "Approved", "Distributed"
+  google.protobuf.Timestamp last_updated = 3;
+}
+
+message SaveObituaryRequest {
+  string estate_id = 1;
+  string content = 2;
+}
+
+message SaveObituaryResponse {
+  bool success = 1;
+}
+
+message GetAIInsightRequest {
+  string estate_id = 1;
+}
+
+message GetAIInsightResponse {
+  string insight = 1; // The raw AI-generated guidance
+  string action_label = 2; // e.g. "Complete Assets"
+  string action_url = 3; // e.g. "/dashboard/assets"
+}
+
+message GetGovernanceSettingsRequest {
+  string estate_id = 1;
+}
+
+message GovernanceSettings {
+  bool mfa_enabled = 1;
+  bool biometric_release = 2;
+  bool email_alerts = 3;
+  string recovery_key_status = 4;
+  string status_reports_frequency = 5;
+}
+
+message GetGovernanceSettingsResponse {
+  GovernanceSettings settings = 1;
+}
+
+message ListNotificationsRequest {
+  string estate_id = 1;
+}
+
+message Notification {
+  string title = 1;
+  string time = 2;
+  string type = 3;
+  string desc = 4;
+}
+
+message ListNotificationsResponse {
+  repeated Notification notifications = 1;
+}

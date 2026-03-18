@@ -7,11 +7,11 @@
 
 :root {
   /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
-  --royal: #133378; /* Verified Heritage Royal (#133378) */
-  --navy: #1B263B;  /* Deep Indigo Shard */
-  --navy-mid: #1E3A5F; /* Heritage Royal */
-  --royal-bright: #1E40AF; /* Darker blue for highlights */
-  --navy-subtle: rgba(19, 51, 120, 0.08);
+  /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
+  --royal: #133378;    /* Verified Heritage Royal (#133378) */
+  --sapphire: #0F52BA; /* Vibrant Sapphire Highlight */
+  --sapphire-light: #1E40AF;
+  --royal-subtle: rgba(19, 51, 120, 0.05);
 
   /* Sidebar/Header Layout — Light Theme Industrial */
   --sidebar-bg: #FFFFFF;
@@ -33,14 +33,14 @@
   /* Swiss Neo-Deco (Dashboard Surface Protocol) */
   --bg-dashboard: #F8FAFF;
   --bg-dashboard-tint: radial-gradient(circle at top right, #F8FAFF 0%, #EDF1F7 100%);
-  --text-navy: #0F172A;
-  --text-navy-light: #1E3A5F;
-  --border-dashboard: rgba(15, 23, 42, 0.08);
+  --text-royal: #133378;
+  --text-sapphire: #0F52BA;
+  --border-dashboard: rgba(19, 51, 120, 0.1);
 
   /* Semantic Default (Fallback to Light for safety) */
   --bg-primary: #FFFFFF;
-  --text-primary: var(--text-navy);
-  --text-secondary: #334155;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
   --text-muted: #64748B;
   --border-light: var(--border-dashboard);
 
@@ -138,15 +138,15 @@ body {
   --input-focus-bg: #FFFFFF;
 
   --icon-color: var(--royal);
-  --icon-hover: var(--royal-bright);
+  --icon-hover: var(--sapphire);
 
-  /* Royal Header & Sidebar */
-  --header-bg: #133378;
-  --header-text: #FFFFFF;
-  --header-text-muted: rgba(255, 255, 255, 0.6);
-  --sidebar-bg: #0F172A;
-  --sidebar-text: #FFFFFF;
-  --sidebar-text-muted: rgba(255, 255, 255, 0.6);
+  /* Light Premium Header & Sidebar */
+  --header-bg: #FFFFFF;
+  --header-text: #0F172A;
+  --header-text-muted: #64748B;
+  --sidebar-bg: #FFFFFF;
+  --sidebar-text: #0F172A;
+  --sidebar-text-muted: #64748B;
 }
 
 

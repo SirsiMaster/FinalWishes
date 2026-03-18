@@ -35,20 +35,21 @@ function SettingsPage() {
   const s = data?.settings;
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto">
-      <div className="border-b border-border-light pb-8 flex justify-between items-end">
+    <div className="max-w-[1000px] mx-auto space-y-10 pb-20 px-4">
+      <div className="border-b border-royal/10 pb-10 flex justify-between items-end">
         <div>
-          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-navy uppercase tracking-tight">Governance Shard</h2>
-          <p className="text-sm text-text-muted">Manage the security protocols, authority releases, and biometric shards for this estate.</p>
+          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Governance Shard</h2>
+          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">Manage the security protocols, authority releases, and biometric shards for this estate.</p>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-royal-subtle border border-royal/10 rounded-xl">
+        <div className="flex items-center gap-2.5 px-5 py-2.5 bg-royal/[0.03] border border-royal/10 rounded-2xl shadow-sm">
            <div className="w-2 h-2 rounded-full bg-royal animate-pulse" />
-           <span className="text-[10px] font-black text-royal uppercase tracking-widest">Active State Verification</span>
+           <span className="text-[10px] font-black text-royal uppercase tracking-widest leading-none">Status Verification Verified</span>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 gap-8 pb-20">
-        <section className="bg-white rounded-[2.5rem] border border-border-light overflow-hidden shadow-sm hover:shadow-2xl hover:border-royal/20 transition-all">
+      <div className="grid grid-cols-1 gap-12">
+        <section className="bg-white rounded-[3rem] border border-royal/10 overflow-hidden shadow-[0_2px_20px_rgba(19,51,120,0.03)] hover:shadow-[0_20px_50px_rgba(19,51,120,0.08)] hover:border-royal/20 transition-all group relative">
+          <div className="absolute top-0 left-0 w-1.5 h-full bg-royal/5 group-hover:bg-royal/10 transition-colors" />
           <SettingsSection title="Security Protocol [AES-256]">
             <SettingsItem label="Bipartite Multi-Factor Auth" value={s?.mfaEnabled ? "Enabled" : "Disabled"} type="toggle" />
             <SettingsItem label="Zero-Knowledge Recovery Key" value={s?.recoveryKeyStatus || "Verified"} type="status" />
@@ -56,7 +57,8 @@ function SettingsPage() {
           </SettingsSection>
         </section>
 
-        <section className="bg-white rounded-[2.5rem] border border-border-light overflow-hidden shadow-sm hover:shadow-2xl hover:border-royal/20 transition-all">
+        <section className="bg-white rounded-[3rem] border border-royal/10 overflow-hidden shadow-[0_2px_20px_rgba(19,51,120,0.03)] hover:shadow-[0_20px_50px_rgba(19,51,120,0.08)] hover:border-royal/20 transition-all group relative">
+          <div className="absolute top-0 left-0 w-1.5 h-full bg-royal/5 group-hover:bg-royal/10 transition-colors" />
           <SettingsSection title="Notification Governance">
             <SettingsItem label="Encrypted Email Alerts" value={s?.emailAlerts ? "Enabled" : "Disabled"} type="toggle" />
             <SettingsItem label="Legal Status Shard Frequency" value={s?.statusReportsFrequency || "Weekly"} type="select" />
@@ -64,16 +66,18 @@ function SettingsPage() {
           </SettingsSection>
         </section>
         
-        <div className="p-8 bg-gray-50 rounded-[2rem] border-2 border-dashed border-gray-200 text-center">
-            <p className="text-[10px] font-black text-navy/40 uppercase tracking-[0.2em] mb-4">Operational Domain Information</p>
-            <div className="flex justify-center gap-12">
-               <div>
-                  <span className="block text-[8px] font-black text-navy/30 uppercase mb-1">Estate Shard ID</span>
-                  <span className="text-xs font-mono font-bold text-navy">{estateId}</span>
+        <div className="p-12 bg-royal/[0.02] rounded-[3rem] border-2 border-dashed border-royal/5 text-center relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-royal/[0.02] rounded-bl-[5rem] translate-x-4 -translate-y-4 group-hover:bg-royal/[0.04] transition-colors" />
+            <p className="text-[10px] font-black text-royal/20 uppercase tracking-[0.3em] mb-6">Operational Domain Registry</p>
+            <div className="flex justify-center gap-20 items-center">
+               <div className="text-center group/id">
+                  <span className="block text-[9px] font-black text-royal/20 uppercase tracking-[0.2em] mb-2 group-hover:text-royal/40 transition-colors">Estate Shard ID</span>
+                  <span className="text-[14px] font-mono font-black text-royal uppercase tracking-widest">{estateId}</span>
                </div>
-               <div>
-                  <span className="block text-[8px] font-black text-navy/30 uppercase mb-1">Jurisdiction</span>
-                  <span className="text-xs font-bold text-navy uppercase tracking-widest">Maryland, IL, MN</span>
+               <div className="w-px h-8 bg-royal/5" />
+               <div className="text-center group/loc">
+                  <span className="block text-[9px] font-black text-royal/20 uppercase tracking-[0.2em] mb-2 group-hover:text-royal/40 transition-colors">Jurisdiction Protocol</span>
+                  <span className="text-[14px] font-black text-royal uppercase tracking-[0.15em]">Maryland, Illinois, Minnesota</span>
                </div>
             </div>
         </div>
@@ -85,32 +89,33 @@ function SettingsPage() {
 function SettingsSection({ title, children }: any) {
   return (
     <div>
-      <div className="bg-navy px-8 py-5 border-b border-white/10">
-        <h3 className="text-gold font-black text-[0.7rem] uppercase tracking-[0.25em]">{title}</h3>
+      <div className="bg-royal/[0.03] px-10 py-6 border-b border-royal/5">
+        <h3 className="text-royal font-black text-[11px] uppercase tracking-[0.3em]">{title}</h3>
       </div>
-      <div className="divide-y divide-border-light">{children}</div>
+      <div className="divide-y divide-royal/5">{children}</div>
     </div>
   );
 }
 
 function SettingsItem({ label, value, type }: any) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-royal-subtle transition-colors group">
+    <div className="flex items-center justify-between px-10 py-7 hover:bg-royal/[0.01] transition-all group cursor-pointer relative">
+      <div className="absolute left-0 top-0 w-1 h-full bg-royal opacity-0 group-hover:opacity-20 transition-all" />
       <div className="flex flex-col">
-        <span className="text-[10px] font-black text-navy/20 uppercase tracking-[0.15em] mb-1 leading-none group-hover:text-royal/40 transition-colors">Protocol Element</span>
-        <span className="text-sm font-black text-navy uppercase tracking-tight">{label}</span>
+        <span className="text-[8px] font-black text-royal/20 uppercase tracking-[0.2em] mb-1 leading-none group-hover:text-royal/40 transition-colors">Governance Element</span>
+        <span className="text-[15px] font-black text-royal uppercase tracking-tight group-hover:text-sapphire transition-colors">{label}</span>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {type === 'toggle' ? (
-          <div className={`w-12 h-6 rounded-full relative cursor-pointer transition-all ${value === 'Enabled' ? 'bg-royal shadow-lg shadow-royal/20' : 'bg-gray-200'}`}>
-            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all shadow-sm ${value === 'Enabled' ? 'left-7' : 'left-1'}`} />
+          <div className={`w-14 h-7 rounded-full relative cursor-pointer transition-all border ${value === 'Enabled' ? 'bg-royal border-royal shadow-[0_4px_12px_rgba(19,51,120,0.2)]' : 'bg-royal/[0.05] border-royal/10'}`}>
+            <div className={`absolute top-1 w-4.5 h-4.5 bg-white rounded-full transition-all shadow-md ${value === 'Enabled' ? 'left-8.5' : 'left-1'}`} />
           </div>
         ) : type === 'status' ? (
-          <span className="text-[9px] font-black text-green-700 uppercase tracking-[0.2em] px-3 py-1 bg-green-50 border border-green-200 rounded-lg">{value}</span>
+          <span className="text-[9px] font-black text-green-600 uppercase tracking-[0.2em] px-4 py-1.5 bg-green-50 border border-green-100 rounded-xl shadow-sm">{value}</span>
         ) : (
-          <div className="flex items-center gap-2 group/val cursor-pointer">
-            <span className="text-xs text-navy font-black uppercase tracking-widest">{value}</span>
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-navy/30 group-hover/val:text-royal transition-colors" fill="none" stroke="currentColor" strokeWidth="3"><path d="M19 9l-7 7-7-7"/></svg>
+          <div className="flex items-center gap-3 group/val px-4 py-2 bg-royal/[0.02] border border-royal/5 rounded-xl hover:bg-royal/[0.05] transition-all">
+            <span className="text-[11px] text-royal font-black uppercase tracking-widest">{value}</span>
+            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-royal/30 group-hover/val:text-royal transition-all" fill="none" stroke="currentColor" strokeWidth="4"><path d="M19 9l-7 7-7-7"/></svg>
           </div>
         )}
       </div>

@@ -24,7 +24,7 @@ function ObituaryPage() {
     if (session) {
       const u = JSON.parse(session);
       setUserName(u.name || '');
-      setProfilePhoto('/assets/tameeka/mom memorial.jpg'); // Heritage Photo for Obituary
+      setProfilePhoto('/assets/tameeka/mom memorial.jpg');
     }
     const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
     setEstateId(preferredId);
@@ -46,7 +46,10 @@ function ObituaryPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal"></div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading record...</span>
+        </div>
       </div>
     );
   }
@@ -54,120 +57,104 @@ function ObituaryPage() {
   const obit = data;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Full Fidelity Heritage Modal */}
+    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+      {/* Photo Modal */}
       {showPhotoModal && profilePhoto && (
         <div 
-          className="fixed inset-0 z-[300] flex items-center justify-center bg-navy/95 backdrop-blur-3xl p-4 animate-in fade-in duration-300 pointer-events-auto"
+          className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-xl p-4 animate-in fade-in duration-300"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 
-            className="relative bg-black rounded-[2rem] overflow-hidden border-2 border-gold/50 shadow-2xl animate-in zoom-in duration-500 max-w-[95vw] max-h-[95vh] flex flex-col items-center"
+            className="relative bg-white rounded-[2rem] overflow-hidden border border-slate-200 shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col items-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative group">
-              <img 
-                src={profilePhoto} 
-                className="max-w-full max-h-[85vh] object-contain block mx-auto" 
-                alt="Full Fidelity Portrait" 
-              />
-              
-              {/* Close Action - Top Right */}
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button 
-                  onClick={() => setShowPhotoModal(false)}
-                  className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all"
-                >
-                  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Content Info Bar */}
-            <div className="w-full p-6 bg-gradient-to-t from-navy to-navy/80 border-t border-white/10 flex justify-between items-center">
-              <div className="text-left">
-                <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-black text-white uppercase tracking-wider mb-1 leading-tight">Heritage Record Portrait</h3>
-                <div className="flex items-center gap-3">
-                  <span className="text-[9px] font-black text-gold/60 uppercase tracking-widest">{userName || "Tameeka Lockhart"} · The Final Record</span>
-                  <div className="w-1 h-1 rounded-full bg-white/20" />
-                  <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">Shard: Lockdown Verified</span>
-                </div>
+            <img 
+              src={profilePhoto} 
+              className="max-w-full max-h-[80vh] object-contain block mx-auto" 
+              alt="Heritage Portrait" 
+            />
+            <div className="w-full p-6 bg-white border-t border-slate-100 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold text-[#0F172A]">Heritage Portrait</h3>
+                <p className="text-[13px] text-[#64748B] font-medium">{userName || "Tameeka Lockhart"}</p>
               </div>
               <button 
                 onClick={() => setShowPhotoModal(false)}
-                className="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white font-black text-[10px] uppercase tracking-widest transition-all"
+                className="px-5 py-2 bg-[#F8FAFC] hover:bg-slate-100 border border-slate-200 rounded-xl text-[#0F172A] font-bold text-[12px] transition-all"
               >
-                Close Record
+                Close
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex justify-between items-end border-b border-border-light pb-6">
-        <div>
-          <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-navy mb-1 uppercase tracking-tight">The Final Record</h2>
-          <p className="text-sm text-text-muted">Draft, manage, and distribute the canonical life story for publication.</p>
+      <div className="flex justify-between items-end border-b border-slate-100 pb-8">
+        <div className="space-y-2">
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Final Record</h2>
+          <p className="text-lg text-[#64748B] font-medium">Draft, manage, and distribute the official life story for your estate.</p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={() => setModalOpen(true)}
-            className="bg-navy text-white px-6 py-2.5 rounded-xl font-bold text-[0.7rem] uppercase tracking-widest hover:bg-black transition-colors flex items-center gap-2"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 rounded-2xl font-bold text-[13px] transition-all shadow-lg flex items-center gap-2 active:scale-95"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
             Review & Sign
           </button>
-          <button className="bg-gold text-black px-6 py-2.5 rounded-xl font-bold text-[0.7rem] uppercase tracking-widest hover:scale-105 transition-transform flex items-center gap-2">
+          <button className="bg-[#C8A951] hover:bg-[#b8993f] text-white px-6 py-3 rounded-2xl font-bold text-[13px] transition-all shadow-lg flex items-center gap-2 active:scale-95">
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-            Distribute Service
+            Share
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-[1fr_2fr] gap-10 max-md:grid-cols-1">
+      <div className="grid grid-cols-[1fr_2fr] gap-8 max-md:grid-cols-1">
         <div className="space-y-6">
+          {/* Portrait */}
           <div 
-            className="aspect-[3/4] rounded-2xl bg-navy relative border-4 border-gold group overflow-hidden shadow-2xl cursor-pointer"
+            className="aspect-[3/4] rounded-[2rem] bg-[#F8FAFC] relative border border-slate-200 group overflow-hidden shadow-sm cursor-pointer"
             onClick={() => setShowPhotoModal(true)}
           >
              {profilePhoto ? (
-               <img src={profilePhoto} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Portrait" />
+               <img src={profilePhoto} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Portrait" />
              ) : (
-               <div className="absolute inset-0 flex items-center justify-center text-white/5 bg-gradient-to-b from-navy/50 to-navy text-center p-8">
-                 <svg viewBox="0 0 24 24" className="w-20 h-20 mb-4 mx-auto" fill="none" stroke="currentColor" strokeWidth="1"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
-                 <span className="text-xs font-bold uppercase tracking-widest">Heritage Portrait Placeholder</span>
+               <div className="absolute inset-0 flex items-center justify-center text-slate-300 p-8">
+                 <svg viewBox="0 0 24 24" className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="1"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
                </div>
              )}
-             <button className="absolute bottom-4 left-4 right-4 py-2.5 bg-gold/90 backdrop-blur-md rounded-xl text-black font-bold text-[0.65rem] uppercase tracking-widest translate-y-12 group-hover:translate-y-0 transition-transform">Update Photo</button>
+             <button className="absolute bottom-4 left-4 right-4 py-2.5 bg-white/90 backdrop-blur-md rounded-xl text-[#0F172A] font-bold text-[12px] translate-y-12 group-hover:translate-y-0 transition-transform shadow-md">Update Photo</button>
           </div>
           
-          <div className="bg-white rounded-2xl border border-border-light p-6">
-            <h4 className="text-[0.65rem] font-bold text-navy uppercase tracking-widest mb-4">Vital Statistics</h4>
+          {/* Vital Stats */}
+          <div className="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
+            <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Details</h4>
             <div className="space-y-3">
-              <StatRow label="Status" value={isSigned ? "Locked" : obit?.status} color={isSigned ? "green" : "blue"} />
+              <StatRow label="Status" value={isSigned ? "Finalized" : obit?.status} color={isSigned ? "green" : "blue"} />
               <StatRow label="Last Update" value="Today, 9:22 PM" />
-              <StatRow label="Review Type" value="Family Only" />
-              <StatRow label="Verification" value={isSigned ? "Verified" : "Pending"} color={isSigned ? "green" : "gold"} />
+              <StatRow label="Visibility" value="Family Only" />
+              <StatRow label="Verification" value={isSigned ? "Verified" : "Pending review"} color={isSigned ? "green" : "amber"} />
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-border-light shadow-sm flex flex-col min-h-[500px] relative">
-          <div className="bg-navy/5 px-6 py-4 flex justify-between items-center">
-             <span className="text-[0.65rem] font-bold text-navy uppercase tracking-widest">Obituary Content Draft</span>
+        {/* Editor */}
+        <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col min-h-[500px]">
+          <div className="bg-[#F8FAFC] px-6 py-4 flex justify-between items-center border-b border-slate-100 rounded-t-[2rem]">
+             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Obituary Draft</span>
              {!editing && !isSigned && (
-               <button onClick={() => setEditing(true)} className="text-royal font-bold text-xs uppercase tracking-widest hover:underline">Edit Entry</button>
+               <button onClick={() => setEditing(true)} className="text-[#133378] font-bold text-[12px] hover:underline">Edit</button>
              )}
              {editing && (
                <button onClick={() => {
                  const content = textAreaRef.current?.value || "";
                  saveMutation.mutate(content);
-               }} className="text-success font-bold text-xs uppercase tracking-widest hover:underline">Save Draft</button>
+               }} className="text-green-600 font-bold text-[12px] hover:underline">Save Draft</button>
              )}
              {isSigned && (
-               <div className="flex items-center gap-1.5 text-success font-bold text-[0.6rem] uppercase tracking-widest">
+               <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px]">
                   <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                  Immutable Record Locked
+                  Finalized
                </div>
              )}
           </div>
@@ -176,50 +163,51 @@ function ObituaryPage() {
                <textarea 
                   ref={textAreaRef}
                   defaultValue={obit?.content}
-                  className="w-full h-full min-h-[400px] border-none focus:ring-0 text-navy font-[family-name:var(--font-inter)] leading-relaxed text-lg outline-none resize-none"
+                  className="w-full h-full min-h-[400px] border-none focus:ring-0 text-[#0F172A] font-[family-name:var(--font-inter)] leading-relaxed text-lg outline-none resize-none"
                   placeholder="Start drafting the final record here..."
                />
              ) : (
-               <p className="text-navy font-[family-name:var(--font-inter)] leading-relaxed text-lg whitespace-pre-wrap">
-                 {obit?.content || "No content drafted yet. Use the 'Edit Entry' button to begin the record."}
+               <p className="text-[#0F172A] font-[family-name:var(--font-inter)] leading-relaxed text-lg whitespace-pre-wrap">
+                 {obit?.content || "No content drafted yet. Click 'Edit' to begin writing the record."}
                </p>
              )}
           </div>
         </div>
       </div>
 
+      {/* Sign Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-navy/80 backdrop-blur-md p-4">
-          <div className="bg-white rounded-[2.5rem] p-10 max-w-2xl w-full border border-border-light shadow-2xl animate-in zoom-in duration-300">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-xl p-4">
+          <div className="bg-white rounded-[3rem] p-12 max-w-2xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-300">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-navy text-gold rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-gold shadow-lg">
+              <div className="w-16 h-16 bg-[#133378] text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               </div>
-              <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-navy uppercase tracking-wider mb-2">Legal Review & Sign</h3>
-              <p className="text-sm text-text-muted max-w-md mx-auto">By signing this document, you are establishing the canonical record for your estate.</p>
+              <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-2">Review & Sign</h3>
+              <p className="text-[#64748B] font-medium max-w-md mx-auto">By signing this document, you are establishing the official record for your estate.</p>
             </div>
             
-            <div className="bg-navy/5 p-6 rounded-2xl mb-8 border border-navy/10 max-h-[200px] overflow-y-auto scrollbar-thin">
-               <p className="text-text-secondary text-sm italic leading-relaxed">"{obit?.content || 'Unfinished record...'}"</p>
+            <div className="bg-[#F8FAFC] p-6 rounded-2xl mb-8 border border-slate-100 max-h-[200px] overflow-y-auto">
+               <p className="text-[#64748B] text-sm italic leading-relaxed">"{obit?.content || 'No content drafted yet...'}"</p>
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-3xl border border-gray-200 mb-8 text-center">
-               <label className="text-[0.65rem] font-black text-navy uppercase tracking-[0.2em] mb-4 block opacity-40">Protocol Signature Area</label>
-               <div className="h-20 border-b-2 border-navy/40 flex items-center justify-center text-navy/20 font-serif italic text-3xl select-none">
-                  {isSigned ? <span className="text-navy font-[family-name:var(--font-cinzel)] opacity-100">{userName || 'Legal Guardian'}</span> : 'Sign here with owner key'}
+            <div className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200 mb-8 text-center">
+               <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Signature</label>
+               <div className="h-20 border-b-2 border-[#0F172A]/30 flex items-center justify-center text-slate-300 font-serif italic text-3xl select-none">
+                  {isSigned ? <span className="text-[#0F172A] font-[family-name:var(--font-cinzel)]">{userName || 'Legal Guardian'}</span> : 'Sign here'}
                </div>
             </div>
 
             <div className="flex gap-4">
-              <button onClick={() => setModalOpen(false)} className="flex-1 py-4 rounded-2xl border border-border-light font-black text-navy text-xs uppercase tracking-[0.15em] hover:bg-gray-50 transition-colors">Cancel</button>
+              <button onClick={() => setModalOpen(false)} className="flex-1 py-4 rounded-2xl border border-slate-200 font-bold text-[#64748B] text-sm hover:bg-slate-50 transition-colors active:scale-95">Cancel</button>
               <button 
                 onClick={() => {
                   setIsSigned(true);
                   setTimeout(() => setModalOpen(false), 800);
                 }}
-                className="flex-1 py-4 rounded-2xl bg-navy text-white font-black text-xs uppercase tracking-[0.15em] hover:bg-black transition-all shadow-xl"
+                className="flex-1 py-4 rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white font-bold text-sm transition-all shadow-lg active:scale-95"
               >
-                {isSigned ? 'Locked & Secured' : 'Execute & Sign'}
+                {isSigned ? 'Signed & Sealed' : 'Sign Document'}
               </button>
             </div>
           </div>
@@ -230,11 +218,21 @@ function ObituaryPage() {
 }
 
 function StatRow({ label, value, color }: any) {
-  const badgeMap: Record<string, string> = { blue: "bg-royal-subtle text-royal", green: "bg-green-100 text-green-700", gold: "bg-gold-dim text-gold" };
+  const colorMap: Record<string, string> = {
+    blue: 'bg-[#133378]/5 text-[#133378] border-[#133378]/10',
+    green: 'bg-green-50 text-green-600 border-green-200',
+    amber: 'bg-amber-50 text-amber-600 border-amber-200',
+  };
+  const badgeStyle = color ? colorMap[color] || '' : '';
+  
   return (
-    <div className="flex justify-between items-center py-2.5 border-b border-border-light last:border-b-0 space-x-2">
-      <span className="text-[0.7rem] text-text-muted font-bold uppercase tracking-tighter shrink-0">{label}</span>
-      {color ? <span className={`text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest ${badgeMap[color]}`}>{value}</span> : <span className="text-[0.75rem] font-black text-navy tracking-tight truncate">{value}</span>}
+    <div className="flex justify-between items-center py-2.5 border-b border-slate-100 last:border-b-0">
+      <span className="text-[13px] text-[#64748B] font-medium">{label}</span>
+      {color ? (
+        <span className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border ${badgeStyle}`}>{value}</span>
+      ) : (
+        <span className="text-[13px] font-bold text-[#0F172A]">{value}</span>
+      )}
     </div>
   );
 }

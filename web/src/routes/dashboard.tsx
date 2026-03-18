@@ -1,45 +1,31 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { Sidebar } from '../components/layout/Sidebar'
-import { AdminHeader } from '../components/layout/AdminHeader'
-import { useEffect, useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/dashboard')({
-  component: DashboardLayout,
+  component: DashboardRedirect,
 })
 
-function DashboardLayout() {
-  const [estateName, setEstateName] = useState('Lockhart Estate');
-
-  useEffect(() => {
-    document.body.classList.add('dashboard-theme');
-    document.body.classList.remove('royal-theme');
-    return () => {
-      document.body.classList.remove('dashboard-theme');
-    }
-  }, []);
+/** Legacy /dashboard route — redirects to scoped /estates/{id}/dashboard */
+function DashboardRedirect() {
+  const navigate = useNavigate();
 
   useEffect(() => {
     const session = localStorage.getItem('finalwishes_user');
     if (session) {
       const u = JSON.parse(session);
-      setEstateName(u.primaryEstateName);
+      const estateSlug = u.primaryEstateId === 'estate_lockhart' ? 'lockhart' : (u.primaryEstateId || 'lockhart');
+      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
+    } else {
+      navigate({ to: '/login', replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   return (
-    <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
-      <Sidebar />
-      <div 
-        className="transition-all duration-300 min-h-screen flex flex-col"
-        style={{ 
-          marginLeft: 'var(--sidebar-width)',
-        }}
-      >
-        <AdminHeader title="Operations Command" subtitle={`Estate: ${estateName} · Vault: Secured · Status: Active`} />
-        <main className="flex-1 p-8">
-          <Outlet />
-        </main>
+    <div className="flex items-center justify-center min-h-screen bg-[#F8FAFC]">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+        <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Redirecting...</span>
       </div>
     </div>
-  )
+  );
 }

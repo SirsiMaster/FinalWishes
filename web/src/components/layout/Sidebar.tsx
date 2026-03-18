@@ -1,5 +1,20 @@
 import { type ReactNode, useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "@tanstack/react-router";
+import { Link, useLocation, useParams, useNavigate } from "@tanstack/react-router";
+
+/* ─── Role-Based Permission Matrix ─── */
+const ROLE_PERMISSIONS: Record<string, string[]> = {
+  owner:       ['dashboard', 'estates', 'assets', 'memoirs', 'obituary', 'vault', 'beneficiaries', 'notifications', 'settings'],
+  admin:       ['dashboard', 'estates', 'assets', 'memoirs', 'obituary', 'vault', 'beneficiaries', 'notifications', 'settings'],
+  beneficiary: ['dashboard', 'assets', 'memoirs', 'obituary', 'notifications'],
+  executor:    ['dashboard', 'assets', 'beneficiaries', 'obituary', 'vault', 'notifications'],
+};
+
+const ROLE_LABELS: Record<string, string> = {
+  owner: 'Estate Owner',
+  admin: 'Administrator',
+  beneficiary: 'Beneficiary',
+  executor: 'Legal Executor',
+};
 
 interface NavItem {
   id: string;
@@ -7,16 +22,13 @@ interface NavItem {
   icon: ReactNode;
   section: string;
   badge?: string;
-  to: string;
 }
 
-const getNavItems = (): NavItem[] => [
-  // MAIN
+const NAV_ITEMS: NavItem[] = [
   {
     id: "dashboard",
     label: "Dashboard",
     section: "OVERVIEW",
-    to: `/dashboard`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <rect x="3" y="3" width="7" height="7" />
@@ -30,7 +42,6 @@ const getNavItems = (): NavItem[] => [
     id: "estates",
     label: "My Estates",
     section: "OVERVIEW",
-    to: `/dashboard/estates`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -42,7 +53,6 @@ const getNavItems = (): NavItem[] => [
     id: "assets",
     label: "Assets",
     section: "OVERVIEW",
-    to: `/dashboard/assets`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <line x1="12" y1="1" x2="12" y2="23" />
@@ -54,7 +64,6 @@ const getNavItems = (): NavItem[] => [
     id: "memoirs",
     label: "Memories",
     section: "OVERVIEW",
-    to: `/dashboard/memoirs`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M23 7l-7 5 7 5V7z" />
@@ -66,7 +75,6 @@ const getNavItems = (): NavItem[] => [
     id: "obituary",
     label: "Final Record",
     section: "MANAGE",
-    to: `/dashboard/obituary`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -78,7 +86,6 @@ const getNavItems = (): NavItem[] => [
     id: "vault",
     label: "Documents",
     section: "MANAGE",
-    to: `/dashboard/vault`,
     badge: "SOC 2",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -91,7 +98,6 @@ const getNavItems = (): NavItem[] => [
     id: "beneficiaries",
     label: "Beneficiaries",
     section: "MANAGE",
-    to: `/dashboard/beneficiaries`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -105,7 +111,6 @@ const getNavItems = (): NavItem[] => [
     id: "notifications",
     label: "Notifications",
     section: "MANAGE",
-    to: `/dashboard/notifications`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -117,7 +122,6 @@ const getNavItems = (): NavItem[] => [
     id: "settings",
     label: "Settings",
     section: "MANAGE",
-    to: `/dashboard/settings`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
         <circle cx="12" cy="12" r="3" />
@@ -129,6 +133,7 @@ const getNavItems = (): NavItem[] => [
 
 export function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const params = useParams({ strict: false }) as any;
   const estateId = params.estateId || "lockhart";
   
@@ -142,16 +147,21 @@ export function Sidebar() {
     } else {
       setUser({
         name: 'Tameeka Lockhart',
+        role: 'owner',
         profilePhotoUrl: '/assets/tameeka/mom dance.jpg',
         primaryEstateName: 'Lockhart Estate'
       });
     }
   }, []);
 
-  const navItems = getNavItems();
+  const userRole = user?.role || 'owner';
+  const allowedIds = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS.owner;
+
+  // Filter nav items by role
+  const visibleItems = NAV_ITEMS.filter((item) => allowedIds.includes(item.id));
 
   // Group by section
-  const sections = navItems.reduce((acc, item) => {
+  const sections = visibleItems.reduce((acc, item) => {
     if (!acc[item.section]) acc[item.section] = [];
     acc[item.section].push(item);
     return acc;
@@ -159,6 +169,11 @@ export function Sidebar() {
 
   const getInitials = (name: string) => {
     return name?.split(' ').map(n => n[0]).join('') || 'TL';
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('finalwishes_user');
+    navigate({ to: '/login' });
   };
 
   return (
@@ -173,11 +188,11 @@ export function Sidebar() {
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
         <div 
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal/10 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-[#133378]/10 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 
-            className="relative bg-white overflow-hidden border border-royal/20 shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
+            className="relative bg-white overflow-hidden border border-[#133378]/20 shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <img 
@@ -188,7 +203,7 @@ export function Sidebar() {
             <div className="absolute top-8 right-8">
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
-                className="w-10 h-10 bg-white border border-royal/20 flex items-center justify-center text-royal hover:bg-royal/5 transition-all shadow-lg"
+                className="w-10 h-10 bg-white border border-[#133378]/20 flex items-center justify-center text-[#133378] hover:bg-[#133378]/5 transition-all shadow-lg rounded-xl"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
@@ -208,27 +223,27 @@ export function Sidebar() {
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
-          className="w-6 h-6 text-royal drop-shadow-sm"
+          className="w-6 h-6 text-[#133378] drop-shadow-sm"
         >
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
           <path d="M2 17l10 5 10-5" />
           <path d="M2 12l10 5 10-5" />
         </svg>
-        <span className="text-royal text-[1rem] font-black uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
+        <span className="text-[#133378] text-[1rem] font-bold uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
           FinalWishes
         </span>
       </Link>
 
       {/* Estate Switcher */}
-      <div className="px-4 py-5 border-b border-royal/10 bg-royal/[0.01]">
-        <label className="text-[9px] font-bold text-royal/40 uppercase tracking-[0.2em] mb-2 block">Governance Domain</label>
+      <div className="px-4 py-5 border-b border-[#133378]/10 bg-[#133378]/[0.01]">
+        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Active Estate</label>
         <div className="relative">
-          <button className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-white border border-royal/10 hover:border-royal/30 transition-all text-left overflow-hidden group">
+          <button className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-white border border-slate-200 hover:border-[#133378]/30 rounded-xl transition-all text-left overflow-hidden group">
             <div className="flex-1 truncate">
-              <div className="text-royal text-[0.8rem] font-black truncate uppercase tracking-tight group-hover:text-sapphire transition-colors">{user?.primaryEstateName || "Lockhart Estate"}</div>
-              <div className="text-royal/30 text-[9px] font-bold uppercase tracking-widest mt-0.5">Focus: {estateId}</div>
+              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate group-hover:text-[#133378] transition-colors">{user?.primaryEstateName || "Lockhart Estate"}</div>
+              <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
             </div>
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-royal/20 group-hover:text-royal transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover:text-[#133378] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
           </button>
         </div>
       </div>
@@ -237,31 +252,34 @@ export function Sidebar() {
       <nav className="flex-1 py-4">
         {Object.entries(sections).map(([section, items]) => (
           <div key={section} className="mb-6">
-            <div className="text-[9px] font-black text-royal/20 uppercase tracking-[0.25em] px-5 py-2">
+            <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] px-5 py-2">
               {section}
             </div>
             {items.map((item) => {
-              const isActive = location.pathname === item.to;
+              const to = item.id === 'dashboard'
+                ? `/estates/${estateId}/dashboard`
+                : `/estates/${estateId}/${item.id}`;
+              const isActive = location.pathname.includes(`/${item.id}`);
               return (
                 <Link
                   key={item.id}
-                  to={item.to}
+                  to={to}
                   className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                     isActive
-                      ? "text-royal bg-royal/5 border-l-royal font-black"
-                      : "text-royal/50 border-l-transparent hover:text-royal hover:bg-royal/[0.02]"
+                      ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
+                      : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
                   }`}
                 >
                   <span
                     className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
-                      isActive ? "opacity-100 text-royal" : "opacity-30"
+                      isActive ? "opacity-100 text-[#133378]" : "opacity-40"
                     }`}
                   >
                     {item.icon}
                   </span>
-                  <span className="uppercase tracking-widest text-[0.65rem] font-black">{item.label}</span>
+                  <span className="text-[0.75rem] font-semibold">{item.label}</span>
                   {item.badge && (
-                    <span className="ml-auto bg-royal/5 border border-royal/10 text-royal px-1.5 py-0.5 text-[8px] font-black tracking-tighter">
+                    <span className="ml-auto bg-green-50 border border-green-200 text-green-600 px-1.5 py-0.5 text-[8px] font-bold tracking-tight rounded">
                       {item.badge}
                     </span>
                   )}
@@ -273,25 +291,32 @@ export function Sidebar() {
       </nav>
 
       {/* User Footer */}
-      <div
-        className="flex items-center gap-3 p-4 mt-auto border-t border-royal/10 bg-royal/[0.01]"
-      >
-        {user?.profilePhotoUrl ? (
-          <img 
-            src={user.profilePhotoUrl} 
-            onClick={() => setShowPhotoModal(true)}
-            className="w-9 h-9 object-cover border border-royal/20 shadow-sm cursor-pointer hover:border-royal transition-all" 
-            alt="Profile" 
-          />
-        ) : (
-          <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-xs shrink-0 shadow-sm">
-            {getInitials(user?.name || 'TL')}
+      <div className="p-4 mt-auto border-t border-slate-100 bg-slate-50/50">
+        <div className="flex items-center gap-3 mb-3">
+          {user?.profilePhotoUrl ? (
+            <img 
+              src={user.profilePhotoUrl} 
+              onClick={() => setShowPhotoModal(true)}
+              className="w-9 h-9 rounded-xl object-cover border border-slate-200 shadow-sm cursor-pointer hover:border-[#133378] transition-all" 
+              alt="Profile" 
+            />
+          ) : (
+            <div className="w-9 h-9 bg-[#133378] flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm rounded-xl">
+              {getInitials(user?.name || 'TL')}
+            </div>
+          )}
+          <div className="min-w-0">
+            <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "Tameeka Lockhart"}</div>
+            <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
           </div>
-        )}
-        <div className="min-w-0">
-          <div className="text-royal text-[0.8rem] font-black uppercase tracking-tight truncate">{user?.name || "Tameeka Lockhart"}</div>
-          <div className="text-royal/30 text-[9px] font-bold uppercase tracking-widest">Estate Shard</div>
         </div>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
+        >
+          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Sign Out
+        </button>
       </div>
     </aside>
   );

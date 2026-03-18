@@ -26,20 +26,18 @@ function VaultPage() {
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      setUploadStatus(`Signing ${file.name}...`);
+      setUploadStatus(`Preparing ${file.name}...`);
       const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
         estateId: estateId,
         fileName: file.name,
         contentType: file.type
       });
-
-      setUploadStatus(`Uploading to GCS...`);
+      setUploadStatus(`Uploading...`);
       const response = await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': file.type },
         body: file
       });
-
       if (!response.ok) throw new Error('Upload failed');
       setUploadStatus(`Verifying...`);
       return finalUrl;
@@ -57,7 +55,10 @@ function VaultPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal"></div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading documents...</span>
+        </div>
       </div>
     );
   }
@@ -66,26 +67,26 @@ function VaultPage() {
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
-      <div className="flex justify-between items-end border-b border-royal/10 pb-12">
-        <div className="space-y-4">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tighter">The Archive</h2>
-          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">All your documents are safely stored and encrypted here.</p>
+      <div className="flex justify-between items-end border-b border-slate-100 pb-10">
+        <div className="space-y-2">
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Document Vault</h2>
+          <p className="text-lg text-[#64748B] font-medium">All your important documents are safely stored and encrypted here.</p>
         </div>
         <div className="flex flex-col items-end gap-3">
           <button 
             onClick={() => fileInputRef.current?.click()}
             disabled={uploadMutation.isPending}
-            className="bg-royal hover:bg-sapphire text-white px-10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all shadow-[0_8px_32px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_40px_rgba(15,82,186,0.3)] hover:-translate-y-1 active:scale-95 disabled:opacity-50 border border-white/10 flex items-center gap-3"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 rounded-2xl font-bold text-[13px] transition-all shadow-lg hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 flex items-center gap-3"
           >
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="4">
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            {uploadMutation.isPending ? 'Saving File...' : 'Upload New Document'}
+            {uploadMutation.isPending ? 'Uploading...' : 'Upload Document'}
           </button>
           {uploadStatus && (
-            <div className="flex items-center gap-2 px-4 py-1.5 bg-royal/[0.03] border border-royal/10 rounded-xl shadow-sm">
-              <div className="w-2 h-2 rounded-full bg-royal animate-pulse" />
-              <span className="text-[9px] font-black text-royal uppercase tracking-widest">{uploadStatus}</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F8FAFC] border border-slate-200 rounded-xl">
+              <div className="w-2 h-2 rounded-full bg-[#133378] animate-pulse" />
+              <span className="text-[11px] font-semibold text-[#133378]">{uploadStatus}</span>
             </div>
           )}
           <input 
@@ -100,24 +101,28 @@ function VaultPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <VaultFolder name="Legal Documents" count={documents.filter(d => d.category === 'Legal').length} color="blue" icon={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />
-        <VaultFolder name="Financial Records" count={documents.filter(d => d.category === 'Financial').length} color="sapphire" icon={<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>} />
-        <VaultFolder name="Personal Memories" count={documents.filter(d => d.category === 'Memoir').length} color="royal" icon={<><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>} />
+      {/* Category Folders */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <VaultFolder name="Legal Documents" count={documents.filter((d: any) => d.category === 'Legal').length} icon={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />
+        <VaultFolder name="Financial Records" count={documents.filter((d: any) => d.category === 'Financial').length} icon={<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>} />
+        <VaultFolder name="Personal Memories" count={documents.filter((d: any) => d.category === 'Memoir').length} icon={<><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>} />
       </div>
 
-      <div className="bg-white rounded-[4rem] border border-royal/10 p-12 shadow-[0_2px_40px_rgba(19,51,120,0.05)] relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-royal/[0.01] rounded-bl-[10rem] pointer-events-none group-hover:bg-royal/[0.02] transition-colors" />
-        <div className="flex items-center gap-3 mb-12 relative z-10 px-4">
-          <div className="w-2.5 h-2.5 rounded-full bg-royal shadow-[0_0_12px_rgba(19,51,120,0.3)]" />
-          <h3 className="text-[10px] font-black text-royal/20 uppercase tracking-[0.3em]">All Files</h3>
+      {/* All Files */}
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-sm">
+        <div className="flex items-center gap-3 mb-8 px-2">
+          <div className="w-2 h-2 rounded-full bg-green-400" />
+          <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">All Files · Encrypted</h3>
         </div>
-        <div className="space-y-6 relative z-10">
-          {documents.map((doc, i) => (
+        <div className="space-y-4">
+          {documents.map((doc: any, i: number) => (
             <DocItem key={i} name={doc.name} date={doc.date} size={doc.size} />
           ))}
           {documents.length === 0 && (
-            <div className="text-center py-40 text-royal/20 italic font-black uppercase tracking-[0.3em] bg-royal/[0.01] rounded-[3rem] border-2 border-dashed border-royal/5">No files have been added to this estate yet.</div>
+            <div className="text-center py-24 bg-[#F8FAFC] rounded-2xl border border-slate-100">
+              <p className="text-[#64748B] font-medium">No files have been added to this estate yet.</p>
+              <p className="text-sm text-slate-400 mt-2">Click "Upload Document" to get started.</p>
+            </div>
           )}
         </div>
       </div>
@@ -125,25 +130,20 @@ function VaultPage() {
   )
 }
 
-function VaultFolder({ name, count, color, icon }: any) {
-  const bgMap = { blue: "bg-royal/[0.03]", sapphire: "bg-sapphire/[0.03]", royal: "bg-royal/[0.05]" };
-  const textMap = { blue: "text-royal", sapphire: "text-sapphire", royal: "text-royal" };
-  const borderMap = { blue: "border-royal/10", sapphire: "border-sapphire/10", royal: "border-royal/10" };
-  
+function VaultFolder({ name, count, icon }: any) {
   return (
-    <div className={`bg-white p-10 rounded-[3.5rem] border border-royal/10 shadow-[0_2px_40px_rgba(19,51,120,0.05)] hover:border-royal/30 hover:shadow-[0_20px_60px_rgba(19,51,120,0.08)] transition-all cursor-pointer group active:scale-[0.98]`}>
-      <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mb-10 border transition-all duration-500 shadow-sm ${bgMap[color as keyof typeof bgMap]} ${textMap[color as keyof typeof textMap]} ${borderMap[color as keyof typeof borderMap]} group-hover:bg-royal group-hover:text-white group-hover:scale-110`}>
-        <svg viewBox="0 0 24 24" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:border-slate-200 hover:shadow-md transition-all cursor-pointer group active:scale-[0.98]">
+      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-[#F8FAFC] border border-slate-100 text-[#133378] group-hover:bg-[#133378] group-hover:text-white transition-all duration-500">
+        <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
           {icon}
         </svg>
       </div>
-      <h4 className="text-royal font-black text-2xl uppercase tracking-tighter mb-4 group-hover:text-sapphire transition-colors">{name}</h4>
+      <h4 className="text-[#0F172A] font-bold text-lg mb-2 group-hover:text-[#133378] transition-colors">{name}</h4>
       <div className="flex items-center gap-3">
-        <span className="text-[11px] font-black text-royal/30 uppercase tracking-widest">{count} file{count !== 1 ? 's' : ''}</span>
-        <div className="w-1.5 h-1.5 rounded-full bg-royal/10" />
-        <div className="flex items-center gap-1.5 bg-royal/[0.03] px-3 py-1 rounded-lg border border-royal/10 shadow-sm group-hover:bg-white transition-all">
-           <div className="w-1.5 h-1.5 rounded-full bg-sapphire animate-pulse shadow-[0_0_8px_rgba(15,82,186,0.3)]" />
-           <span className="text-[9px] font-black text-sapphire uppercase tracking-widest">Protected</span>
+        <span className="text-[13px] font-medium text-[#64748B]">{count} file{count !== 1 ? 's' : ''}</span>
+        <div className="flex items-center gap-1.5 bg-green-50 px-2 py-0.5 rounded border border-green-200">
+           <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+           <span className="text-[10px] font-bold text-green-600">Protected</span>
         </div>
       </div>
     </div>
@@ -152,26 +152,23 @@ function VaultFolder({ name, count, color, icon }: any) {
 
 function DocItem({ name, date, size }: any) {
   return (
-    <div className="flex items-center justify-between p-8 bg-white border border-royal/10 rounded-[2.5rem] hover:bg-royal/[0.03] transition-all group cursor-pointer hover:border-royal/30 hover:shadow-[0_12px_40px_rgba(19,51,120,0.05)] relative overflow-hidden active:scale-[0.995]">
-      <div className="flex items-center gap-8 relative z-10">
-        <div className="w-16 h-16 rounded-[1.5rem] bg-royal/[0.03] flex items-center justify-center text-royal/20 group-hover:bg-royal group-hover:text-white transition-all duration-500 border border-royal/10 shadow-sm">
-          <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <div className="flex items-center justify-between p-6 bg-white border border-slate-100 rounded-2xl hover:bg-[#F8FAFC] transition-all group cursor-pointer hover:border-slate-200">
+      <div className="flex items-center gap-5">
+        <div className="w-12 h-12 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-slate-300 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 border border-slate-100">
+          <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
           </svg>
         </div>
         <div>
-          <div className="text-royal font-black text-xl uppercase tracking-tight leading-tight mb-2 group-hover:text-sapphire transition-colors">{name}</div>
-          <div className="flex items-center gap-4 text-[11px] font-black text-royal/30 uppercase tracking-widest">
+          <div className="text-[#0F172A] font-bold text-base mb-1 group-hover:text-[#133378] transition-colors">{name}</div>
+          <div className="flex items-center gap-3 text-[13px] font-medium text-[#64748B]">
             <span>{date}</span>
-            <div className="w-1.5 h-1.5 rounded-full bg-royal/10" />
+            <div className="w-1 h-1 rounded-full bg-slate-300" />
             <span>{size}</span>
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-6 relative z-10">
-        <div className="px-4 py-1.5 bg-white border border-royal/10 rounded-xl text-royal font-black text-[9px] uppercase tracking-widest shadow-sm translate-x-8 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 hidden md:block">Securely Saved</div>
-        <button className="bg-royal hover:bg-sapphire text-white px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest opacity-0 translate-x-12 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-700 shadow-xl hover:shadow-[0_12px_24px_rgba(15,82,186,0.3)] active:scale-95 border border-white/10">Download File</button>
-      </div>
+      <button className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-5 py-2.5 rounded-xl text-[12px] font-bold opacity-0 translate-x-4 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 shadow-md active:scale-95">Download</button>
     </div>
   );
 }

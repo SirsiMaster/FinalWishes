@@ -111,17 +111,17 @@ function Home() {
             <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
           </div>
 
-          <p className="font-[family-name:var(--font-cinzel)] text-lg md:text-xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold">
+          <p className="font-[family-name:var(--font-cinzel)] text-xl md:text-2xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold">
             The Operating System for Your Life&apos;s Work
           </p>
 
-          <h1 className="font-[family-name:var(--font-cinzel)] text-4xl md:text-5xl lg:text-6xl leading-[1.15] mb-8 hero-text">
+          <h1 className="font-[family-name:var(--font-cinzel)] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 hero-text">
             Preserve Your Story.
             <br />
             <span className="text-gold hero-text-gold">Protect Your People.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
             The first platform that bridges <strong className="text-white">Life</strong> and{" "}
             <strong className="text-white">Legacy</strong>. Secure your memoirs, guide your heirs,
             and automate the chaos of estate settlement.
@@ -149,33 +149,39 @@ function Home() {
 
       {/* ═══════════════════ PROBLEM SECTION ═══════════════════ */}
       <section id="problem" className="relative z-10 grid md:grid-cols-2">
-        <div className="relative h-[260px] md:h-auto overflow-hidden">
+        <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=3840&auto=format&fit=crop"
             alt="Old photographs and letters"
             className="w-full h-full object-cover"
           />
           {/* Stat overlay */}
-          <div className="absolute bottom-6 left-6 glass-card rounded-xl p-4">
-            <div className="text-2xl font-bold text-danger font-[family-name:var(--font-cinzel)]">$1.2 Trillion</div>
-            <div className="text-[0.6rem] text-white/60 uppercase tracking-[0.15em] mt-1">In Unclaimed Assets</div>
+          <div className="absolute bottom-6 left-6 bg-black/70 backdrop-blur-md rounded-xl p-5 border border-white/10">
+            <div className="text-3xl font-bold text-danger font-[family-name:var(--font-cinzel)]">$72 Billion</div>
+            <div className="text-sm text-white/60 uppercase tracking-[0.1em] mt-1">In Unclaimed Assets Nationwide</div>
           </div>
         </div>
 
-        <div className="flex flex-col justify-center px-6 md:px-10 py-8 glass-panel">
+        <div className="flex flex-col justify-center px-8 md:px-12 py-10 glass-panel">
           <div className="max-w-lg mx-auto">
-            <h2 className="text-2xl md:text-4xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
+            <h2 className="text-3xl md:text-5xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
               Two Tragedies:<br />
               <span className="text-gold">Chaos &amp; Silence</span>
             </h2>
-            <p className="text-sm text-white/80 leading-relaxed mb-6">
+            <p className="text-base md:text-lg text-white/80 leading-relaxed mb-6">
               Death brings two tragedies. First, the <strong className="text-white">Silence</strong>—the extinguishing of a unique voice,
               wisdom, and history. Second, the <strong className="text-white">Chaos</strong>—the wreckage of frozen assets, legal battles,
               and family confusion that can last for years. FinalWishes is the bridge that prevents both.
             </p>
-            <div className="glass-card rounded-xl p-4">
-              <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">$1.2M</div>
-              <div className="text-[0.6rem] text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Lost Assets/Year</div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-black/30 backdrop-blur-md rounded-xl p-5 border border-white/10">
+                <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">$2B+</div>
+                <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Annual Probate Costs</div>
+              </div>
+              <div className="bg-black/30 backdrop-blur-md rounded-xl p-5 border border-white/10">
+                <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">55%</div>
+                <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Adults Without a Will</div>
+              </div>
             </div>
           </div>
         </div>
@@ -186,7 +192,7 @@ function Home() {
       {/* ═══════════════════ VALUE PROPOSITION ═══════════════════ */}
       <section id="value" className="py-10 relative z-10 overflow-hidden">
         <div className="max-w-4xl mx-auto px-5 relative z-10 text-center">
-          <p className="text-base md:text-lg text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
             We automate the chaotic administration of loss—so your family can grieve in peace, not paperwork.
           </p>
 
@@ -241,10 +247,10 @@ function Home() {
               </div>
               <div className="flex flex-col justify-center p-8 glass-panel border-l-2 border-gold/20">
                 <h3 className="text-3xl text-gold mb-3 font-[family-name:var(--font-cinzel)]">LIVING LEGACY</h3>
-                <p className="text-sm text-white/80 leading-relaxed mb-4">
+                <p className="text-base text-white/80 leading-relaxed mb-4">
                   Wealth is transient. Wisdom is eternal. Capture your voice, your values, and your vision while you are vibrant. Create a vault of truth that outlasts you.
                 </p>
-                <ul className="space-y-2 text-sm text-white/60">
+                <ul className="space-y-2 text-base text-white/60">
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Video &amp; Audio Memoirs</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Asset Distribution Wishlist</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Secure Password Vault</li>
@@ -256,10 +262,10 @@ function Home() {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="flex flex-col justify-center p-8 glass-panel border-r-2 border-gold/20 order-2 md:order-1">
                 <h3 className="text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">VERIFY &amp; LOCK</h3>
-                <p className="text-sm text-white/80 leading-relaxed mb-4">
+                <p className="text-base text-white/80 leading-relaxed mb-4">
                   We stand watch. When the time comes, our system verifies the transition via government API and biometric checks. Your estate enters &quot;Fortress Mode&quot;, instantly securing digital assets against bad actors.
                 </p>
-                <ul className="space-y-2 text-sm text-white/60">
+                <ul className="space-y-2 text-base text-white/60">
                   <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Biometric Auth</li>
                   <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Death Cert Verification</li>
                 </ul>
@@ -286,10 +292,10 @@ function Home() {
               </div>
               <div className="flex flex-col justify-center p-8 glass-panel border-l-2 border-gold/20">
                 <h3 className="text-3xl text-gold mb-3 font-[family-name:var(--font-cinzel)]">AUTOMATED NOTIFICATION</h3>
-                <p className="text-sm text-white/80 leading-relaxed mb-4">
+                <p className="text-base text-white/80 leading-relaxed mb-4">
                   The silence is broken on your terms. Your pre-recorded messages and legal directives are dispatched instantly to heirs, attorneys, and loved ones. No delays. No secrets.
                 </p>
-                <ul className="space-y-2 text-sm text-white/60">
+                <ul className="space-y-2 text-base text-white/60">
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Legal Notifications</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Personal Letters</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Funeral Instructions</li>
@@ -301,10 +307,10 @@ function Home() {
             <div className="grid md:grid-cols-2 gap-0">
               <div className="flex flex-col justify-center p-8 glass-panel border-r-2 border-gold/20 order-2 md:order-1">
                 <h3 className="text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">DISTRIBUTE</h3>
-                <p className="text-sm text-white/80 leading-relaxed mb-4">
+                <p className="text-base text-white/80 leading-relaxed mb-4">
                   The final transfer. Your assets—crypto, keys, and keepsakes—are distributed seamlessly according to your protocols. The friction of probate is replaced by the certainty of code.
                 </p>
-                <ul className="space-y-2 text-sm text-white/60">
+                <ul className="space-y-2 text-base text-white/60">
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Crypto &amp; Digital Assets</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Passwords &amp; Keys</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Sentimental Items</li>
@@ -313,16 +319,12 @@ function Home() {
                   Start Your Protocol
                 </Link>
               </div>
-              <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
+              <div className="relative min-h-[280px] md:h-auto overflow-hidden order-1 md:order-2">
                 <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Family embracing together" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-gold/30 font-[family-name:var(--font-cinzel)]">04</span>
                   <div className="status-dot" />
-                </div>
-                <div className="absolute bottom-5 right-5 glass-card rounded-lg px-3 py-2 flex items-center gap-2">
-                  <div className="status-dot" />
-                  <span className="text-white font-bold uppercase tracking-widest text-xs">Protocol Complete</span>
                 </div>
               </div>
             </div>
@@ -336,7 +338,7 @@ function Home() {
       <section id="security" className="relative min-h-[45vh] flex items-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3840&auto=format&fit=crop" alt="Secure data center vault" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-black/80" />
         </div>
 
         {/* Animated Shield (desktop) */}
@@ -359,11 +361,10 @@ function Home() {
 
         <div className="relative z-10 max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-10 items-center w-full py-16">
           <div>
-            <h2 className="text-2xl md:text-4xl text-white mb-5 leading-tight font-[family-name:var(--font-cinzel)]">
-              Built Like a<br />
-              <span className="text-gold">Swiss Vault</span>
+            <h2 className="text-3xl md:text-5xl text-white mb-5 leading-tight font-[family-name:var(--font-cinzel)]">
+              Built Like a <span className="text-gold">Swiss Vault</span>
             </h2>
-            <p className="text-sm text-white/80 leading-relaxed mb-6">
+            <p className="text-base md:text-lg text-white/90 leading-relaxed mb-6">
               Your family&apos;s data is more valuable than gold. We treat it that way.
               FinalWishes uses military-grade encryption to ensure your asset map is visible to{" "}
               <strong className="text-gold">no one</strong>—not even us—until verification.
@@ -377,8 +378,8 @@ function Home() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-1">Zero-Knowledge Architecture</h4>
-                  <p className="text-xs text-white/60">Your data is encrypted on your device before it ever touches our servers.</p>
+                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Zero-Knowledge Architecture</h4>
+                  <p className="text-sm text-white/70">Your data is encrypted on your device before it ever touches our servers.</p>
                 </div>
               </div>
 
@@ -389,8 +390,8 @@ function Home() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-1">Multi-Sig Release</h4>
-                  <p className="text-xs text-white/60">Requires cryptographic proof of death and identity verification from two separate executors.</p>
+                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Multi-Sig Release</h4>
+                  <p className="text-sm text-white/70">Requires cryptographic proof of death and identity verification from two separate executors.</p>
                 </div>
               </div>
 
@@ -401,8 +402,8 @@ function Home() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-xs uppercase tracking-widest mb-1">Audit Trail</h4>
-                  <p className="text-xs text-white/60">Every access attempt is logged, timestamped, and immutably recorded on-chain.</p>
+                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Audit Trail</h4>
+                  <p className="text-sm text-white/70">Every access attempt is logged, timestamped, and immutably recorded on-chain.</p>
                 </div>
               </div>
             </div>
@@ -420,7 +421,7 @@ function Home() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
               From Grief to <span className="text-gold">Gratitude</span>
             </h2>
-            <p className="text-sm text-white/60 max-w-xl mx-auto">Real families who found peace through our protocol.</p>
+            <p className="text-base text-white/60 max-w-xl mx-auto">Real families who found peace through our platform.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
@@ -462,7 +463,7 @@ function Home() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
               The Vision: <span className="text-gold">Expanding Your Legacy</span>
             </h2>
-            <p className="text-sm text-white/60 max-w-xl mx-auto">We are building the operating system for generations. Here is what&apos;s next.</p>
+            <p className="text-base text-white/60 max-w-xl mx-auto">We are building the operating system for generations. Here is what&apos;s next.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-5">
@@ -493,8 +494,8 @@ function Home() {
                 <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">Self-Guided</div>
               </div>
               <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest mb-4">Forever</div>
-              <p className="text-white/60 text-xs mb-5 flex-grow">For families who need a roadmap but can handle the execution.</p>
+              <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Forever</div>
+              <p className="text-white/60 text-sm mb-5 flex-grow">For families who need a roadmap but can handle the execution.</p>
               <Link to="/login" className="w-full py-3 border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg">
                 Start Free
               </Link>
@@ -511,9 +512,9 @@ function Home() {
                 <div className="px-2 py-0.5 bg-gold text-black text-[0.55rem] font-bold uppercase rounded">Popular</div>
               </div>
               <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$2,997</div>
-              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
-              <p className="text-white/60 text-xs mb-4 flex-grow">We do the heavy lifting. Automated filing and fraud protection included.</p>
-              <ul className="space-y-2 text-xs text-white/70 mb-5">
+              <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
+              <p className="text-white/60 text-sm mb-4 flex-grow">We do the heavy lifting. Automated filing and fraud protection included.</p>
+              <ul className="space-y-2 text-sm text-white/70 mb-5">
                 <li className="flex gap-2 items-center"><span className="text-gold">✓</span> 10 Certified Death Certificates</li>
                 <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Auto-Filing Service</li>
                 <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Priority Support</li>
@@ -531,8 +532,8 @@ function Home() {
                 <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">White Glove</div>
               </div>
               <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$9,997</div>
-              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
-              <p className="text-white/60 text-xs mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
+              <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
+              <p className="text-white/60 text-sm mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
               <Link to="/login" className="w-full py-3 border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg">
                 Contact Sales
               </Link>
@@ -628,18 +629,17 @@ function TestimonialCard({ image, name, tag, value, quote }: { image: string; na
       <div className="relative h-56 overflow-hidden">
         <img src={image} alt={name} className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute top-4 right-4 glass-card rounded-lg px-3 py-1.5 flex items-center gap-2">
-          <div className="status-dot" />
+        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md rounded-lg px-3 py-1.5 flex items-center gap-2 border border-white/20">
+          <div className="w-2 h-2 rounded-full bg-green-400" />
           <span className="text-xs text-white uppercase tracking-widest font-semibold">Verified</span>
         </div>
       </div>
-      <div className="p-5 -mt-6 relative">
-        <div className="text-gold text-4xl font-[family-name:var(--font-cinzel)] leading-none mb-2">&ldquo;</div>
-        <p className="text-white/80 text-sm leading-relaxed mb-4">{quote}</p>
+      <div className="p-5 relative">
+        <p className="text-white/80 text-base leading-relaxed mb-4">&ldquo;{quote}&rdquo;</p>
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-white font-bold text-sm font-[family-name:var(--font-cinzel)]">{name}</div>
-            <div className="text-gold text-[0.6rem] uppercase tracking-widest font-semibold">{tag}</div>
+            <div className="text-white font-bold text-base font-[family-name:var(--font-cinzel)]">{name}</div>
+            <div className="text-gold text-xs uppercase tracking-widest font-semibold">{tag}</div>
           </div>
           <div className="text-2xl font-bold text-royal-bright/30 font-[family-name:var(--font-cinzel)]">{value}</div>
         </div>
@@ -657,8 +657,8 @@ function FeatureCard({ icon, color, title, desc }: { icon: string; color: "gold"
         {icon}
       </div>
       <div>
-        <h4 className={`text-white font-bold text-sm uppercase tracking-widest mb-2 ${titleHover} transition-colors`}>{title}</h4>
-        <p className="text-xs text-white/60 leading-relaxed">{desc}</p>
+        <h4 className={`text-white font-bold text-base uppercase tracking-widest mb-2 ${titleHover} transition-colors`}>{title}</h4>
+        <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
       </div>
     </div>
   );

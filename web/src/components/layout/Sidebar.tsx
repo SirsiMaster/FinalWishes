@@ -15,7 +15,7 @@ const getNavItems = (estateId: string): NavItem[] => [
   {
     id: "dashboard",
     label: "Dashboard",
-    section: "MAIN",
+    section: "OVERVIEW",
     to: `/estates/${estateId}/dashboard`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -28,8 +28,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   },
   {
     id: "estates",
-    label: "Governance",
-    section: "MAIN",
+    label: "My Estates",
+    section: "OVERVIEW",
     to: `/estates/${estateId}/estates`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -40,8 +40,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   },
   {
     id: "assets",
-    label: "Asset Inventory",
-    section: "MAIN",
+    label: "Assets",
+    section: "OVERVIEW",
     to: `/estates/${estateId}/assets`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -52,8 +52,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   },
   {
     id: "memoirs",
-    label: "Legacy Tapes",
-    section: "MAIN",
+    label: "Memories",
+    section: "OVERVIEW",
     to: `/estates/${estateId}/memoirs`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -65,8 +65,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   // MANAGEMENT
   {
     id: "vault",
-    label: "Evidence Vault",
-    section: "MANAGEMENT",
+    label: "Documents",
+    section: "MANAGE",
     to: `/estates/${estateId}/vault`,
     badge: "SOC 2",
     icon: (
@@ -78,8 +78,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   },
   {
     id: "obituary",
-    label: "The Final Record",
-    section: "MANAGEMENT",
+    label: "Final Record",
+    section: "MANAGE",
     to: `/estates/${estateId}/obituary`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -90,8 +90,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   },
   {
     id: "beneficiaries",
-    label: "Heirs Registry",
-    section: "MANAGEMENT",
+    label: "Beneficiaries",
+    section: "MANAGE",
     to: `/estates/${estateId}/beneficiaries`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -104,8 +104,8 @@ const getNavItems = (estateId: string): NavItem[] => [
   },
   {
     id: "notifications",
-    label: "Protocol Ledger",
-    section: "MANAGEMENT",
+    label: "Notifications",
+    section: "MANAGE",
     to: `/estates/${estateId}/notifications`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -117,7 +117,7 @@ const getNavItems = (estateId: string): NavItem[] => [
   {
     id: "settings",
     label: "Settings",
-    section: "MANAGEMENT",
+    section: "MANAGE",
     to: `/estates/${estateId}/settings`,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-full h-full">
@@ -164,21 +164,21 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen overflow-y-auto z-[100] flex flex-col shadow-2xl"
+      className="fixed left-0 top-0 h-screen overflow-y-auto z-[100] flex flex-col"
       style={{
         width: "var(--sidebar-width)",
         background: "var(--sidebar-bg)",
-        borderRight: "1px solid var(--border-light)",
+        borderRight: "1px solid #E2E8F0",
       }}
     >
       {/* Photo Modal */}
       {showPhotoModal && user?.profilePhotoUrl && (
         <div 
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-navy/20 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
+          className="fixed inset-0 z-[500] flex items-center justify-center bg-black/20 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
           onClick={() => setShowPhotoModal(false)}
         >
           <div 
-            className="relative bg-black rounded-[3rem] overflow-hidden border-4 border-gold shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
+            className="relative bg-white overflow-hidden border border-[#E2E8F0] shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <img 
@@ -189,55 +189,55 @@ export function Sidebar() {
             <div className="absolute top-8 right-8">
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
-                className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-2xl"
+                className="w-10 h-10 bg-white border border-[#E2E8F0] flex items-center justify-center text-[#0F172A] hover:bg-[#F1F5F9] transition-all shadow-lg"
               >
-                <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
             </div>
-            <div className="p-10 bg-white border-t border-border-light">
+            <div className="p-8 bg-white border-t border-[#E2E8F0]">
               <div className="flex justify-between items-end">
                 <div>
-                  <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-navy uppercase tracking-wider mb-2">Heritage Shard Portrait</h3>
-                  <p className="text-gold font-black text-xs uppercase tracking-[0.2em]">{user?.name || "Tameeka Lockhart"} · Identity Verification Shard</p>
+                  <h3 className="text-2xl font-bold text-[#0F172A] uppercase tracking-wider mb-2">{user?.name || "Tameeka Lockhart"}</h3>
+                  <p className="text-royal font-bold text-xs uppercase tracking-[0.2em]">Identity Verification Shard</p>
                 </div>
-                <div className="px-5 py-2 bg-gold text-black rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg">4K Protocol</div>
               </div>
             </div>
           </div>
         </div>
       )}
+
       {/* Logo */}
       <Link
         to="/"
-        className="flex items-center gap-3 px-4 py-6 no-underline"
-        style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}
+        className="flex items-center gap-3 px-5 py-5 no-underline"
+        style={{ borderBottom: "1px solid #E2E8F0" }}
       >
         <svg
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
-          className="w-6 h-6 text-gold"
+          className="w-6 h-6 text-royal"
         >
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
           <path d="M2 17l10 5 10-5" />
           <path d="M2 12l10 5 10-5" />
         </svg>
-        <span className="text-white font-[family-name:var(--font-cinzel)] text-[1.15rem] font-black uppercase tracking-[0.1em]">
+        <span className="text-[#0F172A] text-[1rem] font-bold uppercase tracking-[0.15em]">
           FinalWishes
         </span>
       </Link>
 
       {/* Estate Switcher */}
-      <div className="px-4 py-8 border-b border-white/5 bg-black/10">
-        <label className="text-[0.6rem] font-black text-gold opacity-60 uppercase tracking-[0.2em] mb-3 block">Governance Domain</label>
-        <div className="relative group">
-          <button className="w-full flex items-center justify-between gap-2 px-3.5 py-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all text-left overflow-hidden shadow-inner">
+      <div className="px-4 py-5 border-b border-[#E2E8F0]">
+        <label className="text-[9px] font-bold text-[#94A3B8] uppercase tracking-[0.2em] mb-2 block">Governance Domain</label>
+        <div className="relative">
+          <button className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#CBD5E1] transition-all text-left overflow-hidden">
             <div className="flex-1 truncate">
-              <div className="text-white text-[0.8rem] font-black truncate uppercase tracking-tight">{user?.primaryEstateName || "Lockhart Estate"}</div>
-              <div className="text-gold/40 text-[9px] font-black uppercase tracking-widest mt-0.5">Focus: {estateId}</div>
+              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate uppercase tracking-tight">{user?.primaryEstateName || "Lockhart Estate"}</div>
+              <div className="text-[#94A3B8] text-[9px] font-bold uppercase tracking-widest mt-0.5">Focus: {estateId}</div>
             </div>
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-gold shrink-0 opacity-40"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2"/></svg>
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#94A3B8] shrink-0"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2"/></svg>
           </button>
         </div>
       </div>
@@ -246,7 +246,7 @@ export function Sidebar() {
       <nav className="flex-1 py-4">
         {Object.entries(sections).map(([section, items]) => (
           <div key={section} className="mb-6">
-            <div className="text-white/30 text-[0.6rem] font-black italic uppercase tracking-[0.25em] px-5 py-2">
+            <div className="text-[9px] font-bold text-[#94A3B8] uppercase tracking-[0.2em] px-5 py-2">
               {section}
             </div>
             {items.map((item) => {
@@ -255,22 +255,22 @@ export function Sidebar() {
                 <Link
                   key={item.id}
                   to={item.to}
-                  className={`flex items-center gap-3 px-5 py-3 text-[0.85rem] cursor-pointer transition-all duration-300 border-l-[4px] no-underline ${
+                  className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                     isActive
-                      ? "text-gold bg-white/5 border-l-gold font-bold"
-                      : "text-white/40 border-l-transparent hover:text-white hover:bg-white/[0.05]"
+                      ? "text-royal bg-royal/5 border-l-royal font-bold"
+                      : "text-[#64748B] border-l-transparent hover:text-[#0F172A] hover:bg-[#F8FAFC]"
                   }`}
                 >
                   <span
                     className={`w-[16px] h-[16px] shrink-0 ${
-                      isActive ? "opacity-100 text-gold" : "opacity-40"
+                      isActive ? "opacity-100 text-royal" : "opacity-40"
                     }`}
                   >
                     {item.icon}
                   </span>
-                  <span className="uppercase tracking-widest text-[0.7rem] font-bold">{item.label}</span>
+                  <span className="uppercase tracking-widest text-[0.65rem] font-bold">{item.label}</span>
                   {item.badge && (
-                    <span className="ml-auto bg-royal-bright/20 border border-royal-bright/40 text-royal-bright px-1.5 py-0.5 rounded text-[8px] font-black tracking-tighter shadow-sm">
+                    <span className="ml-auto bg-royal/10 border border-royal/20 text-royal px-1.5 py-0.5 text-[8px] font-bold tracking-tighter">
                       {item.badge}
                     </span>
                   )}
@@ -283,23 +283,23 @@ export function Sidebar() {
 
       {/* User Footer */}
       <div
-        className="flex items-center gap-3 p-5 mt-auto bg-black/10 border-t border-white/5"
+        className="flex items-center gap-3 p-4 mt-auto border-t border-[#E2E8F0]"
       >
         {user?.profilePhotoUrl ? (
           <img 
             src={user.profilePhotoUrl} 
             onClick={() => setShowPhotoModal(true)}
-            className="w-10 h-10 rounded-xl object-cover border-2 border-gold/40 shadow-lg cursor-pointer hover:scale-110 active:scale-95 transition-all" 
+            className="w-9 h-9 object-cover border border-[#E2E8F0] shadow-sm cursor-pointer hover:opacity-80 transition-all" 
             alt="Profile" 
           />
         ) : (
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-gold-bright flex items-center justify-center text-black font-black text-xs shrink-0 shadow-lg">
+          <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-bold text-xs shrink-0">
             {getInitials(user?.name || 'TL')}
           </div>
         )}
         <div className="min-w-0">
-          <div className="text-white text-[0.85rem] font-black uppercase tracking-tight truncate">{user?.name || "Tameeka Lockhart"}</div>
-          <div className="text-gold/50 text-[0.6rem] font-black uppercase tracking-widest">Owner of FinalWishes</div>
+          <div className="text-[#0F172A] text-[0.8rem] font-bold uppercase tracking-tight truncate">{user?.name || "Tameeka Lockhart"}</div>
+          <div className="text-[#94A3B8] text-[9px] font-bold uppercase tracking-widest">Owner</div>
         </div>
       </div>
     </aside>

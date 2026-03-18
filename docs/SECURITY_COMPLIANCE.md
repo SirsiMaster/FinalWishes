@@ -27,22 +27,22 @@
 ## 2. Encryption Standards
 
 ### 2.1 Data at Rest
-- **Database:** AES-256 via AWS RDS encryption
-- **Documents:** AES-256 via AWS S3 SSE-KMS with customer-managed keys
-- **Redis:** Encryption enabled (ElastiCache)
-- **Backups:** Encrypted using same keys as source
+- **Database:** AES-256 via **Google Cloud SQL** (PostgreSQL) encryption.
+- **Documents:** AES-256 via **Google Cloud Storage** with **Cloud KMS** customer-managed keys (CMEK).
+- **NoSQL:** Firestore at-rest encryption (Google-managed).
+- **Backups:** Encrypted using same keys as source.
 
 ### 2.2 Data in Transit
-- **Protocol:** TLS 1.3 (minimum TLS 1.2)
-- **Certificates:** AWS Certificate Manager (ACM)
-- **Internal traffic:** VPC encryption enabled
-- **API calls:** HTTPS only, HSTS enabled
+- **Protocol:** TLS 1.3 (minimum TLS 1.2).
+- **Certificates:** **Google Managed Certificates**.
+- **Internal traffic:** VPC Service Controls and internal encryption.
+- **API calls:** HTTPS only, HSTS enabled.
 
 ### 2.3 Key Management
-- **Provider:** AWS Key Management Service (KMS)
-- **Key rotation:** Automatic annual rotation
-- **Per-estate keys:** Document encryption uses unique data keys per estate
-- **Access:** Restricted to application service accounts
+- **Provider:** **Google Cloud KMS**.
+- **Key rotation:** Automatic annual rotation.
+- **Per-estate keys:** Document encryption uses unique data keys per estate (ADR-031).
+- **Access:** Restricted to application service accounts authenticated via IAM.
 
 ---
 
@@ -51,9 +51,9 @@
 ### 3.1 Authentication Methods
 | Method | Use Case | Implementation |
 |--------|----------|----------------|
-| Email/Password | Primary login | Auth0 with bcrypt hashing |
-| OAuth 2.0 | Google, Apple SSO | Auth0 social connections |
-| MFA (TOTP) | Enhanced security | Google Authenticator compatible |
+| Email/Password | Primary login | **Firebase Auth** with bcrypt hashing |
+| OAuth 2.0 | Google, Apple SSO | **Firebase Auth** social connections |
+| MFA (TOTP) | **Mandatory Hardening** | **Bipartite MFA** (Firebase + SMS/Auth) |
 | Biometric | Mobile apps | Face ID, Touch ID, Fingerprint |
 
 ### 3.2 Session Management
@@ -88,18 +88,18 @@ user → role → estate → permissions
 - **Security Groups:** Whitelist-based firewall rules
 - **NAT Gateway:** Outbound-only internet access for private subnets
 
-### 4.2 WAF (Web Application Firewall)
-- **Provider:** AWS WAF
+### 4.2 Cloud Armor (WAF)
+- **Provider:** **Google Cloud Armor**
 - **Rules enabled:**
-  - SQL injection protection
-  - Cross-site scripting (XSS) protection
-  - Rate limiting (DDoS mitigation)
-  - IP reputation filtering
-  - Bot detection
+  - **SQL injection protection** (WAF module)
+  - **Cross-site scripting (XSS)** protection
+  - **Rate limiting** (Global DDoS protection)
+  - **IP reputation filtering**
+  - **Bot detection** (reCAPTCHA Enterprise)
 
 ### 4.3 DDoS Protection
-- **CloudFront:** Edge caching, geographic distribution
-- **AWS Shield Standard:** Automatic DDoS protection
+- **Cloud Load Balancer:** Global anycast IP network
+- **Cloud Armor:** Built-in DDoS mitigation
 - **Rate limiting:** API and application level
 
 ---
@@ -283,8 +283,23 @@ Post-launch bug bounty program:
 
 ---
 
+## 11. Secure Enclave & PII Siloing (ADR-031)
+
+To protect the "Hierarchical Canon of Secure Enclaves," all dashboard data is protected by the **Secure Enclave Protocol**:
+
+### 11.1 Estate Sequestration
+- **Session-Bound Enclaves**: Users never interact with sensitive data through URL-exposed slugs. Data is fetched solely based on the user's authenticated session, which maps to a single, authorized `estate_id` in the **Secure Shroud**.
+- **Cross-Enclave Prevention**: The backend middleware validates that every request to the `estates`, `documents`, or `assets` collections matches the session's current authorized Shard ID. Any attempt to cross-shards without a new authentication ceremony results in a `403 FORBIDDEN` and an immediate audit event.
+
+### 11.2 PII, HIPAA, & PCI DSS Governance
+- **PII/HIPAA Separation**: Sensitive health data (HIPAA) and identity documents (PCI DSS) are stored in the **Cloud SQL (PII)** enclave, keeping them physically and logically separate from transient operational data in Firestore.
+- **Visible Security Visibility**: The "Shard Status" UI component (ADR-031) provides users with a direct window into the encryption state (AES-256) and hardening (MFA-Hardened) of their current estate shard.
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+| **2.0.0** | **2026-03-18** | **Antigravity** | **Nexus Refresh: Replaced AWS refs with GCP. Added Section 11: Secure Enclave Protocol (ADR-031).** |

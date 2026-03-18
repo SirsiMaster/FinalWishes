@@ -48,60 +48,67 @@ function AssetsPage() {
   const assets = data?.assets || [];
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
-      <div className="flex justify-between items-end border-b border-royal/10 pb-12">
+    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+      {/* ── Page Header ── */}
+      <div className="flex justify-between items-end border-b border-slate-50 pb-16">
         <div className="space-y-4">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tighter">My Assets</h2>
-          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">A complete list of everything you own and want to pass on.</p>
+          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
+            <div className="w-10 h-px bg-[#133378]/20" />
+            <span>Estate Asset Ledger</span>
+          </div>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">My Assets</h2>
+          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
+            A complete inventory of everything you own and want to pass on to your beneficiaries.
+          </p>
         </div>
         <button 
           onClick={() => setModalOpen(true)}
-          className="bg-royal hover:bg-sapphire text-white px-10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all shadow-[0_8px_32px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_40px_rgba(15,82,186,0.3)] hover:-translate-y-1 active:scale-95 border border-white/10 flex items-center gap-3"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] transition-all shadow-[0_20px_50px_rgba(19,51,120,0.1)] flex items-center gap-3"
         >
-          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="4"><path d="M12 5v14M5 12h14"/></svg>
-          Add New Asset
+          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add Asset
         </button>
       </div>
 
-      <div className="bg-white rounded-[3.5rem] border border-royal/10 overflow-hidden shadow-[0_2px_40px_rgba(19,51,120,0.05)] group relative">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-royal via-sapphire to-royal opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
+      {/* ── Asset Table ── */}
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-royal/[0.01] text-[10px] uppercase tracking-[0.25em] font-black text-royal/40 border-b border-royal/5">
-                <th className="px-10 py-8 font-black">Asset Name</th>
-                <th className="px-10 py-8 font-black">Category</th>
-                <th className="px-10 py-8 font-black">Estimated Value</th>
-                <th className="px-10 py-8 font-black text-center">Status</th>
-                <th className="px-10 py-8 font-black text-right">Actions</th>
+              <tr className="bg-[#F8FAFC] text-[11px] uppercase tracking-widest font-bold text-slate-400 border-b border-slate-100">
+                <th className="px-10 py-6">Asset Name</th>
+                <th className="px-10 py-6">Category</th>
+                <th className="px-10 py-6">Estimated Value</th>
+                <th className="px-10 py-6 text-center">Status</th>
+                <th className="px-10 py-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="text-[13px] font-bold text-royal/60">
+            <tbody className="text-[14px] font-medium text-[#334155]">
               {assets.map((a, i) => (
-                <tr key={i} className="border-b border-royal/5 hover:bg-royal/[0.01] transition-all group/row relative">
-                  <td className="px-10 py-8 font-black text-royal text-base uppercase tracking-tight">{a.name}</td>
-                  <td className="px-10 py-8">
-                    <span className="px-4 py-1.5 bg-royal/[0.03] text-royal font-black text-[9px] uppercase tracking-widest rounded-xl border border-royal/10 group-hover/row:bg-white transition-all shadow-sm">
+                <tr key={i} className="border-b border-slate-50 hover:bg-[#F8FAFC] transition-all group">
+                  <td className="px-10 py-7 font-bold text-[#0F172A] text-[15px]">{a.name}</td>
+                  <td className="px-10 py-7">
+                    <span className="px-4 py-1.5 bg-[#F1F5F9] text-[#334155] font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">
                       {a.type}
                     </span>
                   </td>
-                  <td className="px-10 py-8 font-black text-royal/80 text-lg tabular-nums">{a.value}</td>
-                  <td className="px-10 py-8 text-center">
+                  <td className="px-10 py-7 font-bold text-[#0F172A] text-lg tabular-nums">{a.value}</td>
+                  <td className="px-10 py-7 text-center">
                     <div className="flex items-center justify-center gap-2">
-                       <div className={`w-2 h-2 rounded-full ${a.status === 'Verified' ? 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)]' : 'bg-sapphire shadow-[0_0_12px_rgba(15,82,186,0.4)] animate-pulse'}`} />
-                       <span className={`text-[9px] uppercase font-black tracking-widest ${a.status === 'Verified' ? 'text-green-600' : 'text-sapphire'}`}>
+                       <div className={`w-2 h-2 rounded-full ${a.status === 'Verified' ? 'bg-green-500' : 'bg-[#133378] animate-pulse'}`} />
+                       <span className={`text-[11px] uppercase font-bold tracking-widest ${a.status === 'Verified' ? 'text-green-600' : 'text-[#133378]'}`}>
                          {a.status}
                        </span>
                     </div>
                   </td>
-                  <td className="px-10 py-8 text-right">
-                    <button className="text-royal font-black text-[10px] uppercase tracking-widest bg-royal/[0.03] hover:bg-royal hover:text-white px-5 py-2.5 rounded-xl border border-royal/10 transition-all shadow-sm active:scale-95">View Details</button>
+                  <td className="px-10 py-7 text-right">
+                    <button className="text-[#133378] font-bold text-[12px] bg-[#F8FAFC] hover:bg-[#133378] hover:text-white px-5 py-2.5 rounded-xl border border-slate-100 transition-all">View Details</button>
                   </td>
                 </tr>
               ))}
               {assets.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-10 py-32 text-center text-royal/20 italic font-black uppercase tracking-[0.3em]">No assets have been added to this estate yet.</td>
+                  <td colSpan={5} className="px-10 py-32 text-center text-slate-300 font-medium text-sm">No assets have been added to this estate yet.</td>
                 </tr>
               )}
             </tbody>
@@ -109,13 +116,12 @@ function AssetsPage() {
         </div>
       </div>
 
-      {/* Registration Modal — Light Premium Glass */}
+      {/* ── Add Asset Modal ── */}
       {modalOpen && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-royal/[0.05] backdrop-blur-xl p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[4rem] p-16 max-w-xl w-full border border-royal/10 shadow-[0_40px_100px_rgba(19,51,120,0.15)] animate-in zoom-in duration-500 relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-royal via-sapphire to-royal opacity-20" />
-            <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-royal mb-3 uppercase tracking-tight">Add New Asset</h3>
-            <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest mb-10 italic">Add something new to your estate list.</p>
+        <div className="fixed inset-0 z-[600] flex items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+          <div className="bg-white rounded-[3rem] p-16 max-w-xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-500 relative">
+            <h3 className="text-3xl font-bold text-[#0F172A] mb-3 tracking-tight">Add New Asset</h3>
+            <p className="text-slate-500 font-medium text-sm mb-12">Enter the details for a new asset entry in your estate ledger.</p>
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
@@ -124,34 +130,29 @@ function AssetsPage() {
                 type: formData.get('type') as string,
                 value: formData.get('value') as string
               });
-            }} className="space-y-8">
-              <div className="group/field">
-                <label className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em] mb-3 block group-hover/field:text-royal/60 transition-colors">Name of Asset</label>
-                <input name="name" required className="w-full px-8 py-5 rounded-2xl border border-royal/10 bg-royal/[0.01] focus:bg-white focus:border-royal focus:ring-[12px] focus:ring-royal/[0.03] outline-none font-black text-royal transition-all placeholder:text-royal/10 text-lg uppercase tracking-tight" placeholder="e.g. CHASE SAVINGS 0422" />
+            }} className="space-y-10">
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Asset Name</label>
+                <input name="name" required className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] transition-all placeholder:text-slate-300 text-lg" placeholder="e.g. Chase Savings Account" />
               </div>
-              <div className="group/field">
-                <label className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em] mb-3 block group-hover/field:text-royal/60 transition-colors">Type of Asset</label>
-                <div className="relative">
-                  <select name="type" required className="w-full px-8 py-5 rounded-2xl border border-royal/10 bg-royal/[0.01] focus:bg-white focus:border-royal outline-none font-black text-royal appearance-none text-lg transition-all uppercase tracking-tight">
-                    <option value="Real Estate">Real Estate</option>
-                    <option value="Cash">Cash / Savings</option>
-                    <option value="Securities">Securities / Stocks</option>
-                    <option value="Personal Property">Personal Property</option>
-                    <option value="Digital Assets">Digital Assets</option>
-                  </select>
-                  <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-royal/30 group-hover/field:text-royal transition-colors">
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3"><path d="M19 9l-7 7-7-7"/></svg>
-                  </div>
-                </div>
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Asset Category</label>
+                <select name="type" required className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] outline-none font-bold text-[#0F172A] appearance-none text-lg transition-all">
+                  <option value="Real Estate">Real Estate</option>
+                  <option value="Cash">Cash / Savings</option>
+                  <option value="Securities">Securities / Stocks</option>
+                  <option value="Personal Property">Personal Property</option>
+                  <option value="Digital Assets">Digital Assets</option>
+                </select>
               </div>
-              <div className="group/field">
-                <label className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em] mb-3 block group-hover/field:text-royal/60 transition-colors">Estimated Value</label>
-                <input name="value" required className="w-full px-8 py-5 rounded-2xl border border-royal/10 bg-royal/[0.01] focus:bg-white focus:border-royal focus:ring-[12px] focus:ring-royal/[0.03] outline-none font-black text-royal transition-all placeholder:text-royal/10 text-lg uppercase tracking-tight" placeholder="e.g. $125,000" />
+              <div className="space-y-3">
+                <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Estimated Value</label>
+                <input name="value" required className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] transition-all placeholder:text-slate-300 text-lg" placeholder="e.g. $125,000" />
               </div>
-              <div className="flex gap-6 pt-6">
-                <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-5 rounded-2xl border border-royal/10 font-black text-royal/40 text-[11px] uppercase tracking-[0.2em] hover:bg-royal/[0.02] hover:text-royal transition-all active:scale-95">Cancel</button>
-                <button type="submit" disabled={addAssetMutation.isPending} className="flex-1 py-5 rounded-2xl bg-royal text-white font-black text-[11px] uppercase tracking-[0.2em] hover:bg-sapphire shadow-[0_12px_32px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] hover:-translate-y-1 transition-all disabled:opacity-50 active:scale-95 border border-white/10">
-                  {addAssetMutation.isPending ? 'SAVING...' : 'Add Asset'}
+              <div className="flex gap-6 pt-4">
+                <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-5 rounded-2xl border border-slate-100 font-bold text-slate-400 text-sm hover:bg-slate-50 transition-all">Cancel</button>
+                <button type="submit" disabled={addAssetMutation.isPending} className="flex-1 py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-xl disabled:opacity-50">
+                  {addAssetMutation.isPending ? 'Saving...' : 'Add to Ledger'}
                 </button>
               </div>
             </form>

@@ -6,19 +6,14 @@
    ============================================ */
 
 :root {
-  /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
-  /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
-  --royal: #133378;    /* Verified Heritage Royal (#133378) */
-  --sapphire: #0F52BA; /* Vibrant Sapphire Highlight */
-  --sapphire-light: #1E40AF;
+  /* Primary Foundation — Aligned with GEMINI.md */
+  --royal: #133378;         /* Heritage Royal */
+  --royal-blue: #1E3A5F;    /* Primary Royal Accent */
+  --royal-bright: #2563EB;  /* Interaction Highlight */
   --royal-subtle: rgba(19, 51, 120, 0.05);
 
-  /* Sidebar/Header Layout — Light Theme Industrial */
-  --sidebar-bg: #FFFFFF;
-  --header-bg: #FFFFFF;
-
-  /* Gold (shared across Sirsi portfolio) */
-  --gold: #C8A951;
+  /* Secondary Foundation */
+  --gold: #C8A951;          /* Metallic Gold */
   --gold-bright: #D4AF37;
   --gold-dim: #F0E6D2;
 
@@ -27,27 +22,6 @@
   --warning: #F59E0B;
   --danger: #EF4444;
 
-  /* Royal Neo-Deco (Website/Login Foundation) */
-  --bg-royal: radial-gradient(at 50% 0px, #133378 0%, #1E3A5F 35%, #0F172A 75%);
-  
-  /* Swiss Neo-Deco (Dashboard Surface Protocol) */
-  --bg-dashboard: #F8FAFF;
-  --bg-dashboard-tint: radial-gradient(circle at top right, #F8FAFF 0%, #EDF1F7 100%);
-  --text-royal: #133378;
-  --text-sapphire: #0F52BA;
-  --border-dashboard: rgba(19, 51, 120, 0.1);
-
-  /* Semantic Default (Fallback to Light for safety) */
-  --bg-primary: #FFFFFF;
-  --text-primary: #1E293B;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --border-light: var(--border-dashboard);
-
-  /* Glass Shard Tokens */
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-
   /* Layout Spacing Protocol */
   --sidebar-width: 280px;
   --header-height: 80px;
@@ -55,31 +29,22 @@
 
 /* ── TailwindCSS v4 Theme Tokens ── */
 @theme inline {
-  --color-background: var(--bg-primary);
-  --color-foreground: var(--text-primary);
-  --color-navy: var(--navy);
-  --color-navy-mid: var(--navy-mid);
   --color-royal: var(--royal);
+  --color-royal-blue: var(--royal-blue);
   --color-royal-bright: var(--royal-bright);
-  --color-navy-subtle: var(--navy-subtle);
   --color-gold: var(--gold);
   --color-gold-bright: var(--gold-bright);
   --color-gold-dim: var(--gold-dim);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-border-light: var(--border-light);
   --font-heading: var(--font-cinzel);
   --font-body: var(--font-inter);
 }
 
-/* ── Body: Deep Blue Gradient ── */
 body {
   background-color: #FFFFFF;
-  color: var(--text-primary);
+  color: #0F172A;
   min-height: 100vh;
   overflow-x: hidden;
   font-family: var(--font-inter);
@@ -87,66 +52,86 @@ body {
 
 /* ── Identity Contexts ── */
 .royal-theme {
-  background-color: var(--navy-mid);
-  background-image: radial-gradient(at 50% 0px, var(--royal) 0%, var(--navy-mid) 65%, var(--navy) 100%);
+  background-color: var(--royal);
+  background-image: radial-gradient(at 50% 0px, var(--royal-blue) 0%, var(--royal) 65%, #0F172A 100%);
   background-attachment: fixed;
   color: #FFFFFF;
+
+  /* Text */
   --text-primary: #FFFFFF;
   --text-secondary: rgba(255, 255, 255, 0.85);
   --text-muted: rgba(255, 255, 255, 0.65);
-  --border-light: rgba(255, 255, 255, 0.15);
-  
-  /* Royal Card Protocol — Vibrant Blue Glass Shard */
-  --card-bg: rgba(30, 58, 95, 0.7); /* Refined Royal Blue (var(--navy-mid) based) */
-  --card-border: rgba(255, 255, 255, 0.15);
-  --card-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5);
-  --card-shadow-hover: 0 40px 70px -12px rgba(37, 99, 235, 0.4);
-  --card-backdrop: blur(25px);
 
-  /* Royal Input Protocol — Refined Shards */
-  --input-bg: rgba(255, 255, 255, 0.08);
+  /* Borders */
+  --border-light: rgba(255, 255, 255, 0.15);
+
+  /* Backgrounds */
+  --bg-primary: var(--royal);
+  --bg-secondary: rgba(30, 58, 95, 0.5);
+  --bg-dashboard-tint: none;
+
+  /* Glass Card System */
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(200, 169, 81, 0.1);
+  --card-backdrop: blur(12px);
+
+  /* Input System */
+  --input-bg: rgba(255, 255, 255, 0.05);
   --input-border: rgba(255, 255, 255, 0.15);
   --input-text: #FFFFFF;
-  --input-placeholder: rgba(255, 255, 255, 0.4);
-  --input-focus-bg: rgba(255, 255, 255, 0.12);
-  
-  --icon-color: #94A3B8;
-  --icon-hover: var(--gold);
+  --input-placeholder: rgba(255, 255, 255, 0.35);
+  --input-focus-bg: rgba(255, 255, 255, 0.1);
+
+  /* Icon System */
+  --icon-color: rgba(255, 255, 255, 0.6);
+  --icon-hover: #FFFFFF;
+
+  /* Header Bar */
+  --header-text: #FFFFFF;
+  --header-text-muted: rgba(255, 255, 255, 0.5);
 }
 
 .dashboard-theme {
   background-color: #F8FAFC;
   background-image: none;
-  color: var(--text-navy);
-  --text-primary: var(--text-navy);
+  color: #0F172A;
+
+  /* Text */
+  --text-primary: #0F172A;
   --text-secondary: #334155;
   --text-muted: #64748B;
+
+  /* Borders */
   --border-light: #E2E8F0;
 
-  /* Dashboard Card Protocol */
+  /* Backgrounds */
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #F1F5F9;
+  --bg-dashboard-tint: none;
+
+  /* Glass Card System (Light Mode) */
   --card-bg: #FFFFFF;
   --card-border: #E2E8F0;
-  --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --card-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
   --card-backdrop: none;
 
-  /* Dashboard Input Protocol */
-  --input-bg: #F1F5F9;
+  /* Input System */
+  --input-bg: #F8FAFC;
   --input-border: #E2E8F0;
-  --input-text: var(--text-navy);
-  --input-placeholder: rgba(15, 23, 42, 0.4);
+  --input-text: #0F172A;
+  --input-placeholder: #94A3B8;
   --input-focus-bg: #FFFFFF;
 
-  --icon-color: var(--royal);
-  --icon-hover: var(--sapphire);
+  /* Icon System */
+  --icon-color: #64748B;
+  --icon-hover: #0F172A;
 
-  /* Light Premium Header & Sidebar */
-  --header-bg: #FFFFFF;
+  /* Header Bar */
   --header-text: #0F172A;
   --header-text-muted: #64748B;
-  --sidebar-bg: #FFFFFF;
-  --sidebar-text: #0F172A;
-  --sidebar-text-muted: #64748B;
 }
 
 

@@ -36,26 +36,26 @@ function NotificationsPage() {
   ];
 
   return (
-    <div className="space-y-10 pb-20">
-      <div className="flex justify-between items-end border-b border-border-light pb-8">
-        <div>
-          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-navy uppercase tracking-tight leading-none mb-3">Protocol Ledger</h2>
-          <p className="text-sm text-text-muted">The immutable audit trail of all estate governance, security, and financial events.</p>
+    <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
+      <div className="flex justify-between items-end border-b border-royal/10 pb-12">
+        <div className="space-y-4">
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tighter">Activity History</h2>
+          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">A record of everything that has happened with your estate plan.</p>
         </div>
-        <div className="flex gap-3">
-          <button className="px-6 py-2.5 rounded-xl border border-border-light text-[0.7rem] font-black uppercase tracking-widest text-navy bg-white hover:bg-black hover:text-white transition-all shadow-sm">Export Audit CSV</button>
-          <button className="px-6 py-2.5 rounded-xl bg-navy text-white text-[0.7rem] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Print Notarized Log</button>
+        <div className="flex gap-4">
+          <button className="px-8 py-4 rounded-2xl border border-royal/10 text-[11px] font-black uppercase tracking-widest text-royal bg-white hover:bg-royal/[0.02] transition-all shadow-sm active:scale-95">Save as File</button>
+          <button className="px-8 py-4 rounded-2xl bg-royal text-white text-[11px] font-black uppercase tracking-widest hover:bg-sapphire transition-all shadow-[0_8px_32px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_40px_rgba(15,82,186,0.25)] hover:-translate-y-1 active:scale-95 border border-white/10">Print History</button>
         </div>
       </div>
 
-      <div className="bg-white rounded-[3rem] border border-border-light overflow-hidden shadow-2xl relative">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-navy via-royal to-gold opacity-50" />
-        <div className="p-12 space-y-12">
+      <div className="bg-white rounded-[4rem] border border-royal/10 overflow-hidden shadow-[0_40px_100px_rgba(19,51,120,0.05)] relative group">
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-royal via-sapphire to-royal opacity-20" />
+        <div className="p-16 space-y-16 relative z-10">
           {notifications.map((n, i) => (
             <NotificationItem key={i} title={n.title} time={n.time} type={n.type} desc={n.desc} />
           ))}
           {notifications.length === 0 && (
-            <div className="text-center py-24 bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-border-light italic text-text-muted">No activity logs recorded in the current epoch.</div>
+            <div className="text-center py-40 bg-royal/[0.01] rounded-[3rem] border-2 border-dashed border-royal/5 italic text-royal/20 font-black uppercase tracking-[0.3em]">No activity recorded yet.</div>
           )}
         </div>
       </div>
@@ -65,41 +65,41 @@ function NotificationsPage() {
 
 function NotificationItem({ title, time, type, desc }: any) {
   const colorMap: Record<string, string> = { 
-    security: "bg-navy group-hover:bg-royal", 
-    activity: "bg-gold", 
-    success: "bg-green-600" 
+    security: "bg-royal shadow-[0_0_12px_rgba(19,51,120,0.4)]", 
+    activity: "bg-sapphire shadow-[0_0_12px_rgba(15,82,186,0.4)]", 
+    success: "bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.4)]" 
   };
-  const bgColor = colorMap[type] || "bg-gray-300";
+  const bgColor = colorMap[type] || "bg-royal/10";
   
   return (
-    <div className="flex gap-12 group relative pl-6">
-      <div className={`absolute left-0 top-0 w-2 h-full ${bgColor} rounded-full transition-all duration-500 transform scale-y-90 group-hover:scale-y-100 group-hover:w-2.5 shadow-lg`} />
-      <div className="flex-1 pb-12 border-b border-gray-100 group-last:border-b-0 group-last:pb-0">
-        <div className="flex justify-between items-baseline mb-4">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-3">
-              <h4 className="text-navy font-black text-2xl tracking-tight group-hover:text-royal transition-colors font-[family-name:var(--font-cinzel)]">{title}</h4>
-              <span className={`px-2.5 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] border transition-all ${type === 'security' ? 'bg-navy text-white border-navy shadow-navy/20 shadow-lg' : 'bg-gray-50 text-gray-500 border-gray-200'}`}>
+    <div className="flex gap-16 group relative pl-10">
+      <div className={`absolute left-0 top-0 w-2.5 h-full ${bgColor} rounded-full transition-all duration-700 transform scale-y-90 group-hover:scale-y-100 group-hover:w-3 opacity-20 group-hover:opacity-100`} />
+      <div className="flex-1 pb-16 border-b border-royal/5 group-last:border-b-0 group-last:pb-0">
+        <div className="flex justify-between items-start mb-6">
+          <div className="space-y-3">
+            <div className="flex items-center gap-4">
+              <h4 className="text-royal font-black text-3xl tracking-tighter group-hover:text-sapphire transition-colors font-[family-name:var(--font-cinzel)] uppercase">{title}</h4>
+              <span className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${type === 'security' ? 'bg-royal text-white border-white/10 shadow-lg' : 'bg-royal/[0.03] text-royal/40 border-royal/10 group-hover:bg-white group-hover:text-royal'}`}>
                 {type}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-               <div className="w-1.5 h-1.5 rounded-full bg-border-light" />
-               <span className="text-[10px] font-mono font-bold text-text-muted tracking-tight">Timestamp: {time}</span>
+            <div className="flex items-center gap-3">
+               <div className="w-2 h-2 rounded-full bg-royal/10" />
+               <span className="text-[11px] font-black text-royal/20 uppercase tracking-[0.2em] group-hover:text-royal/40 transition-colors">Timestamp: {time}</span>
             </div>
           </div>
-          <div className="px-4 py-2 bg-gray-50 rounded-xl border border-gray-100 text-[10px] font-black text-navy uppercase tracking-widest opacity-40 group-hover:opacity-100 transition-opacity">
-            Epoch Checksum: 0x{Math.floor(Math.random() * 0xffffff).toString(16).toUpperCase()}
+          <div className="px-5 py-2.5 bg-royal/[0.02] rounded-2xl border border-royal/5 text-[10px] font-black text-royal/20 uppercase tracking-[0.3em] group-hover:opacity-100 group-hover:text-royal/40 transition-all shadow-sm">
+            Security Code: 0x{Math.floor(Math.random() * 0xffffff).toString(16).toUpperCase()}
           </div>
         </div>
-        <p className="text-[16px] text-text-secondary leading-relaxed max-w-4xl font-medium antialiased">{desc}</p>
-        <div className="mt-6 flex gap-4 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-          <button className="text-[10px] font-black text-royal uppercase tracking-widest hover:underline flex items-center gap-1.5">
-            View Evidence Shard
-            <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        <p className="text-xl text-royal/60 leading-tight max-w-5xl font-black uppercase tracking-tighter group-hover:text-royal transition-colors">{desc}</p>
+        <div className="mt-8 flex gap-8 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
+          <button className="text-[11px] font-black text-royal uppercase tracking-widest hover:text-sapphire flex items-center gap-2 transition-colors">
+            View Details
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="4"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </button>
-          <span className="text-gray-200">|</span>
-          <button className="text-[10px] font-black text-gold/60 uppercase tracking-widest hover:underline">Verify Hash Shard</button>
+          <div className="w-px h-4 bg-royal/10" />
+          <button className="text-[11px] font-black text-royal/30 uppercase tracking-widest hover:text-royal transition-colors">Verify Security</button>
         </div>
       </div>
     </div>

@@ -7,11 +7,15 @@
 
 :root {
   /* Primary Palette — The "JUST THAT BLUE" Protocol (Aligned with GEMINI.md) */
-  --navy: #1B263B; /* Deep Indigo Shard (Not black) */
-  --navy-mid: #1E3A5F; /* The "Heritage Royal" */
-  --royal: #2563EB; /* The "Royal Accent" */
+  --royal: #2c54ab; /* Verified Vibrant Royal (#2c54ab) */
+  --navy: #1B263B;  /* Deep Indigo Shard */
+  --navy-mid: #1E3A5F; /* Heritage Royal */
   --royal-bright: #3B82F6;
-  --navy-subtle: rgba(30, 58, 138, 0.08);
+  --navy-subtle: rgba(30, 84, 171, 0.08);
+
+  /* Sidebar/Header Layout Accents — MUST BE #2c54ab */
+  --sidebar-bg: #2c54ab;
+  --header-bg: #2c54ab;
 
   /* Gold (shared across Sirsi portfolio) */
   --gold: #C8A951;
@@ -24,7 +28,7 @@
   --danger: #EF4444;
 
   /* Royal Neo-Deco (Website/Login Foundation) */
-  --bg-royal: radial-gradient(at 50% 0px, #2563EB 0%, #1E3A5F 35%, #0F172A 75%);
+  --bg-royal: radial-gradient(at 50% 0px, #2c54ab 0%, #1E3A5F 35%, #0F172A 75%);
   
   /* Swiss Neo-Deco (Dashboard Surface Protocol) */
   --bg-dashboard: #F8FAFF;
@@ -43,6 +47,10 @@
   /* Glass Shard Tokens */
   --card-bg: rgba(255, 255, 255, 0.95);
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+  /* Layout Spacing Protocol */
+  --sidebar-width: 280px;
+  --header-height: 80px;
 }
 
 /* ── TailwindCSS v4 Theme Tokens ── */
@@ -117,21 +125,46 @@ body {
   --border-light: var(--border-dashboard);
 
   /* Dashboard Card Protocol */
-  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.98); /* Near solid white for dashboard cards */
   --card-border: var(--border-dashboard);
   --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --card-backdrop: none;
 
   /* Dashboard Input Protocol */
-  --input-bg: #F3F4F6;
-  --input-border: #E5E7EB;
-  --input-text: var(--navy);
-  --input-placeholder: rgba(15, 23, 42, 0.3);
+  --input-bg: #F1F5F9;
+  --input-border: #E2E8F0;
+  --input-text: var(--text-navy);
+  --input-placeholder: rgba(15, 23, 42, 0.4);
   --input-focus-bg: #FFFFFF;
 
-  --icon-color: var(--gold); /* Gold for white background */
+  --icon-color: var(--gold); 
   --icon-hover: var(--gold-bright);
+
+  /* Target: AdminHeader / Identity Bar — Hardened Royal Shard for Dashboard */
+  --header-bg: #2c54ab; /* Verified Royal header */
+  --header-text: #FFFFFF;
+  --header-text-muted: rgba(255, 255, 255, 0.7);
+
+  /* Override inputs for the dark header */
+  --input-bg: rgba(255, 255, 255, 0.08);
+  --input-border: rgba(255, 255, 255, 0.15);
+  --input-text: #FFFFFF;
+  --input-placeholder: rgba(255, 255, 255, 0.4);
+}
+
+.royal-theme {
+  --header-bg: rgba(30, 58, 95, 0.7);
+  --header-text: #FFFFFF;
+  --header-text-muted: rgba(255, 255, 255, 0.6);
+}
+
+.identity-bar-text {
+  color: var(--header-text);
+}
+
+.identity-bar-muted {
+  color: var(--header-text-muted);
 }
 
 /* ── Themed Input Utilities ── */
@@ -166,6 +199,23 @@ body {
 }
 .themed-icon:hover {
   color: var(--icon-hover);
+}
+
+.themed-layout-bg {
+  background-color: var(--bg-primary);
+  background-image: var(--bg-dashboard-tint);
+  background-attachment: fixed;
+}
+
+.themed-border {
+  border-color: var(--border-light);
+}
+
+.themed-surface {
+  background-color: var(--card-bg);
+  backdrop-filter: var(--card-backdrop);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  border: 1px solid var(--card-border);
 }
 
 /* ── Film Grain Texture ── */

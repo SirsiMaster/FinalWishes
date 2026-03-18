@@ -37,11 +37,11 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Orbs */}
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-navy">
+      {/* Background Orbs — Royal Neo-Deco Protocol */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-royal/20 blur-[100px] rounded-full" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-gold/10 blur-[100px] rounded-full" />
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-royal/30 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-gold/15 blur-[120px] rounded-full" />
       </div>
 
       <div className="glass-card w-full max-w-md p-10 rounded-3xl relative z-10 border border-white/10 shadow-2xl animate-in fade-in zoom-in duration-700">

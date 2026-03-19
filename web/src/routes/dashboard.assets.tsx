@@ -61,7 +61,7 @@ function AssetsPage() {
           onClick={() => setModalOpen(true)}
           className="bg-royal hover:bg-sapphire text-white px-8 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_8px_24px_rgba(15,82,186,0.3)] hover:-translate-y-0.5 active:scale-[0.98] transition-all border border-white/10"
         >
-          + Add Asset Shard
+          + Add Asset
         </button>
       </div>
 
@@ -71,9 +71,9 @@ function AssetsPage() {
           <thead>
             <tr className="bg-royal/[0.03] text-[10px] uppercase tracking-[0.2em] font-black text-royal/60">
               <th className="px-10 py-7">Asset Identifier</th>
-              <th className="px-10 py-7">Type Shard</th>
+              <th className="px-10 py-7">Category</th>
               <th className="px-10 py-7 text-right">Valuation</th>
-              <th className="px-10 py-7 text-center">Protocol Status</th>
+              <th className="px-10 py-7 text-center">Status</th>
               <th className="px-10 py-7 text-right">Ledger Actions</th>
             </tr>
           </thead>
@@ -91,13 +91,13 @@ function AssetsPage() {
                   </span>
                 </td>
                 <td className="px-10 py-6 text-right">
-                  <button className="text-royal/20 font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 hover:text-royal transition-all hover:scale-105 active:scale-95">Audit Element</button>
+                  <button className="text-royal/20 font-black text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 hover:text-royal transition-all hover:scale-105 active:scale-95">View Details</button>
                 </td>
               </tr>
             ))}
             {assets.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-10 py-32 text-center text-royal/20 italic font-black uppercase tracking-widest text-[11px] bg-royal/[0.01]">No assets detected in this verified governance shard.</td>
+                <td colSpan={5} className="px-10 py-32 text-center text-royal/20 italic font-black uppercase tracking-widest text-[11px] bg-royal/[0.01]">No assets have been added to this estate yet.</td>
               </tr>
             )}
           </tbody>
@@ -109,7 +109,7 @@ function AssetsPage() {
           <div className="bg-white/95 backdrop-blur-2xl rounded-[3rem] p-12 max-w-lg w-full border border-royal/10 shadow-[0_20px_60px_rgba(19,51,120,0.15)] animate-in zoom-in duration-500 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-royal via-sapphire to-royal opacity-20" />
             <h3 className="text-2xl font-[family-name:var(--font-cinzel)] font-black text-royal mb-2 uppercase tracking-wide">Register New Asset</h3>
-            <p className="text-[11px] text-royal/30 mb-10 font-black uppercase tracking-widest leading-relaxed">Synchronize a new holding with the estate's verified ledger shard.</p>
+            <p className="text-[11px] text-royal/30 mb-10 font-black uppercase tracking-widest leading-relaxed">Add a new asset to your estate inventory.</p>
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
@@ -124,7 +124,7 @@ function AssetsPage() {
                 <input name="name" required className="w-full px-6 py-4.5 rounded-2xl border border-royal/10 bg-royal/[0.02] focus:bg-white focus:border-royal focus:shadow-sm outline-none font-black text-royal transition-all placeholder:text-royal/10" placeholder="e.g. Chase Savings 0422" />
               </div>
               <div className="group">
-                <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Holding Type Shard</label>
+                <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Asset Category</label>
                 <div className="relative">
                   <select name="type" required className="w-full px-6 py-4.5 rounded-2xl border border-royal/10 bg-royal/[0.02] focus:bg-white outline-none font-black text-royal appearance-none cursor-pointer transition-all">
                     <option value="Real Estate">Real Estate</option>
@@ -145,7 +145,7 @@ function AssetsPage() {
               <div className="flex gap-6 pt-6">
                 <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-4.5 rounded-2xl border border-royal/10 font-black text-royal/40 text-[11px] uppercase tracking-[0.2em] hover:bg-royal/[0.02] hover:text-royal transition-all">Discard</button>
                 <button type="submit" disabled={addAssetMutation.isPending} className="flex-1 py-4.5 rounded-2xl bg-royal hover:bg-sapphire text-white font-black text-[11px] uppercase tracking-[0.2em] shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-[0.98] border border-white/10">
-                  {addAssetMutation.isPending ? 'Synchronizing...' : 'Register Asset Shard'}
+                  {addAssetMutation.isPending ? 'Saving...' : 'Add Asset'}
                 </button>
               </div>
             </form>

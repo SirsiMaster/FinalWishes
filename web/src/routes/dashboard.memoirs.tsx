@@ -121,22 +121,22 @@ function MemoirsPage() {
               <div className="mb-auto">
                 <div className="flex items-center gap-2 mb-8">
                   <div className={`w-2 h-2 rounded-full bg-royal animate-pulse`} />
-                  <span className="text-[10px] font-black text-royal/30 uppercase tracking-[0.2em]">{selectedMemoir.type} Shard · Lockhart Estate</span>
+                  <span className="text-[10px] font-black text-royal/30 uppercase tracking-[0.2em]">{selectedMemoir.type} · Lockhart Estate</span>
                 </div>
                 <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-8 leading-tight">{selectedMemoir.title}</h3>
                 <div className="space-y-6">
                   <div className="group">
                     <label className="text-[10px] font-black text-royal/20 uppercase tracking-widest block mb-2 transition-colors group-hover:text-royal/40">Operational Status</label>
-                    <div className="text-royal font-black text-sm uppercase tracking-tighter">Verified & Secured Shard</div>
+                    <div className="text-royal font-black text-sm uppercase tracking-tighter">Verified & Secured</div>
                   </div>
                   <div className="group">
                     <label className="text-[10px] font-black text-royal/20 uppercase tracking-widest block mb-2 transition-colors group-hover:text-royal/40">Capture Date</label>
                     <div className="text-royal font-black text-sm uppercase tracking-tighter tabular-nums">{selectedMemoir.dateAdded}</div>
                   </div>
                   <div className="group">
-                    <label className="text-[10px] font-black text-royal/20 uppercase tracking-widest block mb-1 opacity-50 transition-colors group-hover:text-royal/40">Visibility Shard</label>
+                    <label className="text-[10px] font-black text-royal/20 uppercase tracking-widest block mb-1 opacity-50 transition-colors group-hover:text-royal/40">Visibility</label>
                     <div className="px-3 py-1 bg-royal/[0.02] rounded-xl border border-royal/10 inline-block text-[10px] text-royal font-black uppercase tracking-widest shadow-sm">
-                      {selectedMemoir.visibility === 'private' ? 'Owner Shard Only' : 'Unified Heirs Access'}
+                      {selectedMemoir.visibility === 'private' ? 'Owner Only' : 'Shared With Family'}
                     </div>
                   </div>
                 </div>
@@ -201,7 +201,7 @@ function MemoirsPage() {
           <div className="bg-white rounded-[3rem] p-12 max-w-lg w-full border border-royal/10 shadow-[0_40px_100px_rgba(19,51,120,0.15)] animate-in zoom-in duration-500 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-royal via-sapphire to-royal opacity-20" />
             <h3 className="text-2xl font-[family-name:var(--font-cinzel)] font-black text-royal mb-2 uppercase tracking-wide">New Legacy Element</h3>
-            <p className="text-[11px] text-royal/30 mb-10 font-black uppercase tracking-widest leading-relaxed">Your digital legacy is stored in the vault shard with AES-256 state encryption.</p>
+            <p className="text-[11px] text-royal/30 mb-10 font-black uppercase tracking-widest leading-relaxed">Your digital legacy, securely encrypted and stored.</p>
             
             <form onSubmit={(e) => {
               e.preventDefault();
@@ -219,7 +219,7 @@ function MemoirsPage() {
               });
             }} className="space-y-8">
               <div className="group">
-                <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Protocol Title</label>
+                <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Title</label>
                 <input name="title" required className="w-full px-6 py-4.5 rounded-2xl border border-royal/10 bg-royal/[0.02] focus:bg-white focus:border-royal focus:shadow-sm outline-none font-black text-royal transition-all placeholder:text-royal/10" placeholder="e.g. Message to my Grandkids" />
               </div>
               
@@ -237,7 +237,7 @@ function MemoirsPage() {
                   </div>
                 </div>
                 <div className="group">
-                  <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Visibility Shard</label>
+                  <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Visibility</label>
                   <div className="relative">
                     <select name="visibility" className="w-full px-6 py-4.5 rounded-2xl border border-royal/10 bg-royal/[0.02] focus:bg-white outline-none font-black text-royal appearance-none transition-all">
                       <option value="private">Owner Primary</option>
@@ -260,7 +260,7 @@ function MemoirsPage() {
                     <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
                   </div>
                   <span className="text-[10px] font-black text-royal/30 uppercase tracking-[0.2em] group-hover:text-royal/60">
-                    {fileInputRef.current?.files?.[0]?.name || "Synchronize Shard File"}
+                    {fileInputRef.current?.files?.[0]?.name || "Choose File"}
                   </span>
                   <input ref={fileInputRef} type="file" className="hidden" accept="video/*,image/*" onChange={() => setUploading(false)} />
                 </div>
@@ -269,7 +269,7 @@ function MemoirsPage() {
               <div className="flex gap-6 pt-6">
                 <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-4.5 rounded-2xl border border-royal/10 font-black text-royal/40 text-[11px] uppercase tracking-[0.2em] hover:bg-royal/[0.02] hover:text-royal transition-all">Discard</button>
                 <button type="submit" disabled={uploading} className="flex-1 py-4.5 rounded-2xl bg-royal hover:bg-sapphire text-white font-black text-[11px] uppercase tracking-[0.2em] shadow-[0_8px_24px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-[0.98] border border-white/10">
-                  {uploading ? 'Registering...' : 'Commit to Vault Shard'}
+                  {uploading ? 'Saving...' : 'Save Memoir'}
                 </button>
               </div>
             </form>
@@ -314,7 +314,7 @@ function VideoCard({ memoir, onClick }: any) {
           <span className="text-[10px] text-royal/20 font-black uppercase tracking-[0.2em] group-hover:text-royal/40 transition-colors tabular-nums">{memoir.dateAdded}</span>
           <div className="flex items-center gap-2 px-3 py-1 bg-royal/[0.02] rounded-xl border border-royal/5 shadow-sm group-hover:border-royal/20 transition-all">
             <div className="w-1.5 h-1.5 rounded-full bg-royal animate-pulse" />
-            <span className="text-[9px] font-black text-royal uppercase tracking-tighter">Secured Shard</span>
+            <span className="text-[9px] font-black text-royal uppercase tracking-tighter">Secured</span>
           </div>
         </div>
       </div>

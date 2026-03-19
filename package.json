@@ -1,31 +1,26 @@
 {
   "name": "finalwishes",
-  "version": "1.0.0",
+  "version": "0.1.0-alpha",
+  "private": true,
+  "packageManager": "npm@11.9.0",
   "description": "FinalWishes - The Estate Operating System. Built by Sirsi Technologies.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "workspaces": [
+    "web",
+    "shared"
+  ],
   "scripts": {
-    "build:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/tailwind.css --minify",
-    "watch:css": "tailwindcss -i ./src/input.css -o ./public/assets/css/tailwind.css --watch",
-    "build": "npm run build:css",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SirsiMaster/111-Venture-Projects.git"
+    "url": "git+https://github.com/SirsiMaster/FinalWishes.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/SirsiMaster/111-Venture-Projects/issues"
-  },
-  "homepage": "https://github.com/SirsiMaster/111-Venture-Projects#readme",
+  "author": "Sirsi Technologies",
+  "license": "UNLICENSED",
   "devDependencies": {
-    "@tailwindcss/cli": "^4.1.17",
-    "tailwindcss": "^4.1.17"
+    "turbo": "^2"
   }
 }

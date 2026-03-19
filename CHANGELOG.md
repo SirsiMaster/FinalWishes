@@ -6,9 +6,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 ### Planned
-- Phase 0.5: Tool Acquisition & Staging (all GCP/open-source/NVIDIA dependencies)
 - Phase 1: Firebase Auth, Cloud Run Go API, Firestore rules, Cloud SQL/KMS
 - Phase 2: Vault, YouTube Memorials, Google Photos, Lockbox, Capsules, Shepherd AI
+
+---
+
+## [0.1.1-alpha] — 2026-03-19
+### Fixed (Phase 0)
+- **Removed `web/dist/` from git** — build artifacts no longer tracked
+- **Hardened `.gitignore`** — covers dist/, out/, build/, .env*, .DS_Store, *.tsbuildinfo
+- **Dashboard ELI5 sweep** — purged all internal jargon ("Shard", "Protocol", "Enclave", "Governance") from 9 dashboard route files. Replaced with consumer terms: "Estate", "Document", "Family", "Settings"
+
+### Added (Phase 0.5 — Tool Acquisition)
+- **shadcn/ui initialized** — Radix + Nova preset, 13 core components (button, card, dialog, input, label, select, tabs, textarea, badge, avatar, dropdown-menu, separator, sonner)
+- **Turborepo wired** — root `package.json` workspaces (`web`, `shared`), `turbo.json` v2 tasks format
+- **npm packages installed** — `firebase`, `sonner`, `recharts`, `@react-pdf/renderer`, `@tiptap/react`, `@tiptap/starter-kit`
+- **Build verified** — 312 modules, 0 errors via `turbo build`
 
 ---
 

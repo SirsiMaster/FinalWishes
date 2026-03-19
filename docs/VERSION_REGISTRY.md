@@ -1,6 +1,6 @@
 # Version Registry — FinalWishes Component Tracker
 ## Age, Date, Status of Every Component
-**Last Updated:** 2026-03-18 — **Current Release:** v0.1.0-alpha
+**Last Updated:** 2026-03-19 — **Current Release:** v0.1.0-alpha
 
 ---
 
@@ -36,11 +36,12 @@
 
 | Component | Version | Created | Last Modified | Status | Tech |
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
-| **Royal Neo-Deco Tokens** | 1.0.0 | 2026-02-17 | 2026-03-18 | ✅ Established | CSS Custom Properties |
-| **globals.css** | 1.0.0 | 2026-02-17 | 2026-03-18 | ✅ 326 lines | Tailwind + Custom CSS |
+| **Royal Neo-Deco Tokens** | 1.0.0 | 2026-02-17 | 2026-03-19 | ✅ Established | CSS Custom Properties |
+| **globals.css** | 1.1.0 | 2026-02-17 | 2026-03-19 | ✅ 584 lines (shadcn/ui + Royal Neo-Deco) | Tailwind v4 + shadcn |
 | **Sidebar** | 0.2.0 | 2026-03-01 | 2026-03-18 | ⚠️ Hardened, needs mobile | React |
 | **AdminHeader** | 0.2.0 | 2026-03-01 | 2026-03-18 | ⚠️ Hardened | React |
-| **shadcn/ui** | — | — | — | 🔲 Not initialized | per ADR-033 |
+| **shadcn/ui** | 0.1.0 | 2026-03-19 | 2026-03-19 | ✅ Initialized (Radix/Nova, 13 components) | shadcn + Radix |
+| **Turborepo** | 2.8.x | 2026-03-19 | 2026-03-19 | ✅ Wired (web + shared workspaces) | Turborepo |
 
 ## Cloud Infrastructure
 

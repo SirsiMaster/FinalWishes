@@ -18,7 +18,7 @@ function DashboardIndex() {
       const u = JSON.parse(session);
       setUserName(u.name || '');
     }
-    // Synchronize Firestore Shard
+    // Load estate data from Firestore
     const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
     setEstateId(preferredId);
   }, [routeId]);
@@ -83,7 +83,7 @@ function DashboardIndex() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-royal/[0.015] rounded-bl-full pointer-events-none" />
         <div className="flex-1 space-y-10 relative z-10">
           <div className="space-y-3">
-             <div className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em]">Estate Setup Protocol</div>
+             <div className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em]">Estate Setup Progress</div>
              <div className="flex items-end gap-5">
                 <span className="text-8xl font-black text-[#0F172A] tracking-tighter leading-none tabular-nums">88%</span>
                 <span className="text-slate-400 font-semibold text-2xl pb-2">complete</span>

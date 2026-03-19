@@ -84,7 +84,7 @@ function ObituaryPage() {
               <div className="flex justify-between items-end text-left">
                 <div>
                   <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Heritage Record Portrait</h3>
-                  <p className="text-[11px] text-royal/30 font-black uppercase tracking-[0.2em]">{userName || "Tameeka Lockhart"} · The Final Record Shard</p>
+                  <p className="text-[11px] text-royal/30 font-black uppercase tracking-[0.2em]">{userName || "Tameeka Lockhart"} · Final Wishes Record</p>
                 </div>
                 <div className="px-5 py-2.5 bg-royal/[0.03] border border-royal/10 text-royal rounded-xl font-black text-[10px] uppercase tracking-widest shadow-sm">4K PROTOCOL</div>
               </div>
@@ -108,7 +108,7 @@ function ObituaryPage() {
           </button>
           <button className="bg-white hover:bg-royal/[0.02] text-royal px-8 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest border border-royal/10 shadow-sm transition-all hover:-translate-y-0.5 active:scale-[0.98] flex items-center gap-3">
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
-            Distribute Shard
+            Share With Family
           </button>
         </div>
       </div>
@@ -125,11 +125,11 @@ function ObituaryPage() {
              ) : (
                <div className="absolute inset-0 flex flex-col items-center justify-center text-royal/5 bg-gradient-to-b from-royal/[0.02] to-royal/[0.05] text-center p-10">
                  <svg viewBox="0 0 24 24" className="w-20 h-20 mb-6 mx-auto" fill="none" stroke="currentColor" strokeWidth="1"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
-                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Heritage Portrait Shard</span>
+                 <span className="text-[10px] font-black uppercase tracking-[0.3em]">Heritage Portrait</span>
                </div>
              )}
              <div className="absolute inset-0 bg-gradient-to-t from-royal/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700" />
-             <button className="absolute bottom-6 left-6 right-6 py-4 bg-white/90 backdrop-blur-md rounded-2xl text-royal font-black text-[10px] uppercase tracking-widest translate-y-20 group-hover:translate-y-0 transition-all duration-500 shadow-xl border border-white">Update Shard Photo</button>
+             <button className="absolute bottom-6 left-6 right-6 py-4 bg-white/90 backdrop-blur-md rounded-2xl text-royal font-black text-[10px] uppercase tracking-widest translate-y-20 group-hover:translate-y-0 transition-all duration-500 shadow-xl border border-white">Update Photo</button>
           </div>
           
           <div className="bg-white rounded-[2.5rem] border border-royal/10 p-10 shadow-[0_2px_16px_rgba(19,51,120,0.03)] group relative overflow-hidden">
@@ -140,8 +140,8 @@ function ObituaryPage() {
             </h4>
             <div className="space-y-4">
               <StatRow label="Operational Status" value={isSigned ? "Locked" : obit?.status} color={isSigned ? "green" : "blue"} />
-              <StatRow label="Last Shard Update" value="Today, 9:02 PM" />
-              <StatRow label="Registry Shard" value="Maryland Legacy" />
+              <StatRow label="Last Updated" value="Today, 9:02 PM" />
+              <StatRow label="Registry" value="Maryland Legacy" />
               <StatRow label="Verification State" value={isSigned ? "Verified" : "Pending"} color={isSigned ? "green" : "gold"} />
             </div>
           </div>
@@ -174,11 +174,11 @@ function ObituaryPage() {
                   ref={textAreaRef}
                   defaultValue={obit?.content}
                   className="w-full h-full min-h-[440px] border-none focus:ring-0 text-royal font-[family-name:var(--font-inter)] leading-relaxed text-xl outline-none resize-none placeholder:text-royal/10 bg-transparent"
-                  placeholder="Initiate drafting of the final record shard..."
+                  placeholder="Begin writing your final wishes and memorial..."
                />
              ) : (
                <p className="text-royal font-[family-name:var(--font-inter)] leading-[1.8] text-xl whitespace-pre-wrap selection:bg-royal/10 selection:text-royal">
-                 {obit?.content || "No record content established. Initiate amendment shard to begin documentation."}
+                 {obit?.content || "No content written yet. Click 'Edit' to begin your final wishes."}
                </p>
              )}
           </div>
@@ -203,7 +203,7 @@ function ObituaryPage() {
                 <svg viewBox="0 0 24 24" className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               </div>
               <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-4">Legal Review & Sign</h3>
-              <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest max-w-md mx-auto leading-relaxed">By executing this signature, you are establishing the canonical record shard for your estate protocol. This action is immutable.</p>
+              <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest max-w-md mx-auto leading-relaxed">By signing below, you are finalizing the official record of your final wishes. This document will be securely stored and shared with your designated family members.</p>
             </div>
             
             <div className="bg-royal/[0.02] p-8 rounded-[2.5rem] mb-12 border border-royal/5 max-h-[240px] overflow-y-auto scrollbar-thin shadow-inner">
@@ -212,7 +212,7 @@ function ObituaryPage() {
 
             <div className="bg-royal/[0.01] p-10 rounded-[3rem] border border-royal/10 mb-12 relative group/sig">
                <div className="absolute top-0 right-0 w-24 h-24 bg-royal/[0.02] rounded-bl-[4rem] group-hover/sig:bg-royal/5 transition-colors" />
-               <label className="text-[9px] font-black text-royal/20 uppercase tracking-[0.3em] mb-6 block text-center">Cryptographic Protocol Signature Area</label>
+               <label className="text-[9px] font-black text-royal/20 uppercase tracking-[0.3em] mb-6 block text-center">Digital Signature</label>
                <div className="h-24 border-b-2 border-royal/10 flex items-center justify-center text-royal/10 font-[family-name:var(--font-cinzel)] italic text-4xl select-none group-hover/sig:text-royal/20 transition-all">
                   {isSigned ? <span className="text-royal not-italic opacity-100 animate-in slide-in-from-bottom-2 duration-700">{userName || 'Legal Guardian'}</span> : 'EXECUTE SIGNATURE SHARD'}
                </div>
@@ -223,7 +223,7 @@ function ObituaryPage() {
                 onClick={() => setModalOpen(false)}
                 className="flex-1 py-5 rounded-2xl border border-royal/10 font-black text-royal/40 text-[11px] uppercase tracking-[0.2em] hover:bg-royal/[0.02] hover:text-royal transition-all"
               >
-                Discard Shard
+                Cancel
               </button>
               <button 
                 onClick={() => {
@@ -232,7 +232,7 @@ function ObituaryPage() {
                 }}
                 className={`flex-1 py-5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-all shadow-xl active:scale-[0.98] border border-white/10 ${isSigned ? 'bg-green-600 text-white shadow-green-500/20' : 'bg-royal hover:bg-sapphire text-white shadow-royal/20'}`}
               >
-                {isSigned ? 'Record Locked & Secured' : 'Finalize & Execute Shard'}
+                {isSigned ? 'Record Locked & Secured' : 'Sign & Finalize'}
               </button>
             </div>
           </div>

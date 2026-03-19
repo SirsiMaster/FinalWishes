@@ -54,7 +54,7 @@ function BeneficiariesPage() {
     <div className="space-y-10 pb-20 max-w-6xl mx-auto px-4">
       <div className="flex justify-between items-end border-b border-royal/10 pb-8">
         <div>
-          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Family Shard</h2>
+          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Family & Beneficiaries</h2>
           <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">Register and manage legal heirs, executors, and primary trustees for this estate protocol.</p>
         </div>
         <button 
@@ -116,7 +116,7 @@ function BeneficiariesPage() {
                 </div>
               </div>
               <div className="group">
-                <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Secure Email Shard</label>
+                <label className="text-[10px] font-black text-royal/40 uppercase tracking-[0.2em] mb-2.5 block ml-1 group-focus-within:text-royal transition-colors">Email Address</label>
                 <input name="email" required className="w-full px-6 py-4.5 rounded-2xl border border-royal/10 bg-royal/[0.02] focus:bg-white outline-none font-black text-royal transition-all placeholder:text-royal/10" type="email" placeholder="sarah@example.com" />
               </div>
               <div className="flex gap-6 pt-6">
@@ -146,7 +146,7 @@ function BeneficiaryCard({ name, relation, share, status, email }: any) {
         </div>
         <div className="flex items-center gap-4 mb-6">
            <span className={`px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm border ${status === 'Verified' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-[#C8A951]/5 text-[#C8A951] border-[#C8A951]/20'}`}>
-            {status} Shard
+            {status}
           </span>
           <span className="text-[11px] font-black text-royal/20 uppercase tracking-tighter truncate group-hover:text-royal/40 transition-colors">{email || 'No identity provided'}</span>
         </div>

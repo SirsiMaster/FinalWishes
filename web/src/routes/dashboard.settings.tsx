@@ -38,8 +38,8 @@ function SettingsPage() {
     <div className="max-w-[1000px] mx-auto space-y-10 pb-20 px-4">
       <div className="border-b border-royal/10 pb-10 flex justify-between items-end">
         <div>
-          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Governance Shard</h2>
-          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">Manage the security protocols, authority releases, and biometric shards for this estate.</p>
+          <h2 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Account Settings</h2>
+          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">Manage your security settings, authorized contacts, and preferences for this estate.</p>
         </div>
         <div className="flex items-center gap-2.5 px-5 py-2.5 bg-royal/[0.03] border border-royal/10 rounded-2xl shadow-sm">
            <div className="w-2 h-2 rounded-full bg-royal animate-pulse" />
@@ -50,7 +50,7 @@ function SettingsPage() {
       <div className="grid grid-cols-1 gap-12">
         <section className="bg-white rounded-[3rem] border border-royal/10 overflow-hidden shadow-[0_2px_20px_rgba(19,51,120,0.03)] hover:shadow-[0_20px_50px_rgba(19,51,120,0.08)] hover:border-royal/20 transition-all group relative">
           <div className="absolute top-0 left-0 w-1.5 h-full bg-royal/5 group-hover:bg-royal/10 transition-colors" />
-          <SettingsSection title="Security Protocol [AES-256]">
+          <SettingsSection title="Security Settings">
             <SettingsItem label="Bipartite Multi-Factor Auth" value={s?.mfaEnabled ? "Enabled" : "Disabled"} type="toggle" />
             <SettingsItem label="Zero-Knowledge Recovery Key" value={s?.recoveryKeyStatus || "Verified"} type="status" />
             <SettingsItem label="Biometric Release Verification" value={s?.biometricRelease ? "Enabled" : "Disabled"} type="toggle" />
@@ -61,7 +61,7 @@ function SettingsPage() {
           <div className="absolute top-0 left-0 w-1.5 h-full bg-royal/5 group-hover:bg-royal/10 transition-colors" />
           <SettingsSection title="Notification Governance">
             <SettingsItem label="Encrypted Email Alerts" value={s?.emailAlerts ? "Enabled" : "Disabled"} type="toggle" />
-            <SettingsItem label="Legal Status Shard Frequency" value={s?.statusReportsFrequency || "Weekly"} type="select" />
+            <SettingsItem label="Status Report Frequency" value={s?.statusReportsFrequency || "Weekly"} type="select" />
             <SettingsItem label="AI Guidance Interface" value="Disabled" type="toggle" />
           </SettingsSection>
         </section>
@@ -71,12 +71,12 @@ function SettingsPage() {
             <p className="text-[10px] font-black text-royal/20 uppercase tracking-[0.3em] mb-6">Operational Domain Registry</p>
             <div className="flex justify-center gap-20 items-center">
                <div className="text-center group/id">
-                  <span className="block text-[9px] font-black text-royal/20 uppercase tracking-[0.2em] mb-2 group-hover:text-royal/40 transition-colors">Estate Shard ID</span>
+                  <span className="block text-[9px] font-black text-royal/20 uppercase tracking-[0.2em] mb-2 group-hover:text-royal/40 transition-colors">Estate ID</span>
                   <span className="text-[14px] font-mono font-black text-royal uppercase tracking-widest">{estateId}</span>
                </div>
                <div className="w-px h-8 bg-royal/5" />
                <div className="text-center group/loc">
-                  <span className="block text-[9px] font-black text-royal/20 uppercase tracking-[0.2em] mb-2 group-hover:text-royal/40 transition-colors">Jurisdiction Protocol</span>
+                  <span className="block text-[9px] font-black text-royal/20 uppercase tracking-[0.2em] mb-2 group-hover:text-royal/40 transition-colors">Jurisdiction</span>
                   <span className="text-[14px] font-black text-royal uppercase tracking-[0.15em]">Maryland, Illinois, Minnesota</span>
                </div>
             </div>

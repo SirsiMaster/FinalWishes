@@ -1,6 +1,6 @@
 # Version Registry — FinalWishes Component Tracker
 ## Age, Date, Status of Every Component
-**Last Updated:** 2026-03-19 — **Current Release:** v0.1.0-alpha
+**Last Updated:** 2026-03-19 — **Current Release:** v0.1.2-alpha
 
 ---
 
@@ -42,6 +42,7 @@
 | **AdminHeader** | 0.2.0 | 2026-03-01 | 2026-03-18 | ⚠️ Hardened | React |
 | **shadcn/ui** | 0.1.0 | 2026-03-19 | 2026-03-19 | ✅ Initialized (Radix/Nova, 13 components) | shadcn + Radix |
 | **Turborepo** | 2.8.x | 2026-03-19 | 2026-03-19 | ✅ Wired (web + shared workspaces) | Turborepo |
+| **Antigravity Skills** | 1.0.0 | 2026-03-19 | 2026-03-19 | ✅ 26 skills, universal (`~/.gemini/antigravity/skills/`) | Markdown (SKILL.md) |
 
 ## Cloud Infrastructure
 
@@ -96,7 +97,7 @@
 | **PRODUCT_SPECIFICATION.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
 | **DATA_MODEL_LOCK.md** | 1.0.0 | 2026-03-17 | 2026-03-17 | 🔒 Locked |
 | **CHANGELOG.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
-| **VERSION_REGISTRY.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
+| **VERSION_REGISTRY.md** | 1.1.0 | 2026-03-18 | 2026-03-19 | ✅ Active |
 
 ---
 

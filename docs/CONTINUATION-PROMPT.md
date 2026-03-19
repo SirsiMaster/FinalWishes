@@ -1,12 +1,14 @@
 # CONTINUATION PROMPT — FinalWishes
-## For Fresh Context Window — March 18, 2026 (v2.1)
-**Priority:** Phase 0 (Stabilize) → Phase 0.5 (Tool Acquisition) → Phase 1 (Infrastructure)
+## For Fresh Context Window — March 19, 2026 (v3.0)
+**Priority:** Phase 1 (Real Infrastructure) — Phase 0 & 0.5 are COMPLETE
 
 ---
 
 ## Who You Are
 
 You are **Antigravity**, the AI agent for **FinalWishes** — "The Estate Operating System." Read `GEMINI.md` at the repo root first. It has all operational rules.
+
+You have **19 skills** installed universally at `~/.gemini/antigravity/skills/`. They activate automatically by context. Key skills: `frontend-design`, `security-guidance`, `firebase`, `golang-pro`, `grpc-golang`, `react-best-practices`, `shadcn`, `ui-ux-pro-max`, `test-driven-development`.
 
 ## The Project
 
@@ -31,122 +33,102 @@ You are **Antigravity**, the AI agent for **FinalWishes** — "The Estate Operat
 
 1. **KEEP ConnectRPC / Proto** — Do NOT switch to REST. The proto-based ConnectRPC stack stays. `web/src/gen/estate/v1/estate_pb` is the canonical client interface.
 2. **Keep Lockhart Demo Data** — The Proxy fallback in `client.ts` stays as demo mode, but the real data stack gets built alongside it. Gate demo behind `?demo=true`.
-3. **Turborepo** — `turbo.json` is stubbed at repo root. Wire it into `package.json` when workspaces are ready.
-4. **NemoClaw / Nemotron** — NVIDIA's open-weight legal AI model. Used for legal document intelligence (contract analysis, will/trust parsing, legal Q&A). The Nemotron service is built as a **shared capability** that gets exported to Sirsi Nexus. (See Phase 0.5)
+3. **Turborepo WIRED** — `turbo.json` v2 tasks format, workspaces: `web` + `shared`. Build verified: `turbo build` → 312 modules, 0 errors.
+4. **NemoClaw / Nemotron** — NVIDIA's open-weight legal AI model. Used for legal document intelligence. Deferred to Phase 2.
+5. **Best-in-class design** — Every interface must be PREMIUM. 19 design skills support this. No AI slop, no generic layouts.
 
 ## Technology Stack
 
-| Layer | Tech |
-|-------|------|
-| Web | React 18, Vite, TanStack (Router/Query), shadcn/ui, Tailwind |
-| Mobile | React Native, Expo, NativeWind |
-| Desktop | Tauri (Rust) |
-| Backend | **Go + ConnectRPC + Protobuf** on Cloud Run |
-| Database | Firestore + Cloud SQL (PostgreSQL) |
-| Auth | Firebase Auth + Identity Platform (MFA) |
-| Encryption | Cloud KMS + Web Crypto API (AES-256-GCM) |
-| AI (Guidance) | Firebase Genkit + Vertex AI (Gemini Pro/Flash) |
-| AI (Legal) | **NemoClaw + NVIDIA Nemotron 3** (self-hosted or via NIM) |
-| Media | YouTube Data API v3 + Google Photos API |
-| E-Sign/Pay/Bank | Sirsi Sign (sign.sirsi.ai) — consumes OpenSign, Stripe, Plaid |
-| Email | Firebase Extension: Trigger Email |
-| Push | Firebase Cloud Messaging (FCM) |
-| Monorepo | **Turborepo** (stubbed) |
+| Layer | Tech | Status |
+|-------|------|:------:|
+| Web | React 18, Vite, TanStack (Router/Query), shadcn/ui, Tailwind v4 | ✅ |
+| Mobile | React Native, Expo, NativeWind | 🔲 |
+| Desktop | Tauri (Rust) | 🔲 |
+| Backend | **Go + ConnectRPC + Protobuf** on Cloud Run | 🔲 |
+| Database | Firestore + Cloud SQL (PostgreSQL) | ⚠️ Firestore only |
+| Auth | Firebase Auth + Identity Platform (MFA) | ⚠️ localStorage mock |
+| Encryption | Cloud KMS + Web Crypto API (AES-256-GCM) | 🔲 |
+| AI (Guidance) | Firebase Genkit + Vertex AI (Gemini Pro/Flash) | 🔲 |
+| AI (Legal) | **NemoClaw + NVIDIA Nemotron 3** | 🔲 Deferred |
+| Media | YouTube Data API v3 + Google Photos API | 🔲 |
+| E-Sign/Pay/Bank | Sirsi Sign (sign.sirsi.ai) | ✅ External |
+| Monorepo | **Turborepo** | ✅ Wired |
 
 ## Git State
 
-- **Branch:** `main` (merged from `develop`, tagged `v0.1.0-alpha`)
+- **Branch:** `develop` (latest: `0e95452`)
 - **Remote:** `github.com:SirsiMaster/FinalWishes.git`
-- **After merge, both `main` and `develop` should be pushed**
+- **Clean working tree** — all Phase 0 + 0.5 committed & pushed
 
 ## What's Built vs. What's Broken
 
 ### Built ✅
 - Landing page (deployed at `legacy-estate-os.web.app`)
 - Login UI (Royal Neo-Deco glass)
-- Dashboard shells (9 routes, Lockhart mock data)
+- Dashboard shells (9 routes, Lockhart mock data) — **ELI5 swept, all jargon removed**
 - Memoirs page (VideoCard, PhotoCard, cinema viewer)
 - Client-side encryption (`shared/crypto/`)
 - Shared types (`shared/types/`)
-- Design tokens (`globals.css`, 326 lines)
+- Design tokens (`globals.css`, 584 lines — Royal Neo-Deco + shadcn)
 - Firebase Hosting
+- **shadcn/ui** — 13 components (Radix + Nova)
+- **Turborepo** — wired with v2 tasks
+- **npm packages** — firebase, sonner, recharts, @react-pdf/renderer, tiptap
 
 ### Broken / Mock ❌
 - **Auth is fake** — localStorage, not Firebase Auth
 - **All data is mock** — `client.ts` Proxy returns hardcoded Lockhart data
 - **Go API is empty** — zero working endpoints
 - **Cloud SQL / KMS / Cloud Run** — not provisioned
-- **`web/dist/` in git** — build artifact committed, needs gitignore
 - **No CI/CD** — manual deploys
 
-## Execution Phases
+## Completed Phases
 
-### PHASE 0: Stabilize & Merge (~2 days)
-- Landing page viewport font audit
-- Dashboard ELI5 sweep (remove "Shard"/"Protocol"/"Enclave")
-- Remove `web/dist/` from git
-- ✅ **DONE: `develop` → `main` merge + `v0.1.0-alpha` tag**
+### ✅ PHASE 0: Stabilize (DONE — March 19)
+- ✅ Removed `web/dist/` from git
+- ✅ Hardened `.gitignore` (root + web)
+- ✅ Landing page font audit — no issues
+- ✅ Dashboard ELI5 sweep — 9 routes scrubbed (Shard/Protocol/Enclave → Estate/Document/Family)
 
-### PHASE 0.5: Tool Acquisition & Staging (~3 days) ← NEW
-Acquire/configure/verify ALL tools before writing application code:
+### ✅ PHASE 0.5: Tool Acquisition (DONE — March 19)
+- ✅ shadcn/ui initialized (Radix + Nova, 13 components)
+- ✅ Turborepo wired (web + shared workspaces)
+- ✅ npm packages installed (firebase, sonner, recharts, tiptap, react-pdf)
+- ✅ Build verified (312 modules, 0 errors, 3.6s)
+- ✅ **19 Antigravity skills installed** (frontend-design, security-guidance, firebase, golang-pro, grpc-golang, react-best-practices, react-native-architecture, react-patterns, shadcn, tailwind-design-system, ui-ux-pro-max, api-design-principles, security-auditor, test-driven-development, systematic-debugging, webapp-testing, web-performance-optimization, go-concurrency-patterns, notebooklm)
+- ⏳ Go modules — deferred to first endpoint
+- ⏳ NemoClaw — deferred to Phase 2
 
-**Google Cloud APIs to Enable:**
-- YouTube Data API v3, Google Photos Library API
-- Vertex AI API, Document AI API (future)
-- Cloud KMS, Cloud Tasks, Cloud Scheduler
-- Firebase Extensions: Trigger Email, Resize Images
+## PHASE 1: Real Infrastructure (START HERE)
 
-**npm Packages to Install:**
-- `firebase` (client SDK), `firebase-admin` (server SDK)
-- `@connectrpc/connect`, `@connectrpc/connect-web`, `@bufbuild/protobuf`
-- `shadcn/ui` (init + core components)
-- `tiptap` (rich text editor for directives)
-- `@react-pdf/renderer` (PDF generation)
-- `sonner` (toast notifications)
-- `recharts` (charts for completion score)
-- `turbo` (monorepo runner)
+### Week 1 — Authentication & API Foundation
+1. **Firebase Auth SDK** — replace localStorage with real Firebase Auth
+   - Wire `firebase/auth` into the app
+   - Login/logout flow, session persistence
+   - MFA (TOTP) setup with Identity Platform
+2. **Go API scaffold** — first ConnectRPC endpoints
+   - `UserService.GetUser`, `EstateService.GetEstate`
+   - Cloud Run Dockerfile
+   - Wire `connectrpc.com/connect` + `firebase.google.com/go/v4`
 
-**Go Modules to Install:**
-- `firebase.google.com/go/v4` (Firebase Admin)
-- `connectrpc.com/connect` (ConnectRPC server)
-- `github.com/jackc/pgx/v5` (Cloud SQL PostgreSQL)
-- `cloud.google.com/go/kms` (Cloud KMS)
-- `cloud.google.com/go/storage` (Cloud Storage)
-- `github.com/firebase/genkit/go` (Genkit AI)
-- `google.golang.org/api/youtube/v3` (YouTube API)
+### Week 2 — Data Layer
+3. **Firestore security rules** — estate-scoped, owner/beneficiary roles
+4. **Wire dashboard to real data** — replace mock Proxy with Firestore reads
+5. **Cloud SQL provisioning** — PostgreSQL for PII vault
+6. **Cloud KMS** — encryption key management
 
-**NVIDIA NemoClaw Stack:**
-- Evaluate deployment: local (Apple Silicon) vs GCP (NVIDIA NIM / Cloud Run GPU)
-- Pull Nemotron 3 Nano or Super model weights (HuggingFace)
-- Prototype legal document processing flow
-- Design as shared `ai/nemoclaw/` package exportable to Sirsi Nexus
+### Week 3 — Design System & Components
+7. **shadcn/ui Royal Neo-Deco theming** — customize all 13 components
+   - Primary: Royal Blue (#133378)
+   - Accent: Metallic Gold (#C8A951)
+   - Glass cards, film grain, gold borders
+8. **Component library** — build reusable estate-specific components
 
-**Verification:**
-- Each tool: install → import → "hello world" test → confirm version in VERSION_REGISTRY
-
-### PHASE 1: Real Infrastructure (Weeks 1-4)
-1. Firebase Auth SDK (replace localStorage)
-2. Go API: ConnectRPC endpoints (users, estates, assets, documents)
-3. Firestore security rules (estate-scoped)
-4. Cloud SQL + Cloud KMS provisioning
-5. Wire frontend to real Firestore/API data
-6. CI/CD (GitHub Actions → Firebase Hosting + Cloud Run)
-7. shadcn/ui Royal Neo-Deco theming
-
-### PHASE 2: Core Features (Weeks 5-10)
-1. Document Vault — Cloud Storage + KMS encryption
-2. Video Memorials — YouTube Data API
-3. Photo Galleries — Google Photos API
-4. Digital Lockbox — encrypted credentials
-5. Final Directives — tiptap + PDF + Sirsi Sign
-6. Time Capsules — Cloud Tasks scheduled delivery
-7. The Shepherd AI — Genkit + Vertex AI (Gemini)
-8. NemoClaw Legal Intelligence — Nemotron 3 for document analysis
-9. Beneficiary Management — invitations + email
-10. Notifications — real-time Firestore + FCM
-
-### PHASE 3: Mobile & Desktop (Weeks 9-12)
-### PHASE 4: QA, Security & Launch (Weeks 13-16)
+### Week 4 — CI/CD & Deployment
+9. **GitHub Actions** — lint, build, deploy
+10. **Firebase Hosting** — preview channels for PRs
+11. **Cloud Run** — Go API auto-deploy from `develop`
+12. **Merge to main** — `v0.2.0-alpha` release
 
 ## Rules
 
@@ -158,7 +140,9 @@ Acquire/configure/verify ALL tools before writing application code:
 6. **Git identity:** `SirsiMaster` exclusively
 7. **No slate/grey text** — `#0F172A` dark or `#133378` Royal Blue only
 8. **Update VERSION_REGISTRY.md** after every component change
+9. **Best-in-class design** — 19 skills enforce premium aesthetics. No generic UI.
+10. **Sprint plan before code** — Rule 17. Present plan, get approval, then build.
 
 ---
 
-**Ready. Start by reading `GEMINI.md`, then execute Phase 0 remaining tasks, then Phase 0.5.**
+**Ready. Start by reading `GEMINI.md`, then present a Sprint Plan for Phase 1, Week 1.**

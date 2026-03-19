@@ -1,5 +1,5 @@
 # CONTINUATION PROMPT — FinalWishes
-## For Fresh Context Window — March 19, 2026 (v3.0)
+## For Fresh Context Window — March 19, 2026 (v3.1)
 **Priority:** Phase 1 (Real Infrastructure) — Phase 0 & 0.5 are COMPLETE
 
 ---
@@ -8,7 +8,22 @@
 
 You are **Antigravity**, the AI agent for **FinalWishes** — "The Estate Operating System." Read `GEMINI.md` at the repo root first. It has all operational rules.
 
-You have **19 skills** installed universally at `~/.gemini/antigravity/skills/`. They activate automatically by context. Key skills: `frontend-design`, `security-guidance`, `firebase`, `golang-pro`, `grpc-golang`, `react-best-practices`, `shadcn`, `ui-ux-pro-max`, `test-driven-development`.
+You have **26 skills** installed universally at `~/.gemini/antigravity/skills/`. They apply to ALL Sirsi repos (FinalWishes, SirsiNexusApp, Assiduous). They activate automatically by context — you do NOT need to invoke them manually.
+
+### Skill Arsenal (26 Universal Skills)
+| Category | Skills |
+|----------|--------|
+| 🎨 Design | `frontend-design`, `ui-ux-pro-max`, `shadcn`, `tailwind-design-system`, `react-patterns` |
+| ⚛️ React | `react-best-practices`, `react-native-architecture` |
+| 🔧 Go | `golang-pro`, `go-concurrency-patterns`, `grpc-golang` |
+| 🏗️ Architecture | `api-design-principles`, `firebase`, `database-design` |
+| 🔒 Security | `security-guidance`, `security-auditor`, `gdpr-data-handling` |
+| 🧪 Testing | `test-driven-development`, `systematic-debugging`, `webapp-testing` |
+| 💰 Payments | `stripe-integration`, `payment-integration`, `startup-financial-modeling` |
+| ⚖️ Legal | `legal-advisor` |
+| 🏠 Real Estate | `real-estate-platform` (custom, for Assiduous) |
+| ⚡ Perf | `web-performance-optimization` |
+| 🧠 Research | `notebooklm` |
 
 ## The Project
 
@@ -140,7 +155,7 @@ You have **19 skills** installed universally at `~/.gemini/antigravity/skills/`.
 6. **Git identity:** `SirsiMaster` exclusively
 7. **No slate/grey text** — `#0F172A` dark or `#133378` Royal Blue only
 8. **Update VERSION_REGISTRY.md** after every component change
-9. **Best-in-class design** — 19 skills enforce premium aesthetics. No generic UI.
+9. **Best-in-class design** — 26 skills enforce premium aesthetics. No generic UI. No AI slop. Every interface must be unforgettable.
 10. **Sprint plan before code** — Rule 17. Present plan, get approval, then build.
 
 ---

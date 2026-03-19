@@ -1,271 +1,161 @@
-# Continuation Prompt: Landing Page Polish + Dashboard Hardening Sprint
-## FinalWishes — "The Estate Operating System"
-
-## **Session Date:** March 18, 2026
-
----
-
-## **Role & Mission**
-You are **Antigravity**, the AI agent for the **FinalWishes** repository. Your mission is to complete the landing page polish, ensure full functional routing, and harden the admin dashboard for all test accounts.
-
-**CRITICAL**: Read `GEMINI.md` before writing any code. This is the FinalWishes repo, NOT SirsiNexusApp.
+# CONTINUATION PROMPT — FinalWishes
+## For Fresh Context Window — March 18, 2026
+**Priority:** Start Phase 0 (Stabilize & Merge), then Phase 1 (Real Infrastructure)
 
 ---
 
-## **What Was Built This Session (March 18)**
+## Who You Are
 
-### Landing Page Overhaul (8 commits)
-| Commit | Description |
-|--------|-------------|
-| `4204e51` | Restored 12+ missing CSS custom properties in `.royal-theme` and `.dashboard-theme` — fixed transparent glass-card/glass-panel rendering on landing page |
-| `9437a0d` | Harmonized glass color system — aligned `--bg-secondary` with inline section backgrounds |
-| `cb948c3` | Sparkling glass system — luminous cards with `saturate(1.4)`, inset highlights, gold glow hovers |
-| `8585421` | Sapphire shift — purged all dark navy (`#0B1A3E`, `#0f172a`) for rich sapphire (`#1E3A8A`) |
-| `e7b0bce` | Neutral image overlays (no blue tint) + removed color block sections |
-| `971cbc0` | Reduced hero section from 100vh to 75vh |
-| `f4c9616` | Compacted ALL sections — hero 65vh, images 280px, dividers 20px |
-| `f8100d9` | Restored original Black family hero image (`photo-1551836022-d5d88e9218df`) |
+You are **Antigravity**, the AI agent for the **FinalWishes** project — "The Estate Operating System." Read `GEMINI.md` at the repo root before doing anything. It contains all operational rules.
 
-### Admin Dashboard High-Fidelity Executive Refactor (4 pages)
-| Page | File | Changes |
-|------|------|---------|
-| Dashboard | `estates.$estateId.dashboard.tsx` | Fixed stray `);` syntax error, consolidated TypeScript interfaces |
-| Memoirs | `estates.$estateId.memoirs.tsx` | Cinema-grade viewer, clean white cards, refined upload modal |
-| Assets | `estates.$estateId.assets.tsx` | Institutional ledger table, clean slate borders, refined modal |
-| Estates | `estates.$estateId.estates.tsx` | Clean estate cards, understated badges, premium registration modal |
+## The Project
 
-### Design Language Established
-- **Heritage Royal** (`#133378`) for headers and accents
-- **Dark Ink** (`#0F172A`) for body text — never bold blue
-- **Slate palette** (`#64748B`, `#F8FAFC`, `#F1F5F9`) for supporting elements
-- **Sentence case** descriptions — no more UPPERCASE SHOUTING
-- **`font-bold`** instead of `font-black` for professional weight
-- **Cinzel** for page titles, **Inter** for body text
+**FinalWishes** is a $95,000 "Living Legacy" platform (MSA-2025-111-FW, SOW-2025-001). It is NOT a probate tool. It lets a person (the Principal) organize memories, documents, final instructions, and asset designations — then control exactly how and when that legacy is delivered to their heirs.
 
----
+**The contract was pivoted on Feb 17, 2026** from a $175K probate-focused platform to a $95K Google-first media preservation and directive management platform. The pivot record lives at:
+- `closed_conversations/2026-02-17-FinalWishes-Contract-Overhaul.md`
+- The executed contract: `SirsiNexusApp/packages/sirsi-opensign/public/finalwishes/contracts/printable-msa.html`
 
-## **🚨 P0: CRITICAL — Must Do First**
+## Canon Documents (Read These First)
 
-### 1. Hero Image — WRONG IMAGE DEPLOYED
-**Status**: The hero currently shows the WRONG image. The Unsplash URL `photo-1551836022-d5d88e9218df` does NOT resolve to the correct family photo — it resolves to a corporate stock photo of two women at a laptop.
+| Document | Path | What It Contains |
+|----------|------|-----------------|
+| **GEMINI.md** | `/Development/FinalWishes/GEMINI.md` | All operational rules, design system, stack |
+| **Canonical Development Plan** | `docs/CANONICAL_DEVELOPMENT_PLAN.md` | Google-first feature→service mapping, tiers, roadmap |
+| **Product Specification** | `docs/PRODUCT_SPECIFICATION.md` | Every screen, feature, API route, data flow |
+| **Data Model Lock** | `docs/DATA_MODEL_LOCK.md` | Locked Firestore + Cloud SQL schemas |
+| **ADR Index** | `docs/ADR-INDEX.md` | All 33 architectural decision records |
+| **ADR-033** | `docs/ADR-033-DESIGN-SYSTEM-ACCELERATION.md` | shadcn/ui + cross-portfolio reuse strategy |
 
-**The correct image** (confirmed visually by the user in conversation `60524584-e9c8-4a2c-b535-0f85c23fc2ab`, Step 1327):
-- **Description**: A **multi-generational African American family** (6 people) FACING THE CAMERA and smiling broadly
-- **People**: Grandmother (short hair, pink blouse, left), Father (bald, olive shirt, center-left), Daughter (~8yo, on father's back), Son (~11yo, blue shirt, center), Mother (curly hair, patterned top, center-right), Grandfather (grey beard, white shirt, right)
-- **Setting**: Outdoors, green trees behind them, golden sun flare from upper-left
-- **Mood**: Joyful, warm, multi-generational connection
-- **Current file**: `web/public/assets/images/hero-family.jpg` — THIS FILE IS WRONG, needs to be replaced
-- **Hero reference**: `web/src/routes/index.tsx` line 92 — currently uses `/assets/images/hero-family.jpg`
+## Technology Stack
 
-**Action Required**:
-- The user MUST provide the correct image file, OR
-- Search for the exact image on stock photo sites matching the description above
-- Save to `web/public/assets/images/hero-family.jpg` (overwrite the wrong one)
-- The git history version at `8f23790:images/hero-family.jpg` is ALSO the wrong image (family facing AWAY from camera)
-- Do NOT use any Unsplash URL — serve locally only
+| Layer | Tech | Notes |
+|-------|------|-------|
+| Web | React 18, Vite, TanStack (Router/Query), shadcn/ui | Tailwind CSS, Royal Neo-Deco theme |
+| Mobile | React Native, Expo, NativeWind | Shared logic with web via `shared/` |
+| Desktop | Tauri (Rust) | Wraps the web app |
+| Backend | Go (Golang) on Cloud Run | REST+JSON (migrating from ConnectRPC) |
+| Database | Firestore + Cloud SQL (PostgreSQL) | Firestore for metadata, Cloud SQL for PII |
+| Auth | Firebase Auth + Identity Platform | MFA (TOTP), custom claims |
+| Encryption | Cloud KMS + Web Crypto API (AES-256-GCM) | Client-side encrypt, Cloud KMS for key management |
+| AI | Firebase Genkit + Vertex AI (Gemini) | The Shepherd guidance engine |
+| Media | YouTube Data API v3 + Google Photos API | Video memorials + photo galleries |
+| E-Sign/Pay/Bank | Sirsi Sign (sign.sirsi.ai) | Consumes OpenSign, Stripe, Plaid as services |
+| Email | Firebase Extension: Trigger Email | Zero-code — write to Firestore, email sent |
+| Push | Firebase Cloud Messaging (FCM) | Time capsule delivery, death alerts |
 
-### 2. Landing Page Link Audit
-**Every link on the landing page must work**:
+## Design System: Royal Neo-Deco
 
-| Element | Current Target | Status |
-|---------|---------------|--------|
-| Nav: "Problem" | `#problem` | ✅ Anchor link |
-| Nav: "Protocol" | `#protocol` | ✅ Anchor link |
-| Nav: "Security" | `#security` | ✅ Anchor link |
-| Nav: "Stories" | `#stories` | ✅ Anchor link |
-| Nav: "Sign In" | `/login` | ⚠️ Verify renders |
-| Nav: "Get Started" | `/login` | ⚠️ Verify renders |
-| CTA: "Begin Your Legacy" | `/login` | ⚠️ Verify renders |
-| CTA: "See How It Works" | `#protocol` | ✅ Anchor link |
-| Protocol: "Start Your Protocol" | `/login` | ⚠️ Verify renders |
-| Final CTA: "Begin Your Legacy" | `/login` | ⚠️ Verify renders |
-| Footer links | Various | ❌ Audit needed |
+- **Background:** Deep Royal Blue gradient (NOT black, NOT emerald)
+- **Primary:** Royal Blue `#133378` / `#1E3A5F` / `#2563EB`
+- **Accent:** Metallic Gold `#C8A951` (NO gradients on buttons)
+- **Headings:** Cinzel (serif, uppercase tracking)
+- **Body:** Inter (sans-serif)
+- **Components:** 24px rounded glass cards, gold borders, film grain overlay
+- **Branding & Identity** ($30K add-on) was purchased — all UI must conform
 
-**Action**: Click every link in browser, verify no 404s, ensure login route works.
+## Current State of the Codebase
 
----
+### What's Built and Working
+- ✅ Landing page — deployed at `legacy-estate-os.web.app`
+- ✅ Login page — UI built (Royal Neo-Deco glass aesthetic)
+- ✅ Dashboard — 9 route files with UI shells (uses mock Lockhart data)
+- ✅ Memoirs page — VideoCard, PhotoCard, cinema-grade viewer modal
+- ✅ Client-side encryption — `shared/crypto/index.ts`
+- ✅ Shared types — `shared/types/index.ts`
+- ✅ CSS design system — `web/src/styles/globals.css` (326 lines)
+- ✅ Firebase Hosting — live deployment
 
-## **P1: Dashboard Role Hardening**
+### What's Broken / Not Real
+- ❌ **Auth is fake** — `login.tsx` stores `{ authenticated: true }` in localStorage
+- ❌ **All data is mock** — `web/src/lib/client.ts` has a Proxy that returns hardcoded Lockhart Estate data on 400ms timeout
+- ❌ **Go API is empty** — project structure exists, zero working endpoints
+- ❌ **ConnectRPC** — the client imports from `../gen/estate/v1/estate_pb` which references a proto-generated client. **Decision: switch to REST+JSON.**
+- ❌ **Firestore rules** — basic, not estate-scoped
+- ❌ **Cloud SQL** — not provisioned
+- ❌ **Cloud KMS** — not provisioned
+- ❌ **CI/CD** — manual deploys only
+- ❌ **`develop` ≠ `main`** — 30+ commits on `develop` not merged. **Merge immediately.**
+- ❌ **Build artifacts in git** — `web/dist/` is committed (should be gitignored)
 
-### Current Auth System (Stub — localStorage)
-The login page (`web/src/routes/login.tsx`) currently hardcodes **one credential**:
+### Key Files
 
-```
-Tameeka Lockhart (SuperAdmin):
-  - Login: Tameeka116
-  - Email: Tameekalockhart@gmail.com
-  - Phone: 123-456-7890
-  - Password: ML6824!
-  - Primary Estate: estate_lockhart (Lockhart Estate)
-```
+| File | Purpose |
+|------|---------|
+| `web/src/lib/client.ts` | API client with mock Lockhart data fallback — **must be rewritten** |
+| `web/src/routes/login.tsx` | Login UI — **must wire to Firebase Auth** |
+| `web/src/routes/estates.$estateId.memoirs.tsx` | Memoirs page — **must wire to YouTube API** |
+| `web/src/routes/index.tsx` | Landing page — polished, deployed |
+| `web/src/styles/globals.css` | Design system tokens — Royal Neo-Deco |
+| `web/src/components/layout/Sidebar.tsx` | Dashboard sidebar navigation |
+| `web/src/components/layout/AdminHeader.tsx` | Dashboard header |
+| `shared/crypto/index.ts` | AES-256-GCM encrypt/decrypt utilities |
+| `shared/types/index.ts` | TypeScript types for Estate, Asset, Document, etc. |
+| `api/scripts/seed/main.go` | Go seed script (mostly empty) |
+| `functions/index.js` | Firebase Functions (basic Cloud Storage trigger) |
 
-### Required: Multi-Role Test Accounts
-Per GEMINI.md test credentials and business requirements, implement these test accounts:
+### Git State
+- **Branch:** `develop` (HEAD)
+- **Last commit:** `d764328` — "canon: complete product specification"
+- **30+ commits ahead of `main`** — needs merge
+- **13 Dependabot vulnerabilities** — non-blocking (node_modules)
 
-| User | Role | Estate Access | Login |
-|------|------|--------------|-------|
-| **Tameeka Lockhart** | SuperAdmin/Owner | Lockhart Estate (full access) | `Tameeka116` / `ML6824!` |
-| **Cylton Collymore** | Admin | Lockhart Estate (admin) | `cylton@sirsi.ai` / `Sirsi2026!` |
-| **Heir Account** | Beneficiary | Lockhart Estate (read-only) | `heir@test.com` / `Test123!` |
-| **Attorney Account** | Executor | Lockhart Estate (legal) | `attorney@test.com` / `Test123!` |
+## What To Do Next (In Order)
 
-### Per-Role Dashboard Routing
-Each role should see different sidebar links and have appropriate access:
+### PHASE 0: Stabilize & Merge (~2 days)
+1. Landing page final viewport font audit + minor polish
+2. Dashboard ELI5 sweep (remove "Shard"/"Protocol"/"Enclave" language)
+3. Remove `web/dist/` from git, add to `.gitignore`
+4. Merge `develop` → `main`, tag `v0.1.0-alpha`
 
-| Route | Owner | Admin | Beneficiary | Executor |
-|-------|-------|-------|-------------|----------|
-| `/estates/{id}/dashboard` | ✅ | ✅ | ✅ | ✅ |
-| `/estates/{id}/assets` | ✅ | ✅ | ✅ (read) | ✅ (read) |
-| `/estates/{id}/beneficiaries` | ✅ | ✅ | ❌ | ✅ |
-| `/estates/{id}/memoirs` | ✅ | ✅ | ✅ | ❌ |
-| `/estates/{id}/vault` | ✅ | ✅ | ❌ | ✅ |
-| `/estates/{id}/obituary` | ✅ | ✅ | ✅ | ✅ |
-| `/estates/{id}/notifications` | ✅ | ✅ | ✅ | ✅ |
-| `/estates/{id}/settings` | ✅ | ✅ | ❌ | ❌ |
-| `/estates/{id}/estates` | ✅ | ✅ | ❌ | ❌ |
+### PHASE 1: Real Infrastructure (Weeks 1-4)
+1. Firebase Auth SDK integration (replace localStorage)
+2. Go API: rest endpoints (users, estates, assets, documents)
+3. Firestore security rules (estate-scoped access)
+4. Cloud SQL provisioning + PII tables
+5. Cloud KMS key ring + crypto key
+6. Wire React frontend to real Firestore/API data
+7. CI/CD (GitHub Actions → Firebase Hosting + Cloud Run)
+8. shadcn/ui initialization + Royal Neo-Deco theming
 
----
+### PHASE 2: Core Features (Weeks 5-10)
+1. Document Vault — Cloud Storage + KMS encryption flow
+2. Video Memorials — YouTube Data API integration
+3. Photo Galleries — Google Photos API integration
+4. Digital Lockbox — encrypted credential storage
+5. Final Directives — tiptap editor + PDF export + Sirsi Sign signing
+6. Time Capsules — Cloud Tasks scheduled delivery
+7. The Shepherd AI — Genkit flows + Vertex AI Gemini
+8. Beneficiary Management — invitation emails + acceptance flow
+9. Notifications — real-time Firestore + FCM push
 
-## **P2: Dashboard Page Polish**
+### PHASE 3: Mobile & Desktop (Weeks 9-12)
+### PHASE 4: QA, Security & Launch (Weeks 13-16)
 
-### Pages Already Refactored (High-Fidelity Executive)
-- ✅ `estates.$estateId.dashboard.tsx`
-- ✅ `estates.$estateId.memoirs.tsx`
-- ✅ `estates.$estateId.assets.tsx`
-- ✅ `estates.$estateId.estates.tsx`
+Full details in the phased execution plan (artifact in conversation `344e7d88`).
 
-### Pages Still Need Refactoring
-Apply the same High-Fidelity Executive aesthetic:
-- ❌ `estates.$estateId.beneficiaries.tsx`
-- ❌ `estates.$estateId.obituary.tsx`
-- ❌ `estates.$estateId.notifications.tsx`
-- ❌ `estates.$estateId.settings.tsx`
-- ❌ `estates.$estateId.vault.tsx`
+## Sirsi Sign Integration
 
-### Design Rules for Refactoring
-1. Headers: `text-5xl font-cinzel font-bold text-[#0F172A]` — NEVER uppercase
-2. Descriptions: `text-[#64748B] text-lg font-medium` — sentence case
-3. Cards: `bg-white rounded-[2.5rem] border border-slate-100 shadow-sm`
-4. Buttons: `bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-2xl font-bold`
-5. Labels: `text-[11px] font-bold text-slate-400 uppercase tracking-widest`
-6. Modals: `bg-white rounded-[3rem] p-16 shadow-2xl`
-7. No `font-black`, no uppercase body text, no bold blue descriptions
+FinalWishes **consumes** Sirsi Sign at `sign.sirsi.ai` — it does NOT build its own:
+- **E-Signatures** → OpenSign (already deployed)
+- **Payments** → Stripe (already integrated)
+- **Bank Linking** → Plaid (already integrated)
+- **MFA Ceremony** → Already built
+- **PDF Generation** → Puppeteer (already running)
 
----
+Per MSA §4.6: *"These integrations shall route through Provider's infrastructure."*
 
-## **P3: Duplicate Route Cleanup**
+## Critical Rules
 
-There are TWO parallel route trees that appear to serve similar purposes:
-
-```
-dashboard.*.tsx        — Legacy flat routes (/dashboard/assets, etc.)
-estates.$estateId.*.tsx — Scoped estate routes (/estates/lockhart/assets, etc.)
-```
-
-### Decision Required
-- Are both needed? (Multi-estate users may need the scoped routes)
-- Does `/dashboard` redirect to `/estates/{primaryEstateId}/dashboard`?
-- Currently `/dashboard` loads `dashboard.tsx` layout, while `/estates/{id}/*` loads `estates.$estateId.tsx` layout — they have separate sidebars.
+1. **Branding & Identity** ($30K) was purchased — all UI must conform to its design specs
+2. **State engines (MD/IL/MN probate) are NOT in scope** — they're a $35K add-on
+3. **Plaid direct integration is NOT in scope** — bank linking is consumed via Sirsi Sign
+4. **Browser subagent** must use `ccollymo@alumni.chicagobooth.edu` Chrome profile (Rule 28)
+5. **Identity**: All Git/Firebase work uses `SirsiMaster` account exclusively
+6. **No slate/grey text** — use only `#0F172A` (dark) or `#133378` (Royal Blue)
+7. **No gradients on buttons** — solid Metallic Gold `#C8A951` only
+8. **Git repo**: `github.com/SirsiMaster/FinalWishes`, local at `/Users/thekryptodragon/Development/FinalWishes`
 
 ---
 
-## **Current File Map**
-
-### Routes (24 files)
-```
-web/src/routes/
-├── __root.tsx                          # Root layout (bare Outlet)
-├── index.tsx                           # Public landing page (Royal theme)
-├── login.tsx                           # Auth stub (localStorage, Tameeka only)
-├── dashboard.tsx                       # Legacy dashboard layout (Sidebar + AdminHeader)
-├── dashboard.index.tsx                 # Legacy dashboard home
-├── dashboard.assets.tsx                # Legacy assets
-├── dashboard.beneficiaries.tsx         # Legacy beneficiaries
-├── dashboard.estates.tsx               # Legacy estates
-├── dashboard.memoirs.tsx               # Legacy memoirs
-├── dashboard.notifications.tsx         # Legacy notifications
-├── dashboard.obituary.tsx              # Legacy obituary
-├── dashboard.settings.tsx              # Legacy settings
-├── dashboard.vault.tsx                 # Legacy vault
-├── estates.$estateId.tsx               # Scoped estate layout
-├── estates.$estateId.index.tsx         # Estate redirect
-├── estates.$estateId.dashboard.tsx     # ✅ REFACTORED
-├── estates.$estateId.assets.tsx        # ✅ REFACTORED
-├── estates.$estateId.beneficiaries.tsx # Needs refactor
-├── estates.$estateId.estates.tsx       # ✅ REFACTORED
-├── estates.$estateId.memoirs.tsx       # ✅ REFACTORED
-├── estates.$estateId.notifications.tsx # Needs refactor
-├── estates.$estateId.obituary.tsx      # Needs refactor
-├── estates.$estateId.settings.tsx      # Needs refactor
-└── estates.$estateId.vault.tsx         # Needs refactor
-```
-
-### Components
-```
-web/src/components/layout/
-├── Sidebar.tsx                         # Dashboard sidebar navigation
-├── AdminHeader.tsx                     # Dashboard header bar
-```
-
-### Styles
-```
-web/src/styles/
-├── globals.css                         # Global CSS + .royal-theme + .dashboard-theme
-```
-
-### Key Config
-```
-firebase.json                           # Hosting: web/dist → legacy-estate-os.web.app
-GEMINI.md                               # Project governance (READ FIRST)
-DOMAIN_MANIFEST.md                      # File ownership map
-docs/DATA_MODEL_LOCK.md                 # Frozen data model
-```
-
----
-
-## **Deploy Pipeline**
-```bash
-# Build + Deploy
-cd web && npm run build && cd .. && firebase deploy --only hosting
-
-# Git Push
-git add -A && git commit -m "message" && git push origin develop
-```
-
-**Production URL**: https://legacy-estate-os.web.app
-**GitHub**: https://github.com/SirsiMaster/FinalWishes
-
----
-
-## **Color Reference Card**
-
-| Token | Hex | Usage |
-|-------|-----|-------|
-| Heritage Royal | `#133378` | Headers, accents, primary buttons |
-| Royal Blue | `#1E3A5F` | Button hover states |
-| Sapphire (landing bg) | `#1A347A` | Landing page base gradient |
-| Bright Sapphire | `#2563EB` | Landing gradient top glow |
-| Dark Ink | `#0F172A` | Body text color (dashboard) |
-| Slate 500 | `#64748B` | Descriptions, supporting text |
-| Slate 100 | `#F1F5F9` | Card borders, badges |
-| Slate 50 | `#F8FAFC` | Background tint, empty states |
-| Gold | `#C8A951` | Accent highlights, gold borders |
-
----
-
-## **Sprint Execution Order**
-
-1. **P0-A**: Extract `hero-family.jpg` from git, serve as local asset, update hero `<img>` src
-2. **P0-B**: Audit and fix every link on the landing page
-3. **P1-A**: Add multi-role test credentials to `login.tsx`
-4. **P1-B**: Implement role-based sidebar visibility
-5. **P1-C**: Verify Tameeka's full access end-to-end
-6. **P2**: Refactor remaining dashboard pages (Beneficiaries, Obituary, Notifications, Settings, Vault)
-7. **P3**: Decide on and resolve dashboard.* vs estates.$estateId.* route duplication
-8. **Deploy + Verify**: Build, deploy, screenshot every page
-
----
-
-**Signed,**
-**Antigravity (The Agent)**
-**Session: March 18, 2026**
+**Ready to resume. Start by reading `GEMINI.md`, then execute Phase 0.**

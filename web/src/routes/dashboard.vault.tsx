@@ -77,8 +77,8 @@ function VaultPage() {
     <div className="max-w-[1200px] mx-auto space-y-10 pb-20 px-4">
       <div className="flex justify-between items-end border-b border-royal/10 pb-8">
         <div>
-          <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Evidence Vault</h2>
-          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">Digitally signed, AES-256 encrypted legal evidence shards.</p>
+          <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-2">Document Vault</h2>
+          <p className="text-[13px] text-royal/40 font-bold uppercase tracking-widest">Your important documents, securely encrypted and stored.</p>
         </div>
         <div className="flex flex-col items-end gap-3">
           <button 
@@ -89,7 +89,7 @@ function VaultPage() {
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            {uploadMutation.isPending ? 'Securing Shard...' : 'Deposit Document'}
+            {uploadMutation.isPending ? 'Uploading...' : 'Upload Document'}
           </button>
           {uploadStatus && (
             <div className="flex items-center gap-2 px-3 py-1 bg-royal/5 border border-royal/10 rounded-lg">
@@ -110,9 +110,9 @@ function VaultPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <VaultFolder name="Legal Protocols" count={documents.filter(d => d.category === 'Legal').length} color="blue" icon={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />
-        <VaultFolder name="Financial Ledgers" count={documents.filter(d => d.category === 'Financial').length} color="gold" icon={<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>} />
-        <VaultFolder name="Legacy Memoirs" count={documents.filter(d => d.category === 'Memoir').length} color="green" icon={<><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>} />
+        <VaultFolder name="Legal Documents" count={documents.filter(d => d.category === 'Legal').length} color="blue" icon={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />
+        <VaultFolder name="Financial Records" count={documents.filter(d => d.category === 'Financial').length} color="gold" icon={<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>} />
+        <VaultFolder name="Memoirs & Media" count={documents.filter(d => d.category === 'Memoir').length} color="green" icon={<><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>} />
       </div>
 
       <div className="bg-white rounded-[2.5rem] border border-royal/10 p-10 shadow-[0_2px_20px_rgba(19,51,120,0.03)] relative overflow-hidden group">
@@ -120,7 +120,7 @@ function VaultPage() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
              <div className="w-2 h-2 rounded-full bg-royal animate-pulse" />
-             <h3 className="text-[12px] font-black text-royal uppercase tracking-[0.2em]">Verified Vault Inventory</h3>
+             <h3 className="text-[12px] font-black text-royal uppercase tracking-[0.2em]">All Documents</h3>
           </div>
           <div className="flex gap-1.5 opacity-20">
             <div className="w-1.5 h-1.5 rounded-full bg-royal" />
@@ -132,7 +132,7 @@ function VaultPage() {
             <DocItem key={i} name={doc.name} date={doc.date} size={doc.size} />
           ))}
           {documents.length === 0 && (
-            <div className="text-center py-24 text-royal/20 italic bg-royal/[0.01] rounded-[2rem] border-2 border-dashed border-royal/5 font-black uppercase tracking-widest text-xs">No documents detected in this governance shard.</div>
+            <div className="text-center py-24 text-royal/20 italic bg-royal/[0.01] rounded-[2rem] border-2 border-dashed border-royal/5 font-black uppercase tracking-widest text-xs">No documents have been uploaded yet.</div>
           )}
         </div>
       </div>
@@ -157,7 +157,7 @@ function VaultFolder({ name, count, color, icon }: any) {
       <div className="flex items-center gap-2">
         <span className="text-[10px] font-black text-royal/30 uppercase tracking-[0.15em]">{count} element{count !== 1 ? 's' : ''} stored</span>
         <div className="w-1.5 h-1.5 rounded-full bg-royal/10" />
-        <span className="text-[9px] font-black text-[#C8A951] uppercase tracking-[0.2em] shadow-sm px-2 py-0.5 bg-[#C8A951]/5 rounded border border-[#C8A951]/10">Locked Shard</span>
+        <span className="text-[9px] font-black text-[#C8A951] uppercase tracking-[0.2em] shadow-sm px-2 py-0.5 bg-[#C8A951]/5 rounded border border-[#C8A951]/10">Encrypted</span>
       </div>
     </div>
   );
@@ -182,8 +182,8 @@ function DocItem({ name, date, size }: any) {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <div className="px-4 py-1.5 bg-green-50 border border-green-100 rounded-xl text-green-600 text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all shadow-sm">Verified Shard</div>
-        <button className="bg-royal hover:bg-sapphire text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all active:scale-[0.97] shadow-[0_4px_12px_rgba(19,51,120,0.15)] border border-white/10">Execute Download</button>
+        <div className="px-4 py-1.5 bg-green-50 border border-green-100 rounded-xl text-green-600 text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all shadow-sm">Verified</div>
+        <button className="bg-royal hover:bg-sapphire text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all active:scale-[0.97] shadow-[0_4px_12px_rgba(19,51,120,0.15)] border border-white/10">Download</button>
       </div>
     </div>
   );

@@ -34,8 +34,8 @@ function NotificationsPage() {
 
   const notifications = data?.notifications || [
     { title: "Vault Access Authorized", time: "18:42:01", type: "security", desc: "Multi-factor authentication verified for 'Sarah Johnson' (Executor)." },
-    { title: "Asset Shard Synchronized", time: "16:20:15", type: "success", desc: "Real estate valuation updated via Zillow API integration." },
-    { title: "Governance Mode Change", time: "09:12:44", type: "activity", desc: "Authority mode refreshed to 'OWNER_ACTIVE' (Protocol 4A)." },
+    { title: "Asset Valuation Updated", time: "16:20:15", type: "success", desc: "Real estate valuation updated automatically." },
+    { title: "Estate Status Updated", time: "09:12:44", type: "activity", desc: "Estate ownership status confirmed as active." },
   ];
 
   return (

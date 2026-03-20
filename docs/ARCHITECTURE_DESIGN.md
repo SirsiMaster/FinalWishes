@@ -331,11 +331,12 @@ mobile/
 | Service | Purpose | Configuration |
 |---------|---------|---------------|
 | **Cloud Run** | Go API hosting | Auto-scaling 0-10, 512MB RAM |
-| **Firestore** | Real-time database | Native mode, multi-region |
-| **Cloud SQL** | PII storage | PostgreSQL 15, db-f1-micro |
+| **Firestore** | Real-time database | Native mode, multi-region (nam5) |
+| **Cloud SQL** | PII Vault | PostgreSQL 15, `finalwishes-pii-vault`, CMEK via KMS |
 | **Cloud Storage** | Document storage | Standard class, versioning |
-| **Firebase Auth** | Authentication | Email, Google, Apple, MFA |
-| **Cloud KMS** | Key management | Software keys, AES-256 |
+| **Firebase Auth** | Authentication | Email/Password, MFA (TOTP) |
+| **Cloud KMS** | Key management | `finalwishes-keyring`: `pii-vault-key` + `document-vault-key` (AES-256, 365d rotate) |
+| **Secret Manager** | Credentials | `vault-db-password` |
 | **Firebase Hosting** | Web hosting | Global CDN, auto SSL |
 | **Cloud Logging** | Centralized logs | 30-day retention |
 | **Vertex AI** | LLM processing | gemini-pro model |

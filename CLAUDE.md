@@ -1,5 +1,5 @@
-# GEMINI.md
-**Operational Directive for Gemini Agent (FinalWishes)**
+# CLAUDE.md
+**Operational Directive for Claude/Antigravity Agent (FinalWishes)**
 **Version:** 1.2.0 (Traceability Hardened)
 **Date:** March 19, 2026
 

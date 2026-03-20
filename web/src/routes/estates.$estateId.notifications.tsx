@@ -1,7 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useMemo } from 'react'
+import { useEstateNotifications } from '../lib/firestore'
 
 export const Route = createFileRoute('/estates/$estateId/notifications')({
   component: NotificationsPage,
@@ -9,17 +8,9 @@ export const Route = createFileRoute('/estates/$estateId/notifications')({
 
 function NotificationsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/notifications' });
-  const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['notifications', estateId],
-    queryFn: () => estateClient.listNotifications({ estateId }),
-  });
+  const { data: rawNotifications, loading: isLoading } = useEstateNotifications(estateId);
 
   if (isLoading) {
     return (
@@ -32,11 +23,20 @@ function NotificationsPage() {
     );
   }
 
-  const notifications = data?.notifications || [
-    { title: "Document access authorized", time: "6:42 PM", type: "security", desc: "Multi-factor authentication verified for Sarah Johnson (Executor)." },
-    { title: "Asset valuation updated", time: "4:20 PM", type: "success", desc: "Real estate valuation refreshed via automated market analysis." },
-    { title: "Estate status updated", time: "9:12 AM", type: "activity", desc: "Authority mode changed to Active Owner." },
-  ];
+  const notifications = rawNotifications.length > 0
+    ? rawNotifications.map(n => ({
+        title: n.title || 'Activity',
+        time: n.createdAt?.toDate?.()
+          ? n.createdAt.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+          : '',
+        type: n.type || 'activity',
+        desc: n.message || '',
+      }))
+    : [
+        { title: "Document access authorized", time: "6:42 PM", type: "security", desc: "Multi-factor authentication verified for Sarah Johnson (Executor)." },
+        { title: "Asset valuation updated", time: "4:20 PM", type: "success", desc: "Real estate valuation refreshed via automated market analysis." },
+        { title: "Estate status updated", time: "9:12 AM", type: "activity", desc: "Authority mode changed to Active Owner." },
+      ];
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">

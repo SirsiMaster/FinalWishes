@@ -4,6 +4,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.5.2-alpha] — 2026-03-19
+### Added (Phase 1, Week 2 — Invitation System)
+- **Invitation service** (`web/src/lib/invitations.ts`) — Full invitation lifecycle
+  - `sendEstateInvitation`: Creates invitation record + estate subcollection entry
+  - Auto-links if invitee already has a FinalWishes account
+  - `getEstateInvitations`: Lists all invitations for an estate
+  - `revokeInvitation`: Marks invitation as revoked
+  - `hasExistingInvitation`: Duplicate prevention
+  - Backward-compatible exports for `InviteTeamMember` component
+
+### Changed
+- **Beneficiaries page** — Uses invitation system instead of direct heir creation
+  - Shows auto-link feedback when invitee already has an account
+  - Creates proper invitation trail for audit purposes
+
 ## [0.5.1-alpha] — 2026-03-19
 ### Added (Phase 1, Week 2 — Sprint 4: Create Estate Onboarding)
 - **Create Estate page** (`/estates/create`) — Premium 2-step onboarding flow

@@ -219,7 +219,7 @@ SirsiMaster (GitHub Organization)
 ├── FinalWishes            ← Tenant Application (Estate Planning)
 │   ├── Design: Royal Neo-Deco
 │   ├── Consumes: Sirsi Sign, UCS, Auth
-│   └── Firebase: legacy-estate-os (to be migrated)
+│   └── Firebase: finalwishes-prod (independent)
 │
 └── Assiduous              ← Tenant Application (Real Estate)
     ├── Design: Assiduous Modern

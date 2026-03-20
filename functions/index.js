@@ -319,7 +319,7 @@ app.post('/api/envelopes/:id/sign', async (req, res) => {
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
-        service: 'legacy-estate-opensign',
+        service: 'finalwishes-api',
         timestamp: new Date().toISOString()
     });
 });

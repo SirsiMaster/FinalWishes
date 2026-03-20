@@ -14,28 +14,28 @@ const db = admin.firestore();
 
 const testAccounts = [
     {
-        email: 'admin@legacy.estate',
+        email: 'admin@finalwishes.app',
         password: 'LegacyAdmin2025!',
         displayName: 'Legacy Admin',
         role: 'admin',
         subscription: { plan: 'whiteglove', status: 'active' }
     },
     {
-        email: 'principal@legacy.estate',
+        email: 'principal@finalwishes.app',
         password: 'LegacyPrincipal2025!',
         displayName: 'John Principal',
         role: 'principal',
         subscription: { plan: 'concierge', status: 'active' }
     },
     {
-        email: 'executor@legacy.estate',
+        email: 'executor@finalwishes.app',
         password: 'LegacyExecutor2025!',
         displayName: 'Sarah Executor',
         role: 'executor',
         subscription: { plan: 'concierge', status: 'active' }
     },
     {
-        email: 'heir@legacy.estate',
+        email: 'heir@finalwishes.app',
         password: 'LegacyHeir2025!',
         displayName: 'Michael Heir',
         role: 'heir',

@@ -13,10 +13,10 @@ const auth = admin.auth();
 const db = admin.firestore();
 
 const testAccounts = [
-    { email: 'admin@legacy.estate', role: 'admin', expectedPlan: 'whiteglove' },
-    { email: 'principal@legacy.estate', role: 'principal', expectedPlan: 'concierge' },
-    { email: 'executor@legacy.estate', role: 'executor', expectedPlan: 'concierge' },
-    { email: 'heir@legacy.estate', role: 'heir', expectedPlan: 'free' }
+    { email: 'admin@finalwishes.app', role: 'admin', expectedPlan: 'whiteglove' },
+    { email: 'principal@finalwishes.app', role: 'principal', expectedPlan: 'concierge' },
+    { email: 'executor@finalwishes.app', role: 'executor', expectedPlan: 'concierge' },
+    { email: 'heir@finalwishes.app', role: 'heir', expectedPlan: 'free' }
 ];
 
 async function testAuthFlows() {

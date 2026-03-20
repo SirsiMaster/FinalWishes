@@ -1,6 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useRef, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import React, { useState, useRef, useMemo } from 'react'
+import { useCollection } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 
 export const Route = createFileRoute('/estates/$estateId/memoirs')({
@@ -9,57 +9,46 @@ export const Route = createFileRoute('/estates/$estateId/memoirs')({
 
 function MemoirsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/memoirs' });
-  const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [estateId, setEstateId ] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
   const [selectedMemoir, setSelectedMemoir] = useState<any>(null);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
+  const { data: firestoreMemoirs, loading: isLoading } = useCollection<any>(`estates/${estateId}/memoirs`);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['memoirs', estateId],
-    queryFn: () => estateClient.listMemoirs({ estateId }),
-  });
-
-  const uploadMutation = useMutation({
-    mutationFn: async (vars: { title: string, type: string, file: File }) => {
+  const handleUpload = async (vars: { title: string, type: string, file: File }) => {
+    try {
+      setUploading(true);
       const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
-        estateId: estateId,
+        estateId,
         fileName: vars.file.name,
-        contentType: vars.file.type
+        contentType: vars.file.type,
       });
 
       if (uploadUrl && !uploadUrl.includes('localhost')) {
-         const response = await fetch(uploadUrl, {
-           method: 'PUT',
-           headers: { 'Content-Type': vars.file.type },
-           body: vars.file,
-         });
-         if (!response.ok) throw new Error('Failed to upload file to storage');
+        const response = await fetch(uploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': vars.file.type },
+          body: vars.file,
+        });
+        if (!response.ok) throw new Error('Failed to upload file to storage');
       }
 
-      return estateClient.uploadMemoir({
-        estateId: estateId,
+      await estateClient.uploadMemoir({
+        estateId,
         title: vars.title,
         type: vars.type,
-        url: finalUrl || `/memoirs/placeholder.${vars.type === 'video' ? 'mp4' : 'jpg'}`
+        url: finalUrl || `/memoirs/placeholder.${vars.type === 'video' ? 'mp4' : 'jpg'}`,
       });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['memoirs'] });
+
       setModalOpen(false);
-      setUploading(false);
-    },
-    onError: () => {
-      setUploading(false);
+    } catch {
       alert('Upload failed. Ensure Cloud Storage bucket is configured.');
+    } finally {
+      setUploading(false);
     }
-  });
+  };
 
   if (isLoading) {
     return (
@@ -69,7 +58,14 @@ function MemoirsPage() {
     );
   }
 
-  const memoirs = data?.memoirs || [];
+  const memoirs = firestoreMemoirs.map(m => ({
+    id: m.id,
+    title: m.title || 'Untitled',
+    type: m.type || 'photo',
+    url: m.url || '',
+    dateAdded: m.date_added || m.dateAdded || '',
+    visibility: m.visibility || 'private',
+  }));
   const videos = memoirs.filter(m => m.type === 'video');
   const photos = memoirs.filter(m => m.type === 'photo');
 
@@ -180,7 +176,7 @@ function MemoirsPage() {
                 return;
               }
               setUploading(true);
-              uploadMutation.mutate({ 
+              handleUpload({ 
                 title: formData.get('title') as string, 
                 type: formData.get('type') as string,
                 file: file

@@ -1,7 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useMemo } from 'react'
+import { useDocument } from '../lib/firestore'
 import { useAuth } from '../lib/auth'
 import { getMFAStatus } from '../lib/mfa'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
@@ -14,17 +13,9 @@ export const Route = createFileRoute('/estates/$estateId/settings')({
 function SettingsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/settings' });
   const { user, profile } = useAuth();
-  const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['governanceSettings', estateId],
-    queryFn: () => estateClient.getGovernanceSettings({ estateId }),
-  });
+  const { data: settingsDoc, loading: isLoading } = useDocument<any>(`estates/${estateId}/governance/settings`);
 
   if (isLoading) {
     return (
@@ -37,7 +28,7 @@ function SettingsPage() {
     );
   }
 
-  const s = data?.settings;
+  const s = settingsDoc;
   const mfaStatus = getMFAStatus(user);
   const isFiduciary = profile?.role && ['heir', 'executor', 'legal', 'cpa'].includes(profile.role);
 

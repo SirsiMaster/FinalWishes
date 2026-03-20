@@ -141,7 +141,7 @@ export interface EstateNotification {
 /**
  * Subscribe to a single Firestore document.
  */
-function useDocument<T>(path: string | null): FirestoreResult<T> {
+export function useDocument<T>(path: string | null): FirestoreResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -183,7 +183,7 @@ function useDocument<T>(path: string | null): FirestoreResult<T> {
 /**
  * Subscribe to a Firestore collection or subcollection with optional constraints.
  */
-function useCollection<T>(
+export function useCollection<T>(
   collectionPath: string | null,
   constraints?: QueryConstraint[]
 ): FirestoreListResult<T> {

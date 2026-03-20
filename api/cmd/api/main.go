@@ -10,12 +10,14 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
+	firebase "firebase.google.com/go/v4"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
@@ -52,26 +54,26 @@ func main() {
 		MaxAge:           300,
 	}))
 
-	// Health check endpoint
+	// Health check endpoint (unauthenticated)
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte("FinalWishes API is running"))
+		_, _ = w.Write([]byte(`{"status":"healthy","service":"finalwishes-api"}`))
 	})
 
-	// Initialize Google Firestore Client
+	// Initialize Google Cloud clients
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 	if projectID == "" {
 		log.Warn().Msg("GOOGLE_CLOUD_PROJECT not set, running in mock mode")
 	}
 
+	ctx := context.Background()
 	var fs *firestore.Client
 	var sc *storage.Client
 
 	if projectID != "" {
-		ctx := context.Background()
 		var err error
-		
+
 		// Firestore
 		fs, err = firestore.NewClient(ctx, projectID)
 		if err != nil {
@@ -89,12 +91,36 @@ func main() {
 		log.Info().Str("project", projectID).Msg("Storage client initialized")
 	}
 
-	// ConnectRPC Services
+	// Initialize Firebase Admin for auth token verification
+	var authMiddleware func(http.Handler) http.Handler
+
+	firebaseApp, err := firebase.NewApp(ctx, nil)
+	if err != nil {
+		log.Warn().Err(err).Msg("Firebase Admin SDK initialization failed — auth middleware disabled (mock mode)")
+		// In mock mode, use a pass-through middleware
+		authMiddleware = func(next http.Handler) http.Handler { return next }
+	} else {
+		authClient, err := firebaseApp.Auth(ctx)
+		if err != nil {
+			log.Warn().Err(err).Msg("Firebase Auth client initialization failed — auth middleware disabled")
+			authMiddleware = func(next http.Handler) http.Handler { return next }
+		} else {
+			log.Info().Msg("Firebase Admin Auth initialized — token verification active")
+			authMiddleware = auth.Middleware(authClient)
+		}
+	}
+
+	// ConnectRPC Services (protected by auth middleware)
 	estateService := estate.NewServer(fs, sc)
 	path, handler := estatev1connect.NewEstateServiceHandler(estateService)
-	r.Handle(path+"*", handler)
 
-	// API routes
+	// Protected routes — require Firebase Auth
+	r.Group(func(r chi.Router) {
+		r.Use(authMiddleware)
+		r.Handle(path+"*", handler)
+	})
+
+	// API routes (OpenSign integration — public for now)
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Route("/opensign", func(r chi.Router) {
 			r.Post("/create-envelope", opensign.CreateEnvelopeHandler)
@@ -128,10 +154,10 @@ func main() {
 
 	log.Info().Msg("Shutting down server...")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := srv.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Fatal().Err(err).Msg("Server forced to shutdown")
 	}
 

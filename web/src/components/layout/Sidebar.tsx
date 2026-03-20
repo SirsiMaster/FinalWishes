@@ -1,5 +1,6 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Link, useLocation, useParams, useNavigate } from "@tanstack/react-router";
+import { useAuth } from "../../lib/auth";
 
 /* ─── Role-Based Permission Matrix ─── */
 const ROLE_PERMISSIONS: Record<string, string[]> = {
@@ -136,25 +137,24 @@ export function Sidebar() {
   const navigate = useNavigate();
   const params = useParams({ strict: false }) as any;
   const estateId = params.estateId || "lockhart";
+  const { profile, signOut } = useAuth();
   
-  const [user, setUser] = useState<any>(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
-  useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      setUser(JSON.parse(session));
-    } else {
-      setUser({
-        name: 'Tameeka Lockhart',
-        role: 'owner',
-        profilePhotoUrl: '/assets/tameeka/mom dance.jpg',
-        primaryEstateName: 'Lockhart Estate'
-      });
-    }
-  }, []);
+  // Map auth profile to sidebar user data
+  const user = profile ? {
+    name: profile.displayName || `${profile.firstName} ${profile.lastName}`.trim(),
+    role: profile.role === 'principal' ? 'owner' : profile.role,
+    profilePhotoUrl: profile.profilePhotoUrl || '',
+    primaryEstateName: profile.primaryEstateName || 'My Estate',
+  } : {
+    name: 'Guest',
+    role: 'owner' as const,
+    profilePhotoUrl: '',
+    primaryEstateName: 'My Estate',
+  };
 
-  const userRole = user?.role || 'owner';
+  const userRole = user.role || 'owner';
   const allowedIds = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS.owner;
 
   // Filter nav items by role
@@ -168,11 +168,11 @@ export function Sidebar() {
   }, {} as Record<string, NavItem[]>);
 
   const getInitials = (name: string) => {
-    return name?.split(' ').map(n => n[0]).join('') || 'TL';
+    return name?.split(' ').map(n => n[0]).join('') || 'FW';
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('finalwishes_user');
+  const handleLogout = async () => {
+    await signOut();
     navigate({ to: '/login' });
   };
 

@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardRedirect,
@@ -8,17 +9,18 @@ export const Route = createFileRoute('/dashboard')({
 /** Legacy /dashboard route — redirects to scoped /estates/{id}/dashboard */
 function DashboardRedirect() {
   const navigate = useNavigate();
+  const { user, profile, loading } = useAuth();
 
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      const estateSlug = u.primaryEstateId === 'estate_lockhart' ? 'lockhart' : (u.primaryEstateId || 'lockhart');
+    if (loading) return;
+
+    if (user && profile) {
+      const estateSlug = profile.primaryEstateId === 'estate_lockhart' ? 'lockhart' : (profile.primaryEstateId || 'lockhart');
       navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
-    } else {
+    } else if (!user) {
       navigate({ to: '/login', replace: true });
     }
-  }, [navigate]);
+  }, [user, profile, loading, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#F8FAFC]">
@@ -29,3 +31,4 @@ function DashboardRedirect() {
     </div>
   );
 }
+

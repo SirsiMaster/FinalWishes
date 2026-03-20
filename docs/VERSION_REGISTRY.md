@@ -1,6 +1,6 @@
 # Version Registry — FinalWishes Component Tracker
 ## Age, Date, Status of Every Component
-**Last Updated:** 2026-03-19 — **Current Release:** v0.1.2-alpha
+**Last Updated:** 2026-03-19 — **Current Release:** v0.2.0-alpha
 
 ---
 
@@ -10,7 +10,7 @@
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
 | **Web Dashboard** | 0.1.0-alpha | 2026-02-17 | 2026-03-18 | ⚠️ UI Shells (mock data) | React 18 + Vite + TanStack |
 | **Landing Page** | 1.0.0 | 2026-02-17 | 2026-03-18 | ✅ Deployed | React (single route) |
-| **Login Page** | 0.1.0 | 2026-03-01 | 2026-03-18 | ⚠️ UI only (localStorage) | React |
+| **Login Page** | 0.2.0 | 2026-03-01 | 2026-03-19 | ✅ Firebase Auth (email + username) | React + Firebase Auth |
 | **iOS App** | 0.0.1 | 2026-03-18 | 2026-03-18 | 🔲 Stubs | React Native + Expo |
 | **Android App** | 0.0.1 | 2026-03-18 | 2026-03-18 | 🔲 Stubs | React Native + Expo |
 | **macOS Desktop** | 0.0.1 | 2026-03-18 | 2026-03-18 | 🔲 Config only | Tauri (Rust) |
@@ -19,7 +19,7 @@
 
 | Component | Version | Created | Last Modified | Status | Tech |
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
-| **Go API (Cloud Run)** | 0.0.1 | 2026-03-01 | 2026-03-17 | 🔲 Scaffold, no endpoints | Go + ConnectRPC |
+| **Go API (Cloud Run)** | 0.1.0 | 2026-03-01 | 2026-03-19 | ⚠️ Auth middleware, mock mode | Go + ConnectRPC + Firebase Admin |
 | **Proto Definitions** | 0.0.1 | 2026-03-01 | 2026-03-17 | 🔲 EstateService only | Protobuf + ConnectRPC |
 | **Firebase Functions** | 0.1.0 | 2026-03-17 | 2026-03-17 | ⚠️ Cloud Storage trigger | Node.js |
 | **Firestore Rules** | 0.1.0 | 2026-02-17 | 2026-03-17 | ⚠️ Basic, not estate-scoped | Firestore Rules DSL |
@@ -30,7 +30,7 @@
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
 | **shared/crypto** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Complete | TypeScript (Web Crypto API) |
 | **shared/types** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Complete | TypeScript |
-| **shared/api-client** | 0.1.0 | 2026-03-18 | 2026-03-18 | ⚠️ Mock fallback proxy | TypeScript |
+| **shared/api-client** | 0.2.0 | 2026-03-18 | 2026-03-19 | ⚠️ Firebase auth headers, demo fallback | TypeScript |
 
 ## Design System
 
@@ -48,7 +48,7 @@
 
 | Component | Version | Provisioned | Last Verified | Status | Service |
 |-----------|:-------:|:-----------:|:-------------:|:------:|---------|
-| **Firebase Auth** | — | 2026-02-17 | 2026-03-18 | ⚠️ Provisioned, not wired to app | Identity Platform |
+| **Firebase Auth** | 1.0.0 | 2026-02-17 | 2026-03-19 | ✅ Wired to React + Go API | Identity Platform |
 | **Firestore** | — | 2026-02-17 | 2026-03-18 | ⚠️ Active, basic rules | Firestore |
 | **Firebase Hosting** | — | 2026-02-17 | 2026-03-18 | ✅ Deployed | Firebase Hosting |
 | **Cloud Storage** | — | 2026-02-17 | 2026-03-18 | ⚠️ Bucket exists, no app integration | Cloud Storage |
@@ -97,7 +97,8 @@
 | **PRODUCT_SPECIFICATION.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
 | **DATA_MODEL_LOCK.md** | 1.0.0 | 2026-03-17 | 2026-03-17 | 🔒 Locked |
 | **CHANGELOG.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
-| **VERSION_REGISTRY.md** | 1.1.0 | 2026-03-18 | 2026-03-19 | ✅ Active |
+| **VERSION_REGISTRY.md** | 1.2.0 | 2026-03-18 | 2026-03-19 | ✅ Active |
+| **ADR-034** | 1.0.0 | 2026-03-19 | 2026-03-19 | ✅ Accepted |
 
 ---
 

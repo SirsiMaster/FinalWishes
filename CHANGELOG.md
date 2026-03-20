@@ -4,6 +4,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.6.1-alpha] — 2026-03-19
+### Performance (Phase 1, Week 3 — Code Splitting)
+- **Bundle splitting** via Vite `manualChunks` (Rolldown function API)
+  - `firebase-core`: 118KB (app + auth)
+  - `firebase-data`: 236KB (firestore + storage)
+  - `framework`: 274KB (react + react-dom + tanstack router)
+  - `index` (app code): **464KB** — 57% reduction from 1,093KB
+- No build warnings at 600KB threshold
+
+## [0.6.0-alpha] — 2026-03-19
+### Added (Phase 1, Week 3 — Settings + Firestore Migration)
+- **Settings page v2.0** — Complete rewrite with:
+  - Profile card (avatar, name, email, role/MFA/verified badges)
+  - Working toggle switches persisted to Firestore governance/settings
+  - Dropdown selects for status report frequency and primary state
+  - Save Changes button with dirty-state tracking and success feedback
+  - Danger Zone section with delete estate placeholder
+  - Decomposed into SettingsToggle, SettingsStatus, SettingsSelect components
+- **Estate card name resolution** — Shows actual estate name from Firestore
+
+### Changed
+- **All estate pages now read from Firestore** (ADR-036 complete)
+  - Memoirs → `useCollection` for reads, `estateClient` for GCS uploads
+  - Obituary → `useDocument` for reads, direct `setDoc` for saves
+  - Settings → `useDocument` for governance/settings
+  - Estates list → `useUserEstates` + `useEstate` for name resolution
+- **Exported `useDocument` and `useCollection`** generic hooks
+- **Removed all React Query** (`useQuery`/`useMutation`) from estate pages
+- **Go API verified** — health check + ConnectRPC auth middleware tested locally
+
 ## [0.5.2-alpha] — 2026-03-19
 ### Added (Phase 1, Week 2 — Invitation System)
 - **Invitation service** (`web/src/lib/invitations.ts`) — Full invitation lifecycle

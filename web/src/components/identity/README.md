@@ -8,6 +8,7 @@ Identity verification components for FinalWishes' tiered security model (ADR-035
 ```
 components/identity/
 ├── AttestationForm.tsx    # Canvas signature + legal declaration
+├── MFAEnrollment.tsx      # Shared TOTP enrollment UI (QR + verify)
 └── README.md              # This file
 
 components/guards/

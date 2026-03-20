@@ -1,6 +1,6 @@
 # CONTINUATION PROMPT — FinalWishes
-## For Fresh Context Window — March 19, 2026 (v6.0)
-**Priority:** Phase 1 Week 3 Complete → Phase 2 (Cloud SQL PII Vault + Deployment)
+## For Fresh Context Window — March 19, 2026 (v7.0)
+**Priority:** Phase 1 COMPLETE → Phase 2 (Cloud SQL PII Vault + Production Deploy)
 
 ---
 
@@ -12,102 +12,132 @@ You have **26 skills** installed at `~/.gemini/antigravity/skills/`. **Check rel
 
 ---
 
-## What Was Just Completed (v0.5.0 → v0.6.1)
+## Phase 1 — COMPLETE ✅
 
-### Phase 1, Week 2 — Data Layer + Invitations (ALL COMPLETE ✅)
+Phase 1 (Data Layer + Go API Foundation) is **fully complete**. Here's everything delivered:
 
-| Sprint | Deliverable | Commit |
-|--------|------------|--------|
-| 1 | Firestore hooks (useEstate, useEstateAssets, etc.) | `a28b5eb` |
-| 2 | Auto-match invitation Cloud Function | `a28b5eb` |
-| 3 | Firestore composite indexes (16 total) | `a28b5eb` |
-| 4 | Create Estate onboarding flow (/estates/create) | `4dd0b9f` |
-| 5 | Invitation system (invitations.ts + beneficiaries) | `be3fb04` |
+### Version History (v0.4.0 → v0.6.2)
 
-### Phase 1, Week 3 — Settings + Performance (ALL COMPLETE ✅)
+| Version | Deliverable |
+|---------|------------|
+| 0.4.0 | ADR-036 (Firestore Direct Reads), security rules, Cloud Functions |
+| 0.5.0 | Firestore hooks, 16 composite indexes, 4 estate dashboard pages |
+| 0.5.1 | Create Estate onboarding (/estates/create) |
+| 0.5.2 | Invitation system + beneficiaries integration |
+| 0.6.0 | Settings page v2.0, ALL pages wired to Firestore |
+| 0.6.1 | Code splitting — 4 chunks |
+| **0.6.2** | **Dead code cleanup — removed 1,815 lines + React Query** |
 
-| Sprint | Deliverable | Commit |
-|--------|------------|--------|
-| 1 | Wire ALL remaining pages to Firestore | `f70d7d1` |
-| 2 | Settings page v2.0 (profile card, toggles, saves) | `50fe89f` |
-| 3 | Code splitting — bundle 1093KB → 464KB (-57%) | `d6b67fe` |
-| 4 | Go API health check + auth middleware verified | N/A (verified) |
-| – | CHANGELOG v0.5.0-0.6.1 | `dc388ac` |
-
-### Key Architecture Decisions
-- **ADR-036**: Dashboard reads Firestore directly (not Go API) — all pages now live
-- **Go API role**: Cloud Storage signed URLs + Cloud SQL PII (Phase 2)
-- **Invitation flow**: Create pending → auto-link → Cloud Function on signup
-- **Code splitting**: 4 chunks (firebase-core, firebase-data, framework, app)
-
-### Build Output
+### Architecture (ADR-036 Fully Realized)
 ```
-dist/firebase-core.js    117 KB (app + auth)
-dist/firebase-data.js    236 KB (firestore + storage)
-dist/framework.js        274 KB (react + router)
-dist/index.js            464 KB (app code — under 600KB limit)
-dist/index.css           151 KB
-```
-
-### Key Files Created/Modified This Session
-```
-NEW:
-  web/src/lib/invitations.ts         — Invitation lifecycle (268 lines)
-  web/src/routes/estates.create.tsx  — Create Estate onboarding (210 lines)
-
-REWRITTEN:
-  web/src/routes/estates.$estateId.settings.tsx  — Premium Settings v2.0
-  web/src/routes/estates.$estateId.memoirs.tsx   — Firestore reads
-  web/src/routes/estates.$estateId.obituary.tsx  — Firestore reads + saves
-  web/src/routes/estates.$estateId.estates.tsx   — Firestore reads + name resolution
-  web/src/routes/estates.$estateId.beneficiaries.tsx — Invitation system
-  web/src/lib/firestore.ts                       — Exported useDocument/useCollection
-  web/vite.config.ts                             — Code splitting config
+┌────────────────────────────────────────┐
+│  React Dashboard (TanStack Router)     │
+│  ├── useDocument / useCollection       │ ← Firestore real-time
+│  ├── estateClient (signed URLs)        │ ← Go API for GCS only
+│  └── Firebase Auth (MFA ready)         │
+├────────────────────────────────────────┤
+│  Firestore (NoSQL)                     │
+│  ├── estates/{id}                      │
+│  ├── estates/{id}/assets               │
+│  ├── estates/{id}/heirs                │
+│  ├── estates/{id}/executors            │
+│  ├── estates/{id}/documents            │
+│  ├── estates/{id}/governance/*         │
+│  ├── estates/{id}/notifications        │
+│  ├── estate_users (junction)           │
+│  └── estate_invitations                │
+├────────────────────────────────────────┤
+│  Go API (Cloud Run)                    │
+│  ├── /health                           │
+│  ├── ConnectRPC + Firebase Auth        │
+│  └── Cloud Storage signed URLs         │
+├────────────────────────────────────────┤
+│  Cloud Functions                       │
+│  └── autoMatchInvitation (on signup)   │
+└────────────────────────────────────────┘
 ```
 
-### Known Issues / Blockers
-1. **Cloud Functions deploy** requires Blaze plan — currently on Spark
-2. **Cloud SQL** not provisioned yet — needed for Phase 2 PII Vault
-3. **SendGrid** not integrated — invitations don't send email (TODO)
-4. **Pre-existing TS error** in `estates.$estateId.index.tsx` line 4 (navigate params)
-5. **React Query still imported** in some legacy dashboard.* routes (deferred cleanup)
+### Build Output (Final)
+```
+Modules: 296
+dist/firebase-core.js    118 KB
+dist/firebase-data.js    236 KB
+dist/framework.js        274 KB
+dist/index.js            337 KB  ← was 1,093KB (-69%)
+dist/index.css           126 KB  ← was 151KB (-17%)
+```
+
+### Key Files
+```
+Core Data Layer:
+  web/src/lib/firestore.ts         — Firestore hooks (useDocument, useCollection, 7 domain hooks)
+  web/src/lib/invitations.ts       — Invitation lifecycle (268 lines)
+  web/src/lib/estate-actions.ts    — Estate CRUD (createEstate, addAsset, addHeir, etc.)
+  web/src/lib/auth.tsx             — Firebase Auth + profile listener
+  web/src/lib/client.ts            — estateClient for Go API (Cloud Storage only)
+
+Dashboard Pages (all Firestore-powered):
+  web/src/routes/estates.$estateId.dashboard.tsx
+  web/src/routes/estates.$estateId.assets.tsx
+  web/src/routes/estates.$estateId.beneficiaries.tsx
+  web/src/routes/estates.$estateId.vault.tsx
+  web/src/routes/estates.$estateId.memoirs.tsx
+  web/src/routes/estates.$estateId.obituary.tsx
+  web/src/routes/estates.$estateId.settings.tsx
+  web/src/routes/estates.$estateId.estates.tsx
+  web/src/routes/estates.$estateId.notifications.tsx
+  web/src/routes/estates.$estateId.attestation.tsx
+  web/src/routes/estates.create.tsx
+
+Infrastructure:
+  firestore.rules          — Full security rules with role-based access
+  firestore.indexes.json   — 16 composite indexes
+  functions/               — Cloud Functions (autoMatchInvitation)
+  api/                     — Go API (health, ConnectRPC, GCS)
+```
+
+### Removed This Session
+- `@tanstack/react-query` — uninstalled from package.json
+- 9 legacy `dashboard.*` route files (stubbed to null)
+- All `useQuery` / `useMutation` / `useQueryClient` calls from estate pages
 
 ---
 
 ## Phase 2 — Recommended Next Steps
 
-### Sprint 1: Upgrade Firebase to Blaze Plan
-- Required for Cloud Functions deployment
+### Sprint 1: Firebase Blaze Upgrade
+- Required for Cloud Functions deploy
 - Required for Cloud SQL provisioning
-- Required for production-grade GCS usage
+- Required for production-grade Cloud Storage
 
-### Sprint 2: Deploy Cloud Functions
-- `autoMatchInvitation` — fires on user signup
-- Test invitation → signup → auto-link flow end-to-end
+### Sprint 2: Cloud Functions Deploy
+- Deploy `autoMatchInvitation`
+- Test: signup → auto-link invitation flow
 
-### Sprint 3: Cloud SQL Instance + Schema
-- Create Cloud SQL instance (PostgreSQL)
-- Run initial migration for PII tables (SSN, financial data)
-- Wire Go API to Cloud SQL connection pool
+### Sprint 3: Cloud SQL + PII Vault
+- Provision PostgreSQL on Cloud SQL
+- Schema: `pii_vault`, `financial_accounts`, `encrypted_documents`
+- Wire Go API connection pool
 
-### Sprint 4: Legacy Dashboard Route Cleanup
-- Remove unused `dashboard.*` route files
-- Clean up remaining React Query imports
-- Tree-shake unused estateClient methods
+### Sprint 4: SendGrid Integration
+- Wire invitation emails
+- Template: estate invitation notification
+- Template: account verification
 
 ### Sprint 5: Production Deployment
-- Configure Firebase Hosting for SPA
-- Deploy Go API to Cloud Run
-- Set up domain + SSL
+- Firebase Hosting SPA config
+- Cloud Run deploy for Go API
+- Domain + SSL setup
+- Smoke test all dashboards
 
 ---
 
 ## Git State
 ```
 Branch: develop
-Latest: dc388ac (docs: CHANGELOG v0.6.0-0.6.1)
+Latest: 6abfa62 (docs: CHANGELOG v0.6.2)
 Remote: SirsiMaster/FinalWishes → origin/develop (synced)
-Total commits this session: 10
+Total commits this session: 13
 ```
 
 ## Quick Commands

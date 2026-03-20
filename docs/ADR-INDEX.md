@@ -41,6 +41,7 @@ Each ADR follows this structure:
 | [ADR-031](ADR-031-SECURE-ENCLAVE-DASHBOARD-STANDARD.md) | Secure Enclave Dashboard Standard | Accepted | 2026-03-18 | — |
 | [ADR-032](ADR-032-UNIVERSAL-ENCLAVE-IMPLEMENTATION.md) | Universal Enclave Implementation (Web/Mobile/Desktop) | Accepted | 2026-03-18 | — |
 | [ADR-033](ADR-033-DESIGN-SYSTEM-ACCELERATION.md) | Design System Acceleration & Cross-Portfolio Reuse | Accepted | 2026-03-18 | — |
+| [ADR-034](ADR-034-FIREBASE-AUTH-IMPLEMENTATION.md) | Firebase Auth Implementation (Username + Email Login) | Accepted | 2026-03-19 | — |
 
 ## Categories
 

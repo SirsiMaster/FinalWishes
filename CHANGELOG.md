@@ -4,9 +4,45 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.2.0-alpha] — 2026-03-19
+### Added (Phase 1, Week 1 — Authentication & API Foundation)
+- **Firebase Auth SDK wired to React** — `web/src/lib/firebase.ts` initializes Firebase app, auth, and Firestore
+- **Auth context provider** — `web/src/lib/auth.tsx` with `AuthProvider` and `useAuth()` hook
+  - `signIn(identifier, password)` — supports **email or username** login
+  - `signUp({ email, username, password, firstName, lastName })` — creates Firebase account + Firestore profile + username index
+  - `signOut()` — Firebase sign out
+  - `resetPassword(email)` — Firebase password reset email
+  - Username → email resolution via `usernames/{username}` Firestore collection
+- **Route protection** — `AuthGuard` component wraps estate routes, redirects to `/login` if unauthenticated
+- **Login page rewired** — replaced hardcoded `TEST_ACCOUNTS` with Firebase `signInWithEmailAndPassword`
+  - Sign-in mode: email or username + password
+  - Sign-up mode: first name, last name, username, email, password
+  - Form validation, loading states, error messages
+  - `?demo=true` preserves Lockhart demo data for presentations
+- **Go API auth middleware** — `api/internal/auth/middleware.go`
+  - Firebase Admin SDK token verification (`firebase.google.com/go/v4`)
+  - `Authorization: Bearer <token>` header extraction
+  - User UID injected into request context
+  - Optional middleware variant for mixed-auth routes
+- **ConnectRPC auth headers** — transport interceptor injects Firebase ID token on every API request
+- **ADR-034** — Firebase Auth Implementation decision documented
+
+### Changed
+- `estates.$estateId.tsx` — replaced `localStorage.getItem` with `useAuth()` hook
+- `dashboard.tsx` — replaced localStorage redirect with Firebase auth check
+- `Sidebar.tsx` — replaced localStorage user data with `useAuth()` profile, `signOut` via Firebase
+- `client.ts` — demo proxy now gated behind `?demo=true` instead of always-on fallback
+- Go API `main.go` — Firebase Admin SDK initialization, auth middleware on ConnectRPC routes
+
+### Fixed
+- Login label colors changed from `text-slate-400` to `text-[#133378]/40` per Rule 27 (no slate text)
+- Security badge text changed from `text-slate-400` to `text-[#133378]/40`
+
+---
+
 ## [Unreleased]
 ### Planned
-- Phase 1: Firebase Auth, Cloud Run Go API, Firestore rules, Cloud SQL/KMS
+- Phase 1, Week 2: Firestore security rules, real data wiring, Cloud SQL/KMS
 - Phase 2: Vault, YouTube Memorials, Google Photos, Lockbox, Capsules, Shepherd AI
 
 ## [0.1.2-alpha] — 2026-03-19

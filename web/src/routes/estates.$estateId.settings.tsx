@@ -2,6 +2,9 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
+import { getMFAStatus } from '../lib/mfa'
+import { MFAEnrollment } from '../components/identity/MFAEnrollment'
 
 export const Route = createFileRoute('/estates/$estateId/settings')({
   component: SettingsPage,
@@ -9,6 +12,7 @@ export const Route = createFileRoute('/estates/$estateId/settings')({
 
 function SettingsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/settings' });
+  const { user, profile } = useAuth();
   const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
 
   useEffect(() => {
@@ -33,6 +37,8 @@ function SettingsPage() {
   }
 
   const s = data?.settings;
+  const mfaStatus = getMFAStatus(user);
+  const isFiduciary = profile?.role && ['heir', 'executor', 'legal', 'cpa'].includes(profile.role);
 
   return (
     <div className="max-w-[1000px] mx-auto space-y-10 pb-20">
@@ -45,10 +51,13 @@ function SettingsPage() {
           Save Changes
         </button>
       </div>
+
+      {/* ── MFA Enrollment (Shared Component) ── */}
+      <MFAEnrollment user={user} mfaStatus={mfaStatus} isFiduciary={!!isFiduciary} />
       
       <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
         <SettingsSection title="Security">
-          <SettingsItem label="Two-factor authentication" description="Add an extra layer of security to your account" value={s?.mfaEnabled ? "Enabled" : "Disabled"} type="toggle" />
+          <SettingsItem label="Two-factor authentication" description="Add an extra layer of security to your account" value={mfaStatus.enrolled ? "Enabled" : "Disabled"} type="toggle" />
           <SettingsItem label="Recovery key" description="Backup key for account recovery" value={s?.recoveryKeyStatus || "Active"} type="status" />
           <SettingsItem label="Biometric verification" description="Use Face ID or fingerprint to unlock sensitive actions" value={s?.biometricRelease ? "Enabled" : "Disabled"} type="toggle" />
           <SettingsItem label="Encryption standard" description="All data is encrypted at rest and in transit" value="AES-256" type="status" />

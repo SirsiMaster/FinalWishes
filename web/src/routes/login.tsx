@@ -44,9 +44,9 @@ const DEMO_ACCOUNTS = [
 function LoginPage() {
   const navigate = useNavigate();
   const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, resetPassword, user } = useAuth();
 
-  const [mode, setMode] = useState<'signin' | 'signup' | 'mfa'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -58,6 +58,8 @@ function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mfaResolver, setMfaResolver] = useState<MultiFactorResolver | null>(null);
   const [totpCode, setTotpCode] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -205,13 +207,15 @@ function LoginPage() {
             </div>
           </Link>
           <h1 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378] mb-2">
-            {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : 'Verification Required'}
+            {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : mode === 'forgot' ? 'Reset Password' : 'Verification Required'}
           </h1>
           <p className="text-[#64748B] text-sm font-medium max-w-[260px] mx-auto leading-relaxed">
             {mode === 'signin' 
               ? 'Secure access to the Estate Operating System' 
               : mode === 'signup'
               ? 'Start preserving your legacy today'
+              : mode === 'forgot'
+              ? 'Enter your email and we\'ll send a reset link'
               : 'Enter the 6-digit code from your authenticator app'}
           </p>
           {isDemo && (
@@ -279,7 +283,11 @@ function LoginPage() {
             </button>
 
             <div className="flex items-center justify-between text-xs text-[#64748B] px-1 pt-2">
-              <a href="#" className="hover:text-[#133378] transition-colors font-medium">Forgot password?</a>
+              <button
+                type="button"
+                onClick={() => { setMode('forgot'); setError(''); setResetSent(false); setResetEmail(identifier.includes('@') ? identifier : ''); }}
+                className="hover:text-[#133378] transition-colors font-medium text-[#64748B] bg-transparent border-none cursor-pointer text-xs"
+              >Forgot password?</button>
               <button 
                 type="button"
                 onClick={() => { setMode('signup'); setError(''); }}
@@ -396,6 +404,95 @@ function LoginPage() {
               </button>
             </div>
           </form>
+        ) : mode === 'forgot' ? (
+          /* ─── Forgot Password Form ─── */
+          <div className="space-y-6">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-[#C8A951]/10 rounded-2xl flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="M22 7l-10 7L2 7" />
+                </svg>
+              </div>
+            </div>
+
+            {resetSent ? (
+              <div className="text-center space-y-4">
+                <div className="p-4 bg-green-50 border border-green-100 rounded-2xl">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                    <span className="text-green-700 font-bold text-sm">Check your email</span>
+                  </div>
+                  <p className="text-green-600/70 text-[13px] font-medium">
+                    If an account exists for that email, we've sent password reset instructions.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setMode('signin'); setError(''); setResetSent(false); }}
+                  className="text-[#133378] font-bold text-sm hover:underline bg-transparent border-none cursor-pointer"
+                >
+                  ← Back to sign in
+                </button>
+              </div>
+            ) : (
+              <form className="space-y-6" onSubmit={async (e) => {
+                e.preventDefault();
+                setError('');
+                setIsSubmitting(true);
+                const result = await resetPassword(resetEmail.trim());
+                setIsSubmitting(false);
+                if (result.success) {
+                  setResetSent(true);
+                } else {
+                  // Per security-guidance: don't reveal if email exists
+                  // Always show success to prevent user enumeration
+                  setResetSent(true);
+                }
+              }}>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Email Address</label>
+                  <input
+                    id="reset-email"
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    autoFocus
+                    required
+                    className="w-full bg-slate-50 border border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 transition-all outline-none font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus:bg-white focus:border-[#133378] focus:shadow-sm"
+                  />
+                </div>
+
+                {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
+
+                <button
+                  id="reset-submit"
+                  type="submit"
+                  disabled={isSubmitting || !resetEmail.includes('@')}
+                  className="block w-full bg-[#C8A951] hover:bg-[#B89941] disabled:opacity-60 disabled:cursor-not-allowed text-white text-center py-4 rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(200,169,81,0.2)] hover:shadow-[0_12px_32px_rgba(200,169,81,0.3)] transition-all active:scale-95"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Sending...
+                    </span>
+                  ) : 'Send Reset Link'}
+                </button>
+
+                <div className="text-center text-xs text-[#64748B] pt-2">
+                  <button
+                    type="button"
+                    onClick={() => { setMode('signin'); setError(''); }}
+                    className="hover:text-[#133378] transition-colors font-medium text-[#64748B] bg-transparent border-none cursor-pointer"
+                  >
+                    ← Back to sign in
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
         ) : mode === 'mfa' ? (
           /* ─── MFA TOTP Challenge ─── */
           <form className="space-y-6" onSubmit={handleMfaVerify}>

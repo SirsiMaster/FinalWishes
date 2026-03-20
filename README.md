@@ -8,7 +8,7 @@ FinalWishes transforms the chaotic 18-month estate settlement process into a str
 **Core Mission:** Where government systems lack digital interfaces, we BUILD THE CONNECTOR and become the benchmark for eventual state adoption.
 
 ## Live Site
-🔗 **[View Live Site](https://legacy-estate-os.web.app)**
+🔗 **[View Live Site](https://finalwishes-prod.web.app)**
 
 ## Technology Stack
 - **Backend:** Go on Cloud Run

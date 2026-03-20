@@ -13,7 +13,7 @@ func main() {
 	ctx := context.Background()
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 	if projectID == "" {
-		projectID = "legacy-estate-os" // Default for this project
+		projectID = "finalwishes-prod" // Default for this project
 	}
 
 	fmt.Printf("Seeding Firestore for project: %s\n", projectID)

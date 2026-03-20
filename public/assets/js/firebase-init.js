@@ -68,9 +68,9 @@ import {
  */
 const firebaseConfig = {
     apiKey: "AIzaSyANMDZXcdn2eI8JN8FxXlAkCt-f4BONuiU",
-    authDomain: "legacy-estate-os.firebaseapp.com",
-    projectId: "legacy-estate-os",
-    storageBucket: "legacy-estate-os.firebasestorage.app",
+    authDomain: "finalwishes-prod.firebaseapp.com",
+    projectId: "finalwishes-prod",
+    storageBucket: "finalwishes-prod.firebasestorage.app",
     messagingSenderId: "1002875213628",
     appId: "1:1002875213628:web:59d3f4b04345f3f7abb039"
 };

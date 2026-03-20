@@ -6,7 +6,7 @@
 const admin = require('firebase-admin');
 
 admin.initializeApp({
-    projectId: 'legacy-estate-os'
+    projectId: 'finalwishes-prod'
 });
 
 const auth = admin.auth();

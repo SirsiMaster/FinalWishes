@@ -29,7 +29,7 @@
       }
     },
     "security": {
-      "csp": "default-src 'self'; connect-src https://api.finalwishes.app https://legacy-estate-os.web.app https://*.googleapis.com"
+      "csp": "default-src 'self'; connect-src https://api.finalwishes.app https://finalwishes-prod.web.app https://*.googleapis.com"
     },
     "windows": [
       {

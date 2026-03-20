@@ -5669,7 +5669,7 @@
                 executeBtn.disabled = true;
 
                 // 3. Create Envelope via Firebase Functions (sirsi-nexus-live API)
-                // Uses sirsi-nexus-live project API since legacy-estate-os doesn't have functions deployed
+                // Uses finalwishes-prod project API for contract functions
                 const API_BASE = 'https://api-6kdf4or4qq-uc.a.run.app';
                 const firebaseUser = window.firebase?.auth?.()?.currentUser || window.firebaseAuth?.currentUser;
                 const isGuest = !firebaseUser;

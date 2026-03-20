@@ -155,8 +155,8 @@ cd api && go run ./cmd/api/
 # Health check: curl http://localhost:8080/health
 
 # Deploy Firestore rules + indexes
-firebase deploy --only firestore --project legacy-estate-os
+firebase deploy --only firestore --project finalwishes-prod
 
 # Deploy Cloud Functions (requires Blaze plan)
-firebase deploy --only functions --project legacy-estate-os
+firebase deploy --only functions --project finalwishes-prod
 ```

@@ -27,6 +27,6 @@ or navigate to chrome://settings/people to verify the correct profile is active.
 
 ## Common Targets
 
-- **Landing Page**: `https://legacy-estate-os.web.app` or `http://localhost:3000/`
-- **Login**: `https://legacy-estate-os.web.app/login`
-- **Dashboard**: `https://legacy-estate-os.web.app/estates/lockhart/dashboard`
+- **Landing Page**: `https://finalwishes-prod.web.app` or `http://localhost:3000/`
+- **Login**: `https://finalwishes-prod.web.app/login`
+- **Dashboard**: `https://finalwishes-prod.web.app/estates/lockhart/dashboard`

@@ -420,9 +420,7 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/estates/$(estateId)/executors/$(request.auth.uid));
     }
     
-    function isHeirOf(estateId) {
-      return exists(/databases/$(database)/documents/estates/$(estateId)/heirs/$(request.auth.uid));
-    }
+    // isHeirOf — REMOVED: replaced by isEstateRole() via estate_users junction table
     
     function isEstateRole(estateId) {
       return exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId));

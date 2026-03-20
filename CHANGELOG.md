@@ -49,11 +49,48 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 - Estate layout wraps `<Outlet>` with `<IdentityGate>` for fiduciary gating
 - Role labels map expanded: legal → "Legal Counsel", cpa → "CPA Advisor"
 - Firestore rules: user create now accepts `legal` and `cpa` roles
+- **MFAEnrollment extracted** from dashboard.settings.tsx → shared component (`-216` lines inline, `+1` import)
+  - Used by both `/dashboard/settings` and `/estates/:estateId/settings`
+- **Login page** — "Forgot password?" dead link replaced with full reset flow
+  - `'forgot'` mode added to mode state machine (signin → signup → forgot → mfa)
+  - Pre-fills email from identifier if it contains `@`
+
+### Added (Phase 1 cont. — Session 2)
+- **EmailVerificationBanner** — gold banner between header and content
+  - Shows when `emailVerified === false`
+  - "Resend Email" button with loading/sent/cooldown states
+  - Dismiss button (per-session, reappears next visit)
+- **Password reset flow** — form with email input + gold "Send Reset Link" button
+  - Anti-enumeration: always shows success regardless of email existence
+  - (Security-guidance skill applied)
+- **Firestore Security Rules v3.0.0** — complete hardening
+  - 8 collection groups with explicit rules (no wildcards)
+  - Data shape validation on all `create` operations
+  - Least privilege: heirs/legal/cpa = READ-ONLY everywhere
+  - Immutable: audit_logs, timeline, attestations (no update/delete)
+  - Payments, notifications: backend-only creation
+  - `estate_users` junction table with principal-managed access
+  - Default deny documented explicitly
+  - Deployed to `legacy-estate-os` (0 errors, 0 warnings)
+- **Role-Based Invitation System** — complete team onboarding
+  - `InviteTeamMember` component: form with role selector cards, member list, status badges, revoke
+  - `lib/invitations.ts`: Firestore CRUD for `estate_invitations` collection
+  - Firestore rules for `estate_invitations`: principal-only create, email-based invitee read
+  - Wired into `/estates/:estateId/settings`
+- **User guides** (Rule 30):
+  - `docs/user-guides/email-verification.md`
+  - `docs/user-guides/password-reset.md`
+  - `docs/user-guides/data-privacy.md`
+  - `docs/user-guides/inviting-team-members.md`
+- **Developer READMEs** (Rule 30):
+  - `web/src/components/estate/README.md`
+  - Updated `web/src/components/identity/README.md` (MFA + Email banner added)
 
 ### Refs
 - Canon: GEMINI.md (§2 Rules 29-30, §6 Knowledge), IDENTITY-WORKFLOW-DIAGRAMS.md, CHANGELOG.md
 - ADRs: ADR-034 (Firebase Auth), ADR-035 (Tiered Identity Verification)
 - Diagrams: All 10 diagrams created (§1-§10)
+- Skills applied: firebase, security-auditor, security-guidance, react-patterns, react-best-practices
 
 ---
 

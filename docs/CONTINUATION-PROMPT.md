@@ -1,6 +1,6 @@
 # CONTINUATION PROMPT — FinalWishes
-## For Fresh Context Window — March 19, 2026 (v3.1)
-**Priority:** Phase 1 (Real Infrastructure) — Phase 0 & 0.5 are COMPLETE
+## For Fresh Context Window — March 19, 2026 (v4.0)
+**Priority:** Phase 1 Week 2 — Data Layer + Go API Foundation
 
 ---
 
@@ -8,7 +8,7 @@
 
 You are **Antigravity**, the AI agent for **FinalWishes** — "The Estate Operating System." Read `GEMINI.md` at the repo root first. It has all operational rules.
 
-You have **26 skills** installed universally at `~/.gemini/antigravity/skills/`. They apply to ALL Sirsi repos (FinalWishes, SirsiNexusApp, Assiduous). They activate automatically by context — you do NOT need to invoke them manually.
+You have **26 skills** installed at `~/.gemini/antigravity/skills/`. **Check relevant skills before every task.** They are a best practice, not optional overhead.
 
 ### Skill Arsenal (26 Universal Skills)
 | Category | Skills |
@@ -29,7 +29,7 @@ You have **26 skills** installed universally at `~/.gemini/antigravity/skills/`.
 
 **FinalWishes** is a $95,000 "Living Legacy" platform (MSA-2025-111-FW, SOW-2025-001). It lets a person organize memories, documents, final instructions, and asset designations — then control when and how that legacy reaches their heirs.
 
-**Contract was pivoted Feb 17, 2026** from a $175K probate-focused platform to a $95K Google-first media preservation platform. The executed contract lives at `SirsiNexusApp/packages/sirsi-opensign/public/finalwishes/contracts/printable-msa.html`.
+**Contract was pivoted Feb 17, 2026** from a $175K probate-focused platform to a $95K Google-first media preservation platform.
 
 ## Canon Documents (Read These First)
 
@@ -37,127 +37,131 @@ You have **26 skills** installed universally at `~/.gemini/antigravity/skills/`.
 |----------|------|
 | **GEMINI.md** | `GEMINI.md` |
 | **Canonical Development Plan** | `docs/CANONICAL_DEVELOPMENT_PLAN.md` |
-| **Product Specification** | `docs/PRODUCT_SPECIFICATION.md` |
-| **Data Model Lock** | `docs/DATA_MODEL_LOCK.md` |
-| **Version Registry** | `docs/VERSION_REGISTRY.md` |
+| **Data Model** | `docs/DATA_MODEL.md` |
 | **Changelog** | `CHANGELOG.md` |
 | **ADR Index** | `docs/ADR-INDEX.md` |
-| **ADR-033** | `docs/ADR-033-DESIGN-SYSTEM-ACCELERATION.md` |
-
-## Critical Architecture Decisions
-
-1. **KEEP ConnectRPC / Proto** — Do NOT switch to REST. The proto-based ConnectRPC stack stays. `web/src/gen/estate/v1/estate_pb` is the canonical client interface.
-2. **Keep Lockhart Demo Data** — The Proxy fallback in `client.ts` stays as demo mode, but the real data stack gets built alongside it. Gate demo behind `?demo=true`.
-3. **Turborepo WIRED** — `turbo.json` v2 tasks format, workspaces: `web` + `shared`. Build verified: `turbo build` → 312 modules, 0 errors.
-4. **NemoClaw / Nemotron** — NVIDIA's open-weight legal AI model. Used for legal document intelligence. Deferred to Phase 2.
-5. **Best-in-class design** — Every interface must be PREMIUM. 19 design skills support this. No AI slop, no generic layouts.
-
-## Technology Stack
-
-| Layer | Tech | Status |
-|-------|------|:------:|
-| Web | React 18, Vite, TanStack (Router/Query), shadcn/ui, Tailwind v4 | ✅ |
-| Mobile | React Native, Expo, NativeWind | 🔲 |
-| Desktop | Tauri (Rust) | 🔲 |
-| Backend | **Go + ConnectRPC + Protobuf** on Cloud Run | 🔲 |
-| Database | Firestore + Cloud SQL (PostgreSQL) | ⚠️ Firestore only |
-| Auth | Firebase Auth + Identity Platform (MFA) | ⚠️ localStorage mock |
-| Encryption | Cloud KMS + Web Crypto API (AES-256-GCM) | 🔲 |
-| AI (Guidance) | Firebase Genkit + Vertex AI (Gemini Pro/Flash) | 🔲 |
-| AI (Legal) | **NemoClaw + NVIDIA Nemotron 3** | 🔲 Deferred |
-| Media | YouTube Data API v3 + Google Photos API | 🔲 |
-| E-Sign/Pay/Bank | Sirsi Sign (sign.sirsi.ai) | ✅ External |
-| Monorepo | **Turborepo** | ✅ Wired |
+| **Workflow Diagrams** | `docs/IDENTITY-WORKFLOW-DIAGRAMS.md` |
+| **Security Compliance** | `docs/SECURITY_COMPLIANCE.md` |
 
 ## Git State
 
-- **Branch:** `develop` (latest: `0e95452`)
+- **Branch:** `develop` (latest: `48f33c5`)
 - **Remote:** `github.com:SirsiMaster/FinalWishes.git`
-- **Clean working tree** — all Phase 0 + 0.5 committed & pushed
+- **Clean working tree** — all Phase 0, 0.5, and Phase 1 Week 1 committed & pushed
 
-## What's Built vs. What's Broken
+## What's Built ✅ (Complete as of this prompt)
 
-### Built ✅
+### Auth & Identity (Phase 1, Week 1 — DONE)
+| Feature | Status | Location |
+|---------|:------:|----------|
+| Firebase Auth SDK (real login) | ✅ | `lib/auth.tsx`, `lib/firebase.ts` |
+| Email + username login | ✅ | `routes/login.tsx` |
+| Registration (signup) | ✅ | `routes/login.tsx` |
+| TOTP MFA enrollment + challenge | ✅ | `lib/mfa.ts`, `components/identity/MFAEnrollment.tsx` |
+| MFA login challenge | ✅ | `routes/login.tsx` (mode='mfa') |
+| IdentityGate (MFA + attestation) | ✅ | `components/guards/IdentityGate.tsx` |
+| AttestationForm (signature pad) | ✅ | `components/identity/AttestationForm.tsx` |
+| Email verification banner | ✅ | `components/identity/EmailVerificationBanner.tsx` |
+| Password reset flow | ✅ | `routes/login.tsx` (mode='forgot') |
+| Role-based invitation system | ✅ | `components/estate/InviteTeamMember.tsx`, `lib/invitations.ts` |
+| Firestore rules v3.0.0 (hardened) | ✅ | `firestore.rules` — deployed to production |
+| Identity Platform (TOTP) | ✅ | Activated on `legacy-estate-os` |
+| localStorage fully eliminated | ✅ | 13 files migrated to `useAuth()` |
+
+### Role-Based Access Matrix (Enforced at Firestore + UI)
+| Role | Register | Login | MFA | Attestation | Read | Write |
+|------|:--------:|:-----:|:---:|:-----------:|:----:|:-----:|
+| Principal | ✅ | ✅ | Optional | No | Full | Full |
+| Executor | ✅ | ✅ | **Required** | **Required** | Full | Write (no doc delete) |
+| Heir | ✅ | ✅ | **Required** | **Required** | Full | **Read-only** |
+| Legal | ✅ | ✅ | **Required** | **Required** | Full | **Read-only** |
+| CPA | ✅ | ✅ | **Required** | **Required** | Full | **Read-only** |
+| Admin | ✅ | ✅ | Optional | No | All | Full |
+
+### Infrastructure (Earlier Phases — DONE)
 - Landing page (deployed at `legacy-estate-os.web.app`)
-- Login UI (Royal Neo-Deco glass)
-- Dashboard shells (9 routes, Lockhart mock data) — **ELI5 swept, all jargon removed**
+- Dashboard shells (9 routes, Lockhart mock data)
 - Memoirs page (VideoCard, PhotoCard, cinema viewer)
 - Client-side encryption (`shared/crypto/`)
-- Shared types (`shared/types/`)
-- Design tokens (`globals.css`, 584 lines — Royal Neo-Deco + shadcn)
-- Firebase Hosting
-- **shadcn/ui** — 13 components (Radix + Nova)
-- **Turborepo** — wired with v2 tasks
-- **npm packages** — firebase, sonner, recharts, @react-pdf/renderer, tiptap
+- Design tokens (`globals.css`, 584 lines)
+- shadcn/ui — 13 components
+- Turborepo — wired
+- 10 Mermaid workflow diagrams
+- GEMINI.md v1.2.0 (Rule 29 traceability, Rule 30 feature docs)
+- CLAUDE.md mirror
+- 7 user guides in `docs/user-guides/`
 
-### Broken / Mock ❌
-- **Auth is fake** — localStorage, not Firebase Auth
-- **All data is mock** — `client.ts` Proxy returns hardcoded Lockhart data
+### What's Still Mock / Not Built ❌
+- **All dashboard data is mock** — `client.ts` Proxy returns hardcoded Lockhart data
 - **Go API is empty** — zero working endpoints
 - **Cloud SQL / KMS / Cloud Run** — not provisioned
 - **No CI/CD** — manual deploys
+- **No email for invitations** — invitations saved to Firestore but no SendGrid yet
+- **No auto-match** — invitee registers but isn't auto-linked to estate_users yet
 
-## Completed Phases
+## PHASE 1, Week 2: Data Layer (START HERE)
 
-### ✅ PHASE 0: Stabilize (DONE — March 19)
-- ✅ Removed `web/dist/` from git
-- ✅ Hardened `.gitignore` (root + web)
-- ✅ Landing page font audit — no issues
-- ✅ Dashboard ELI5 sweep — 9 routes scrubbed (Shard/Protocol/Enclave → Estate/Document/Family)
-
-### ✅ PHASE 0.5: Tool Acquisition (DONE — March 19)
-- ✅ shadcn/ui initialized (Radix + Nova, 13 components)
-- ✅ Turborepo wired (web + shared workspaces)
-- ✅ npm packages installed (firebase, sonner, recharts, tiptap, react-pdf)
-- ✅ Build verified (312 modules, 0 errors, 3.6s)
-- ✅ **19 Antigravity skills installed** (frontend-design, security-guidance, firebase, golang-pro, grpc-golang, react-best-practices, react-native-architecture, react-patterns, shadcn, tailwind-design-system, ui-ux-pro-max, api-design-principles, security-auditor, test-driven-development, systematic-debugging, webapp-testing, web-performance-optimization, go-concurrency-patterns, notebooklm)
-- ⏳ Go modules — deferred to first endpoint
-- ⏳ NemoClaw — deferred to Phase 2
-
-## PHASE 1: Real Infrastructure (START HERE)
-
-### Week 1 — Authentication & API Foundation
-1. **Firebase Auth SDK** — replace localStorage with real Firebase Auth
-   - Wire `firebase/auth` into the app
-   - Login/logout flow, session persistence
-   - MFA (TOTP) setup with Identity Platform
+### Priority Tasks
+1. **Wire dashboard to Firestore** — replace mock Proxy with real Firestore reads
+   - Estate dashboard reads from `estates/{estateId}`
+   - Assets page reads from `estates/{estateId}/assets`
+   - Beneficiaries page reads from `estates/{estateId}/heirs`
+   - Vault page reads from `estates/{estateId}/documents`
+   
 2. **Go API scaffold** — first ConnectRPC endpoints
    - `UserService.GetUser`, `EstateService.GetEstate`
    - Cloud Run Dockerfile
    - Wire `connectrpc.com/connect` + `firebase.google.com/go/v4`
+   
+3. **Auto-match invitations** — Cloud Function that triggers on user registration
+   - Query `estate_invitations` by email
+   - Auto-create `estate_users` record if match found
+   
+4. **Firestore indexes** — deploy composite indexes from `firestore.indexes.json`
 
-### Week 2 — Data Layer
-3. **Firestore security rules** — estate-scoped, owner/beneficiary roles
-4. **Wire dashboard to real data** — replace mock Proxy with Firestore reads
-5. **Cloud SQL provisioning** — PostgreSQL for PII vault
-6. **Cloud KMS** — encryption key management
+5. **Cloud SQL provisioning** — PostgreSQL for PII vault (SSN, DOB, account #s)
 
-### Week 3 — Design System & Components
-7. **shadcn/ui Royal Neo-Deco theming** — customize all 13 components
-   - Primary: Royal Blue (#133378)
-   - Accent: Metallic Gold (#C8A951)
-   - Glass cards, film grain, gold borders
-8. **Component library** — build reusable estate-specific components
+### Governance Reminders
+- **Rule 29**: Every commit → canon doc + version + changelog + diagram + ADR
+- **Rule 30**: Every feature → user guide + developer README
+- **Skills**: Check relevant skills before every task
+- **Sprint plan before code** (Rule 17)
+- **Browser profile**: `ccollymo@alumni.chicagobooth.edu` (Rule 28)
+- **Git identity**: `SirsiMaster` exclusively
 
-### Week 4 — CI/CD & Deployment
-9. **GitHub Actions** — lint, build, deploy
-10. **Firebase Hosting** — preview channels for PRs
-11. **Cloud Run** — Go API auto-deploy from `develop`
-12. **Merge to main** — `v0.2.0-alpha` release
+## Component Architecture
 
-## Rules
-
-1. **ConnectRPC / Proto stays** — do NOT switch to REST
-2. **Lockhart demo mode stays** — gate behind `?demo=true`
-3. **Branding & Identity ($30K purchased)** — all UI must conform
-4. **State engines are NOT in scope** — $35K add-on, deferred
-5. **Browser subagent:** `ccollymo@alumni.chicagobooth.edu` Chrome profile (Rule 28)
-6. **Git identity:** `SirsiMaster` exclusively
-7. **No slate/grey text** — `#0F172A` dark or `#133378` Royal Blue only
-8. **Update VERSION_REGISTRY.md** after every component change
-9. **Best-in-class design** — 26 skills enforce premium aesthetics. No generic UI. No AI slop. Every interface must be unforgettable.
-10. **Sprint plan before code** — Rule 17. Present plan, get approval, then build.
+```
+web/src/
+├── components/
+│   ├── estate/
+│   │   ├── InviteTeamMember.tsx    # Team invitation UI
+│   │   └── README.md
+│   ├── guards/
+│   │   ├── AuthGuard.tsx           # Login required
+│   │   └── IdentityGate.tsx        # MFA + attestation required
+│   ├── identity/
+│   │   ├── AttestationForm.tsx     # Signature pad + declaration
+│   │   ├── EmailVerificationBanner.tsx  # Gold verification nudge
+│   │   ├── MFAEnrollment.tsx       # QR code + TOTP verify
+│   │   └── README.md
+│   └── layout/
+│       ├── AdminHeader.tsx
+│       └── Sidebar.tsx
+├── lib/
+│   ├── auth.tsx                    # Firebase Auth context + hooks
+│   ├── client.ts                   # ConnectRPC client (mock proxy)
+│   ├── firebase.ts                 # SDK initialization
+│   ├── invitations.ts              # Estate invitation CRUD
+│   └── mfa.ts                      # TOTP enrollment + challenge
+└── routes/
+    ├── login.tsx                    # 4 modes: signin/signup/forgot/mfa
+    ├── estates.$estateId.tsx        # Layout: Sidebar + Header + IdentityGate
+    ├── estates.$estateId.settings.tsx  # MFA + Invitations + Security
+    ├── estates.$estateId.dashboard.tsx
+    └── ... (9 more routes)
+```
 
 ---
 
-**Ready. Start by reading `GEMINI.md`, then present a Sprint Plan for Phase 1, Week 1.**
+**Ready. Start by reading `GEMINI.md`, checking relevant skills, then present a Sprint Plan for Phase 1, Week 2.**

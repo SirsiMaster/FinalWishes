@@ -4,6 +4,42 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.8.1-alpha] — 2026-03-20
+### Email System (Firebase Extension — Buy Decision) + CI/CD Fix
+- **Firebase Trigger Email Extension** (`firebase/firestore-send-email@0.2.6`) registered in manifest
+  - Sends email by writing to Firestore `mail` collection → Extension → SendGrid SMTP
+  - Zero Go backend code required
+  - Handlebars templates stored in `email_templates` Firestore collection
+- **Email TypeScript helpers** (`web/src/lib/email.ts`)
+  - `sendInvitationEmail()` — estate team invitation
+  - `sendWelcomeEmail()` — registration welcome
+  - `sendNotificationEmail()` — estate deadline/update
+  - `sendPasswordResetNotification()` — security audit notification
+  - `useEmailService()` — React hook with user context
+- **Email templates seeded** to Firestore (`email_templates` collection)
+  - `invitation` — Royal Neo-Deco styled, team invite with role badge
+  - `welcome` — onboarding guide with action items
+  - `notification` — estate notifications with gold accent callout
+- **Firestore rules v4.0.0** — §9 added: `mail` (user-create, extension-managed), `email_templates` (admin-only)
+- **ESLint config fixed** — Replaced broken `eslint-config-next` with proper Vite + React + TypeScript config
+  - This was the root cause of ALL CI lint failures since project creation
+  - Added `@eslint/js`, `globals`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`, `typescript-eslint`
+  - 0 errors, 102 warnings (all warnings are cosmetic)
+- **React compiler fixes** — Fixed setState-in-effect violations:
+  - `InviteTeamMember.tsx` — Moved loadInvitations before useEffect, used .then() pattern
+  - `firestore.ts` — Wrapped synchronous setLoading in startTransition
+
+### Documentation (Rule 30)
+- Developer README: `web/src/lib/README-email.md`
+- User Guide: `docs/user-guides/email-notifications-and-sms.md` (includes SMS MFA notes)
+
+### Refs
+- Canon: GEMINI.md (Rule 30), ARCHITECTURE_DESIGN.md
+- ADR: (Buy Decision — documented in README-email.md)
+- Changelog: v0.8.1 — Email System + CI Fix
+
+---
+
 ## [0.8.0-alpha] — 2026-03-20
 ### PII Vault — Estate-Grade Encryption Architecture (ADR-037)
 - **Cloud KMS Key Ring** provisioned: `finalwishes-keyring` (us-central1)

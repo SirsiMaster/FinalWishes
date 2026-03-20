@@ -419,7 +419,33 @@ service cloud.firestore {
     }
     
     // =============================================
-    // 9. DEFAULT DENY — Catch-All
+    // 9. EMAIL — Firebase Trigger Email Extension
+    // =============================================
+    
+    // Mail queue: authenticated users create email requests,
+    // the Firebase Extension processes and updates delivery status.
+    // Users can only read their own sent emails.
+    match /mail/{mailId} {
+      allow read: if isAuthenticated()
+        && resource.data.createdBy == request.auth.uid;
+      
+      // Authenticated users can create email requests
+      // The extension handles the rest (send, update status)
+      allow create: if isAuthenticated();
+      
+      // Only the extension (which runs as admin) updates delivery status
+      // Client-side updates are not allowed
+      allow update, delete: if false;
+    }
+    
+    // Email templates: admin-only, read by the extension
+    match /email_templates/{templateId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // =============================================
+    // 10. DEFAULT DENY — Catch-All
     // =============================================
     // Any collection not explicitly matched above is DENIED.
     // This is the Firestore default behavior, but we document it

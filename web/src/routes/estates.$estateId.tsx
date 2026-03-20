@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
 import { Sidebar } from '../components/layout/Sidebar'
 import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
+import { IdentityGate } from '../components/guards/IdentityGate'
 import { useAuth } from '../lib/auth'
 import { useEffect } from 'react'
 
@@ -12,6 +13,8 @@ const ROLE_LABELS: Record<string, string> = {
   beneficiary: 'Beneficiary',
   heir: 'Beneficiary',
   executor: 'Legal Executor',
+  legal: 'Legal Counsel',
+  cpa: 'CPA Advisor',
 };
 
 export const Route = createFileRoute('/estates/$estateId')({
@@ -53,7 +56,9 @@ function EstateLayout() {
         >
           <AdminHeader title={displayEstateName} subtitle={`${roleLabel} · Vault Secured · Active`} />
           <main className="flex-1 p-8">
-            <Outlet />
+            <IdentityGate estateId={estateId}>
+              <Outlet />
+            </IdentityGate>
           </main>
         </div>
       </div>

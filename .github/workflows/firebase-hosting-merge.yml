@@ -90,6 +90,8 @@ jobs:
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
+        env:
+          GOGC: "50"
         with:
           version: latest
           working-directory: api

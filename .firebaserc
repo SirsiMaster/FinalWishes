@@ -1,5 +1,13 @@
 {
   "projects": {
     "default": "finalwishes-prod"
+  },
+  "targets": {},
+  "etags": {
+    "finalwishes-prod": {
+      "extensionInstances": {
+        "firestore-send-email": "6cc536aa400c2524143bcfd9cee2a9dd8ab800f17e3bf07420e6088977e91f88"
+      }
+    }
   }
 }

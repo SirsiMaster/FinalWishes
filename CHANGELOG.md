@@ -4,6 +4,59 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.3.0-alpha] — 2026-03-19
+### Added (Phase 1. — Identity Verification & Governance)
+- **TOTP MFA Enrollment** — QR code generation, 6-digit verification, status display in Settings
+  - Uses Firebase Identity Platform TOTP provider
+  - Role-aware UI: "Required" badge for fiduciaries, "Optional" for principals
+  - Fiduciaries cannot unenroll MFA (enforced)
+- **IdentityGate Component** — Route-level gate for tiered identity verification (ADR-035)
+  - Tier 1 (principal): passes through without gate
+  - Tier 2 (heir/executor/legal/cpa): must complete MFA + attestation
+  - Step-by-step wizard UI for incomplete verification
+- **AttestationForm Component** — Canvas-based signature pad + legal declaration
+  - Perjury attestation: "I attest under penalty of perjury..."
+  - Base64 signature capture (mouse + touch)
+  - Stored permanently in Firestore `attestations` collection
+- **Attestation route** — `/estates/:estateId/attestation`
+- **Firestore rules for attestations** — create/read/update controls, no deletes
+- **UserProfile roles expanded** — added `legal` and `cpa` to role union type
+- **Email verification** — `sendEmailVerification` on registration, gold banner + resend
+- **MFA login challenge** — TOTP code input when Firebase returns `auth/multi-factor-auth-required`
+- **Identity Platform enabled** — TOTP + SMS MFA providers activated on `legacy-estate-os`
+- **10 Mermaid workflow diagrams** — `docs/IDENTITY-WORKFLOW-DIAGRAMS.md`
+  1. Complete Auth State Machine
+  2. Registration Flow
+  3. Sign-In Flow (email/username + MFA)
+  4. TOTP MFA Enrollment
+  5. Tiered Identity Gate (ADR-035)
+  6. Attestation Signing Flow
+  7. Route Protection Hierarchy
+  8. Firestore Data Flow
+  9. Security Enforcement Layers
+  10. End-to-End Fiduciary Onboarding
+- **ADR-035** — Tiered Identity Verification architecture decision
+- **Rule 29 (Commit Traceability)** — cross-ref canon docs, version, changelog, diagrams, ADRs
+- **Rule 30 (Feature Documentation)** — user-facing How-To + developer README per feature
+- **User guides** — `docs/user-guides/two-factor-authentication.md`, `identity-verification.md`
+- **Developer README** — `web/src/components/identity/README.md`
+- **CLAUDE.md** — mirrored from GEMINI.md for Claude/Antigravity agent
+
+### Changed
+- **13 files migrated from localStorage to useAuth()** — complete elimination of `localStorage.getItem('finalwishes_user')`
+  - AdminHeader, dashboard.index, dashboard.obituary, dashboard.settings, dashboard.beneficiaries, dashboard.vault, dashboard.notifications, dashboard.assets, dashboard.memoirs, dashboard.estates, estates.$estateId.dashboard, estates.$estateId.obituary, estates.$estateId.estates
+- **GEMINI.md** bumped to v1.2.0 (Traceability Hardened)
+- Estate layout wraps `<Outlet>` with `<IdentityGate>` for fiduciary gating
+- Role labels map expanded: legal → "Legal Counsel", cpa → "CPA Advisor"
+- Firestore rules: user create now accepts `legal` and `cpa` roles
+
+### Refs
+- Canon: GEMINI.md (§2 Rules 29-30, §6 Knowledge), IDENTITY-WORKFLOW-DIAGRAMS.md, CHANGELOG.md
+- ADRs: ADR-034 (Firebase Auth), ADR-035 (Tiered Identity Verification)
+- Diagrams: All 10 diagrams created (§1-§10)
+
+---
+
 ## [0.2.0-alpha] — 2026-03-19
 ### Added (Phase 1, Week 1 — Authentication & API Foundation)
 - **Firebase Auth SDK wired to React** — `web/src/lib/firebase.ts` initializes Firebase app, auth, and Firestore

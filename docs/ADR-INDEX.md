@@ -42,6 +42,9 @@ Each ADR follows this structure:
 | [ADR-032](ADR-032-UNIVERSAL-ENCLAVE-IMPLEMENTATION.md) | Universal Enclave Implementation (Web/Mobile/Desktop) | Accepted | 2026-03-18 | — |
 | [ADR-033](ADR-033-DESIGN-SYSTEM-ACCELERATION.md) | Design System Acceleration & Cross-Portfolio Reuse | Accepted | 2026-03-18 | — |
 | [ADR-034](ADR-034-FIREBASE-AUTH-IMPLEMENTATION.md) | Firebase Auth Implementation (Username + Email Login) | Accepted | 2026-03-19 | — |
+| [ADR-035](ADR-035-TIERED-IDENTITY-VERIFICATION.md) | Tiered Identity Verification | Accepted | 2026-03-19 | — |
+| [ADR-036](ADR-036-FIRESTORE-DIRECT-READS.md) | Firestore Direct Reads | Accepted | 2026-03-19 | — |
+| [ADR-037](ADR-037-CLOUD-SQL-PII-VAULT.md) | Cloud SQL PII Vault — Estate-Grade Encryption | Accepted | 2026-03-20 | — |
 
 ## Categories
 
@@ -57,6 +60,7 @@ Each ADR follows this structure:
 - ADR-002 §6: Data Architecture & Estate Sequestration
 - ADR-003: HMAC-Based Vault Security Layer
 - ADR-016: Live Infrastructure Telemetry & Audit Stream
+- ADR-037: Cloud SQL PII Vault — AES-256-GCM Envelope Encryption via Cloud KMS
 
 ### Infrastructure
 - ADR-001 §3: Google Cloud Platform (vs AWS/Azure)
@@ -106,4 +110,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-02-13*
+*Last updated: 2026-03-20*

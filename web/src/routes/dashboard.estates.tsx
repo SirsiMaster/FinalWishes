@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/dashboard/estates')({
   component: EstatesPage,
@@ -10,15 +11,8 @@ export const Route = createFileRoute('/dashboard/estates')({
 function EstatesPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [userId, setUserId] = useState('test-user');
-
-  useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      setUserId(u.login || 'test-user');
-    }
-  }, []);
+  const { user } = useAuth();
+  const userId = user?.uid || 'test-user';
 
   const { data, isLoading } = useQuery({
     queryKey: ['estates', userId],

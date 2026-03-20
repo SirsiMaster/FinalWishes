@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/dashboard/notifications')({
   component: NotificationsPage,
@@ -10,14 +11,13 @@ export const Route = createFileRoute('/dashboard/notifications')({
 function NotificationsPage() {
   const [estateId, setEstateId] = useState('');
 
+  const { profile } = useAuth();
+
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
-      setEstateId(preferredId);
+    if (profile?.primaryEstateId) {
+      setEstateId(profile.primaryEstateId);
     }
-  }, []);
+  }, [profile]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['notifications', estateId],

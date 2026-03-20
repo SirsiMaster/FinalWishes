@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useAuth } from '../../lib/auth'
 
 export function AdminHeader({
   title,
@@ -9,19 +10,11 @@ export function AdminHeader({
   subtitle?: string;
 }) {
   const [mode, setMode] = useState<'Owner' | 'Incapacity' | 'Settlement'>('Owner');
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      setUser(JSON.parse(session));
-    } else {
-      setUser({
-        name: 'Tameeka Lockhart',
-        profilePhotoUrl: '/assets/tameeka/mom dance.jpg'
-      });
-    }
-  }, []);
+  const { profile } = useAuth();
+  const user = profile ? {
+    name: profile.displayName,
+    profilePhotoUrl: profile.profilePhotoUrl || '/assets/tameeka/mom dance.jpg',
+  } : { name: 'Guest', profilePhotoUrl: '' };
 
   const getInitials = (name: string) => {
     return name?.split(' ').map(n => n[0]).join('') || 'TL';

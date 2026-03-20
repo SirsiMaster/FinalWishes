@@ -25,7 +25,7 @@ service cloud.firestore {
       // Users can create their own document (on registration)
       allow create: if request.auth != null && request.auth.uid == userId
         && request.resource.data.keys().hasAll(['email', 'role', 'createdAt'])
-        && request.resource.data.role in ['principal', 'executor', 'heir'];
+        && request.resource.data.role in ['principal', 'executor', 'heir', 'legal', 'cpa'];
       
       // Users can update their own document (limited fields)
       allow update: if request.auth != null && request.auth.uid == userId
@@ -59,6 +59,39 @@ service cloud.firestore {
       
       // No updates or deletes — usernames are permanent
       allow update, delete: if false;
+    }
+    
+    // =============================================
+    // IDENTITY VERIFICATION — Attestations (ADR-035)
+    // =============================================
+    
+    // Attestations: identity declarations by fiduciary-role users
+    // Document ID format: {uid}_{estateId}
+    match /attestations/{attestationId} {
+      // Users can read their own attestations
+      allow read: if request.auth != null 
+        && resource.data.uid == request.auth.uid;
+      
+      // Estate principals can read attestations for their estate
+      allow read: if request.auth != null 
+        && exists(/databases/$(database)/documents/estates/$(resource.data.estateId))
+        && get(/databases/$(database)/documents/estates/$(resource.data.estateId)).data.ownerId == request.auth.uid;
+      
+      // Users can create their own attestation (must match their uid)
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasAll(['uid', 'estateId', 'role', 'fullLegalName', 'attestationText', 'signatureData', 'status'])
+        && request.resource.data.role in ['heir', 'executor', 'legal', 'cpa']
+        && request.resource.data.status == 'verified';
+      
+      // Only admins or estate principals can update (e.g., revoke)
+      allow update: if isAdmin()
+        || (request.auth != null 
+            && exists(/databases/$(database)/documents/estates/$(resource.data.estateId))
+            && get(/databases/$(database)/documents/estates/$(resource.data.estateId)).data.ownerId == request.auth.uid);
+      
+      // No deletes — attestations are permanent records
+      allow delete: if false;
     }
     
     // =============================================

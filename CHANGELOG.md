@@ -4,6 +4,48 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.5.1-alpha] — 2026-03-19
+### Added (Phase 1, Week 2 — Sprint 4: Create Estate Onboarding)
+- **Create Estate page** (`/estates/create`) — Premium 2-step onboarding flow
+  - Welcome screen with feature cards (Assets, Vault, Family)
+  - Estate naming with auto-suggested placeholder based on user's last name
+  - AES-256 + SOC 2 + HIPAA compliance badges
+  - Creates Firestore estate document + estate_users junction record
+  - Updates user profile with `primaryEstateId` and `primaryEstateName`
+  - Auto-redirects to new estate's dashboard on creation
+
+### Changed
+- **Dashboard redirect** (`/dashboard`) — Now detects first-time users (no `primaryEstateId`)
+  and routes to `/estates/create` instead of falling back to demo data
+
+## [0.5.0-alpha] — 2026-03-19
+### Added (Phase 1, Week 2 — Sprints 1-3: Data Layer + Auto-Match)
+- **Firestore data hooks** (`web/src/lib/firestore.ts`) — Real-time `onSnapshot` hooks
+  - `useEstate`, `useEstateAssets`, `useEstateHeirs`, `useEstateExecutors`
+  - `useEstateDocuments`, `useUserEstates`, `useEstateNotifications`
+  - Generic `useDocument<T>` and `useCollection<T>` with typed constraints
+- **Estate write operations** (`web/src/lib/estate-actions.ts`)
+  - `createEstate`, `addAsset`, `addHeir`, `addExecutor`
+  - `createDocumentRecord`, `archiveAsset`, `archiveDocument`, `updateEstate`
+- **Auto-match invitation Cloud Function** (`autoMatchInvitation`)
+  - Firestore trigger on `users/{uid}` document creation
+  - Checks `estate_invitations` for matching email
+  - Auto-creates `estate_users` records with audit logging
+  - Batched write for atomicity
+- **ADR-036** — Firestore Direct Reads for Dashboard
+- **Developer README** — `web/src/lib/README.md`
+
+### Changed
+- **Dashboard page** — Wired to Firestore hooks (was ConnectRPC mock client)
+- **Assets page** — Wired to Firestore hooks + `addAsset` write action
+- **Beneficiaries page** — Wired to Firestore hooks + `addHeir` write action
+- **Vault page** — Document list from Firestore, upload still via Go API signed URLs
+- **Notifications page** — Wired to Firestore hooks with fallback data
+
+### Infrastructure
+- **Firestore indexes deployed** — 16 composite indexes including new `estate_invitations` (email+status)
+
+
 ## [0.3.0-alpha] — 2026-03-19
 ### Added (Phase 1. — Identity Verification & Governance)
 - **TOTP MFA Enrollment** — QR code generation, 6-digit verification, status display in Settings

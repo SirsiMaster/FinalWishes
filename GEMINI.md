@@ -72,6 +72,19 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
     
     Neither document is optional. A feature without documentation is an incomplete feature. The How-To and README must be created **in the same commit** as the feature code.
 
+*   **Context Monitoring Protocol (Rule 31)**: The agent MUST monitor context window and token usage throughout every session using the AG Monitor Pro extension and the `/context-monitoring` workflow. After **every sprint or phase**, the agent MUST report:
+    1.  **Commits this session** — total count
+    2.  **Context health** — 🟢 Healthy / 🟡 Getting Deep / 🔴 Critical
+    3.  **Recommendation** — Continue / Wrap Soon / Wrap Now
+    
+    When context health is 🟡 or 🔴, the agent MUST proactively:
+    - Commit all work
+    - Update `CHANGELOG.md`
+    - Generate a fresh `docs/CONTINUATION-PROMPT.md`
+    - Report final metrics
+    
+    **The agent is responsible for ensuring the session never gets cut short by context exhaustion.** If the context is getting deep, say so. Don't wait to be asked.
+
 ## 3. Technology Stack (FinalWishes)
 
 | Layer | Technology | Decision |

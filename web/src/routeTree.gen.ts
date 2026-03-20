@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as EstatesCreateRouteImport } from './routes/estates.create'
 import { Route as EstatesEstateIdRouteImport } from './routes/estates.$estateId'
 import { Route as DashboardVaultRouteImport } from './routes/dashboard.vault'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
@@ -53,6 +54,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const EstatesCreateRoute = EstatesCreateRouteImport.update({
+  id: '/estates/create',
+  path: '/estates/create',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const EstatesEstateIdRoute = EstatesEstateIdRouteImport.update({
   id: '/estates/$estateId',
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
+  '/estates/create': typeof EstatesCreateRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/dashboard/obituary': typeof DashboardObituaryRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
+  '/estates/create': typeof EstatesCreateRoute
   '/dashboard': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/vault': typeof DashboardVaultRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
+  '/estates/create': typeof EstatesCreateRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/vault'
     | '/estates/$estateId'
+    | '/estates/create'
     | '/dashboard/'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/dashboard/obituary'
     | '/dashboard/settings'
     | '/dashboard/vault'
+    | '/estates/create'
     | '/dashboard'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/vault'
     | '/estates/$estateId'
+    | '/estates/create'
     | '/dashboard/'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
@@ -320,6 +332,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   EstatesEstateIdRoute: typeof EstatesEstateIdRouteWithChildren
+  EstatesCreateRoute: typeof EstatesCreateRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -351,6 +364,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/estates/create': {
+      id: '/estates/create'
+      path: '/estates/create'
+      fullPath: '/estates/create'
+      preLoaderRoute: typeof EstatesCreateRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/estates/$estateId': {
       id: '/estates/$estateId'
@@ -560,6 +580,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   EstatesEstateIdRoute: EstatesEstateIdRouteWithChildren,
+  EstatesCreateRoute: EstatesCreateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

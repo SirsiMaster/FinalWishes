@@ -6,7 +6,7 @@ export const Route = createFileRoute('/dashboard')({
   component: DashboardRedirect,
 })
 
-/** Legacy /dashboard route — redirects to scoped /estates/{id}/dashboard */
+/** Legacy /dashboard route — redirects to scoped /estates/{id}/dashboard or /estates/create */
 function DashboardRedirect() {
   const navigate = useNavigate();
   const { user, profile, loading } = useAuth();
@@ -14,11 +14,18 @@ function DashboardRedirect() {
   useEffect(() => {
     if (loading) return;
 
-    if (user && profile) {
-      const estateSlug = profile.primaryEstateId === 'estate_lockhart' ? 'lockhart' : (profile.primaryEstateId || 'lockhart');
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
-    } else if (!user) {
+    if (!user) {
       navigate({ to: '/login', replace: true });
+      return;
+    }
+
+    if (profile?.primaryEstateId) {
+      // User has an estate — go to it
+      const estateSlug = profile.primaryEstateId === 'estate_lockhart' ? 'lockhart' : profile.primaryEstateId;
+      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
+    } else {
+      // First-time user with no estate — onboarding flow
+      navigate({ to: '/estates/create', replace: true });
     }
   }, [user, profile, loading, navigate]);
 

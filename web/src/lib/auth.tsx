@@ -26,6 +26,7 @@ import {
   onAuthStateChanged,
   updateProfile,
   sendPasswordResetEmail,
+  sendEmailVerification,
   type User,
 } from 'firebase/auth';
 import {
@@ -60,6 +61,8 @@ export interface AuthContextValue {
   profile: UserProfile | null;
   /** True while Firebase is determining auth state */
   loading: boolean;
+  /** Whether the user's email has been verified */
+  emailVerified: boolean;
   /** Sign in with email or username + password */
   signIn: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
   /** Create a new account */
@@ -68,6 +71,8 @@ export interface AuthContextValue {
   signOut: () => Promise<void>;
   /** Send password reset email */
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
+  /** Resend email verification */
+  resendVerification: () => Promise<{ success: boolean; error?: string }>;
 }
 
 export interface SignUpParams {
@@ -186,7 +191,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (firebaseUser) {
         // Fetch user profile from Firestore
-        const userProfile = await fetchUserProfile(firebaseUser.uid);
+        let userProfile = await fetchUserProfile(firebaseUser.uid);
+        
+        // Handle edge case: Firebase Auth account exists but Firestore profile doesn't
+        // (e.g., previous registration failed mid-write due to permissions)
+        if (!userProfile && firebaseUser.email) {
+          try {
+            const displayName = firebaseUser.displayName || firebaseUser.email.split('@')[0];
+            const nameParts = displayName.split(' ');
+            await setDoc(doc(db, 'users', firebaseUser.uid), {
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              emailVerified: firebaseUser.emailVerified,
+              firstName: nameParts[0] || '',
+              lastName: nameParts.slice(1).join(' ') || '',
+              displayName,
+              role: 'principal',
+              tier: 'free',
+              status: 'active',
+              idVerified: false,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+            });
+            userProfile = await fetchUserProfile(firebaseUser.uid);
+          } catch {
+            // If this also fails, user will see limited UI — they can try again
+          }
+        }
+        
         setProfile(userProfile);
       } else {
         setProfile(null);
@@ -267,6 +299,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         createdAt: serverTimestamp(),
       });
 
+      // Send email verification
+      await sendEmailVerification(credential.user);
+
       // Set profile in state
       const userProfile = await fetchUserProfile(uid);
       setProfile(userProfile);
@@ -293,14 +328,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Resend email verification
+  const resendVerification = useCallback(async () => {
+    try {
+      if (!auth.currentUser) {
+        return { success: false, error: 'No user signed in.' };
+      }
+      await sendEmailVerification(auth.currentUser);
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: formatAuthError(error) };
+    }
+  }, []);
+
   const value: AuthContextValue = {
     user,
     profile,
     loading,
+    emailVerified: user?.emailVerified ?? false,
     signIn,
     signUp,
     signOut: handleSignOut,
     resetPassword,
+    resendVerification,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

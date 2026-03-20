@@ -1,7 +1,8 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useRef, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useState, useRef, useMemo } from 'react'
+import { useDocument } from '../lib/firestore'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/estates/$estateId/obituary')({
@@ -10,34 +11,35 @@ export const Route = createFileRoute('/estates/$estateId/obituary')({
 
 function ObituaryPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/obituary' });
-  const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [isSigned, setIsSigned] = useState(false);
+  const [saving, setSaving] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
   const { profile } = useAuth();
   const userName = profile?.displayName || '';
   const profilePhoto = profile?.profilePhotoUrl || '/assets/tameeka/mom memorial.jpg';
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
+  const { data: obit, loading: isLoading } = useDocument<any>(`estates/${estateId}/governance/obituary`);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['obituary', estateId],
-    queryFn: () => estateClient.getObituary({ estateId }),
-  });
-
-  const saveMutation = useMutation({
-    mutationFn: (content: string) => estateClient.saveObituary({ estateId, content }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['obituary', estateId] });
+  const handleSave = async () => {
+    const content = textAreaRef.current?.value || '';
+    setSaving(true);
+    try {
+      await setDoc(doc(db, `estates/${estateId}/governance`, 'obituary'), {
+        content,
+        status: 'Draft',
+        last_updated: serverTimestamp(),
+      }, { merge: true });
       setEditing(false);
+    } catch (err) {
+      console.error('[SaveObituary] Error:', err);
+    } finally {
+      setSaving(false);
     }
-  });
+  };
 
   if (isLoading) {
     return (
@@ -49,8 +51,6 @@ function ObituaryPage() {
       </div>
     );
   }
-
-  const obit = data;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
@@ -142,10 +142,7 @@ function ObituaryPage() {
                <button onClick={() => setEditing(true)} className="text-[#133378] font-bold text-[12px] hover:underline">Edit</button>
              )}
              {editing && (
-               <button onClick={() => {
-                 const content = textAreaRef.current?.value || "";
-                 saveMutation.mutate(content);
-               }} className="text-green-600 font-bold text-[12px] hover:underline">Save Draft</button>
+               <button onClick={handleSave} className="text-green-600 font-bold text-[12px] hover:underline">{saving ? 'Saving...' : 'Save Draft'}</button>
              )}
              {isSigned && (
                <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px]">

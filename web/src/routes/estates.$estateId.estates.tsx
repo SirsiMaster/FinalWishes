@@ -1,7 +1,7 @@
 import { createFileRoute, useParams, useNavigate } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useState } from 'react'
+import { useUserEstates, useEstate } from '../lib/firestore'
+import { createEstate } from '../lib/estate-actions'
 import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/estates/$estateId/estates')({
@@ -11,28 +11,12 @@ export const Route = createFileRoute('/estates/$estateId/estates')({
 function EstatesPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/estates' });
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const { user } = useAuth();
-  const userId = user?.uid || 'test-user';
+  const userId = user?.uid || null;
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['estates', userId],
-    queryFn: () => estateClient.listEstates({ userId }),
-  });
-
-  const registerMutation = useMutation({
-    mutationFn: (vars: { name: string, type: string }) => 
-      estateClient.registerEstate({
-        userId: userId,
-        name: vars.name,
-        type: vars.type
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['estates', userId] });
-      setModalOpen(false);
-    }
-  });
+  const { data: estateUsers, loading: isLoading } = useUserEstates(userId);
 
   if (isLoading) {
     return (
@@ -42,7 +26,12 @@ function EstatesPage() {
     );
   }
 
-  const estates = data?.estates || [];
+  // Map estate_users junction records to estate summaries
+  const estates = estateUsers.map(eu => ({
+    id: eu.estateId,
+    name: eu.estateId, // Will be resolved by EstateCard
+    role: eu.role || 'Owner',
+  }));
 
   return (
     <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
@@ -122,13 +111,17 @@ function EstatesPage() {
             <h3 className="text-3xl font-bold text-[#0F172A] mb-3 tracking-tight">Add New Plan</h3>
             <p className="text-slate-500 font-medium text-sm mb-12">Enter the details to create a new estate plan for your family.</p>
             
-            <form onSubmit={(e) => {
+            <form onSubmit={async (e) => {
               e.preventDefault();
+              if (!user) return;
               const formData = new FormData(e.currentTarget);
-              registerMutation.mutate({ 
-                name: formData.get('name') as string, 
-                type: formData.get('type') as string 
+              setSaving(true);
+              await createEstate({
+                name: formData.get('name') as string,
+                principalId: user.uid,
               });
+              setSaving(false);
+              setModalOpen(false);
             }} className="space-y-10">
               <div className="space-y-3">
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Plan Name</label>
@@ -144,8 +137,8 @@ function EstatesPage() {
               </div>
               <div className="flex gap-6 pt-4">
                 <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-5 rounded-2xl border border-slate-100 font-bold text-slate-400 text-sm hover:bg-slate-50 transition-all">Cancel</button>
-                <button type="submit" disabled={registerMutation.isPending} className="flex-1 py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-xl disabled:opacity-50">
-                  {registerMutation.isPending ? 'Saving...' : 'Create Plan'}
+                <button type="submit" disabled={saving} className="flex-1 py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-xl disabled:opacity-50">
+                  {saving ? 'Saving...' : 'Create Plan'}
                 </button>
               </div>
             </form>

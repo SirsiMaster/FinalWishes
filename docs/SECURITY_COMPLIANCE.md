@@ -297,9 +297,68 @@ To protect the "Hierarchical Canon of Secure Enclaves," all dashboard data is pr
 
 ---
 
+## 12. Cloud KMS & PII Vault — Live Infrastructure (ADR-037)
+
+The PII Vault is the physically isolated encryption enclave for all sensitive data. Provisioned March 20, 2026.
+
+### 12.1 Cloud KMS Key Hierarchy
+
+| Resource | Value |
+|----------|-------|
+| **Key Ring** | `projects/finalwishes-prod/locations/us-central1/keyRings/finalwishes-keyring` |
+| **PII Vault Key** | `pii-vault-key` — AES-256, 365d auto-rotation, ENABLED |
+| **Document Vault Key** | `document-vault-key` — AES-256, 365d auto-rotation, ENABLED |
+
+### 12.2 Envelope Encryption Flow
+
+```
+1. Generate random 256-bit DEK (Data Encryption Key)
+2. Encrypt PII with DEK using AES-256-GCM
+3. Encrypt DEK with KEK via Cloud KMS (with estate-scoped AAD)
+4. Store: encrypted_data + encrypted_dek + nonce
+5. Zero plaintext DEK from memory
+```
+
+**Additional Authenticated Data (AAD):** Each encryption operation is bound to a specific estate ID via KMS AAD context. A DEK encrypted for Estate A **cannot** decrypt data for Estate B — this is cryptographically enforced.
+
+### 12.3 Cloud SQL PII Vault
+
+| Resource | Value |
+|----------|-------|
+| **Instance** | `finalwishes-pii-vault` (PostgreSQL 15, us-central1-c) |
+| **Tier** | `db-f1-micro` (dev) → `db-n1-standard-1` (production) |
+| **Database** | `pii_vault` |
+| **User** | `vault_admin` (password in Secret Manager) |
+| **Tables** | `user_pii`, `asset_pii`, `heir_pii`, `vault_audit_log` |
+| **Access** | Go API only — no client-side access, ever |
+
+### 12.4 Cipher Suite
+
+All connections use:
+- **TLS 1.3** (Cloud Run → Cloud SQL, mandatory)
+- **TLS_AES_256_GCM_SHA384** with **ECDHE** key exchange
+- **Perfect Forward Secrecy** (PFS) — past communications remain secure even if keys are compromised
+
+### 12.5 API Endpoints
+
+All require Firebase Auth (`Authorization: Bearer <token>`):
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/api/v1/vault/user-pii` | Store user SSN, DOB |
+| `GET` | `/api/v1/vault/user-pii` | Retrieve user PII (masked by default) |
+| `POST` | `/api/v1/vault/asset-pii` | Store account/routing/VIN |
+| `GET` | `/api/v1/vault/asset-pii` | Retrieve asset PII (masked by default) |
+| `POST` | `/api/v1/vault/heir-pii` | Store heir SSN, DOB |
+| `GET` | `/api/v1/vault/heir-pii` | Retrieve heir PII (masked by default) |
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
-| **2.0.0** | **2026-03-18** | **Antigravity** | **Nexus Refresh: Replaced AWS refs with GCP. Added Section 11: Secure Enclave Protocol (ADR-031).** |
+| 2.0.0 | 2026-03-18 | Antigravity | Nexus Refresh: Replaced AWS refs with GCP. Added Section 11: Secure Enclave Protocol (ADR-031). |
+| **3.0.0** | **2026-03-20** | **Antigravity** | **Added Section 12: Cloud KMS & PII Vault live infrastructure (ADR-037). Documented cipher suite, envelope encryption flow, and API endpoints.** |
+

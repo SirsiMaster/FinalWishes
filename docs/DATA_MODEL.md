@@ -576,44 +576,94 @@ interface Payment {
 
 ## 9. Cloud SQL Schema (PII)
 
-For sensitive PII that cannot be stored in Firestore:
+For sensitive PII that cannot be stored in Firestore. Implemented in `api/internal/vault/repository.go` (ADR-037).
+
+**Instance:** `finalwishes-pii-vault` (PostgreSQL 15, us-central1)  
+**Database:** `pii_vault`  
+**Encryption:** AES-256-GCM envelope encryption via Cloud KMS (`finalwishes-keyring/pii-vault-key`)
+
+Each encrypted field uses 3 columns:
+- `{field}_encrypted` — AES-256-GCM ciphertext (base64)
+- `{field}_dek` — KMS-encrypted Data Encryption Key (base64)
+- `{field}_nonce` — GCM nonce (base64)
 
 ```sql
--- User PII
+-- User PII (keyed by firebase_uid + estate_id)
 CREATE TABLE user_pii (
-    id UUID PRIMARY KEY,
-    firebase_uid VARCHAR(128) UNIQUE NOT NULL,
-    date_of_birth DATE,
-    ssn_encrypted BYTEA,         -- Encrypted with Cloud KMS
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    firebase_uid VARCHAR(128) NOT NULL,
+    estate_id VARCHAR(128) NOT NULL,
+    ssn_encrypted TEXT,          -- AES-256-GCM ciphertext
+    ssn_dek TEXT,                -- KMS-encrypted DEK
+    ssn_nonce TEXT,              -- GCM nonce
+    dob_encrypted TEXT,
+    dob_dek TEXT,
+    dob_nonce TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    accessed_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(firebase_uid, estate_id)
 );
 
--- Asset PII
+-- Asset PII (keyed by asset_id + estate_id)
 CREATE TABLE asset_pii (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     asset_id VARCHAR(128) NOT NULL,
-    account_number_encrypted BYTEA,
-    routing_number_encrypted BYTEA,
-    vin_encrypted BYTEA,
+    estate_id VARCHAR(128) NOT NULL,
+    account_number_encrypted TEXT,
+    account_number_dek TEXT,
+    account_number_nonce TEXT,
+    routing_number_encrypted TEXT,
+    routing_number_dek TEXT,
+    routing_number_nonce TEXT,
+    vin_encrypted TEXT,
+    vin_dek TEXT,
+    vin_nonce TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    accessed_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(asset_id, estate_id)
 );
 
--- Heir PII
+-- Heir PII (keyed by heir_id + estate_id)
 CREATE TABLE heir_pii (
-    id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     heir_id VARCHAR(128) NOT NULL,
-    date_of_birth DATE,
-    ssn_encrypted BYTEA,
+    estate_id VARCHAR(128) NOT NULL,
+    ssn_encrypted TEXT,
+    ssn_dek TEXT,
+    ssn_nonce TEXT,
+    dob_encrypted TEXT,
+    dob_dek TEXT,
+    dob_nonce TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    accessed_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(heir_id, estate_id)
+);
+
+-- Vault Audit Log (immutable, SOC 2 evidence)
+CREATE TABLE vault_audit_log (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id VARCHAR(128) NOT NULL,
+    estate_id VARCHAR(128) NOT NULL,
+    action VARCHAR(32) NOT NULL,      -- 'store' | 'retrieve'
+    resource_type VARCHAR(32) NOT NULL, -- 'user_pii' | 'asset_pii' | 'heir_pii'
+    resource_id VARCHAR(128),
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Indexes
 CREATE INDEX idx_user_pii_firebase ON user_pii(firebase_uid);
+CREATE INDEX idx_user_pii_estate ON user_pii(estate_id);
 CREATE INDEX idx_asset_pii_asset ON asset_pii(asset_id);
+CREATE INDEX idx_asset_pii_estate ON asset_pii(estate_id);
 CREATE INDEX idx_heir_pii_heir ON heir_pii(heir_id);
+CREATE INDEX idx_heir_pii_estate ON heir_pii(estate_id);
+CREATE INDEX idx_audit_estate ON vault_audit_log(estate_id, created_at DESC);
+CREATE INDEX idx_audit_user ON vault_audit_log(user_id, created_at DESC);
 ```
 
 ---
@@ -678,4 +728,5 @@ CREATE INDEX idx_heir_pii_heir ON heir_pii(heir_id);
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial PostgreSQL schema |
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Firestore + Cloud SQL hybrid |
-| **3.0.0** | **2025-12-05** | **Claude** | **Rebranded to FinalWishes, updated to 5 launch states** |
+| 3.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes, updated to 5 launch states |
+| **4.0.0** | **2026-03-20** | **Antigravity** | **Updated §9 Cloud SQL schema to match live implementation (ADR-037): envelope encryption columns, vault_audit_log, estate_id scoping** |

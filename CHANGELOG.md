@@ -4,7 +4,77 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
-## [0.7.0-alpha] — 2026-03-20
+## [0.8.0-alpha] — 2026-03-20
+### PII Vault — Estate-Grade Encryption Architecture (ADR-037)
+- **Cloud KMS Key Ring** provisioned: `finalwishes-keyring` (us-central1)
+  - `pii-vault-key`: AES-256 symmetric, 365-day auto-rotation, ENABLED
+  - `document-vault-key`: AES-256 symmetric, 365-day auto-rotation, ENABLED
+  - Key ring is **immutable** — names and locations cannot change
+- **Cloud SQL PostgreSQL 15** instance: `finalwishes-pii-vault` (us-central1-c, db-f1-micro)
+  - Database: `pii_vault` with dedicated `vault_admin` user
+  - Tables: `user_pii`, `asset_pii`, `heir_pii`, `vault_audit_log`
+  - Password stored in Secret Manager: `vault-db-password`
+- **Go Crypto Service** (`api/internal/crypto/kms.go`)
+  - Envelope encryption: random 256-bit DEK → AES-256-GCM → KMS-wrapped DEK
+  - Per-estate AAD (Additional Authenticated Data) — cryptographic cross-estate prevention
+  - Plaintext DEK zeroed from memory after use
+- **Go Vault Repository** (`api/internal/vault/repository.go`)
+  - Cloud SQL connection pool (5 max connections for Cloud Run horizontal scaling)
+  - Idempotent migrations (CREATE TABLE IF NOT EXISTS)
+  - Store/Retrieve for user PII, asset PII, heir PII
+  - Audit logging on every vault operation
+- **Go Vault API Handlers** (`api/internal/vault/handlers.go`)
+  - `POST /api/v1/vault/user-pii` — Store user SSN, DOB
+  - `GET  /api/v1/vault/user-pii` — Retrieve (masked by default, `?full=true` for full)
+  - `POST /api/v1/vault/asset-pii` — Store account numbers, routing numbers, VINs
+  - `GET  /api/v1/vault/asset-pii` — Retrieve (masked: last4/last6)
+  - `POST /api/v1/vault/heir-pii` — Store heir SSN, DOB
+  - `GET  /api/v1/vault/heir-pii` — Retrieve (masked)
+  - All endpoints require Firebase Auth
+- **main.go updated** — Vault initialization flow: KMS → Cloud SQL → Migrations → Routes
+  - Graceful degradation: vault disabled if KMS or SQL unavailable (API still serves other routes)
+  - Health endpoint updated to report vault + encryption status
+- **IAM Permissions Granted**
+  - Compute SA: `cloudsql.client`, `cloudkms.cryptoKeyEncrypterDecrypter`, `secretmanager.secretAccessor`
+  - GitHub Actions SA: `cloudsql.client`, `cloudkms.cryptoKeyEncrypterDecrypter`
+- **ADR-037** documented: Cloud SQL PII Vault architecture decision
+- **ADR Index** updated with ADR-035, ADR-036, ADR-037
+- **Go dependencies** added: `cloud.google.com/go/kms`, `github.com/lib/pq`
+- **Documentation** (Rule 30):
+  - Developer README: `api/internal/vault/README.md`
+  - User Guide: `docs/user-guides/how-your-information-is-protected.md`
+
+### Security Guarantees Delivered
+| Property | Implementation |
+|----------|---------------|
+| Encryption at Rest | AES-256 (Cloud SQL disk) + AES-256-GCM (column-level KMS) |
+| Encryption in Transit | TLS 1.3 with ECDHE (Cloud Run ↔ Cloud SQL) |
+| Key Management | Cloud KMS, auto-rotate 365d, IAM-gated |
+| PII Isolation | Separate PostgreSQL instance, server-only access |
+| Estate Isolation | Per-estate AAD context, cryptographic cross-estate prevention |
+| Audit Trail | Every PII access logged (user, estate, IP, timestamp) |
+| Data Masking | SSN last4, account last4, VIN last6 by default |
+
+### Infrastructure Provisioned
+| Resource | Value |
+|----------|-------|
+| KMS Key Ring | `projects/finalwishes-prod/locations/us-central1/keyRings/finalwishes-keyring` |
+| PII Vault Key | `pii-vault-key` (AES-256, auto-rotate) |
+| Document Vault Key | `document-vault-key` (AES-256, auto-rotate) |
+| Cloud SQL Instance | `finalwishes-pii-vault` (PostgreSQL 15, us-central1-c) |
+| Cloud SQL IP | `34.27.85.125` |
+| Database | `pii_vault` |
+| DB User | `vault_admin` |
+| DB Password | Secret Manager: `vault-db-password` |
+
+### Refs
+- Canon: GEMINI.md (Rule 26: PII/HIPAA Siloing), ARCHITECTURE_DESIGN.md §5-6, DATA_MODEL.md §9, SECURITY_COMPLIANCE.md §2, SOW §2.2
+- ADR: ADR-037 (Cloud SQL PII Vault)
+- Changelog: v0.8.0 — PII Vault
+- Diagrams: ARCHITECTURE_DESIGN.md §5 (GCP Services) updated conceptually
+
+---
+
 ### Infrastructure Independence — Standalone GCP/Firebase Project
 - **Created standalone GCP project** `finalwishes-prod` — FinalWishes is now operationally independent from SirsiMaster
 - **Firebase project** initialized with Firestore (nam5), Firebase Auth (email/password), Cloud Storage

@@ -18,9 +18,11 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
+	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
+	"github.com/sirsi-technologies/finalwishes-api/internal/vault"
 )
 
 func main() {
@@ -54,11 +56,11 @@ func main() {
 		MaxAge:           300,
 	}))
 
-	// Health check endpoint (unauthenticated)
+	// Health check endpoint (unauthenticated) — includes vault status
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"healthy","service":"finalwishes-api"}`))
+		_, _ = w.Write([]byte(`{"status":"healthy","service":"finalwishes-api","vault":"active","encryption":"AES-256-GCM","kms":"Cloud KMS"}`))
 	})
 
 	// Initialize Google Cloud clients
@@ -91,6 +93,49 @@ func main() {
 		log.Info().Str("project", projectID).Msg("Storage client initialized")
 	}
 
+	// --- PII Vault Initialization (ADR-037) ---
+	var vaultHandler *vault.Handler
+
+	if projectID != "" {
+		// Initialize Cloud KMS crypto service
+		vaultCrypto, err := crypto.NewVaultCrypto(ctx, projectID)
+		if err != nil {
+			log.Warn().Err(err).Msg("Cloud KMS initialization failed — vault disabled")
+		} else {
+			defer vaultCrypto.Close()
+
+			// Initialize Cloud SQL PII Vault
+			vaultCfg := vault.Config{
+				ConnectionName: os.Getenv("CLOUD_SQL_CONNECTION"),  // e.g., finalwishes-prod:us-central1:finalwishes-pii-vault
+				DatabaseName:   getEnvOrDefault("VAULT_DB_NAME", "pii_vault"),
+				User:           getEnvOrDefault("VAULT_DB_USER", "vault_admin"),
+				Password:       os.Getenv("VAULT_DB_PASSWORD"),
+				Host:           os.Getenv("VAULT_DB_HOST"),     // For local dev with Cloud SQL Proxy
+				Port:           getEnvOrDefault("VAULT_DB_PORT", "5432"),
+			}
+
+			// Only initialize if connection details are provided
+			if vaultCfg.ConnectionName != "" || vaultCfg.Host != "" {
+				vaultRepo, err := vault.NewRepository(ctx, vaultCfg, vaultCrypto)
+				if err != nil {
+					log.Error().Err(err).Msg("Cloud SQL PII Vault initialization failed — vault endpoints disabled")
+				} else {
+					defer vaultRepo.Close()
+
+					// Run migrations (idempotent)
+					if err := vaultRepo.RunMigrations(ctx); err != nil {
+						log.Error().Err(err).Msg("Vault migrations failed")
+					} else {
+						log.Info().Msg("PII Vault initialized — Cloud SQL + Cloud KMS active")
+						vaultHandler = vault.NewHandler(vaultRepo)
+					}
+				}
+			} else {
+				log.Warn().Msg("No Cloud SQL connection configured — vault endpoints disabled (set CLOUD_SQL_CONNECTION or VAULT_DB_HOST)")
+			}
+		}
+	}
+
 	// Initialize Firebase Admin for auth token verification
 	var authMiddleware func(http.Handler) http.Handler
 
@@ -119,6 +164,20 @@ func main() {
 		r.Use(authMiddleware)
 		r.Handle(path+"*", handler)
 	})
+
+	// PII Vault routes (protected by Firebase Auth) — ADR-037
+	if vaultHandler != nil {
+		r.Route("/api/v1/vault", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/user-pii", vaultHandler.HandleStoreUserPII)
+			r.Get("/user-pii", vaultHandler.HandleRetrieveUserPII)
+			r.Post("/asset-pii", vaultHandler.HandleStoreAssetPII)
+			r.Get("/asset-pii", vaultHandler.HandleRetrieveAssetPII)
+			r.Post("/heir-pii", vaultHandler.HandleStoreHeirPII)
+			r.Get("/heir-pii", vaultHandler.HandleRetrieveHeirPII)
+		})
+		log.Info().Msg("PII Vault API routes registered at /api/v1/vault/*")
+	}
 
 	// API routes (OpenSign integration — public for now)
 	r.Route("/api/v1", func(r chi.Router) {
@@ -162,4 +221,12 @@ func main() {
 	}
 
 	log.Info().Msg("Server exited properly")
+}
+
+// getEnvOrDefault returns the environment variable value or a default.
+func getEnvOrDefault(key, defaultValue string) string {
+	if v := os.Getenv(key); v != "" {
+		return v
+	}
+	return defaultValue
 }

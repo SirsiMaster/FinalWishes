@@ -4,6 +4,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.6.2-alpha] — 2026-03-19
+### Removed (Phase 1, Week 3 — Dead Code Cleanup)
+- **Stubbed 9 legacy `dashboard.*` routes** — 1,815 lines of dead code removed
+- **Uninstalled `@tanstack/react-query`** — all data fetching now uses Firestore hooks
+- **Removed `QueryClientProvider`** from app root (`main.tsx`)
+
+### Performance
+- Modules: 343 → **296** (-14%)
+- Main bundle: 464KB → **337KB** (-27%)
+- CSS: 151KB → **126KB** (-17%)
+- **Session total: 1,093KB → 337KB (-69%)**
+
 ## [0.6.1-alpha] — 2026-03-19
 ### Performance (Phase 1, Week 3 — Code Splitting)
 - **Bundle splitting** via Vite `manualChunks` (Rolldown function API)

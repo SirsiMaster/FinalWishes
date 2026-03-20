@@ -4,6 +4,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.7.0-alpha] — 2026-03-20
+### Infrastructure Independence — Standalone GCP/Firebase Project
+- **Created standalone GCP project** `finalwishes-prod` — FinalWishes is now operationally independent from SirsiMaster
+- **Firebase project** initialized with Firestore (nam5), Firebase Auth (email/password), Cloud Storage
+- **Firestore rules + 16 composite indexes** deployed to new project
+- **Firebase Auth** configured with email/password provider + localhost authorized domain
+- **Test data seeded** — Lockhart estate fully populated in new Firestore
+- **13 files updated** — config-only changes (zero logic/architecture modifications):
+  - `.firebaserc` → `finalwishes-prod`
+  - `web/src/lib/firebase.ts` → new SDK config (apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId)
+  - `functions/index.js` → CORS origins, sourceProject, baseUrl
+  - `api/scripts/seed/main.go` → default project fallback
+  - `scripts/test-auth-flows.js` + `create-test-accounts.js` → projectId
+  - `public/` HTML pages (4) + `improvements/` (1) → Firebase config blocks
+  - `desktop/src-tauri/tauri.conf.json` → CSP domain allowlist
+  - `README.md` → live site URL
+
+### Business Context
+- FinalWishes is an independent company that contracted Sirsi Technologies for development
+- This migration separates FinalWishes infrastructure from the shared SirsiMaster GCP project
+- The old `legacy-estate-os` project remains intact as a fallback
+- Zero runtime code dependencies on Sirsi were found (audit confirmed: 0 npm imports, 0 TS imports, 0 Go imports)
+
+### Refs
+- Canon: GEMINI.md, ARCHITECTURE_DESIGN.md, COST_PROPOSAL.md
+- ADR: ADR-036 (Firestore Direct Reads — unaffected)
+- Changelog: v0.7.0 — Infrastructure Independence
+
+---
+
 ## [0.6.2-alpha] — 2026-03-19
 ### Removed (Phase 1, Week 3 — Dead Code Cleanup)
 - **Stubbed 9 legacy `dashboard.*` routes** — 1,815 lines of dead code removed

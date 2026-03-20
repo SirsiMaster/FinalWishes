@@ -24,8 +24,8 @@ const app = express();
 // CORS configuration for cross-origin access
 app.use(cors({
     origin: [
-        'https://legacy-estate-os.web.app',
-        'https://legacy-estate-os.firebaseapp.com',
+        'https://finalwishes-prod.web.app',
+        'https://finalwishes-prod.firebaseapp.com',
         'http://localhost:3000',
         'http://localhost:5000',
         'http://127.0.0.1:5500'
@@ -67,8 +67,8 @@ app.post('/api/guest/envelopes', async (req, res) => {
         // Validate origin (only allow Legacy Estate OS and localhost)
         const origin = req.headers.origin || '';
         const allowedOrigins = [
-            'https://legacy-estate-os.web.app',
-            'https://legacy-estate-os.firebaseapp.com',
+            'https://finalwishes-prod.web.app',
+            'https://finalwishes-prod.firebaseapp.com',
             'http://localhost',
             'http://127.0.0.1'
         ];
@@ -102,7 +102,7 @@ app.post('/api/guest/envelopes', async (req, res) => {
             signerName: signerName,
             signers: [signerEmail],
             isGuestSigning: true,
-            sourceProject: 'legacy-estate-os',
+            sourceProject: 'finalwishes-prod',
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         };
@@ -111,7 +111,7 @@ app.post('/api/guest/envelopes', async (req, res) => {
         const envelopeId = docRef.id;
 
         // Generate signing URL - points back to sign.html with envelope ID
-        const baseUrl = 'https://legacy-estate-os.web.app';
+        const baseUrl = 'https://finalwishes-prod.web.app';
         const signingUrl = `${baseUrl}/admin/sign.html?envelope=${envelopeId}&guest=true`;
 
         // Update with envelope ID and signing URL
@@ -174,7 +174,7 @@ app.post('/api/envelopes', authenticate, async (req, res) => {
             createdByEmail: req.user.email || null,
             signers: recipientsList.map(r => r.email),
             isGuestSigning: false,
-            sourceProject: 'legacy-estate-os',
+            sourceProject: 'finalwishes-prod',
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         };
@@ -183,7 +183,7 @@ app.post('/api/envelopes', authenticate, async (req, res) => {
         const envelopeId = docRef.id;
 
         // Generate signing URL
-        const baseUrl = 'https://legacy-estate-os.web.app';
+        const baseUrl = 'https://finalwishes-prod.web.app';
         const signingUrl = `${baseUrl}/admin/sign.html?envelope=${envelopeId}`;
 
         // Update with envelope ID and signing URL

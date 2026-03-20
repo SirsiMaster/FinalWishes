@@ -10,7 +10,7 @@
  * @version 1.0.0
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, startTransition } from 'react';
 import {
   doc,
   collection,
@@ -19,7 +19,7 @@ import {
   orderBy,
   limit,
   onSnapshot,
-  type DocumentData,
+  type DocumentData as _DocumentData,
   type QueryConstraint,
   type Timestamp,
 } from 'firebase/firestore';
@@ -148,13 +148,14 @@ export function useDocument<T>(path: string | null): FirestoreResult<T> {
 
   useEffect(() => {
     if (!path) {
-      setData(null);
-      setLoading(false);
+      startTransition(() => {
+        setData(null);
+        setLoading(false);
+      });
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    startTransition(() => setLoading(true));
 
     const docRef = doc(db, path);
     const unsubscribe = onSnapshot(

@@ -47,16 +47,22 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
   // Only principals can invite
   const isPrincipal = profile?.role === 'principal' || profile?.role === 'admin';
 
-  useEffect(() => {
-    loadInvitations();
-  }, [estateId]);
-
-  const loadInvitations = async () => {
-    setLoadingInvitations(true);
+  const refreshInvitations = async () => {
     const data = await getEstateInvitations(estateId);
     setInvitations(data);
     setLoadingInvitations(false);
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    getEstateInvitations(estateId).then((data) => {
+      if (!cancelled) {
+        setInvitations(data);
+        setLoadingInvitations(false);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [estateId]);
 
   const handleInvite = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +91,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
       setEmail('');
       setFullName('');
       setShowForm(false);
-      loadInvitations();
+      refreshInvitations();
       setTimeout(() => setSuccess(''), 5000);
     } else {
       setError(result.error || 'Failed to send invitation.');
@@ -95,7 +101,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
   const handleRevoke = async (invitationId: string) => {
     const result = await revokeInvitation(invitationId);
     if (result.success) {
-      loadInvitations();
+      refreshInvitations();
     }
   };
 

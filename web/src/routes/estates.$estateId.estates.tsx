@@ -58,42 +58,9 @@ function EstatesPage() {
       
       {/* ── Estate Cards ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {estates.map((e) => {
-          const isCurrent = routeId === e.id || (routeId === 'lockhart' && e.id === 'estate_lockhart');
-          return (
-            <div key={e.id} className={`bg-white p-12 rounded-[2.5rem] border ${isCurrent ? 'border-[#133378]/20 shadow-xl' : 'border-slate-100 shadow-sm'} hover:shadow-2xl hover:border-[#133378]/20 transition-all group overflow-hidden relative cursor-pointer`}>
-              <div className={`w-16 h-16 ${isCurrent ? 'bg-[#133378] text-white' : 'bg-[#F8FAFC] text-[#133378]'} rounded-2xl flex items-center justify-center mb-8 border border-slate-100 transition-all duration-500`}>
-                <svg viewBox="0 0 24 24" className="w-8 h-8 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-[#0F172A] font-bold text-3xl mb-3 tracking-tight group-hover:text-[#133378] transition-colors">{e.name}</h3>
-              <div className="flex items-center gap-4 mb-8">
-                 <span className="px-4 py-1.5 bg-[#F1F5F9] text-[#334155] font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">{e.role} Manager</span>
-                 <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Verified</span>
-                 </div>
-              </div>
-              <p className="text-[#64748B] font-medium text-sm leading-relaxed mb-10">The assets and memories for this estate are actively monitored and secured. All designated heirs have been verified.</p>
-              <div className="flex gap-4">
-                <button className="flex-1 bg-[#F8FAFC] border border-slate-100 text-[#0F172A] px-8 py-4 rounded-2xl text-sm font-bold hover:bg-slate-100 transition-all">
-                  View History
-                </button>
-                <button 
-                  onClick={() => {
-                    if (isCurrent) return;
-                    const nextId = e.id === 'estate_lockhart' ? 'lockhart' : e.id;
-                    navigate({ to: `/estates/${nextId}/dashboard` });
-                  }}
-                  className={`flex-1 ${isCurrent ? 'bg-[#F8FAFC] text-slate-400 border border-slate-100 cursor-default' : 'bg-[#133378] text-white hover:bg-[#1E3A5F]'} px-8 py-4 rounded-2xl text-sm font-bold transition-all shadow-sm`}
-                >
-                  {isCurrent ? 'Currently Active' : 'Open Estate'}
-                </button>
-              </div>
-            </div>
-          );
-        })}
+        {estates.map((e) => (
+          <EstateCard key={e.id} estateId={e.id} role={e.role} routeId={routeId} navigate={navigate} />
+        ))}
         {estates.length === 0 && (
           <div className="col-span-2 text-center py-40 bg-[#F8FAFC] rounded-[2.5rem] border-2 border-dashed border-slate-100 flex flex-col items-center justify-center">
              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-8 border border-slate-100 shadow-sm">
@@ -147,4 +114,50 @@ function EstatesPage() {
       )}
     </div>
   )
+}
+
+// ── Estate Card — resolves name from Firestore ──
+
+function EstateCard({ estateId, role, routeId, navigate }: {
+  estateId: string; role: string; routeId: string; navigate: any;
+}) {
+  const { data: estate } = useEstate(estateId);
+  const isCurrent = routeId === estateId || (routeId === 'lockhart' && estateId === 'estate_lockhart');
+  const displayName = estate?.name || estateId;
+
+  return (
+    <div className={`bg-white p-12 rounded-[2.5rem] border ${isCurrent ? 'border-[#133378]/20 shadow-xl' : 'border-slate-100 shadow-sm'} hover:shadow-2xl hover:border-[#133378]/20 transition-all group overflow-hidden relative cursor-pointer`}>
+      <div className={`w-16 h-16 ${isCurrent ? 'bg-[#133378] text-white' : 'bg-[#F8FAFC] text-[#133378]'} rounded-2xl flex items-center justify-center mb-8 border border-slate-100 transition-all duration-500`}>
+        <svg viewBox="0 0 24 24" className="w-8 h-8 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        </svg>
+      </div>
+      <h3 className="text-[#0F172A] font-bold text-3xl mb-3 tracking-tight group-hover:text-[#133378] transition-colors">{displayName}</h3>
+      <div className="flex items-center gap-4 mb-8">
+        <span className="px-4 py-1.5 bg-[#F1F5F9] text-[#334155] font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">{role}</span>
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Active</span>
+        </div>
+      </div>
+      <p className="text-[#64748B] font-medium text-sm leading-relaxed mb-10">
+        The assets and memories for this estate are actively monitored and secured.
+      </p>
+      <div className="flex gap-4">
+        <button className="flex-1 bg-[#F8FAFC] border border-slate-100 text-[#0F172A] px-8 py-4 rounded-2xl text-sm font-bold hover:bg-slate-100 transition-all">
+          View History
+        </button>
+        <button
+          onClick={() => {
+            if (isCurrent) return;
+            const nextId = estateId === 'estate_lockhart' ? 'lockhart' : estateId;
+            navigate({ to: `/estates/${nextId}/dashboard` });
+          }}
+          className={`flex-1 ${isCurrent ? 'bg-[#F8FAFC] text-slate-400 border border-slate-100 cursor-default' : 'bg-[#133378] text-white hover:bg-[#1E3A5F]'} px-8 py-4 rounded-2xl text-sm font-bold transition-all shadow-sm`}
+        >
+          {isCurrent ? 'Currently Active' : 'Open Estate'}
+        </button>
+      </div>
+    </div>
+  );
 }

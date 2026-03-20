@@ -28,7 +28,14 @@ api/bin/
 # === Firebase ===
 .firebase/
 
-# === Misc ===
+# === Security — never commit keys ===
 *.pem
+*.json.key
+*-key.json
+service-account*.json
+
+# === Misc ===
 *.log
 .turbo/
+.agents/
+

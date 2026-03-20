@@ -35,7 +35,9 @@ import {
   setDoc,
   serverTimestamp,
 } from 'firebase/firestore';
+import { type MultiFactorResolver } from 'firebase/auth';
 import { auth, db } from './firebase';
+import { getMFAResolver } from './mfa';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,7 +66,12 @@ export interface AuthContextValue {
   /** Whether the user's email has been verified */
   emailVerified: boolean;
   /** Sign in with email or username + password */
-  signIn: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signIn: (identifier: string, password: string) => Promise<{
+    success: boolean;
+    error?: string;
+    mfaRequired?: boolean;
+    mfaResolver?: MultiFactorResolver;
+  }>;
   /** Create a new account */
   signUp: (params: SignUpParams) => Promise<{ success: boolean; error?: string }>;
   /** Sign out */
@@ -252,6 +259,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return { success: true };
     } catch (error: any) {
+      // Check if this is an MFA challenge
+      if (error.code === 'auth/multi-factor-auth-required') {
+        const resolver = getMFAResolver(error);
+        if (resolver) {
+          return { success: false, mfaRequired: true, mfaResolver: resolver };
+        }
+      }
       return { success: false, error: formatAuthError(error) };
     }
   }, []);

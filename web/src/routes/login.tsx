@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
+import { resolveTotpChallenge } from '../lib/mfa'
+import { type MultiFactorResolver } from 'firebase/auth'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
@@ -44,7 +46,7 @@ function LoginPage() {
   const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
   const { signIn, signUp, user } = useAuth();
 
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [mode, setMode] = useState<'signin' | 'signup' | 'mfa'>('signin');
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -54,6 +56,8 @@ function LoginPage() {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mfaResolver, setMfaResolver] = useState<MultiFactorResolver | null>(null);
+  const [totpCode, setTotpCode] = useState('');
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -102,8 +106,29 @@ function LoginPage() {
 
     if (result.success) {
       navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+    } else if (result.mfaRequired && result.mfaResolver) {
+      // Switch to MFA challenge mode
+      setMfaResolver(result.mfaResolver);
+      setMode('mfa');
+      setError('');
     } else {
       setError(result.error || 'Sign in failed. Please try again.');
+    }
+  };
+
+  const handleMfaVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mfaResolver) return;
+    setError('');
+    setIsSubmitting(true);
+
+    const result = await resolveTotpChallenge(mfaResolver, totpCode);
+    setIsSubmitting(false);
+
+    if (result.success) {
+      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+    } else {
+      setError(result.error || 'MFA verification failed.');
     }
   };
 
@@ -180,12 +205,14 @@ function LoginPage() {
             </div>
           </Link>
           <h1 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378] mb-2">
-            {mode === 'signin' ? 'Sign In' : 'Create Account'}
+            {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : 'Verification Required'}
           </h1>
           <p className="text-[#64748B] text-sm font-medium max-w-[260px] mx-auto leading-relaxed">
             {mode === 'signin' 
               ? 'Secure access to the Estate Operating System' 
-              : 'Start preserving your legacy today'}
+              : mode === 'signup'
+              ? 'Start preserving your legacy today'
+              : 'Enter the 6-digit code from your authenticator app'}
           </p>
           {isDemo && (
             <div className="mt-3 bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-xl px-3 py-2">
@@ -262,7 +289,7 @@ function LoginPage() {
               </button>
             </div>
           </form>
-        ) : (
+        ) : mode === 'signup' ? (
           /* ─── Sign Up Form ─── */
           <form className="space-y-4" onSubmit={handleSignUp}>
             <div className="grid grid-cols-2 gap-3">
@@ -369,7 +396,61 @@ function LoginPage() {
               </button>
             </div>
           </form>
-        )}
+        ) : mode === 'mfa' ? (
+          /* ─── MFA TOTP Challenge ─── */
+          <form className="space-y-6" onSubmit={handleMfaVerify}>
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-[#133378]/5 rounded-2xl flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Authenticator Code</label>
+              <input 
+                id="mfa-code"
+                type="text" 
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                value={totpCode}
+                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="000000"
+                autoComplete="one-time-code"
+                autoFocus
+                className="w-full bg-slate-50 border border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 transition-all outline-none font-mono font-bold text-[24px] text-center text-[#0F172A] placeholder:text-slate-200 focus:bg-white focus:border-[#133378] focus:shadow-sm tracking-[0.5em]"
+              />
+            </div>
+
+            {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
+
+            <button
+              id="mfa-submit"
+              type="submit"
+              disabled={isSubmitting || totpCode.length !== 6}
+              className="block w-full bg-[#133378] hover:bg-[#1E3A5F] disabled:opacity-60 disabled:cursor-not-allowed text-white text-center py-4 rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8"
+            >
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Verifying...
+                </span>
+              ) : 'Verify'}
+            </button>
+
+            <div className="text-center text-xs text-[#64748B] pt-2">
+              <button 
+                type="button"
+                onClick={() => { setMode('signin'); setError(''); setTotpCode(''); setMfaResolver(null); }}
+                className="hover:text-[#133378] transition-colors font-medium text-[#64748B] bg-transparent border-none cursor-pointer"
+              >
+                ← Back to sign in
+              </button>
+            </div>
+          </form>
+        ) : null}
 
         <div className="mt-12 pt-8 border-t border-slate-100 flex items-center justify-center gap-6">
           <div className="flex items-center gap-2">

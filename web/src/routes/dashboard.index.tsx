@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/dashboard/')({
   component: DashboardIndex,
@@ -9,17 +10,14 @@ export const Route = createFileRoute('/dashboard/')({
 
 function DashboardIndex() {
   const [estateId, setEstateId] = useState('estate_lockhart');
-  const [userName, setUserName] = useState('');
+  const { profile } = useAuth();
+  const userName = profile?.firstName || profile?.displayName || '';
 
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
-      setEstateId(preferredId);
-      setUserName(u.name || '');
+    if (profile?.primaryEstateId) {
+      setEstateId(profile.primaryEstateId);
     }
-  }, []);
+  }, [profile]);
 
   const { data: metadata, isLoading: metaLoading } = useQuery({
     queryKey: ['estateMetadata', estateId],

@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/dashboard/obituary')({
   component: ObituaryPage,
@@ -14,20 +15,16 @@ function ObituaryPage() {
   const [isSigned, setIsSigned] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [estateId, setEstateId ] = useState('');
-  const [userName, setUserName] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+  const { profile } = useAuth();
+  const userName = profile?.displayName || '';
+  const profilePhoto = profile?.profilePhotoUrl || '/assets/tameeka/mom memorial.jpg';
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      const preferredId = u.name === 'Tameeka Lockhart' ? 'estate_lockhart' : (u.primaryEstateId || 'estate_lockhart');
-      setEstateId(preferredId);
-      setUserName(u.name || '');
-      setProfilePhoto('/assets/tameeka/mom memorial.jpg'); // The memorial photo for obituary
+    if (profile?.primaryEstateId) {
+      setEstateId(profile.primaryEstateId);
     }
-  }, []);
+  }, [profile]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['obituary', estateId],

@@ -2,6 +2,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/estates/$estateId/obituary')({
   component: ObituaryPage,
@@ -15,17 +16,12 @@ function ObituaryPage() {
   const [isSigned, setIsSigned] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
-  const [userName, setUserName] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
+  const { profile } = useAuth();
+  const userName = profile?.displayName || '';
+  const profilePhoto = profile?.profilePhotoUrl || '/assets/tameeka/mom memorial.jpg';
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      setUserName(u.name || '');
-      setProfilePhoto('/assets/tameeka/mom memorial.jpg');
-    }
     const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
     setEstateId(preferredId);
   }, [routeId]);

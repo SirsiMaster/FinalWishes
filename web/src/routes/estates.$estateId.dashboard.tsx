@@ -2,6 +2,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { estateClient } from '../lib/client'
+import { useAuth } from '../lib/auth'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -9,16 +10,11 @@ export const Route = createFileRoute('/estates/$estateId/dashboard')({
 
 function DashboardIndex() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/dashboard' });
+  const { profile } = useAuth();
   const [estateId, setEstateId] = useState(routeId);
-  const [userName, setUserName] = useState('');
+  const userName = profile?.firstName || profile?.displayName || '';
 
   useEffect(() => {
-    const session = localStorage.getItem('finalwishes_user');
-    if (session) {
-      const u = JSON.parse(session);
-      setUserName(u.name || '');
-    }
-    // Load estate data from Firestore
     const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
     setEstateId(preferredId);
   }, [routeId]);

@@ -1,7 +1,8 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo } from 'react'
 import { useEstateHeirs } from '../lib/firestore'
-import { addHeir } from '../lib/estate-actions'
+import { useAuth } from '../lib/auth'
+import { sendEstateInvitation } from '../lib/invitations'
 
 export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
   component: BeneficiariesPage,
@@ -9,22 +10,33 @@ export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
 
 function BeneficiariesPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/beneficiaries' });
+  const { user } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
   const { data: heirs, loading: isLoading } = useEstateHeirs(estateId);
 
   const handleAddHeir = async (vars: { name: string, relation: string, email: string }) => {
+    if (!user) return;
     setSaving(true);
-    await addHeir({
+    setFeedback(null);
+    const result = await sendEstateInvitation({
       estateId,
       fullName: vars.name,
       email: vars.email,
+      role: 'heir',
       relationship: vars.relation,
+      invitedBy: user.uid,
     });
     setSaving(false);
-    setModalOpen(false);
+    if (result.success) {
+      setFeedback(result.autoLinked ? 'Linked — they already have an account!' : 'Invitation sent!');
+      setTimeout(() => { setModalOpen(false); setFeedback(null); }, 1500);
+    } else {
+      setFeedback(`Error: ${result.error}`);
+    }
   };
 
   if (isLoading) {

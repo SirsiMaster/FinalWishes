@@ -7,9 +7,10 @@ Identity verification components for FinalWishes' tiered security model (ADR-035
 
 ```
 components/identity/
-├── AttestationForm.tsx    # Canvas signature + legal declaration
-├── MFAEnrollment.tsx      # Shared TOTP enrollment UI (QR + verify)
-└── README.md              # This file
+├── AttestationForm.tsx           # Canvas signature + legal declaration
+├── EmailVerificationBanner.tsx   # Gold banner for unverified emails
+├── MFAEnrollment.tsx             # Shared TOTP enrollment UI (QR + verify)
+└── README.md                     # This file
 
 components/guards/
 ├── AuthGuard.tsx           # Login gate (all authenticated routes)

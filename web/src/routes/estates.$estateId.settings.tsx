@@ -5,6 +5,7 @@ import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { getMFAStatus } from '../lib/mfa'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
+import { InviteTeamMember } from '../components/estate/InviteTeamMember'
 
 export const Route = createFileRoute('/estates/$estateId/settings')({
   component: SettingsPage,
@@ -54,6 +55,9 @@ function SettingsPage() {
 
       {/* ── MFA Enrollment (Shared Component) ── */}
       <MFAEnrollment user={user} mfaStatus={mfaStatus} isFiduciary={!!isFiduciary} />
+      
+      {/* ── Estate Team Invitations ── */}
+      <InviteTeamMember estateId={estateId} />
       
       <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
         <SettingsSection title="Security">

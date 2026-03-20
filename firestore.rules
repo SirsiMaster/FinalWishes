@@ -286,6 +286,38 @@ service cloud.firestore {
     }
     
     // =============================================
+    // 4b. ESTATE INVITATIONS — Pending Team Invitations
+    // =============================================
+    
+    match /estate_invitations/{invitationId} {
+      // Principals can read all invitations for their estate
+      allow read: if isAuthenticated()
+        && isEstatePrincipal(resource.data.estateId);
+      
+      // Invitees can read their own invitation (by email match against profile)
+      allow read: if isAuthenticated()
+        && resource.data.email == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email;
+      
+      // Admin can read all
+      allow read: if isAdmin();
+      
+      // Only principals or admin can create invitations
+      allow create: if isAuthenticated()
+        && (isEstatePrincipal(request.resource.data.estateId) || isAdmin())
+        && request.resource.data.keys().hasAll(['estateId', 'email', 'fullName', 'role', 'status', 'invitedBy'])
+        && request.resource.data.role in ['executor', 'heir', 'legal', 'cpa']
+        && request.resource.data.status == 'pending';
+      
+      // Principal or admin can update (accept/revoke)
+      allow update: if isAuthenticated()
+        && (isEstatePrincipal(resource.data.estateId) || isAdmin());
+      
+      // Principal or admin can delete (revoke)
+      allow delete: if isAuthenticated()
+        && (isEstatePrincipal(resource.data.estateId) || isAdmin());
+    }
+    
+    // =============================================
     // 5. COMPLIANCE — State Rules (Read-Only)
     // =============================================
     

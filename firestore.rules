@@ -45,6 +45,22 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid;
     }
     
+    // Username index — used for username→email lookup during login
+    // This collection maps lowercase usernames to { email, uid }
+    // NOTE: Read is unauthenticated because username resolution happens BEFORE login
+    match /usernames/{username} {
+      // Anyone can read (needed for login username→email resolution)
+      allow read: if true;
+      
+      // Authenticated users can create their own username entry
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasAll(['email', 'uid']);
+      
+      // No updates or deletes — usernames are permanent
+      allow update, delete: if false;
+    }
+    
     // =============================================
     // ESTATE AGENT - Estate Collections
     // =============================================

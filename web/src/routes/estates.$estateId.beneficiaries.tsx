@@ -1,7 +1,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useState, useMemo } from 'react'
+import { useEstateHeirs } from '../lib/firestore'
+import { addHeir } from '../lib/estate-actions'
 
 export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
   component: BeneficiariesPage,
@@ -9,33 +9,23 @@ export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
 
 function BeneficiariesPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/beneficiaries' });
-  const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const [saving, setSaving] = useState(false);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
+  const { data: heirs, loading: isLoading } = useEstateHeirs(estateId);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['beneficiaries', estateId],
-    queryFn: () => estateClient.listBeneficiaries({ estateId }),
-  });
-
-  const addMutation = useMutation({
-    mutationFn: (vars: { name: string, relation: string, email: string }) => 
-      estateClient.addBeneficiary({
-        estateId: estateId,
-        name: vars.name,
-        relation: vars.relation,
-        email: vars.email
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['beneficiaries', estateId] });
-      setModalOpen(false);
-    }
-  });
+  const handleAddHeir = async (vars: { name: string, relation: string, email: string }) => {
+    setSaving(true);
+    await addHeir({
+      estateId,
+      fullName: vars.name,
+      email: vars.email,
+      relationship: vars.relation,
+    });
+    setSaving(false);
+    setModalOpen(false);
+  };
 
   if (isLoading) {
     return (
@@ -48,7 +38,13 @@ function BeneficiariesPage() {
     );
   }
 
-  const beneficiaries = data?.beneficiaries || [];
+  const beneficiaries = heirs.map(h => ({
+    name: h.fullName,
+    relation: h.relationship || '',
+    share: h.residuaryPercentage ? `${h.residuaryPercentage}%` : undefined,
+    status: h.status === 'active' ? 'Verified' : 'Pending',
+    email: h.email,
+  }));
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-24 px-6">
@@ -92,7 +88,7 @@ function BeneficiariesPage() {
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
-              addMutation.mutate({ 
+              handleAddHeir({ 
                 name: formData.get('name') as string, 
                 relation: formData.get('relation') as string,
                 email: formData.get('email') as string
@@ -127,8 +123,8 @@ function BeneficiariesPage() {
               </div>
               <div className="flex gap-4 pt-4">
                 <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-4 rounded-2xl border border-slate-200 font-bold text-[#64748B] hover:bg-slate-50 transition-all active:scale-95">Cancel</button>
-                <button type="submit" disabled={addMutation.isPending} className="flex-1 py-4 rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white font-bold transition-all shadow-lg active:scale-95 disabled:opacity-50">
-                  {addMutation.isPending ? 'Saving...' : 'Add to Estate'}
+                <button type="submit" disabled={saving} className="flex-1 py-4 rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white font-bold transition-all shadow-lg active:scale-95 disabled:opacity-50">
+                  {saving ? 'Saving...' : 'Add to Estate'}
                 </button>
               </div>
             </form>

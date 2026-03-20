@@ -1,7 +1,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useState, useMemo } from 'react'
+import { useEstateAssets, type Asset } from '../lib/firestore'
+import { addAsset as addAssetAction } from '../lib/estate-actions'
 
 export const Route = createFileRoute('/estates/$estateId/assets')({
   component: AssetsPage,
@@ -9,33 +9,23 @@ export const Route = createFileRoute('/estates/$estateId/assets')({
 
 function AssetsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/assets' });
-  const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
-  const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const [saving, setSaving] = useState(false);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
+  const { data: assets, loading: isLoading } = useEstateAssets(estateId);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['assets', estateId],
-    queryFn: () => estateClient.listAssets({ estateId }),
-  });
-
-  const addAssetMutation = useMutation({
-    mutationFn: (vars: { name: string, type: string, value: string }) => 
-      estateClient.addAsset({
-        estateId: estateId,
-        name: vars.name,
-        type: vars.type,
-        value: vars.value
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assets', estateId] });
-      setModalOpen(false);
-    }
-  });
+  const handleAddAsset = async (vars: { name: string, type: string, value: string }) => {
+    setSaving(true);
+    await addAssetAction({
+      estateId,
+      name: vars.name,
+      category: vars.type as Asset['category'],
+      estimatedValue: parseFloat(vars.value.replace(/[^0-9.]/g, '')) || 0,
+    });
+    setSaving(false);
+    setModalOpen(false);
+  };
 
   if (isLoading) {
     return (
@@ -44,8 +34,6 @@ function AssetsPage() {
       </div>
     );
   }
-
-  const assets = data?.assets || [];
 
   return (
     <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
@@ -84,19 +72,19 @@ function AssetsPage() {
               </tr>
             </thead>
             <tbody className="text-[14px] font-medium text-[#334155]">
-              {assets.map((a, i) => (
-                <tr key={i} className="border-b border-slate-50 hover:bg-[#F8FAFC] transition-all group">
+              {assets.map((a) => (
+                <tr key={a.id} className="border-b border-slate-50 hover:bg-[#F8FAFC] transition-all group">
                   <td className="px-10 py-7 font-bold text-[#0F172A] text-[15px]">{a.name}</td>
                   <td className="px-10 py-7">
                     <span className="px-4 py-1.5 bg-[#F1F5F9] text-[#334155] font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">
-                      {a.type}
+                      {a.category}
                     </span>
                   </td>
-                  <td className="px-10 py-7 font-bold text-[#0F172A] text-lg tabular-nums">{a.value}</td>
+                  <td className="px-10 py-7 font-bold text-[#0F172A] text-lg tabular-nums">{a.estimatedValue ? `$${a.estimatedValue.toLocaleString()}` : '—'}</td>
                   <td className="px-10 py-7 text-center">
                     <div className="flex items-center justify-center gap-2">
-                       <div className={`w-2 h-2 rounded-full ${a.status === 'Verified' ? 'bg-green-500' : 'bg-[#133378] animate-pulse'}`} />
-                       <span className={`text-[11px] uppercase font-bold tracking-widest ${a.status === 'Verified' ? 'text-green-600' : 'text-[#133378]'}`}>
+                       <div className={`w-2 h-2 rounded-full ${a.status === 'active' ? 'bg-green-500' : 'bg-[#133378] animate-pulse'}`} />
+                       <span className={`text-[11px] uppercase font-bold tracking-widest ${a.status === 'active' ? 'text-green-600' : 'text-[#133378]'}`}>
                          {a.status}
                        </span>
                     </div>
@@ -125,7 +113,7 @@ function AssetsPage() {
             <form onSubmit={(e) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
-              addAssetMutation.mutate({ 
+              handleAddAsset({ 
                 name: formData.get('name') as string, 
                 type: formData.get('type') as string,
                 value: formData.get('value') as string
@@ -151,8 +139,8 @@ function AssetsPage() {
               </div>
               <div className="flex gap-6 pt-4">
                 <button type="button" onClick={() => setModalOpen(false)} className="flex-1 py-5 rounded-2xl border border-slate-100 font-bold text-slate-400 text-sm hover:bg-slate-50 transition-all">Cancel</button>
-                <button type="submit" disabled={addAssetMutation.isPending} className="flex-1 py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-xl disabled:opacity-50">
-                  {addAssetMutation.isPending ? 'Saving...' : 'Add to Ledger'}
+                <button type="submit" disabled={saving} className="flex-1 py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-xl disabled:opacity-50">
+                  {saving ? 'Saving...' : 'Add to Ledger'}
                 </button>
               </div>
             </form>

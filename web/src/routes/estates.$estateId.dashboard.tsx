@@ -1,8 +1,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { estateClient } from '../lib/client'
+import React, { useMemo } from 'react'
 import { useAuth } from '../lib/auth'
+import { useEstate, useEstateAssets, useEstateHeirs, useEstateDocuments } from '../lib/firestore'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -11,40 +10,15 @@ export const Route = createFileRoute('/estates/$estateId/dashboard')({
 function DashboardIndex() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/dashboard' });
   const { profile } = useAuth();
-  const [estateId, setEstateId] = useState(routeId);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
   const userName = profile?.firstName || profile?.displayName || '';
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
+  const { data: estate, loading: metaLoading } = useEstate(estateId);
+  const { data: assets, loading: assetsLoading } = useEstateAssets(estateId);
+  const { data: heirs, loading: beneLoading } = useEstateHeirs(estateId);
+  const { data: documents, loading: vaultLoading } = useEstateDocuments(estateId);
 
-  const { data: metadata, isLoading: metaLoading } = useQuery({
-    queryKey: ['estateMetadata', estateId],
-    queryFn: () => estateClient.getEstateMetadata({ estateId }),
-  });
-
-  const { data: assetsData, isLoading: assetsLoading } = useQuery({
-    queryKey: ['assets', estateId],
-    queryFn: () => estateClient.listAssets({ estateId }),
-  });
-
-  const { data: beneData, isLoading: beneLoading } = useQuery({
-    queryKey: ['beneficiaries', estateId],
-    queryFn: () => estateClient.listBeneficiaries({ estateId }),
-  });
-
-  const { data: vaultData, isLoading: vaultLoading } = useQuery({
-    queryKey: ['vaultDocs', estateId],
-    queryFn: () => estateClient.listVaultDocuments({ estateId }),
-  });
-
-  const { data: insightData, isLoading: insightLoading } = useQuery({
-    queryKey: ['aiInsight', estateId],
-    queryFn: () => estateClient.getAIInsight({ estateId }),
-  });
-
-  if (metaLoading || assetsLoading || beneLoading || insightLoading || vaultLoading) {
+  if (metaLoading || assetsLoading || beneLoading || vaultLoading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal"></div>
@@ -96,9 +70,9 @@ function DashboardIndex() {
 
       {/* ── Stat Grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-        <MiniStat label="Total Assets" value={assetsData?.totalCount.toString() || "2"} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>} />
-        <MiniStat label="Stored Documents" value={vaultData?.documents.length.toString() || "3"} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>} />
-        <MiniStat label="Beneficiaries" value={beneData?.beneficiaries.length.toString() || "2"} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>} />
+        <MiniStat label="Total Assets" value={assets.length.toString() || "0"} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>} />
+        <MiniStat label="Stored Documents" value={documents.length.toString() || "0"} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>} />
+        <MiniStat label="Beneficiaries" value={heirs.length.toString() || "0"} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>} />
         <MiniStat label="Last Updated" value="Today" icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>} />
       </div>
 

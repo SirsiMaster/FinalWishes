@@ -1,6 +1,6 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useRef, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import React, { useState, useRef, useMemo } from 'react'
+import { useEstateDocuments, type VaultDocument } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 
 export const Route = createFileRoute('/estates/$estateId/vault')({
@@ -9,48 +9,49 @@ export const Route = createFileRoute('/estates/$estateId/vault')({
 
 function VaultPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/vault' });
-  const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-  const [estateId, setEstateId] = useState(routeId === 'lockhart' ? 'estate_lockhart' : routeId);
+  const [uploading, setUploading] = useState(false);
+  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
-  useEffect(() => {
-    const preferredId = routeId === 'lockhart' ? 'estate_lockhart' : routeId;
-    setEstateId(preferredId);
-  }, [routeId]);
+  const { data: firestoreDocs, loading: isLoading } = useEstateDocuments(estateId);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['vaultDocuments', estateId],
-    queryFn: () => estateClient.listVaultDocuments({ estateId }),
-  });
+  // Map Firestore document shape to display shape
+  const documents = firestoreDocs.map((d: VaultDocument) => ({
+    name: d.displayName || d.originalName,
+    date: d.createdAt?.toDate?.()
+      ? d.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : '',
+    size: d.fileSize ? `${(d.fileSize / (1024 * 1024)).toFixed(1)} MB` : '',
+    category: d.folderId || 'General',
+  }));
 
-  const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
+  const handleUpload = async (file: File) => {
+    try {
+      setUploading(true);
       setUploadStatus(`Preparing ${file.name}...`);
-      const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
-        estateId: estateId,
+      const { uploadUrl } = await estateClient.generateUploadUrl({
+        estateId,
         fileName: file.name,
-        contentType: file.type
+        contentType: file.type,
       });
-      setUploadStatus(`Uploading...`);
+      setUploadStatus('Uploading...');
       const response = await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': file.type },
-        body: file
+        body: file,
       });
       if (!response.ok) throw new Error('Upload failed');
-      setUploadStatus(`Verifying...`);
-      return finalUrl;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vaultDocuments', estateId] });
+      setUploadStatus('Verifying...');
+      // Firestore onSnapshot will auto-update the list
       setUploadStatus(null);
-    },
-    onError: (err) => {
+    } catch (err: any) {
       console.error(err);
       setUploadStatus(`Error: ${err.message}`);
+    } finally {
+      setUploading(false);
     }
-  });
+  };
 
   if (isLoading) {
     return (
@@ -63,8 +64,6 @@ function VaultPage() {
     );
   }
 
-  const documents = data?.documents || [];
-
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
       <div className="flex justify-between items-end border-b border-slate-100 pb-10">
@@ -75,13 +74,13 @@ function VaultPage() {
         <div className="flex flex-col items-end gap-3">
           <button 
             onClick={() => fileInputRef.current?.click()}
-            disabled={uploadMutation.isPending}
+            disabled={uploading}
             className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 rounded-2xl font-bold text-[13px] transition-all shadow-lg hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 flex items-center gap-3"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
             </svg>
-            {uploadMutation.isPending ? 'Uploading...' : 'Upload Document'}
+            {uploading ? 'Uploading...' : 'Upload Document'}
           </button>
           {uploadStatus && (
             <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F8FAFC] border border-slate-200 rounded-xl">
@@ -95,7 +94,7 @@ function VaultPage() {
             className="hidden" 
             onChange={(e) => {
               const file = e.target.files?.[0];
-              if (file) uploadMutation.mutate(file);
+              if (file) handleUpload(file);
             }} 
           />
         </div>

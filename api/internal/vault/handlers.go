@@ -4,12 +4,13 @@
 // without explicit, audited retrieval requests.
 //
 // Endpoints:
-//   POST /api/v1/vault/user-pii     — Store user PII
-//   GET  /api/v1/vault/user-pii     — Retrieve user PII
-//   POST /api/v1/vault/asset-pii    — Store asset PII
-//   GET  /api/v1/vault/asset-pii    — Retrieve asset PII
-//   POST /api/v1/vault/heir-pii     — Store heir PII
-//   GET  /api/v1/vault/heir-pii     — Retrieve heir PII
+//
+//	POST /api/v1/vault/user-pii     — Store user PII
+//	GET  /api/v1/vault/user-pii     — Retrieve user PII
+//	POST /api/v1/vault/asset-pii    — Store asset PII
+//	GET  /api/v1/vault/asset-pii    — Retrieve asset PII
+//	POST /api/v1/vault/heir-pii     — Store heir PII
+//	GET  /api/v1/vault/heir-pii     — Retrieve heir PII
 package vault
 
 import (
@@ -74,12 +75,12 @@ type UserPIIResponse struct {
 
 // AssetPIIResponse is the response for retrieving asset PII.
 type AssetPIIResponse struct {
-	ID                  string `json:"id"`
-	AccountNumberLast4  string `json:"account_number_last4,omitempty"`
-	AccountNumber       string `json:"account_number,omitempty"`
-	RoutingNumber       string `json:"routing_number,omitempty"`
-	VINLast6            string `json:"vin_last6,omitempty"`
-	VIN                 string `json:"vin,omitempty"`
+	ID                 string `json:"id"`
+	AccountNumberLast4 string `json:"account_number_last4,omitempty"`
+	AccountNumber      string `json:"account_number,omitempty"`
+	RoutingNumber      string `json:"routing_number,omitempty"`
+	VINLast6           string `json:"vin_last6,omitempty"`
+	VIN                string `json:"vin,omitempty"`
 }
 
 // HeirPIIResponse is the response for retrieving heir PII.

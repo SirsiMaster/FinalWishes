@@ -107,8 +107,8 @@ func NewRepository(ctx context.Context, cfg Config, vc *crypto.VaultCrypto) (*Re
 	}
 
 	// Configure connection pool for Cloud Run
-	db.SetMaxOpenConns(5)           // Cloud Run scales horizontally, keep per-instance low
-	db.SetMaxIdleConns(2)           // Minimum idle connections
+	db.SetMaxOpenConns(5) // Cloud Run scales horizontally, keep per-instance low
+	db.SetMaxIdleConns(2) // Minimum idle connections
 	db.SetConnMaxLifetime(30 * time.Minute)
 	db.SetConnMaxIdleTime(10 * time.Minute)
 
@@ -275,10 +275,10 @@ func (r *Repository) StoreUserPII(ctx context.Context, pii *UserPII) (string, er
 // RetrieveUserPII decrypts and returns user PII data.
 func (r *Repository) RetrieveUserPII(ctx context.Context, firebaseUID, estateID string) (*UserPII, error) {
 	var (
-		id                                            string
-		ssnEnc, ssnDek, ssnNonce                      sql.NullString
-		dobEnc, dobDek, dobNonce                      sql.NullString
-		createdAt, updatedAt                          time.Time
+		id                       string
+		ssnEnc, ssnDek, ssnNonce sql.NullString
+		dobEnc, dobDek, dobNonce sql.NullString
+		createdAt, updatedAt     time.Time
 	)
 
 	err := r.db.QueryRowContext(ctx, `
@@ -409,11 +409,11 @@ func (r *Repository) StoreAssetPII(ctx context.Context, pii *AssetPII) (string, 
 // RetrieveAssetPII decrypts and returns asset PII data.
 func (r *Repository) RetrieveAssetPII(ctx context.Context, assetID, estateID string) (*AssetPII, error) {
 	var (
-		id                                            string
-		acctEnc, acctDek, acctNonce                    sql.NullString
-		routingEnc, routingDek, routingNonce            sql.NullString
-		vinEnc, vinDek, vinNonce                        sql.NullString
-		createdAt, updatedAt                          time.Time
+		id                                   string
+		acctEnc, acctDek, acctNonce          sql.NullString
+		routingEnc, routingDek, routingNonce sql.NullString
+		vinEnc, vinDek, vinNonce             sql.NullString
+		createdAt, updatedAt                 time.Time
 	)
 
 	err := r.db.QueryRowContext(ctx, `
@@ -533,10 +533,10 @@ func (r *Repository) StoreHeirPII(ctx context.Context, pii *HeirPII) (string, er
 // RetrieveHeirPII decrypts and returns heir PII data.
 func (r *Repository) RetrieveHeirPII(ctx context.Context, heirID, estateID string) (*HeirPII, error) {
 	var (
-		id                                            string
-		ssnEnc, ssnDek, ssnNonce                      sql.NullString
-		dobEnc, dobDek, dobNonce                      sql.NullString
-		createdAt, updatedAt                          time.Time
+		id                       string
+		ssnEnc, ssnDek, ssnNonce sql.NullString
+		dobEnc, dobDek, dobNonce sql.NullString
+		createdAt, updatedAt     time.Time
 	)
 
 	err := r.db.QueryRowContext(ctx, `

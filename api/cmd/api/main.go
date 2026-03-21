@@ -106,11 +106,11 @@ func main() {
 
 			// Initialize Cloud SQL PII Vault
 			vaultCfg := vault.Config{
-				ConnectionName: os.Getenv("CLOUD_SQL_CONNECTION"),  // e.g., finalwishes-prod:us-central1:finalwishes-pii-vault
+				ConnectionName: os.Getenv("CLOUD_SQL_CONNECTION"), // e.g., finalwishes-prod:us-central1:finalwishes-pii-vault
 				DatabaseName:   getEnvOrDefault("VAULT_DB_NAME", "pii_vault"),
 				User:           getEnvOrDefault("VAULT_DB_USER", "vault_admin"),
 				Password:       os.Getenv("VAULT_DB_PASSWORD"),
-				Host:           os.Getenv("VAULT_DB_HOST"),     // For local dev with Cloud SQL Proxy
+				Host:           os.Getenv("VAULT_DB_HOST"), // For local dev with Cloud SQL Proxy
 				Port:           getEnvOrDefault("VAULT_DB_PORT", "5432"),
 			}
 

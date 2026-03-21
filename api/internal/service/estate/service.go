@@ -374,19 +374,19 @@ func (s *Server) UploadMemoir(ctx context.Context, req *connect.Request[estatev1
 	}
 
 	newMemoir := &estatev1.Memoir{
-		Title:     req.Msg.Title,
-		Type:      req.Msg.Type,
-		Url:       req.Msg.Url,
-		DateAdded: time.Now().Format("Jan 02, 2006"),
+		Title:      req.Msg.Title,
+		Type:       req.Msg.Type,
+		Url:        req.Msg.Url,
+		DateAdded:  time.Now().Format("Jan 02, 2006"),
 		Visibility: "private",
 	}
 
 	docRef, _, err := s.fs.Collection("estates").Doc(req.Msg.EstateId).Collection("memoirs").Add(ctx, map[string]interface{}{
-		"title":       newMemoir.Title,
-		"type":        newMemoir.Type,
-		"url":         newMemoir.Url,
-		"date_added":  newMemoir.DateAdded,
-		"visibility":  newMemoir.Visibility,
+		"title":      newMemoir.Title,
+		"type":       newMemoir.Type,
+		"url":        newMemoir.Url,
+		"date_added": newMemoir.DateAdded,
+		"visibility": newMemoir.Visibility,
 	})
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to save memoir: %w", err))
@@ -425,7 +425,7 @@ func (s *Server) GetObituary(ctx context.Context, req *connect.Request[estatev1.
 	if err := doc.DataTo(&obit); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to decode obituary: %w", err))
 	}
-	
+
 	// Handle timestamp conversion if needed, otherwise firestore stores it
 	return connect.NewResponse(&obit), nil
 }

@@ -24,9 +24,9 @@ import (
 
 // VaultCrypto handles envelope encryption operations using Cloud KMS.
 type VaultCrypto struct {
-	client     *kms.KeyManagementClient
-	keyName    string // Full resource name of the KMS key
-	projectID  string
+	client    *kms.KeyManagementClient
+	keyName   string // Full resource name of the KMS key
+	projectID string
 }
 
 // EncryptedPayload contains encrypted data with its encrypted DEK.

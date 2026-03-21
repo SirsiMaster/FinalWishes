@@ -27,15 +27,15 @@ func main() {
 	// 1. Seed Tameeka Lockhart User
 	tameekaID := "user_tameeka"
 	_, err = client.Collection("users").Doc(tameekaID).Set(ctx, map[string]interface{}{
-		"name":               "Tameeka Lockhart",
-		"email":              "Tameekalockhart@gmail.com",
-		"phone":              "123-456-7890",
-		"username":           "Tameeka116",
-		"profile_photo_url":  "/assets/tameeka/mom dance.jpg",
-		"primary_estate_id":  "estate_lockhart",
+		"name":                "Tameeka Lockhart",
+		"email":               "Tameekalockhart@gmail.com",
+		"phone":               "123-456-7890",
+		"username":            "Tameeka116",
+		"profile_photo_url":   "/assets/tameeka/mom dance.jpg",
+		"primary_estate_id":   "estate_lockhart",
 		"primary_estate_name": "Lockhart Estate",
-		"role":               "SuperAdmin",
-		"status":             "Active",
+		"role":                "SuperAdmin",
+		"status":              "Active",
 	})
 	if err != nil {
 		log.Fatalf("Failed to seed Tameeka user: %v", err)

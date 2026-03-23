@@ -1,0 +1,32 @@
+#!/bin/bash
+# 𓂀 Osiris (FinalWishes) Pre-Push Gate
+# Runs the same checks CI runs, so lint issues never reach the pipeline.
+# Install: git config core.hooksPath .githooks
+# Skip:    git push --no-verify (use sparingly)
+
+set -e
+
+echo ""
+echo "  𓂀 Osiris (FinalWishes) pre-push gate..."
+echo ""
+
+# 1. Lint check
+if ! npm run lint 2>/dev/null; then
+    echo "  ❌ npm run lint failed — fix errors before pushing"
+    exit 1
+fi
+
+# 2. Typecheck check
+if ! npm run typecheck 2>/dev/null; then
+    echo "  ❌ npm run typecheck failed"
+    exit 1
+fi
+
+# 3. Build check
+if ! npm run build 2>/dev/null; then
+    echo "  ❌ npm run build failed"
+    exit 1
+fi
+
+echo "  ✅ Pipeline gate passed — pushing to the underworld"
+echo ""

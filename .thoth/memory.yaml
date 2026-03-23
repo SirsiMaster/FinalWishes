@@ -1,0 +1,93 @@
+# 𓁟 Thoth — Project Memory for FinalWishes
+# Read this FIRST before any source files.
+# Last updated: 2026-03-23T05:10:00-04:00
+
+## Identity
+project: finalwishes
+repo: github.com/SirsiMaster/FinalWishes
+type: Tenant Application — Estate Planning Platform
+language: TypeScript (React 18 + Vite) + Go (API backend)
+version: 0.1.0-alpha
+line_count: TBD
+
+## Architecture Quick Reference
+# web/            — React 18 frontend (Vite, TailwindCSS, Zustand)
+# api/            — Go backend (Cloud Run, gRPC + Protobuf)
+# shared/         — Shared types/utils (TypeScript)
+# functions/      — Firebase Cloud Functions
+# proposals/      — Legal documents (CONTRACT, SOW, COST_PROPOSAL)
+# proto/          — Protobuf definitions
+# mobile/         — React Native + Expo (iOS/Android)
+# desktop/        — Desktop app scaffold
+# extensions/     — Browser extension scaffold
+# improvements/   — Feature improvement tracking
+# firebase.json   — Firebase project config
+# firestore.rules — Firestore security rules
+# storage.rules   — Cloud Storage security rules
+# go.work         — Go workspace (api + shared modules)
+
+## Critical Design Decisions
+# 1. Royal Neo-Deco design system — Royal Blue (#1E3A5F) + Gold (#C8A951)
+#    NOT the Sirsi emerald — explicitly firewalled (Rule 27)
+# 2. Hybrid database: Cloud SQL for PII/vault + Firestore for real-time
+# 3. Sirsi Sign consumed as service (from SirsiNexusApp) — no own payment infra
+# 4. Firebase Auth with MFA (TOTP required)
+# 5. SOC 2 + KMS security model (AES-256)
+# 6. Vault concept — documents stored as legal evidence, not just files
+# 7. Secure Enclave Dashboard — session-based estate ID, no URL slugs (ADR-031)
+# 8. Cloud SQL PII Vault (ADR-037)
+# 9. Tiered Identity Verification (ADR-035)
+# 10. Firestore Direct Reads (ADR-036)
+
+## ADRs (25 total)
+# ADR-001: Architecture Decisions (founding)
+# ADR-031: Secure Enclave Dashboard Standard
+# ADR-032: Universal Enclave Implementation
+# ADR-033: Design System Acceleration
+# ADR-034: Firebase Auth Implementation
+# ADR-035: Tiered Identity Verification
+# ADR-036: Firestore Direct Reads
+# ADR-037: Cloud SQL PII Vault
+# (see docs/ADR-INDEX.md for full list)
+
+## Known Limitations
+# - Go API backend is early stage (api/ directory)
+# - Mobile and desktop scaffolds are stubs
+# - Cloud SQL PII Vault not yet deployed to production
+# - SendGrid email integration planned but not deployed
+# - 2 uncommitted files in working tree
+# - Thoth memory was skeleton until Session 9 update
+
+## Recent Changes
+# 2026-03-22: Case study stub + ROI calculator deployed
+# 2026-03-20: Continuation prompt for Phase B (Cloud SQL) + Phase C (SendGrid)
+# 2026-03-19: GEMINI.md v1.2.0 (Traceability Hardened)
+# 2026-03-19: Firebase email extension exploration
+
+## CI
+# .github/workflows/firebase-hosting-merge.yml — Deploy on merge
+# .github/workflows/firebase-hosting-pull-request.yml — Preview on PR
+# CI Status: ✅ Green (as of Mar 23)
+
+## Compliance
+# HIPAA-adjacent (estate documents contain PII)
+# SOC 2 target
+# PII siloed in Cloud SQL, never in Firestore or client state (Rule 26)
+# No telemetry on sensitive data
+
+## Pantheon Status
+# Thoth: ✅ Active (this file — populated Session 9)
+# Ma'at: ❌ Not yet deployed
+# Pre-push hook: ❌ Not installed
+# Session workflows: ✅ .agent/workflows/session-start.md
+
+## File Map
+# package.json           — root workspace config (npm)
+# GEMINI.md / CLAUDE.md  — governance rules
+# CHANGELOG.md           — release changelog
+# web/                   — React frontend
+# api/                   — Go backend
+# functions/             — Firebase functions
+# docs/                  — ADRs, architecture, design, legal
+# proposals/             — Financial Trinity (Contract, SOW, Cost Proposal)
+# .thoth/memory.yaml     — THIS FILE

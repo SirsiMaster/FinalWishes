@@ -1,5 +1,8 @@
 # .golangci.yml — FinalWishes API linter configuration
 # Tuned for CI runners with limited RAM (heavy cloud deps)
+# golangci-lint v2 format
+
+version: "2"
 
 run:
   timeout: 5m
@@ -13,11 +16,15 @@ linters:
     - ineffassign
     - staticcheck
     - unused
-    - gofmt
+  settings:
+    govet:
+      enable-all: false
+  exclusions:
+    rules: []
 
-linters-settings:
-  govet:
-    enable-all: false
+formatters:
+  enable:
+    - gofmt
 
 issues:
   max-issues-per-linter: 50

@@ -1,5 +1,5 @@
 # CLAUDE.md
-**Operational Directive for Claude Agent (Antigravity) (FinalWishes)**
+**Operational Directive for Claude Agent (FinalWishes)**
 **Version:** 1.2.0 (Traceability Hardened)
 **Date:** March 19, 2026
 
@@ -129,7 +129,7 @@ These documents are the source of truth for this repo:
 3.  `proposals/COST_PROPOSAL.md`
 
 ### 📋 Governance (2)
-4.  `GEMINI.md` (this file)
+4.  `CLAUDE.md` (this file)
 5.  `docs/PROJECT_SCOPE.md`
 
 ### 🏗 Architecture & Design (4)
@@ -168,7 +168,7 @@ These documents are the source of truth for this repo:
 
 ## 7. Interaction Protocol
 *   **User**: "I want X."
-*   **Gemini Response**: "I see you want X. However, analyzing the ADRs, Y might be better because [Reason]. Should we do Y?"
+*   **Claude Response**: "I see you want X. However, analyzing the ADRs, Y might be better because [Reason]. Should we do Y?"
 *   **Artifacts**: Use `implementation_plan.md` to structure complex thought.
 
 ## 8. Agent Capabilities

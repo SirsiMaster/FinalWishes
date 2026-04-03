@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../lib/auth'

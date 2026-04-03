@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { AttestationForm } from '../components/identity/AttestationForm'
 import { useAuth } from '../lib/auth'

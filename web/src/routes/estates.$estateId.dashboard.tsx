@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useMemo } from 'react'
 import { useAuth } from '../lib/auth'
@@ -13,7 +14,7 @@ function DashboardIndex() {
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
   const userName = profile?.firstName || profile?.displayName || '';
 
-  const { data: estate, loading: metaLoading } = useEstate(estateId);
+  const { data: _estate, loading: metaLoading } = useEstate(estateId);
   const { data: assets, loading: assetsLoading } = useEstateAssets(estateId);
   const { data: heirs, loading: beneLoading } = useEstateHeirs(estateId);
   const { data: documents, loading: vaultLoading } = useEstateDocuments(estateId);
@@ -25,12 +26,6 @@ function DashboardIndex() {
       </div>
     );
   }
-
-  const formatReviewDate = (ts: any) => {
-    if (!ts || !ts.seconds) return 'Active';
-    const ms = Number(ts.seconds) * 1000;
-    return new Date(ms).toLocaleDateString();
-  };
 
   return (
     <div className="max-w-[1440px] mx-auto p-12 space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">

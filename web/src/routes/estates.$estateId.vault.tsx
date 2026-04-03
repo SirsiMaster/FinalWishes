@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo } from 'react'
 import { useEstateDocuments, type VaultDocument } from '../lib/firestore'
@@ -45,9 +46,9 @@ function VaultPage() {
       setUploadStatus('Verifying...');
       // Firestore onSnapshot will auto-update the list
       setUploadStatus(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setUploadStatus(`Error: ${err.message}`);
+      setUploadStatus(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
     } finally {
       setUploading(false);
     }
@@ -102,9 +103,9 @@ function VaultPage() {
 
       {/* Category Folders */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <VaultFolder name="Legal Documents" count={documents.filter((d: any) => d.category === 'Legal').length} icon={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />
-        <VaultFolder name="Financial Records" count={documents.filter((d: any) => d.category === 'Financial').length} icon={<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>} />
-        <VaultFolder name="Personal Memories" count={documents.filter((d: any) => d.category === 'Memoir').length} icon={<><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>} />
+        <VaultFolder name="Legal Documents" count={documents.filter((d) => d.category === 'Legal').length} icon={<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>} />
+        <VaultFolder name="Financial Records" count={documents.filter((d) => d.category === 'Financial').length} icon={<path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>} />
+        <VaultFolder name="Personal Memories" count={documents.filter((d) => d.category === 'Memoir').length} icon={<><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>} />
       </div>
 
       {/* All Files */}
@@ -114,7 +115,7 @@ function VaultPage() {
           <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">All Files · Encrypted</h3>
         </div>
         <div className="space-y-4">
-          {documents.map((doc: any, i: number) => (
+          {documents.map((doc, i) => (
             <DocItem key={i} name={doc.name} date={doc.date} size={doc.size} />
           ))}
           {documents.length === 0 && (
@@ -129,7 +130,7 @@ function VaultPage() {
   )
 }
 
-function VaultFolder({ name, count, icon }: any) {
+function VaultFolder({ name, count, icon }: { name: string; count: number; icon: React.ReactNode }) {
   return (
     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:border-slate-200 hover:shadow-md transition-all cursor-pointer group active:scale-[0.98]">
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-[#F8FAFC] border border-slate-100 text-[#133378] group-hover:bg-[#133378] group-hover:text-white transition-all duration-500">
@@ -149,7 +150,7 @@ function VaultFolder({ name, count, icon }: any) {
   );
 }
 
-function DocItem({ name, date, size }: any) {
+function DocItem({ name, date, size }: { name: string; date: string; size: string }) {
   return (
     <div className="flex items-center justify-between p-6 bg-white border border-slate-100 rounded-2xl hover:bg-[#F8FAFC] transition-all group cursor-pointer hover:border-slate-200">
       <div className="flex items-center gap-5">

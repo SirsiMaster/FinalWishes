@@ -54,9 +54,9 @@ export async function startTotpEnrollment(user: User): Promise<{
     );
 
     return { secret: totpSecret, qrUrl };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('MFA enrollment start failed:', error);
-    return { error: error.message || 'Failed to start MFA enrollment.' };
+    return { error: error instanceof Error ? error.message : 'Failed to start MFA enrollment.' };
   }
 }
 
@@ -77,13 +77,13 @@ export async function finalizeTotpEnrollment(
     await multiFactor(user).enroll(multiFactorAssertion, 'Authenticator App');
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('MFA enrollment finalization failed:', error);
-    
-    if (error.code === 'auth/invalid-verification-code') {
+
+    if ((error as { code?: string }).code === 'auth/invalid-verification-code') {
       return { success: false, error: 'Invalid code. Please check your authenticator app and try again.' };
     }
-    return { success: false, error: error.message || 'Failed to complete MFA enrollment.' };
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to complete MFA enrollment.' };
   }
 }
 
@@ -115,13 +115,13 @@ export async function resolveTotpChallenge(
     await resolver.resolveSignIn(multiFactorAssertion);
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('MFA challenge resolution failed:', error);
-    
-    if (error.code === 'auth/invalid-verification-code') {
+
+    if ((error as { code?: string }).code === 'auth/invalid-verification-code') {
       return { success: false, error: 'Invalid code. Please try again.' };
     }
-    return { success: false, error: error.message || 'Failed to verify MFA code.' };
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to verify MFA code.' };
   }
 }
 
@@ -160,8 +160,8 @@ export async function unenrollTotp(user: User): Promise<{ success: boolean; erro
 
     await multiFactor(user).unenroll(totpFactor);
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: error.message || 'Failed to remove MFA.' };
+  } catch (error: unknown) {
+    return { success: false, error: error instanceof Error ? error.message : 'Failed to remove MFA.' };
   }
 }
 
@@ -169,7 +169,7 @@ export async function unenrollTotp(user: User): Promise<{ success: boolean; erro
  * Get the MFA resolver from an auth/multi-factor-auth-required error.
  * This is used in the login flow to extract the resolver from the error object.
  */
-export function getMFAResolver(error: any): MultiFactorResolver | null {
+export function getMFAResolver(error: unknown): MultiFactorResolver | null {
   try {
     return getMultiFactorResolver(auth, error);
   } catch {

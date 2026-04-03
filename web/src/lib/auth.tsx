@@ -96,6 +96,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) {
@@ -161,8 +162,8 @@ async function fetchUserProfile(uid: string): Promise<UserProfile | null> {
 /**
  * Format Firebase auth errors to friendly messages.
  */
-function formatAuthError(error: any): string {
-  const code = error?.code || '';
+function formatAuthError(error: unknown): string {
+  const code = (error as { code?: string })?.code || '';
   const errorMap: Record<string, string> = {
     'auth/invalid-email': 'Please enter a valid email address.',
     'auth/user-disabled': 'This account has been disabled.',
@@ -174,11 +175,12 @@ function formatAuthError(error: any): string {
     'auth/too-many-requests': 'Too many attempts. Please try again later.',
     'auth/network-request-failed': 'Network error. Please check your connection.',
   };
-  return errorMap[code] || error?.message || 'An unexpected error occurred.';
+  return errorMap[code] || (error instanceof Error ? error.message : 'An unexpected error occurred.');
 }
 
 // ─── Check username availability ──────────────────────────────────────────────
 
+// eslint-disable-next-line react-refresh/only-export-components
 export async function isUsernameAvailable(username: string): Promise<boolean> {
   const usernameDoc = await getDoc(doc(db, 'usernames', username.toLowerCase()));
   return !usernameDoc.exists();
@@ -258,9 +260,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(userProfile);
 
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Check if this is an MFA challenge
-      if (error.code === 'auth/multi-factor-auth-required') {
+      if ((error as { code?: string }).code === 'auth/multi-factor-auth-required') {
         const resolver = getMFAResolver(error);
         if (resolver) {
           return { success: false, mfaRequired: true, mfaResolver: resolver };
@@ -321,7 +323,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(userProfile);
 
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return { success: false, error: formatAuthError(error) };
     }
   }, []);
@@ -337,7 +339,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await sendPasswordResetEmail(auth, email);
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return { success: false, error: formatAuthError(error) };
     }
   }, []);
@@ -350,7 +352,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       await sendEmailVerification(auth.currentUser);
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       return { success: false, error: formatAuthError(error) };
     }
   }, []);

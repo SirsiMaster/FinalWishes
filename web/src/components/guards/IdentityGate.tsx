@@ -24,18 +24,12 @@ interface IdentityGateProps {
   children: React.ReactNode;
 }
 
-interface AttestationRecord {
-  uid: string;
-  estateId: string;
-  status: 'pending' | 'verified' | 'revoked';
-}
-
 export function IdentityGate({ estateId, children }: IdentityGateProps) {
   const { user, profile } = useAuth();
   const [attestationVerified, setAttestationVerified] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(true);
 
-  const isFiduciary = profile?.role && FIDUCIARY_ROLES.includes(profile.role as any);
+  const isFiduciary = profile?.role && (FIDUCIARY_ROLES as readonly string[]).includes(profile.role);
   const mfaStatus = getMFAStatus(user);
 
   // Check attestation status from Firestore

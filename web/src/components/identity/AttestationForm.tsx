@@ -134,9 +134,9 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
 
       setSuccess(true);
       onComplete?.();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Attestation submission failed:', err);
-      setError(err.message || 'Failed to submit attestation.');
+      setError(err instanceof Error ? err.message : 'Failed to submit attestation.');
     }
     setSubmitting(false);
   };

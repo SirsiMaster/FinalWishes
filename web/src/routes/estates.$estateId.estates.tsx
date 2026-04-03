@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams, useNavigate } from '@tanstack/react-router'
 import React, { useState } from 'react'
 import { useUserEstates, useEstate } from '../lib/firestore'
@@ -119,7 +120,7 @@ function EstatesPage() {
 // ── Estate Card — resolves name from Firestore ──
 
 function EstateCard({ estateId, role, routeId, navigate }: {
-  estateId: string; role: string; routeId: string; navigate: any;
+  estateId: string; role: string; routeId: string; navigate: (opts: { to: string }) => void;
 }) {
   const { data: estate } = useEstate(estateId);
   const isCurrent = routeId === estateId || (routeId === 'lockhart' && estateId === 'estate_lockhart');

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Settings Page — Estate Governance + Profile
  *
@@ -36,10 +37,10 @@ function SettingsPage() {
   const { user, profile } = useAuth();
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
-  const { data: settingsDoc, loading: isLoading } = useDocument<any>(`estates/${estateId}/governance/settings`);
+  const { data: settingsDoc, loading: isLoading } = useDocument<Record<string, unknown>>(`estates/${estateId}/governance/settings`);
 
   // Local settings state for toggle changes
-  const [localSettings, setLocalSettings] = useState<Record<string, any>>({});
+  const [localSettings, setLocalSettings] = useState<Record<string, unknown>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 

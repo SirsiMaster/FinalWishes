@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useMemo } from 'react'
 import { useEstateNotifications } from '../lib/firestore'
@@ -53,7 +54,7 @@ function NotificationsPage() {
 
       <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
         <div className="p-10 space-y-0">
-          {notifications.map((n: any, i: number) => (
+          {notifications.map((n, i) => (
             <NotificationItem key={i} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
           ))}
           {notifications.length === 0 && (
@@ -67,7 +68,7 @@ function NotificationsPage() {
   )
 }
 
-function NotificationItem({ title, time, type, desc, isLast }: any) {
+function NotificationItem({ title, time, type, desc, isLast }: { title: string; time: string; type: string; desc: string; isLast: boolean }) {
   const iconMap: Record<string, { bg: string; dot: string; text: string }> = {
     security: { bg: 'bg-[#133378]/5', dot: 'bg-[#133378]', text: 'text-[#133378]' },
     activity: { bg: 'bg-blue-50', dot: 'bg-blue-500', text: 'text-blue-600' },

@@ -135,7 +135,7 @@ const NAV_ITEMS: NavItem[] = [
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const params = useParams({ strict: false }) as any;
+  const params = useParams({ strict: false }) as { estateId?: string };
   const estateId = params.estateId || "lockhart";
   const { profile, signOut } = useAuth();
   

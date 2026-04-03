@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo } from 'react'
 import { useEstateAssets, type Asset } from '../lib/firestore'

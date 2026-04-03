@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo } from 'react'
 import { useEstateHeirs } from '../lib/firestore'
@@ -13,7 +14,7 @@ function BeneficiariesPage() {
   const { user } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [_feedback, setFeedback] = useState<string | null>(null);
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
   const { data: heirs, loading: isLoading } = useEstateHeirs(estateId);
@@ -75,7 +76,7 @@ function BeneficiariesPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {beneficiaries.map((b: any, i: number) => (
+        {beneficiaries.map((b, i) => (
           <BeneficiaryCard key={i} name={b.name} relation={b.relation} share={b.share} status={b.status} email={b.email} />
         ))}
         {beneficiaries.length === 0 && (
@@ -147,7 +148,7 @@ function BeneficiariesPage() {
   )
 }
 
-function BeneficiaryCard({ name, relation, share, status, email }: any) {
+function BeneficiaryCard({ name, relation, share, status, email }: { name: string; relation: string; share?: string; status: string; email?: string }) {
   return (
     <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex items-center gap-8 group hover:border-slate-200 hover:shadow-md transition-all cursor-pointer">
       <div className="w-16 h-16 rounded-2xl bg-[#F8FAFC] border border-slate-100 flex items-center justify-center text-[#133378] font-bold text-xl shrink-0 transition-all duration-500 group-hover:bg-[#133378] group-hover:text-white">

@@ -16,7 +16,6 @@ import {
   addDoc,
   setDoc,
   updateDoc,
-  deleteDoc,
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -70,9 +69,9 @@ export async function createEstate(params: {
     });
 
     return { success: true, id: estateRef.id };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[createEstate] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -89,9 +88,9 @@ export async function updateEstate(
       updatedAt: serverTimestamp(),
     });
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[updateEstate] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -115,9 +114,9 @@ export async function addAsset(params: {
       updatedAt: serverTimestamp(),
     });
     return { success: true, id: ref.id };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[addAsset] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -132,9 +131,9 @@ export async function updateAsset(
       updatedAt: serverTimestamp(),
     });
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[updateAsset] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -165,9 +164,9 @@ export async function addHeir(params: {
       updatedAt: serverTimestamp(),
     });
     return { success: true, id: ref.id };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[addHeir] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -182,9 +181,9 @@ export async function updateHeir(
       updatedAt: serverTimestamp(),
     });
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[updateHeir] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -209,9 +208,9 @@ export async function addExecutor(params: {
       updatedAt: serverTimestamp(),
     });
     return { success: true, id: ref.id };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[addExecutor] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -243,9 +242,9 @@ export async function createDocumentRecord(params: {
       updatedAt: serverTimestamp(),
     });
     return { success: true, id: ref.id };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[createDocumentRecord] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -256,8 +255,8 @@ export async function archiveDocument(estateId: string, docId: string): Promise<
       updatedAt: serverTimestamp(),
     });
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[archiveDocument] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }

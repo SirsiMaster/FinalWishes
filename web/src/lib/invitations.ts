@@ -17,12 +17,12 @@ import {
   collection,
   addDoc,
   setDoc,
-  getDoc,
   getDocs,
   updateDoc,
   query,
   where,
   serverTimestamp,
+  type Timestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
 
@@ -141,9 +141,9 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
     // 5. User doesn't exist — Cloud Function will handle on signup
     // TODO: Send email via SendGrid when integrated
     return { success: true, invitationId: invRef.id, autoLinked: false };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[sendEstateInvitation] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
 
@@ -155,7 +155,7 @@ export interface PendingInvitation {
   fullName: string;
   role: string;
   status: string;
-  createdAt: any;
+  createdAt: Timestamp | null;
 }
 
 /**
@@ -218,8 +218,8 @@ export interface EstateInvitation {
   role: string;
   status: string;
   invitedBy: string;
-  createdAt: any;
-  updatedAt: any;
+  createdAt: Timestamp | null;
+  updatedAt: Timestamp | null;
 }
 
 /**
@@ -260,8 +260,8 @@ export async function revokeInvitation(invitationId: string): Promise<{ success:
       updatedAt: serverTimestamp(),
     });
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('[revokeInvitation] Error:', err);
-    return { success: false, error: err.message };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }

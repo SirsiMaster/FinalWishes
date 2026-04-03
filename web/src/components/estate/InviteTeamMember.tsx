@@ -264,7 +264,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
                   <button
                     key={opt.value}
                     type="button"
-                    onClick={() => setRole(opt.value as any)}
+                    onClick={() => setRole(opt.value as typeof role)}
                     className={`text-left p-3.5 rounded-xl border transition-all ${
                       role === opt.value
                         ? 'border-royal bg-royal/[0.05] shadow-sm'

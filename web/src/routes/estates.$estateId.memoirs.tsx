@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo } from 'react'
 import { useCollection } from '../lib/firestore'
@@ -13,9 +14,9 @@ function MemoirsPage() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
-  const [selectedMemoir, setSelectedMemoir] = useState<any>(null);
+  const [selectedMemoir, setSelectedMemoir] = useState<{ id: string; title: string; type: string; url: string; dateAdded: string; visibility: string } | null>(null);
 
-  const { data: firestoreMemoirs, loading: isLoading } = useCollection<any>(`estates/${estateId}/memoirs`);
+  const { data: firestoreMemoirs, loading: isLoading } = useCollection<Record<string, string>>(`estates/${estateId}/memoirs`);
 
   const handleUpload = async (vars: { title: string, type: string, file: File }) => {
     try {
@@ -234,7 +235,7 @@ function MemoirsPage() {
   )
 }
 
-function VideoCard({ memoir, onClick }: any) {
+function VideoCard({ memoir, onClick }: { memoir: { title: string; url: string; dateAdded: string }; onClick: () => void }) {
   const videoUrl = memoir.url ? `${memoir.url}#t=0.001` : null;
   return (
     <div onClick={onClick} className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-2xl transition-all cursor-pointer">
@@ -257,7 +258,7 @@ function VideoCard({ memoir, onClick }: any) {
   );
 }
 
-function PhotoCard({ memoir, onClick }: any) {
+function PhotoCard({ memoir, onClick }: { memoir: { title: string; url: string; dateAdded: string }; onClick: () => void }) {
   return (
     <div onClick={onClick} className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-2xl transition-all cursor-pointer">
       <div className="aspect-square bg-slate-50 relative overflow-hidden">
@@ -272,7 +273,7 @@ function PhotoCard({ memoir, onClick }: any) {
   );
 }
 
-function UploadPlaceholder({ type, onClick }: any) {
+function UploadPlaceholder({ type, onClick }: { type: string; onClick: () => void }) {
   return (
     <button 
       onClick={onClick}

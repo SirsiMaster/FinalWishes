@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo } from 'react'
 import { useDocument } from '../lib/firestore'
@@ -22,7 +23,7 @@ function ObituaryPage() {
   const profilePhoto = profile?.profilePhotoUrl || '/assets/tameeka/mom memorial.jpg';
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
-  const { data: obit, loading: isLoading } = useDocument<any>(`estates/${estateId}/governance/obituary`);
+  const { data: obit, loading: isLoading } = useDocument<{ content?: string; status?: string }>(`estates/${estateId}/governance/obituary`);
 
   const handleSave = async () => {
     const content = textAreaRef.current?.value || '';
@@ -210,7 +211,7 @@ function ObituaryPage() {
   )
 }
 
-function StatRow({ label, value, color }: any) {
+function StatRow({ label, value, color }: { label: string; value?: string; color?: string }) {
   const colorMap: Record<string, string> = {
     blue: 'bg-[#133378]/5 text-[#133378] border-[#133378]/10',
     green: 'bg-green-50 text-green-600 border-green-200',

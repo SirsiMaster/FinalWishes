@@ -40,11 +40,11 @@ const isDemoMode = typeof window !== 'undefined' && new URLSearchParams(window.l
 
 export const estateClient = isDemoMode
   ? new Proxy(realClient, {
-    get(target, prop, receiver) {
-      const originalMethod = (target as any)[prop];
+    get(target, prop, _receiver) {
+      const originalMethod = (target as Record<string | symbol, unknown>)[prop];
       if (typeof originalMethod !== 'function') return originalMethod;
 
-      return async (...args: any[]) => {
+      return async (...args: unknown[]) => {
         try {
           const networkCall = originalMethod.apply(target, args);
           const timeoutPromise = new Promise((_, reject) => 
@@ -66,7 +66,7 @@ export const estateClient = isDemoMode
                 completionPercentage: 88, 
                 tier: 'Concierge', 
                 mfaEnabled: true,
-                nextReviewDate: { seconds: BigInt(Math.floor(Date.now() / 1000) + 7776000), nanos: 0 } as any
+                nextReviewDate: { seconds: BigInt(Math.floor(Date.now() / 1000) + 7776000), nanos: 0 } as unknown
               };
               case 'listAssets': return { assets: [
                 { id: 'a1', category: 'Real Estate', name: 'Primary Residence (Chicago)', valuation: 750000, status: 'Verified' },

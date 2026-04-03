@@ -3,6 +3,7 @@ package estate
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -34,34 +35,38 @@ func NewServer(fs *firestore.Client, sc *storage.Client) *Server {
 
 func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[estatev1.GenerateUploadUrlRequest]) (*connect.Response[estatev1.GenerateUploadUrlResponse], error) {
 	if s.sc == nil {
-		// Mock for development if GCS not available
-		return connect.NewResponse(&estatev1.GenerateUploadUrlResponse{
-			UploadUrl: "http://localhost:8080/mock-upload",
-			FinalUrl:  fmt.Sprintf("/vault/mock/%s", req.Msg.FileName),
-		}), nil
+		return nil, connect.NewError(connect.CodeFailedPrecondition, fmt.Errorf("storage client not initialized"))
 	}
 
-	bucketName := "finalwishes-vault" // Should be env var
-	objectName := fmt.Sprintf("%s/%d-%s", req.Msg.EstateId, time.Now().Unix(), req.Msg.FileName)
-
-	opts := &storage.SignedURLOptions{
-		Scheme:         storage.SigningSchemeV4,
-		Method:         "PUT",
-		GoogleAccessID: "sirsi-master@sirsi-nexus.iam.gserviceaccount.com", // Example
-		Expires:        time.Now().Add(15 * time.Minute),
-		ContentType:    req.Msg.ContentType,
+	bucketName := os.Getenv("VAULT_STORAGE_BUCKET")
+	if bucketName == "" {
+		bucketName = "finalwishes-vault"
 	}
 
-	// Note: In a real environment, you'd use a service account key or metadata server
-	// For now, providing the conceptual bridge
-	u, err := storage.SignedURL(bucketName, objectName, opts)
+	objectName := fmt.Sprintf("estates/%s/vault/%d-%s", req.Msg.EstateId, time.Now().UnixMilli(), req.Msg.FileName)
+
+	uploadURL, err := s.sc.Bucket(bucketName).SignedURL(objectName, &storage.SignedURLOptions{
+		Scheme:      storage.SigningSchemeV4,
+		Method:      "PUT",
+		Expires:     time.Now().Add(15 * time.Minute),
+		ContentType: req.Msg.ContentType,
+	})
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to sign URL: %w", err))
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate signed upload URL: %w", err))
+	}
+
+	downloadURL, err := s.sc.Bucket(bucketName).SignedURL(objectName, &storage.SignedURLOptions{
+		Scheme:  storage.SigningSchemeV4,
+		Method:  "GET",
+		Expires: time.Now().Add(7 * 24 * time.Hour),
+	})
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate signed download URL: %w", err))
 	}
 
 	return connect.NewResponse(&estatev1.GenerateUploadUrlResponse{
-		UploadUrl: u,
-		FinalUrl:  fmt.Sprintf("https://storage.googleapis.com/%s/%s", bucketName, objectName),
+		UploadUrl: uploadURL,
+		FinalUrl:  downloadURL,
 	}), nil
 }
 

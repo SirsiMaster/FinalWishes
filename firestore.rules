@@ -5,14 +5,15 @@ service cloud.firestore {
     
     // =============================================
     // FinalWishes - The Estate Operating System
-    // Security Rules v3.0.0 — March 19, 2026
+    // Security Rules v4.0.0 — April 3, 2026
     // =============================================
-    // 
+    //
     // AUDIT TRAIL:
     //   v1.0.0 — Dec 2025: Initial rules (estates, users)
     //   v2.0.0 — Mar 2026: ADR-035 attestations, username index
     //   v3.0.0 — Mar 2026: Full hardening per security-auditor
     //                       skill + DATA_MODEL.md alignment
+    //   v4.0.0 — Mar 2026: §9 mail + email_templates collections
     //
     // PRINCIPLES (security-auditor skill):
     //   ✓ No wildcard rules — all access explicit

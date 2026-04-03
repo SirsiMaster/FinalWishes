@@ -39,6 +39,12 @@ func main() {
 	// Create router
 	r := chi.NewRouter()
 
+	// Initialize Google Cloud project ID early (needed for CORS + auth decisions)
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if projectID == "" {
+		log.Warn().Msg("GOOGLE_CLOUD_PROJECT not set, running in local dev mode")
+	}
+
 	// Middleware
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
@@ -46,9 +52,17 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	// CORS configuration
+	// CORS configuration — restrict to known origins in production
+	allowedOrigins := []string{"http://localhost:3000", "http://localhost:5173"}
+	if projectID != "" {
+		allowedOrigins = []string{
+			"https://finalwishes-prod.web.app",
+			"https://finalwishes-prod.firebaseapp.com",
+			"https://finalwishes.app",
+		}
+	}
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"}, // For local development, will be restricted in production
+		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Request-ID", "Connect-Protocol-Version"},
 		ExposedHeaders:   []string{"Link", "Connect-Error-Code", "Connect-Error-Message"},
@@ -62,12 +76,6 @@ func main() {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"status":"healthy","service":"finalwishes-api","vault":"active","encryption":"AES-256-GCM","kms":"Cloud KMS"}`))
 	})
-
-	// Initialize Google Cloud clients
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	if projectID == "" {
-		log.Warn().Msg("GOOGLE_CLOUD_PROJECT not set, running in mock mode")
-	}
 
 	ctx := context.Background()
 	var fs *firestore.Client
@@ -141,13 +149,19 @@ func main() {
 
 	firebaseApp, err := firebase.NewApp(ctx, nil)
 	if err != nil {
-		log.Warn().Err(err).Msg("Firebase Admin SDK initialization failed — auth middleware disabled (mock mode)")
-		// In mock mode, use a pass-through middleware
+		if projectID != "" {
+			// Production: Firebase MUST initialize. Fail hard.
+			log.Fatal().Err(err).Msg("Firebase Admin SDK initialization failed in production mode")
+		}
+		log.Warn().Err(err).Msg("Firebase Admin SDK initialization failed — auth middleware disabled (local dev only)")
 		authMiddleware = func(next http.Handler) http.Handler { return next }
 	} else {
 		authClient, err := firebaseApp.Auth(ctx)
 		if err != nil {
-			log.Warn().Err(err).Msg("Firebase Auth client initialization failed — auth middleware disabled")
+			if projectID != "" {
+				log.Fatal().Err(err).Msg("Firebase Auth client initialization failed in production mode")
+			}
+			log.Warn().Err(err).Msg("Firebase Auth client initialization failed — auth middleware disabled (local dev only)")
 			authMiddleware = func(next http.Handler) http.Handler { return next }
 		} else {
 			log.Info().Msg("Firebase Admin Auth initialized — token verification active")
@@ -179,15 +193,18 @@ func main() {
 		log.Info().Msg("PII Vault API routes registered at /api/v1/vault/*")
 	}
 
-	// API routes (OpenSign integration — public for now)
+	// API routes (OpenSign integration — protected by auth)
 	r.Route("/api/v1", func(r chi.Router) {
+		r.Use(authMiddleware)
 		r.Route("/opensign", func(r chi.Router) {
 			r.Post("/create-envelope", opensign.CreateEnvelopeHandler)
 		})
 	})
 
-	r.Post("/api/guest/envelopes", opensign.CreateEnvelopeHandler)
-	r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
+	r.Group(func(r chi.Router) {
+		r.Use(authMiddleware)
+		r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
+	})
 
 	// Create server
 	srv := &http.Server{

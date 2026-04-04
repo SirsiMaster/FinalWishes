@@ -1,6 +1,6 @@
 # CONTINUATION PROMPT — FinalWishes
 ## For Fresh Context Window — April 3, 2026 (v10.0)
-**Priority:** Sprint 3 COMPLETE → Sprint 4 (YouTube Memorials + Media) + Sprint 5 (Production Hardening)
+**Priority:** Sprint 3 + 4 COMPLETE → Sprint 5 (Production Hardening)
 
 ---
 
@@ -26,7 +26,8 @@ You have **26 skills** installed at `~/.gemini/antigravity/skills/`. **Check rel
 | 0.7.0 | Full build verified, CI/CD migrated to `finalwishes-prod` |
 | 0.8.0 | PII Vault — Cloud KMS envelope encryption (AES-256-GCM) + Cloud SQL |
 | 0.8.1 | Email System (Firebase Extension) + CI/CD lint fix |
-| **0.9.0** | **Document Vault — Upload/Download/Preview/Delete with signed URLs** |
+| 0.9.0 | Document Vault — Upload/Download/Preview/Delete with signed URLs |
+| **0.10.0** | **YouTube Memorials + Photo Gallery — iframe embeds, uploads, delete** |
 
 ---
 
@@ -112,7 +113,7 @@ Full analysis artifact: `~/.gemini/antigravity/brain/3821c756-e1a4-45fd-adc5-978
 |--------|----------|---------|
 | Sprint 2 (Email) | ✅ **BUY** — Firebase Extension | ~450 lines Go code, 2 days |
 | Sprint 3 (Document Vault) | ✅ **HYBRID** — Cloud Storage + Go API signed URLs + react-dropzone | 1 day |
-| Sprint 4 (Memorials) | **BUY** — react-player + Cloud Storage (drop Google Photos API) | 1.5 days |
+| Sprint 4 (Memorials) | ✅ **BUILD** — YouTube iframe + Cloud Storage (zero-bundle-cost embed) | 4 hours |
 | Sprint 5 (Production) | **CONFIG** — Cloud Run auto-SSL, Cloud Armor WAF | 2 days |
 
 **Total: 11-17 days → 3-4 days (40% reduction)**
@@ -132,12 +133,16 @@ Full analysis artifact: `~/.gemini/antigravity/brain/3821c756-e1a4-45fd-adc5-978
 - Go API REST endpoint: `GET /api/v1/documents/download-url?storageKey=...`
 - File validation: 50 MB max, allowed MIME types enforced
 
-### Sprint 4: YouTube Memorials + Media — ~4-6 hours
-**What to build:**
-- YouTube URL input → `react-player` iframe embed (~30 lines)
-- Photo gallery with Cloud Storage upload (~100 lines)
-- **DO NOT** use Google Photos API (deprecated embedding, unreliable links)
-- Optional deferred: Google Photos import wizard
+### Sprint 4: YouTube Memorials + Media — ✅ COMPLETE (v0.10.0)
+**What was built:**
+- YouTube URL embedding via native iframe (youtube-nocookie.com, zero bundle cost)
+- Thumbnail preview from YouTube API on URL paste
+- Cinema-grade full-screen viewer for YouTube, videos, and photos
+- Photo/video file upload via Cloud Storage signed URLs
+- Visibility control (Private / Shared with Heirs)
+- Direct Firestore writes for memoir metadata
+- Memoir delete with confirmation modal
+- Rejected react-player (500 KB+ bundle) in favor of native iframe (0 KB)
 
 ### Sprint 5: Production Hardening — ~1 day
 **What to build:**

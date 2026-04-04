@@ -1,13 +1,13 @@
 #!/bin/bash
-# 𓂀 Osiris (FinalWishes) Pre-Push Gate
-# Runs the same checks CI runs, so lint issues never reach the pipeline.
+# 𓆄 Ma'at Pre-Push Gate (FinalWishes)
+# Quality, truth, and order — the feather weighs before every push.
 # Install: git config core.hooksPath .githooks
 # Skip:    git push --no-verify (use sparingly)
 
 set -e
 
 echo ""
-echo "  𓂀 Osiris (FinalWishes) pre-push gate..."
+echo "  𓆄 Ma'at pre-push gate... [FinalWishes]"
 echo ""
 
 # 1. Lint check
@@ -28,5 +28,5 @@ if ! npm run build 2>/dev/null; then
     exit 1
 fi
 
-echo "  ✅ Pipeline gate passed — pushing to the underworld"
+echo "  ✅ Ma'at: the feather weighs true — pushing FinalWishes"
 echo ""

@@ -4,6 +4,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.9.0-alpha] — 2026-04-03
+### Document Vault — Full Upload/Download/Preview/Delete (Sprint 3)
+- **Drag-and-drop upload** via `react-dropzone` with multi-file support
+  - File validation: 50 MB max, allowed types (PDF, JPEG, PNG, HEIC, DOC, DOCX, TXT)
+  - Real-time progress bar with XHR upload progress tracking
+  - Automatic category inference from filename (Legal, Financial, Personal)
+- **Upload→Firestore wiring** — uploaded files now recorded in `estates/{estateId}/documents`
+  - Calls `createDocumentRecord()` after Cloud Storage PUT
+  - Stores `storageKey`, `storageBucket`, `mimeType`, `fileSize`, `uploadedBy`
+  - Firestore `onSnapshot` auto-refreshes document list
+- **Download via signed URLs** — new Go API REST endpoint
+  - `GET /api/v1/documents/download-url?storageKey=...` → 1-hour signed GET URL
+  - Firebase Auth protected
+- **Document preview modal** — inline viewing for images and PDFs
+  - Image preview with `<img>` tag
+  - PDF preview with `<iframe>` embed
+  - Download button in preview header
+- **Document archive (soft delete)** — confirmation modal with archive action
+  - Sets `status: 'archived'` in Firestore (reversible)
+- **Category filtering** — click folder cards to filter by Legal/Financial/Personal
+  - Active category shown with Royal Blue highlight
+  - "Show All" button to clear filter
+- **Go API** — new `estate/download.go` handler for signed download URLs
+- **Zero slate/grey text** — all text uses `#0F172A`, `#133378`, or `#C8A951` per Rule 27
+
+### Refs
+- Canon: ARCHITECTURE_DESIGN.md §5-6, PRODUCT_SPECIFICATION.md §3.4, API_SPECIFICATION.md §6
+- ADR: ADR-036 (Firestore Direct Reads), ADR-037 (Cloud SQL PII Vault)
+- Changelog: v0.9.0 — Document Vault
+
+---
+
 ## [0.8.1-alpha] — 2026-03-20
 ### Email System (Firebase Extension — Buy Decision) + CI/CD Fix
 - **Firebase Trigger Email Extension** (`firebase/firestore-send-email@0.2.6`) registered in manifest

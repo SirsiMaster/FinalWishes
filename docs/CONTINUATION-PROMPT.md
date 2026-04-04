@@ -1,6 +1,6 @@
 # CONTINUATION PROMPT — FinalWishes
-## For Fresh Context Window — March 20, 2026 (v9.0)
-**Priority:** Sprint 2 COMPLETE → Sprint 3 (Document Vault) + Sprint 4 (Memorials) + Sprint 5 (Production Hardening)
+## For Fresh Context Window — April 3, 2026 (v10.0)
+**Priority:** Sprint 3 COMPLETE → Sprint 4 (YouTube Memorials + Media) + Sprint 5 (Production Hardening)
 
 ---
 
@@ -24,8 +24,9 @@ You have **26 skills** installed at `~/.gemini/antigravity/skills/`. **Check rel
 | 0.5.2 | Invitation system + beneficiaries integration |
 | 0.6.0 | Settings page v2.0, ALL pages wired to Firestore |
 | 0.7.0 | Full build verified, CI/CD migrated to `finalwishes-prod` |
-| **0.8.0** | **PII Vault — Cloud KMS envelope encryption (AES-256-GCM) + Cloud SQL** |
-| **0.8.1** | **Email System (Firebase Extension) + CI/CD lint fix** |
+| 0.8.0 | PII Vault — Cloud KMS envelope encryption (AES-256-GCM) + Cloud SQL |
+| 0.8.1 | Email System (Firebase Extension) + CI/CD lint fix |
+| **0.9.0** | **Document Vault — Upload/Download/Preview/Delete with signed URLs** |
 
 ---
 
@@ -110,7 +111,7 @@ Full analysis artifact: `~/.gemini/antigravity/brain/3821c756-e1a4-45fd-adc5-978
 | Sprint | Decision | Savings |
 |--------|----------|---------|
 | Sprint 2 (Email) | ✅ **BUY** — Firebase Extension | ~450 lines Go code, 2 days |
-| Sprint 3 (Document Vault) | **HYBRID** — Firebase Storage + Go API for sensitive | 1 day |
+| Sprint 3 (Document Vault) | ✅ **HYBRID** — Cloud Storage + Go API signed URLs + react-dropzone | 1 day |
 | Sprint 4 (Memorials) | **BUY** — react-player + Cloud Storage (drop Google Photos API) | 1.5 days |
 | Sprint 5 (Production) | **CONFIG** — Cloud Run auto-SSL, Cloud Armor WAF | 2 days |
 
@@ -120,14 +121,16 @@ Full analysis artifact: `~/.gemini/antigravity/brain/3821c756-e1a4-45fd-adc5-978
 
 ## Remaining Sprints
 
-### Sprint 3: Document Vault (Cloud Storage) — ~1 day
-**What to build:**
-- General documents (photos, memoirs) → **Firebase Storage SDK** directly from React
-- Sensitive legal documents (wills, trusts) → **Go API signed URLs** with KMS encryption
-- `document-vault-key` already provisioned in KMS
-- File upload UI: use `react-dropzone` (OSS)
-- PDF viewer: use `react-pdf` (OSS, 19M+ weekly downloads)
-- Image resize: use **Firebase Resize Images Extension** (free)
+### Sprint 3: Document Vault (Cloud Storage) — ✅ COMPLETE (v0.9.0)
+**What was built:**
+- Drag-and-drop upload via `react-dropzone` with multi-file support + progress bars
+- Cloud Storage signed URLs (Go API) for both upload (PUT, 15 min) and download (GET, 1 hour)
+- Firestore metadata recording after upload (`estates/{estateId}/documents`)
+- Document preview modal (images + PDFs inline)
+- Document archive (soft delete with confirmation)
+- Category filtering (Legal/Financial/Personal) with auto-inference from filename
+- Go API REST endpoint: `GET /api/v1/documents/download-url?storageKey=...`
+- File validation: 50 MB max, allowed MIME types enforced
 
 ### Sprint 4: YouTube Memorials + Media — ~4-6 hours
 **What to build:**

@@ -4,6 +4,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.10.0-alpha] — 2026-04-03
+### YouTube Memorials + Photo Gallery (Sprint 4)
+- **YouTube URL embedding** — paste any YouTube link to create a video memorial
+  - Thumbnail preview on paste (YouTube API `hqdefault.jpg`)
+  - Full-screen cinema playback via privacy-enhanced `youtube-nocookie.com` iframe
+  - Zero bundle cost — native iframe embed instead of react-player (~500 KB saved)
+- **Photo/video file upload** — Cloud Storage signed URLs (reuses vault pattern)
+  - Upload modal with file picker
+  - Media type selection (video/photo)
+  - Visibility control (Private / Share with Heirs)
+- **Memoir delete** — confirmation modal with permanent deletion from Firestore
+- **Direct Firestore writes** — memoirs written directly to `estates/{estateId}/memoirs`
+  - No longer routes through Go API for memoir metadata
+  - Real-time list updates via Firestore `onSnapshot`
+- **Cinema-grade viewer** — full-screen modal for all media types
+  - YouTube: iframe embed with autoplay
+  - Video files: native `<video>` player
+  - Photos: full-resolution display
+- **YouTube Add shortcut** — dedicated "Add YouTube Link" button in gallery header
+
+### Refs
+- Canon: PRODUCT_SPECIFICATION.md §3.5-3.6, CANONICAL_DEVELOPMENT_PLAN.md §3.4
+- ADR: ADR-036 (Firestore Direct Reads)
+- Changelog: v0.10.0 — YouTube Memorials + Photo Gallery
+
+---
+
 ## [0.9.0-alpha] — 2026-04-03
 ### Document Vault — Full Upload/Download/Preview/Delete (Sprint 3)
 - **Drag-and-drop upload** via `react-dropzone` with multi-file support

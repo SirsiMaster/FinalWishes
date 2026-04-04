@@ -193,6 +193,15 @@ func main() {
 		log.Info().Msg("PII Vault API routes registered at /api/v1/vault/*")
 	}
 
+	// Document Vault REST endpoints (download URLs — not in proto, pure REST)
+	if sc != nil {
+		r.Route("/api/v1/documents", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Get("/download-url", estate.HandleDownloadURL(sc))
+		})
+		log.Info().Msg("Document Vault download URL endpoint registered at /api/v1/documents/download-url")
+	}
+
 	// API routes (OpenSign integration — protected by auth)
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Use(authMiddleware)

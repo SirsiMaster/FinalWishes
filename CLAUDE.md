@@ -38,6 +38,7 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 14. **Sprint Planning is Mandatory (Rule 17)**: Before ANY code change, present a detailed sprint plan. No code is written until the USER approves.
 15. **Living Canon (Rule 18)**: These canonical documents are living documents. When new rules emerge, they MUST be codified immediately.
 16. **Identity Integrity (Rule 19)**: All GitHub and Firebase identities MUST use the `SirsiMaster` account exclusively.
+17. **Deity Registry (Rule A25)**: Deity glyphs, domains, and functions are defined in `docs/DEITY_REGISTRY.md` and are invariant across all repos. Ma'at (`𓆄`) owns all quality gates. The ProtectGlyph (`𓂀`) is Ra's exclusive window-protection authority. No deity may be renamed or reassigned per-repo.
 
 ## 2. FinalWishes-Specific Rules
 

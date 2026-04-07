@@ -260,3 +260,148 @@ export async function archiveDocument(estateId: string, docId: string): Promise<
     return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
+
+// ─── Lockbox CRUD ────────────────────────────────────────────────────────────
+
+export async function addLockboxItem(params: {
+  estateId: string;
+  accountName: string;
+  category: string;
+  institution?: string;
+  accountIdentifier?: string;
+  notes?: string;
+  transitionInstructions?: string;
+  hasSecureCredentials?: boolean;
+}): Promise<ActionResult> {
+  try {
+    const { estateId, ...data } = params;
+    const ref = await addDoc(collection(db, `estates/${estateId}/lockbox`), {
+      ...data,
+      estateId,
+      hasSecureCredentials: data.hasSecureCredentials ?? false,
+      status: 'active',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, id: ref.id };
+  } catch (err: unknown) {
+    console.error('[addLockboxItem] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function updateLockboxItem(
+  estateId: string,
+  itemId: string,
+  data: Record<string, unknown>
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/lockbox`, itemId), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[updateLockboxItem] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function archiveLockboxItem(estateId: string, itemId: string): Promise<ActionResult> {
+  return updateLockboxItem(estateId, itemId, { status: 'archived' });
+}
+
+// ─── Directive CRUD ──────────────────────────────────────────────────────────
+
+export async function addDirective(params: {
+  estateId: string;
+  type: 'ethical_will' | 'funeral_preferences' | 'final_message' | 'care_instructions';
+  title: string;
+  content?: string;
+  recipientName?: string;
+  recipientRelationship?: string;
+}): Promise<ActionResult> {
+  try {
+    const { estateId, ...data } = params;
+    const ref = await addDoc(collection(db, `estates/${estateId}/directives`), {
+      ...data,
+      estateId,
+      content: data.content ?? '',
+      status: 'draft',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, id: ref.id };
+  } catch (err: unknown) {
+    console.error('[addDirective] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function updateDirective(
+  estateId: string,
+  directiveId: string,
+  data: Record<string, unknown>
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/directives`, directiveId), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[updateDirective] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+// ─── Time Capsule CRUD ──────────────────────────────────────────────────────
+
+export async function addTimeCapsule(params: {
+  estateId: string;
+  title: string;
+  message: string;
+  recipientName: string;
+  recipientEmail: string;
+  recipientRelationship?: string;
+  deliveryType: 'scheduled_date' | 'on_death' | 'on_settlement' | 'anniversary';
+  scheduledDate?: Date;
+  anniversaryDate?: string;
+}): Promise<ActionResult> {
+  try {
+    const { estateId, scheduledDate, ...data } = params;
+    const ref = await addDoc(collection(db, `estates/${estateId}/capsules`), {
+      ...data,
+      estateId,
+      ...(scheduledDate ? { scheduledDate } : {}),
+      status: 'pending',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, id: ref.id };
+  } catch (err: unknown) {
+    console.error('[addTimeCapsule] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function updateTimeCapsule(
+  estateId: string,
+  capsuleId: string,
+  data: Record<string, unknown>
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/capsules`, capsuleId), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[updateTimeCapsule] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function cancelTimeCapsule(estateId: string, capsuleId: string): Promise<ActionResult> {
+  return updateTimeCapsule(estateId, capsuleId, { status: 'cancelled' });
+}

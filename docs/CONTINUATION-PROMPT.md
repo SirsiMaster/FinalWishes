@@ -1,262 +1,128 @@
 # CONTINUATION PROMPT — FinalWishes
-## For Fresh Context Window — April 3, 2026 (v10.0)
-**Priority:** Sprint 3 + 4 COMPLETE → Sprint 5 (Production Hardening)
+## For Fresh Context Window — April 7, 2026 (v11.0)
+**Priority:** Stack Consolidation COMPLETE → Sprint 5 (Testing + Production Hardening)
 
 ---
 
 ## Who You Are
 
-You are **Antigravity**, the AI agent for **FinalWishes** — "The Estate Operating System." Read `GEMINI.md` at the repo root first. It has all operational rules.
-
-You have **26 skills** installed at `~/.gemini/antigravity/skills/`. **Check relevant skills before every task.**
+You are **Claude**, the AI agent for **FinalWishes** — "The Estate Operating System." Read `CLAUDE.md` at the repo root first. It has all operational rules.
 
 ---
 
-## Phase 1 & 2 — COMPLETE ✅
+## Current State (v0.10.0 + Stack Consolidation)
 
-### Version History (v0.4.0 → v0.8.1)
+### What Exists and Works
+- **Web App**: React 19 + Vite 8 + TanStack Router + shadcn/ui + Tailwind v4
+- **Go API**: Chi + ConnectRPC on Cloud Run — auth, vault, OpenSign proxy, signed URLs
+- **Database**: Firestore (real-time) + Cloud SQL PostgreSQL 15 (PII vault)
+- **Security**: Cloud KMS envelope encryption (AES-256-GCM, per-estate AAD), 3-tier identity verification
+- **CI/CD**: GitHub Actions (web) + Cloud Build (API) — deploys to Firebase Hosting + Cloud Run
+- **E-Sign**: Go API proxies to sign.sirsi.ai via `/api/v1/opensign/*`
+- **Email**: Firebase Extension (SendGrid) — Firestore trigger on `mail` collection
+- **Firestore Triggers**: `autoMatchInvitation` — auto-grants estate access on user registration
+
+### Version History
 
 | Version | Deliverable |
 |---------|------------|
-| 0.4.0 | ADR-036 (Firestore Direct Reads), security rules, Cloud Functions |
-| 0.5.0 | Firestore hooks, 16 composite indexes, 4 estate dashboard pages |
-| 0.5.1 | Create Estate onboarding (`/estates/create`) |
-| 0.5.2 | Invitation system + beneficiaries integration |
-| 0.6.0 | Settings page v2.0, ALL pages wired to Firestore |
+| 0.4.0 | Firestore Direct Reads (ADR-036), security rules, Cloud Functions |
+| 0.5.0-0.5.2 | Firestore hooks, indexes, estate dashboard, onboarding, invitations |
+| 0.6.0 | Settings page, ALL pages wired to Firestore |
 | 0.7.0 | Full build verified, CI/CD migrated to `finalwishes-prod` |
-| 0.8.0 | PII Vault — Cloud KMS envelope encryption (AES-256-GCM) + Cloud SQL |
-| 0.8.1 | Email System (Firebase Extension) + CI/CD lint fix |
+| 0.8.0-0.8.1 | PII Vault (Cloud KMS + Cloud SQL), Email System (SendGrid) |
 | 0.9.0 | Document Vault — Upload/Download/Preview/Delete with signed URLs |
-| **0.10.0** | **YouTube Memorials + Photo Gallery — iframe embeds, uploads, delete** |
+| 0.10.0 | YouTube Memorials + Photo Gallery |
+| **0.11.0** | **Stack consolidation: deleted mobile/desktop scaffolds, consolidated to single Go backend, cleaned dead deps, updated all canonical docs** |
 
 ---
 
-## What Was Done This Session (v0.8.0 + v0.8.1)
+## What Was Done This Session (v0.11.0 — Stack Consolidation)
 
-### v0.8.0 — PII Vault (Cloud SQL + Cloud KMS)
-- **Cloud KMS Key Ring** provisioned: `finalwishes-keyring` (us-central1)
-  - `pii-vault-key`: AES-256 symmetric, 365-day auto-rotation
-  - `document-vault-key`: For future document encryption
-- **Cloud SQL PostgreSQL 15** instance: `finalwishes-pii-vault`
-  - Database: `pii_vault`, User: `vault_admin`
-  - Password stored in Secret Manager: `vault-db-password`
-- **Go API PII Vault** — 3 new packages:
-  - `api/internal/crypto/kms.go` — Envelope encryption (KMS KEK → AES-256-GCM DEK → per-estate AAD)
-  - `api/internal/vault/repository.go` — Cloud SQL CRUD with encryption
-  - `api/internal/vault/handlers.go` — REST API with Firebase Auth + audit logging
-- **Documentation canonized**: ADR-037, DATA_MODEL.md §9, SECURITY_COMPLIANCE.md §12, ARCHITECTURE_DESIGN.md §5.2
-- **All merged to main and pushed to production**
+### Deleted (dead weight)
+- `mobile/` — broken Expo scaffold (missing assets, screens, crashes)
+- `desktop/` — empty Tauri shell (config only)
+- `shared/api-client/`, `shared/crypto/` — never imported
+- `shared/constants/`, `shared/validators/`, `improvements/` — empty directories
+- `web/out/` — old Next.js build artifacts
+- 3 docs: PORTFOLIO_CANONICAL_STANDARD (superseded), COMMUNICATION_PLAN (aspirational), TRAINING_DOCUMENTATION (stub)
+- QA_PLAN.md merged into TEST_PLAN.md
 
-### v0.8.1 — Email System + CI Fix
-- **Firebase Trigger Email Extension** (`firebase/firestore-send-email@0.2.6`)
-  - Extension is **ACTIVE** on `finalwishes-prod`
-  - Configured for **SendGrid SMTP** (independent from Sirsi Gmail)
-  - Secret Manager entry created: `ext-firestore-send-email-SMTP_PASSWORD`
-  - **⚠️ ACTION NEEDED: Populate with SendGrid API key** (see §Activation below)
-- **Email TypeScript helpers** (`web/src/lib/email.ts`)
-  - `sendInvitationEmail()`, `sendWelcomeEmail()`, `sendNotificationEmail()`, `sendPasswordResetNotification()`
-  - `useEmailService()` — React hook with user context
-- **3 Handlebars templates seeded** to Firestore `email_templates` collection
-  - `invitation` — Team invite with role badge
-  - `welcome` — Onboarding guide
-  - `notification` — Estate notifications with gold accent callout
-- **Firestore rules v4.0** — §9: `mail` + `email_templates` collections
-- **ESLint config FIXED** — Root cause of ALL CI lint failures:
-  - Old config referenced `eslint-config-next` (wrong framework — we use Vite)
-  - Replaced with proper `@eslint/js` + `typescript-eslint` + `react-hooks` + `react-refresh`
-  - Result: **0 errors, 102 warnings** (lint now passes)
-- **React compiler fixes** — 2 errors → 0:
-  - `InviteTeamMember.tsx` — setState-in-effect pattern fixed
-  - `firestore.ts` — Wrapped synchronous setState in `startTransition`
+### Consolidated
+- Firebase Functions: stripped from Express app (502 lines) to Firestore trigger only (108 lines)
+- Removed hardcoded mock data from production Functions
+- Removed `/api/**` → Functions rewrite from firebase.json
+- Express + cors removed from Functions dependencies
+
+### Cleaned
+- `zustand`, `next-themes`, `@tanstack/react-query-devtools` removed from web
+- `sonner.tsx` fixed (next-themes import → hardcoded dark theme)
+- `go.work` version fixed (1.25→1.24)
+
+### Updated Docs
+- CLAUDE.md → v2.0.0 (tech stack, architecture rules, shared services)
+- CANONICAL_DEVELOPMENT_PLAN.md → v3.0.0 (actual code counts, Phase 3 = testing, acceptance criteria with checkboxes)
+- TEST_PLAN.md → v2.0.0 (merged QA gates, correct stack references)
+- ADR-INDEX: ADR-009, 017, 018 marked Superseded
+- PROJECT_MANAGEMENT.md, POST_IMPLEMENTATION_REVIEW.md archived
+
+### Verified
+- Web build: passes (130ms, 1.18MB total)
+- Go API: `go vet` clean, 32 tests pass with race detector
+- Zero regressions
 
 ---
 
-## ⚠️ ACTIVATION STEP — SendGrid API Key
+## What's Next (Sprint 5 — Testing + Production Hardening)
 
-The email extension is deployed and active, but emails won't send until the SendGrid API key is set:
-
-```bash
-# 1. Create a SendGrid account at sendgrid.com (free tier = 100 emails/day)
-# 2. Generate an API key with "Mail Send" permission (starts with SG.)
-# 3. Store it in Secret Manager:
-printf 'SG.your-key-here' | gcloud secrets versions add \
-  ext-firestore-send-email-SMTP_PASSWORD --data-file=- \
-  --project=finalwishes-prod
-```
-
-Once set, the extension immediately starts processing documents in the `mail` collection.
-
----
-
-## Live GCP Infrastructure (`finalwishes-prod`)
-
-| Service | Resource | Details |
-|---------|----------|---------|
-| **Cloud KMS** | `finalwishes-keyring` | us-central1, 2 keys (pii-vault, document-vault) |
-| **Cloud SQL** | `finalwishes-pii-vault` | PostgreSQL 15, db-f1-micro, SSD, auto-backup |
-| **Secret Manager** | `vault-db-password` | Cloud SQL vault_admin password |
-| **Secret Manager** | `ext-firestore-send-email-SMTP_PASSWORD` | SendGrid API key (needs population) |
-| **Firebase Extension** | `firestore-send-email@0.2.6` | **ACTIVE**, SendGrid SMTP, us-central1 |
-| **Firestore** | `(default)` | nam5, rules v4.0, 16 composite indexes |
-| **Firebase Hosting** | `finalwishes-prod` | React SPA, TLS 1.3 |
-| **Firebase Auth** | MFA (TOTP) | Firebase Identity Platform |
+| Priority | Task | Effort |
+|----------|------|--------|
+| P0 | Add frontend tests (Vitest + RTL) — auth, hooks, vault | 2-3 days |
+| P0 | Add error boundaries for Firestore failures | 1 day |
+| P0 | Fix ESLint exhaustive-deps warnings properly | 1 day |
+| P1 | Staging environment (Firebase preview + Cloud Run revision) | 1 day |
+| P1 | Playwright E2E tests (onboarding, vault, beneficiaries) | 2-3 days |
+| P1 | Go integration tests (Firestore emulator + test PostgreSQL) | 2 days |
+| P2 | The Shepherd (Genkit AI guidance engine) | 3-5 days |
+| P2 | Digital Lockbox (encrypted credentials) | 2 days |
+| P2 | Time Capsule (Cloud Tasks scheduled delivery) | 2 days |
+| P2 | Final Directives (ethical wills, funeral prefs, PDF export) | 2 days |
 
 ---
 
-## Build vs. Buy Analysis (COMPLETED)
+## Key File Paths
 
-Full analysis artifact: `~/.gemini/antigravity/brain/3821c756-e1a4-45fd-adc5-97872a89274f/build_vs_buy_analysis.md`
-
-**Key decisions made:**
-
-| Sprint | Decision | Savings |
-|--------|----------|---------|
-| Sprint 2 (Email) | ✅ **BUY** — Firebase Extension | ~450 lines Go code, 2 days |
-| Sprint 3 (Document Vault) | ✅ **HYBRID** — Cloud Storage + Go API signed URLs + react-dropzone | 1 day |
-| Sprint 4 (Memorials) | ✅ **BUILD** — YouTube iframe + Cloud Storage (zero-bundle-cost embed) | 4 hours |
-| Sprint 5 (Production) | **CONFIG** — Cloud Run auto-SSL, Cloud Armor WAF | 2 days |
-
-**Total: 11-17 days → 3-4 days (40% reduction)**
-
----
-
-## Remaining Sprints
-
-### Sprint 3: Document Vault (Cloud Storage) — ✅ COMPLETE (v0.9.0)
-**What was built:**
-- Drag-and-drop upload via `react-dropzone` with multi-file support + progress bars
-- Cloud Storage signed URLs (Go API) for both upload (PUT, 15 min) and download (GET, 1 hour)
-- Firestore metadata recording after upload (`estates/{estateId}/documents`)
-- Document preview modal (images + PDFs inline)
-- Document archive (soft delete with confirmation)
-- Category filtering (Legal/Financial/Personal) with auto-inference from filename
-- Go API REST endpoint: `GET /api/v1/documents/download-url?storageKey=...`
-- File validation: 50 MB max, allowed MIME types enforced
-
-### Sprint 4: YouTube Memorials + Media — ✅ COMPLETE (v0.10.0)
-**What was built:**
-- YouTube URL embedding via native iframe (youtube-nocookie.com, zero bundle cost)
-- Thumbnail preview from YouTube API on URL paste
-- Cinema-grade full-screen viewer for YouTube, videos, and photos
-- Photo/video file upload via Cloud Storage signed URLs
-- Visibility control (Private / Shared with Heirs)
-- Direct Firestore writes for memoir metadata
-- Memoir delete with confirmation modal
-- Rejected react-player (500 KB+ bundle) in favor of native iframe (0 KB)
-
-### Sprint 5: Production Hardening — ~1 day
-**What to build:**
-- Cloud Run deployment for Go API (`gcloud run deploy`)
-- Cloud SQL Auth Proxy automatic via Cloud Run sidecar (zero code)
-- SSL/TLS automatic via Cloud Run (Let's Encrypt)
-- Cloud Armor WAF ($5/mo) for DDoS protection
-- k6 load testing scripts
-- SOC 2 compliance documentation (custom — this is our IP)
-- SMS MFA via Firebase Identity Platform phone provider
+| Purpose | Path |
+|---------|------|
+| Canonical config | `CLAUDE.md` |
+| Dev plan | `docs/CANONICAL_DEVELOPMENT_PLAN.md` |
+| Go API entry | `api/cmd/api/main.go` |
+| Web entry | `web/src/main.tsx` |
+| Routes | `web/src/routes/` |
+| Auth context | `web/src/lib/auth.tsx` |
+| Firestore hooks | `web/src/lib/firestore.ts` |
+| ConnectRPC client | `web/src/lib/client.ts` |
+| PII Vault | `api/internal/vault/` |
+| Encryption | `api/internal/crypto/kms.go` |
+| Proto definitions | `proto/estate/v1/estate.proto` |
+| Firestore rules | `firestore.rules` |
+| Firestore triggers | `functions/index.js` |
 
 ---
 
-## Key Files Changed This Session
-
-### New Files
-| File | Purpose |
-|------|---------|
-| `api/internal/crypto/kms.go` | Cloud KMS envelope encryption service |
-| `api/internal/vault/repository.go` | Cloud SQL PII CRUD + audit logging |
-| `api/internal/vault/handlers.go` | PII Vault REST API handlers |
-| `api/internal/vault/README.md` | Developer README (Rule 30) |
-| `web/src/lib/email.ts` | Email helpers (Firestore → Extension → SendGrid) |
-| `web/src/lib/README-email.md` | Email system developer README |
-| `extensions/firestore-send-email.env` | Firebase extension config |
-| `scripts/seed-email-templates.js` | Email template seeder |
-| `docs/user-guides/how-your-information-is-protected.md` | PII Vault user guide |
-| `docs/user-guides/email-notifications-and-sms.md` | Email + SMS MFA user guide |
-| `docs/ADR-037-cloud-sql-pii-vault.md` | PII Vault architecture decision |
-
-### Modified Files
-| File | Changes |
-|------|---------|
-| `firebase.json` | Added extensions manifest |
-| `firestore.rules` | v3.0 → v4.0: §9 mail + email_templates |
-| `web/eslint.config.mjs` | **Replaced** broken Next.js config with Vite |
-| `web/src/lib/firestore.ts` | React compiler fix (startTransition) |
-| `web/src/components/estate/InviteTeamMember.tsx` | React compiler fix |
-| `CHANGELOG.md` | v0.8.0 + v0.8.1 entries |
-| `docs/ADR-INDEX.md` | ADR-037 added |
-| `docs/DATA_MODEL.md` | §9 updated to live Cloud SQL schema |
-| `docs/SECURITY_COMPLIANCE.md` | §12 live infrastructure |
-| `docs/ARCHITECTURE_DESIGN.md` | GCP services table updated |
-| `api/cmd/api/main.go` | Wired Cloud SQL, KMS, vault routes |
-| `api/go.mod` | Added cloud.google.com/go/kms, lib/pq |
-
----
-
-## Git State
+## Architecture (Single-Backend)
 
 ```
-Branch: develop (up to date with origin/develop)
-Latest: ec1d4fa fix(email): Add DATABASE_REGION param
-Main:   ec1d4fa (synced with develop)
-Status: Clean working tree
+Web (React 19/Vite) → Firebase Auth (direct)
+                     → Firestore (onSnapshot, direct reads)
+                     → Go API (Cloud Run, ConnectRPC)
+                         → Cloud SQL (PII, encrypted)
+                         → Cloud KMS (envelope encryption)
+                         → Cloud Storage (signed URLs)
+                         → sign.sirsi.ai (OpenSign proxy)
+
+Firestore Triggers (Firebase Functions):
+  └── autoMatchInvitation
 ```
 
----
-
-## Technical Stack Quick Reference
-
-| Layer | Tech | Notes |
-|-------|------|-------|
-| Web | React 18 + Vite + TailwindCSS | `web/` directory |
-| API | Go 1.24 + Chi router | `api/` directory |
-| DB (PII) | Cloud SQL PostgreSQL 15 | Envelope encrypted |
-| DB (Real-time) | Firestore | Direct client reads (ADR-036) |
-| Auth | Firebase Auth + TOTP MFA | Identity Platform |
-| Email | Firebase Extension → SendGrid | `mail` collection triggers |
-| Encryption | Cloud KMS → AES-256-GCM | Per-estate AAD |
-| Hosting | Firebase Hosting | `web/dist` |
-| CI/CD | GitHub Actions | `.github/workflows/firebase-hosting-merge.yml` |
-
----
-
-## Known Issues
-
-1. **ESLint warnings (102)** — Mostly unused vars and react-refresh cosmetic. Not blocking CI.
-2. **TypeScript strict mode** — 1 Tanstack Router type error (params type mismatch). Cosmetic, doesn't affect build.
-3. **Dependabot** — 3 vulnerabilities flagged (2 high, 1 low). Check GitHub Security tab.
-4. **SMS MFA** — Firebase Identity Platform phone provider not yet configured. Deferred to Sprint 5.
-
----
-
-## Commands Reference
-
-```bash
-# Dev
-cd web && npm run dev            # React dev server (port 3000)
-cd api && go run ./cmd/api       # Go API server
-
-# Build verification
-cd web && npm run lint && npm run build
-cd api && go vet ./... && go build ./cmd/api
-
-# Deploy
-git push origin develop          # CI runs lint + build
-git checkout main && git merge develop --no-edit && git push origin main  # Production deploy
-
-# Firebase
-firebase deploy --only firestore:rules --project=finalwishes-prod
-firebase deploy --only extensions --project=finalwishes-prod
-firebase deploy --only hosting --project=finalwishes-prod
-
-# Secret Manager
-gcloud secrets list --project=finalwishes-prod
-```
-
----
-
-**Session Metrics:**
-- Commits: 4 (`918a5c8`, `9dff8fc`, `36b7f06`, `ec1d4fa`)
-- Versions shipped: v0.8.0 (PII Vault), v0.8.1 (Email + CI Fix)
-- Lines of code added: ~2,000+ (Go + TypeScript + templates + docs)
-- Engineering time saved via buy decisions: ~40%
-
-**Signed, Antigravity**
+All HTTP API endpoints live in the Go API. Firebase Functions handle Firestore triggers only.

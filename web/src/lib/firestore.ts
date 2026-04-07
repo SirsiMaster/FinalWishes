@@ -124,6 +124,54 @@ export interface EstateUser {
   updatedAt: Timestamp;
 }
 
+// Lockbox Item (subcollection)
+export interface LockboxItem {
+  id: string;
+  estateId: string;
+  category: 'banking' | 'investment' | 'insurance' | 'digital_account' | 'crypto' | 'physical_safe' | 'other';
+  accountName: string;
+  institution?: string;
+  accountIdentifier?: string;
+  notes?: string;
+  transitionInstructions?: string;
+  hasSecureCredentials: boolean;
+  status: 'active' | 'archived';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Directive (subcollection)
+export interface Directive {
+  id: string;
+  estateId: string;
+  type: 'ethical_will' | 'funeral_preferences' | 'final_message' | 'care_instructions';
+  title: string;
+  content: string; // HTML from TipTap
+  recipientName?: string;
+  recipientRelationship?: string;
+  status: 'draft' | 'finalized';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+// Time Capsule (subcollection)
+export interface TimeCapsule {
+  id: string;
+  estateId: string;
+  title: string;
+  message: string;
+  recipientName: string;
+  recipientEmail: string;
+  recipientRelationship?: string;
+  deliveryType: 'scheduled_date' | 'on_death' | 'on_settlement' | 'anniversary';
+  scheduledDate?: Timestamp;
+  anniversaryDate?: string; // MM-DD format
+  status: 'pending' | 'delivered' | 'cancelled';
+  deliveredAt?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 // Notification (subcollection)
 export interface EstateNotification {
   id: string;
@@ -305,6 +353,18 @@ export function useUserEstates(userId: string | null): FirestoreListResult<Estat
 }
 
 /**
+ * Subscribe to lockbox items for an estate (sorted by creation date).
+ */
+export function useLockboxItems(estateId: string | null): FirestoreListResult<LockboxItem> {
+  const path = estateId ? `estates/${estateId}/lockbox` : null;
+  const constraints = useMemo(
+    () => [orderBy('createdAt', 'desc')],
+    []
+  );
+  return useCollection<LockboxItem>(path, constraints);
+}
+
+/**
  * Subscribe to notifications for an estate (latest 20).
  */
 export function useEstateNotifications(estateId: string | null): FirestoreListResult<EstateNotification> {
@@ -314,4 +374,28 @@ export function useEstateNotifications(estateId: string | null): FirestoreListRe
     []
   );
   return useCollection<EstateNotification>(path, constraints);
+}
+
+/**
+ * Subscribe to directives for an estate (sorted by creation date).
+ */
+export function useDirectives(estateId: string | null): FirestoreListResult<Directive> {
+  const path = estateId ? `estates/${estateId}/directives` : null;
+  const constraints = useMemo(
+    () => [orderBy('createdAt', 'desc')],
+    []
+  );
+  return useCollection<Directive>(path, constraints);
+}
+
+/**
+ * Subscribe to time capsules for an estate (sorted by creation date).
+ */
+export function useTimeCapsules(estateId: string | null): FirestoreListResult<TimeCapsule> {
+  const path = estateId ? `estates/${estateId}/capsules` : null;
+  const constraints = useMemo(
+    () => [orderBy('createdAt', 'desc')],
+    []
+  );
+  return useCollection<TimeCapsule>(path, constraints);
 }

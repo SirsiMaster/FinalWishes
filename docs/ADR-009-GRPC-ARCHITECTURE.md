@@ -1,7 +1,7 @@
 # ADR-009: Transition to gRPC and Protocol Buffers
 
 ## Status
-Proposed (January 17, 2026)
+Superseded by ADR-004 (April 7, 2026). gRPC architecture is accepted and implemented via ConnectRPC in the Go API.
 
 ## Context
 The Sirsi Infrastructure Layer and its tenants (like FinalWishes) require high-performance, strictly typed, and language-agnostic service boundaries. While REST/JSON served the initial prototyping phase, the complexity of legal metadata, document versioning, and financial transactions necessitates the reliability and efficiency of gRPC and Protocol Buffers.

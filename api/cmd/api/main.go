@@ -21,6 +21,7 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
+	"github.com/sirsi-technologies/finalwishes-api/internal/payments"
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/vault"
 )
@@ -214,6 +215,21 @@ func main() {
 		r.Use(authMiddleware)
 		r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
 	})
+
+	// Payment routes (Stripe checkout via Sirsi shared account)
+	paymentCfg := payments.ConfigFromEnv()
+	if paymentCfg.SecretKey != "" {
+		paymentHandler := payments.NewHandler(fs, paymentCfg)
+		r.Get("/api/v1/payments/tiers", paymentHandler.HandleGetTiers) // Public — no auth needed
+		r.Route("/api/v1/payments", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/create-checkout", paymentHandler.HandleCreateCheckout)
+		})
+		r.Post("/api/v1/payments/webhook", paymentHandler.HandleWebhook) // Stripe calls this — no auth, uses webhook signature
+		log.Info().Msg("Payment API routes registered at /api/v1/payments/*")
+	} else {
+		log.Warn().Msg("STRIPE_SECRET_KEY not set — payment endpoints disabled")
+	}
 
 	// Create server
 	srv := &http.Server{

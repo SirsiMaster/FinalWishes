@@ -1,7 +1,7 @@
 # ADR-018: Sirsi Governance Console & Dynamic Catalog Store
 
 ## Status
-Proposed
+Superseded by ADR-008 (April 7, 2026). Governance Console concept consolidated into Infrastructure Control Plane.
 
 ## Context
 The Sirsi Studio needs a way to manage the product catalog, pricing, and contract templates dynamically without requiring code changes or deployments for every update. Previously, these were defined as static constants in `catalog.ts` and `projectTemplates.ts`.

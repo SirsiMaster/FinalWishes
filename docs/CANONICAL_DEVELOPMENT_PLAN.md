@@ -1,6 +1,6 @@
 # FinalWishes — Canonical Development Plan
 ## The Living Legacy Platform — Google-First Implementation
-**Version:** 2.0.0 — **Date:** March 18, 2026 — **Author:** Antigravity
+**Version:** 3.0.0 — **Date:** April 7, 2026 — **Author:** Claude (consolidated from Antigravity v2.0.0)
 **Contract:** MSA-2025-111-FW | SOW-2025-001 | **$95,000 Fixed Bid** | 16 Weeks
 
 ---
@@ -21,7 +21,7 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 | **Vault Architecture** | Zero-knowledge encryption (Cloud KMS + AES-256) for all legacy assets |
 | **Legacy Engine ("The Shepherd")** | Time-capsule scheduling, memory curation logic, AI guidance |
 | **Media Integration** | YouTube API (video memorials) + Google Photos API (photo galleries) |
-| **Universal App** | Web (React 18/Vite) + iOS + Android (React Native/Expo) + Desktop (Tauri) |
+| **Web App** | React 19/Vite + TanStack Router + shadcn/ui (web-first; mobile/desktop deferred) |
 
 ### Tier 2: Purchased Add-Ons (Contracted, Scope Impacts Design)
 
@@ -88,7 +88,7 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 | Password reset | **Firebase Auth** | None |
 | Session management (JWT) | **Firebase Auth** | None |
 | Role-based access (Principal, Executor, Heir, Admin) | **Firebase Custom Claims** | ~20 lines |
-| Biometric login (mobile) | **Firebase Auth** + Expo SecureStore | ~30 lines |
+| Biometric login (mobile) | **Firebase Auth** + Expo SecureStore | Deferred (mobile not in scope for Tier 1) |
 
 ### 3.2 Data Storage
 
@@ -108,7 +108,7 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 |---------|--------------|:-----------:|
 | File storage (documents, PDFs) | **Cloud Storage** (Standard) | None |
 | Archive storage (old memoirs) | **Cloud Storage** (Nearline) | None |
-| Client-side encryption (AES-256-GCM) | **Web Crypto API** | ✅ Done (`shared/crypto/`) |
+| Client-side encryption (AES-256-GCM) | **Web Crypto API** | Deferred — server-side KMS handles encryption |
 | Server-side key management (DEK/KEK) | **Cloud KMS** | None |
 | Signed upload/download URLs | **Cloud Storage** | ~50 lines Go |
 | Image thumbnails (auto-generated) | **Firebase Extension: Resize Images** | None (install extension) |
@@ -199,23 +199,21 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 
 ---
 
-## 4. Custom Code Summary
+## 4. Custom Code Summary (Actual — April 2026)
 
-| Component | Language | Lines | Purpose |
-|-----------|----------|:-----:|---------|
-| Go API handlers | Go | ~500 | Cloud Run: signed URLs, Cloud SQL PII, Firestore admin ops |
-| Genkit AI flows | Go | ~100 | Shepherd prompts + flow definitions |
-| Firestore security rules | Rules DSL | ~80 | Declarative access control |
-| Client-side crypto | TypeScript | ✅ Done | `shared/crypto/` AES-256-GCM |
-| YouTube upload wrapper | TypeScript | ~30 | Upload memoir video as unlisted |
-| Google Photos wrapper | TypeScript | ~30 | Album creation + photo upload |
-| React dashboard (web) | TypeScript/React | ~2,500 | shadcn/ui themed to Royal Neo-Deco (Branding & Identity) |
-| React Native (mobile) | TypeScript/React Native | ~1,500 | Shared business logic with web |
-| Tauri desktop shell | Rust | ~50 | macOS wrapper (wraps web app) |
-| Landing page | TypeScript/React | ✅ Done | Already deployed |
+| Component | Language | Lines | Status |
+|-----------|----------|:-----:|--------|
+| Go API (Cloud Run) | Go | ~1,700 | ✅ Production — auth, vault, ConnectRPC, KMS, OpenSign proxy |
+| Firestore security rules | Rules DSL | ~500 | ✅ Production — v4.0.0, comprehensive RBAC |
+| React web app | TypeScript/React | ~3,500 | ✅ Production — 26 routes, 13+ shadcn components |
+| Firestore triggers | Node.js | ~100 | ✅ Production — autoMatchInvitation |
+| Shared types | TypeScript | ~100 | ✅ Active — proto-aligned type definitions |
+| Proto definitions | Protobuf | ~200 | ✅ Active — 18 RPC methods |
 
-**Total custom code: ~4,800 lines**
-**Total Google-managed services: 28**
+**Total custom code: ~6,100 lines**
+**Total Google-managed services: 12 active (Firebase Auth, Firestore, Cloud SQL, Cloud KMS, Cloud Storage, Cloud Run, Firebase Hosting, SendGrid Extension, Cloud Build, Secret Manager, IAM, Cloud DNS)**
+
+> **Removed (April 2026):** `shared/crypto/` (client-side encryption never used), `shared/api-client/` (web uses ConnectRPC), React Native mobile (~0 lines actual), Tauri desktop (~0 lines actual)
 
 ---
 
@@ -273,21 +271,22 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 | 10 | Time Capsule: scheduled message delivery | Cloud Tasks + Cloud Scheduler | Deferred delivery working |
 | 10 | Final Directives: ethical wills + funeral preferences (PDF export) | `@react-pdf/renderer` | Directive PDF generation |
 
-#### Phase 3: Tri-Platform Deployment (Weeks 9-12) — $26,000
+#### Phase 3: Production Hardening & Testing (Weeks 9-12) — $26,000
 
 > [!NOTE]
-> Phase 3 overlaps with Phase 2 (weeks 9-10). Mobile development begins while core features finalize.
+> Mobile (Expo) and Desktop (Tauri) scaffolds removed in April 2026 consolidation.
+> Phase 3 redirected to testing, staging environment, and production hardening.
 
 | Week | Task | Google Service | Deliverable |
 |:----:|------|---------------|-------------|
-| 9 | React Native Expo scaffold (shared hooks, stores, API client) | EAS Build | Mobile shell working |
-| 10 | Core mobile screens: Login, Dashboard, Memoirs, Vault | Firebase Auth + Firestore | Core screens functional |
-| 10 | NativeWind theming (Royal Neo-Deco on mobile) | NativeWind | Consistent design |
-| 11 | Biometric auth (FaceID/TouchID) | Firebase Auth + Expo SecureStore | Biometric login |
-| 11 | Native camera: video recording → YouTube upload | Expo Camera + YouTube API | In-app memoir recording |
-| 11 | Push notifications (FCM) | Firebase Cloud Messaging | Time capsule alerts |
-| 12 | Tauri desktop scaffold (macOS wrapper of web app) | Tauri (Rust) | Desktop app functional |
-| 12 | Cross-platform sync verification | Firestore (real-time) | Web ↔ Mobile ↔ Desktop sync |
+| 9 | Vitest + React Testing Library setup for web | — | Frontend test infrastructure |
+| 9 | Test auth flows, Firestore hooks, vault operations | — | 80%+ coverage on critical paths |
+| 10 | Playwright E2E test suite (critical user journeys) | — | Automated regression |
+| 10 | Staging environment (Firebase preview channel + Cloud Run revision) | Firebase Hosting + Cloud Run | Staging URL live |
+| 11 | ESLint rule fixes (react-hooks/exhaustive-deps) | — | Zero warnings |
+| 11 | Error boundaries for Firestore subscription failures | — | Graceful error handling |
+| 12 | Performance optimization (Lighthouse, Core Web Vitals) | Firebase Performance | LCP < 2.5s verified |
+| 12 | Go API integration tests (Firestore emulator + test PostgreSQL) | — | Backend integration coverage |
 
 #### Phase 4: QA, Integration & Launch (Weeks 13-16) — $17,000
 
@@ -383,50 +382,47 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 
 ---
 
-## 7. Architecture Diagram
+## 7. Architecture Diagram (Post-Consolidation — April 2026)
 
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                        FINALWISHES PLATFORM                              │
-│                                                                          │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │
-│  │  Web App    │  │ iOS App     │  │ Android App │  │ macOS App   │   │
-│  │  React 18   │  │ React Native│  │ React Native│  │ Tauri/Rust  │   │
-│  │  Vite       │  │ Expo        │  │ Expo        │  │ (wraps Web) │   │
-│  │  shadcn/ui  │  │ NativeWind  │  │ NativeWind  │  │             │   │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘   │
-│         │                │                │                │            │
-│         └────────────────┼────────────────┼────────────────┘            │
-│                          │                │                              │
-│                    ┌─────┴────────────────┴─────┐                       │
-│                    │    shared/ (TypeScript)     │                       │
-│                    │  types • api-client • crypto│                       │
-│                    └─────────────┬───────────────┘                       │
-│                                 │                                        │
-└─────────────────────────────────┼────────────────────────────────────────┘
-                                  │
-                    ┌─────────────┴─────────────┐
-                    ▼                           ▼
-         ┌──────────────────┐        ┌──────────────────┐
-         │  DIRECT TO GCP   │        │  VIA SIRSI SIGN  │
-         │                  │        │  (sign.sirsi.ai) │
-         │  Firebase Auth   │        │                  │
-         │  Firestore       │        │  E-Signatures    │
-         │  Cloud SQL       │        │  (OpenSign)      │
-         │  Cloud Storage   │        │                  │
-         │  Cloud KMS       │        │  Payments        │
-         │  Cloud Run       │        │  (Stripe)        │
-         │  YouTube API     │        │                  │
-         │  Google Photos   │        │  Bank Linking    │
-         │  Vertex AI       │        │  (Plaid)         │
-         │  Genkit          │        │                  │
-         │  Document AI     │        │  MFA Gate        │
-         │  FCM             │        │  PDF Generation  │
-         │  Cloud Tasks     │        │                  │
-         │  Cloud Scheduler │        │                  │
-         │  GA4             │        │                  │
-         └──────────────────┘        └──────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                 FINALWISHES PLATFORM                       │
+│                                                            │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │                    Web App                           │  │
+│  │  React 19 + Vite 8 + TanStack Router + shadcn/ui   │  │
+│  │  Royal Neo-Deco (Cinzel + Inter, Royal Blue + Gold) │  │
+│  └──────────────────────┬──────────────────────────────┘  │
+│                          │                                  │
+│  ┌───────────────────────┼───────────────────────────┐    │
+│  │                 shared/types                       │    │
+│  └───────────────────────┼───────────────────────────┘    │
+│                          │                                  │
+│         ┌────────────────┼──────────────────┐              │
+│         ▼                ▼                  ▼              │
+│   Firebase Auth    Firestore          Go API (Cloud Run)  │
+│   (direct)         (onSnapshot)       (ConnectRPC)        │
+│                                            │               │
+└────────────────────────────────────────────┼───────────────┘
+                                             │
+                    ┌────────────────────────┬┴──────────────┐
+                    ▼                        ▼               ▼
+         ┌──────────────────┐    ┌──────────────┐  ┌─────────────────┐
+         │  GCP Services    │    │ Cloud SQL    │  │ Sirsi Sign      │
+         │                  │    │ (PII Vault)  │  │ (sign.sirsi.ai) │
+         │  Cloud Storage   │    │ PostgreSQL   │  │                 │
+         │  Cloud KMS       │    │ AES-256-GCM  │  │ E-Signatures    │
+         │  Vertex AI       │    │ Per-estate   │  │ Payments        │
+         │  Cloud Tasks     │    │ AAD binding  │  │ (Stripe)        │
+         │  Cloud Scheduler │    └──────────────┘  └─────────────────┘
+         └──────────────────┘
+
+Firestore Triggers (Firebase Functions — Node.js 20):
+  └── autoMatchInvitation: grants estate access when invited users register
 ```
+
+> **Note (April 2026):** Mobile (Expo) and Desktop (Tauri) removed from Tier 1 scope.
+> Will be rebuilt as add-on when web product is stable and client approves.
 
 ---
 
@@ -458,28 +454,37 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 
 ## 10. Acceptance Criteria (Tier 1 Complete)
 
-- [ ] User can register and log in with MFA
-- [ ] User can create an estate and add assets
-- [ ] User can upload documents to encrypted vault
-- [ ] User can record/upload video memorials (YouTube)
-- [ ] User can create photo galleries (Google Photos)
-- [ ] User can designate executors and heirs
+### Implemented (v0.10.0)
+- [x] User can register and log in with MFA (TOTP)
+- [x] User can create an estate and add assets
+- [x] User can upload documents to encrypted vault (signed URLs + Cloud KMS)
+- [x] User can embed YouTube video memorials + upload photos
+- [x] User can designate executors and heirs (invitation system)
+- [x] PII encrypted at rest (Cloud SQL + AES-256-GCM + per-estate AAD)
+- [x] All UI conforms to Royal Neo-Deco (Branding & Identity)
+- [x] 3-tier identity verification (password → MFA → attestation)
+- [x] CI/CD pipeline live (GitHub Actions + Cloud Build)
+- [x] Production deployed at finalwishes-prod.web.app
+
+### Remaining (Tier 1 completion)
+- [ ] The Shepherd provides AI-guided completion suggestions (Genkit)
 - [ ] User can store credentials in digital lockbox
 - [ ] User can create ethical wills and final directives (PDF)
-- [ ] User can schedule time capsule message delivery
-- [ ] The Shepherd provides AI-guided completion suggestions
-- [ ] Push notifications work on iOS and Android
-- [ ] Desktop app launches and mirrors web functionality
-- [ ] All UI conforms to Branding & Identity standards
-- [ ] E2E tests pass for all critical flows
-- [ ] Production deployed at finalwishes.app
-- [ ] iOS and Android apps submitted to stores
+- [ ] User can schedule time capsule message delivery (Cloud Tasks)
+- [ ] E2E tests pass for all critical flows (Playwright)
+- [ ] Frontend test coverage > 80% (Vitest)
+- [ ] Staging environment operational
 - [ ] SOC 2 evidence collected
+- [ ] DNS switchover to finalwishes.app
 - [ ] 99.9% uptime during launch week
+
+### Deferred (not Tier 1)
+- [ ] iOS and Android apps (requires separate Tier 1 add-on)
+- [ ] Desktop app (deferred indefinitely)
+- [ ] Google Photos API integration (using direct Cloud Storage uploads instead)
 
 ---
 
-**Signed,**
-**Antigravity (The Agent)**
-**Canon Established: March 18, 2026**
-**Source of Truth: MSA-2025-111-FW + SOW-2025-001 (Feb 17 Pivot)**
+**Updated:** April 7, 2026 (Claude — stack consolidation)
+**Canon Established:** March 18, 2026 (Antigravity)
+**Source of Truth:** MSA-2025-111-FW + SOW-2025-001 (Feb 17 Pivot)

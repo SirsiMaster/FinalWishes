@@ -1,5 +1,5 @@
 # ADR-016: Stack Convergence — One Unified Tech Stack
-**Status:** PROPOSED  
+**Status:** Superseded by ADR-006 + stack consolidation (April 7, 2026). Legacy HTML/JS codebase has been migrated to React 19 + Vite + TanStack Router.  
 **Date:** 2026-02-10  
 **Author:** Antigravity (Agent)  
 **Deciders:** Cylton Collymore  

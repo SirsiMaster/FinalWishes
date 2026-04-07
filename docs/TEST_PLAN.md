@@ -1,38 +1,65 @@
 # Test Plan
-## Legacy - The Estate Operating System
-**Version:** 1.0.0
-**Date:** November 26, 2025
+## FinalWishes — The Estate Operating System
+**Version:** 2.0.0
+**Date:** April 7, 2026
 
 ---
 
 ## 1. Overview
 
-This document defines the testing strategy for the Legacy platform MVP across all platforms (Web, iOS, Android) and backend services.
+Testing strategy for FinalWishes across web (React 19/Vite) and backend (Go/Cloud Run).
 
 ### 1.1 Testing Objectives
 - Ensure all functional requirements are met
-- Validate security and data protection
+- Validate security and data protection (PII vault, encryption, auth)
 - Verify performance under expected load
 - Confirm accessibility compliance (WCAG 2.1 AA)
-- Validate cross-platform consistency
 
 ### 1.2 Testing Scope
 
 | In Scope | Out of Scope |
 |----------|--------------|
-| Unit testing (all components) | Load testing beyond 10K users |
-| Integration testing | Stress testing |
-| End-to-end testing | Chaos engineering |
-| Security testing | Internationalization |
-| Performance testing | Third-party system testing |
-| Accessibility testing | |
-| Mobile device testing | |
+| Unit testing (Go + React) | Load testing beyond 10K users |
+| Integration testing (API + Firestore) | Stress testing |
+| End-to-end testing (Playwright) | Mobile testing (deferred) |
+| Security testing (OWASP Top 10) | Desktop testing (deferred) |
+| Accessibility testing | Third-party system testing |
 
 ---
 
-## 2. Testing Strategy
+## 2. Quality Gates (from QA Plan)
 
-### 2.1 Testing Pyramid
+### 2.1 Code Quality
+- All PRs require CI to pass (tests, lint, build)
+- Code coverage cannot decrease
+- Go: `go vet` + `gofmt` + race detector must pass
+- Web: ESLint must pass (zero errors)
+
+### 2.2 Definition of Done
+- Code complete and merged
+- Unit tests written for new logic
+- Integration tests pass
+- Code reviewed
+- Documentation updated (per Rule 30)
+- Verified on staging (when available)
+
+### 2.3 Release Criteria
+- Zero P0/P1 bugs
+- All E2E tests passing
+- Security scan clear
+- Accessibility audit passed
+
+### 2.4 Testing Responsibilities
+| Activity | Dev | QA |
+|----------|-----|-----|
+| Unit tests | Owner | Review |
+| Integration tests | Owner | Support |
+| E2E tests | Support | Owner |
+| Security testing | Support | Owner |
+
+---
+
+## 3. Testing Pyramid
 
 ```
               ┌───────────────┐
@@ -47,151 +74,101 @@ This document defines the testing strategy for the Legacy platform MVP across al
      /───────────────────────────────\
 ```
 
-### 2.2 Test Types
+---
 
-| Type | Coverage Target | Tools |
-|------|-----------------|-------|
-| Unit Tests | 80%+ | Go testing, Jest, Flutter test |
-| Integration Tests | Critical paths | Go testing, Supertest |
-| E2E Tests | Core user journeys | Playwright, Detox |
-| Security Tests | OWASP Top 10 | OWASP ZAP, SonarQube |
-| Performance Tests | P95 < 200ms | k6, Lighthouse |
-| Accessibility Tests | WCAG 2.1 AA | axe-core, manual audit |
+## 4. Unit Testing
+
+### 4.1 Backend (Go)
+- **Framework:** Go's built-in `testing` package
+- **Coverage Tool:** `go test -cover -race`
+- **Target:** 80%+ code coverage
+- **Current:** 32 tests across 5 packages (auth, vault, opensign, estate, main)
+- **Key Areas:**
+  - Auth middleware (token verification, context injection)
+  - PII Vault handlers (store/retrieve, validation, masking)
+  - Envelope encryption (KMS integration)
+  - OpenSign proxy (upstream error handling)
+  - ConnectRPC service methods
+
+### 4.2 Web Frontend (React 19 + Vite)
+- **Framework:** Vitest + React Testing Library
+- **Coverage Tool:** Vitest coverage (v8 provider)
+- **Target:** 80%+ code coverage
+- **Current:** 0 tests (gap — highest priority)
+- **Key Areas:**
+  - Auth flow (login, MFA enrollment, attestation)
+  - Firestore hooks (useDocument, useCollection)
+  - Vault operations (upload, download, preview)
+  - Form validation (estate creation, beneficiary invite)
+  - Route guards (AuthGuard, IdentityGate)
 
 ---
 
-## 3. Unit Testing
+## 5. Integration Testing
 
-### 3.1 Backend (Go)
-- **Framework:** Go's built-in testing package
-- **Coverage Tool:** go test -cover
-- **Target:** 80%+ code coverage
-- **Key Areas:**
-  - Domain logic (estate, asset, document)
-  - Validation functions
-  - Encryption/decryption utilities
-  - Repository layer mocking
+### 5.1 API Integration Tests
+- **Tool:** Go `httptest` + real Firestore emulator
+- **Database:** Firestore emulator + test PostgreSQL
 
-### 3.2 Web Frontend (Next.js)
-- **Framework:** Jest + React Testing Library
-- **Coverage Tool:** Jest coverage
-- **Target:** 80%+ code coverage
-- **Key Areas:**
-  - Component rendering
-  - Hook behavior
-  - Form validation
-  - State management
-
-### 3.3 Mobile (Flutter)
-- **Framework:** flutter_test
-- **Coverage Tool:** flutter test --coverage
-- **Target:** 80%+ code coverage
-- **Key Areas:**
-  - Widget tests
-  - BLoC state tests
-  - Repository tests
-
----
-
-## 4. Integration Testing
-
-### 4.1 API Integration Tests
-- **Tool:** Go testing with httptest
-- **Coverage:** All API endpoints
-- **Database:** Test database with migrations
-
-### 4.2 Key Integration Scenarios
+### 5.2 Key Integration Scenarios
 
 | Scenario | Components | Priority |
 |----------|------------|----------|
-| User registration flow | API → Auth0 → DB | P0 |
-| Document upload | API → S3 → Lambda → DB | P0 |
-| Estate creation | API → DB → Cache | P0 |
-| Payment processing | API → Stripe → DB | P0 |
-| Notification generation | API → Templates → PDF | P1 |
+| User registration flow | Web → Firebase Auth → Firestore | P0 |
+| Document upload | Web → Go API (signed URL) → Cloud Storage → Firestore | P0 |
+| Estate creation | Web → Firestore → Security Rules | P0 |
+| PII vault store/retrieve | Web → Go API → Cloud SQL (encrypted) → Cloud KMS | P0 |
+| Invitation auto-match | Firestore trigger → estate_users creation | P1 |
+| OpenSign envelope | Go API → sign.sirsi.ai → Firestore | P1 |
 
 ---
 
-## 5. End-to-End Testing
+## 6. End-to-End Testing
 
-### 5.1 Web E2E Tests
-- **Framework:** Playwright
+### 6.1 Framework
+- **Tool:** Playwright
 - **Browsers:** Chrome, Firefox, Safari
 - **Viewports:** Desktop (1920x1080), Tablet (768x1024), Mobile (375x812)
 
-### 5.2 Critical User Journeys
+### 6.2 Critical User Journeys
 
 | Journey | Steps | Priority |
 |---------|-------|----------|
-| New user onboarding | Register → Verify email → Create profile → Create estate | P0 |
-| Asset management | Add asset → Attach document → Assign to heir | P0 |
-| Document vault | Upload → Organize → Search → Download | P0 |
-| Executor flow | Accept invitation → Confirm death → Generate letters | P0 |
-| Payment flow | Select plan → Checkout → Complete | P0 |
-
-### 5.3 Mobile E2E Tests
-- **Framework:** Detox (React Native) or integration_test (Flutter)
-- **Devices:** iOS Simulator, Android Emulator
-- **Key Scenarios:** Same as web + biometric auth, camera capture
+| New user onboarding | Register → Verify email → Create estate → Add assets | P0 |
+| Document vault | Upload → Categorize → Preview → Download → Archive | P0 |
+| Beneficiary management | Invite heir → Accept → Verify identity → View estate | P0 |
+| Memoir creation | Add YouTube video → Upload photos → Cinema viewer | P1 |
+| PII vault | Enter SSN → Encrypted storage → Masked retrieval | P0 |
+| Estate settlement | Report death → Executor confirmation → Settlement mode | P1 |
 
 ---
 
-## 6. Security Testing
+## 7. Security Testing
 
-### 6.1 Automated Security Scans
-- **SAST:** SonarQube in CI pipeline
-- **DAST:** OWASP ZAP scans weekly
-- **Dependency:** Dependabot, Snyk
+### 7.1 Automated Scans
+- **SAST:** `go vet`, ESLint security rules
+- **Dependency:** `npm audit`, Dependabot
+- **Firestore Rules:** Unit tests via Firebase emulator
 
-### 6.2 Manual Security Tests
-
-| Test | Frequency | Timing |
-|------|-----------|--------|
-| Penetration testing | Once | Week 11 |
-| Code review (security) | Ongoing | Per PR |
-| Access control audit | Once | Week 10 |
-
-### 6.3 Security Test Cases
-- Authentication bypass attempts
-- SQL injection testing
-- XSS vulnerability testing
-- CSRF protection verification
-- Authorization boundary testing
-- Session management testing
+### 7.2 Security Test Cases
+- Firebase Auth token forgery/bypass
+- Firestore security rules enforcement (cross-estate access)
+- PII vault authorization (user A cannot read user B's PII)
+- Signed URL expiry and scope validation
+- Cloud KMS AAD binding (estate A DEK cannot decrypt estate B data)
+- XSS in rich text (TipTap obituary editor)
+- CORS policy enforcement
 
 ---
 
-## 7. Performance Testing
+## 8. Performance Criteria
 
-### 7.1 Load Testing
-- **Tool:** k6
-- **Target Load:** 1,000 concurrent users
-- **Peak Load:** 10,000 concurrent users
-- **Duration:** 30 minutes sustained
-
-### 7.2 Performance Criteria
-
-| Metric | Target | Measurement |
-|--------|--------|-------------|
+| Metric | Target | Tool |
+|--------|--------|------|
 | API P95 latency | < 200ms | k6 |
 | Page load (LCP) | < 2.5s | Lighthouse |
 | First Input Delay | < 100ms | Web Vitals |
-| Mobile startup | < 3s | Manual |
-
----
-
-## 8. Accessibility Testing
-
-### 8.1 Automated Testing
-- **Tool:** axe-core integrated with Playwright
-- **Standard:** WCAG 2.1 AA
-- **Coverage:** All pages
-
-### 8.2 Manual Testing
-- Screen reader testing (VoiceOver, NVDA)
-- Keyboard navigation
-- Color contrast verification
-- Focus management
+| Vault build size | < 1.2MB gzipped | Vite build output |
 
 ---
 
@@ -199,41 +176,20 @@ This document defines the testing strategy for the Legacy platform MVP across al
 
 | Environment | Purpose | Data |
 |-------------|---------|------|
-| Local | Unit/integration tests | Mock data |
-| Staging | E2E, QA testing | Seeded test data |
-| Production | Smoke tests | Live data (read-only tests) |
+| Local | Unit/integration tests | Mock data, Firestore emulator |
+| Staging | E2E, QA testing | Seeded test data (TBD — no staging yet) |
+| Production | Smoke tests only | Live data (read-only) |
 
 ---
 
-## 10. Test Schedule
-
-| Phase | Testing Focus | Weeks |
-|-------|---------------|-------|
-| Foundation | Unit tests, API integration | 1-4 |
-| Core Features | Integration, basic E2E | 5-8 |
-| Mobile | Mobile unit/integration, E2E | 9-10 |
-| Polish | Full E2E, security, performance, a11y | 11-12 |
-| Launch | Regression, smoke tests | 13 |
-
----
-
-## 11. Defect Management
-
-### 11.1 Severity Classification
+## 10. Defect Severity
 
 | Severity | Description | Response |
 |----------|-------------|----------|
-| P0 - Critical | System down, data loss | Immediate fix |
+| P0 - Critical | System down, data loss, PII exposure | Immediate fix |
 | P1 - High | Major feature broken | Fix same sprint |
 | P2 - Medium | Feature partially broken | Fix next sprint |
 | P3 - Low | Minor issue, workaround exists | Backlog |
-
-### 11.2 Exit Criteria
-- Zero P0 bugs open
-- Zero P1 bugs open
-- 80%+ code coverage maintained
-- All E2E tests passing
-- Security scan clear
 
 ---
 
@@ -242,3 +198,4 @@ This document defines the testing strategy for the Legacy platform MVP across al
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft |
+| 2.0.0 | 2026-04-07 | Claude | Merged QA_PLAN.md, updated stack (React 19/Vite, Go/Chi, no Flutter/Next.js), added current test counts |

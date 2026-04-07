@@ -28,7 +28,7 @@ Each ADR follows this structure:
 | [ADR-006](ADR-006-TANSTACK-MIGRATION.md) | TanStack Migration — Replacing Next.js | Accepted | 2026-01-20 | — |
 | [ADR-007](ADR-007-REPOSITORY-UNIFICATION.md) | Sirsi Repository Unification (Monorepo) | Accepted | 2026-01-20 | — |
 | [ADR-008](ADR-008-INFRASTRUCTURE-CONTROL-PLANE.md) | Infrastructure Control Plane (The Nexus Bridge) | Proposed | 2026-01-17 | — |
-| [ADR-009](ADR-009-GRPC-ARCHITECTURE.md) | Transition to gRPC and Protocol Buffers | Proposed | 2026-01-17 | — |
+| [ADR-009](ADR-009-GRPC-ARCHITECTURE.md) | Transition to gRPC and Protocol Buffers | **Superseded** | 2026-01-17 | ADR-004 |
 | [ADR-010](ADR-010-OFFERINGS-ENGINE-INTEGRATION.md) | Universal Offerings Engine Integration | Accepted | 2026-01-18 | — |
 | [ADR-011](ADR-011-INFRASTRUCTURE-LICENSE-MODEL.md) | Infrastructure License & Services Model | Accepted | 2026-01-21 | — |
 | [ADR-012](ADR-012-DYNAMIC-FINANCIAL-CALCULATION.md) | Dynamic Financial Calculation & Multipliers | Accepted | 2026-01-22 | — |
@@ -36,8 +36,8 @@ Each ADR follows this structure:
 | [ADR-014](ADR-014-BIPARTITE-CONTRACT-EXECUTION.md) | Bipartite Contract Execution Protocol | Accepted | 2026-02-07 | — |
 | [ADR-015](ADR-015-OPENSIGN-CONVERGENCE.md) | OpenSign Convergence — Dual-Client Architecture | Accepted | 2026-02-07 | — |
 | [ADR-016](ADR-016-ASYNC-PAYMENT-SETTLEMENT-AND-TELEMETRY.md) | Async Payment Settlement & Live Telemetry Stream | Accepted | 2026-02-10 | — |
-| [ADR-017](ADR-017-STACK-CONVERGENCE.md) | Stack Convergence — One Unified Tech Stack | Accepted | 2026-02-10 | — |
-| [ADR-018](ADR-018-GOVERNANCE-CONSOLE.md) | Sirsi Governance Console & Dynamic Catalog Store | Proposed | 2026-02-13 | — |
+| [ADR-017](ADR-017-STACK-CONVERGENCE.md) | Stack Convergence — One Unified Tech Stack | **Superseded** | 2026-02-10 | ADR-006 |
+| [ADR-018](ADR-018-GOVERNANCE-CONSOLE.md) | Sirsi Governance Console & Dynamic Catalog Store | **Superseded** | 2026-02-13 | ADR-008 |
 | [ADR-031](ADR-031-SECURE-ENCLAVE-DASHBOARD-STANDARD.md) | Secure Enclave Dashboard Standard | Accepted | 2026-03-18 | — |
 | [ADR-032](ADR-032-UNIVERSAL-ENCLAVE-IMPLEMENTATION.md) | Universal Enclave Implementation (Web/Mobile/Desktop) | Accepted | 2026-03-18 | — |
 | [ADR-033](ADR-033-DESIGN-SYSTEM-ACCELERATION.md) | Design System Acceleration & Cross-Portfolio Reuse | Accepted | 2026-03-18 | — |
@@ -110,4 +110,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-03-20*
+*Last updated: 2026-04-07*

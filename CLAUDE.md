@@ -1,7 +1,7 @@
 # CLAUDE.md
 **Operational Directive for Claude Agent (FinalWishes)**
-**Version:** 1.2.0 (Traceability Hardened)
-**Date:** March 19, 2026
+**Version:** 2.0.0 (Stack Consolidation)
+**Date:** April 7, 2026
 
 ---
 
@@ -90,15 +90,19 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 
 | Layer | Technology | Decision |
 | :--- | :--- | :--- |
-| **Web** | **React 18 + Vite** | TailwindCSS, Glassmorphism, Zustand |
-| **Mobile** | **React Native + Expo** | iOS/Android, shared logic with Web |
-| **Backend** | **Go (Golang)** | Cloud Run, **gRPC + Protobuf** |
-| **Database** | **Cloud SQL + Firestore** | Hybrid: SQL for PII/Vault, NoSQL for real-time |
-| **Auth** | **Firebase Auth** | MFA (TOTP) Required |
-| **Security** | **SOC 2 + KMS** | Software Keys, AES-256 |
+| **Web** | **React 19 + Vite 8** | TanStack Router (file-based), TailwindCSS v4, shadcn/ui, Glassmorphism |
+| **Backend** | **Go 1.24 + Chi + ConnectRPC** | Cloud Run, gRPC + Protobuf, single HTTP API |
+| **Database** | **Cloud SQL (PostgreSQL 15) + Firestore** | Hybrid: SQL for PII/Vault (encrypted), NoSQL for real-time |
+| **Auth** | **Firebase Auth** | MFA (TOTP) Required, 3-tier identity verification |
+| **Security** | **SOC 2 + Cloud KMS** | AES-256-GCM envelope encryption, per-estate AAD |
 | **AI** | **Gemini (Vertex AI)** | The "Guidance Engine" |
-| **E-Sign** | **Sirsi Sign** (consumed as service) | Via gRPC/API from SirsiNexusApp |
-| **Payments** | **Sirsi Sign → Stripe** | Payment rails via Sirsi Sign component |
+| **E-Sign** | **Sirsi Sign** (sign.sirsi.ai) | Go API proxies to OpenSign via `/api/v1/opensign/*` |
+| **Payments** | **Stripe** | Checkout flow via Go API |
+| **Hosting** | **Firebase Hosting** | CDN for SPA, SPA rewrites |
+| **Triggers** | **Firebase Functions (Node.js 20)** | Firestore triggers only (e.g., auto-match invitations). No HTTP endpoints. |
+
+> **Removed (April 2026):** Mobile (Expo) and Desktop (Tauri) scaffolds deleted — premature. Will rebuild when web is stable.
+> **Consolidated:** All HTTP API endpoints live in the Go API on Cloud Run. Firebase Functions handle only event-driven Firestore triggers.
 
 ## 4. Design System: "Royal Neo-Deco"
 *   **Aesthetic**: "Opulent, Permanent, Guardian-Like"
@@ -116,10 +120,11 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 > ⚠️ **FIREWALL**: Royal Neo-Deco is EXCLUSIVE to FinalWishes. Sirsi brand uses **Emerald + Gold** (Swiss Neo-Deco). Never apply Emerald as primary accent here — that's the Sirsi brand, not FinalWishes.
 
 ## 5. Architecture Rules
+*   **Single Backend**: All HTTP API endpoints live in the Go API on Cloud Run (`api/`). Firebase Functions handle only Firestore triggers. No Express, no dual backends.
 *   **The Vault Concept**: All sensitive documents are stored in Cloud Storage with metadata in Cloud SQL. We do not just "store files"; we "maintain legal evidence".
-*   **Defense in Depth**: Security is not an afterthought. Every API endpoint must have AuthZ checks. PII is always encrypted at rest.
-*   **Sirsi Sign Integration**: FinalWishes consumes Sirsi Sign (from SirsiNexusApp) as a service for contract signing, payment processing, and catalog management. FinalWishes does NOT contain its own signing or payment infrastructure.
-*   **UCS Components**: Shared UI components are imported from the Sirsi UCS (`SirsiNexusApp/packages/sirsi-ui/`). FinalWishes may contribute components back to UCS.
+*   **Defense in Depth**: Security is not an afterthought. Every API endpoint must have AuthZ checks. PII is always encrypted at rest via Cloud KMS envelope encryption.
+*   **Sirsi Sign Integration**: The Go API proxies to OpenSign (sign.sirsi.ai) via `/api/v1/opensign/*` for contract signing.
+*   **No Dead Scaffolds**: Do not create empty scaffold directories for future platforms (mobile, desktop). Build them when the web product is stable and the platform is ready for development.
 
 ## 6. Canonical Documents (FinalWishes)
 These documents are the source of truth for this repo:
@@ -129,43 +134,44 @@ These documents are the source of truth for this repo:
 2.  `proposals/SOW.md`
 3.  `proposals/COST_PROPOSAL.md`
 
-### 📋 Governance (2)
+### 📋 Governance & Planning (3)
 4.  `CLAUDE.md` (this file)
 5.  `docs/PROJECT_SCOPE.md`
+6.  `docs/CANONICAL_DEVELOPMENT_PLAN.md` — The dev plan/blueprint (contract tiers, phases, acceptance criteria)
 
 ### 🏗 Architecture & Design (4)
-6.  `docs/ARCHITECTURE_DESIGN.md`
-7.  `docs/TECHNICAL_DESIGN.md`
-8.  `docs/DATA_MODEL.md`
-9.  `docs/API_SPECIFICATION.md`
+7.  `docs/ARCHITECTURE_DESIGN.md`
+8.  `docs/TECHNICAL_DESIGN.md`
+9.  `docs/DATA_MODEL.md`
+10. `docs/API_SPECIFICATION.md`
 
-### ⚖️ Compliance & Security (3)
-10. `docs/SECURITY_COMPLIANCE.md`
-11. `docs/RISK_MANAGEMENT.md`
-12. `docs/QA_PLAN.md`
+### ⚖️ Compliance & Security (2)
+11. `docs/SECURITY_COMPLIANCE.md`
+12. `docs/RISK_MANAGEMENT.md`
 
 ### 🔬 Requirements (3)
 13. `docs/REQUIREMENTS_SPECIFICATION.md`
 14. `docs/USER_STORIES.md`
 15. `docs/MARKET_JUSTIFICATION.md`
 
-### 🚀 Operations (5)
+### 🚀 Operations (4)
 16. `docs/DEPLOYMENT_GUIDE.md`
 17. `docs/MAINTENANCE_SUPPORT.md`
 18. `docs/CHANGE_MANAGEMENT.md`
-19. `docs/TEST_PLAN.md`
-20. `docs/TRAINING_DOCUMENTATION.md`
+19. `docs/TEST_PLAN.md` (merged from QA_PLAN.md)
 
-### 🧠 Knowledge (5)
-21. `docs/ADR-INDEX.md`
-22. `docs/ADR-TEMPLATE.md`
-23. `docs/POST_IMPLEMENTATION_REVIEW.md`
-24. `docs/IDENTITY-WORKFLOW-DIAGRAMS.md`
-25. `CHANGELOG.md`
+### 🧠 Knowledge (4)
+20. `docs/ADR-INDEX.md`
+21. `docs/ADR-TEMPLATE.md`
+22. `docs/IDENTITY-WORKFLOW-DIAGRAMS.md`
+23. `CHANGELOG.md`
 
-### 📖 Feature Documentation
-26. `docs/user-guides/` — User-facing How-To guides (per Rule 30)
-27. `web/src/**/README.md` — Developer-facing READMEs (per Rule 30)
+### 📖 Session & Feature Documentation
+24. `docs/CONTINUATION-PROMPT.md` — Session baseline for fresh context windows
+25. `docs/user-guides/` — User-facing How-To guides (per Rule 30)
+26. `web/src/**/README.md` — Developer-facing READMEs (per Rule 30)
+
+> **Removed (April 2026):** QA_PLAN.md (merged into TEST_PLAN.md), TRAINING_DOCUMENTATION.md (stub), COMMUNICATION_PLAN.md (aspirational), PORTFOLIO_CANONICAL_STANDARD.md (superseded by SIRSI_PORTFOLIO_STANDARD.md). PROJECT_MANAGEMENT.md and POST_IMPLEMENTATION_REVIEW.md archived to `docs/archived/`.
 
 ## 7. Interaction Protocol
 *   **User**: "I want X."
@@ -179,13 +185,13 @@ These documents are the source of truth for this repo:
 *   **Browser Profile (Rule 28)**: ALL browser subagent work MUST execute in the **`ccollymo@alumni.chicagobooth.edu`** Chrome profile. No exceptions. Every browser_subagent task prompt MUST include instructions to use this profile. See `.agent/workflows/browser-testing.md` for full protocol.
 
 ## 9. Shared Services Map
-| Service | Provider | Repo |
+| Service | Provider | Location |
 | :--- | :--- | :--- |
-| E-Signing | Sirsi Sign (OpenSign) | SirsiNexusApp |
-| Payments | Sirsi Sign (Stripe) | SirsiNexusApp |
-| UI Components | Sirsi UCS | SirsiNexusApp/packages/sirsi-ui |
-| Auth | Firebase Auth | Configured per-repo |
-| Email | SendGrid | Configured per-repo |
+| E-Signing | Sirsi Sign (OpenSign) | sign.sirsi.ai — proxied via Go API `/api/v1/opensign/*` |
+| Payments | Stripe | Go API checkout integration |
+| Auth | Firebase Auth | Configured in this repo |
+| Email | SendGrid | Firebase Extension (Firestore trigger on `mail` collection) |
+| PII Encryption | Cloud KMS | `finalwishes-keyring/pii-vault-key` (us-central1) |
 
 ## 10. Test Credentials
 *   **Name**: Cylton Collymore

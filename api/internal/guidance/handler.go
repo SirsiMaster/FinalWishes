@@ -17,12 +17,14 @@ import (
 
 // Handler serves guidance/scoring endpoints.
 type Handler struct {
-	fs *firestore.Client
+	fs     *firestore.Client
+	genkit *GenkitAdvisor
 }
 
-// NewHandler creates a guidance handler.
-func NewHandler(fs *firestore.Client) *Handler {
-	return &Handler{fs: fs}
+// NewHandler creates a guidance handler with optional Genkit AI advisor.
+// If genkit is nil, the handler falls back to deterministic insights.
+func NewHandler(fs *firestore.Client, genkit *GenkitAdvisor) *Handler {
+	return &Handler{fs: fs, genkit: genkit}
 }
 
 // Score represents the estate completion assessment.
@@ -81,6 +83,22 @@ func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 		log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to compute guidance score")
 		writeError(w, http.StatusInternalServerError, "Failed to compute score")
 		return
+	}
+
+	// Enhance insight with Genkit AI if available
+	if h.genkit != nil {
+		// Fetch estate name for personalized insight
+		estateName := estateID
+		estateSnap, err := h.fs.Collection("estates").Doc(estateID).Get(ctx)
+		if err == nil {
+			if name, ok := estateSnap.Data()["name"].(string); ok && name != "" {
+				estateName = name
+			}
+		}
+
+		if aiInsight := h.genkit.GenerateInsight(ctx, score, estateName); aiInsight != "" {
+			score.Insight = aiInsight
+		}
 	}
 
 	writeJSON(w, http.StatusOK, score)
@@ -204,6 +222,82 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		Insight:           insight,
 		LastCalculated:    time.Now(),
 	}, nil
+}
+
+// HandleAssistObituary accepts a prompt and returns an AI-drafted obituary.
+// POST /api/v1/guidance/assist-obituary
+func (h *Handler) HandleAssistObituary(w http.ResponseWriter, r *http.Request) {
+	if h.genkit == nil {
+		writeError(w, http.StatusServiceUnavailable, "AI guidance is not available")
+		return
+	}
+
+	var req struct {
+		Prompt string `json:"prompt"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+	if req.Prompt == "" {
+		writeError(w, http.StatusBadRequest, "prompt is required")
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+	defer cancel()
+
+	text := h.genkit.GenerateObituary(ctx, req.Prompt)
+	if text == "" {
+		writeError(w, http.StatusInternalServerError, "Failed to generate obituary draft")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]string{"text": text})
+}
+
+// HandleSuggestions returns AI-generated action suggestions for an estate.
+// GET /api/v1/guidance/suggestions?estate_id=xxx
+func (h *Handler) HandleSuggestions(w http.ResponseWriter, r *http.Request) {
+	estateID := r.URL.Query().Get("estate_id")
+	if estateID == "" {
+		writeError(w, http.StatusBadRequest, "estate_id is required")
+		return
+	}
+
+	// Verify access
+	userID, err := auth.RequireUserID(r.Context())
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+	defer cancel()
+
+	euDocID := userID + "_" + estateID
+	euSnap, err := h.fs.Collection("estate_users").Doc(euDocID).Get(ctx)
+	if err != nil || !euSnap.Exists() {
+		log.Warn().Str("user_id", userID).Str("estate_id", estateID).Msg("Suggestions denied — no access")
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
+
+	score, err := h.computeScore(ctx, estateID)
+	if err != nil {
+		log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to compute score for suggestions")
+		writeError(w, http.StatusInternalServerError, "Failed to compute suggestions")
+		return
+	}
+
+	var suggestions []string
+	if h.genkit != nil {
+		suggestions = h.genkit.SuggestNextActions(ctx, score)
+	} else {
+		suggestions = fallbackSuggestions(score)
+	}
+
+	writeJSON(w, http.StatusOK, map[string]interface{}{"suggestions": suggestions})
 }
 
 func generateInsight(percent, completed, total int, counts map[string]int, next *Step) string {

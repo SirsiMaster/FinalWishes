@@ -17,14 +17,20 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
+	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
+
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
+	"github.com/sirsi-technologies/finalwishes-api/internal/ratelimit"
+	"github.com/sirsi-technologies/finalwishes-api/internal/capsules"
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guidance"
+	"github.com/sirsi-technologies/finalwishes-api/internal/lockbox"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
 	"github.com/sirsi-technologies/finalwishes-api/internal/payments"
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/vault"
+	ythandler "github.com/sirsi-technologies/finalwishes-api/internal/youtube"
 )
 
 func main() {
@@ -52,7 +58,13 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(middleware.Timeout(6 * time.Minute)) // Extended for video uploads (YouTube memoir)
+
+	// Rate limiting — application-level defense since Cloud Armor requires a Global
+	// External Application Load Balancer (not available on Cloud Run direct).
+	// 100 requests per 60s per IP, 10-minute ban on exceed.
+	limiter := ratelimit.NewLimiter(100, 60*time.Second, 10*time.Minute)
+	r.Use(ratelimit.Middleware(limiter))
 
 	// CORS configuration — restrict to known origins in production
 	allowedOrigins := []string{"http://localhost:3000", "http://localhost:5173"}
@@ -103,14 +115,29 @@ func main() {
 		log.Info().Str("project", projectID).Msg("Storage client initialized")
 	}
 
-	// --- PII Vault Initialization (ADR-037) ---
+	// --- Cloud Tasks client (capsule delivery) ---
+	var tasksClient *cloudtasks.Client
+	if projectID != "" {
+		var err error
+		tasksClient, err = cloudtasks.NewClient(ctx)
+		if err != nil {
+			log.Warn().Err(err).Msg("Cloud Tasks client initialization failed — capsule scheduling disabled")
+		} else {
+			defer tasksClient.Close()
+			log.Info().Msg("Cloud Tasks client initialized")
+		}
+	}
+
+	// --- Cloud KMS + PII Vault Initialization (ADR-037) ---
 	var vaultHandler *vault.Handler
+	var vaultCrypto *crypto.VaultCrypto
 
 	if projectID != "" {
-		// Initialize Cloud KMS crypto service
-		vaultCrypto, err := crypto.NewVaultCrypto(ctx, projectID)
+		// Initialize Cloud KMS crypto service (shared by PII Vault and Lockbox)
+		var err error
+		vaultCrypto, err = crypto.NewVaultCrypto(ctx, projectID)
 		if err != nil {
-			log.Warn().Err(err).Msg("Cloud KMS initialization failed — vault disabled")
+			log.Warn().Err(err).Msg("Cloud KMS initialization failed — vault and lockbox disabled")
 		} else {
 			defer vaultCrypto.Close()
 
@@ -195,6 +222,19 @@ func main() {
 		log.Info().Msg("PII Vault API routes registered at /api/v1/vault/*")
 	}
 
+	// Digital Lockbox routes (encrypted credentials via Cloud KMS — Firestore-backed)
+	if fs != nil && vaultCrypto != nil {
+		lockboxHandler := lockbox.NewHandler(fs, vaultCrypto)
+		r.Route("/api/v1/lockbox", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/store-credentials", lockboxHandler.HandleStoreCredentials)
+			r.Post("/retrieve-credentials", lockboxHandler.HandleRetrieveCredentials)
+		})
+		log.Info().Msg("Digital Lockbox API routes registered at /api/v1/lockbox/*")
+	} else if fs != nil && vaultCrypto == nil {
+		log.Warn().Msg("Cloud KMS unavailable — lockbox credential encryption endpoints disabled")
+	}
+
 	// Document Vault REST endpoints (download URLs — not in proto, pure REST)
 	if sc != nil {
 		r.Route("/api/v1/documents", func(r chi.Router) {
@@ -217,14 +257,51 @@ func main() {
 		r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
 	})
 
-	// Guidance routes (The Shepherd — estate completion scoring)
+	// Guidance routes (The Shepherd v2 — estate completion scoring + Genkit AI)
 	if fs != nil {
-		guidanceHandler := guidance.NewHandler(fs)
+		genkitAdvisor := guidance.NewGenkitAdvisor(ctx)
+		guidanceHandler := guidance.NewHandler(fs, genkitAdvisor)
 		r.Route("/api/v1/guidance", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Get("/score", guidanceHandler.HandleGetScore)
+			r.Post("/assist-obituary", guidanceHandler.HandleAssistObituary)
+			r.Get("/suggestions", guidanceHandler.HandleSuggestions)
 		})
-		log.Info().Msg("Guidance API (The Shepherd) registered at /api/v1/guidance/*")
+		if genkitAdvisor != nil {
+			log.Info().Msg("Guidance API (The Shepherd v2) registered at /api/v1/guidance/* — Genkit AI active")
+		} else {
+			log.Info().Msg("Guidance API (The Shepherd v2) registered at /api/v1/guidance/* — deterministic mode (no Genkit)")
+		}
+	}
+
+	// YouTube memoir routes (video uploads via YouTube Data API v3)
+	if fs != nil {
+		youtubeHandler, err := ythandler.NewHandler(ctx, fs)
+		if err != nil {
+			log.Warn().Err(err).Msg("YouTube API initialization failed — memoir video endpoints disabled")
+		} else {
+			r.Route("/api/v1/memoirs", func(r chi.Router) {
+				r.Use(authMiddleware)
+				r.Post("/upload-video", youtubeHandler.HandleUploadVideo)
+				r.Get("/video-status", youtubeHandler.HandleGetVideoStatus)
+			})
+			log.Info().Msg("YouTube memoir API routes registered at /api/v1/memoirs/*")
+		}
+	}
+
+	// Time Capsule routes (Cloud Tasks deferred delivery)
+	if fs != nil && tasksClient != nil {
+		capsuleHandler := capsules.NewHandler(fs, tasksClient, projectID)
+		r.Route("/api/v1/capsules", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/schedule", capsuleHandler.HandleScheduleCapsule)
+			r.Post("/cancel", capsuleHandler.HandleCancelScheduled)
+		})
+		// Cloud Tasks callback — authenticated via OIDC token + Cloud Tasks headers, not Firebase Auth
+		r.Post("/api/v1/capsules/deliver", capsuleHandler.HandleDeliverCapsule)
+		log.Info().Msg("Time Capsule API routes registered at /api/v1/capsules/*")
+	} else if fs != nil && tasksClient == nil {
+		log.Warn().Msg("Cloud Tasks client unavailable — capsule scheduling endpoints disabled")
 	}
 
 	// Payment routes (Stripe checkout via Sirsi shared account)
@@ -246,8 +323,8 @@ func main() {
 	srv := &http.Server{
 		Addr:         ":" + port,
 		Handler:      r,
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  5 * time.Minute,  // Extended for video uploads
+		WriteTimeout: 6 * time.Minute,  // Extended for video uploads
 		IdleTimeout:  60 * time.Second,
 	}
 

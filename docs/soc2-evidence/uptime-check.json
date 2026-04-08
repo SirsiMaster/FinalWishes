@@ -1,0 +1,20 @@
+{
+  "checkerType": "STATIC_IP_CHECKERS",
+  "displayName": "FinalWishes API Health",
+  "httpCheck": {
+    "path": "/api/v1/payments/tiers",
+    "port": 443,
+    "requestMethod": "GET",
+    "useSsl": true
+  },
+  "monitoredResource": {
+    "labels": {
+      "host": "finalwishes-api-860699311615.us-central1.run.app",
+      "project_id": "finalwishes-prod"
+    },
+    "type": "uptime_url"
+  },
+  "name": "projects/finalwishes-prod/uptimeCheckConfigs/finalwishes-api-health-pfGJeNAJ7iY",
+  "period": "300s",
+  "timeout": "60s"
+}

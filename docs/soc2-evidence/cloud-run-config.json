@@ -1,0 +1,198 @@
+{
+  "apiVersion": "serving.knative.dev/v1",
+  "kind": "Service",
+  "metadata": {
+    "annotations": {
+      "run.googleapis.com/build-enable-automatic-updates": "false",
+      "run.googleapis.com/build-id": "26612af0-0993-4360-a5ca-596edbf252dc",
+      "run.googleapis.com/build-image-uri": "us-central1-docker.pkg.dev/finalwishes-prod/cloud-run-source-deploy/finalwishes-api",
+      "run.googleapis.com/build-name": "projects/860699311615/locations/us-central1/builds/26612af0-0993-4360-a5ca-596edbf252dc",
+      "run.googleapis.com/build-source-location": "gs://run-sources-finalwishes-prod-us-central1/services/finalwishes-api/1775664747.828994-e2d525f85c894d2ea2054d73c4eda0b2.zip#1775664759443513",
+      "run.googleapis.com/client-name": "gcloud",
+      "run.googleapis.com/client-version": "562.0.0",
+      "run.googleapis.com/ingress": "all",
+      "run.googleapis.com/ingress-status": "all",
+      "run.googleapis.com/maxScale": "20",
+      "run.googleapis.com/operation-id": "67f5794e-e53f-432d-977a-cf9b2041c52c",
+      "run.googleapis.com/urls": "[\"https://finalwishes-api-860699311615.us-central1.run.app\",\"https://finalwishes-api-qyjuke2xea-uc.a.run.app\"]",
+      "serving.knative.dev/creator": "sirsimaster@gmail.com",
+      "serving.knative.dev/lastModifier": "sirsimaster@gmail.com"
+    },
+    "creationTimestamp": "2026-04-08T16:10:11.562479Z",
+    "generation": 5,
+    "labels": {
+      "cloud.googleapis.com/location": "us-central1"
+    },
+    "name": "finalwishes-api",
+    "namespace": "860699311615",
+    "resourceVersion": "AAZO9Yx2r6w",
+    "selfLink": "/apis/serving.knative.dev/v1/namespaces/860699311615/services/finalwishes-api",
+    "uid": "1f407c09-063a-4618-acbf-8b71c02d1875"
+  },
+  "spec": {
+    "template": {
+      "metadata": {
+        "annotations": {
+          "autoscaling.knative.dev/maxScale": "10",
+          "run.googleapis.com/client-name": "gcloud",
+          "run.googleapis.com/client-version": "562.0.0",
+          "run.googleapis.com/cloudsql-instances": "finalwishes-prod:us-central1:finalwishes-pii-vault",
+          "run.googleapis.com/startup-cpu-boost": "true"
+        },
+        "labels": {
+          "client.knative.dev/nonce": "nnbgametuo",
+          "run.googleapis.com/startupProbeType": "Default"
+        }
+      },
+      "spec": {
+        "containerConcurrency": 80,
+        "containers": [
+          {
+            "env": [
+              {
+                "name": "GOOGLE_CLOUD_PROJECT",
+                "value": "finalwishes-prod"
+              },
+              {
+                "name": "STRIPE_SUCCESS_URL",
+                "value": "https://finalwishes-prod.web.app/estates/{ESTATE_ID}/settings?payment=success&session_id={CHECKOUT_SESSION_ID}"
+              },
+              {
+                "name": "STRIPE_CANCEL_URL",
+                "value": "https://finalwishes-prod.web.app/estates/{ESTATE_ID}/pricing?payment=cancelled"
+              },
+              {
+                "name": "CLOUD_SQL_CONNECTION",
+                "value": "finalwishes-prod:us-central1:finalwishes-pii-vault"
+              },
+              {
+                "name": "VAULT_DB_NAME",
+                "value": "pii_vault"
+              },
+              {
+                "name": "VAULT_DB_USER",
+                "value": "vault_admin"
+              },
+              {
+                "name": "VAULT_DB_PASSWORD",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "vault-db-password"
+                  }
+                }
+              },
+              {
+                "name": "STRIPE_SECRET_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "stripe-secret-key"
+                  }
+                }
+              },
+              {
+                "name": "STRIPE_PUBLISHABLE_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "stripe-publishable-key"
+                  }
+                }
+              },
+              {
+                "name": "STRIPE_WEBHOOK_SECRET",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "stripe-webhook-secret"
+                  }
+                }
+              },
+              {
+                "name": "SENDGRID_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "sendgrid-api-key"
+                  }
+                }
+              },
+              {
+                "name": "OPENSIGN_API_URL",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "latest",
+                    "name": "opensign-api-url"
+                  }
+                }
+              }
+            ],
+            "image": "us-central1-docker.pkg.dev/finalwishes-prod/cloud-run-source-deploy/finalwishes-api@sha256:64edc482130a347354439598bcebae43688e3288a9edc69a8f458d42a8b56417",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "limits": {
+                "cpu": "1",
+                "memory": "512Mi"
+              }
+            },
+            "startupProbe": {
+              "failureThreshold": 1,
+              "periodSeconds": 240,
+              "tcpSocket": {
+                "port": 8080
+              },
+              "timeoutSeconds": 240
+            }
+          }
+        ],
+        "serviceAccountName": "860699311615-compute@developer.gserviceaccount.com",
+        "timeoutSeconds": 60
+      }
+    },
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100
+      }
+    ]
+  },
+  "status": {
+    "address": {
+      "url": "https://finalwishes-api-qyjuke2xea-uc.a.run.app"
+    },
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-04-08T16:39:50.806444Z",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2026-04-08T16:39:45.484999Z",
+        "status": "True",
+        "type": "ConfigurationsReady"
+      },
+      {
+        "lastTransitionTime": "2026-04-08T16:39:50.762894Z",
+        "status": "True",
+        "type": "RoutesReady"
+      }
+    ],
+    "latestCreatedRevisionName": "finalwishes-api-00005-hr9",
+    "latestReadyRevisionName": "finalwishes-api-00005-hr9",
+    "observedGeneration": 5,
+    "traffic": [
+      {
+        "latestRevision": true,
+        "percent": 100,
+        "revisionName": "finalwishes-api-00005-hr9"
+      }
+    ],
+    "url": "https://finalwishes-api-qyjuke2xea-uc.a.run.app"
+  }
+}

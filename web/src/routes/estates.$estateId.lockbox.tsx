@@ -7,7 +7,6 @@ import {
   Plus,
   X,
   Lock,
-  Building2,
   CreditCard,
   Globe,
   Bitcoin,
@@ -18,8 +17,6 @@ import {
   Landmark,
   TrendingUp,
   Shield,
-  Smartphone,
-  Wallet,
   Package,
 } from 'lucide-react'
 

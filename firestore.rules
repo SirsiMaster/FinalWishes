@@ -5,7 +5,7 @@ service cloud.firestore {
     
     // =============================================
     // FinalWishes - The Estate Operating System
-    // Security Rules v4.0.0 — April 3, 2026
+    // Security Rules v5.0.0 — April 7, 2026
     // =============================================
     //
     // AUDIT TRAIL:
@@ -14,6 +14,7 @@ service cloud.firestore {
     //   v3.0.0 — Mar 2026: Full hardening per security-auditor
     //                       skill + DATA_MODEL.md alignment
     //   v4.0.0 — Mar 2026: §9 mail + email_templates collections
+    //   v5.0.0 — Apr 2026: §3i-m memoirs, governance, lockbox, directives, capsules, payments
     //
     // PRINCIPLES (security-auditor skill):
     //   ✓ No wildcard rules — all access explicit
@@ -253,6 +254,63 @@ service cloud.firestore {
               .hasOnly(['readAt', 'status']);
         allow delete: if false;
       }
+
+      // ── 3i. Memoirs (Videos, Photos, YouTube) ──
+      match /memoirs/{memoirId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['title', 'type', 'createdAt']);
+        allow update: if canWriteEstate(estateId);
+        allow delete: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+      }
+
+      // ── 3j. Governance (Settings, Obituary) ──
+      match /governance/{docId} {
+        allow read: if canAccessEstate(estateId);
+        allow create, update: if canWriteEstate(estateId);
+        allow delete: if false;
+      }
+
+      // ── 3k. Digital Lockbox (Credential Vault) ──
+      match /lockbox/{itemId} {
+        // Only principal and admin can access lockbox (not executors/heirs)
+        allow read: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+        allow create: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && request.resource.data.keys().hasAll(['accountName', 'category', 'status', 'createdAt']);
+        allow update: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+        allow delete: if isAdmin();
+      }
+
+      // ── 3l. Final Directives (Ethical Wills, Messages) ──
+      match /directives/{directiveId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['type', 'title', 'status', 'createdAt'])
+          && request.resource.data.type in ['ethical_will', 'funeral_preferences', 'final_message', 'care_instructions']
+          && request.resource.data.status == 'draft';
+        allow update: if canWriteEstate(estateId);
+        // Finalized directives cannot be deleted
+        allow delete: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && resource.data.status != 'finalized';
+      }
+
+      // ── 3m. Time Capsules (Scheduled Messages) ──
+      match /capsules/{capsuleId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['title', 'message', 'recipientName', 'recipientEmail', 'deliveryType', 'status', 'createdAt'])
+          && request.resource.data.deliveryType in ['scheduled_date', 'on_death', 'on_settlement', 'anniversary']
+          && request.resource.data.status == 'pending';
+        allow update: if canWriteEstate(estateId);
+        // Delivered capsules are immutable
+        allow delete: if canWriteEstate(estateId)
+          && resource.data.status != 'delivered';
+      }
     }
     
     // =============================================
@@ -446,7 +504,22 @@ service cloud.firestore {
     }
     
     // =============================================
-    // 10. DEFAULT DENY — Catch-All
+    // 10. PAYMENTS — Stripe Payment Records
+    // =============================================
+    // Written by Go API webhook handler (server-side).
+    // Users can read their own payment records.
+
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+      // Only server (Go API) creates payment records via Admin SDK
+      // Client writes are denied
+      allow create, update, delete: if false;
+    }
+
+    // =============================================
+    // 11. DEFAULT DENY — Catch-All
     // =============================================
     // Any collection not explicitly matched above is DENIED.
     // This is the Firestore default behavior, but we document it

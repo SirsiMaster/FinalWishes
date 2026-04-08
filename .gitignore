@@ -34,6 +34,12 @@ api/bin/
 *-key.json
 service-account*.json
 
+# === Playwright ===
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # === Misc ===
 *.log
 .turbo/

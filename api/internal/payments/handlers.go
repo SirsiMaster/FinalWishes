@@ -233,7 +233,7 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verify webhook signature
+	// Verify webhook signature — fail closed in production
 	var event stripe.Event
 	if h.webhookSecret != "" {
 		event, err = webhook.ConstructEvent(body, r.Header.Get("Stripe-Signature"), h.webhookSecret)
@@ -242,13 +242,18 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusBadRequest, "Invalid webhook signature")
 			return
 		}
+	} else if os.Getenv("GOOGLE_CLOUD_PROJECT") != "" {
+		// Production with missing secret — reject all webhooks (fail closed)
+		log.Error().Msg("STRIPE_WEBHOOK_SECRET not configured in production — rejecting webhook")
+		writeError(w, http.StatusServiceUnavailable, "Webhook not configured")
+		return
 	} else {
-		// Dev mode: no signature verification
+		// Local dev only: no signature verification
 		if err := json.Unmarshal(body, &event); err != nil {
 			writeError(w, http.StatusBadRequest, "Invalid event JSON")
 			return
 		}
-		log.Warn().Msg("Stripe webhook signature verification DISABLED (no STRIPE_WEBHOOK_SECRET)")
+		log.Warn().Msg("Stripe webhook signature verification DISABLED (local dev only)")
 	}
 
 	switch event.Type {

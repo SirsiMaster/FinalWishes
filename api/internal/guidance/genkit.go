@@ -25,7 +25,15 @@ type GenkitAdvisor struct {
 // NewGenkitAdvisor initializes Genkit with the Google AI (Gemini) plugin.
 // Returns nil if initialization fails — callers must check for nil and fall
 // back to deterministic mode.
-func NewGenkitAdvisor(ctx context.Context) *GenkitAdvisor {
+func NewGenkitAdvisor(ctx context.Context) (advisor *GenkitAdvisor) {
+	// GoogleAI plugin panics if GEMINI_API_KEY is not set — recover gracefully
+	defer func() {
+		if r := recover(); r != nil {
+			log.Warn().Interface("panic", r).Msg("Genkit initialization panicked — falling back to deterministic guidance")
+			advisor = nil
+		}
+	}()
+
 	g := genkit.Init(ctx, genkit.WithPlugins(&googlegenai.GoogleAI{}))
 	if g == nil {
 		log.Warn().Msg("Genkit initialization returned nil — falling back to deterministic guidance")

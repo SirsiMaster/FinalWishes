@@ -370,17 +370,38 @@ func (h *Handler) handleSubscriptionCancelled(event stripe.Event) {
 	}
 
 	estateID := sub.Metadata["estate_id"]
-	if estateID != "" && h.fs != nil {
-		fctx, cancel := newCtx()
-		defer cancel()
-		_, err := h.fs.Collection("estates").Doc(estateID).Set(fctx, map[string]interface{}{
-			"tier":          "free",
-			"tierUpdatedAt": time.Now(),
-			"paymentStatus": "cancelled",
-		}, firestore.MergeAll)
-		if err != nil {
-			log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to downgrade estate tier")
-		}
+	if estateID == "" || h.fs == nil {
+		log.Warn().Str("subscription_id", sub.ID).Msg("Subscription cancelled but no estate_id in metadata")
+		return
+	}
+
+	fctx, cancel := newCtx()
+	defer cancel()
+
+	// HIGH-2 fix: verify this subscription actually belongs to the estate
+	// before downgrading. Prevents metadata spoofing via crafted webhooks.
+	estateSnap, err := h.fs.Collection("estates").Doc(estateID).Get(fctx)
+	if err != nil {
+		log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to fetch estate for subscription cancel verification")
+		return
+	}
+	storedSubID, _ := estateSnap.DataAt("subscriptionId")
+	if storedSubID != sub.ID {
+		log.Warn().
+			Str("estate_id", estateID).
+			Str("webhook_sub", sub.ID).
+			Interface("stored_sub", storedSubID).
+			Msg("Subscription cancel rejected — subscription ID mismatch")
+		return
+	}
+
+	_, err = h.fs.Collection("estates").Doc(estateID).Set(fctx, map[string]interface{}{
+		"tier":          "free",
+		"tierUpdatedAt": time.Now(),
+		"paymentStatus": "cancelled",
+	}, firestore.MergeAll)
+	if err != nil {
+		log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to downgrade estate tier")
 	}
 
 	log.Info().Str("subscription_id", sub.ID).Str("estate_id", estateID).Msg("Subscription cancelled — downgraded to free")

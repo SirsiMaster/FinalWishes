@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 // YouTube embed via native iframe — zero bundle cost (no react-player)

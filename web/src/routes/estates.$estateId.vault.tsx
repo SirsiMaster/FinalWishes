@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useCallback, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -72,7 +73,7 @@ function VaultPage() {
 
   const uploadFile = useCallback(
     async (file: File) => {
-      const uploadIndex = Date.now()
+      const _uploadIndex = Date.now()
       const newUpload: UploadState = { file, progress: 0, status: 'preparing' }
 
       setUploads((prev) => [...prev, newUpload])

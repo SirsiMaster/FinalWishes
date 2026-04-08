@@ -8,6 +8,23 @@ import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
 
+import { Button } from '../components/ui/button'
+import { Card, CardContent } from '../components/ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogMedia,
+} from '../components/ui/alert-dialog'
+import { Badge } from '../components/ui/badge'
+import { Progress } from '../components/ui/progress'
+
 export const Route = createFileRoute('/estates/$estateId/vault')({
   component: VaultPage,
 })
@@ -188,7 +205,7 @@ function VaultPage() {
       try {
         const isLocal =
           window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        const baseUrl = isLocal ? 'http://localhost:8080' : ''
+        const baseUrl = isLocal ? 'http://localhost:8080' : (import.meta.env.VITE_API_URL || '')
 
         const token = await auth.currentUser?.getIdToken()
         const res = await fetch(
@@ -265,12 +282,10 @@ function VaultPage() {
             All your important documents are safely stored and encrypted here.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-xl border border-green-200">
+        <Badge className="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider h-auto gap-2">
           <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span className="text-[11px] font-bold text-green-700 uppercase tracking-wider">
-            AES-256 Encrypted
-          </span>
-        </div>
+          AES-256 Encrypted
+        </Badge>
       </div>
 
       {/* Dropzone */}
@@ -337,62 +352,72 @@ function VaultPage() {
           <span className="text-[12px] font-bold text-[#133378]/60 uppercase tracking-wider">
             Filtered: {CATEGORY_MAP[activeCategory]?.label || activeCategory}
           </span>
-          <button
+          <Button
+            variant="ghost"
+            size="xs"
             onClick={() => setActiveCategory(null)}
-            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378] transition-colors"
+            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378]"
           >
             Show All
-          </button>
+          </Button>
         </div>
       )}
 
       {/* All Files */}
-      <div className="bg-white rounded-[2.5rem] border border-[#133378]/10 p-10 shadow-sm">
-        <div className="flex items-center gap-3 mb-8 px-2">
-          <div className="w-2 h-2 rounded-full bg-green-400" />
-          <h3 className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
-            {activeCategory ? `${CATEGORY_MAP[activeCategory]?.label}` : 'All Files'} · {documents.length} file
-            {documents.length !== 1 ? 's' : ''} · Encrypted
-          </h3>
-        </div>
-        <div className="space-y-3">
-          {documents.map((doc) => (
-            <DocItem
-              key={doc.id}
-              doc={doc}
-              onDownload={() => handleDownload(doc)}
-              onPreview={() => setPreviewDoc(doc)}
-              onDelete={() => setDeleteConfirm(doc)}
-            />
-          ))}
-          {documents.length === 0 && (
-            <div className="text-center py-24 bg-[#F8FAFC] rounded-2xl border border-[#133378]/10">
-              <p className="text-[#133378]/50 font-medium">
-                {activeCategory
-                  ? `No ${CATEGORY_MAP[activeCategory]?.label.toLowerCase() || 'files'} yet.`
-                  : 'No files have been added to this estate yet.'}
-              </p>
-              <p className="text-sm text-[#133378]/30 mt-2">
-                Drag & drop files above or click to browse.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
+      <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm">
+        <CardContent className="p-10">
+          <div className="flex items-center gap-3 mb-8 px-2">
+            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <h3 className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+              {activeCategory ? `${CATEGORY_MAP[activeCategory]?.label}` : 'All Files'} · {documents.length} file
+              {documents.length !== 1 ? 's' : ''} · Encrypted
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {documents.map((doc) => (
+              <DocItem
+                key={doc.id}
+                doc={doc}
+                onDownload={() => handleDownload(doc)}
+                onPreview={() => setPreviewDoc(doc)}
+                onDelete={() => setDeleteConfirm(doc)}
+              />
+            ))}
+            {documents.length === 0 && (
+              <div className="text-center py-24 bg-[#F8FAFC] rounded-2xl border border-[#133378]/10">
+                <p className="text-[#133378]/50 font-medium">
+                  {activeCategory
+                    ? `No ${CATEGORY_MAP[activeCategory]?.label.toLowerCase() || 'files'} yet.`
+                    : 'No files have been added to this estate yet.'}
+                </p>
+                <p className="text-sm text-[#133378]/30 mt-2">
+                  Drag & drop files above or click to browse.
+                </p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Preview Modal */}
-      {previewDoc && (
-        <PreviewModal doc={previewDoc} onClose={() => setPreviewDoc(null)} onDownload={() => handleDownload(previewDoc)} />
-      )}
+      <Dialog open={!!previewDoc} onOpenChange={(open) => !open && setPreviewDoc(null)}>
+        {previewDoc && (
+          <PreviewModalContent
+            doc={previewDoc}
+            onDownload={() => handleDownload(previewDoc)}
+          />
+        )}
+      </Dialog>
 
       {/* Delete Confirmation */}
-      {deleteConfirm && (
-        <DeleteModal
-          doc={deleteConfirm}
-          onClose={() => setDeleteConfirm(null)}
-          onConfirm={() => handleDelete(deleteConfirm)}
-        />
-      )}
+      <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        {deleteConfirm && (
+          <DeleteModalContent
+            doc={deleteConfirm}
+            onConfirm={() => handleDelete(deleteConfirm)}
+          />
+        )}
+      </AlertDialog>
     </div>
   )
 }
@@ -446,14 +471,12 @@ function UploadProgress({ upload }: { upload: UploadState }) {
             {statusLabel}
           </span>
         </div>
-        <div className="h-1.5 bg-[#133378]/10 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-300 ${
-              isError ? 'bg-red-400' : isDone ? 'bg-green-400' : 'bg-[#133378]'
-            }`}
-            style={{ width: `${upload.progress}%` }}
-          />
-        </div>
+        <Progress
+          value={upload.progress}
+          className={`h-1.5 ${
+            isError ? '[&>*]:bg-red-400' : isDone ? '[&>*]:bg-green-400' : '[&>*]:bg-[#133378]'
+          } bg-[#133378]/10`}
+        />
       </div>
     </div>
   )
@@ -475,7 +498,7 @@ function VaultFolder({
   onClick: () => void
 }) {
   return (
-    <button
+    <Card
       onClick={onClick}
       className={`text-left w-full p-8 rounded-[2.5rem] border shadow-sm transition-all cursor-pointer group active:scale-[0.98] ${
         active
@@ -483,38 +506,47 @@ function VaultFolder({
           : 'bg-white border-[#133378]/10 hover:border-[#133378]/20 hover:shadow-md'
       }`}
     >
-      <div
-        className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
-          active
-            ? 'bg-white/20 text-white'
-            : 'bg-[#F8FAFC] border border-[#133378]/10 text-[#133378] group-hover:bg-[#133378] group-hover:text-white'
-        }`}
-      >
-        <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
-          {icon}
-        </svg>
-      </div>
-      <h4
-        className={`font-bold text-lg mb-2 transition-colors ${
-          active ? 'text-white' : 'text-[#0F172A] group-hover:text-[#133378]'
-        }`}
-      >
-        {name}
-      </h4>
-      <div className="flex items-center gap-3">
-        <span className={`text-[13px] font-medium ${active ? 'text-white/70' : 'text-[#133378]/50'}`}>
-          {count} file{count !== 1 ? 's' : ''}
-        </span>
+      <CardContent className="p-0">
         <div
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded border ${
-            active ? 'bg-white/10 border-white/20' : 'bg-green-50 border-green-200'
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
+            active
+              ? 'bg-white/20 text-white'
+              : 'bg-[#F8FAFC] border border-[#133378]/10 text-[#133378] group-hover:bg-[#133378] group-hover:text-white'
           }`}
         >
-          <div className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-green-300' : 'bg-green-400'}`} />
-          <span className={`text-[10px] font-bold ${active ? 'text-green-200' : 'text-green-600'}`}>Protected</span>
+          <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
+            {icon}
+          </svg>
         </div>
-      </div>
-    </button>
+        <h4
+          className={`font-bold text-lg mb-2 transition-colors ${
+            active ? 'text-white' : 'text-[#0F172A] group-hover:text-[#133378]'
+          }`}
+        >
+          {name}
+        </h4>
+        <div className="flex items-center gap-3">
+          <Badge
+            variant="secondary"
+            className={`text-[13px] font-medium h-auto py-0 px-0 bg-transparent border-none ${
+              active ? 'text-white/70' : 'text-[#133378]/50'
+            }`}
+          >
+            {count} file{count !== 1 ? 's' : ''}
+          </Badge>
+          <Badge
+            className={`text-[10px] font-bold h-auto py-0.5 px-2 rounded border gap-1.5 ${
+              active
+                ? 'bg-white/10 border-white/20 text-green-200'
+                : 'bg-green-50 border-green-200 text-green-600'
+            }`}
+          >
+            <div className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-green-300' : 'bg-green-400'}`} />
+            Protected
+          </Badge>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -554,7 +586,9 @@ function DocItem({
             {doc.folderId && (
               <>
                 <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
-                <span className="text-[#C8A951] font-semibold">{doc.folderId}</span>
+                <Badge variant="ghost" className="text-[#C8A951] font-semibold text-[12px] h-auto py-0 px-0">
+                  {doc.folderId}
+                </Badge>
               </>
             )}
           </div>
@@ -562,47 +596,50 @@ function DocItem({
       </div>
       <div className="flex items-center gap-2 flex-shrink-0 ml-4">
         {isPreviewable && (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onPreview}
-            className="p-2 rounded-lg hover:bg-[#133378]/5 text-[#133378]/30 hover:text-[#133378] transition-all"
+            className="text-[#133378]/30 hover:text-[#133378] hover:bg-[#133378]/5"
             title="Preview"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
-          </button>
+          </Button>
         )}
-        <button
+        <Button
           onClick={onDownload}
-          className="px-4 py-2 bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[11px] font-bold transition-all shadow-sm active:scale-95"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[11px] font-bold shadow-sm"
+          size="sm"
         >
           Download
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onDelete}
-          className="p-2 rounded-lg hover:bg-red-50 text-[#133378]/20 hover:text-red-500 transition-all"
+          className="text-[#133378]/20 hover:text-red-500 hover:bg-red-50"
           title="Delete"
         >
           <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="3 6 5 6 21 6" />
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
-        </button>
+        </Button>
       </div>
     </div>
   )
 }
 
-// ─── Preview Modal ────────────────────────────────────────────────────────
+// ─── Preview Modal Content ───────────────────────────────────────────────
 
-function PreviewModal({
+function PreviewModalContent({
   doc,
-  onClose,
   onDownload,
 }: {
   doc: VaultDocument
-  onClose: () => void
   onDownload: () => void
 }) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -614,7 +651,7 @@ function PreviewModal({
       try {
         const isLocal =
           window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        const baseUrl = isLocal ? 'http://localhost:8080' : ''
+        const baseUrl = isLocal ? 'http://localhost:8080' : (import.meta.env.VITE_API_URL || '')
         const token = await auth.currentUser?.getIdToken()
         const res = await fetch(
           `${baseUrl}/api/v1/documents/download-url?storageKey=${encodeURIComponent(doc.storageKey)}`,
@@ -635,103 +672,89 @@ function PreviewModal({
   }, [doc.storageKey])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="bg-white rounded-[2rem] max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#133378]/10">
-          <div className="min-w-0">
-            <h3 className="text-lg font-bold text-[#0F172A] truncate">{doc.displayName || doc.originalName}</h3>
-            <p className="text-[12px] text-[#133378]/40 font-medium mt-0.5">
+    <DialogContent
+      showCloseButton
+      className="max-w-4xl w-full rounded-[2rem] p-0 overflow-hidden shadow-2xl sm:max-w-4xl"
+    >
+      <DialogHeader className="p-6 border-b border-[#133378]/10">
+        <div className="flex items-center justify-between">
+          <div className="min-w-0 flex-1">
+            <DialogTitle className="text-lg font-bold text-[#0F172A] truncate">
+              {doc.displayName || doc.originalName}
+            </DialogTitle>
+            <DialogDescription className="text-[12px] text-[#133378]/40 font-medium mt-0.5">
               {doc.mimeType} · {formatFileSize(doc.fileSize)}
-            </p>
+            </DialogDescription>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onDownload}
-              className="px-4 py-2 bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[12px] font-bold transition-all"
-            >
-              Download
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-[#133378]/5 text-[#133378]/40 hover:text-[#133378] transition-all"
-            >
-              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
+          <Button
+            onClick={onDownload}
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[12px] font-bold ml-4"
+            size="sm"
+          >
+            Download
+          </Button>
         </div>
+      </DialogHeader>
 
-        {/* Content */}
-        <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-[#F8FAFC]">
-          {loading ? (
-            <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          ) : previewUrl ? (
-            doc.mimeType?.startsWith('image/') ? (
-              <img src={previewUrl} alt={doc.originalName} className="max-w-full max-h-[60vh] rounded-xl object-contain" />
-            ) : doc.mimeType === 'application/pdf' ? (
-              <iframe src={previewUrl} className="w-full h-[60vh] rounded-xl border border-[#133378]/10" title={doc.originalName} />
-            ) : (
-              <p className="text-[#133378]/50">Preview not available for this file type.</p>
-            )
+      {/* Content */}
+      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-[#F8FAFC]">
+        {loading ? (
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+        ) : previewUrl ? (
+          doc.mimeType?.startsWith('image/') ? (
+            <img src={previewUrl} alt={doc.originalName} className="max-w-full max-h-[60vh] rounded-xl object-contain" />
+          ) : doc.mimeType === 'application/pdf' ? (
+            <iframe src={previewUrl} className="w-full h-[60vh] rounded-xl border border-[#133378]/10" title={doc.originalName} />
           ) : (
-            <p className="text-[#133378]/50">Unable to load preview. Try downloading instead.</p>
-          )}
-        </div>
+            <p className="text-[#133378]/50">Preview not available for this file type.</p>
+          )
+        ) : (
+          <p className="text-[#133378]/50">Unable to load preview. Try downloading instead.</p>
+        )}
       </div>
-    </div>
+    </DialogContent>
   )
 }
 
-// ─── Delete Confirmation Modal ────────────────────────────────────────────
+// ─── Delete Confirmation Modal Content ───────────────────────────────────
 
-function DeleteModal({
+function DeleteModalContent({
   doc,
-  onClose,
   onConfirm,
 }: {
   doc: VaultDocument
-  onClose: () => void
   onConfirm: () => void
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="bg-white rounded-[2rem] max-w-md w-full mx-4 p-8 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-6 mx-auto">
+    <AlertDialogContent className="rounded-[2rem] p-8 max-w-md sm:max-w-md">
+      <AlertDialogHeader>
+        <AlertDialogMedia className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 mx-auto mb-2">
           <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="3 6 5 6 21 6" />
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
-        </div>
-        <h3 className="text-xl font-bold text-[#0F172A] text-center mb-2">Archive Document</h3>
-        <p className="text-[14px] text-[#133378]/50 text-center mb-8">
+        </AlertDialogMedia>
+        <AlertDialogTitle className="text-xl font-bold text-[#0F172A] text-center">
+          Archive Document
+        </AlertDialogTitle>
+        <AlertDialogDescription className="text-[14px] text-[#133378]/50 text-center">
           <strong className="text-[#0F172A]">{doc.displayName || doc.originalName}</strong> will be archived.
           It can be restored later if needed.
-        </p>
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 py-3 rounded-xl border border-[#133378]/10 text-[#0F172A] font-bold text-[13px] hover:bg-[#F8FAFC] transition-all"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-[13px] transition-all"
-          >
-            Archive
-          </button>
-        </div>
-      </div>
-    </div>
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter className="flex gap-3 mt-4 sm:flex-row border-t-0 bg-transparent mx-0 mb-0 p-0 rounded-none">
+        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[#133378]/10 text-[#0F172A] font-bold text-[13px] hover:bg-[#F8FAFC] h-auto">
+          Cancel
+        </AlertDialogCancel>
+        <AlertDialogAction
+          variant="destructive"
+          onClick={onConfirm}
+          className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-[13px] h-auto border-none"
+        >
+          Archive
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
   )
 }
 

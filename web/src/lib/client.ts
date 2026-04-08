@@ -5,7 +5,7 @@ import { auth } from "./firebase";
 
 // The transport defines how the client talks to the backend
 const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-const baseUrl = isLocal ? "http://localhost:8080" : "/api";
+const baseUrl = isLocal ? "http://localhost:8080" : (import.meta.env.VITE_API_URL || "https://finalwishes-api-860699311615.us-central1.run.app");
 
 const transport = createConnectTransport({
   baseUrl: baseUrl,

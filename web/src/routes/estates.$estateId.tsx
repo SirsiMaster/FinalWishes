@@ -5,6 +5,7 @@ import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { IdentityGate } from '../components/guards/IdentityGate'
 import { EmailVerificationBanner } from '../components/identity/EmailVerificationBanner'
+import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
 import { useEffect } from 'react'
 
@@ -59,9 +60,11 @@ function EstateLayout() {
           <AdminHeader title={displayEstateName} subtitle={`${roleLabel} · Vault Secured · Active`} />
           <EmailVerificationBanner />
           <main className="flex-1 p-8">
-            <IdentityGate estateId={estateId}>
-              <Outlet />
-            </IdentityGate>
+            <ErrorBoundary>
+              <IdentityGate estateId={estateId}>
+                <Outlet />
+              </IdentityGate>
+            </ErrorBoundary>
           </main>
         </div>
       </div>

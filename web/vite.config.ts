@@ -41,6 +41,18 @@ export default defineConfig({
               id.includes('@tanstack/react-router') || id.includes('@tanstack/react-store')) {
             return 'framework';
           }
+          // TipTap rich text editor (~150KB) — only loaded on directives page
+          if (id.includes('@tiptap/') || id.includes('prosemirror')) {
+            return 'tiptap';
+          }
+          // Charts + PDF (~100KB) — only loaded on dashboard/directives
+          if (id.includes('recharts') || id.includes('@react-pdf/')) {
+            return 'viz';
+          }
+          // Framer Motion (~80KB) — only loaded on landing page
+          if (id.includes('framer-motion')) {
+            return 'motion';
+          }
         },
       },
     },

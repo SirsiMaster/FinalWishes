@@ -12,6 +12,8 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/api/iterator"
+
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
 // Handler serves guidance/scoring endpoints.
@@ -48,6 +50,7 @@ type Step struct {
 }
 
 // HandleGetScore computes and returns the estate completion score.
+// Requires authenticated user with access to the estate (via estate_users junction).
 func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 	estateID := r.URL.Query().Get("estate_id")
 	if estateID == "" {
@@ -55,8 +58,24 @@ func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Verify the authenticated user has access to this estate
+	userID, err := auth.RequireUserID(r.Context())
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
+
+	// Check estate_users junction for access
+	euDocID := userID + "_" + estateID
+	euSnap, err := h.fs.Collection("estate_users").Doc(euDocID).Get(ctx)
+	if err != nil || !euSnap.Exists() {
+		log.Warn().Str("user_id", userID).Str("estate_id", estateID).Msg("Guidance score denied — no access")
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
 
 	score, err := h.computeScore(ctx, estateID)
 	if err != nil {

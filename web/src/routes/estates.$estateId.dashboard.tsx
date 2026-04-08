@@ -74,18 +74,18 @@ function DashboardIndex() {
 
   const percent = score?.completionPercent ?? 0
   const insight = score?.insight ?? 'Loading your estate guidance...'
-  const scoreSteps = score?.steps ?? []
   const nextAction = score?.nextAction
 
   // Group steps by category
   const categories = useMemo(() => {
+    const steps = score?.steps ?? []
     const map: Record<string, ShepherdStep[]> = {}
-    for (const s of scoreSteps) {
+    for (const s of steps) {
       if (!map[s.category]) map[s.category] = []
       map[s.category].push(s)
     }
     return map
-  }, [scoreSteps])
+  }, [score])
 
   if (isLoading) {
     return (

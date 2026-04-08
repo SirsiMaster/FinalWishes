@@ -1,0 +1,573 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // =============================================
+    // FinalWishes - The Estate Operating System
+    // Security Rules v5.0.0 — April 7, 2026
+    // =============================================
+    //
+    // AUDIT TRAIL:
+    //   v1.0.0 — Dec 2025: Initial rules (estates, users)
+    //   v2.0.0 — Mar 2026: ADR-035 attestations, username index
+    //   v3.0.0 — Mar 2026: Full hardening per security-auditor
+    //                       skill + DATA_MODEL.md alignment
+    //   v4.0.0 — Mar 2026: §9 mail + email_templates collections
+    //   v5.0.0 — Apr 2026: §3i-m memoirs, governance, lockbox, directives, capsules, payments
+    //
+    // PRINCIPLES (security-auditor skill):
+    //   ✓ No wildcard rules — all access explicit
+    //   ✓ Principle of least privilege — fiduciaries read-only
+    //   ✓ Defense in depth — validate data shape on writes
+    //   ✓ Fail closed — default deny
+    //   ✓ Data shape enforcement on create/update
+    //   ✓ Immutable audit trail
+    //
+    // IMPORTANT: This file must stay in sync with:
+    //   docs/DATA_MODEL.md (collection schemas)
+    //   docs/IDENTITY-WORKFLOW-DIAGRAMS.md §9 (Security Layers)
+    //   docs/SECURITY_COMPLIANCE.md
+    //
+    // =============================================
+    
+    // =============================================
+    // 1. AUTH — User Collections
+    // =============================================
+    
+    // Users: each user can only access their own document
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      
+      // Registration: user creates own profile with required fields
+      allow create: if isOwner(userId)
+        && request.resource.data.keys().hasAll(['email', 'role', 'createdAt'])
+        && request.resource.data.role in ['principal', 'executor', 'heir', 'legal', 'cpa'];
+      
+      // Self-update: cannot change role or createdAt
+      allow update: if (isOwner(userId)
+        && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['role', 'createdAt']))
+        || isAdmin();
+      
+      // Only admins can delete users
+      allow delete: if isAdmin();
+    }
+    
+    // Sessions: users can only access their own sessions
+    match /sessions/{sessionId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    // Username index: maps lowercase usernames to { email, uid }
+    // NOTE: Read is unauthenticated — resolution happens BEFORE login
+    match /usernames/{username} {
+      allow read: if true;
+      
+      allow create: if isAuthenticated()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasAll(['email', 'uid']);
+      
+      // Usernames are permanent — no updates or deletes
+      allow update, delete: if false;
+    }
+    
+    // =============================================
+    // 2. IDENTITY — Attestations (ADR-035)
+    // =============================================
+    
+    // Attestations: identity declarations by fiduciary-role users
+    // Document ID format: {uid}_{estateId}
+    match /attestations/{attestationId} {
+      // Users can read their own attestations
+      allow read: if isAuthenticated()
+        && resource.data.uid == request.auth.uid;
+      
+      // Estate principals can read attestations for their estate
+      allow read: if isAuthenticated()
+        && isEstatePrincipal(resource.data.estateId);
+      
+      // Admin can read any attestation
+      allow read: if isAdmin();
+      
+      // Users create their own attestation (fiduciary roles only)
+      allow create: if isAuthenticated()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasAll([
+            'uid', 'estateId', 'role', 'fullLegalName',
+            'attestationText', 'signatureData', 'status'
+           ])
+        && request.resource.data.role in ['heir', 'executor', 'legal', 'cpa']
+        && request.resource.data.status == 'verified';
+      
+      // Only admins or estate principals can update (e.g., revoke)
+      allow update: if isAdmin()
+        || (isAuthenticated() && isEstatePrincipal(resource.data.estateId));
+      
+      // Attestations are permanent legal records — no deletes
+      allow delete: if false;
+    }
+    
+    // =============================================
+    // 3. ESTATES — Core Estate Collection
+    // =============================================
+    
+    match /estates/{estateId} {
+      // Read: principal, executors, heirs, legal, cpa, admin
+      allow read: if isAuthenticated() && (
+        resource.data.principalId == request.auth.uid ||
+        isEstateRole(estateId) ||
+        isAdmin()
+      );
+      
+      // Create: authenticated user becomes principal
+      allow create: if isAuthenticated()
+        && request.resource.data.principalId == request.auth.uid
+        && request.resource.data.keys().hasAll(['name', 'principalId', 'status', 'createdAt'])
+        && request.resource.data.status == 'active';
+      
+      // Update: principal, executor, admin
+      // Heirs, legal, and CPAs are READ-ONLY on the estate root
+      allow update: if isAuthenticated() && (
+        resource.data.principalId == request.auth.uid ||
+        isExecutorOf(estateId) ||
+        isAdmin()
+      );
+      
+      // Delete: admin only (estates are archived, not deleted)
+      allow delete: if isAdmin();
+      
+      // ── 3a. Assets ──
+      match /assets/{assetId} {
+        allow read: if canAccessEstate(estateId);
+        
+        // Write: principal, executor, admin (fiduciaries are read-only)
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['name', 'category', 'status', 'createdAt']);
+        
+        allow update: if canWriteEstate(estateId);
+        
+        // Soft-delete only (status → archived), hard delete admin only
+        allow delete: if isAdmin();
+        
+        // Asset allocations (who inherits what)
+        match /allocations/{allocationId} {
+          allow read: if canAccessEstate(estateId);
+          allow create, update: if canWriteEstate(estateId)
+            && request.resource.data.keys().hasAll(['assetId', 'heirId', 'percentage']);
+          allow delete: if canWriteEstate(estateId);
+        }
+      }
+      
+      // ── 3b. Heirs ──
+      match /heirs/{heirId} {
+        allow read: if canAccessEstate(estateId);
+        
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['fullName', 'status', 'createdAt']);
+        
+        allow update: if canWriteEstate(estateId);
+        
+        // Soft-delete only
+        allow delete: if isAdmin();
+      }
+      
+      // ── 3c. Executors ──
+      match /executors/{executorId} {
+        allow read: if canAccessEstate(estateId);
+        
+        // Only principal or admin can manage executors
+        allow create: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && request.resource.data.keys().hasAll(['fullName', 'email', 'priority', 'status', 'createdAt']);
+        
+        allow update: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+        
+        allow delete: if isAdmin();
+      }
+      
+      // ── 3d. Documents (Vault) ──
+      match /documents/{documentId} {
+        allow read: if canAccessEstate(estateId);
+        
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll([
+              'originalName', 'mimeType', 'fileSize',
+              'storageKey', 'status', 'createdAt'
+             ]);
+        
+        allow update: if canWriteEstate(estateId);
+        
+        // Document deletion: principal or admin only
+        // (executors cannot delete evidence)
+        allow delete: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+      }
+      
+      // ── 3e. Document Folders ──
+      match /folders/{folderId} {
+        allow read: if canAccessEstate(estateId);
+        
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['name', 'createdAt']);
+        
+        allow update: if canWriteEstate(estateId)
+          && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['isSystem']);  // Cannot change system flag
+        
+        // System folders are permanent
+        allow delete: if canWriteEstate(estateId)
+          && resource.data.isSystem != true;
+      }
+      
+      // ── 3f. Timeline (Append-Only Audit) ──
+      match /timeline/{eventId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canAccessEstate(estateId);
+        // Timeline is immutable — no updates or deletes
+        allow update, delete: if false;
+      }
+      
+      // ── 3g. Letters (Institutional Notifications) ──
+      match /letters/{letterId} {
+        allow read: if canAccessEstate(estateId);
+        allow create, update: if canWriteEstate(estateId);
+        allow delete: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+      }
+      
+      // ── 3h. Estate Notifications ──
+      match /notifications/{notificationId} {
+        allow read: if canAccessEstate(estateId);
+        // Estate notifications are system-generated
+        allow create: if isAdmin();
+        allow update: if canAccessEstate(estateId)
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['readAt', 'status']);
+        allow delete: if false;
+      }
+
+      // ── 3i. Memoirs (Videos, Photos, YouTube) ──
+      match /memoirs/{memoirId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['title', 'type', 'createdAt']);
+        allow update: if canWriteEstate(estateId);
+        allow delete: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+      }
+
+      // ── 3j. Governance (Settings, Obituary) ──
+      match /governance/{docId} {
+        allow read: if canAccessEstate(estateId);
+        allow create, update: if canWriteEstate(estateId);
+        allow delete: if false;
+      }
+
+      // ── 3k. Digital Lockbox (Credential Vault) ──
+      match /lockbox/{itemId} {
+        // Only principal and admin can access lockbox (not executors/heirs)
+        allow read: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin());
+        allow create: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && request.resource.data.keys().hasAll(['accountName', 'category', 'status', 'createdAt']);
+        allow update: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['createdAt', 'estateId']); // Immutable fields
+        allow delete: if isAdmin();
+      }
+
+      // ── 3l. Final Directives (Ethical Wills, Messages) ──
+      match /directives/{directiveId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['type', 'title', 'status', 'createdAt'])
+          && request.resource.data.type in ['ethical_will', 'funeral_preferences', 'final_message', 'care_instructions']
+          && request.resource.data.status == 'draft';
+        allow update: if canWriteEstate(estateId);
+        // Finalized directives cannot be deleted
+        allow delete: if isAuthenticated()
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && resource.data.status != 'finalized';
+      }
+
+      // ── 3m. Time Capsules (Scheduled Messages) ──
+      match /capsules/{capsuleId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['title', 'message', 'recipientName', 'recipientEmail', 'deliveryType', 'status', 'createdAt'])
+          && request.resource.data.deliveryType in ['scheduled_date', 'on_death', 'on_settlement', 'anniversary']
+          && request.resource.data.status == 'pending';
+        allow update: if canWriteEstate(estateId);
+        // Delivered capsules are immutable
+        allow delete: if canWriteEstate(estateId)
+          && resource.data.status != 'delivered';
+      }
+    }
+    
+    // =============================================
+    // 4. ESTATE USERS — Access Control Junction Table
+    // =============================================
+    
+    match /estate_users/{estateUserId} {
+      // Users can read their own access records
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      
+      // Principals can read all access records for their estate
+      allow read: if isAuthenticated()
+        && isEstatePrincipal(resource.data.estateId);
+      
+      // Admin can read all
+      allow read: if isAdmin();
+      
+      // Only principal or admin can grant/modify access
+      allow create: if isAuthenticated()
+        && (isEstatePrincipal(request.resource.data.estateId) || isAdmin())
+        && request.resource.data.keys().hasAll(['estateId', 'userId', 'role', 'createdAt'])
+        && request.resource.data.role in ['principal', 'executor', 'heir', 'legal', 'cpa'];
+      
+      allow update: if isAuthenticated()
+        && (isEstatePrincipal(resource.data.estateId) || isAdmin())
+        && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['estateId', 'userId']);  // Cannot change which estate/user
+      
+      // Only admin can remove access records
+      allow delete: if isAdmin();
+    }
+    
+    // =============================================
+    // 4b. ESTATE INVITATIONS — Pending Team Invitations
+    // =============================================
+    
+    match /estate_invitations/{invitationId} {
+      // Principals can read all invitations for their estate
+      allow read: if isAuthenticated()
+        && isEstatePrincipal(resource.data.estateId);
+      
+      // Invitees can read their own invitation (by email match against profile)
+      allow read: if isAuthenticated()
+        && resource.data.email == get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email;
+      
+      // Admin can read all
+      allow read: if isAdmin();
+      
+      // Only principals or admin can create invitations
+      allow create: if isAuthenticated()
+        && (isEstatePrincipal(request.resource.data.estateId) || isAdmin())
+        && request.resource.data.keys().hasAll(['estateId', 'email', 'fullName', 'role', 'status', 'invitedBy'])
+        && request.resource.data.role in ['executor', 'heir', 'legal', 'cpa']
+        && request.resource.data.status == 'pending';
+      
+      // Principal or admin can update (accept/revoke)
+      allow update: if isAuthenticated()
+        && (isEstatePrincipal(resource.data.estateId) || isAdmin());
+      
+      // Principal or admin can delete (revoke)
+      allow delete: if isAuthenticated()
+        && (isEstatePrincipal(resource.data.estateId) || isAdmin());
+    }
+    
+    // =============================================
+    // 5. COMPLIANCE — State Rules (Read-Only)
+    // =============================================
+    
+    match /states/{stateCode} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+      
+      match /checklists/{checklistId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin();
+      }
+      
+      match /templates/{templateId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin();
+      }
+    }
+    
+    match /institutions/{institutionId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    match /notification_templates/{templateId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // =============================================
+    // 6. NOTIFICATIONS — User-Level
+    // =============================================
+    
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      
+      // Only created by Cloud Functions / Go API
+      allow create: if false;
+      
+      // Users can mark as read (limited fields only)
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['readAt', 'status']);
+      
+      // Notifications cannot be deleted
+      allow delete: if false;
+    }
+    
+    match /user-preferences/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // =============================================
+    // 7. AI AGENT — Conversations
+    // =============================================
+    
+    match /conversations/{conversationId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      // Users can delete their own conversations
+      allow delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+    
+    match /knowledge-base/{articleId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // =============================================
+    // 8. SYSTEM — Audit Logs & Payments
+    // =============================================
+    
+    // Audit logs: append-only, never editable
+    match /audit_logs/{logId} {
+      // Only admins and principals can read audit logs
+      allow read: if isAdmin()
+        || (isAuthenticated() && isEstatePrincipal(resource.data.estateId));
+      
+      // Only backend (Cloud Functions / Go API) creates logs
+      allow create: if false;
+      
+      // Immutable — no updates or deletes
+      allow update, delete: if false;
+    }
+    
+    // =============================================
+    // 9. EMAIL — Firebase Trigger Email Extension
+    // =============================================
+    
+    // Mail queue: authenticated users create email requests,
+    // the Firebase Extension processes and updates delivery status.
+    // Users can only read their own sent emails.
+    match /mail/{mailId} {
+      allow read: if isAuthenticated()
+        && resource.data.createdBy == request.auth.uid;
+      
+      // Authenticated users can create email requests
+      // The extension handles the rest (send, update status)
+      allow create: if isAuthenticated();
+      
+      // Only the extension (which runs as admin) updates delivery status
+      // Client-side updates are not allowed
+      allow update, delete: if false;
+    }
+    
+    // Email templates: admin-only, read by the extension
+    match /email_templates/{templateId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+    
+    // =============================================
+    // 10. PAYMENTS — Stripe Payment Records
+    // =============================================
+    // Written by Go API webhook handler (server-side).
+    // Users can read their own payment records.
+
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+      // Only server (Go API) creates payment records via Admin SDK
+      // Client writes are denied
+      allow create, update, delete: if false;
+    }
+
+    // =============================================
+    // 11. DEFAULT DENY — Catch-All
+    // =============================================
+    // Any collection not explicitly matched above is DENIED.
+    // This is the Firestore default behavior, but we document it
+    // explicitly per security-auditor "fail closed" principle.
+    
+    // =============================================
+    // HELPER FUNCTIONS
+    // =============================================
+    
+    // Authentication checks
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Estate role checks
+    function isEstatePrincipal(estateId) {
+      return get(/databases/$(database)/documents/estates/$(estateId)).data.principalId == request.auth.uid;
+    }
+    
+    function isExecutorOf(estateId) {
+      return exists(/databases/$(database)/documents/estates/$(estateId)/executors/$(request.auth.uid));
+    }
+    
+    // isHeirOf — REMOVED: replaced by isEstateRole() via estate_users junction table
+    
+    function isEstateRole(estateId) {
+      return exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId));
+    }
+    
+    // Access: anyone with a role in the estate (read)
+    function canAccessEstate(estateId) {
+      return isAuthenticated() && (
+        isEstatePrincipal(estateId) ||
+        isEstateRole(estateId) ||
+        isAdmin()
+      );
+    }
+    
+    // Write: principal, executor, admin only
+    // Heirs, legal, and CPAs are READ-ONLY
+    function canWriteEstate(estateId) {
+      return isAuthenticated() && (
+        isEstatePrincipal(estateId) ||
+        isExecutorOf(estateId) ||
+        isAdmin()
+      );
+    }
+  }
+}

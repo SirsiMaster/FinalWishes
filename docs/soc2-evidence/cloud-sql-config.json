@@ -1,0 +1,117 @@
+{
+  "availableMaintenanceVersions": [
+    "POSTGRES_15_17.R20260319.00_02"
+  ],
+  "backendType": "SECOND_GEN",
+  "connectionName": "finalwishes-prod:us-central1:finalwishes-pii-vault",
+  "createTime": "2026-03-20T06:00:47.729Z",
+  "databaseInstalledVersion": "POSTGRES_15_17",
+  "databaseVersion": "POSTGRES_15",
+  "etag": "8f3b572e7f91f4a93e16eca092c2811f050c63a76fa7ff28bf1b185cd6ee3736",
+  "gceZone": "us-central1-c",
+  "geminiConfig": {
+    "activeQueryEnabled": false,
+    "entitled": false,
+    "googleVacuumMgmtEnabled": false,
+    "indexAdvisorEnabled": false,
+    "oomSessionCancelEnabled": true
+  },
+  "includeReplicasForMajorVersionUpgrade": false,
+  "instanceType": "CLOUD_SQL_INSTANCE",
+  "ipAddresses": [
+    {
+      "ipAddress": "34.27.85.125",
+      "type": "PRIMARY"
+    },
+    {
+      "ipAddress": "34.172.6.48",
+      "type": "OUTGOING"
+    }
+  ],
+  "kind": "sql#instance",
+  "maintenanceVersion": "POSTGRES_15_17.R20260108.01_20",
+  "name": "finalwishes-pii-vault",
+  "project": "finalwishes-prod",
+  "region": "us-central1",
+  "satisfiesPzi": true,
+  "selfLink": "https://sqladmin.googleapis.com/sql/v1beta4/projects/finalwishes-prod/instances/finalwishes-pii-vault",
+  "serverCaCert": {
+    "cert": "-----BEGIN CERTIFICATE-----\nMIIDcTCCAlmgAwIBAgIBADANBgkqhkiG9w0BAQsFADBwMS0wKwYDVQQuEyQyMWQx\nODkxNy0zMzU0LTRiNDYtYjM4OC1hYTQ4NjNiMmU5N2UxHDAaBgNVBAMTE0Nsb3Vk\nIFNRTCBTZXJ2ZXIgQ0ExFDASBgNVBAoTC0dvb2dsZSwgSW5jMQswCQYDVQQGEwJV\nUzAeFw0yNjAzMjAwNjAxMDdaFw0zNjAzMTcwNjAyMDdaMHAxLTArBgNVBC4TJDIx\nZDE4OTE3LTMzNTQtNGI0Ni1iMzg4LWFhNDg2M2IyZTk3ZTEcMBoGA1UEAxMTQ2xv\ndWQgU1FMIFNlcnZlciBDQTEUMBIGA1UEChMLR29vZ2xlLCBJbmMxCzAJBgNVBAYT\nAlVTMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzk9CmiuWuKyBBG00\n1aakmJcAmZIIIllJmT1dvI/fi/ssqfz+9VfMn1seR6i5rj/3h/+aMYlN9QEA8vzl\nZjNG/JcnGnUeNZoBs1GYzm67ECyzQnqHLRNpoFMKJCmE6qkg037dLJQi51PYfBuv\n2DvcKmIx1M9V3a9frWRbP+Af9nn1gjxKVmiiOgYuJ9oLLzA1FAVgSi5jrJtU/7RA\nV6ANGilpu8p2fsJhBihfYW+j+Sudqk33TfKx+mFAKGqrrMmss9QH7dyao1t4GYzR\nxmz0frNkYxWQzeoJoHbMg+KVVPmqG6tsydHsnFHGdjNMfRvqcudSRL3M66ADYTtS\nOUBd/wIDAQABoxYwFDASBgNVHRMBAf8ECDAGAQH/AgEAMA0GCSqGSIb3DQEBCwUA\nA4IBAQBTgsFpjfF7NmN+Z+62UvTBxia5MSYYYafVXB0h/1t0A9AJsjV/BNrguJVD\nHlIaJxzAwTHt5kgPIpdPxMQ1dL/9id2KIdl+t0pqs5jOFKLKaDWYQTtR0kRcyGho\nOMofRE3ey2U99jIRyOTvbfVXEsOTmSqCJuQ8if9g/HParO+woVNNoaMJ/57H1q9j\nWcWSAysnqsry1FZ4Kd7VoZe90+QHDT6LXI6b7u74M8CD6YEWhuzSXMQltjQ7M/DH\ndXYqjmNIB0EUmvJpHvSNAqFT6xktLdwKo4u08b/zA6GiQUkyG7waZ67j7QAz08Lz\npJUKLgmIHGYO4ngmLptFpFv+5vUO\n-----END CERTIFICATE-----",
+    "certSerialNumber": "0",
+    "commonName": "C=US,O=Google\\, Inc,CN=Cloud SQL Server CA,dnQualifier=21d18917-3354-4b46-b388-aa4863b2e97e",
+    "createTime": "2026-03-20T06:01:07.001Z",
+    "expirationTime": "2036-03-17T06:02:07.001Z",
+    "instance": "finalwishes-pii-vault",
+    "kind": "sql#sslCert",
+    "sha1Fingerprint": "2563a7280cae6ed87aadfa87267c66bc869dffc1"
+  },
+  "serviceAccountEmailAddress": "p860699311615-f7wliq@gcp-sa-cloud-sql.iam.gserviceaccount.com",
+  "settings": {
+    "activationPolicy": "ALWAYS",
+    "availabilityType": "ZONAL",
+    "backupConfiguration": {
+      "backupRetentionSettings": {
+        "retainedBackups": 7,
+        "retentionUnit": "COUNT"
+      },
+      "backupTier": "STANDARD",
+      "enabled": true,
+      "kind": "sql#backupConfiguration",
+      "startTime": "04:00",
+      "transactionLogRetentionDays": 7,
+      "transactionalLogStorageState": "TRANSACTIONAL_LOG_STORAGE_STATE_UNSPECIFIED"
+    },
+    "connectorEnforcement": "NOT_REQUIRED",
+    "dataDiskSizeGb": "10",
+    "dataDiskType": "PD_SSD",
+    "deletionProtectionEnabled": false,
+    "edition": "ENTERPRISE",
+    "insightsConfig": {
+      "queryInsightsEnabled": true
+    },
+    "ipConfiguration": {
+      "ipv4Enabled": true,
+      "message": "Configuring authorized network or using CloudSQL auth proxy or language connectors is a prerequisite for connecting to Public IP. Please refer to the documentation for more details https://cloud.google.com/sql/docs/mysql/authorize-networks.",
+      "requireSsl": false,
+      "serverCaMode": "GOOGLE_MANAGED_INTERNAL_CA",
+      "serverCertificateRotationMode": "SERVER_CERTIFICATE_ROTATION_MODE_UNSPECIFIED",
+      "sslMode": "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
+    },
+    "kind": "sql#settings",
+    "locationPreference": {
+      "kind": "sql#locationPreference",
+      "zone": "us-central1-c"
+    },
+    "maintenanceWindow": {
+      "day": 7,
+      "hour": 2,
+      "kind": "sql#maintenanceWindow"
+    },
+    "pricingPlan": "PER_USE",
+    "replicationLagMaxSeconds": 31536000,
+    "replicationType": "SYNCHRONOUS",
+    "settingsVersion": "26",
+    "storageAutoResize": true,
+    "storageAutoResizeLimit": "0",
+    "tier": "db-f1-micro"
+  },
+  "sqlNetworkArchitecture": "NEW_NETWORK_ARCHITECTURE",
+  "state": "RUNNABLE",
+  "upgradableDatabaseVersions": [
+    {
+      "displayName": "PostgreSQL 16",
+      "majorVersion": "POSTGRES_16",
+      "name": "POSTGRES_16"
+    },
+    {
+      "displayName": "PostgreSQL 17",
+      "majorVersion": "POSTGRES_17",
+      "name": "POSTGRES_17"
+    },
+    {
+      "displayName": "PostgreSQL 18",
+      "majorVersion": "POSTGRES_18",
+      "name": "POSTGRES_18"
+    }
+  ]
+}

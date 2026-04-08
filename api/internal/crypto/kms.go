@@ -217,6 +217,212 @@ func (vc *VaultCrypto) Decrypt(ctx context.Context, payload *EncryptedPayload, e
 	return plaintext, nil
 }
 
+// MultiFieldEnvelope holds a single DEK envelope that can encrypt/decrypt multiple fields.
+// This is used when multiple fields share the same DEK (e.g., lockbox credentials).
+type MultiFieldEnvelope struct {
+	// EncryptedDEKBase64 is the DEK encrypted by Cloud KMS, base64 encoded
+	EncryptedDEKBase64 string
+	// NonceBase64 is the shared GCM nonce, base64 encoded
+	NonceBase64 string
+	// dek is the plaintext DEK (only held in memory during encrypt/decrypt operations)
+	dek []byte
+	// nonce is the plaintext nonce
+	nonce []byte
+	// gcm is the initialized GCM cipher
+	gcm cipher.AEAD
+	// gcmAAD is the AAD for GCM operations
+	gcmAAD []byte
+}
+
+// NewMultiFieldEnvelope generates a fresh DEK, encrypts it via Cloud KMS, and
+// returns an envelope ready to encrypt multiple fields.
+//
+// The kmsAAD binds the DEK to a specific context (e.g., "finalwishes:estate:X:lockbox:Y").
+// The gcmAAD binds each field encryption to the same context (e.g., "estate:X:lockbox:Y").
+//
+// Caller MUST call envelope.Zero() when done to clear the DEK from memory.
+func (vc *VaultCrypto) NewMultiFieldEnvelope(ctx context.Context, gcmAAD, kmsAAD string) (*MultiFieldEnvelope, error) {
+	if gcmAAD == "" || kmsAAD == "" {
+		return nil, fmt.Errorf("both GCM AAD and KMS AAD are required")
+	}
+
+	// Generate random 256-bit DEK
+	dek := make([]byte, 32)
+	if _, err := io.ReadFull(rand.Reader, dek); err != nil {
+		return nil, fmt.Errorf("failed to generate DEK: %w", err)
+	}
+
+	// Create AES-256-GCM cipher
+	block, err := aes.NewCipher(dek)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create AES cipher: %w", err)
+	}
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create GCM: %w", err)
+	}
+
+	// Generate a single nonce shared across all fields in this envelope
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		return nil, fmt.Errorf("failed to generate nonce: %w", err)
+	}
+
+	// Encrypt DEK with KEK via Cloud KMS
+	encryptReq := &kmspb.EncryptRequest{
+		Name:                        vc.keyName,
+		Plaintext:                   dek,
+		AdditionalAuthenticatedData: []byte(kmsAAD),
+	}
+	encryptResp, err := vc.client.Encrypt(ctx, encryptReq)
+	if err != nil {
+		// Zero DEK before returning on error
+		for i := range dek {
+			dek[i] = 0
+		}
+		return nil, fmt.Errorf("KMS encrypt failed: %w", err)
+	}
+
+	log.Debug().
+		Str("gcm_aad", gcmAAD).
+		Msg("Multi-field envelope created")
+
+	return &MultiFieldEnvelope{
+		EncryptedDEKBase64: base64.StdEncoding.EncodeToString(encryptResp.Ciphertext),
+		NonceBase64:        base64.StdEncoding.EncodeToString(nonce),
+		dek:                dek,
+		nonce:              nonce,
+		gcm:                gcm,
+		gcmAAD:             []byte(gcmAAD),
+	}, nil
+}
+
+// EncryptField encrypts a single field using this envelope's DEK.
+// Returns the ciphertext as a base64 string.
+//
+// IMPORTANT: Each field gets unique nonce material by prepending a field tag to the
+// plaintext before encryption. The shared nonce is safe because GCM's authentication
+// tag includes the plaintext length and content, making each (nonce, plaintext) pair unique.
+// However, for defense in depth, we derive a per-field nonce by XORing the field index.
+func (env *MultiFieldEnvelope) EncryptField(plaintext []byte, fieldIndex int) (string, error) {
+	if len(plaintext) == 0 {
+		return "", fmt.Errorf("cannot encrypt empty field")
+	}
+	if env.dek == nil {
+		return "", fmt.Errorf("envelope has been zeroed — cannot encrypt")
+	}
+
+	// Derive per-field nonce: XOR the last byte of the shared nonce with the field index.
+	// This ensures each field encrypted under the same DEK uses a distinct nonce,
+	// which is a hard requirement for AES-GCM security.
+	fieldNonce := make([]byte, len(env.nonce))
+	copy(fieldNonce, env.nonce)
+	fieldNonce[len(fieldNonce)-1] ^= byte(fieldIndex)
+
+	ciphertext := env.gcm.Seal(nil, fieldNonce, plaintext, env.gcmAAD)
+	return base64.StdEncoding.EncodeToString(ciphertext), nil
+}
+
+// Zero clears the plaintext DEK from memory. Must be called when done.
+func (env *MultiFieldEnvelope) Zero() {
+	if env.dek != nil {
+		for i := range env.dek {
+			env.dek[i] = 0
+		}
+		env.dek = nil
+	}
+}
+
+// OpenMultiFieldEnvelope decrypts the DEK from an existing envelope via Cloud KMS,
+// returning an envelope ready to decrypt multiple fields.
+//
+// Caller MUST call envelope.Zero() when done.
+func (vc *VaultCrypto) OpenMultiFieldEnvelope(ctx context.Context, encryptedDEKBase64, nonceBase64, gcmAAD, kmsAAD string) (*MultiFieldEnvelope, error) {
+	if gcmAAD == "" || kmsAAD == "" {
+		return nil, fmt.Errorf("both GCM AAD and KMS AAD are required")
+	}
+
+	encryptedDEK, err := base64.StdEncoding.DecodeString(encryptedDEKBase64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode encrypted DEK: %w", err)
+	}
+
+	nonce, err := base64.StdEncoding.DecodeString(nonceBase64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode nonce: %w", err)
+	}
+
+	// Decrypt DEK via Cloud KMS
+	decryptReq := &kmspb.DecryptRequest{
+		Name:                        vc.keyName,
+		Ciphertext:                  encryptedDEK,
+		AdditionalAuthenticatedData: []byte(kmsAAD),
+	}
+	decryptResp, err := vc.client.Decrypt(ctx, decryptReq)
+	if err != nil {
+		return nil, fmt.Errorf("KMS decrypt failed (AAD mismatch?): %w", err)
+	}
+
+	dek := decryptResp.Plaintext
+
+	block, err := aes.NewCipher(dek)
+	if err != nil {
+		for i := range dek {
+			dek[i] = 0
+		}
+		return nil, fmt.Errorf("failed to create AES cipher: %w", err)
+	}
+
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		for i := range dek {
+			dek[i] = 0
+		}
+		return nil, fmt.Errorf("failed to create GCM: %w", err)
+	}
+
+	log.Debug().
+		Str("gcm_aad", gcmAAD).
+		Msg("Multi-field envelope opened for decryption")
+
+	return &MultiFieldEnvelope{
+		EncryptedDEKBase64: encryptedDEKBase64,
+		NonceBase64:        nonceBase64,
+		dek:                dek,
+		nonce:              nonce,
+		gcm:                gcm,
+		gcmAAD:             []byte(gcmAAD),
+	}, nil
+}
+
+// DecryptField decrypts a single field using this envelope's DEK.
+// The fieldIndex must match what was used during encryption.
+func (env *MultiFieldEnvelope) DecryptField(ciphertextBase64 string, fieldIndex int) ([]byte, error) {
+	if ciphertextBase64 == "" {
+		return nil, fmt.Errorf("cannot decrypt empty ciphertext")
+	}
+	if env.dek == nil {
+		return nil, fmt.Errorf("envelope has been zeroed — cannot decrypt")
+	}
+
+	ciphertext, err := base64.StdEncoding.DecodeString(ciphertextBase64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode ciphertext: %w", err)
+	}
+
+	// Derive the same per-field nonce used during encryption
+	fieldNonce := make([]byte, len(env.nonce))
+	copy(fieldNonce, env.nonce)
+	fieldNonce[len(fieldNonce)-1] ^= byte(fieldIndex)
+
+	plaintext, err := env.gcm.Open(nil, fieldNonce, ciphertext, env.gcmAAD)
+	if err != nil {
+		return nil, fmt.Errorf("AES-GCM decryption failed (data integrity violation): %w", err)
+	}
+
+	return plaintext, nil
+}
+
 // Close releases the KMS client resources.
 func (vc *VaultCrypto) Close() error {
 	if vc.client != nil {

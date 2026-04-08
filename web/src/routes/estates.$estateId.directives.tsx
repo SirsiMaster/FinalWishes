@@ -346,17 +346,24 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     setMode('view')
   }, [editor, estateId, directive.id])
 
-  const handleExportPDF = useCallback(() => {
+  const handleExportPDF = useCallback(async () => {
     if (!editor) return
-    const content = editor.getText()
-    const blob = new Blob(
-      [`${directive.title}\n${'─'.repeat(40)}\nType: ${cfg.label}\n${directive.recipientName ? `To: ${directive.recipientName}\n` : ''}Date: ${new Date().toLocaleDateString()}\n\n${content}`],
-      { type: 'text/plain' }
-    )
+    const { pdf } = await import('@react-pdf/renderer')
+    const { DirectivePDF } = await import('@/components/pdf/DirectivePDF')
+    const doc = DirectivePDF({
+      title: directive.title,
+      typeLabel: cfg.label,
+      status: (directive.status as 'draft' | 'finalized') || 'draft',
+      content: editor.getHTML(),
+      recipientName: directive.recipientName || undefined,
+      recipientRelationship: directive.recipientRelationship || undefined,
+      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    })
+    const blob = await pdf(doc).toBlob()
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${directive.title.replace(/[^a-zA-Z0-9]/g, '_')}.txt`
+    a.download = `${directive.title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
     a.click()
     URL.revokeObjectURL(url)
   }, [editor, directive, cfg.label])

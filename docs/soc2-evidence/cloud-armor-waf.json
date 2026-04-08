@@ -1,0 +1,76 @@
+[
+  {
+    "creationTimestamp": "2026-04-08T09:52:16.896-07:00",
+    "description": "FinalWishes WAF",
+    "fingerprint": "m-rVLOPOM30=",
+    "id": "8015067473210194223",
+    "kind": "compute#securityPolicy",
+    "labelFingerprint": "42WmSpB8rSM=",
+    "name": "finalwishes-waf",
+    "rules": [
+      {
+        "action": "deny(403)",
+        "description": "",
+        "kind": "compute#securityPolicyRule",
+        "match": {
+          "expr": {
+            "expression": "evaluatePreconfiguredExpr('sqli-v33-stable')"
+          }
+        },
+        "preview": false,
+        "priority": 1000
+      },
+      {
+        "action": "deny(403)",
+        "description": "",
+        "kind": "compute#securityPolicyRule",
+        "match": {
+          "expr": {
+            "expression": "evaluatePreconfiguredExpr('xss-v33-stable')"
+          }
+        },
+        "preview": false,
+        "priority": 1001
+      },
+      {
+        "action": "rate_based_ban",
+        "description": "",
+        "kind": "compute#securityPolicyRule",
+        "match": {
+          "expr": {
+            "expression": "true"
+          }
+        },
+        "preview": false,
+        "priority": 2000,
+        "rateLimitOptions": {
+          "banDurationSec": 600,
+          "conformAction": "allow",
+          "enforceOnKey": "IP",
+          "exceedAction": "deny(429)",
+          "rateLimitThreshold": {
+            "count": 100,
+            "intervalSec": 60
+          }
+        }
+      },
+      {
+        "action": "allow",
+        "description": "default rule",
+        "kind": "compute#securityPolicyRule",
+        "match": {
+          "config": {
+            "srcIpRanges": [
+              "*"
+            ]
+          },
+          "versionedExpr": "SRC_IPS_V1"
+        },
+        "preview": false,
+        "priority": 2147483647
+      }
+    ],
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/finalwishes-prod/global/securityPolicies/finalwishes-waf",
+    "type": "CLOUD_ARMOR"
+  }
+]

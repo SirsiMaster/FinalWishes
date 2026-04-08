@@ -281,7 +281,9 @@ service cloud.firestore {
           && (isEstatePrincipal(estateId) || isAdmin())
           && request.resource.data.keys().hasAll(['accountName', 'category', 'status', 'createdAt']);
         allow update: if isAuthenticated()
-          && (isEstatePrincipal(estateId) || isAdmin());
+          && (isEstatePrincipal(estateId) || isAdmin())
+          && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['createdAt', 'estateId']); // Immutable fields
         allow delete: if isAdmin();
       }
 
@@ -466,15 +468,6 @@ service cloud.firestore {
       
       // Immutable — no updates or deletes
       allow update, delete: if false;
-    }
-    
-    // Payments: read-only for user, managed by backend
-    match /payments/{paymentId} {
-      allow read: if isAuthenticated()
-        && resource.data.userId == request.auth.uid;
-      
-      // All payment operations go through the Go API / Stripe webhooks
-      allow create, update, delete: if false;
     }
     
     // =============================================

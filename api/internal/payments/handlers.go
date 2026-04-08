@@ -15,6 +15,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/stripe/stripe-go/v81"
+
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 	"github.com/stripe/stripe-go/v81/checkout/session"
 	"github.com/stripe/stripe-go/v81/webhook"
 
@@ -122,6 +124,13 @@ func (h *Handler) HandleGetTiers(w http.ResponseWriter, r *http.Request) {
 
 // HandleCreateCheckout creates a Stripe Checkout session.
 func (h *Handler) HandleCreateCheckout(w http.ResponseWriter, r *http.Request) {
+	// Verify authenticated caller
+	callerUID, err := auth.RequireUserID(r.Context())
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+
 	// Parse request
 	var req struct {
 		TierID   string `json:"tierId"`
@@ -137,6 +146,25 @@ func (h *Handler) HandleCreateCheckout(w http.ResponseWriter, r *http.Request) {
 	if req.TierID == "" || req.EstateID == "" {
 		writeError(w, http.StatusBadRequest, "tierId and estateId are required")
 		return
+	}
+
+	// Enforce caller identity — prevent cross-user checkout
+	if req.UserID != "" && req.UserID != callerUID {
+		writeError(w, http.StatusForbidden, "Cannot create checkout for another user")
+		return
+	}
+	req.UserID = callerUID // Always use the authenticated UID
+
+	// Verify caller owns this estate (principal check via estate_users)
+	if h.fs != nil {
+		euDocID := callerUID + "_" + req.EstateID
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		euSnap, fsErr := h.fs.Collection("estate_users").Doc(euDocID).Get(ctx)
+		if fsErr != nil || !euSnap.Exists() {
+			writeError(w, http.StatusForbidden, "You do not have access to this estate")
+			return
+		}
 	}
 
 	// Find tier

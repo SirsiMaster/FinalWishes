@@ -1,0 +1,272 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+// ─── Mock Firestore ──────────────────────────────────────────────────────────
+
+const mockAddDoc = vi.fn()
+const mockSetDoc = vi.fn()
+const mockUpdateDoc = vi.fn()
+const mockGetDocs = vi.fn()
+const mockCollection = vi.fn(() => 'mock-collection-ref')
+const mockDoc = vi.fn(() => 'mock-doc-ref')
+const mockQuery = vi.fn((...args: unknown[]) => args[0])
+const mockWhere = vi.fn((...args: unknown[]) => ({ type: 'where', args }))
+const mockServerTimestamp = vi.fn(() => 'MOCK_TIMESTAMP')
+
+vi.mock('firebase/firestore', () => ({
+  addDoc: (...args: unknown[]) => mockAddDoc(...args),
+  setDoc: (...args: unknown[]) => mockSetDoc(...args),
+  updateDoc: (...args: unknown[]) => mockUpdateDoc(...args),
+  getDocs: (...args: unknown[]) => mockGetDocs(...args),
+  collection: (...args: unknown[]) => mockCollection(...args),
+  doc: (...args: unknown[]) => mockDoc(...args),
+  query: (...args: unknown[]) => mockQuery(...args),
+  where: (...args: unknown[]) => mockWhere(...args),
+  serverTimestamp: () => mockServerTimestamp(),
+}))
+
+import {
+  sendEstateInvitation,
+  listPendingInvitations,
+  hasExistingInvitation,
+  getEstateInvitations,
+  revokeInvitation,
+  ROLE_LABELS,
+} from './invitations'
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  mockAddDoc.mockResolvedValue({ id: 'inv-1' })
+  mockSetDoc.mockResolvedValue(undefined)
+  mockUpdateDoc.mockResolvedValue(undefined)
+})
+
+// ─── sendEstateInvitation ────────────────────────────────────────────────────
+
+describe('sendEstateInvitation', () => {
+  it('creates invitation for new user (no existing account)', async () => {
+    // No existing user
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    const result = await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'new@example.com',
+      fullName: 'Jane Doe',
+      role: 'executor',
+      invitedBy: 'user-1',
+      priority: 1,
+    })
+
+    expect(result.success).toBe(true)
+    expect(result.invitationId).toBe('inv-1')
+    expect(result.autoLinked).toBe(false)
+    // invitation record + executor subcollection record
+    expect(mockAddDoc).toHaveBeenCalledTimes(2)
+  })
+
+  it('auto-links existing user and sets accepted status', async () => {
+    // Existing user found
+    mockGetDocs.mockResolvedValue({
+      empty: false,
+      docs: [{ id: 'existing-uid', data: () => ({ email: 'existing@example.com' }) }],
+    })
+
+    const result = await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'Existing@Example.com',
+      fullName: 'Existing User',
+      role: 'heir',
+      invitedBy: 'user-1',
+    })
+
+    expect(result.success).toBe(true)
+    expect(result.autoLinked).toBe(true)
+    // invitation + heir subcollection
+    expect(mockAddDoc).toHaveBeenCalledTimes(2)
+    // estate_users junction + update invitation status
+    expect(mockSetDoc).toHaveBeenCalledTimes(1)
+    expect(mockUpdateDoc).toHaveBeenCalledTimes(1)
+  })
+
+  it('normalizes email to lowercase', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: '  UPPER@Example.COM  ',
+      fullName: 'Test',
+      role: 'heir',
+      invitedBy: 'user-1',
+    })
+
+    // Check that the email was normalized in the invitation record
+    const addDocCall = mockAddDoc.mock.calls[0]
+    expect(addDocCall[1].email).toBe('upper@example.com')
+  })
+
+  it('creates executor subcollection record for executor role', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'exec@example.com',
+      fullName: 'Executor Person',
+      role: 'executor',
+      invitedBy: 'user-1',
+      priority: 2,
+    })
+
+    // Second addDoc call should be the executor subcollection
+    const subcollectionCall = mockAddDoc.mock.calls[1]
+    expect(subcollectionCall[1].priority).toBe(2)
+    expect(subcollectionCall[1].status).toBe('invited')
+  })
+
+  it('creates heir subcollection record for non-executor roles', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'legal@example.com',
+      fullName: 'Legal Counsel',
+      role: 'legal',
+      invitedBy: 'user-1',
+    })
+
+    const subcollectionCall = mockAddDoc.mock.calls[1]
+    expect(subcollectionCall[1].isMinor).toBe(false)
+    expect(subcollectionCall[1].isResiduary).toBe(false)
+    expect(subcollectionCall[1].status).toBe('pending')
+  })
+
+  it('returns error on failure', async () => {
+    mockGetDocs.mockRejectedValue(new Error('Network error'))
+
+    const result = await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'test@example.com',
+      fullName: 'Test',
+      role: 'heir',
+      invitedBy: 'user-1',
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Network error')
+  })
+})
+
+// ─── listPendingInvitations ──────────────────────────────────────────────────
+
+describe('listPendingInvitations', () => {
+  it('returns pending invitations for estate', async () => {
+    mockGetDocs.mockResolvedValue({
+      docs: [
+        { id: 'inv-1', data: () => ({ email: 'a@b.com', fullName: 'A', role: 'heir', status: 'pending' }) },
+        { id: 'inv-2', data: () => ({ email: 'c@d.com', fullName: 'C', role: 'executor', status: 'pending' }) },
+      ],
+    })
+
+    const result = await listPendingInvitations('estate-1')
+
+    expect(result).toHaveLength(2)
+    expect(result[0].id).toBe('inv-1')
+    expect(mockWhere).toHaveBeenCalledWith('estateId', '==', 'estate-1')
+    expect(mockWhere).toHaveBeenCalledWith('status', '==', 'pending')
+  })
+
+  it('returns empty array on error', async () => {
+    mockGetDocs.mockRejectedValue(new Error('Permission denied'))
+
+    const result = await listPendingInvitations('estate-1')
+
+    expect(result).toEqual([])
+  })
+})
+
+// ─── hasExistingInvitation ───────────────────────────────────────────────────
+
+describe('hasExistingInvitation', () => {
+  it('returns true when invitation exists', async () => {
+    mockGetDocs.mockResolvedValue({ empty: false })
+
+    const result = await hasExistingInvitation('estate-1', 'test@example.com')
+
+    expect(result).toBe(true)
+  })
+
+  it('returns false when no invitation exists', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true })
+
+    const result = await hasExistingInvitation('estate-1', 'new@example.com')
+
+    expect(result).toBe(false)
+  })
+
+  it('returns false on error', async () => {
+    mockGetDocs.mockRejectedValue(new Error('Network error'))
+
+    const result = await hasExistingInvitation('estate-1', 'test@example.com')
+
+    expect(result).toBe(false)
+  })
+})
+
+// ─── getEstateInvitations ────────────────────────────────────────────────────
+
+describe('getEstateInvitations', () => {
+  it('returns all invitations for estate', async () => {
+    mockGetDocs.mockResolvedValue({
+      docs: [
+        { id: 'inv-1', data: () => ({ email: 'a@b.com', status: 'accepted' }) },
+        { id: 'inv-2', data: () => ({ email: 'c@d.com', status: 'pending' }) },
+      ],
+    })
+
+    const result = await getEstateInvitations('estate-1')
+
+    expect(result).toHaveLength(2)
+  })
+
+  it('returns empty array on error', async () => {
+    mockGetDocs.mockRejectedValue(new Error('Fail'))
+
+    const result = await getEstateInvitations('estate-1')
+
+    expect(result).toEqual([])
+  })
+})
+
+// ─── revokeInvitation ────────────────────────────────────────────────────────
+
+describe('revokeInvitation', () => {
+  it('sets invitation status to revoked', async () => {
+    const result = await revokeInvitation('inv-1')
+
+    expect(result.success).toBe(true)
+    expect(mockUpdateDoc).toHaveBeenCalledTimes(1)
+    expect(mockUpdateDoc).toHaveBeenCalledWith('mock-doc-ref', {
+      status: 'revoked',
+      updatedAt: 'MOCK_TIMESTAMP',
+    })
+  })
+
+  it('returns error on failure', async () => {
+    mockUpdateDoc.mockRejectedValue(new Error('Permission denied'))
+
+    const result = await revokeInvitation('inv-1')
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Permission denied')
+  })
+})
+
+// ─── ROLE_LABELS ─────────────────────────────────────────────────────────────
+
+describe('ROLE_LABELS', () => {
+  it('has labels for all roles', () => {
+    expect(ROLE_LABELS.executor).toBe('Executor')
+    expect(ROLE_LABELS.heir).toBe('Beneficiary')
+    expect(ROLE_LABELS.legal).toBe('Legal Counsel')
+    expect(ROLE_LABELS.cpa).toBe('CPA Advisor')
+    expect(ROLE_LABELS.principal).toBe('Estate Owner')
+  })
+})

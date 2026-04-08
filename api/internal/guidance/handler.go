@@ -11,7 +11,6 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog/log"
-	"google.golang.org/api/iterator"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
@@ -226,41 +225,23 @@ func generateInsight(percent, completed, total int, counts map[string]int, next 
 }
 
 func countCollection(ctx context.Context, col *firestore.CollectionRef) (int, error) {
-	// Use aggregation query for efficiency (no document reads)
-	query := col.Where("status", "!=", "archived")
-	iter := query.Documents(ctx)
-	defer iter.Stop()
-
-	count := 0
-	for {
-		_, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			// Fallback: count without filter (some collections don't have status)
-			return countCollectionAll(ctx, col)
-		}
-		count++
+	// Firestore count aggregation — single operation, no document reads
+	results, err := col.NewAggregationQuery().WithCount("n").Get(ctx)
+	if err != nil {
+		return 0, err
 	}
-	return count, nil
-}
-
-func countCollectionAll(ctx context.Context, col *firestore.CollectionRef) (int, error) {
-	iter := col.Documents(ctx)
-	defer iter.Stop()
-	count := 0
-	for {
-		_, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
-		if err != nil {
-			return 0, err
-		}
-		count++
+	v, ok := results["n"]
+	if !ok {
+		return 0, nil
 	}
-	return count, nil
+	if n, ok := v.(*firestore.AggregationResult); ok && n != nil {
+		_ = n // shouldn't happen at this level
+	}
+	// The Go Firestore SDK returns count as int64
+	if n, ok := v.(int64); ok {
+		return int(n), nil
+	}
+	return 0, nil
 }
 
 func docExists(ctx context.Context, ref *firestore.DocumentRef) bool {

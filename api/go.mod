@@ -1,17 +1,18 @@
 module github.com/sirsi-technologies/finalwishes-api
 
-go 1.25.0
+go 1.26.0
 
 require (
 	cloud.google.com/go/firestore v1.21.0
 	cloud.google.com/go/kms v1.26.0
-	cloud.google.com/go/storage v1.61.3
+	cloud.google.com/go/storage v1.60.0
 	connectrpc.com/connect v1.17.0
 	firebase.google.com/go/v4 v4.19.0
 	github.com/go-chi/chi/v5 v5.2.3
 	github.com/go-chi/cors v1.2.2
 	github.com/lib/pq v1.12.0
 	github.com/rs/zerolog v1.34.0
+	github.com/stripe/stripe-go/v81 v81.4.0
 	google.golang.org/api v0.272.0
 	google.golang.org/protobuf v1.36.11
 )
@@ -47,7 +48,6 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.6.0 // indirect
-	github.com/stripe/stripe-go/v81 v81.4.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.39.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.63.0 // indirect

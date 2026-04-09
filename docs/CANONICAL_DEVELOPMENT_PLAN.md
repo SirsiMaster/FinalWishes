@@ -203,15 +203,16 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 
 | Component | Language | Lines | Status |
 |-----------|----------|:-----:|--------|
-| Go API (Cloud Run) | Go | ~1,700 | ✅ Production — auth, vault, ConnectRPC, KMS, OpenSign proxy |
-| Firestore security rules | Rules DSL | ~500 | ✅ Production — v4.0.0, comprehensive RBAC |
-| React web app | TypeScript/React | ~3,500 | ✅ Production — 26 routes, 13+ shadcn components |
-| Firestore triggers | Node.js | ~100 | ✅ Production — autoMatchInvitation |
-| Shared types | TypeScript | ~100 | ✅ Active — proto-aligned type definitions |
-| Proto definitions | Protobuf | ~200 | ✅ Active — 18 RPC methods |
+| Go API (Cloud Run) | Go | ~10,500 | ✅ Production — auth, vault, ConnectRPC, KMS, OpenSign proxy, Genkit AI, Cloud Tasks, rate limiting |
+| React web app | TypeScript/React | ~16,700 | ✅ Production — 22 routes, 20 shadcn components, Royal Neo-Deco theme |
+| Firestore security rules | Rules DSL | ~573 | ✅ Production — v5.0.0, comprehensive RBAC |
+| Tests (Vitest + Playwright) | TypeScript | ~1,750 | ✅ Active — 105 unit + 9 E2E |
+| Proto definitions | Protobuf | ~253 | ✅ Active — 18 RPC methods |
+| Firestore triggers | Node.js | ~118 | ✅ Production — autoMatchInvitation |
+| Shared types | TypeScript | ~97 | ✅ Active — proto-aligned type definitions |
 
-**Total custom code: ~6,100 lines**
-**Total Google-managed services: 12 active (Firebase Auth, Firestore, Cloud SQL, Cloud KMS, Cloud Storage, Cloud Run, Firebase Hosting, SendGrid Extension, Cloud Build, Secret Manager, IAM, Cloud DNS)**
+**Total custom code: ~30,000 lines** (up from ~6,100 at v0.10.0)
+**Total Google-managed services: 14 active (Firebase Auth, Firestore, Cloud SQL, Cloud KMS, Cloud Storage, Cloud Run, Firebase Hosting, SendGrid Extension, Cloud Build, Secret Manager, IAM, Cloud DNS, Cloud Tasks, Resize Images Extension)**
 
 > **Removed (April 2026):** `shared/crypto/` (client-side encryption never used), `shared/api-client/` (web uses ConnectRPC), React Native mobile (~0 lines actual), Tauri desktop (~0 lines actual)
 
@@ -467,14 +468,14 @@ Firestore Triggers (Firebase Functions — Node.js 20):
 - [x] Production deployed at finalwishes-prod.web.app
 
 ### Remaining (Tier 1 completion)
-- [ ] The Shepherd provides AI-guided completion suggestions (Genkit)
-- [ ] User can store credentials in digital lockbox
-- [ ] User can create ethical wills and final directives (PDF)
-- [ ] User can schedule time capsule message delivery (Cloud Tasks)
-- [ ] E2E tests pass for all critical flows (Playwright)
-- [ ] Frontend test coverage > 80% (Vitest)
-- [ ] Staging environment operational
-- [ ] SOC 2 evidence collected
+- [x] The Shepherd provides AI-guided completion suggestions (Genkit) — (692b96d)
+- [x] User can store credentials in digital lockbox — (692b96d)
+- [x] User can create ethical wills and final directives (PDF) — (692b96d)
+- [x] User can schedule time capsule message delivery (Cloud Tasks) — (692b96d)
+- [x] E2E tests pass for all critical flows (Playwright) — 9 tests (b1d24c9)
+- [x] Frontend test coverage > 80% (Vitest) — 105 tests (a2c9614)
+- [x] Staging environment operational — Firebase preview channel
+- [x] SOC 2 evidence collected — 9 files
 - [ ] DNS switchover to finalwishes.app
 - [ ] 99.9% uptime during launch week
 
@@ -485,6 +486,6 @@ Firestore Triggers (Firebase Functions — Node.js 20):
 
 ---
 
-**Updated:** April 7, 2026 (Claude — stack consolidation)
+**Updated:** April 8, 2026 (Claude — acceptance criteria + code stats update)
 **Canon Established:** March 18, 2026 (Antigravity)
 **Source of Truth:** MSA-2025-111-FW + SOW-2025-001 (Feb 17 Pivot)

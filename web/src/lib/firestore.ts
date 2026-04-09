@@ -172,6 +172,23 @@ export interface TimeCapsule {
   updatedAt: Timestamp;
 }
 
+// Heirloom (subcollection)
+export interface Heirloom {
+  id: string;
+  estateId: string;
+  name: string;
+  category: 'jewelry' | 'artwork' | 'furniture' | 'vehicle' | 'collectible' | 'family_artifact' | 'other';
+  description: string;
+  estimatedValue?: number;
+  designatedHeir?: string;
+  photoUrls: string[];
+  location?: string;
+  provenance?: string;
+  status: 'active' | 'archived';
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 // Notification (subcollection)
 export interface EstateNotification {
   id: string;
@@ -398,4 +415,16 @@ export function useTimeCapsules(estateId: string | null): FirestoreListResult<Ti
     []
   );
   return useCollection<TimeCapsule>(path, constraints);
+}
+
+/**
+ * Subscribe to heirlooms for an estate (sorted by creation date).
+ */
+export function useHeirlooms(estateId: string | null): FirestoreListResult<Heirloom> {
+  const path = estateId ? `estates/${estateId}/heirlooms` : null;
+  const constraints = useMemo(
+    () => [orderBy('createdAt', 'desc')],
+    []
+  );
+  return useCollection<Heirloom>(path, constraints);
 }

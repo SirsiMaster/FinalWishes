@@ -91,11 +91,11 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 | Layer | Technology | Decision |
 | :--- | :--- | :--- |
 | **Web** | **React 19 + Vite 8** | TanStack Router (file-based), TailwindCSS v4, shadcn/ui, Glassmorphism |
-| **Backend** | **Go 1.24 + Chi + ConnectRPC** | Cloud Run, gRPC + Protobuf, single HTTP API |
+| **Backend** | **Go 1.26 + Chi + ConnectRPC** | Cloud Run, gRPC + Protobuf, single HTTP API |
 | **Database** | **Cloud SQL (PostgreSQL 15) + Firestore** | Hybrid: SQL for PII/Vault (encrypted), NoSQL for real-time |
 | **Auth** | **Firebase Auth** | MFA (TOTP) Required, 3-tier identity verification |
 | **Security** | **SOC 2 + Cloud KMS** | AES-256-GCM envelope encryption, per-estate AAD |
-| **AI** | **Gemini (Vertex AI)** | The "Guidance Engine" |
+| **AI** | **Gemini Flash (Firebase Genkit)** | The "Shepherd" — AI guidance engine, completion scoring |
 | **E-Sign** | **Sirsi Sign** (sign.sirsi.ai) | Go API proxies to OpenSign via `/api/v1/opensign/*` |
 | **Payments** | **Stripe** | Checkout flow via Go API |
 | **Hosting** | **Firebase Hosting** | CDN for SPA, SPA rewrites |

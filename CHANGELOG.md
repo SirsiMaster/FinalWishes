@@ -4,6 +4,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [Unreleased]
+
+### Added
+- Complete shadcn refactor: 17 pages + 2 layouts using 20 shadcn components (833f065, a5b4f20)
+- YouTube Data API v3 integration for video memorials (692b96d)
+- Genkit AI Shepherd v2 with Gemini Flash guidance flows (692b96d)
+- Cloud Tasks time capsule deferred delivery engine (692b96d)
+- PDF export for directives via @react-pdf/renderer (692b96d)
+- Cloud KMS lockbox field-level encryption (692b96d)
+- Heirloom Registry for physical asset inventory (692b96d)
+- Playwright E2E smoke suite — 9 tests (b1d24c9)
+- 105 unit tests with >80% critical path coverage (a2c9614)
+- Cloud DNS zone configured for finalwishes.app
+- Staging environment via Firebase preview channel
+- SOC 2 evidence collection (9 files)
+- Cloud Monitoring uptime check
+- Firebase Resize Images extension deployed (a2c9614)
+
+### Fixed
+- HIGH-2: Subscription cancel metadata verification (adff2ff)
+- HIGH-3: TipTap HTML sanitization with DOMPurify (adff2ff)
+- Genkit panic recovery for missing GEMINI_API_KEY (c401b65)
+- Frontend wired to Cloud Run API URL (98a74b2)
+- npm audit: 0 vulnerabilities (98a74b2)
+
+### Changed
+- Go toolchain 1.24 → 1.26 (Dockerfile + go.mod + go.work) (adff2ff)
+- Application-level rate limiting added (100 req/60s/IP) (692b96d)
+
+---
+
 ## [0.10.0-alpha] — 2026-04-03
 ### YouTube Memorials + Photo Gallery (Sprint 4)
 - **YouTube URL embedding** — paste any YouTube link to create a video memorial

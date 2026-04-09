@@ -405,3 +405,54 @@ export async function updateTimeCapsule(
 export async function cancelTimeCapsule(estateId: string, capsuleId: string): Promise<ActionResult> {
   return updateTimeCapsule(estateId, capsuleId, { status: 'cancelled' });
 }
+
+// ─── Heirloom CRUD ──────────────────────────────────────────────────────────
+
+export async function addHeirloom(params: {
+  estateId: string;
+  name: string;
+  category: string;
+  description: string;
+  estimatedValue?: number;
+  designatedHeir?: string;
+  photoUrls?: string[];
+  location?: string;
+  provenance?: string;
+}): Promise<ActionResult> {
+  try {
+    const { estateId, ...data } = params;
+    const ref = await addDoc(collection(db, `estates/${estateId}/heirlooms`), {
+      ...data,
+      estateId,
+      photoUrls: data.photoUrls ?? [],
+      status: 'active',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, id: ref.id };
+  } catch (err: unknown) {
+    console.error('[addHeirloom] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function updateHeirloom(
+  estateId: string,
+  heirloomId: string,
+  data: Record<string, unknown>
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/heirlooms`, heirloomId), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[updateHeirloom] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function archiveHeirloom(estateId: string, heirloomId: string): Promise<ActionResult> {
+  return updateHeirloom(estateId, heirloomId, { status: 'archived' });
+}

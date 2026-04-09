@@ -1,0 +1,504 @@
+/* eslint-disable react-refresh/only-export-components */
+import { createFileRoute, useParams } from '@tanstack/react-router'
+import { useState, useMemo, useCallback } from 'react'
+import { useHeirlooms, type Heirloom } from '../lib/firestore'
+import { addHeirloom, archiveHeirloom } from '../lib/estate-actions'
+import {
+  Plus,
+  Gem,
+  MapPin,
+  User,
+  DollarSign,
+  Archive,
+  Image,
+  Palette,
+  Armchair,
+  Car,
+  Trophy,
+  ScrollText,
+  Package,
+} from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { Textarea } from '@/components/ui/textarea'
+import { Separator } from '@/components/ui/separator'
+
+export const Route = createFileRoute('/estates/$estateId/heirlooms')({
+  component: HeirloomsPage,
+})
+
+// ─── Category Config ──────────────────────────────────────────────────────
+
+const CATEGORIES = [
+  { value: 'jewelry' as const, label: 'Jewelry', icon: Gem, color: '#C8A951' },
+  { value: 'artwork' as const, label: 'Artwork', icon: Palette, color: '#7C3AED' },
+  { value: 'furniture' as const, label: 'Furniture', icon: Armchair, color: '#059669' },
+  { value: 'vehicle' as const, label: 'Vehicle', icon: Car, color: '#2563EB' },
+  { value: 'collectible' as const, label: 'Collectible', icon: Trophy, color: '#F59E0B' },
+  { value: 'family_artifact' as const, label: 'Family Artifact', icon: ScrollText, color: '#DC2626' },
+  { value: 'other' as const, label: 'Other', icon: Package, color: '#64748B' },
+] as const
+
+type CategoryValue = (typeof CATEGORIES)[number]['value']
+
+function getCategoryConfig(value: string) {
+  return CATEGORIES.find((c) => c.value === value) || CATEGORIES[CATEGORIES.length - 1]
+}
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+}
+
+// ─── Main Page ──────────────────────────────────────────────────────────────
+
+function HeirloomsPage() {
+  const { estateId: routeId } = useParams({ from: '/estates/$estateId/heirlooms' })
+  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+
+  const { data: items, loading } = useHeirlooms(estateId)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [filterCategory, setFilterCategory] = useState<CategoryValue | 'all'>('all')
+
+  // Only show active items
+  const activeItems = useMemo(() => items.filter((i) => i.status === 'active'), [items])
+
+  const filtered = useMemo(() => {
+    if (filterCategory === 'all') return activeItems
+    return activeItems.filter((i) => i.category === filterCategory)
+  }, [activeItems, filterCategory])
+
+  const stats = useMemo(() => ({
+    total: activeItems.length,
+    totalValue: activeItems.reduce((sum, i) => sum + (i.estimatedValue || 0), 0),
+    categories: new Set(activeItems.map((i) => i.category)).size,
+  }), [activeItems])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+      {/* ── Page Header ── */}
+      <div className="flex justify-between items-end border-b border-slate-50 pb-16">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
+            <div className="w-10 h-px bg-[#133378]/20" />
+            <span>Physical Asset Inventory</span>
+          </div>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+            Heirloom Registry
+          </h2>
+          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
+            Physical assets, family treasures, and sentimental items worth preserving for future generations.
+          </p>
+        </div>
+        <Button
+          onClick={() => setModalOpen(true)}
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)]"
+        >
+          <Plus className="w-5 h-5" />
+          Add Heirloom
+        </Button>
+      </div>
+
+      {/* ── Stats ── */}
+      <div className="grid grid-cols-3 gap-8">
+        {[
+          { label: 'Total Items', value: String(stats.total), icon: Gem },
+          { label: 'Estimated Value', value: formatCurrency(stats.totalValue), icon: DollarSign },
+          { label: 'Categories', value: String(stats.categories), icon: Archive },
+        ].map((s) => (
+          <Card key={s.label} className="bg-[#F8FAFC] rounded-3xl border-slate-100 py-0">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#133378]/5 rounded-2xl flex items-center justify-center">
+                  <s.icon className="w-5 h-5 text-[#133378]" />
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-[#0F172A]">{s.value}</p>
+                  <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">{s.label}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* ── Category Filter ── */}
+      <div className="flex gap-3 flex-wrap">
+        <Button
+          variant={filterCategory === 'all' ? 'default' : 'secondary'}
+          onClick={() => setFilterCategory('all')}
+          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[#133378] text-white hover:bg-[#1E3A5F]' : 'bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]'}`}
+        >
+          All
+        </Button>
+        {CATEGORIES.map((c) => (
+          <Button
+            key={c.value}
+            variant={filterCategory === c.value ? 'default' : 'secondary'}
+            onClick={() => setFilterCategory(c.value)}
+            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[#133378] text-white hover:bg-[#1E3A5F]' : 'bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]'}`}
+          >
+            <c.icon className="w-3.5 h-3.5" />
+            {c.label}
+          </Button>
+        ))}
+      </div>
+
+      {/* ── Items Grid ── */}
+      {filtered.length === 0 ? (
+        <div className="text-center py-24">
+          <div className="w-20 h-20 bg-[#C8A951]/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <Gem className="w-8 h-8 text-[#C8A951]/40" />
+          </div>
+          <h3 className="text-xl font-bold text-[#0F172A] mb-2">No heirlooms registered yet</h3>
+          <p className="text-[#64748B] mb-8">Document your family treasures to ensure they reach the right hands.</p>
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[14px]"
+          >
+            <Plus className="w-4 h-4" /> Add First Heirloom
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {filtered.map((item) => (
+            <HeirloomCard key={item.id} item={item} estateId={estateId} />
+          ))}
+        </div>
+      )}
+
+      {/* ── Modal ── */}
+      <AddHeirloomModal estateId={estateId} open={modalOpen} onOpenChange={setModalOpen} />
+    </div>
+  )
+}
+
+// ─── Heirloom Card ──────────────────────────────────────────────────────────
+
+function HeirloomCard({ item, estateId }: { item: Heirloom; estateId: string }) {
+  const cat = getCategoryConfig(item.category)
+  const [confirming, setConfirming] = useState(false)
+  const Icon = cat.icon
+  const hasPhoto = item.photoUrls && item.photoUrls.length > 0
+
+  const handleArchive = useCallback(async () => {
+    await archiveHeirloom(estateId, item.id)
+    setConfirming(false)
+  }, [estateId, item.id])
+
+  return (
+    <Card className="rounded-3xl border-slate-100 hover:border-[#133378]/10 transition-all group py-0 overflow-hidden">
+      <CardContent className="p-0">
+        {/* Photo / Placeholder */}
+        <div className="relative h-48 bg-[#F8FAFC] flex items-center justify-center overflow-hidden">
+          {hasPhoto ? (
+            <img
+              src={item.photoUrls[0]}
+              alt={item.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <Image className="w-10 h-10 text-[#133378]/15" />
+              <span className="text-[11px] font-bold text-[#133378]/20 uppercase tracking-widest">No Photo</span>
+            </div>
+          )}
+          {/* Category badge overlay */}
+          <Badge
+            className="absolute top-4 right-4 px-3 py-1.5 h-auto text-[10px] font-bold uppercase tracking-widest rounded-lg border-transparent backdrop-blur-sm"
+            style={{ backgroundColor: `${cat.color}20`, color: cat.color }}
+          >
+            <Icon className="w-3 h-3" />
+            {cat.label}
+          </Badge>
+        </div>
+
+        <div className="p-8">
+          {/* Name & Value */}
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="text-lg font-bold text-[#0F172A]">{item.name}</h3>
+            {item.estimatedValue != null && item.estimatedValue > 0 && (
+              <Badge className="px-3 py-1.5 h-auto bg-[#C8A951]/10 text-[#C8A951] text-[11px] font-bold rounded-lg border-transparent">
+                <DollarSign className="w-3 h-3" />
+                {formatCurrency(item.estimatedValue)}
+              </Badge>
+            )}
+          </div>
+
+          {/* Description */}
+          {item.description && (
+            <p className="text-[13px] text-[#64748B] line-clamp-2 mb-4">{item.description}</p>
+          )}
+
+          {/* Meta row */}
+          <div className="flex flex-wrap gap-4 mb-4">
+            {item.designatedHeir && (
+              <div className="flex items-center gap-1.5 text-[12px] text-[#334155]">
+                <User className="w-3.5 h-3.5 text-[#133378]/40" />
+                <span className="font-medium">{item.designatedHeir}</span>
+              </div>
+            )}
+            {item.location && (
+              <div className="flex items-center gap-1.5 text-[12px] text-[#334155]">
+                <MapPin className="w-3.5 h-3.5 text-[#133378]/40" />
+                <span className="font-medium">{item.location}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Provenance */}
+          {item.provenance && (
+            <div className="bg-[#F8FAFC] rounded-2xl p-5 mb-4">
+              <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest mb-2">Provenance</p>
+              <p className="text-[13px] text-[#334155] line-clamp-3">{item.provenance}</p>
+            </div>
+          )}
+
+          <Separator className="bg-slate-50 mb-4" />
+
+          {/* Archive action */}
+          <div className="flex justify-end">
+            {confirming ? (
+              <div className="flex items-center gap-3">
+                <span className="text-[12px] text-[#DC2626] font-medium">Archive this heirloom?</span>
+                <Button variant="destructive" size="xs" onClick={handleArchive} className="text-[12px] font-bold">
+                  Yes
+                </Button>
+                <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[#64748B]">
+                  No
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setConfirming(true)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Archive className="w-4 h-4 text-[#94A3B8] hover:text-[#DC2626]" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// ─── Add Modal ──────────────────────────────────────────────────────────────
+
+function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const [saving, setSaving] = useState(false)
+  const [form, setForm] = useState({
+    name: '',
+    category: 'jewelry' as CategoryValue,
+    description: '',
+    estimatedValue: '',
+    designatedHeir: '',
+    location: '',
+    provenance: '',
+    photoUrls: '',
+  })
+
+  const resetForm = useCallback(() => {
+    setForm({
+      name: '',
+      category: 'jewelry',
+      description: '',
+      estimatedValue: '',
+      designatedHeir: '',
+      location: '',
+      provenance: '',
+      photoUrls: '',
+    })
+  }, [])
+
+  const handleSubmit = useCallback(async () => {
+    if (!form.name.trim() || !form.description.trim()) return
+    setSaving(true)
+    const photoUrls = form.photoUrls
+      .split(',')
+      .map((u) => u.trim())
+      .filter(Boolean)
+    await addHeirloom({
+      estateId,
+      name: form.name.trim(),
+      category: form.category,
+      description: form.description.trim(),
+      estimatedValue: form.estimatedValue ? parseFloat(form.estimatedValue) : undefined,
+      designatedHeir: form.designatedHeir.trim() || undefined,
+      photoUrls,
+      location: form.location.trim() || undefined,
+      provenance: form.provenance.trim() || undefined,
+    })
+    setSaving(false)
+    resetForm()
+    onOpenChange(false)
+  }, [estateId, form, onOpenChange, resetForm])
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton
+        className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10"
+      >
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+            Add Heirloom
+          </DialogTitle>
+          <DialogDescription>
+            Register a physical asset, family treasure, or sentimental item.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6 py-4">
+          {/* Name */}
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              Item Name *
+            </Label>
+            <Input
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              placeholder="e.g., Grandmother's Diamond Ring, Steinway Grand Piano"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+            />
+          </div>
+
+          {/* Category */}
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              Category
+            </Label>
+            <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
+              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORIES.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              Description *
+            </Label>
+            <Textarea
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              placeholder="Describe the item — materials, condition, distinguishing features..."
+              rows={3}
+              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[#0F172A] resize-none"
+            />
+          </div>
+
+          {/* Two-column row: Value + Heir */}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+                Estimated Value
+              </Label>
+              <Input
+                type="number"
+                value={form.estimatedValue}
+                onChange={(e) => setForm((f) => ({ ...f, estimatedValue: e.target.value }))}
+                placeholder="$0"
+                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+                Designated Heir
+              </Label>
+              <Input
+                value={form.designatedHeir}
+                onChange={(e) => setForm((f) => ({ ...f, designatedHeir: e.target.value }))}
+                placeholder="Name of the intended recipient"
+                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              />
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              Location
+            </Label>
+            <Input
+              value={form.location}
+              onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+              placeholder="Where is the item kept? e.g., Master bedroom safe, Storage unit #42"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+            />
+          </div>
+
+          {/* Provenance */}
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              Provenance / Story
+            </Label>
+            <Textarea
+              value={form.provenance}
+              onChange={(e) => setForm((f) => ({ ...f, provenance: e.target.value }))}
+              placeholder="The history and story behind this item — where it came from, who owned it, why it matters..."
+              rows={3}
+              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[#0F172A] resize-none"
+            />
+          </div>
+
+          {/* Photo URLs */}
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              Photo URLs
+            </Label>
+            <Input
+              value={form.photoUrls}
+              onChange={(e) => setForm((f) => ({ ...f, photoUrls: e.target.value }))}
+              placeholder="Comma-separated URLs (Cloud Storage upload coming soon)"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+            />
+            <p className="text-[11px] text-[#94A3B8]">Separate multiple URLs with commas. Direct photo upload will be available in a future update.</p>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <DialogFooter className="gap-4 pt-8 border-t border-slate-100">
+          <Button
+            variant="ghost"
+            onClick={() => onOpenChange(false)}
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={saving || !form.name.trim() || !form.description.trim()}
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
+          >
+            {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Gem className="w-4 h-4" />}
+            {saving ? 'Saving...' : 'Save Heirloom'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}

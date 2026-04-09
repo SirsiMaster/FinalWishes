@@ -301,6 +301,18 @@ service cloud.firestore {
           && resource.data.status != 'finalized';
       }
 
+      // ── 3n. Heirloom Registry (Physical Asset Inventory) ──
+      match /heirlooms/{heirloomId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['name', 'category', 'status', 'createdAt'])
+          && request.resource.data.category in ['jewelry', 'artwork', 'furniture', 'vehicle', 'collectible', 'family_artifact', 'other']
+          && request.resource.data.status == 'active';
+        allow update: if canWriteEstate(estateId)
+          && resource.data.status == 'active';
+        allow delete: if isEstatePrincipal(estateId);
+      }
+
       // ── 3m. Time Capsules (Scheduled Messages) ──
       match /capsules/{capsuleId} {
         allow read: if canAccessEstate(estateId);

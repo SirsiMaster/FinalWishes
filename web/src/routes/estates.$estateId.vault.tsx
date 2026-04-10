@@ -7,6 +7,7 @@ import { createDocumentRecord, archiveDocument } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
+import { trackDocumentUploaded, startVaultTrace } from '../lib/analytics'
 
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
@@ -91,6 +92,7 @@ function VaultPage() {
   const uploadFile = useCallback(
     async (file: File) => {
       const _uploadIndex = Date.now()
+      const perfTrace = startVaultTrace()
       const newUpload: UploadState = { file, progress: 0, status: 'preparing' }
 
       setUploads((prev) => [...prev, newUpload])
@@ -154,6 +156,8 @@ function VaultPage() {
         })
 
         updateUpload({ status: 'done', progress: 100 })
+        perfTrace?.stop()
+        trackDocumentUploaded(estateId, file.type || 'unknown')
 
         // Remove from upload list after 3 seconds
         setTimeout(() => {

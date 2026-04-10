@@ -16,6 +16,7 @@ import { useState } from 'react'
 import { useAuth } from '../lib/auth'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { createEstate } from '../lib/estate-actions'
+import { trackEstateCreated, startEstateCreateTrace } from '../lib/analytics'
 
 export const Route = createFileRoute('/estates/create')({
   component: CreateEstatePage,
@@ -37,12 +38,15 @@ function CreateEstatePage() {
     setSaving(true);
     setError(null);
 
+    const perfTrace = startEstateCreateTrace();
     const result = await createEstate({
       name: estateName.trim(),
       principalId: user.uid,
     });
 
     if (result.success && result.id) {
+      perfTrace?.stop();
+      trackEstateCreated(result.id);
       // Navigate to the new estate's dashboard
       navigate({ to: '/estates/$estateId/dashboard', params: { estateId: result.id } });
     } else {

@@ -1,46 +1,42 @@
-# How to Use the Document Vault
+# The Document Vault
 
-Your Document Vault is a secure, encrypted storage space for all your important estate documents. Every file you upload is protected with AES-256 encryption.
+> A secure, encrypted storage space for your most important documents -- wills, deeds, insurance policies, tax records, and personal letters.
 
-## Uploading Documents
+## What You'll Need
+- An active FinalWishes account with at least one estate
 
-You can upload documents in two ways:
+## Step by Step
 
-1. **Drag and drop** — Simply drag files from your computer and drop them onto the upload area
-2. **Click to browse** — Click the upload area to open your file browser and select files
+### Uploading Documents
+1. Navigate to your estate dashboard and click **Vault** in the sidebar
+2. Upload files in two ways:
+   - **Drag and drop** -- drag files from your computer onto the upload area
+   - **Click to browse** -- click the upload area to select files from your computer
+3. You can upload multiple files at once. Each shows a progress bar while uploading.
 
-You can upload multiple files at once. Each file shows a progress bar while uploading.
+**Accepted file types:** PDFs, images (JPEG, PNG, HEIC), Word documents (DOC, DOCX), and text files. Maximum 50 MB per file.
 
-### What you can upload
-- PDFs (wills, trusts, tax forms, legal documents)
-- Images (JPEG, PNG, HEIC — photos of documents or family memories)
-- Word documents (DOC, DOCX)
-- Text files (TXT)
-- Maximum file size: 50 MB per file
+### Document Categories
+FinalWishes automatically sorts your uploads into three categories based on the filename:
+- **Legal** -- files with words like "will," "trust," "deed," or "contract"
+- **Financial** -- files with words like "tax," "bank," "statement," or "insurance"
+- **Personal** -- files with words like "photo," "memoir," "letter," or "family"
 
-### Automatic categorization
-FinalWishes automatically categorizes your documents based on the filename:
-- **Legal Documents** — files with words like "will", "trust", "deed", "contract"
-- **Financial Records** — files with words like "tax", "bank", "statement", "insurance"
-- **Personal Memories** — files with words like "photo", "memoir", "letter", "family"
+Click the category cards at the top of the page to filter your documents.
 
-You can filter by category by clicking the folder cards at the top.
+### Downloading Documents
+Click the **Download** button on any document to save it to your computer. Each download link is generated fresh for security and expires after one hour.
 
-## Downloading Documents
+### Understanding AES-256 Encryption
+Every file you upload is encrypted using AES-256 -- the same standard used by banks and government agencies. In simple terms: your document is scrambled into unreadable data before it's stored. Only your authorized account can unscramble and view it. Even if someone gained access to the raw storage, they would see nothing usable.
 
-Click the **Download** button on any document to download it to your computer. The download link is generated fresh each time for security.
+## Tips
+- Name your files clearly (e.g., "Last-Will-2024.pdf") to help automatic categorization.
+- Upload both the original and any signed copies of important legal documents.
 
-## Previewing Documents
+## FAQ
+**Q: Can anyone at FinalWishes see my documents?**
+A: No. Your files are encrypted before storage. FinalWishes staff cannot decrypt or view them.
 
-For PDFs and images, you can click on the document name to open a preview. The preview shows the document right in your browser without downloading it.
-
-## Archiving Documents
-
-If you need to remove a document, click the trash icon. This **archives** the document — it doesn't permanently delete it. Archived documents can be restored if needed.
-
-## Security
-
-- All documents are encrypted with AES-256 before storage
-- Access requires your FinalWishes login
-- Download links expire after 1 hour
-- Only people with access to your estate can view your documents
+**Q: What happens if I accidentally delete a document?**
+A: Deleting a document archives it rather than permanently removing it. Archived documents can be restored if needed.

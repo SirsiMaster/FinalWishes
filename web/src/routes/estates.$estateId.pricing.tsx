@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Sparkles,
 } from 'lucide-react'
+import { trackCheckoutStarted, trackPaymentSuccess } from '../lib/analytics'
 
 export const Route = createFileRoute('/estates/$estateId/pricing')({
   component: PricingPage,
@@ -98,6 +99,13 @@ function PricingPage() {
 
   const currentTier = estate?.tier || 'free'
 
+  // Track successful payment on return from Stripe
+  useEffect(() => {
+    if (paymentResult === 'success' && currentTier !== 'free') {
+      trackPaymentSuccess(currentTier)
+    }
+  }, [paymentResult, currentTier])
+
   useEffect(() => {
     fetchTiers()
       .then((data) => {
@@ -117,6 +125,7 @@ function PricingPage() {
       setCheckoutLoading(tierId)
       setError(null)
       try {
+        trackCheckoutStarted(tierId)
         const token = await user.getIdToken()
         const result = await createCheckout({
           tierId,

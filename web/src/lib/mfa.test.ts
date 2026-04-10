@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import type { User, TotpSecret, MultiFactorResolver } from 'firebase/auth'
 
 // ─── Mock Firebase Auth ──────────────────────────────────────────────────────
 
@@ -55,7 +56,7 @@ describe('getMFAStatus', () => {
   })
 
   it('returns not enrolled when no factors', () => {
-    const status = getMFAStatus({ uid: 'user-1' } as any)
+    const status = getMFAStatus({ uid: 'user-1' } as unknown as User)
     expect(status.enrolled).toBe(false)
     expect(status.methods).toEqual([])
   })
@@ -63,7 +64,7 @@ describe('getMFAStatus', () => {
   it('returns enrolled with methods when factors exist', () => {
     mockEnrolledFactors.push({ factorId: 'totp', displayName: 'Authenticator App', uid: 'f1' })
 
-    const status = getMFAStatus({ uid: 'user-1' } as any)
+    const status = getMFAStatus({ uid: 'user-1' } as unknown as User)
     expect(status.enrolled).toBe(true)
     expect(status.methods).toEqual(['Authenticator App'])
   })
@@ -71,7 +72,7 @@ describe('getMFAStatus', () => {
   it('falls back to factorId when displayName is empty', () => {
     mockEnrolledFactors.push({ factorId: 'totp', displayName: '', uid: 'f1' })
 
-    const status = getMFAStatus({ uid: 'user-1' } as any)
+    const status = getMFAStatus({ uid: 'user-1' } as unknown as User)
     expect(status.methods).toEqual(['totp'])
   })
 })
@@ -86,7 +87,7 @@ describe('startTotpEnrollment', () => {
     mockGetSession.mockResolvedValue('mock-session')
     mockGenerateSecret.mockResolvedValue(mockSecret)
 
-    const result = await startTotpEnrollment({ uid: 'user-1', email: 'test@example.com' } as any)
+    const result = await startTotpEnrollment({ uid: 'user-1', email: 'test@example.com' } as unknown as User)
 
     expect('error' in result).toBe(false)
     if (!('error' in result)) {
@@ -98,7 +99,7 @@ describe('startTotpEnrollment', () => {
   it('returns error on failure', async () => {
     mockGetSession.mockRejectedValue(new Error('Session expired'))
 
-    const result = await startTotpEnrollment({ uid: 'user-1', email: 'test@example.com' } as any)
+    const result = await startTotpEnrollment({ uid: 'user-1', email: 'test@example.com' } as unknown as User)
 
     expect('error' in result).toBe(true)
     if ('error' in result) {
@@ -114,8 +115,8 @@ describe('finalizeTotpEnrollment', () => {
     mockEnroll.mockResolvedValue(undefined)
 
     const result = await finalizeTotpEnrollment(
-      { uid: 'user-1' } as any,
-      { secretKey: 'ABC' } as any,
+      { uid: 'user-1' } as unknown as User,
+      { secretKey: 'ABC' } as unknown as TotpSecret,
       '123456'
     )
 
@@ -128,8 +129,8 @@ describe('finalizeTotpEnrollment', () => {
     mockEnroll.mockRejectedValue({ code: 'auth/invalid-verification-code' })
 
     const result = await finalizeTotpEnrollment(
-      { uid: 'user-1' } as any,
-      { secretKey: 'ABC' } as any,
+      { uid: 'user-1' } as unknown as User,
+      { secretKey: 'ABC' } as unknown as TotpSecret,
       '000000'
     )
 
@@ -147,7 +148,7 @@ describe('resolveTotpChallenge', () => {
       resolveSignIn: vi.fn().mockResolvedValue(undefined),
     }
 
-    const result = await resolveTotpChallenge(mockResolver as any, '123456')
+    const result = await resolveTotpChallenge(mockResolver as unknown as MultiFactorResolver, '123456')
 
     expect(result.success).toBe(true)
     expect(mockAssertionForSignIn).toHaveBeenCalledWith('hint-1', '123456')
@@ -160,7 +161,7 @@ describe('resolveTotpChallenge', () => {
       resolveSignIn: vi.fn(),
     }
 
-    const result = await resolveTotpChallenge(mockResolver as any, '123456')
+    const result = await resolveTotpChallenge(mockResolver as unknown as MultiFactorResolver, '123456')
 
     expect(result.success).toBe(false)
     expect(result.error).toContain('No authenticator app enrolled')
@@ -172,7 +173,7 @@ describe('resolveTotpChallenge', () => {
       resolveSignIn: vi.fn().mockRejectedValue({ code: 'auth/invalid-verification-code' }),
     }
 
-    const result = await resolveTotpChallenge(mockResolver as any, '000000')
+    const result = await resolveTotpChallenge(mockResolver as unknown as MultiFactorResolver, '000000')
 
     expect(result.success).toBe(false)
     expect(result.error).toContain('Invalid code')
@@ -186,7 +187,7 @@ describe('unenrollTotp', () => {
     mockEnrolledFactors.push({ factorId: 'totp', displayName: 'Authenticator App', uid: 'f1' })
     mockUnenroll.mockResolvedValue(undefined)
 
-    const result = await unenrollTotp({ uid: 'user-1' } as any)
+    const result = await unenrollTotp({ uid: 'user-1' } as unknown as User)
 
     expect(result.success).toBe(true)
     expect(mockUnenroll).toHaveBeenCalled()
@@ -195,7 +196,7 @@ describe('unenrollTotp', () => {
   it('returns error when no TOTP factor enrolled', async () => {
     // mockEnrolledFactors is empty
 
-    const result = await unenrollTotp({ uid: 'user-1' } as any)
+    const result = await unenrollTotp({ uid: 'user-1' } as unknown as User)
 
     expect(result.success).toBe(false)
     expect(result.error).toContain('No authenticator app enrolled')

@@ -3,6 +3,9 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
 import { useTimeCapsules, type TimeCapsule } from '../lib/firestore'
 import { addTimeCapsule, cancelTimeCapsule } from '../lib/estate-actions'
+import { useAuth } from '../lib/auth'
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 import {
   Clock,
   Heart,
@@ -201,6 +204,7 @@ function CreateModal({
   estateId: string
   onClose: () => void
 }) {
+  const { user } = useAuth()
   const [saving, setSaving] = useState(false)
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('scheduled_date')
   const [error, setError] = useState<string | null>(null)
@@ -247,6 +251,24 @@ function CreateModal({
       ...(deliveryType === 'scheduled_date' && scheduledDateStr ? { scheduledDate: new Date(scheduledDateStr) } : {}),
       ...(deliveryType === 'anniversary' ? { anniversaryDate: `${anniversaryMonth.padStart(2, '0')}-${anniversaryDay.padStart(2, '0')}` } : {}),
     })
+
+    if (result.success && result.id) {
+      // Schedule delivery via Go API
+      try {
+        const token = await user?.getIdToken()
+        await fetch(`${API_BASE}/api/v1/capsules/schedule`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ estateId, capsuleId: result.id }),
+        })
+      } catch (err) {
+        console.error('[CapsuleSchedule] Failed to schedule delivery:', err)
+        // Capsule was created in Firestore; scheduling can be retried
+      }
+    }
 
     setSaving(false)
     if (result.success) {
@@ -458,14 +480,29 @@ function CancelModal({
   estateId: string
   onClose: () => void
 }) {
+  const { user } = useAuth()
   const [cancelling, setCancelling] = useState(false)
 
   const handleCancel = useCallback(async () => {
     setCancelling(true)
+    // Cancel scheduled delivery via Go API BEFORE updating Firestore
+    try {
+      const token = await user?.getIdToken()
+      await fetch(`${API_BASE}/api/v1/capsules/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estateId, capsuleId: capsule.id }),
+      })
+    } catch (err) {
+      console.error('[CapsuleCancel] Failed to cancel scheduled delivery:', err)
+    }
     await cancelTimeCapsule(estateId, capsule.id)
     setCancelling(false)
     onClose()
-  }, [estateId, capsule.id, onClose])
+  }, [estateId, capsule.id, onClose, user])
 
   return (
     <div

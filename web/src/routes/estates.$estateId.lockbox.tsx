@@ -1,8 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useLockboxItems, type LockboxItem } from '../lib/firestore'
 import { addLockboxItem, archiveLockboxItem } from '../lib/estate-actions'
+import { useAuth } from '../lib/auth'
 import {
   Plus,
   X,
@@ -19,6 +20,8 @@ import {
   Shield,
   Package,
 } from 'lucide-react'
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 export const Route = createFileRoute('/estates/$estateId/lockbox')({
   component: LockboxPage,
@@ -169,8 +172,13 @@ function LockboxPage() {
 // ─── Lockbox Card ──────────────────────────────────────────────────────────
 
 function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }) {
+  const { user } = useAuth()
   const cat = getCategoryConfig(item.category)
   const [confirming, setConfirming] = useState(false)
+  const [showCredentials, setShowCredentials] = useState(false)
+  const [credentials, setCredentials] = useState<{ password?: string; pin?: string; notes?: string } | null>(null)
+  const [credLoading, setCredLoading] = useState(false)
+  const clearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const Icon = cat.icon
 
   const handleArchive = useCallback(async () => {
@@ -178,68 +186,193 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
     setConfirming(false)
   }, [estateId, item.id])
 
+  const handleViewCredentials = useCallback(async () => {
+    if (!user) return
+    setCredLoading(true)
+    try {
+      const token = await user.getIdToken()
+      const res = await fetch(`${API_BASE}/api/v1/lockbox/retrieve-credentials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estateId, itemId: item.id }),
+      })
+      if (!res.ok) throw new Error('Failed to retrieve credentials')
+      const data = await res.json()
+      setCredentials(data)
+      setShowCredentials(true)
+    } catch (err) {
+      console.error('[Lockbox] Failed to retrieve credentials:', err)
+      alert('Failed to retrieve credentials. Please try again.')
+    } finally {
+      setCredLoading(false)
+    }
+  }, [user, estateId, item.id])
+
+  // Auto-clear credentials after 30 seconds
+  useEffect(() => {
+    if (showCredentials && credentials) {
+      clearTimerRef.current = setTimeout(() => {
+        setCredentials(null)
+        setShowCredentials(false)
+      }, 30000)
+    }
+    return () => {
+      if (clearTimerRef.current) clearTimeout(clearTimerRef.current)
+    }
+  }, [showCredentials, credentials])
+
+  const handleCloseCredentials = useCallback(() => {
+    setCredentials(null)
+    setShowCredentials(false)
+    if (clearTimerRef.current) clearTimeout(clearTimerRef.current)
+  }, [])
+
   return (
-    <div className="bg-white rounded-3xl border border-slate-100 p-8 hover:border-[#133378]/10 transition-all group">
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${cat.color}10` }}>
-            <Icon className="w-5 h-5" style={{ color: cat.color }} />
+    <>
+      <div className="bg-white rounded-3xl border border-slate-100 p-8 hover:border-[#133378]/10 transition-all group">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${cat.color}10` }}>
+              <Icon className="w-5 h-5" style={{ color: cat.color }} />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-[#0F172A]">{item.accountName}</h3>
+              {item.institution && <p className="text-[13px] text-[#64748B] font-medium">{item.institution}</p>}
+            </div>
           </div>
-          <div>
-            <h3 className="text-lg font-bold text-[#0F172A]">{item.accountName}</h3>
-            {item.institution && <p className="text-[13px] text-[#64748B] font-medium">{item.institution}</p>}
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {item.hasSecureCredentials && (
-            <span className="px-3 py-1.5 bg-[#C8A951]/10 text-[#C8A951] text-[10px] font-bold uppercase tracking-widest rounded-lg flex items-center gap-1.5">
-              <ShieldCheck className="w-3 h-3" /> Secured
+          <div className="flex items-center gap-2">
+            {item.hasSecureCredentials && (
+              <span className="px-3 py-1.5 bg-[#C8A951]/10 text-[#C8A951] text-[10px] font-bold uppercase tracking-widest rounded-lg flex items-center gap-1.5">
+                <ShieldCheck className="w-3 h-3" /> Secured
+              </span>
+            )}
+            <span className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg" style={{ backgroundColor: `${cat.color}10`, color: cat.color }}>
+              {cat.label}
             </span>
-          )}
-          <span className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg" style={{ backgroundColor: `${cat.color}10`, color: cat.color }}>
-            {cat.label}
-          </span>
-        </div>
-      </div>
-
-      {item.accountIdentifier && (
-        <p className="text-[13px] text-[#334155] mb-3">
-          <span className="text-[#64748B]">Identifier:</span> {item.accountIdentifier}
-        </p>
-      )}
-
-      {item.transitionInstructions && (
-        <div className="bg-[#F8FAFC] rounded-2xl p-5 mb-4">
-          <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest mb-2">Transition Instructions</p>
-          <p className="text-[13px] text-[#334155] line-clamp-3">{item.transitionInstructions}</p>
-        </div>
-      )}
-
-      {item.notes && (
-        <p className="text-[13px] text-[#64748B] line-clamp-2 mb-4">{item.notes}</p>
-      )}
-
-      <div className="flex justify-end pt-2 border-t border-slate-50">
-        {confirming ? (
-          <div className="flex items-center gap-3">
-            <span className="text-[12px] text-[#DC2626] font-medium">Archive this item?</span>
-            <button onClick={handleArchive} className="text-[12px] font-bold text-[#DC2626] hover:underline">Yes</button>
-            <button onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[#64748B] hover:underline">No</button>
           </div>
-        ) : (
-          <button onClick={() => setConfirming(true)} className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <Trash2 className="w-4 h-4 text-[#94A3B8] hover:text-[#DC2626]" />
-          </button>
+        </div>
+
+        {item.accountIdentifier && (
+          <p className="text-[13px] text-[#334155] mb-3">
+            <span className="text-[#64748B]">Identifier:</span> {item.accountIdentifier}
+          </p>
         )}
+
+        {item.transitionInstructions && (
+          <div className="bg-[#F8FAFC] rounded-2xl p-5 mb-4">
+            <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest mb-2">Transition Instructions</p>
+            <p className="text-[13px] text-[#334155] line-clamp-3">{item.transitionInstructions}</p>
+          </div>
+        )}
+
+        {item.notes && (
+          <p className="text-[13px] text-[#64748B] line-clamp-2 mb-4">{item.notes}</p>
+        )}
+
+        <div className="flex justify-between items-center pt-2 border-t border-slate-50">
+          {item.hasSecureCredentials ? (
+            <button
+              onClick={handleViewCredentials}
+              disabled={credLoading}
+              className="text-[12px] font-bold text-[#C8A951] hover:text-[#133378] transition-colors flex items-center gap-1.5 disabled:opacity-50"
+            >
+              {credLoading ? (
+                <div className="w-3 h-3 border-2 border-[#C8A951]/30 border-t-[#C8A951] rounded-full animate-spin" />
+              ) : (
+                <Key className="w-3.5 h-3.5" />
+              )}
+              View Credentials
+            </button>
+          ) : (
+            <div />
+          )}
+          <div className="ml-auto">
+            {confirming ? (
+              <div className="flex items-center gap-3">
+                <span className="text-[12px] text-[#DC2626] font-medium">Archive this item?</span>
+                <button onClick={handleArchive} className="text-[12px] font-bold text-[#DC2626] hover:underline">Yes</button>
+                <button onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[#64748B] hover:underline">No</button>
+              </div>
+            ) : (
+              <button onClick={() => setConfirming(true)} className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <Trash2 className="w-4 h-4 text-[#94A3B8] hover:text-[#DC2626]" />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Secure Credentials Modal */}
+      {showCredentials && credentials && (
+        <div
+          className="fixed inset-0 z-[600] flex items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm p-4"
+          onClick={handleCloseCredentials}
+        >
+          <div
+            className="bg-white rounded-3xl w-full max-w-md shadow-2xl p-8 border border-[#C8A951]/20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#C8A951]/10 flex items-center justify-center">
+                  <ShieldCheck className="w-5 h-5 text-[#C8A951]" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#0F172A]">{item.accountName}</h3>
+                  <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest">Auto-clears in 30 seconds</p>
+                </div>
+              </div>
+              <button
+                onClick={handleCloseCredentials}
+                className="w-8 h-8 rounded-lg bg-[#F1F5F9] flex items-center justify-center hover:bg-[#E2E8F0]"
+              >
+                <X className="w-4 h-4 text-[#64748B]" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {credentials.password && (
+                <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-slate-100">
+                  <p className="text-[10px] font-bold text-[#133378]/40 uppercase tracking-widest mb-1">Password</p>
+                  <p className="text-[14px] font-mono font-bold text-[#0F172A] break-all select-all">{credentials.password}</p>
+                </div>
+              )}
+              {credentials.pin && (
+                <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-slate-100">
+                  <p className="text-[10px] font-bold text-[#133378]/40 uppercase tracking-widest mb-1">PIN</p>
+                  <p className="text-[14px] font-mono font-bold text-[#0F172A] select-all">{credentials.pin}</p>
+                </div>
+              )}
+              {credentials.notes && (
+                <div className="bg-[#F8FAFC] rounded-2xl p-4 border border-slate-100">
+                  <p className="text-[10px] font-bold text-[#133378]/40 uppercase tracking-widest mb-1">Secure Notes</p>
+                  <p className="text-[13px] text-[#334155] whitespace-pre-wrap select-all">{credentials.notes}</p>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={handleCloseCredentials}
+              className="w-full mt-6 py-3 rounded-2xl bg-[#133378] text-white font-bold text-[13px] hover:bg-[#1E3A5F] transition-all"
+            >
+              Close & Clear
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
 // ─── Add Modal ──────────────────────────────────────────────────────────────
 
 function AddLockboxModal({ estateId, onClose }: { estateId: string; onClose: () => void }) {
+  const { user } = useAuth()
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [form, setForm] = useState({
     accountName: '',
     category: 'banking' as CategoryValue,
@@ -249,14 +382,58 @@ function AddLockboxModal({ estateId, onClose }: { estateId: string; onClose: () 
     transitionInstructions: '',
     hasSecureCredentials: false,
   })
+  const [secureFields, setSecureFields] = useState({
+    password: '',
+    pin: '',
+    secureNotes: '',
+  })
 
   const handleSubmit = useCallback(async () => {
     if (!form.accountName.trim()) return
     setSaving(true)
-    await addLockboxItem({ estateId, ...form })
+    setError(null)
+
+    const result = await addLockboxItem({ estateId, ...form })
+
+    if (result.success && result.id && form.hasSecureCredentials) {
+      // Store encrypted credentials via Go API
+      try {
+        const token = await user?.getIdToken()
+        const res = await fetch(`${API_BASE}/api/v1/lockbox/store-credentials`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            estateId,
+            itemId: result.id,
+            password: secureFields.password,
+            pin: secureFields.pin,
+            notes: secureFields.secureNotes,
+          }),
+        })
+        if (!res.ok) {
+          console.error('[Lockbox] Failed to store encrypted credentials')
+          setError('Credential saved but encryption failed. Contact support.')
+          setSaving(false)
+          return
+        }
+      } catch (err) {
+        console.error('[Lockbox] Encryption API error:', err)
+        setError('Credential saved but encryption failed. Contact support.')
+        setSaving(false)
+        return
+      }
+    }
+
     setSaving(false)
-    onClose()
-  }, [estateId, form, onClose])
+    if (result.success) {
+      onClose()
+    } else {
+      setError(result.error || 'Failed to save credential.')
+    }
+  }, [estateId, form, secureFields, onClose, user])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={onClose}>
@@ -359,6 +536,50 @@ function AddLockboxModal({ estateId, onClose }: { estateId: string; onClose: () 
               </div>
             </div>
           </div>
+
+          {/* Secure Credential Fields (shown when toggle is on) */}
+          {form.hasSecureCredentials && (
+            <div className="space-y-4 bg-[#F8FAFC] rounded-2xl p-6 border border-[#C8A951]/20">
+              <p className="text-[11px] font-bold text-[#C8A951] uppercase tracking-widest">Encrypted Credentials (Cloud KMS)</p>
+              <div>
+                <label className="block text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest mb-2">Password</label>
+                <input
+                  type="password"
+                  value={secureFields.password}
+                  onChange={(e) => setSecureFields((s) => ({ ...s, password: e.target.value }))}
+                  placeholder="Account password"
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 text-[14px] text-[#0F172A] focus:outline-none focus:border-[#C8A951] focus:ring-1 focus:ring-[#C8A951]"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest mb-2">PIN</label>
+                <input
+                  type="password"
+                  value={secureFields.pin}
+                  onChange={(e) => setSecureFields((s) => ({ ...s, pin: e.target.value }))}
+                  placeholder="PIN or security code"
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 text-[14px] text-[#0F172A] focus:outline-none focus:border-[#C8A951] focus:ring-1 focus:ring-[#C8A951]"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest mb-2">Secure Notes</label>
+                <textarea
+                  value={secureFields.secureNotes}
+                  onChange={(e) => setSecureFields((s) => ({ ...s, secureNotes: e.target.value }))}
+                  placeholder="Security questions, recovery codes, etc."
+                  rows={2}
+                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 text-[14px] text-[#0F172A] focus:outline-none focus:border-[#C8A951] focus:ring-1 focus:ring-[#C8A951] resize-none"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Error Display */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-600 text-sm font-medium">
+              {error}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex justify-end gap-4 mt-10 pt-8 border-t border-slate-100">

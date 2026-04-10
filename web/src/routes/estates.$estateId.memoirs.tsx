@@ -8,6 +8,8 @@ import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
 export const Route = createFileRoute('/estates/$estateId/memoirs')({
   component: MemoirsPage,
 })
@@ -37,7 +39,7 @@ function MemoirsPage() {
   )
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [modalMode, setModalMode] = useState<'file' | 'youtube'>('file')
+  const [modalMode, setModalMode] = useState<'file' | 'youtube' | 'youtube-upload'>('file')
   const [uploading, setUploading] = useState(false)
   const [selectedMemoir, setSelectedMemoir] = useState<Memoir | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Memoir | null>(null)
@@ -132,6 +134,96 @@ function MemoirsPage() {
       }
     },
     [estateId, user],
+  )
+
+  // ─── YouTube Upload via API ────────────────────────────────────────────
+
+  const [ytUploadStatus, setYtUploadStatus] = useState<string | null>(null)
+  const [_ytEmbedUrl, setYtEmbedUrl] = useState<string | null>(null)
+
+  const handleYouTubeUpload = useCallback(
+    async (title: string, description: string, visibility: string, file: File) => {
+      if (!user) return
+      try {
+        setUploading(true)
+        setYtUploadStatus('uploading')
+
+        const token = await user.getIdToken()
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('title', title)
+        formData.append('description', description)
+        formData.append('estateId', estateId)
+
+        const res = await fetch(`${API_BASE}/api/v1/memoirs/upload-video`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        })
+
+        if (!res.ok) throw new Error('YouTube upload failed')
+        const data = await res.json()
+        const videoId = data.videoId
+
+        // Poll for video readiness
+        setYtUploadStatus('processing')
+        const pollInterval = setInterval(async () => {
+          try {
+            const statusRes = await fetch(
+              `${API_BASE}/api/v1/memoirs/video-status?video_id=${videoId}`,
+              { headers: { Authorization: `Bearer ${token}` } },
+            )
+            if (statusRes.ok) {
+              const statusData = await statusRes.json()
+              if (statusData.status === 'ready') {
+                clearInterval(pollInterval)
+                setYtUploadStatus(null)
+                setYtEmbedUrl(statusData.embedUrl)
+
+                // Save to Firestore
+                await addDoc(collection(db, `estates/${estateId}/memoirs`), {
+                  title,
+                  type: 'youtube',
+                  url: '',
+                  youtubeUrl: statusData.embedUrl,
+                  visibility,
+                  uploadedBy: user?.uid || 'unknown',
+                  date_added: new Date().toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  }),
+                  createdAt: serverTimestamp(),
+                })
+                setModalOpen(false)
+              } else if (statusData.status === 'failed') {
+                clearInterval(pollInterval)
+                setYtUploadStatus(null)
+                alert('YouTube processing failed. Please try again.')
+              }
+            }
+          } catch {
+            // continue polling
+          }
+        }, 3000)
+
+        // Timeout after 5 minutes
+        setTimeout(() => {
+          clearInterval(pollInterval)
+          if (ytUploadStatus === 'processing') {
+            setYtUploadStatus(null)
+            alert('Video processing timed out. Check back later.')
+          }
+        }, 300000)
+      } catch (err) {
+        console.error('YouTube upload failed:', err)
+        setYtUploadStatus(null)
+        alert('YouTube upload failed. Please try again.')
+      } finally {
+        setUploading(false)
+      }
+    },
+    [estateId, user, ytUploadStatus],
   )
 
   // ─── Delete ───────────────────────────────────────────────────────────
@@ -260,6 +352,16 @@ function MemoirsPage() {
         </div>
       </section>
 
+      {/* YouTube Upload Status Banner */}
+      {ytUploadStatus && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[800] bg-[#133378] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4">
+          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          <span className="font-bold text-sm">
+            {ytUploadStatus === 'uploading' ? 'Uploading to YouTube...' : 'Processing video...'}
+          </span>
+        </div>
+      )}
+
       {/* Upload Modal */}
       {modalOpen && (
         <UploadModal
@@ -269,6 +371,7 @@ function MemoirsPage() {
           onClose={() => setModalOpen(false)}
           onFileUpload={handleFileUpload}
           onYouTubeSave={handleYouTubeSave}
+          onYouTubeUpload={handleYouTubeUpload}
           onModeChange={setModalMode}
         />
       )}
@@ -388,18 +491,21 @@ function UploadModal({
   onClose,
   onFileUpload,
   onYouTubeSave,
+  onYouTubeUpload,
   onModeChange,
 }: {
-  mode: 'file' | 'youtube'
+  mode: 'file' | 'youtube' | 'youtube-upload'
   uploading: boolean
   fileInputRef: React.RefObject<HTMLInputElement | null>
   onClose: () => void
   onFileUpload: (title: string, type: string, visibility: string, file: File) => void
   onYouTubeSave: (title: string, youtubeUrl: string, visibility: string) => void
-  onModeChange: (mode: 'file' | 'youtube') => void
+  onYouTubeUpload: (title: string, description: string, visibility: string, file: File) => void
+  onModeChange: (mode: 'file' | 'youtube' | 'youtube-upload') => void
 }) {
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [selectedFileName, setSelectedFileName] = useState('')
+  const ytFileRef = useRef<HTMLInputElement>(null)
 
   return (
     <div className="fixed inset-0 z-[600] flex items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm p-4" onClick={onClose}>
@@ -417,7 +523,19 @@ function UploadModal({
               mode === 'file' ? 'bg-[#133378] text-white shadow-md' : 'text-[#133378]/50 hover:text-[#133378]'
             }`}
           >
-            Upload File
+            Upload to Vault
+          </button>
+          <button
+            onClick={() => onModeChange('youtube-upload')}
+            className={`flex-1 py-3 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-2 ${
+              mode === 'youtube-upload' ? 'bg-[#133378] text-white shadow-md' : 'text-[#133378]/50 hover:text-[#133378]'
+            }`}
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+              <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
+            </svg>
+            Upload to YouTube
           </button>
           <button
             onClick={() => onModeChange('youtube')}
@@ -425,10 +543,6 @@ function UploadModal({
               mode === 'youtube' ? 'bg-[#133378] text-white shadow-md' : 'text-[#133378]/50 hover:text-[#133378]'
             }`}
           >
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
-              <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
-            </svg>
             YouTube Link
           </button>
         </div>
@@ -443,6 +557,11 @@ function UploadModal({
             if (mode === 'youtube') {
               if (!youtubeUrl) { alert('Please paste a YouTube URL.'); return }
               onYouTubeSave(title, youtubeUrl, visibility)
+            } else if (mode === 'youtube-upload') {
+              const file = ytFileRef.current?.files?.[0]
+              if (!file) { alert('Please select a video file.'); return }
+              const description = (formData.get('description') as string) || ''
+              onYouTubeUpload(title, description, visibility, file)
             } else {
               const file = fileInputRef.current?.files?.[0]
               const type = (formData.get('type') as string) || 'photo'
@@ -463,7 +582,46 @@ function UploadModal({
             />
           </div>
 
-          {mode === 'youtube' ? (
+          {mode === 'youtube-upload' ? (
+            /* YouTube Upload — send video file to API */
+            <>
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Description (optional)</label>
+                <textarea
+                  name="description"
+                  rows={3}
+                  className="w-full px-6 py-4 rounded-2xl border border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] focus:ring-4 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] transition-all placeholder:text-[#133378]/20 resize-none"
+                  placeholder="A description for the YouTube video..."
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Video File</label>
+                <div
+                  onClick={() => ytFileRef.current?.click()}
+                  className="w-full h-36 border-2 border-dashed border-red-500/20 rounded-[2rem] flex flex-col items-center justify-center bg-red-50/30 hover:bg-red-50 hover:border-red-500/40 transition-all cursor-pointer group"
+                >
+                  <div className="w-12 h-12 rounded-full bg-white border border-red-200 flex items-center justify-center mb-3 group-hover:bg-red-600 group-hover:text-white transition-all duration-500 text-red-400">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+                      <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
+                    </svg>
+                  </div>
+                  <span className="text-[11px] font-bold text-red-400/60 uppercase tracking-[0.2em] group-hover:text-red-600">
+                    Select Video for YouTube (Unlisted)
+                  </span>
+                  <input
+                    ref={ytFileRef}
+                    type="file"
+                    className="hidden"
+                    accept="video/*"
+                  />
+                </div>
+                <p className="text-[10px] text-[#64748B] font-medium mt-1">
+                  Video will be uploaded as unlisted to YouTube via your estate account.
+                </p>
+              </div>
+            </>
+          ) : mode === 'youtube' ? (
             /* YouTube URL Input */
             <div className="space-y-2">
               <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">YouTube URL</label>
@@ -551,7 +709,7 @@ function UploadModal({
               disabled={uploading}
               className="flex-1 py-4 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-lg disabled:opacity-50"
             >
-              {uploading ? 'Saving...' : mode === 'youtube' ? 'Save YouTube Link' : 'Upload & Save'}
+              {uploading ? 'Saving...' : mode === 'youtube' ? 'Save YouTube Link' : mode === 'youtube-upload' ? 'Upload to YouTube' : 'Upload & Save'}
             </button>
           </div>
         </form>

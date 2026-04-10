@@ -45,9 +45,13 @@ export default defineConfig({
           if (id.includes('@tiptap/') || id.includes('prosemirror')) {
             return 'tiptap';
           }
-          // Charts + PDF (~100KB) — only loaded on dashboard/directives
-          if (id.includes('recharts') || id.includes('@react-pdf/')) {
+          // Charts (~100KB) — only loaded on dashboard
+          if (id.includes('recharts')) {
             return 'viz';
+          }
+          // PDF renderer (~1.5MB) — lazy-loaded on directives page only
+          if (id.includes('@react-pdf/')) {
+            return 'react-pdf';
           }
           // Framer Motion (~80KB) — only loaded on landing page
           if (id.includes('framer-motion')) {

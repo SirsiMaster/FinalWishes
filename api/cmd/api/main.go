@@ -20,6 +20,7 @@ import (
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
+	appmw "github.com/sirsi-technologies/finalwishes-api/internal/middleware"
 	"github.com/sirsi-technologies/finalwishes-api/internal/ratelimit"
 	"github.com/sirsi-technologies/finalwishes-api/internal/capsules"
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
@@ -84,11 +85,21 @@ func main() {
 		MaxAge:           300,
 	}))
 
+	// Security headers — CSP, HSTS, X-Frame-Options, etc.
+	r.Use(appmw.SecurityHeaders)
+
 	// Health check endpoint (unauthenticated) — includes vault status
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte(`{"status":"healthy","service":"finalwishes-api","vault":"active","encryption":"AES-256-GCM","kms":"Cloud KMS"}`))
+	})
+
+	// Kubernetes-style health probe (Cloud Run startup/liveness checks)
+	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte(`{"status":"healthy","service":"finalwishes-api"}`))
 	})
 
 	ctx := context.Background()

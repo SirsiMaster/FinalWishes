@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { useEstateHeirs } from '../lib/firestore'
 import { useAuth } from '../lib/auth'
 import { sendEstateInvitation } from '../lib/invitations'
+import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 
 export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
   component: BeneficiariesPage,
@@ -41,14 +42,7 @@ function BeneficiariesPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading family members...</span>
-        </div>
-      </div>
-    );
+    return <CardGridSkeleton />;
   }
 
   const beneficiaries = heirs.map(h => ({
@@ -60,15 +54,15 @@ function BeneficiariesPage() {
   }));
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-10 pb-24 px-6">
-      <div className="flex justify-between items-end border-b border-slate-100 pb-10">
+    <div className="max-w-[1240px] mx-auto space-y-8 md:space-y-10 pb-24 px-4 md:px-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-8 md:pb-10">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Family & Heirs</h2>
-          <p className="text-lg text-[#64748B] font-medium">Add and manage the people who will receive your assets or help manage your estate.</p>
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Family & Heirs</h2>
+          <p className="text-base md:text-lg text-[#64748B] font-medium">Add and manage the people who will receive your assets or help manage your estate.</p>
         </div>
-        <button 
+        <button
           onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 rounded-2xl font-bold text-[13px] transition-all shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 rounded-2xl font-bold text-[13px] transition-all shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3 w-full md:w-auto justify-center"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
           Add Family Member
@@ -93,10 +87,10 @@ function BeneficiariesPage() {
       {/* Add Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-xl p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[3rem] p-16 max-w-xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-500 relative overflow-hidden">
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-16 max-w-xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-500 relative overflow-hidden">
              <div className="absolute top-0 left-0 w-full h-1.5 bg-[#133378]" />
-            <h3 className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-3">Add family member</h3>
-            <p className="text-lg text-[#64748B] font-medium mb-10">Enter the details for the person you want to add to your estate plan.</p>
+            <h3 className="text-2xl md:text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-3">Add family member</h3>
+            <p className="text-base md:text-lg text-[#64748B] font-medium mb-6 md:mb-10">Enter the details for the person you want to add to your estate plan.</p>
             
             <form onSubmit={(e) => {
               e.preventDefault();
@@ -111,7 +105,7 @@ function BeneficiariesPage() {
                 <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Full Name</label>
                 <input name="name" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] focus:ring-4 focus:ring-[#133378]/5 outline-none font-semibold text-[#0F172A] transition-all text-base" placeholder="Jane Doe" />
               </div>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Relationship</label>
                   <input name="relation" required className="w-full px-6 py-4 rounded-2xl border border-slate-200 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] outline-none font-semibold text-[#0F172A] text-base transition-all" placeholder="Spouse" />
@@ -150,7 +144,7 @@ function BeneficiariesPage() {
 
 function BeneficiaryCard({ name, relation, share, status, email }: { name: string; relation: string; share?: string; status: string; email?: string }) {
   return (
-    <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex items-center gap-8 group hover:border-slate-200 hover:shadow-md transition-all cursor-pointer">
+    <div className="bg-white p-5 md:p-8 rounded-2xl md:rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 group hover:border-slate-200 hover:shadow-md transition-all cursor-pointer">
       <div className="w-16 h-16 rounded-2xl bg-[#F8FAFC] border border-slate-100 flex items-center justify-center text-[#133378] font-bold text-xl shrink-0 transition-all duration-500 group-hover:bg-[#133378] group-hover:text-white">
         {name.split(' ').map((n: string) => n[0]).join('')}
       </div>

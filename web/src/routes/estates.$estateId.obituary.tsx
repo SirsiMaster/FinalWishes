@@ -2,6 +2,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { useDocument } from '../lib/firestore'
+import { EditorSkeleton } from '@/components/skeletons/EditorSkeleton'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
@@ -75,18 +76,11 @@ function ObituaryPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading record...</span>
-        </div>
-      </div>
-    );
+    return <EditorSkeleton />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+    <div className="max-w-4xl mx-auto space-y-8 pb-20 px-4 md:px-0">
       {/* Photo Modal */}
       {showPhotoModal && profilePhoto && (
         <div 
@@ -118,12 +112,12 @@ function ObituaryPage() {
         </div>
       )}
 
-      <div className="flex justify-between items-end border-b border-slate-100 pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-6 md:pb-8">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Final Record</h2>
-          <p className="text-lg text-[#64748B] font-medium">Draft, manage, and distribute the official life story for your estate.</p>
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Final Record</h2>
+          <p className="text-base md:text-lg text-[#64748B] font-medium">Draft, manage, and distribute the official life story for your estate.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full md:w-auto">
           <button 
             onClick={() => setModalOpen(true)}
             className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 rounded-2xl font-bold text-[13px] transition-all shadow-lg flex items-center gap-2 active:scale-95"
@@ -223,7 +217,7 @@ function ObituaryPage() {
       {/* Sign Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-xl p-4">
-          <div className="bg-white rounded-[3rem] p-12 max-w-2xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-300">
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-12 max-w-2xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-300">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-[#133378] text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

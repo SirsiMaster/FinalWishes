@@ -3,6 +3,7 @@ import { createFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useMemo, useState, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
 import { useEstate, useEstateAssets, useEstateHeirs, useEstateDocuments } from '../lib/firestore'
+import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -114,38 +115,34 @@ function DashboardIndex() {
   }, [score])
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal" />
-      </div>
-    )
+    return <DashboardSkeleton />
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Page Header ── */}
-      <div className="space-y-3 mb-16">
+      <div className="space-y-3 mb-8 md:mb-16">
         <div className="flex items-center gap-3 text-[11px] font-bold text-royal/40 uppercase tracking-[0.2em] mb-4">
           <div className="w-10 h-px bg-royal/20" />
           <span>The Shepherd — Estate Guidance</span>
         </div>
-        <h1 className="text-[3.5rem] font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] leading-tight tracking-tight">
+        <h1 className="text-3xl md:text-[3.5rem] font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] leading-tight tracking-tight">
           Welcome back, {userName || 'there'}.
         </h1>
-        <p className="text-[#64748B] text-xl font-medium max-w-3xl leading-relaxed">{insight}</p>
+        <p className="text-[#64748B] text-base md:text-xl font-medium max-w-3xl leading-relaxed">{insight}</p>
       </div>
 
       {/* ── Primary Action Card ── */}
-      <div className="bg-[#F8FAFC] rounded-[3rem] p-16 flex items-center justify-between border border-slate-100 shadow-sm relative overflow-hidden group">
+      <div className="bg-[#F8FAFC] rounded-2xl md:rounded-[3rem] p-6 md:p-12 lg:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-8 border border-slate-100 shadow-sm relative overflow-hidden group">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-royal/[0.015] rounded-bl-full pointer-events-none" />
         <div className="flex-1 space-y-10 relative z-10">
           <div className="space-y-3">
             <div className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em]">Estate Completion</div>
             <div className="flex items-end gap-5">
-              <span className="text-8xl font-black text-[#0F172A] tracking-tighter leading-none tabular-nums">
+              <span className="text-5xl md:text-8xl font-black text-[#0F172A] tracking-tighter leading-none tabular-nums">
                 {scoreLoading ? '—' : `${percent}%`}
               </span>
-              <span className="text-slate-400 font-semibold text-2xl pb-2">
+              <span className="text-slate-400 font-semibold text-base md:text-2xl pb-2">
                 {score ? `${score.completedSteps} of ${score.totalSteps} steps` : 'calculating...'}
               </span>
             </div>
@@ -160,7 +157,7 @@ function DashboardIndex() {
         {nextAction && (
           <Link
             to={`/estates/${routeId}/${nextAction.route}`}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-14 py-6 rounded-2xl font-bold text-[15px] transition-all shadow-[0_20px_50px_rgba(19,51,120,0.15)] hover:shadow-[0_25px_60px_rgba(19,51,120,0.25)] hover:-translate-y-1 active:scale-95 z-10 no-underline"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 md:px-14 md:py-6 rounded-2xl font-bold text-[13px] md:text-[15px] transition-all shadow-[0_20px_50px_rgba(19,51,120,0.15)] hover:shadow-[0_25px_60px_rgba(19,51,120,0.25)] hover:-translate-y-1 active:scale-95 z-10 no-underline w-full md:w-auto text-center"
           >
             {nextAction.label} →
           </Link>
@@ -168,16 +165,16 @@ function DashboardIndex() {
       </div>
 
       {/* ── Stat Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 lg:gap-12">
         <MiniStat label="Total Assets" value={assets.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>} />
         <MiniStat label="Stored Documents" value={documents.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>} />
         <MiniStat label="Beneficiaries" value={heirs.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>} />
         <MiniStat label="Completion" value={scoreLoading ? '—' : `${percent}%`} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-16 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-8 lg:gap-16 py-6 md:py-12">
         {/* ── Shepherd Checklist ── */}
-        <div className="bg-white rounded-[3rem] p-16 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)] space-y-12">
+        <div className="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-10 lg:p-16 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)] space-y-8 md:space-y-12">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-2xl font-bold text-[#0F172A] tracking-tight">Estate Checklist</h3>
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-4 py-2 rounded-full border border-slate-100">
@@ -231,9 +228,9 @@ function DashboardIndex() {
 
         {/* ── Quick Actions + Support ── */}
         <div className="space-y-12">
-          <div className="bg-white rounded-[3rem] p-12 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)]">
-            <h3 className="text-xl font-bold text-[#0F172A] mb-10 tracking-tight">Quick Actions</h3>
-            <div className="grid grid-cols-2 gap-8">
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-12 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)]">
+            <h3 className="text-xl font-bold text-[#0F172A] mb-6 md:mb-10 tracking-tight">Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-4 md:gap-8">
               <ActionBtn label="Add Asset" route={`/estates/${routeId}/assets`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12H3m9-9v18" /></svg>} />
               <ActionBtn label="Upload Doc" route={`/estates/${routeId}/vault`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>} />
               <ActionBtn label="Add Heir" route={`/estates/${routeId}/beneficiaries`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /></svg>} />
@@ -242,8 +239,8 @@ function DashboardIndex() {
           </div>
 
           {/* AI Suggestions */}
-          <div className="bg-white rounded-[3rem] p-12 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)]">
-            <div className="flex items-center gap-3 mb-8">
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-12 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)]">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
               <div className="w-10 h-10 rounded-xl bg-[#C8A951]/10 flex items-center justify-center">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z" />
@@ -279,7 +276,7 @@ function DashboardIndex() {
             )}
           </div>
 
-          <div className="bg-[#133378] rounded-[3rem] p-12 text-white shadow-xl relative overflow-hidden group">
+          <div className="bg-[#133378] rounded-2xl md:rounded-[3rem] p-6 md:p-12 text-white shadow-xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-bl-[4rem] group-hover:bg-white/10 transition-colors" />
             <div className="relative z-10">
               <h4 className="text-xl font-bold mb-4 font-[family-name:var(--font-cinzel)] uppercase tracking-widest">Need Support?</h4>
@@ -305,13 +302,13 @@ interface MiniStatProps {
 
 function MiniStat({ label, value, icon }: MiniStatProps) {
   return (
-    <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-[0_2px_30px_rgba(15,23,42,0.01)] flex flex-col gap-8 group hover:border-[#133378]/20 transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1">
-      <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 shadow-sm border border-slate-100">
+    <div className="bg-white p-5 md:p-10 rounded-2xl md:rounded-[2.5rem] border border-slate-100 shadow-[0_2px_30px_rgba(15,23,42,0.01)] flex flex-col gap-4 md:gap-8 group hover:border-[#133378]/20 transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1">
+      <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 shadow-sm border border-slate-100">
         {icon}
       </div>
       <div>
-        <div className="text-[11px] font-bold text-slate-300 uppercase tracking-[0.3em] mb-2">{label}</div>
-        <div className="text-4xl font-bold text-[#0F172A] tracking-tighter tabular-nums">{value}</div>
+        <div className="text-[10px] md:text-[11px] font-bold text-slate-300 uppercase tracking-[0.2em] md:tracking-[0.3em] mb-1 md:mb-2">{label}</div>
+        <div className="text-2xl md:text-4xl font-bold text-[#0F172A] tracking-tighter tabular-nums">{value}</div>
       </div>
     </div>
   )
@@ -351,7 +348,7 @@ function ActionBtn({ label, icon, route }: ActionBtnProps) {
   return (
     <Link
       to={route}
-      className="flex flex-col items-center justify-center gap-6 p-10 bg-slate-50 border border-slate-100 rounded-3xl hover:bg-white hover:border-[#133378]/20 hover:shadow-[0_20px_60px_rgba(19,51,120,0.06)] transition-all active:scale-[0.98] group no-underline"
+      className="flex flex-col items-center justify-center gap-3 md:gap-6 p-5 md:p-10 bg-slate-50 border border-slate-100 rounded-2xl md:rounded-3xl hover:bg-white hover:border-[#133378]/20 hover:shadow-[0_20px_60px_rgba(19,51,120,0.06)] transition-all active:scale-[0.98] group no-underline"
     >
       <div className="text-slate-300 group-hover:text-[#133378] transition-all duration-500 scale-110 group-hover:scale-125">
         {icon}

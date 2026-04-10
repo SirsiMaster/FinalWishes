@@ -2,6 +2,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useMemo } from 'react'
 import { useEstateNotifications } from '../lib/firestore'
+import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 
 export const Route = createFileRoute('/estates/$estateId/notifications')({
   component: NotificationsPage,
@@ -14,14 +15,7 @@ function NotificationsPage() {
   const { data: rawNotifications, loading: isLoading } = useEstateNotifications(estateId);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading activity...</span>
-        </div>
-      </div>
-    );
+    return <CardGridSkeleton timeline cards={6} />;
   }
 
   const notifications = rawNotifications.length > 0
@@ -41,19 +35,19 @@ function NotificationsPage() {
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
-      <div className="flex justify-between items-end border-b border-slate-100 pb-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-8 md:pb-10">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Activity History</h2>
-          <p className="text-lg text-[#64748B] font-medium">A record of everything that has happened with your estate plan.</p>
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Activity History</h2>
+          <p className="text-base md:text-lg text-[#64748B] font-medium">A record of everything that has happened with your estate plan.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full md:w-auto">
           <button className="px-6 py-3 rounded-2xl border border-slate-200 text-[13px] font-bold text-[#64748B] bg-white hover:bg-slate-50 transition-all active:scale-95">Export</button>
           <button className="px-6 py-3 rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white text-[13px] font-bold transition-all shadow-lg active:scale-95">Print History</button>
         </div>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
-        <div className="p-10 space-y-0">
+      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
+        <div className="p-4 md:p-10 space-y-0">
           {notifications.map((n, i) => (
             <NotificationItem key={i} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
           ))}

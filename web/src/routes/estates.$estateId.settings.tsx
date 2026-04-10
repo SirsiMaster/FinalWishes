@@ -15,6 +15,7 @@ import { useDocument } from '../lib/firestore'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
+import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { getMFAStatus } from '../lib/mfa'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
 import { InviteTeamMember } from '../components/estate/InviteTeamMember'
@@ -74,14 +75,7 @@ function SettingsPage() {
   }, [estateId, localSettings]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading settings...</span>
-        </div>
-      </div>
-    );
+    return <CardGridSkeleton />;
   }
 
   const mfaStatus = getMFAStatus(user);
@@ -89,12 +83,12 @@ function SettingsPage() {
   const hasChanges = Object.keys(localSettings).length > 0;
 
   return (
-    <div className="max-w-[1000px] mx-auto space-y-10 pb-20">
+    <div className="max-w-[1000px] mx-auto space-y-8 md:space-y-10 pb-20 px-4 md:px-0">
       {/* ── Page Header ── */}
-      <div className="flex justify-between items-end border-b border-slate-100 pb-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-8 md:pb-10">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Settings</h2>
-          <p className="text-lg text-[#64748B] font-medium">Manage your profile, security, and estate preferences.</p>
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Settings</h2>
+          <p className="text-base md:text-lg text-[#64748B] font-medium">Manage your profile, security, and estate preferences.</p>
         </div>
         <button
           onClick={handleSave}
@@ -122,8 +116,8 @@ function SettingsPage() {
       </div>
 
       {/* ── Profile Card ── */}
-      <section className="bg-white rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
-        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-10 py-6 border-b border-slate-100 flex items-center gap-3">
+      <section className="bg-white rounded-2xl md:rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-5 md:px-10 py-4 md:py-6 border-b border-slate-100 flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
@@ -131,9 +125,9 @@ function SettingsPage() {
           </div>
           <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em]">Your Profile</h3>
         </div>
-        <div className="p-10 flex items-start gap-8">
+        <div className="p-5 md:p-10 flex flex-col md:flex-row items-center md:items-start gap-5 md:gap-8">
           {/* Avatar */}
-          <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center text-white text-3xl font-[family-name:var(--font-cinzel)] font-bold shadow-lg shrink-0">
+          <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl md:rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center text-white text-2xl md:text-3xl font-[family-name:var(--font-cinzel)] font-bold shadow-lg shrink-0">
             {(profile?.firstName?.[0] || profile?.displayName?.[0] || 'U').toUpperCase()}
           </div>
           {/* Info */}
@@ -170,7 +164,7 @@ function SettingsPage() {
       <InviteTeamMember estateId={estateId} />
 
       {/* ── Settings Panels ── */}
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
         <SettingsSection title="Security">
           <SettingsToggle
             label="Two-factor authentication"
@@ -223,11 +217,11 @@ function SettingsPage() {
       </div>
 
       {/* ── Danger Zone ── */}
-      <div className="bg-white rounded-[2.5rem] border border-red-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-red-100 overflow-hidden shadow-sm">
         <div className="bg-red-50/50 px-10 py-5 border-b border-red-100">
           <h3 className="text-[11px] font-bold text-red-400 uppercase tracking-widest">Danger Zone</h3>
         </div>
-        <div className="px-10 py-6 flex items-center justify-between">
+        <div className="px-5 md:px-10 py-5 md:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Delete this estate</span>
             <p className="text-[13px] text-[#64748B] font-medium mt-1">
@@ -248,7 +242,7 @@ function SettingsPage() {
 function SettingsSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="border-b border-slate-100 last:border-b-0">
-      <div className="bg-[#F8FAFC] px-10 py-5 border-b border-slate-100">
+      <div className="bg-[#F8FAFC] px-5 md:px-10 py-4 md:py-5 border-b border-slate-100">
         <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{title}</h3>
       </div>
       <div className="divide-y divide-slate-100">{children}</div>
@@ -260,10 +254,10 @@ function SettingsToggle({ label, description, checked, onChange, disabled }: {
   label: string; description: string; checked: boolean; onChange?: () => void; disabled?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex flex-col">
-        <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
-        <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
+    <div className="flex items-center justify-between gap-4 px-5 md:px-10 py-5 md:py-6 hover:bg-[#F8FAFC] transition-all group">
+      <div className="flex flex-col min-w-0">
+        <span className="text-[#0F172A] font-bold text-[14px] md:text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
+        <span className="text-[12px] md:text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
       </div>
       <button
         onClick={onChange}
@@ -280,10 +274,10 @@ function SettingsToggle({ label, description, checked, onChange, disabled }: {
 
 function SettingsStatus({ label, description, value }: { label: string; description: string; value: string }) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex flex-col">
-        <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
-        <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
+    <div className="flex items-center justify-between gap-4 px-5 md:px-10 py-5 md:py-6 hover:bg-[#F8FAFC] transition-all group">
+      <div className="flex flex-col min-w-0">
+        <span className="text-[#0F172A] font-bold text-[14px] md:text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
+        <span className="text-[12px] md:text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
       </div>
       <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
         <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
@@ -297,10 +291,10 @@ function SettingsSelect({ label, description, value, options, onChange }: {
   label: string; description: string; value: string; options: string[]; onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex flex-col">
-        <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
-        <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
+    <div className="flex items-center justify-between gap-4 px-5 md:px-10 py-5 md:py-6 hover:bg-[#F8FAFC] transition-all group">
+      <div className="flex flex-col min-w-0">
+        <span className="text-[#0F172A] font-bold text-[14px] md:text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
+        <span className="text-[12px] md:text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
       </div>
       <select
         value={value}

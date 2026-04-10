@@ -2,6 +2,7 @@ import { type ReactNode, useState } from "react";
 import { Link, useLocation, useParams, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../../lib/auth";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -199,6 +200,183 @@ const NAV_ITEMS: NavItem[] = [
   },
 ];
 
+/** Shared nav content rendered in both desktop sidebar and mobile sheet */
+function SidebarNavContent({
+  sections,
+  estateId,
+  location,
+  onNavClick,
+}: {
+  sections: Record<string, NavItem[]>;
+  estateId: string;
+  location: { pathname: string };
+  onNavClick?: () => void;
+}) {
+  return (
+    <nav className="py-4">
+      {Object.entries(sections).map(([section, items]) => (
+        <div key={section} className="mb-6">
+          <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] px-5 py-2">
+            {section}
+          </div>
+          {items.map((item) => {
+            const to = item.id === 'dashboard'
+              ? `/estates/${estateId}/dashboard`
+              : `/estates/${estateId}/${item.id}`;
+            const isActive = location.pathname.includes(`/${item.id}`);
+            return (
+              <Link
+                key={item.id}
+                to={to}
+                onClick={onNavClick}
+                className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
+                  isActive
+                    ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
+                    : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
+                }`}
+              >
+                <span
+                  className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
+                    isActive ? "opacity-100 text-[#133378]" : "opacity-40"
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span className="text-[0.75rem] font-semibold">{item.label}</span>
+                {item.badge && (
+                  <Badge
+                    variant="outline"
+                    className="ml-auto bg-green-50 border-green-200 text-green-600 px-1.5 py-0.5 text-[8px] font-bold tracking-tight h-auto rounded"
+                  >
+                    {item.badge}
+                  </Badge>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      ))}
+    </nav>
+  );
+}
+
+/** Mobile sidebar sheet — controlled externally via open/onOpenChange */
+export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const location = useLocation();
+  const params = useParams({ strict: false }) as { estateId?: string };
+  const estateId = params.estateId || "lockhart";
+  const { profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const user = profile ? {
+    name: profile.displayName || `${profile.firstName} ${profile.lastName}`.trim(),
+    role: profile.role === 'principal' ? 'owner' : profile.role,
+    profilePhotoUrl: profile.profilePhotoUrl || '',
+    primaryEstateName: profile.primaryEstateName || 'My Estate',
+  } : {
+    name: 'Guest',
+    role: 'owner' as const,
+    profilePhotoUrl: '',
+    primaryEstateName: 'My Estate',
+  };
+
+  const userRole = user.role || 'owner';
+  const allowedIds = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS.owner;
+  const visibleItems = NAV_ITEMS.filter((item) => allowedIds.includes(item.id));
+
+  const sections = visibleItems.reduce((acc, item) => {
+    if (!acc[item.section]) acc[item.section] = [];
+    acc[item.section].push(item);
+    return acc;
+  }, {} as Record<string, NavItem[]>);
+
+  const getInitials = (name: string) => {
+    return name?.split(' ').map(n => n[0]).join('') || 'FW';
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate({ to: '/login' });
+  };
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="left"
+        showCloseButton={true}
+        className="w-[280px] p-0 flex flex-col"
+        style={{ background: "var(--sidebar-bg, #FFFFFF)" }}
+      >
+        <VisuallyHidden.Root>
+          <SheetTitle>Navigation</SheetTitle>
+        </VisuallyHidden.Root>
+
+        {/* Logo */}
+        <Link
+          to="/"
+          onClick={() => onOpenChange(false)}
+          className="flex items-center gap-3 px-5 py-6 no-underline"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6 text-[#133378] drop-shadow-sm">
+            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+            <path d="M2 17l10 5 10-5" />
+            <path d="M2 12l10 5 10-5" />
+          </svg>
+          <span className="text-[#133378] text-[1rem] font-bold uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
+            FinalWishes
+          </span>
+        </Link>
+
+        <Separator className="bg-[#133378]/10" />
+
+        {/* Estate Name */}
+        <div className="px-4 py-4">
+          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Active Estate</label>
+          <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.primaryEstateName || "My Estate"}</div>
+          <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
+        </div>
+
+        <Separator className="bg-[#133378]/10" />
+
+        {/* Navigation */}
+        <ScrollArea className="flex-1">
+          <SidebarNavContent
+            sections={sections}
+            estateId={estateId}
+            location={location}
+            onNavClick={() => onOpenChange(false)}
+          />
+        </ScrollArea>
+
+        {/* User Footer */}
+        <Separator className="bg-slate-100" />
+        <div className="p-4 mt-auto bg-slate-50/50">
+          <div className="flex items-center gap-3 mb-3">
+            <Avatar className="w-9 h-9 rounded-xl">
+              <AvatarImage src={user?.profilePhotoUrl || undefined} alt="Profile" className="rounded-xl object-cover" />
+              <AvatarFallback className="rounded-xl bg-[#133378] text-white font-bold text-xs">
+                {getInitials(user?.name || 'FW')}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
+              <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
+          >
+            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -245,7 +423,7 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-screen z-[100] flex flex-col"
+      className="hidden md:flex fixed left-0 top-0 h-screen z-[100] flex-col"
       style={{
         width: "var(--sidebar-width)",
         background: "var(--sidebar-bg)",
@@ -315,49 +493,7 @@ export function Sidebar() {
 
       {/* Navigation */}
       <ScrollArea className="flex-1">
-        <nav className="py-4">
-          {Object.entries(sections).map(([section, items]) => (
-            <div key={section} className="mb-6">
-              <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] px-5 py-2">
-                {section}
-              </div>
-              {items.map((item) => {
-                const to = item.id === 'dashboard'
-                  ? `/estates/${estateId}/dashboard`
-                  : `/estates/${estateId}/${item.id}`;
-                const isActive = location.pathname.includes(`/${item.id}`);
-                return (
-                  <Link
-                    key={item.id}
-                    to={to}
-                    className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
-                      isActive
-                        ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
-                        : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
-                    }`}
-                  >
-                    <span
-                      className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
-                        isActive ? "opacity-100 text-[#133378]" : "opacity-40"
-                      }`}
-                    >
-                      {item.icon}
-                    </span>
-                    <span className="text-[0.75rem] font-semibold">{item.label}</span>
-                    {item.badge && (
-                      <Badge
-                        variant="outline"
-                        className="ml-auto bg-green-50 border-green-200 text-green-600 px-1.5 py-0.5 text-[8px] font-bold tracking-tight h-auto rounded"
-                      >
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-          ))}
-        </nav>
+        <SidebarNavContent sections={sections} estateId={estateId} location={location} />
       </ScrollArea>
 
       {/* User Footer */}

@@ -17,6 +17,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
   type ReactNode,
 } from 'react';
 import {
@@ -80,6 +81,8 @@ export interface AuthContextValue {
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   /** Resend email verification */
   resendVerification: () => Promise<{ success: boolean; error?: string }>;
+  /** Activate demo session (sets synthetic user + profile without Firebase Auth) */
+  loginDemo: (session: Record<string, string | undefined>) => void;
 }
 
 export interface SignUpParams {
@@ -188,20 +191,89 @@ export async function isUsernameAvailable(username: string): Promise<boolean> {
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
+/**
+ * Check if demo mode is active via URL param.
+ */
+function isDemoMode(): boolean {
+  return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
+}
+
+/**
+ * Load demo session from localStorage (set by login.tsx in demo mode).
+ * Returns a synthetic UserProfile or null if no demo session exists.
+ */
+function loadDemoSession(): UserProfile | null {
+  try {
+    const raw = localStorage.getItem('finalwishes_user');
+    if (!raw) return null;
+    const session = JSON.parse(raw);
+    return {
+      uid: session.id || 'demo_user',
+      email: session.email || '',
+      username: session.login,
+      firstName: session.name?.split(' ')[0] || '',
+      lastName: session.name?.split(' ').slice(1).join(' ') || '',
+      displayName: session.name || 'Demo User',
+      role: (session.role === 'owner' ? 'principal' : session.role) || 'principal',
+      phone: session.phone,
+      status: 'active',
+      profilePhotoUrl: session.profilePhotoUrl,
+      primaryEstateId: session.primaryEstateId,
+      primaryEstateName: session.primaryEstateName,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Create a minimal User-like shim for demo mode.
+ * AuthGuard only checks truthiness and emailVerified, so a partial shim works.
+ */
+function createDemoUserShim(profile: UserProfile): User {
+  return {
+    uid: profile.uid,
+    email: profile.email,
+    emailVerified: true,
+    displayName: profile.displayName,
+    isAnonymous: false,
+    // Stub methods required by consumer code
+    getIdToken: async () => 'demo-token',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any as User;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  // Ref tracks demo activation so the Firebase listener skips overrides
+  const demoActiveRef = useRef(false);
+  // Ref holds unsubscribe so loginDemo can detach the Firebase listener
+  const unsubRef = useRef<(() => void) | null>(null);
 
-  // Listen for Firebase auth state changes
+  // Listen for Firebase auth state changes + demo mode fallback
   useEffect(() => {
+    // Demo mode: check if a demo session already exists in localStorage
+    const demoProfile = loadDemoSession();
+    if (demoProfile && isDemoMode()) {
+      setUser(createDemoUserShim(demoProfile));
+      setProfile(demoProfile);
+      demoActiveRef.current = true;
+      setLoading(false);
+      return; // No Firebase listener needed — demo session is active
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      // Skip if demo mode was activated after mount (via loginDemo)
+      if (demoActiveRef.current) return;
+
       setUser(firebaseUser);
 
       if (firebaseUser) {
         // Fetch user profile from Firestore
         let userProfile = await fetchUserProfile(firebaseUser.uid);
-        
+
         // Handle edge case: Firebase Auth account exists but Firestore profile doesn't
         // (e.g., previous registration failed mid-write due to permissions)
         if (!userProfile && firebaseUser.email) {
@@ -227,7 +299,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // If this also fails, user will see limited UI — they can try again
           }
         }
-        
+
         setProfile(userProfile);
       } else {
         setProfile(null);
@@ -236,6 +308,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
+    unsubRef.current = unsubscribe;
     return unsubscribe;
   }, []);
 
@@ -357,6 +430,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Activate demo session — sets synthetic user + profile in state
+  const loginDemo = useCallback((session: Record<string, string | undefined>) => {
+    const demoProfile: UserProfile = {
+      uid: session.id || 'demo_user',
+      email: session.email || '',
+      username: session.login,
+      firstName: session.name?.split(' ')[0] || '',
+      lastName: session.name?.split(' ').slice(1).join(' ') || '',
+      displayName: session.name || 'Demo User',
+      role: (session.role === 'owner' ? 'principal' : (session.role as UserProfile['role'])) || 'principal',
+      phone: session.phone,
+      status: 'active',
+      profilePhotoUrl: session.profilePhotoUrl,
+      primaryEstateId: session.primaryEstateId,
+      primaryEstateName: session.primaryEstateName,
+    };
+    // Mark demo as active so Firebase listener stops overriding state
+    demoActiveRef.current = true;
+    // Detach Firebase listener if it was attached
+    if (unsubRef.current) {
+      unsubRef.current();
+      unsubRef.current = null;
+    }
+    setUser(createDemoUserShim(demoProfile));
+    setProfile(demoProfile);
+    setLoading(false);
+  }, []);
+
   const value: AuthContextValue = {
     user,
     profile,
@@ -367,6 +468,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut: handleSignOut,
     resetPassword,
     resendVerification,
+    loginDemo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

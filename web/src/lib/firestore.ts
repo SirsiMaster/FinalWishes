@@ -197,6 +197,7 @@ export interface EstateNotification {
   message?: string;
   type?: string;
   status?: string;
+  read?: boolean;
   readAt?: Timestamp;
   createdAt: Timestamp;
 }
@@ -388,6 +389,19 @@ export function useEstateNotifications(estateId: string | null): FirestoreListRe
   const path = estateId ? `estates/${estateId}/notifications` : null;
   const constraints = useMemo(
     () => [orderBy('createdAt', 'desc'), limit(20)],
+    []
+  );
+  return useCollection<EstateNotification>(path, constraints);
+}
+
+/**
+ * Subscribe to unread notifications for an estate (latest 5, real-time).
+ * Used by the notification bell in AdminHeader.
+ */
+export function useUnreadNotifications(estateId: string | null): FirestoreListResult<EstateNotification> {
+  const path = estateId ? `estates/${estateId}/notifications` : null;
+  const constraints = useMemo(
+    () => [where('read', '==', false), orderBy('createdAt', 'desc'), limit(5)],
     []
   );
   return useCollection<EstateNotification>(path, constraints);

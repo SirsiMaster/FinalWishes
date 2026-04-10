@@ -213,10 +213,10 @@ function SidebarNavContent({
   onNavClick?: () => void;
 }) {
   return (
-    <nav className="py-4">
+    <nav aria-label="Estate navigation" className="py-4">
       {Object.entries(sections).map(([section, items]) => (
         <div key={section} className="mb-6">
-          <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] px-5 py-2">
+          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] px-5 py-2">
             {section}
           </div>
           {items.map((item) => {
@@ -236,6 +236,7 @@ function SidebarNavContent({
                 }`}
               >
                 <span
+                  aria-hidden="true"
                   className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
                     isActive ? "opacity-100 text-[#133378]" : "opacity-40"
                   }`}
@@ -317,7 +318,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
           onClick={() => onOpenChange(false)}
           className="flex items-center gap-3 px-5 py-6 no-underline"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6 text-[#133378] drop-shadow-sm">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6 text-[#133378] drop-shadow-sm">
             <path d="M12 2L2 7l10 5 10-5-10-5z" />
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
@@ -331,9 +332,9 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
 
         {/* Estate Name */}
         <div className="px-4 py-4">
-          <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Active Estate</label>
+          <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1 block">Active Estate</label>
           <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.primaryEstateName || "My Estate"}</div>
-          <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
+          <div className="text-slate-500 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
         </div>
 
         <Separator className="bg-[#133378]/10" />
@@ -360,7 +361,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
             </Avatar>
             <div className="min-w-0">
               <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
-              <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
+              <div className="text-slate-500 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
             </div>
           </div>
           <Button
@@ -368,7 +369,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
           >
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             Sign Out
           </Button>
         </div>
@@ -455,6 +456,7 @@ export function Sidebar() {
         className="flex items-center gap-3 px-5 py-6 no-underline"
       >
         <svg
+          aria-hidden="true"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -474,7 +476,7 @@ export function Sidebar() {
 
       {/* Estate Switcher */}
       <div className="px-4 py-5 bg-[#133378]/[0.01]">
-        <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Active Estate</label>
+        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2 block">Active Estate</label>
         <div className="relative">
           <Button
             variant="outline"
@@ -482,9 +484,9 @@ export function Sidebar() {
           >
             <div className="flex-1 truncate text-left">
               <div className="text-[#0F172A] text-[0.8rem] font-bold truncate group-hover/button:text-[#133378] transition-colors">{user?.primaryEstateName || "Lockhart Estate"}</div>
-              <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
+              <div className="text-slate-500 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
             </div>
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[#133378] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[#133378] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
           </Button>
         </div>
       </div>
@@ -515,7 +517,7 @@ export function Sidebar() {
           </Avatar>
           <div className="min-w-0">
             <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "Tameeka Lockhart"}</div>
-            <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
+            <div className="text-slate-500 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
           </div>
         </div>
         <Button
@@ -523,7 +525,7 @@ export function Sidebar() {
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
         >
-          <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Sign Out
         </Button>
       </div>

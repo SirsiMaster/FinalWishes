@@ -4,6 +4,7 @@ import { useAuth } from '../../lib/auth'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { useEstateSearch, type SearchResult } from '@/lib/search'
 import { SearchResults } from '@/components/search/SearchResults'
+import { NotificationBell } from './NotificationBell'
 
 export function AdminHeader({
   title,
@@ -116,9 +117,10 @@ export function AdminHeader({
             <div className="absolute top-8 right-8">
               <button
                 onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
+                aria-label="Close photo"
                 className="w-10 h-10 bg-white border border-royal/20 flex items-center justify-center text-royal hover:bg-royal/5 transition-all shadow-lg"
               >
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
             </div>
           </div>
@@ -132,7 +134,7 @@ export function AdminHeader({
           className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl text-royal/60 hover:bg-royal/5 hover:text-royal transition-all shrink-0"
           aria-label="Open navigation menu"
         >
-          <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="18" x2="21" y2="18" />
@@ -159,6 +161,7 @@ export function AdminHeader({
       >
         <div className="flex items-center gap-2 bg-royal/[0.03] border border-royal/10 py-2 px-4 focus-within:border-royal transition-all">
           <svg
+            aria-hidden="true"
             width="14"
             height="14"
             viewBox="0 0 24 24"
@@ -176,6 +179,10 @@ export function AdminHeader({
             ref={inputRef}
             type="text"
             placeholder="Search estate..."
+            aria-label="Search estate"
+            role="combobox"
+            aria-expanded={showDropdown}
+            aria-autocomplete="list"
             value={searchQuery}
             onChange={(e) => updateSearchQuery(e.target.value)}
             onFocus={() => setSearchFocused(true)}
@@ -184,9 +191,10 @@ export function AdminHeader({
           {searchQuery && (
             <button
               onClick={() => { updateSearchQuery(''); inputRef.current?.focus(); }}
+              aria-label="Clear search"
               className="text-royal/30 hover:text-royal/60 transition-colors"
             >
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>
@@ -235,22 +243,7 @@ export function AdminHeader({
       {/* Right — Actions */}
       <div className="flex items-center gap-2 md:gap-4 shrink-0">
         {/* Notification Bell */}
-        <button className="p-2 text-royal/30 hover:bg-royal/5 hover:text-royal transition-all relative">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          <span className="absolute top-2 right-2 w-2 h-2 bg-royal shadow-[0_0_5px_rgba(19,51,120,0.4)]" />
-        </button>
+        <NotificationBell estateId={estateId} />
 
         {/* Avatar */}
         {user?.profilePhotoUrl ? (
@@ -261,7 +254,7 @@ export function AdminHeader({
             alt="Avatar"
           />
         ) : (
-          <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-[0.7rem] cursor-pointer hover:bg-sapphire transition-all shadow-sm">
+          <div role="button" aria-label="User profile" className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-[0.7rem] cursor-pointer hover:bg-sapphire transition-all shadow-sm">
             {getInitials(user?.name || 'TL')}
           </div>
         )}

@@ -16,6 +16,10 @@ import {
   addDoc,
   setDoc,
   updateDoc,
+  getDocs,
+  query,
+  where,
+  writeBatch,
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -455,4 +459,49 @@ export async function updateHeirloom(
 
 export async function archiveHeirloom(estateId: string, heirloomId: string): Promise<ActionResult> {
   return updateHeirloom(estateId, heirloomId, { status: 'archived' });
+}
+
+// ─── Notification Actions ──────────────────────────────────────────────────
+
+/**
+ * Mark a single notification as read.
+ */
+export async function markNotificationRead(
+  estateId: string,
+  notificationId: string
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/notifications`, notificationId), {
+      read: true,
+      readAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[markNotificationRead] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Batch-mark all unread notifications as read for an estate.
+ */
+export async function markAllNotificationsRead(estateId: string): Promise<ActionResult> {
+  try {
+    const colRef = collection(db, `estates/${estateId}/notifications`);
+    const q = query(colRef, where('read', '==', false));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) return { success: true };
+
+    const batch = writeBatch(db);
+    snapshot.docs.forEach((d) => {
+      batch.update(d.ref, { read: true, readAt: serverTimestamp() });
+    });
+    await batch.commit();
+
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[markAllNotificationsRead] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
 }

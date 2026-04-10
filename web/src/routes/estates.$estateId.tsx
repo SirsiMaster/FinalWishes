@@ -52,6 +52,9 @@ function EstateLayout() {
   return (
     <AuthGuard>
       <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:bg-[#133378] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
+          Skip to content
+        </a>
         <Sidebar />
         <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} />
         <div
@@ -66,7 +69,7 @@ function EstateLayout() {
             onMenuClick={() => setMobileMenuOpen(true)}
           />
           <EmailVerificationBanner />
-          <main className="flex-1 p-4 md:p-8">
+          <main id="main-content" className="flex-1 p-4 md:p-8">
             <ErrorBoundary>
               <IdentityGate estateId={estateId}>
                 <Outlet />

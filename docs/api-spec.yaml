@@ -1,0 +1,2110 @@
+openapi: 3.0.3
+info:
+  title: FinalWishes API
+  version: 1.0.0
+  description: |
+    The Estate Operating System API — vault-grade legacy management.
+
+    All authenticated endpoints require a Firebase ID Token in the Authorization header.
+    PII data is encrypted at rest via Cloud KMS (AES-256-GCM envelope encryption).
+    Rate limited to 100 requests per 60 seconds per IP, with 10-minute ban on exceed.
+  contact:
+    name: Sirsi Technologies
+    url: https://sirsi.ai
+
+servers:
+  - url: https://finalwishes-api-860699311615.us-central1.run.app
+    description: Production (Cloud Run)
+  - url: http://localhost:8080
+    description: Local development
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Health
+    description: Service health checks
+  - name: Payments
+    description: Stripe checkout and subscription management
+  - name: Guidance
+    description: The Shepherd — estate completion scoring and AI suggestions
+  - name: Memoirs
+    description: YouTube video memorial uploads
+  - name: Capsules
+    description: Time capsule scheduling and delivery via Cloud Tasks
+  - name: Lockbox
+    description: Encrypted credential storage (Cloud KMS envelope encryption)
+  - name: Vault
+    description: PII storage and retrieval (Cloud SQL + Cloud KMS)
+  - name: Documents
+    description: Document vault signed download URLs
+  - name: OpenSign
+    description: E-signature envelope creation via Sirsi Sign (sign.sirsi.ai)
+  - name: EstateService (ConnectRPC)
+    description: |
+      Core estate management via ConnectRPC (Protobuf over HTTP).
+      All RPCs are POST requests with JSON or Protobuf bodies.
+      Path prefix: /estate.v1.EstateService/
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Firebase ID Token
+      description: Firebase Auth ID token obtained via Firebase client SDK
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: HTTP status text or numeric code
+            message:
+              type: string
+              description: Human-readable error description
+      example:
+        error:
+          code: "Bad Request"
+          message: "estate_id is required"
+
+    Tier:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "concierge"
+        name:
+          type: string
+          example: "Concierge"
+        description:
+          type: string
+          example: "Complete legacy management"
+        priceCents:
+          type: integer
+          format: int64
+          example: 2900
+        interval:
+          type: string
+          enum: [month, year, one_time]
+          example: "month"
+        features:
+          type: array
+          items:
+            type: string
+
+    Score:
+      type: object
+      properties:
+        estateId:
+          type: string
+        completionPercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+        completedSteps:
+          type: integer
+        totalSteps:
+          type: integer
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/Step"
+        nextAction:
+          $ref: "#/components/schemas/Step"
+        insight:
+          type: string
+          description: AI-generated or deterministic guidance insight
+        lastCalculated:
+          type: string
+          format: date-time
+
+    Step:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "assets"
+        label:
+          type: string
+          example: "Add Assets"
+        description:
+          type: string
+        category:
+          type: string
+          enum: [Foundation, Vault, Security, Legacy]
+        complete:
+          type: boolean
+        route:
+          type: string
+          description: Frontend route to complete this step
+        priority:
+          type: integer
+
+    UploadVideoResponse:
+      type: object
+      properties:
+        videoId:
+          type: string
+          example: "dQw4w9WgXcQ"
+        embedUrl:
+          type: string
+          format: uri
+          example: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+        thumbnailUrl:
+          type: string
+          format: uri
+          example: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+
+    VideoStatusResponse:
+      type: object
+      properties:
+        videoId:
+          type: string
+        uploadStatus:
+          type: string
+          example: "processed"
+        processingStatus:
+          type: string
+          example: "succeeded"
+        privacyStatus:
+          type: string
+          example: "unlisted"
+
+    StoreCredentialsRequest:
+      type: object
+      required: [estateId, itemId]
+      properties:
+        estateId:
+          type: string
+        itemId:
+          type: string
+        username:
+          type: string
+          description: Stored in plaintext (identifier, not a secret)
+        password:
+          type: string
+          description: Encrypted via Cloud KMS envelope encryption
+        pin:
+          type: string
+          description: Encrypted via Cloud KMS envelope encryption
+        notes:
+          type: string
+          description: Encrypted via Cloud KMS envelope encryption
+
+    CredentialsResponse:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        pin:
+          type: string
+        notes:
+          type: string
+
+    StoreUserPIIRequest:
+      type: object
+      required: [estate_id]
+      properties:
+        estate_id:
+          type: string
+        ssn:
+          type: string
+          description: Social Security Number (encrypted at rest)
+        date_of_birth:
+          type: string
+          description: Date of birth string
+
+    UserPIIResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        ssn_last4:
+          type: string
+          description: Last 4 digits of SSN (always returned)
+        ssn:
+          type: string
+          description: Full SSN (only with full=true query param)
+        date_of_birth:
+          type: string
+
+    StoreAssetPIIRequest:
+      type: object
+      required: [asset_id, estate_id]
+      properties:
+        asset_id:
+          type: string
+        estate_id:
+          type: string
+        account_number:
+          type: string
+        routing_number:
+          type: string
+        vin:
+          type: string
+
+    AssetPIIResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        account_number_last4:
+          type: string
+        account_number:
+          type: string
+          description: Full account number (only with full=true)
+        routing_number:
+          type: string
+          description: Full routing number (only with full=true)
+        vin_last6:
+          type: string
+        vin:
+          type: string
+          description: Full VIN (only with full=true)
+
+    StoreHeirPIIRequest:
+      type: object
+      required: [heir_id, estate_id]
+      properties:
+        heir_id:
+          type: string
+        estate_id:
+          type: string
+        ssn:
+          type: string
+        date_of_birth:
+          type: string
+
+    HeirPIIResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        ssn_last4:
+          type: string
+        ssn:
+          type: string
+          description: Full SSN (only with full=true)
+        date_of_birth:
+          type: string
+
+    PIIResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        success:
+          type: boolean
+        message:
+          type: string
+
+    CreateEnvelopeRequest:
+      type: object
+      required: [templateId, signerName, signerEmail]
+      properties:
+        templateId:
+          type: string
+        signerName:
+          type: string
+        signerEmail:
+          type: string
+          format: email
+        redirectUrl:
+          type: string
+          format: uri
+
+    CreateEnvelopeResponse:
+      type: object
+      properties:
+        envelopeId:
+          type: string
+        signingUrl:
+          type: string
+          format: uri
+
+    ScheduleCapsuleRequest:
+      type: object
+      required: [estateId, capsuleId]
+      properties:
+        estateId:
+          type: string
+        capsuleId:
+          type: string
+
+    CancelCapsuleRequest:
+      type: object
+      required: [estateId, capsuleId]
+      properties:
+        estateId:
+          type: string
+        capsuleId:
+          type: string
+
+    TaskPayload:
+      type: object
+      description: Sent by Cloud Tasks to the deliver endpoint
+      properties:
+        estateId:
+          type: string
+        capsuleId:
+          type: string
+        action:
+          type: string
+          example: "deliver"
+
+paths:
+  # ──────────────────────────────────────────────
+  # Health
+  # ──────────────────────────────────────────────
+  /health:
+    get:
+      summary: Health check
+      description: Returns service status including vault and encryption subsystem health.
+      operationId: healthCheck
+      tags: [Health]
+      security: []
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  service:
+                    type: string
+                    example: "finalwishes-api"
+                  vault:
+                    type: string
+                    example: "active"
+                  encryption:
+                    type: string
+                    example: "AES-256-GCM"
+                  kms:
+                    type: string
+                    example: "Cloud KMS"
+
+  # ──────────────────────────────────────────────
+  # Payments
+  # ──────────────────────────────────────────────
+  /api/v1/payments/tiers:
+    get:
+      summary: Get pricing tiers
+      description: Returns all available subscription tiers and the Stripe publishable key. No authentication required.
+      operationId: getPaymentTiers
+      tags: [Payments]
+      security: []
+      responses:
+        "200":
+          description: Pricing tiers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tiers:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Tier"
+                  publishableKey:
+                    type: string
+                    description: Stripe publishable key for client-side checkout
+
+  /api/v1/payments/create-checkout:
+    post:
+      summary: Create Stripe checkout session
+      description: |
+        Creates a Stripe Checkout session for the specified tier and estate.
+        Caller must own the estate (verified via estate_users junction).
+        Free tier returns 400 (no checkout needed).
+      operationId: createCheckout
+      tags: [Payments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tierId, estateId]
+              properties:
+                tierId:
+                  type: string
+                  description: One of "free", "concierge", "white_glove"
+                  example: "concierge"
+                estateId:
+                  type: string
+                userId:
+                  type: string
+                  description: Ignored — always overridden by authenticated caller UID
+                email:
+                  type: string
+                  format: email
+                  description: Pre-fills customer email on Stripe checkout page
+      responses:
+        "200":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    description: Stripe Checkout Session ID
+                  checkoutUrl:
+                    type: string
+                    format: uri
+                    description: Redirect the user here to complete payment
+        "400":
+          description: Invalid tier, missing fields, or free tier selected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Caller does not own the estate or attempted cross-user checkout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Stripe API error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/payments/webhook:
+    post:
+      summary: Stripe webhook receiver
+      description: |
+        Handles Stripe webhook events. Verified via Stripe-Signature header
+        and STRIPE_WEBHOOK_SECRET. Not authenticated via Firebase Auth.
+
+        Handled events:
+        - checkout.session.completed — upgrades estate tier
+        - checkout.session.expired — logged
+        - customer.subscription.deleted — downgrades estate to free tier
+      operationId: stripeWebhook
+      tags: [Payments]
+      security: []
+      parameters:
+        - name: Stripe-Signature
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Stripe webhook signature for verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Raw Stripe event payload
+      responses:
+        "200":
+          description: Event processed
+        "400":
+          description: Invalid signature or malformed event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "503":
+          description: Webhook secret not configured in production
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ──────────────────────────────────────────────
+  # Guidance (The Shepherd)
+  # ──────────────────────────────────────────────
+  /api/v1/guidance/score:
+    get:
+      summary: Get estate completion score
+      description: |
+        Computes the estate completion score by counting subcollection documents
+        across 8 categories (assets, heirs, executors, documents, memoirs, lockbox,
+        directives, capsules) plus governance docs. Returns a step-by-step checklist
+        with the next recommended action. Optionally enhanced with Gemini AI insights.
+      operationId: getGuidanceScore
+      tags: [Guidance]
+      parameters:
+        - name: estate_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Estate to score
+      responses:
+        "200":
+          description: Estate completion score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Score"
+        "400":
+          description: Missing estate_id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Score computation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/guidance/suggestions:
+    get:
+      summary: Get AI-generated action suggestions
+      description: |
+        Returns a list of suggested next actions for the estate based on its
+        completion score. Uses Gemini AI when available, otherwise falls back
+        to deterministic suggestions.
+      operationId: getGuidanceSuggestions
+      tags: [Guidance]
+      parameters:
+        - name: estate_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Action suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  suggestions:
+                    type: array
+                    items:
+                      type: string
+        "400":
+          description: Missing estate_id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Computation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/guidance/assist-obituary:
+    post:
+      summary: Generate AI-drafted obituary
+      description: |
+        Accepts a user prompt and returns an AI-generated obituary draft
+        via Firebase Genkit (Gemini Flash). Returns 503 if AI is not available.
+      operationId: assistObituary
+      tags: [Guidance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [prompt]
+              properties:
+                prompt:
+                  type: string
+                  description: User's prompt describing the person and their life
+                  example: "Write an obituary for a loving grandmother who was a retired teacher from Chicago."
+      responses:
+        "200":
+          description: AI-generated obituary text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: The drafted obituary text
+        "400":
+          description: Missing prompt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: AI generation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "503":
+          description: AI guidance not available (Genkit not initialized)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ──────────────────────────────────────────────
+  # Memoirs (YouTube Video Uploads)
+  # ──────────────────────────────────────────────
+  /api/v1/memoirs/upload-video:
+    post:
+      summary: Upload memorial video
+      description: |
+        Accepts a multipart file upload, uploads the video to YouTube as unlisted,
+        and stores a memoir record in the estate's Firestore subcollection.
+        Maximum file size: 256 MB. Extended timeout: 5 minutes.
+      operationId: uploadMemoirVideo
+      tags: [Memoirs]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, title, estateId]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Video file (max 256 MB)
+                title:
+                  type: string
+                  description: Video title
+                description:
+                  type: string
+                  description: Video description (optional)
+                estateId:
+                  type: string
+                  description: Estate to attach the memoir to
+      responses:
+        "201":
+          description: Video uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadVideoResponse"
+        "400":
+          description: Missing required fields or file too large
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: YouTube upload failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/memoirs/video-status:
+    get:
+      summary: Check video processing status
+      description: |
+        Queries the YouTube Data API for the processing status of an uploaded video.
+        If processing is complete, automatically updates the Firestore memoir status to "ready".
+      operationId: getVideoStatus
+      tags: [Memoirs]
+      parameters:
+        - name: video_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: YouTube video ID
+      responses:
+        "200":
+          description: Video status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VideoStatusResponse"
+        "400":
+          description: Missing video_id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Video not found on YouTube
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: YouTube API error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ──────────────────────────────────────────────
+  # Time Capsules
+  # ──────────────────────────────────────────────
+  /api/v1/capsules/schedule:
+    post:
+      summary: Schedule capsule delivery
+      description: |
+        Creates a Cloud Task to deliver a time capsule at its scheduled time.
+        Supports delivery types:
+        - scheduled_date: one-time delivery at a specific date
+        - anniversary: recurring annual delivery (re-enqueues after each delivery)
+        - on_death / on_settlement: event-driven, no task created (awaits trigger)
+      operationId: scheduleCapsule
+      tags: [Capsules]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleCapsuleRequest"
+      responses:
+        "200":
+          description: Capsule scheduled or set to await trigger
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [scheduled, awaiting_trigger]
+                  taskName:
+                    type: string
+                    description: Cloud Tasks task name (for scheduled types)
+                  nextDelivery:
+                    type: string
+                    format: date-time
+                    description: Next delivery time (for anniversary type)
+        "400":
+          description: Missing fields, unknown delivery type, or missing date
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Capsule not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Cloud Tasks scheduling failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/capsules/cancel:
+    post:
+      summary: Cancel scheduled capsule
+      description: |
+        Cancels a pending Cloud Task for a capsule and marks the capsule as cancelled.
+        If the capsule has no task (on_death/on_settlement), it is still marked cancelled.
+      operationId: cancelCapsule
+      tags: [Capsules]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelCapsuleRequest"
+      responses:
+        "200":
+          description: Capsule cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "cancelled"
+        "400":
+          description: Missing fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Capsule not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Failed to cancel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/capsules/deliver:
+    post:
+      summary: Deliver capsule (Cloud Tasks callback)
+      description: |
+        Internal endpoint called by Cloud Tasks to deliver a time capsule.
+        Reads the capsule from Firestore, composes a styled HTML email, and
+        writes to the `mail` collection (triggering Firebase SendGrid extension).
+
+        NOT authenticated via Firebase Auth. Verified via Cloud Tasks headers
+        (X-CloudTasks-TaskName, X-CloudTasks-QueueName) and OIDC token.
+
+        Idempotent: skips delivery if capsule is already marked "delivered".
+        For anniversary capsules, re-enqueues for next year after delivery.
+      operationId: deliverCapsule
+      tags: [Capsules]
+      security: []
+      parameters:
+        - name: X-CloudTasks-TaskName
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cloud Tasks task name (required for authentication)
+        - name: X-CloudTasks-QueueName
+          in: header
+          required: true
+          schema:
+            type: string
+          description: Cloud Tasks queue name (required for authentication)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskPayload"
+      responses:
+        "200":
+          description: Capsule delivered (or already delivered — idempotent)
+        "400":
+          description: Invalid payload or missing recipient email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Missing Cloud Tasks headers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Delivery failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ──────────────────────────────────────────────
+  # Digital Lockbox
+  # ──────────────────────────────────────────────
+  /api/v1/lockbox/store-credentials:
+    post:
+      summary: Encrypt and store credentials
+      description: |
+        Encrypts sensitive credential fields (password, pin, notes) using Cloud KMS
+        envelope encryption (AES-256-GCM) and stores them in Firestore.
+        Each encryption uses estate+item-scoped AAD to prevent cross-estate decryption.
+        Username is stored in plaintext. At least one sensitive field is required.
+        All operations are audit-logged.
+      operationId: storeCredentials
+      tags: [Lockbox]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreCredentialsRequest"
+      responses:
+        "200":
+          description: Credentials stored
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Credentials encrypted and stored securely"
+        "400":
+          description: Missing required fields or no sensitive fields provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No principal/admin access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Encryption or storage failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/lockbox/retrieve-credentials:
+    post:
+      summary: Decrypt and retrieve credentials
+      description: |
+        Decrypts and returns lockbox credentials for a specific item.
+        Requires principal or admin access to the estate.
+        All retrievals are audit-logged.
+      operationId: retrieveCredentials
+      tags: [Lockbox]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId, itemId]
+              properties:
+                estateId:
+                  type: string
+                itemId:
+                  type: string
+      responses:
+        "200":
+          description: Decrypted credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CredentialsResponse"
+        "400":
+          description: Missing fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: No principal/admin access to estate
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Lockbox item or credentials not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Decryption failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ──────────────────────────────────────────────
+  # Documents
+  # ──────────────────────────────────────────────
+  /api/v1/documents/download-url:
+    get:
+      summary: Generate signed download URL
+      description: |
+        Generates a Cloud Storage V4 signed URL for downloading a document
+        from the vault. URL is valid for 1 hour.
+      operationId: getDownloadUrl
+      tags: [Documents]
+      parameters:
+        - name: storageKey
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Cloud Storage object path (e.g., "estates/xxx/vault/123-file.pdf")
+          example: "estates/abc123/vault/1680000000-will.pdf"
+      responses:
+        "200":
+          description: Signed download URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadUrl:
+                    type: string
+                    format: uri
+                    description: Signed URL valid for 1 hour
+        "400":
+          description: Missing storageKey
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "401":
+          description: Not authenticated
+        "500":
+          description: Failed to generate signed URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  # ──────────────────────────────────────────────
+  # PII Vault (Cloud SQL + Cloud KMS)
+  # ──────────────────────────────────────────────
+  /api/v1/vault/user-pii:
+    post:
+      summary: Store user PII
+      description: |
+        Encrypts and stores user PII (SSN, date of birth) in Cloud SQL
+        via Cloud KMS envelope encryption. At least one PII field is required.
+        All operations are audit-logged.
+      operationId: storeUserPII
+      tags: [Vault]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreUserPIIRequest"
+      responses:
+        "200":
+          description: PII stored
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PIIResponse"
+        "400":
+          description: Missing estate_id or no PII fields provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Storage failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      summary: Retrieve user PII
+      description: |
+        Retrieves user PII. By default returns masked values (SSN last 4 only).
+        Pass full=true to retrieve full PII values (requires elevated access).
+        All retrievals are audit-logged.
+      operationId: retrieveUserPII
+      tags: [Vault]
+      parameters:
+        - name: estate_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: full
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["true", "false"]
+          description: Set to "true" for full PII disclosure
+      responses:
+        "200":
+          description: User PII (masked or full)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserPIIResponse"
+        "400":
+          description: Missing estate_id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: No PII found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Retrieval failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/vault/asset-pii:
+    post:
+      summary: Store asset PII
+      description: |
+        Encrypts and stores asset-level PII (account numbers, routing numbers, VINs)
+        in Cloud SQL. At least one PII field is required.
+      operationId: storeAssetPII
+      tags: [Vault]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreAssetPIIRequest"
+      responses:
+        "200":
+          description: Asset PII stored
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PIIResponse"
+        "400":
+          description: Missing required fields or no PII fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Storage failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      summary: Retrieve asset PII
+      description: |
+        Retrieves asset PII. By default returns masked values (last 4/6 digits only).
+        Pass full=true for full disclosure.
+      operationId: retrieveAssetPII
+      tags: [Vault]
+      parameters:
+        - name: estate_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: asset_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: full
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["true", "false"]
+          description: Set to "true" for full PII disclosure
+      responses:
+        "200":
+          description: Asset PII (masked or full)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetPIIResponse"
+        "400":
+          description: Missing estate_id or asset_id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: No PII found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Retrieval failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/v1/vault/heir-pii:
+    post:
+      summary: Store heir PII
+      description: |
+        Encrypts and stores heir-level PII (SSN, date of birth) in Cloud SQL.
+        At least one PII field is required.
+      operationId: storeHeirPII
+      tags: [Vault]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreHeirPIIRequest"
+      responses:
+        "200":
+          description: Heir PII stored
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PIIResponse"
+        "400":
+          description: Missing required fields or no PII fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Storage failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      summary: Retrieve heir PII
+      description: |
+        Retrieves heir PII. By default returns masked values (SSN last 4 only).
+        Pass full=true for full disclosure.
+      operationId: retrieveHeirPII
+      tags: [Vault]
+      parameters:
+        - name: estate_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: heir_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: full
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["true", "false"]
+          description: Set to "true" for full PII disclosure
+      responses:
+        "200":
+          description: Heir PII (masked or full)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeirPIIResponse"
+        "400":
+          description: Missing estate_id or heir_id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: No PII found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Retrieval failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  # ──────────────────────────────────────────────
+  # OpenSign (E-Signature)
+  # ──────────────────────────────────────────────
+  /api/v1/opensign/create-envelope:
+    post:
+      summary: Create signing envelope
+      description: |
+        Proxies to Sirsi Sign (sign.sirsi.ai / OpenSign) to create an e-signature
+        envelope from a template. Returns the envelope ID and a signing URL.
+      operationId: createEnvelope
+      tags: [OpenSign]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvelopeRequest"
+      responses:
+        "200":
+          description: Envelope created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEnvelopeResponse"
+        "400":
+          description: Invalid request body
+        "401":
+          description: Not authenticated
+        "500":
+          description: Server configuration error (OpenSign URL not set)
+        "502":
+          description: OpenSign API error or unreachable
+
+  /api/envelopes:
+    post:
+      summary: Create signing envelope (legacy path)
+      description: |
+        Legacy endpoint that mirrors /api/v1/opensign/create-envelope.
+        Prefer the versioned path.
+      operationId: createEnvelopeLegacy
+      tags: [OpenSign]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnvelopeRequest"
+      responses:
+        "200":
+          description: Envelope created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEnvelopeResponse"
+        "400":
+          description: Invalid request body
+        "502":
+          description: OpenSign API error
+
+  # ──────────────────────────────────────────────
+  # ConnectRPC — Estate Service
+  # ──────────────────────────────────────────────
+  /estate.v1.EstateService/ListEstates:
+    post:
+      summary: List estates for a user
+      description: Returns all estates where the user has a role.
+      operationId: listEstates
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+      responses:
+        "200":
+          description: List of estate summaries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        role:
+                          type: string
+
+  /estate.v1.EstateService/RegisterEstate:
+    post:
+      summary: Register a new estate
+      operationId: registerEstate
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, name]
+              properties:
+                userId:
+                  type: string
+                name:
+                  type: string
+                type:
+                  type: string
+      responses:
+        "200":
+          description: Estate registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estate:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      role:
+                        type: string
+
+  /estate.v1.EstateService/GetEstateMetadata:
+    post:
+      summary: Get estate metadata
+      operationId: getEstateMetadata
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Estate metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  status:
+                    type: string
+                  completionPercentage:
+                    type: integer
+                  authorityMode:
+                    type: string
+                    enum: [AUTHORITY_MODE_OWNER, AUTHORITY_MODE_EXECUTOR, AUTHORITY_MODE_TRUSTEE]
+
+  /estate.v1.EstateService/ListAssets:
+    post:
+      summary: List estate assets
+      operationId: listAssets
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Asset list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  assets:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        value:
+                          type: string
+                        status:
+                          type: string
+                  totalCount:
+                    type: integer
+
+  /estate.v1.EstateService/AddAsset:
+    post:
+      summary: Add an asset to an estate
+      operationId: addAsset
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId, name, type, value]
+              properties:
+                estateId:
+                  type: string
+                name:
+                  type: string
+                type:
+                  type: string
+                value:
+                  type: string
+      responses:
+        "200":
+          description: Asset added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  asset:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      type:
+                        type: string
+                      value:
+                        type: string
+                      status:
+                        type: string
+
+  /estate.v1.EstateService/ListBeneficiaries:
+    post:
+      summary: List estate beneficiaries
+      operationId: listBeneficiaries
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Beneficiary list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  beneficiaries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        relation:
+                          type: string
+                        share:
+                          type: string
+                        status:
+                          type: string
+                        email:
+                          type: string
+
+  /estate.v1.EstateService/AddBeneficiary:
+    post:
+      summary: Add a beneficiary to an estate
+      operationId: addBeneficiary
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId, name, relation, email]
+              properties:
+                estateId:
+                  type: string
+                name:
+                  type: string
+                relation:
+                  type: string
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Beneficiary added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  beneficiary:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      relation:
+                        type: string
+                      share:
+                        type: string
+                      status:
+                        type: string
+
+  /estate.v1.EstateService/ListVaultDocuments:
+    post:
+      summary: List vault documents
+      operationId: listVaultDocuments
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Document list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        date:
+                          type: string
+                        size:
+                          type: string
+                        category:
+                          type: string
+
+  /estate.v1.EstateService/GenerateUploadUrl:
+    post:
+      summary: Generate signed upload URL for vault documents
+      description: |
+        Generates Cloud Storage V4 signed URLs for uploading a document to the estate vault.
+        Returns both an upload URL (PUT, valid 15 min) and a download URL (GET, valid 7 days).
+      operationId: generateUploadUrl
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId, fileName, contentType]
+              properties:
+                estateId:
+                  type: string
+                fileName:
+                  type: string
+                contentType:
+                  type: string
+                  example: "application/pdf"
+      responses:
+        "200":
+          description: Signed URLs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uploadUrl:
+                    type: string
+                    format: uri
+                    description: PUT this URL with the file (valid 15 min)
+                  finalUrl:
+                    type: string
+                    format: uri
+                    description: GET download URL (valid 7 days)
+
+  /estate.v1.EstateService/ListMemoirs:
+    post:
+      summary: List estate memoirs
+      operationId: listMemoirs
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Memoir list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  memoirs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        type:
+                          type: string
+                          enum: [video, photo]
+                        url:
+                          type: string
+                        dateAdded:
+                          type: string
+                        visibility:
+                          type: string
+                          enum: [private, all_heirs]
+
+  /estate.v1.EstateService/UploadMemoir:
+    post:
+      summary: Upload a memoir record
+      operationId: uploadMemoir
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId, title, type, url]
+              properties:
+                estateId:
+                  type: string
+                title:
+                  type: string
+                type:
+                  type: string
+                url:
+                  type: string
+      responses:
+        "200":
+          description: Memoir created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  memoir:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      title:
+                        type: string
+                      type:
+                        type: string
+                      url:
+                        type: string
+                      dateAdded:
+                        type: string
+                      visibility:
+                        type: string
+
+  /estate.v1.EstateService/GetObituary:
+    post:
+      summary: Get estate obituary
+      operationId: getObituary
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Obituary content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: string
+                  status:
+                    type: string
+                    enum: [None, Draft, Verified]
+                  lastUpdated:
+                    type: string
+                    format: date-time
+
+  /estate.v1.EstateService/SaveObituary:
+    post:
+      summary: Save estate obituary
+      operationId: saveObituary
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId, content]
+              properties:
+                estateId:
+                  type: string
+                content:
+                  type: string
+      responses:
+        "200":
+          description: Obituary saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /estate.v1.EstateService/GetAIInsight:
+    post:
+      summary: Get AI insight for estate
+      operationId: getAIInsight
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: AI insight
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  insight:
+                    type: string
+                  actionLabel:
+                    type: string
+                  actionUrl:
+                    type: string
+
+  /estate.v1.EstateService/GetGovernanceSettings:
+    post:
+      summary: Get estate governance settings
+      operationId: getGovernanceSettings
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Governance settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  settings:
+                    type: object
+                    properties:
+                      mfaEnabled:
+                        type: boolean
+                      biometricRelease:
+                        type: boolean
+                      emailAlerts:
+                        type: boolean
+                      recoveryKeyStatus:
+                        type: string
+                      statusReportsFrequency:
+                        type: string
+
+  /estate.v1.EstateService/ListNotifications:
+    post:
+      summary: List estate notifications
+      operationId: listNotifications
+      tags: [EstateService (ConnectRPC)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estateId]
+              properties:
+                estateId:
+                  type: string
+      responses:
+        "200":
+          description: Notification list (max 10, newest first)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        time:
+                          type: string
+                        type:
+                          type: string
+                        desc:
+                          type: string

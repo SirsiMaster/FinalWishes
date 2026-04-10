@@ -1,9 +1,21 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams, Link } from '@tanstack/react-router'
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../lib/auth'
-import { useEstate, useEstateAssets, useEstateHeirs, useEstateDocuments } from '../lib/firestore'
+import {
+  useEstate,
+  useEstateAssets,
+  useEstateHeirs,
+  useEstateDocuments,
+  useLockboxItems,
+  useDirectives,
+  useTimeCapsules,
+  useHeirlooms,
+  useCollection,
+} from '../lib/firestore'
+import { orderBy } from 'firebase/firestore'
 import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton'
+import { exportEstateData, downloadBlob } from '../lib/export'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -41,10 +53,48 @@ function DashboardIndex() {
   const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
   const userName = profile?.firstName || profile?.displayName || ''
 
-  const { data: _estate, loading: metaLoading } = useEstate(estateId)
+  const { data: estate, loading: metaLoading } = useEstate(estateId)
   const { data: assets, loading: assetsLoading } = useEstateAssets(estateId)
   const { data: heirs, loading: beneLoading } = useEstateHeirs(estateId)
   const { data: documents, loading: vaultLoading } = useEstateDocuments(estateId)
+
+  // Additional hooks for export
+  const { data: lockboxItems } = useLockboxItems(estateId)
+  const { data: directives } = useDirectives(estateId)
+  const { data: capsules } = useTimeCapsules(estateId)
+  const { data: heirlooms } = useHeirlooms(estateId)
+  const memoirConstraints = useMemo(() => [orderBy('createdAt', 'desc')], [])
+  const { data: memoirs } = useCollection<Record<string, unknown>>(
+    estateId ? `estates/${estateId}/memoirs` : null,
+    memoirConstraints
+  )
+
+  const [exporting, setExporting] = useState(false)
+
+  const handleExport = useCallback(async () => {
+    setExporting(true)
+    try {
+      const estateName = estate?.name || `estate-${estateId}`
+      const blob = await exportEstateData({
+        estateId,
+        estateName,
+        assets: assets as Record<string, unknown>[],
+        heirs: heirs as Record<string, unknown>[],
+        documents: documents as Record<string, unknown>[],
+        lockboxItems: lockboxItems as Record<string, unknown>[],
+        directives: directives as Record<string, unknown>[],
+        capsules: capsules as Record<string, unknown>[],
+        heirlooms: heirlooms as Record<string, unknown>[],
+        memoirs: memoirs as Record<string, unknown>[],
+      })
+      const safeName = estateName.replace(/[^a-zA-Z0-9_-]/g, '_')
+      downloadBlob(blob, `${safeName}-export-${new Date().toISOString().slice(0, 10)}.zip`)
+    } catch (err) {
+      console.error('[Export] Failed:', err)
+    } finally {
+      setExporting(false)
+    }
+  }, [estateId, estate, assets, heirs, documents, lockboxItems, directives, capsules, heirlooms, memoirs])
 
   // Shepherd score
   const [score, setScore] = useState<ShepherdScore | null>(null)
@@ -235,6 +285,26 @@ function DashboardIndex() {
               <ActionBtn label="Upload Doc" route={`/estates/${routeId}/vault`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>} />
               <ActionBtn label="Add Heir" route={`/estates/${routeId}/beneficiaries`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /></svg>} />
               <ActionBtn label="Memory" route={`/estates/${routeId}/memoirs`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" /></svg>} />
+              <button
+                onClick={handleExport}
+                disabled={exporting}
+                className="flex flex-col items-center justify-center gap-3 md:gap-6 p-5 md:p-10 bg-slate-50 border border-slate-100 rounded-2xl md:rounded-3xl hover:bg-white hover:border-[#133378]/20 hover:shadow-[0_20px_60px_rgba(19,51,120,0.06)] transition-all active:scale-[0.98] group disabled:opacity-60 disabled:cursor-not-allowed col-span-2"
+              >
+                <div className="text-slate-300 group-hover:text-[#133378] transition-all duration-500 scale-110 group-hover:scale-125">
+                  {exporting ? (
+                    <span className="w-7 h-7 border-2 border-slate-300 border-t-[#133378] rounded-full animate-spin inline-block" />
+                  ) : (
+                    <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                  )}
+                </div>
+                <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#0F172A] uppercase tracking-[0.2em] mt-2">
+                  {exporting ? 'Exporting...' : 'Export'}
+                </span>
+              </button>
             </div>
           </div>
 

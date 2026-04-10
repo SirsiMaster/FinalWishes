@@ -590,3 +590,71 @@ input::-webkit-contacts-auto-fill-button {
     @apply font-sans;
   }
 }
+
+/* ============================================
+   Print-Friendly Styles for Legal Documents
+   Directives, Obituary, Estate Summary
+   ============================================ */
+@media print {
+  /* Hide UI chrome */
+  aside, header, nav, .no-print,
+  [data-slot="dialog-overlay"],
+  button:not(.print-keep) {
+    display: none !important;
+  }
+
+  /* Reset layout */
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Card styling for print */
+  [data-slot="card"] {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Royal Neo-Deco header for printed docs */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    border-bottom: 2px solid #C8A951;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+
+  .print-header h1 {
+    font-family: Georgia, serif;
+    color: #133378;
+    font-size: 24pt;
+    letter-spacing: 0.1em;
+  }
+
+  /* Page breaks */
+  .print-page-break {
+    page-break-before: always;
+  }
+
+  /* Footer for printed docs */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    border-top: 1px solid #C8A951;
+    padding-top: 8px;
+  }
+}

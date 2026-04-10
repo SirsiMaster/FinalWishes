@@ -3,6 +3,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
 import { useTimeCapsules, type TimeCapsule } from '../lib/firestore'
 import { addTimeCapsule, cancelTimeCapsule } from '../lib/estate-actions'
+import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { useAuth } from '../lib/auth'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
@@ -186,7 +187,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       </p>
       <button
         onClick={onAdd}
-        className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] transition-all shadow-lg flex items-center gap-3 active:scale-95"
+        className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 rounded-2xl font-bold text-[13px] md:text-[14px] transition-all shadow-lg flex items-center gap-3 active:scale-95 w-full md:w-auto justify-center"
       >
         <Plus className="w-5 h-5" />
         Create Your First Capsule
@@ -554,30 +555,21 @@ function TimeCapsulePage() {
   // ─── Loading State ────────────────────────────────────────────────────
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#133378]/50 uppercase tracking-[0.2em]">
-            Loading capsules...
-          </span>
-        </div>
-      </div>
-    )
+    return <CardGridSkeleton />
   }
 
   // ─── Render ───────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen">
       {/* Page Header */}
-      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#133378]/10 pb-8 md:pb-16">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
             <div className="w-10 h-px bg-[#133378]/20" />
             <span>Scheduled Messages</span>
           </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
             Time Capsules
           </h2>
           <p className="text-[#133378]/50 text-lg font-medium max-w-2xl leading-relaxed">
@@ -606,7 +598,7 @@ function TimeCapsulePage() {
         </div>
         <button
           onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] transition-all shadow-lg flex items-center gap-3 active:scale-95"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 rounded-2xl font-bold text-[13px] md:text-[14px] transition-all shadow-lg flex items-center gap-3 active:scale-95 w-full md:w-auto justify-center"
         >
           <Plus className="w-5 h-5" />
           Create Capsule

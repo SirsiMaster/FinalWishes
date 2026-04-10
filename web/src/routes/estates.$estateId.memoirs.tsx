@@ -3,6 +3,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 // YouTube embed via native iframe — zero bundle cost (no react-player)
 import { useCollection } from '../lib/firestore'
+import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
@@ -244,22 +245,13 @@ function MemoirsPage() {
   // ─── Loading ──────────────────────────────────────────────────────────
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#133378]/50 uppercase tracking-[0.2em]">
-            Loading memories...
-          </span>
-        </div>
-      </div>
-    )
+    return <CardGridSkeleton />
   }
 
   // ─── Render ───────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen">
       {/* Cinema Viewer */}
       {selectedMemoir && (
         <CinemaViewer
@@ -270,16 +262,16 @@ function MemoirsPage() {
       )}
 
       {/* Page Header */}
-      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#133378]/10 pb-8 md:pb-16">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
             <div className="w-10 h-px bg-[#133378]/20" />
             <span>Estate Heritage Vault</span>
           </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
             Life Stories & Memories
           </h2>
-          <p className="text-[#133378]/50 text-lg font-medium max-w-2xl leading-relaxed">
+          <p className="text-[#133378]/50 text-base md:text-lg font-medium max-w-2xl leading-relaxed">
             Preserve your legacy with video recordings, YouTube memorials, and photo collections for future generations.
           </p>
         </div>
@@ -288,7 +280,7 @@ function MemoirsPage() {
             setModalMode('file')
             setModalOpen(true)
           }}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] transition-all shadow-lg flex items-center gap-3"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 rounded-2xl font-bold text-[13px] md:text-[14px] transition-all shadow-lg flex items-center gap-3 w-full md:w-auto justify-center"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 5v14M5 12h14" />

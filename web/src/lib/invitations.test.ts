@@ -59,8 +59,8 @@ describe('sendEstateInvitation', () => {
     expect(result.success).toBe(true)
     expect(result.invitationId).toBe('inv-1')
     expect(result.autoLinked).toBe(false)
-    // invitation record + executor subcollection record
-    expect(mockAddDoc).toHaveBeenCalledTimes(2)
+    // invitation record + executor subcollection record + email to mail collection
+    expect(mockAddDoc).toHaveBeenCalledTimes(3)
   })
 
   it('auto-links existing user and sets accepted status', async () => {

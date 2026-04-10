@@ -3,6 +3,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo } from 'react'
 import { useEstateAssets, type Asset } from '../lib/firestore'
 import { addAsset as addAssetAction } from '../lib/estate-actions'
+import { TableSkeleton } from '@/components/skeletons/TableSkeleton'
 
 export const Route = createFileRoute('/estates/$estateId/assets')({
   component: AssetsPage,
@@ -29,30 +30,26 @@ function AssetsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal"></div>
-      </div>
-    );
+    return <TableSkeleton />;
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Page Header ── */}
-      <div className="flex justify-between items-end border-b border-slate-50 pb-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-50 pb-8 md:pb-16">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
             <div className="w-10 h-px bg-[#133378]/20" />
             <span>Estate Asset Ledger</span>
           </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">My Assets</h2>
-          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
+          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">My Assets</h2>
+          <p className="text-[#64748B] text-base md:text-lg font-medium max-w-2xl leading-relaxed">
             A complete inventory of everything you own and want to pass on to your beneficiaries.
           </p>
         </div>
-        <button 
+        <button
           onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] transition-all shadow-[0_20px_50px_rgba(19,51,120,0.1)] flex items-center gap-3"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 rounded-2xl font-bold text-[13px] md:text-[14px] transition-all shadow-[0_20px_50px_rgba(19,51,120,0.1)] flex items-center gap-3 w-full md:w-auto justify-center"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
           Add Asset
@@ -60,7 +57,7 @@ function AssetsPage() {
       </div>
 
       {/* ── Asset Table ── */}
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -108,8 +105,8 @@ function AssetsPage() {
       {/* ── Add Asset Modal ── */}
       {modalOpen && (
         <div className="fixed inset-0 z-[600] flex items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div className="bg-white rounded-[3rem] p-16 max-w-xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-500 relative">
-            <h3 className="text-3xl font-bold text-[#0F172A] mb-3 tracking-tight">Add New Asset</h3>
+          <div className="bg-white rounded-2xl md:rounded-[3rem] p-6 md:p-16 max-w-xl w-full border border-slate-100 shadow-2xl animate-in zoom-in duration-500 relative">
+            <h3 className="text-2xl md:text-3xl font-bold text-[#0F172A] mb-3 tracking-tight">Add New Asset</h3>
             <p className="text-slate-500 font-medium text-sm mb-12">Enter the details for a new asset entry in your estate ledger.</p>
             <form onSubmit={(e) => {
               e.preventDefault();

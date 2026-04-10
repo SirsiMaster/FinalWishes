@@ -76,7 +76,7 @@ function CreateEstatePage() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
-                <h1 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-6 tracking-tight leading-tight">
+                <h1 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-6 tracking-tight leading-tight">
                   Welcome{firstName ? `, ${firstName}` : ''}.
                 </h1>
                 <p className="text-xl text-[#64748B] font-medium max-w-lg mx-auto leading-relaxed">
@@ -85,7 +85,7 @@ function CreateEstatePage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-6 mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-10 md:mb-16">
                 <FeatureCard
                   icon={<path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />}
                   title="Assets"

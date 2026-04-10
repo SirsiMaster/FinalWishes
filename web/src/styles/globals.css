@@ -65,6 +65,13 @@
   --sidebar-ring: #133378;
 }
 
+@media (max-width: 767px) {
+  :root {
+    --sidebar-width: 0px;
+    --header-height: 64px;
+  }
+}
+
 /* ── TailwindCSS v4 Theme Tokens ── */
 @theme inline {
   --color-royal: var(--royal);

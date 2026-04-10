@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
-import { Sidebar } from '../components/layout/Sidebar'
+import { useState } from 'react'
+import { Sidebar, MobileSidebar } from '../components/layout/Sidebar'
 import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { IdentityGate } from '../components/guards/IdentityGate'
@@ -27,6 +28,7 @@ export const Route = createFileRoute('/estates/$estateId')({
 function EstateLayout() {
   const { estateId } = useParams({ from: '/estates/$estateId' });
   const { profile } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -51,15 +53,20 @@ function EstateLayout() {
     <AuthGuard>
       <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
         <Sidebar />
-        <div 
+        <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} />
+        <div
           className="transition-all duration-300 min-h-screen flex flex-col"
-          style={{ 
+          style={{
             marginLeft: 'var(--sidebar-width)',
           }}
         >
-          <AdminHeader title={displayEstateName} subtitle={`${roleLabel} · Vault Secured · Active`} />
+          <AdminHeader
+            title={displayEstateName}
+            subtitle={`${roleLabel} · Vault Secured · Active`}
+            onMenuClick={() => setMobileMenuOpen(true)}
+          />
           <EmailVerificationBanner />
-          <main className="flex-1 p-8">
+          <main className="flex-1 p-4 md:p-8">
             <ErrorBoundary>
               <IdentityGate estateId={estateId}>
                 <Outlet />
@@ -71,4 +78,3 @@ function EstateLayout() {
     </AuthGuard>
   )
 }
-

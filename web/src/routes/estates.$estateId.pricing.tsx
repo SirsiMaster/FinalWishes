@@ -3,6 +3,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
 import { useEstate } from '../lib/firestore'
+import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import {
   Crown,
   Shield,
@@ -145,15 +146,11 @@ function PricingPage() {
   )
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal" />
-      </div>
-    )
+    return <CardGridSkeleton columns={3} cards={3} />
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Payment Result Banner ── */}
       {paymentResult === 'success' && (
         <div className="bg-[#059669]/10 border border-[#059669]/20 rounded-2xl p-6 flex items-center gap-4">
@@ -178,10 +175,10 @@ function PricingPage() {
           <span>Estate Protection Plans</span>
           <div className="w-10 h-px bg-[#133378]/20" />
         </div>
-        <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+        <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
           Choose Your Plan
         </h2>
-        <p className="text-[#64748B] text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-[#64748B] text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed">
           Protect your legacy with the right level of coverage. Upgrade or downgrade anytime.
         </p>
       </div>
@@ -205,7 +202,7 @@ function PricingPage() {
           return (
             <div
               key={tier.id}
-              className={`relative bg-white rounded-3xl border-2 p-10 transition-all ${
+              className={`relative bg-white rounded-2xl md:rounded-3xl border-2 p-6 md:p-10 transition-all ${
                 isCurrent
                   ? 'border-[#133378] shadow-[0_20px_60px_rgba(19,51,120,0.15)]'
                   : isPopular

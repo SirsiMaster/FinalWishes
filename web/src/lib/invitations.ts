@@ -25,6 +25,7 @@ import {
   type Timestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { estateInvitationEmail } from './email-templates';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,6 +36,8 @@ export interface InvitationParams {
   role: 'executor' | 'heir' | 'legal' | 'cpa';
   relationship?: string;
   invitedBy: string; // UID of the principal
+  inviterName?: string; // Display name of the principal (for email)
+  estateName?: string; // Estate display name (for email)
   priority?: number; // For executors — 1 = primary
 }
 
@@ -57,7 +60,7 @@ interface InvitationResult {
  * 5. If user doesn't exist → Cloud Function autoMatchInvitation handles it on signup
  */
 export async function sendEstateInvitation(params: InvitationParams): Promise<InvitationResult> {
-  const { estateId, email, fullName, role, relationship, invitedBy, priority } = params;
+  const { estateId, email, fullName, role, relationship, invitedBy, inviterName, estateName, priority } = params;
   const normalizedEmail = email.toLowerCase().trim();
 
   try {
@@ -139,7 +142,32 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
     }
 
     // 5. User doesn't exist — Cloud Function will handle on signup
-    // TODO: Send email via SendGrid when integrated
+    // Send invitation email via Firestore mail collection → SendGrid
+    try {
+      const acceptUrl = `https://finalwishes-prod.web.app/accept-invite?id=${invRef.id}`;
+      const emailContent = estateInvitationEmail({
+        inviterName: inviterName || 'A FinalWishes user',
+        estateName: estateName || 'an estate',
+        recipientName: fullName,
+        role,
+        acceptUrl,
+      });
+
+      await addDoc(collection(db, 'mail'), {
+        to: [normalizedEmail],
+        message: {
+          subject: emailContent.subject,
+          html: emailContent.html,
+          text: emailContent.text,
+        },
+        createdAt: serverTimestamp(),
+        createdBy: invitedBy,
+      });
+    } catch (emailErr) {
+      // Email failure should not fail the invitation itself
+      console.warn('[sendEstateInvitation] Email send failed (invitation still created):', emailErr);
+    }
+
     return { success: true, invitationId: invRef.id, autoLinked: false };
   } catch (err: unknown) {
     console.error('[sendEstateInvitation] Error:', err);

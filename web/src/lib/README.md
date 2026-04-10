@@ -1,28 +1,25 @@
-# Firestore Data Layer — Developer Guide
+# Core Libraries — Developer Guide
 
-## Overview
-
-FinalWishes uses a **client-side Firestore** data layer for real-time dashboard reads.
-The Go API handles Cloud SQL PII operations and Cloud Storage signed URLs only.
-
-## Architecture Decision
-
-See [ADR-036: Firestore Direct Reads](../../docs/ADR-036-FIRESTORE-DIRECT-READS.md).
-
-**Why not route through the Go API?**
-- Firestore provides built-in real-time sync via `onSnapshot`
-- Security is enforced by Firestore Rules v3.0.0 (not API-level auth)
-- Eliminates Cloud Run provisioning as a blocker for Phase 1
-- The Go API is reserved for Cloud SQL PII + Cloud Storage operations
+> Client-side services: auth, real-time data, encryption, analytics, and API transport.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `firestore.ts` | Real-time data hooks (useEstate, useEstateAssets, etc.) |
-| `estate-actions.ts` | Write operations (createEstate, addAsset, etc.) |
-| `firebase.ts` | Firebase SDK initialization |
-| `client.ts` | ConnectRPC client for Go API (signed URLs, PII) |
+| `firebase.ts` | Firebase app initialization (Auth, Firestore, Analytics, Performance) |
+| `auth.tsx` | React Auth context/provider — email + username login, MFA support, demo mode |
+| `mfa.ts` | TOTP enrollment and verification (Google Authenticator, 1Password, Authy) |
+| `firestore.ts` | Real-time Firestore hooks via `onSnapshot` (ADR-036) |
+| `estate-actions.ts` | Firestore write operations (createEstate, addAsset, etc.) |
+| `invitations.ts` | Estate invitation system — create, send, auto-match on registration |
+| `analytics.ts` | Firebase Performance + GA4 wrappers for business-critical events |
+| `client.ts` | ConnectRPC transport for Go API (signed URLs, PII operations) |
+| `email.ts` | Email utility functions |
+| `utils.ts` | Shared utility helpers |
+
+## Architecture
+
+Firestore reads happen **client-side** (ADR-036) — no Go API round-trip for dashboard data. Security is enforced by Firestore Rules v3.0.0. The Go API handles Cloud SQL PII, Cloud Storage, and KMS operations only.
 
 ## Hooks Reference
 

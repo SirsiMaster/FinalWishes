@@ -49,6 +49,10 @@ function DashboardIndex() {
   const [score, setScore] = useState<ShepherdScore | null>(null)
   const [scoreLoading, setScoreLoading] = useState(true)
 
+  // AI Suggestions
+  const [suggestions, setSuggestions] = useState<{ id: string; title: string; description: string; priority: string }[]>([])
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true)
+
   useEffect(() => {
     if (!user) return
     let cancelled = false
@@ -67,6 +71,28 @@ function DashboardIndex() {
       if (!cancelled) setScoreLoading(false)
     }
     load()
+    return () => { cancelled = true }
+  }, [user, estateId])
+
+  useEffect(() => {
+    if (!user) return
+    let cancelled = false
+    const loadSuggestions = async () => {
+      try {
+        const token = await user.getIdToken()
+        const res = await fetch(`${API_BASE}/api/v1/guidance/suggestions?estate_id=${estateId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        if (res.ok && !cancelled) {
+          const data = await res.json()
+          setSuggestions(data.suggestions || [])
+        }
+      } catch {
+        // Suggestions unavailable
+      }
+      if (!cancelled) setSuggestionsLoading(false)
+    }
+    loadSuggestions()
     return () => { cancelled = true }
   }, [user, estateId])
 
@@ -213,6 +239,44 @@ function DashboardIndex() {
               <ActionBtn label="Add Heir" route={`/estates/${routeId}/beneficiaries`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /></svg>} />
               <ActionBtn label="Memory" route={`/estates/${routeId}/memoirs`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" /></svg>} />
             </div>
+          </div>
+
+          {/* AI Suggestions */}
+          <div className="bg-white rounded-[3rem] p-12 border border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)]">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-[#C8A951]/10 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z" />
+                  <line x1="9" y1="21" x2="15" y2="21" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#0F172A] tracking-tight">AI Suggestions</h3>
+            </div>
+            {suggestionsLoading ? (
+              <div className="flex items-center gap-3 py-4">
+                <div className="w-4 h-4 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+                <span className="text-[12px] text-[#64748B] font-medium">Analyzing your estate...</span>
+              </div>
+            ) : suggestions.length > 0 ? (
+              <div className="space-y-4">
+                {suggestions.map((s) => (
+                  <div
+                    key={s.id}
+                    className="flex items-start gap-4 p-4 bg-[#F8FAFC] rounded-2xl border border-slate-100"
+                  >
+                    <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                      s.priority === 'high' ? 'bg-red-400' : s.priority === 'medium' ? 'bg-[#C8A951]' : 'bg-slate-300'
+                    }`} />
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-bold text-[#0F172A]">{s.title}</p>
+                      <p className="text-[12px] text-[#64748B] leading-relaxed mt-0.5">{s.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[13px] text-[#64748B] font-medium">No suggestions at this time. Your estate is looking good.</p>
+            )}
           </div>
 
           <div className="bg-[#133378] rounded-[3rem] p-12 text-white shadow-xl relative overflow-hidden group">

@@ -50,7 +50,7 @@ function AuthWrapper({ children }: { children: ReactNode }) {
   return <AuthProvider>{children}</AuthProvider>
 }
 
-function simulateAuthState(user: unknown) {
+function _simulateAuthState(user: unknown) {
   // mockOnAuthStateChanged captures the callback; we invoke it manually
   const callback = mockOnAuthStateChanged.mock.calls[0]?.[1]
   if (callback) {

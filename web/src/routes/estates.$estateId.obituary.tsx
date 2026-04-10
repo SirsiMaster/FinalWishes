@@ -1,10 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { useDocument } from '../lib/firestore'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 export const Route = createFileRoute('/estates/$estateId/obituary')({
   component: ObituaryPage,
@@ -18,12 +20,42 @@ function ObituaryPage() {
   const [saving, setSaving] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const userName = profile?.displayName || '';
   const profilePhoto = profile?.profilePhotoUrl || '/assets/tameeka/mom memorial.jpg';
   const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [aiAssisting, setAiAssisting] = useState(false);
 
   const { data: obit, loading: isLoading } = useDocument<{ content?: string; status?: string }>(`estates/${estateId}/governance/obituary`);
+
+  const handleAiAssist = useCallback(async () => {
+    if (!user) return;
+    const currentContent = textAreaRef.current?.value || obit?.content || '';
+    setAiAssisting(true);
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch(`${API_BASE}/api/v1/guidance/assist-obituary`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estateId, prompt: currentContent }),
+      });
+      if (!res.ok) throw new Error('AI assist failed');
+      const data = await res.json();
+      if (data.content && textAreaRef.current) {
+        textAreaRef.current.value = data.content;
+      }
+      // Switch to editing mode if not already
+      if (!editing) setEditing(true);
+    } catch (err) {
+      console.error('[Obituary] AI assist failed:', err);
+      alert('AI assistance is temporarily unavailable. Please try again.');
+    } finally {
+      setAiAssisting(false);
+    }
+  }, [user, estateId, obit?.content, editing]);
 
   const handleSave = async () => {
     const content = textAreaRef.current?.value || '';
@@ -139,18 +171,37 @@ function ObituaryPage() {
         <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col min-h-[500px]">
           <div className="bg-[#F8FAFC] px-6 py-4 flex justify-between items-center border-b border-slate-100 rounded-t-[2rem]">
              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Obituary Draft</span>
-             {!editing && !isSigned && (
-               <button onClick={() => setEditing(true)} className="text-[#133378] font-bold text-[12px] hover:underline">Edit</button>
-             )}
-             {editing && (
-               <button onClick={handleSave} className="text-green-600 font-bold text-[12px] hover:underline">{saving ? 'Saving...' : 'Save Draft'}</button>
-             )}
-             {isSigned && (
-               <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px]">
-                  <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                  Finalized
-               </div>
-             )}
+             <div className="flex items-center gap-4">
+               {!isSigned && (
+                 <button
+                   onClick={handleAiAssist}
+                   disabled={aiAssisting}
+                   className="text-[#C8A951] font-bold text-[12px] hover:text-[#133378] transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                 >
+                   {aiAssisting ? (
+                     <div className="w-3 h-3 border-2 border-[#C8A951]/30 border-t-[#C8A951] rounded-full animate-spin" />
+                   ) : (
+                     <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                       <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z" />
+                       <line x1="9" y1="21" x2="15" y2="21" />
+                     </svg>
+                   )}
+                   {aiAssisting ? 'Generating...' : 'AI Assist'}
+                 </button>
+               )}
+               {!editing && !isSigned && (
+                 <button onClick={() => setEditing(true)} className="text-[#133378] font-bold text-[12px] hover:underline">Edit</button>
+               )}
+               {editing && (
+                 <button onClick={handleSave} className="text-green-600 font-bold text-[12px] hover:underline">{saving ? 'Saving...' : 'Save Draft'}</button>
+               )}
+               {isSigned && (
+                 <div className="flex items-center gap-1.5 text-green-600 font-bold text-[11px]">
+                    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                    Finalized
+                 </div>
+               )}
+             </div>
           </div>
           <div className="flex-1 p-8">
              {editing ? (

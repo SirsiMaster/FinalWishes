@@ -28,6 +28,7 @@
     "dompurify": "^3.3.3",
     "firebase": "^12.11.0",
     "framer-motion": "^12.38.0",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.577.0",
     "qrcode.react": "^4.2.0",
     "radix-ui": "^1.4.3",

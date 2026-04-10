@@ -11,14 +11,26 @@
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo, useCallback } from 'react'
-import { useDocument } from '../lib/firestore'
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import {
+  useDocument,
+  useEstate,
+  useEstateAssets,
+  useEstateHeirs,
+  useEstateDocuments,
+  useLockboxItems,
+  useDirectives,
+  useTimeCapsules,
+  useHeirlooms,
+  useCollection,
+} from '../lib/firestore'
+import { doc, setDoc, serverTimestamp, orderBy } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { getMFAStatus } from '../lib/mfa'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
 import { InviteTeamMember } from '../components/estate/InviteTeamMember'
+import { exportEstateData, downloadBlob } from '../lib/export'
 
 const ROLE_DISPLAY: Record<string, string> = {
   principal: 'Estate Owner',
@@ -40,10 +52,28 @@ function SettingsPage() {
 
   const { data: settingsDoc, loading: isLoading } = useDocument<Record<string, unknown>>(`estates/${estateId}/governance/settings`);
 
+  // Estate data hooks for export
+  const { data: estate } = useEstate(estateId);
+  const { data: assets } = useEstateAssets(estateId);
+  const { data: heirs } = useEstateHeirs(estateId);
+  const { data: documents } = useEstateDocuments(estateId);
+  const { data: lockboxItems } = useLockboxItems(estateId);
+  const { data: directives } = useDirectives(estateId);
+  const { data: capsules } = useTimeCapsules(estateId);
+  const { data: heirlooms } = useHeirlooms(estateId);
+  const memoirConstraints = useMemo(() => [orderBy('createdAt', 'desc')], []);
+  const { data: memoirs } = useCollection<Record<string, unknown>>(
+    estateId ? `estates/${estateId}/memoirs` : null,
+    memoirConstraints
+  );
+
   // Local settings state for toggle changes
   const [localSettings, setLocalSettings] = useState<Record<string, unknown>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Export state
+  const [exporting, setExporting] = useState(false);
 
   // Merge Firestore doc with local overrides
   const s = useMemo(() => ({ ...settingsDoc, ...localSettings }), [settingsDoc, localSettings]);
@@ -73,6 +103,31 @@ function SettingsPage() {
       setSaving(false);
     }
   }, [estateId, localSettings]);
+
+  const handleExport = useCallback(async () => {
+    setExporting(true);
+    try {
+      const estateName = estate?.name || `estate-${estateId}`;
+      const blob = await exportEstateData({
+        estateId,
+        estateName,
+        assets: assets as Record<string, unknown>[],
+        heirs: heirs as Record<string, unknown>[],
+        documents: documents as Record<string, unknown>[],
+        lockboxItems: lockboxItems as Record<string, unknown>[],
+        directives: directives as Record<string, unknown>[],
+        capsules: capsules as Record<string, unknown>[],
+        heirlooms: heirlooms as Record<string, unknown>[],
+        memoirs: memoirs as Record<string, unknown>[],
+      });
+      const safeName = estateName.replace(/[^a-zA-Z0-9_-]/g, '_');
+      downloadBlob(blob, `${safeName}-export-${new Date().toISOString().slice(0, 10)}.zip`);
+    } catch (err) {
+      console.error('[Export] Failed:', err);
+    } finally {
+      setExporting(false);
+    }
+  }, [estateId, estate, assets, heirs, documents, lockboxItems, directives, capsules, heirlooms, memoirs]);
 
   if (isLoading) {
     return <CardGridSkeleton />;
@@ -214,6 +269,50 @@ function SettingsPage() {
           />
           <SettingsStatus label="Beneficiary access" description="Control what your beneficiaries can see" value="Restricted" />
         </SettingsSection>
+      </div>
+
+      {/* ── Export Estate Data ── */}
+      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-5 md:px-10 py-4 md:py-6 border-b border-slate-100 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </div>
+          <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em]">Data Export</h3>
+        </div>
+        <div className="px-5 md:px-10 py-5 md:py-8 space-y-4">
+          <div>
+            <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Download Estate Archive</span>
+            <p className="text-[13px] text-[#64748B] font-medium mt-1 max-w-xl">
+              Export all your estate data as a ZIP file for compliance, portability, or personal records.
+              Encrypted credentials and document file contents are excluded for security.
+            </p>
+          </div>
+          <button
+            onClick={handleExport}
+            disabled={exporting}
+            className="px-8 py-3.5 rounded-2xl font-bold text-[13px] shadow-lg transition-all active:scale-95 bg-[#133378] hover:bg-[#1E3A5F] text-white disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {exporting ? (
+              <span className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Generating Archive...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download Estate Archive (ZIP)
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* ── Danger Zone ── */}

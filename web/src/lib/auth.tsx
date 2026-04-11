@@ -252,16 +252,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Ref holds unsubscribe so loginDemo can detach the Firebase listener
   const unsubRef = useRef<(() => void) | null>(null);
 
-  // Listen for Firebase auth state changes + demo mode fallback
+  // Listen for Firebase auth state changes
   useEffect(() => {
-    // Demo mode: check if a demo session already exists in localStorage
+    // Demo mode: check if a demo session exists in localStorage
     const demoProfile = loadDemoSession();
-    if (demoProfile && isDemoMode()) {
-      setUser(createDemoUserShim(demoProfile));
-      setProfile(demoProfile);
+    if (demoProfile && isDemoMode() && !demoActiveRef.current) {
       demoActiveRef.current = true;
-      setLoading(false);
-      return; // No Firebase listener needed — demo session is active
+      // Schedule state updates outside the synchronous effect body
+      const id = requestAnimationFrame(() => {
+        setUser(createDemoUserShim(demoProfile));
+        setProfile(demoProfile);
+        setLoading(false);
+      });
+      return () => cancelAnimationFrame(id);
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {

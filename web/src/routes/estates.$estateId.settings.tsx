@@ -6,31 +6,25 @@
  * Allows profile viewing and estate-level setting management.
  * MFA enrollment and team invitation components are integrated.
  *
- * @version 2.0.0
+ * @version 3.0.0 — Refactored to shadcn/ui primitives
  */
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo, useCallback } from 'react'
-import {
-  useDocument,
-  useEstate,
-  useEstateAssets,
-  useEstateHeirs,
-  useEstateDocuments,
-  useLockboxItems,
-  useDirectives,
-  useTimeCapsules,
-  useHeirlooms,
-  useCollection,
-} from '../lib/firestore'
-import { doc, setDoc, serverTimestamp, orderBy } from 'firebase/firestore'
+import { useDocument } from '../lib/firestore'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
-import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { getMFAStatus } from '../lib/mfa'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
 import { InviteTeamMember } from '../components/estate/InviteTeamMember'
-import { exportEstateData, downloadBlob } from '../lib/export'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 const ROLE_DISPLAY: Record<string, string> = {
   principal: 'Estate Owner',
@@ -52,28 +46,10 @@ function SettingsPage() {
 
   const { data: settingsDoc, loading: isLoading } = useDocument<Record<string, unknown>>(`estates/${estateId}/governance/settings`);
 
-  // Estate data hooks for export
-  const { data: estate } = useEstate(estateId);
-  const { data: assets } = useEstateAssets(estateId);
-  const { data: heirs } = useEstateHeirs(estateId);
-  const { data: documents } = useEstateDocuments(estateId);
-  const { data: lockboxItems } = useLockboxItems(estateId);
-  const { data: directives } = useDirectives(estateId);
-  const { data: capsules } = useTimeCapsules(estateId);
-  const { data: heirlooms } = useHeirlooms(estateId);
-  const memoirConstraints = useMemo(() => [orderBy('createdAt', 'desc')], []);
-  const { data: memoirs } = useCollection<Record<string, unknown>>(
-    estateId ? `estates/${estateId}/memoirs` : null,
-    memoirConstraints
-  );
-
   // Local settings state for toggle changes
   const [localSettings, setLocalSettings] = useState<Record<string, unknown>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-
-  // Export state
-  const [exporting, setExporting] = useState(false);
 
   // Merge Firestore doc with local overrides
   const s = useMemo(() => ({ ...settingsDoc, ...localSettings }), [settingsDoc, localSettings]);
@@ -104,33 +80,15 @@ function SettingsPage() {
     }
   }, [estateId, localSettings]);
 
-  const handleExport = useCallback(async () => {
-    setExporting(true);
-    try {
-      const estateName = estate?.name || `estate-${estateId}`;
-      const blob = await exportEstateData({
-        estateId,
-        estateName,
-        assets: assets as Record<string, unknown>[],
-        heirs: heirs as Record<string, unknown>[],
-        documents: documents as Record<string, unknown>[],
-        lockboxItems: lockboxItems as Record<string, unknown>[],
-        directives: directives as Record<string, unknown>[],
-        capsules: capsules as Record<string, unknown>[],
-        heirlooms: heirlooms as Record<string, unknown>[],
-        memoirs: memoirs as Record<string, unknown>[],
-      });
-      const safeName = estateName.replace(/[^a-zA-Z0-9_-]/g, '_');
-      downloadBlob(blob, `${safeName}-export-${new Date().toISOString().slice(0, 10)}.zip`);
-    } catch (err) {
-      console.error('[Export] Failed:', err);
-    } finally {
-      setExporting(false);
-    }
-  }, [estateId, estate, assets, heirs, documents, lockboxItems, directives, capsules, heirlooms, memoirs]);
-
   if (isLoading) {
-    return <CardGridSkeleton />;
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading settings...</span>
+        </div>
+      </div>
+    );
   }
 
   const mfaStatus = getMFAStatus(user);
@@ -138,22 +96,24 @@ function SettingsPage() {
   const hasChanges = Object.keys(localSettings).length > 0;
 
   return (
-    <div className="max-w-[1000px] mx-auto space-y-8 md:space-y-10 pb-20 px-4 md:px-0">
+    <div className="max-w-[1000px] mx-auto space-y-10 pb-20">
       {/* ── Page Header ── */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-8 md:pb-10">
+      <div className="flex justify-between items-end border-b border-slate-100 pb-10">
         <div className="space-y-2">
-          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Settings</h2>
-          <p className="text-base md:text-lg text-[#64748B] font-medium">Manage your profile, security, and estate preferences.</p>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Settings</h2>
+          <p className="text-lg text-[#64748B] font-medium">Manage your profile, security, and estate preferences.</p>
         </div>
-        <button
+        <Button
           onClick={handleSave}
           disabled={!hasChanges || saving}
+          variant={saved ? 'default' : hasChanges ? 'default' : 'secondary'}
+          size="lg"
           className={`px-8 py-3.5 rounded-2xl font-bold text-[13px] shadow-lg transition-all active:scale-95 ${
             saved
-              ? 'bg-green-600 text-white'
+              ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
               : hasChanges
-                ? 'bg-[#133378] hover:bg-[#1E3A5F] text-white'
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
+                ? 'bg-[#133378] hover:bg-[#1E3A5F] text-white border-[#133378]'
+                : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none border-slate-100'
           }`}
         >
           {saving ? (
@@ -167,12 +127,12 @@ function SettingsPage() {
               Saved
             </span>
           ) : 'Save Changes'}
-        </button>
+        </Button>
       </div>
 
       {/* ── Profile Card ── */}
-      <section className="bg-white rounded-2xl md:rounded-[3rem] border border-slate-100 overflow-hidden shadow-sm">
-        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-5 md:px-10 py-4 md:py-6 border-b border-slate-100 flex items-center gap-3">
+      <Card className="rounded-[3rem] border-slate-100 shadow-sm py-0 gap-0">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-10 py-6 border-b border-slate-100 flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
@@ -180,9 +140,9 @@ function SettingsPage() {
           </div>
           <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em]">Your Profile</h3>
         </div>
-        <div className="p-5 md:p-10 flex flex-col md:flex-row items-center md:items-start gap-5 md:gap-8">
+        <CardContent className="p-10 flex items-start gap-8">
           {/* Avatar */}
-          <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl md:rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center text-white text-2xl md:text-3xl font-[family-name:var(--font-cinzel)] font-bold shadow-lg shrink-0">
+          <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center text-white text-3xl font-[family-name:var(--font-cinzel)] font-bold shadow-lg shrink-0">
             {(profile?.firstName?.[0] || profile?.displayName?.[0] || 'U').toUpperCase()}
           </div>
           {/* Info */}
@@ -192,25 +152,25 @@ function SettingsPage() {
               <p className="text-[#64748B] font-medium text-[15px] mt-0.5">{user?.email || ''}</p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="px-4 py-1.5 bg-[#133378]/5 border border-[#133378]/10 rounded-xl text-[11px] font-black text-[#133378] uppercase tracking-[0.15em]">
+              <Badge variant="outline" className="px-4 py-1.5 h-auto bg-[#133378]/5 border-[#133378]/10 rounded-xl text-[11px] font-black text-[#133378] uppercase tracking-[0.15em]">
                 {ROLE_DISPLAY[profile?.role || 'principal'] || profile?.role}
-              </span>
+              </Badge>
               {mfaStatus.enrolled && (
-                <span className="px-4 py-1.5 bg-green-50 border border-green-200 rounded-xl text-[11px] font-black text-green-600 uppercase tracking-[0.15em] flex items-center gap-1.5">
+                <Badge variant="outline" className="px-4 py-1.5 h-auto bg-green-50 border-green-200 rounded-xl text-[11px] font-black text-green-600 uppercase tracking-[0.15em] flex items-center gap-1.5">
                   <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
                   MFA Active
-                </span>
+                </Badge>
               )}
               {user?.emailVerified && (
-                <span className="px-4 py-1.5 bg-blue-50 border border-blue-200 rounded-xl text-[11px] font-black text-blue-600 uppercase tracking-[0.15em] flex items-center gap-1.5">
+                <Badge variant="outline" className="px-4 py-1.5 h-auto bg-blue-50 border-blue-200 rounded-xl text-[11px] font-black text-blue-600 uppercase tracking-[0.15em] flex items-center gap-1.5">
                   <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
                   Verified
-                </span>
+                </Badge>
               )}
             </div>
           </div>
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
       {/* ── MFA Enrollment (Shared Component) ── */}
       <MFAEnrollment user={user} mfaStatus={mfaStatus} isFiduciary={!!isFiduciary} />
@@ -219,15 +179,15 @@ function SettingsPage() {
       <InviteTeamMember estateId={estateId} />
 
       {/* ── Settings Panels ── */}
-      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
-        <SettingsSection title="Security">
+      <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
+        <SettingsSection title="Security" first>
           <SettingsToggle
             label="Two-factor authentication"
             description="Add an extra layer of security to your account"
             checked={mfaStatus.enrolled}
             disabled
           />
-          <SettingsStatus label="Recovery key" description="Backup key for account recovery" value={s?.recoveryKeyStatus || "Active"} />
+          <SettingsStatus label="Recovery key" description="Backup key for account recovery" value={String(s?.recoveryKeyStatus || "Active")} />
           <SettingsToggle
             label="Biometric verification"
             description="Use Face ID or fingerprint to unlock sensitive actions"
@@ -236,6 +196,8 @@ function SettingsPage() {
           />
           <SettingsStatus label="Encryption standard" description="All data is encrypted at rest and in transit" value="AES-256" />
         </SettingsSection>
+
+        <Separator />
 
         <SettingsSection title="Notifications">
           <SettingsToggle
@@ -247,7 +209,7 @@ function SettingsPage() {
           <SettingsSelect
             label="Status reports"
             description="Periodic summary of your estate status"
-            value={s?.statusReportsFrequency || 'Weekly'}
+            value={String(s?.statusReportsFrequency || 'Weekly')}
             options={['Daily', 'Weekly', 'Monthly', 'Never']}
             onChange={(v) => { setLocalSettings(prev => ({ ...prev, statusReportsFrequency: v })); setSaved(false); }}
           />
@@ -259,89 +221,47 @@ function SettingsPage() {
           />
         </SettingsSection>
 
+        <Separator />
+
         <SettingsSection title="Legal & Jurisdiction">
           <SettingsSelect
             label="Primary state"
             description="The state that governs your estate laws"
-            value={s?.primaryState || 'Maryland'}
+            value={String(s?.primaryState || 'Maryland')}
             options={['Maryland', 'Illinois', 'Minnesota', 'Virginia', 'District of Columbia']}
             onChange={(v) => { setLocalSettings(prev => ({ ...prev, primaryState: v })); setSaved(false); }}
           />
           <SettingsStatus label="Beneficiary access" description="Control what your beneficiaries can see" value="Restricted" />
         </SettingsSection>
-      </div>
-
-      {/* ── Export Estate Data ── */}
-      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
-        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-5 md:px-10 py-4 md:py-6 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-          </div>
-          <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em]">Data Export</h3>
-        </div>
-        <div className="px-5 md:px-10 py-5 md:py-8 space-y-4">
-          <div>
-            <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Download Estate Archive</span>
-            <p className="text-[13px] text-[#64748B] font-medium mt-1 max-w-xl">
-              Export all your estate data as a ZIP file for compliance, portability, or personal records.
-              Encrypted credentials and document file contents are excluded for security.
-            </p>
-          </div>
-          <button
-            onClick={handleExport}
-            disabled={exporting}
-            className="px-8 py-3.5 rounded-2xl font-bold text-[13px] shadow-lg transition-all active:scale-95 bg-[#133378] hover:bg-[#1E3A5F] text-white disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {exporting ? (
-              <span className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Generating Archive...
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Download Estate Archive (ZIP)
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
+      </Card>
 
       {/* ── Danger Zone ── */}
-      <div className="bg-white rounded-2xl md:rounded-[2.5rem] border border-red-100 overflow-hidden shadow-sm">
+      <Card className="rounded-[2.5rem] border-red-100 shadow-sm py-0 gap-0">
         <div className="bg-red-50/50 px-10 py-5 border-b border-red-100">
           <h3 className="text-[11px] font-bold text-red-400 uppercase tracking-widest">Danger Zone</h3>
         </div>
-        <div className="px-5 md:px-10 py-5 md:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <CardContent className="px-10 py-6 flex items-center justify-between">
           <div>
             <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Delete this estate</span>
             <p className="text-[13px] text-[#64748B] font-medium mt-1">
               Permanently remove this estate and all associated data. This action cannot be undone.
             </p>
           </div>
-          <button className="px-6 py-2.5 rounded-xl border border-red-200 text-red-500 font-bold text-[12px] hover:bg-red-50 transition-all">
+          <Button variant="destructive" className="px-6 py-2.5 rounded-xl border border-red-200 font-bold text-[12px]">
             Delete Estate
-          </button>
-        </div>
-      </div>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   )
 }
 
 // ─── Sub-Components ───────────────────────────────────────────────────────────
 
-function SettingsSection({ title, children }: { title: string; children: React.ReactNode }) {
+function SettingsSection({ title, children, first }: { title: string; children: React.ReactNode; first?: boolean }) {
   return (
-    <div className="border-b border-slate-100 last:border-b-0">
-      <div className="bg-[#F8FAFC] px-5 md:px-10 py-4 md:py-5 border-b border-slate-100">
+    <div>
+      <div className={`bg-[#F8FAFC] px-10 py-5 ${first ? '' : ''}border-b border-slate-100`}>
         <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{title}</h3>
       </div>
       <div className="divide-y divide-slate-100">{children}</div>
@@ -353,35 +273,32 @@ function SettingsToggle({ label, description, checked, onChange, disabled }: {
   label: string; description: string; checked: boolean; onChange?: () => void; disabled?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 px-5 md:px-10 py-5 md:py-6 hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex flex-col min-w-0">
-        <span className="text-[#0F172A] font-bold text-[14px] md:text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
-        <span className="text-[12px] md:text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
+    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
+      <div className="flex flex-col">
+        <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
+        <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
       </div>
-      <button
-        onClick={onChange}
+      <Switch
+        checked={!!checked}
+        onCheckedChange={() => onChange?.()}
         disabled={disabled}
-        className={`w-12 h-6 rounded-full relative border shadow-inner transition-all ${
-          checked ? 'bg-[#133378] border-[#133378]' : 'bg-slate-200 border-slate-200'
-        } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-      >
-        <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-all ${checked ? 'left-[26px]' : 'left-0.5'}`} />
-      </button>
+        className="data-[state=checked]:bg-[#133378]"
+      />
     </div>
   );
 }
 
 function SettingsStatus({ label, description, value }: { label: string; description: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 px-5 md:px-10 py-5 md:py-6 hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex flex-col min-w-0">
-        <span className="text-[#0F172A] font-bold text-[14px] md:text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
-        <span className="text-[12px] md:text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
+    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
+      <div className="flex flex-col">
+        <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
+        <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
       </div>
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg">
+      <Badge variant="secondary" className="h-auto px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg text-[11px] font-bold text-green-600 flex items-center gap-2">
         <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-        <span className="text-[11px] font-bold text-green-600">{value}</span>
-      </div>
+        {value}
+      </Badge>
     </div>
   );
 }
@@ -390,19 +307,21 @@ function SettingsSelect({ label, description, value, options, onChange }: {
   label: string; description: string; value: string; options: string[]; onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 px-5 md:px-10 py-5 md:py-6 hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex flex-col min-w-0">
-        <span className="text-[#0F172A] font-bold text-[14px] md:text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
-        <span className="text-[12px] md:text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
+    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
+      <div className="flex flex-col">
+        <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
+        <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
       </div>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="text-[13px] text-[#133378] font-bold bg-transparent border border-slate-200 rounded-lg px-3 py-1.5 outline-none focus:border-[#133378] transition-all cursor-pointer appearance-none pr-8"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' strokeWidth='3'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 8px center' }}
-      >
-        {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-      </select>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="text-[13px] text-[#133378] font-bold bg-transparent border-slate-200 rounded-lg px-3 py-1.5 h-auto focus:border-[#133378] cursor-pointer">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map(opt => (
+            <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }

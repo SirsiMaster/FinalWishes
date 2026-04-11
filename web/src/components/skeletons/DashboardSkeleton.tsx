@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export function DashboardSkeleton() {
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div role="status" aria-label="Loading dashboard" className="max-w-[1440px] mx-auto p-12 space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* Page Header */}
       <div className="space-y-3 mb-16">
         <Skeleton className="h-3 w-48" />

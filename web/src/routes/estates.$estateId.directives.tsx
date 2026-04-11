@@ -3,10 +3,8 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
 import { useDirectives, type Directive } from '../lib/firestore'
 import { addDirective, updateDirective } from '../lib/estate-actions'
-import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import DOMPurify from 'dompurify'
 import {
   Plus,
   FileText,
@@ -25,7 +23,6 @@ import {
   Heading2,
   Undo2,
   Redo2,
-  Printer,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -70,7 +67,11 @@ function DirectivesPage() {
   )
 
   if (loading) {
-    return <CardGridSkeleton />
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal" />
+      </div>
+    )
   }
 
   // ── Editor View ──
@@ -86,15 +87,15 @@ function DirectivesPage() {
 
   // ── List View ──
   return (
-    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Header ── */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-50 pb-8 md:pb-16">
+      <div className="flex justify-between items-end border-b border-slate-50 pb-16">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
             <div className="w-10 h-px bg-[#133378]/20" />
             <span>Legacy Directives</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
             Final Directives
           </h2>
           <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
@@ -103,7 +104,7 @@ function DirectivesPage() {
         </div>
         <Button
           onClick={() => setCreateModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)] w-full md:w-auto justify-center"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)]"
         >
           <Plus className="w-5 h-5" />
           Create Directive
@@ -313,14 +314,9 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
   const [mode, setMode] = useState<'edit' | 'view'>(directive.status === 'finalized' ? 'view' : 'edit')
   const [saving, setSaving] = useState(false)
 
-  const sanitizedContent = useMemo(
-    () => DOMPurify.sanitize(directive.content || '<p>Begin writing your directive here...</p>'),
-    [directive.content]
-  )
-
   const editor = useEditor({
     extensions: [StarterKit],
-    content: sanitizedContent,
+    content: directive.content || '<p>Begin writing your directive here...</p>',
     editable: mode === 'edit' && directive.status !== 'finalized',
     editorProps: {
       attributes: {
@@ -344,30 +340,23 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     setMode('view')
   }, [editor, estateId, directive.id])
 
-  const handleExportPDF = useCallback(async () => {
+  const handleExportPDF = useCallback(() => {
     if (!editor) return
-    const { pdf } = await import('@react-pdf/renderer')
-    const { DirectivePDF } = await import('@/components/pdf/DirectivePDF')
-    const doc = DirectivePDF({
-      title: directive.title,
-      typeLabel: cfg.label,
-      status: (directive.status as 'draft' | 'finalized') || 'draft',
-      content: editor.getHTML(),
-      recipientName: directive.recipientName || undefined,
-      recipientRelationship: directive.recipientRelationship || undefined,
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-    })
-    const blob = await pdf(doc).toBlob()
+    const content = editor.getText()
+    const blob = new Blob(
+      [`${directive.title}\n${'─'.repeat(40)}\nType: ${cfg.label}\n${directive.recipientName ? `To: ${directive.recipientName}\n` : ''}Date: ${new Date().toLocaleDateString()}\n\n${content}`],
+      { type: 'text/plain' }
+    )
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${directive.title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
+    a.download = `${directive.title.replace(/[^a-zA-Z0-9]/g, '_')}.txt`
     a.click()
     URL.revokeObjectURL(url)
   }, [editor, directive, cfg.label])
 
   return (
-    <div className="max-w-[1000px] mx-auto px-4 py-6 md:p-8 lg:p-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1000px] mx-auto p-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Top Bar ── */}
       <div className="flex items-center justify-between mb-10">
         <Button
@@ -406,28 +395,11 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
           <Button
             variant="secondary"
             onClick={handleExportPDF}
-            className="no-print px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]"
+            className="px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]"
           >
             <Download className="w-3.5 h-3.5" /> Export
           </Button>
-          <Button
-            variant="secondary"
-            onClick={() => window.print()}
-            className="no-print px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]"
-          >
-            <Printer className="w-3.5 h-3.5" /> Print
-          </Button>
         </div>
-      </div>
-
-      {/* ── Print Header (hidden on screen) ── */}
-      <div className="hidden print:block print-header">
-        <h1>FINALWISHES</h1>
-        <p style={{ fontSize: '14pt', color: '#334155', marginTop: '4px' }}>{cfg.label}</p>
-        <p style={{ fontSize: '11pt', color: '#64748B', marginTop: '4px' }}>{directive.title}</p>
-        <p style={{ fontSize: '10pt', color: '#64748B', marginTop: '4px' }}>
-          {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </p>
       </div>
 
       {/* ── Title Section ── */}
@@ -475,11 +447,6 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
       {/* ── Editor ── */}
       <div className="rounded-3xl border border-slate-100 overflow-hidden bg-white min-h-[500px]">
         <EditorContent editor={editor} />
-      </div>
-
-      {/* ── Print Footer (hidden on screen) ── */}
-      <div className="hidden print:block print-footer">
-        Generated by FinalWishes — The Estate Operating System · {new Date().toLocaleDateString()} · Confidential
       </div>
     </div>
   )

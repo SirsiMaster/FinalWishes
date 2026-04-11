@@ -3,7 +3,6 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
 import { useEstate } from '../lib/firestore'
-import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import {
   Crown,
   Shield,
@@ -13,7 +12,9 @@ import {
   ExternalLink,
   Sparkles,
 } from 'lucide-react'
-import { trackCheckoutStarted, trackPaymentSuccess } from '../lib/analytics'
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/estates/$estateId/pricing')({
   component: PricingPage,
@@ -100,13 +101,6 @@ function PricingPage() {
 
   const currentTier = estate?.tier || 'free'
 
-  // Track successful payment on return from Stripe
-  useEffect(() => {
-    if (paymentResult === 'success' && currentTier !== 'free') {
-      trackPaymentSuccess(currentTier)
-    }
-  }, [paymentResult, currentTier])
-
   useEffect(() => {
     fetchTiers()
       .then((data) => {
@@ -126,7 +120,6 @@ function PricingPage() {
       setCheckoutLoading(tierId)
       setError(null)
       try {
-        trackCheckoutStarted(tierId)
         const token = await user.getIdToken()
         const result = await createCheckout({
           tierId,
@@ -146,26 +139,34 @@ function PricingPage() {
   )
 
   if (loading) {
-    return <CardGridSkeleton columns={3} cards={3} />
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-royal" />
+      </div>
+    )
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Payment Result Banner ── */}
       {paymentResult === 'success' && (
-        <div className="bg-[#059669]/10 border border-[#059669]/20 rounded-2xl p-6 flex items-center gap-4">
-          <Sparkles className="w-6 h-6 text-[#059669]" />
-          <div>
-            <p className="text-[#059669] font-bold text-[15px]">Payment successful!</p>
-            <p className="text-[#059669]/70 text-[13px]">Your estate plan has been upgraded. All premium features are now active.</p>
-          </div>
-        </div>
+        <Card className="border-[#059669]/20 bg-[#059669]/10 rounded-2xl ring-0">
+          <CardContent className="flex items-center gap-4 py-2">
+            <Sparkles className="w-6 h-6 text-[#059669]" />
+            <div>
+              <p className="text-[#059669] font-bold text-[15px]">Payment successful!</p>
+              <p className="text-[#059669]/70 text-[13px]">Your estate plan has been upgraded. All premium features are now active.</p>
+            </div>
+          </CardContent>
+        </Card>
       )}
       {paymentResult === 'cancelled' && (
-        <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/20 rounded-2xl p-6 flex items-center gap-4">
-          <Shield className="w-6 h-6 text-[#F59E0B]" />
-          <p className="text-[#F59E0B] font-bold text-[15px]">Payment cancelled. You can try again anytime.</p>
-        </div>
+        <Card className="border-[#F59E0B]/20 bg-[#F59E0B]/10 rounded-2xl ring-0">
+          <CardContent className="flex items-center gap-4 py-2">
+            <Shield className="w-6 h-6 text-[#F59E0B]" />
+            <p className="text-[#F59E0B] font-bold text-[15px]">Payment cancelled. You can try again anytime.</p>
+          </CardContent>
+        </Card>
       )}
 
       {/* ── Header ── */}
@@ -175,10 +176,10 @@ function PricingPage() {
           <span>Estate Protection Plans</span>
           <div className="w-10 h-px bg-[#133378]/20" />
         </div>
-        <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+        <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
           Choose Your Plan
         </h2>
-        <p className="text-[#64748B] text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-[#64748B] text-lg font-medium max-w-2xl mx-auto leading-relaxed">
           Protect your legacy with the right level of coverage. Upgrade or downgrade anytime.
         </p>
       </div>
@@ -200,9 +201,9 @@ function PricingPage() {
           const isLoading = checkoutLoading === tier.id
 
           return (
-            <div
+            <Card
               key={tier.id}
-              className={`relative bg-white rounded-2xl md:rounded-3xl border-2 p-6 md:p-10 transition-all ${
+              className={`relative rounded-3xl border-2 p-10 transition-all ring-0 gap-0 ${
                 isCurrent
                   ? 'border-[#133378] shadow-[0_20px_60px_rgba(19,51,120,0.15)]'
                   : isPopular
@@ -212,76 +213,83 @@ function PricingPage() {
             >
               {/* Popular Badge */}
               {isPopular && !isCurrent && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#C8A951] text-white text-[10px] font-bold uppercase tracking-widest px-5 py-1.5 rounded-full">
+                <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#C8A951] text-white text-[10px] font-bold uppercase tracking-widest px-5 py-1.5 rounded-full h-auto border-0 hover:bg-[#C8A951]">
                   Most Popular
-                </div>
+                </Badge>
               )}
 
               {/* Current Badge */}
               {isCurrent && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#133378] text-white text-[10px] font-bold uppercase tracking-widest px-5 py-1.5 rounded-full">
+                <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#133378] text-white text-[10px] font-bold uppercase tracking-widest px-5 py-1.5 rounded-full h-auto border-0 hover:bg-[#133378]">
                   Current Plan
-                </div>
+                </Badge>
               )}
 
               {/* Icon + Name */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${color}10` }}>
-                  <Icon className="w-6 h-6" style={{ color }} />
+              <CardHeader className="p-0 mb-6 gap-0">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${color}10` }}>
+                    <Icon className="w-6 h-6" style={{ color }} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-[#0F172A]">{tier.name}</h3>
+                    <p className="text-[13px] text-[#64748B]">{tier.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-[#0F172A]">{tier.name}</h3>
-                  <p className="text-[13px] text-[#64748B]">{tier.description}</p>
-                </div>
-              </div>
+              </CardHeader>
 
-              {/* Price */}
-              <div className="mb-8">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-[#0F172A]">
-                    {tier.priceCents === 0 ? 'Free' : `$${(tier.priceCents / 100).toFixed(0)}`}
-                  </span>
-                  {tier.priceCents > 0 && (
-                    <span className="text-[14px] text-[#64748B] font-medium">/{tier.interval}</span>
-                  )}
+              {/* Price + Features */}
+              <CardContent className="p-0">
+                {/* Price */}
+                <div className="mb-8">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold text-[#0F172A]">
+                      {tier.priceCents === 0 ? 'Free' : `$${(tier.priceCents / 100).toFixed(0)}`}
+                    </span>
+                    {tier.priceCents > 0 && (
+                      <span className="text-[14px] text-[#64748B] font-medium">/{tier.interval}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {/* Features */}
-              <ul className="space-y-3 mb-10">
-                {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color }} />
-                    <span className="text-[14px] text-[#334155]">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                {/* Features */}
+                <ul className="space-y-3 mb-10">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color }} />
+                      <span className="text-[14px] text-[#334155]">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
 
               {/* CTA Button */}
-              <button
-                onClick={() => handleSelectTier(tier.id)}
-                disabled={isCurrent || tier.id === 'free' || isLoading}
-                className={`w-full py-4 rounded-2xl font-bold text-[14px] transition-all flex items-center justify-center gap-2 ${
-                  isCurrent
-                    ? 'bg-[#F1F5F9] text-[#64748B] cursor-default'
-                    : tier.id === 'free'
-                      ? 'bg-[#F1F5F9] text-[#64748B] cursor-default'
-                      : isPopular
-                        ? 'bg-[#C8A951] hover:bg-[#B8993E] text-white shadow-lg'
-                        : 'bg-[#133378] hover:bg-[#1E3A5F] text-white'
-                }`}
-              >
-                {isLoading ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Redirecting to Stripe...</>
-                ) : isCurrent ? (
-                  'Current Plan'
-                ) : tier.id === 'free' ? (
-                  'Free Forever'
-                ) : (
-                  <><ExternalLink className="w-4 h-4" /> Upgrade Now</>
-                )}
-              </button>
-            </div>
+              <CardFooter className="p-0 border-0 bg-transparent">
+                <Button
+                  onClick={() => handleSelectTier(tier.id)}
+                  disabled={isCurrent || tier.id === 'free' || isLoading}
+                  className={`w-full py-4 h-auto rounded-2xl font-bold text-[14px] transition-all flex items-center justify-center gap-2 border-0 ${
+                    isCurrent
+                      ? 'bg-[#F1F5F9] text-[#64748B] cursor-default hover:bg-[#F1F5F9]'
+                      : tier.id === 'free'
+                        ? 'bg-[#F1F5F9] text-[#64748B] cursor-default hover:bg-[#F1F5F9]'
+                        : isPopular
+                          ? 'bg-[#C8A951] hover:bg-[#B8993E] text-white shadow-lg'
+                          : 'bg-[#133378] hover:bg-[#1E3A5F] text-white'
+                  }`}
+                >
+                  {isLoading ? (
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Redirecting to Stripe...</>
+                  ) : isCurrent ? (
+                    'Current Plan'
+                  ) : tier.id === 'free' ? (
+                    'Free Forever'
+                  ) : (
+                    <><ExternalLink className="w-4 h-4" /> Upgrade Now</>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
           )
         })}
       </div>
@@ -291,9 +299,11 @@ function PricingPage() {
         <p className="text-[13px] text-[#64748B]">
           Payments processed securely by <span className="font-bold">Stripe</span>. Cancel anytime.
         </p>
-        <p className="text-[12px] text-[#94A3B8]">
-          All plans include SOC 2 compliant infrastructure, Cloud KMS encryption, and 99.9% uptime SLA.
-        </p>
+        <div className="flex items-center justify-center gap-3 mt-3">
+          <Badge variant="outline" className="text-[12px] text-[#94A3B8] font-normal">SOC 2 Compliant</Badge>
+          <Badge variant="outline" className="text-[12px] text-[#94A3B8] font-normal">Cloud KMS Encryption</Badge>
+          <Badge variant="outline" className="text-[12px] text-[#94A3B8] font-normal">99.9% Uptime SLA</Badge>
+        </div>
       </div>
     </div>
   )

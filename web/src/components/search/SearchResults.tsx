@@ -163,6 +163,8 @@ export function SearchResults({
           {results.map((result, index) => (
             <button
               key={`${result.type}-${result.id}`}
+              role="option"
+              aria-selected={index === activeIndex}
               data-search-item
               onClick={() => onSelect(result)}
               onMouseEnter={() => onActiveIndexChange(index)}
@@ -223,7 +225,8 @@ export function SearchResults({
 
 function DropdownShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute top-full left-0 right-0 mt-1 z-[100] bg-white border border-royal/10 shadow-[0_20px_60px_rgba(19,51,120,0.12)] overflow-hidden">
+    <div role="listbox" aria-label="Search results" className="absolute top-full left-0 right-0 mt-1 z-[100] bg-white border border-royal/10 shadow-[0_20px_60px_rgba(19,51,120,0.12)] overflow-hidden">
+      <div aria-live="polite" className="sr-only" />
       {children}
     </div>
   );

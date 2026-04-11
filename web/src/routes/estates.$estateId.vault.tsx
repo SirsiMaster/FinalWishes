@@ -7,7 +7,6 @@ import { createDocumentRecord, archiveDocument } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
-import { trackDocumentUploaded, startVaultTrace } from '../lib/analytics'
 
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
@@ -25,7 +24,6 @@ import {
 } from '../components/ui/alert-dialog'
 import { Badge } from '../components/ui/badge'
 import { Progress } from '../components/ui/progress'
-import { VaultSkeleton } from '@/components/skeletons/VaultSkeleton'
 
 export const Route = createFileRoute('/estates/$estateId/vault')({
   component: VaultPage,
@@ -93,7 +91,6 @@ function VaultPage() {
   const uploadFile = useCallback(
     async (file: File) => {
       const _uploadIndex = Date.now()
-      const perfTrace = startVaultTrace()
       const newUpload: UploadState = { file, progress: 0, status: 'preparing' }
 
       setUploads((prev) => [...prev, newUpload])
@@ -157,8 +154,6 @@ function VaultPage() {
         })
 
         updateUpload({ status: 'done', progress: 100 })
-        perfTrace?.stop()
-        trackDocumentUploaded(estateId, file.type || 'unknown')
 
         // Remove from upload list after 3 seconds
         setTimeout(() => {
@@ -210,7 +205,7 @@ function VaultPage() {
       try {
         const isLocal =
           window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        const baseUrl = isLocal ? 'http://localhost:8080' : (import.meta.env.VITE_API_URL || '')
+        const baseUrl = isLocal ? 'http://localhost:8080' : ''
 
         const token = await auth.currentUser?.getIdToken()
         const res = await fetch(
@@ -261,20 +256,29 @@ function VaultPage() {
   // ─── Loading ────────────────────────────────────────────────────────────
 
   if (isLoading) {
-    return <VaultSkeleton />
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[#133378]/50 uppercase tracking-[0.2em]">
+            Loading documents...
+          </span>
+        </div>
+      </div>
+    )
   }
 
   // ─── Render ─────────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-8 md:space-y-10 pb-20 px-4">
+    <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#133378]/10 pb-8 md:pb-10">
+      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-10">
         <div className="space-y-2">
-          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
             Document Vault
           </h2>
-          <p className="text-base md:text-lg text-[#133378]/50 font-medium">
+          <p className="text-lg text-[#133378]/50 font-medium">
             All your important documents are safely stored and encrypted here.
           </p>
         </div>
@@ -288,7 +292,7 @@ function VaultPage() {
       <div
         {...getRootProps()}
         className={`
-          border-2 border-dashed rounded-2xl md:rounded-[2rem] p-6 md:p-12 text-center cursor-pointer transition-all
+          border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all
           ${isDragActive
             ? 'border-[#133378] bg-[#133378]/5 scale-[1.01]'
             : 'border-[#133378]/20 hover:border-[#133378]/40 hover:bg-[#133378]/[0.02]'
@@ -360,8 +364,8 @@ function VaultPage() {
       )}
 
       {/* All Files */}
-      <Card className="rounded-2xl md:rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm">
-        <CardContent className="p-4 md:p-10">
+      <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm">
+        <CardContent className="p-10">
           <div className="flex items-center gap-3 mb-8 px-2">
             <div className="w-2 h-2 rounded-full bg-green-400" />
             <h3 className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
@@ -496,7 +500,7 @@ function VaultFolder({
   return (
     <Card
       onClick={onClick}
-      className={`text-left w-full p-5 md:p-8 rounded-2xl md:rounded-[2.5rem] border shadow-sm transition-all cursor-pointer group active:scale-[0.98] ${
+      className={`text-left w-full p-8 rounded-[2.5rem] border shadow-sm transition-all cursor-pointer group active:scale-[0.98] ${
         active
           ? 'bg-[#133378] border-[#133378] text-white'
           : 'bg-white border-[#133378]/10 hover:border-[#133378]/20 hover:shadow-md'
@@ -566,7 +570,7 @@ function DocItem({
   const isPreviewable = doc.mimeType?.startsWith('image/') || doc.mimeType === 'application/pdf'
 
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0 p-4 md:p-5 bg-white border border-[#133378]/10 rounded-2xl hover:bg-[#F8FAFC] transition-all group">
+    <div className="flex items-center justify-between p-5 bg-white border border-[#133378]/10 rounded-2xl hover:bg-[#F8FAFC] transition-all group">
       <div className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer" onClick={isPreviewable ? onPreview : onDownload}>
         <div className="w-11 h-11 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-[#133378]/30 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 border border-[#133378]/10 flex-shrink-0">
           <FileIcon mimeType={doc.mimeType} />
@@ -647,7 +651,7 @@ function PreviewModalContent({
       try {
         const isLocal =
           window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        const baseUrl = isLocal ? 'http://localhost:8080' : (import.meta.env.VITE_API_URL || '')
+        const baseUrl = isLocal ? 'http://localhost:8080' : ''
         const token = await auth.currentUser?.getIdToken()
         const res = await fetch(
           `${baseUrl}/api/v1/documents/download-url?storageKey=${encodeURIComponent(doc.storageKey)}`,

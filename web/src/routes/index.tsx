@@ -1,6 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Link } from '@tanstack/react-router'
 import React, { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -75,12 +79,12 @@ function Home() {
             <a href="#stories" className="hover:text-white transition-colors">Stories</a>
           </div>
           <div className="flex items-center gap-4">
-            <Link to="/login" className="text-xs font-bold tracking-[0.15em] uppercase text-white/70 hover:text-white transition-colors">
-              Sign In
-            </Link>
-            <Link to="/login" className="bg-gold text-black px-5 py-2.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all">
-              Get Started
-            </Link>
+            <Button variant="ghost" asChild className="text-xs font-bold tracking-[0.15em] uppercase text-white/70 hover:text-white hover:bg-transparent transition-colors">
+              <Link to="/login">Sign In</Link>
+            </Button>
+            <Button asChild className="bg-gold text-black px-5 py-2.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none">
+              <Link to="/login">Get Started</Link>
+            </Button>
           </div>
         </div>
       </nav>
@@ -129,12 +133,12 @@ function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <Link to="/login" className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all">
-              Create Your Vault
-            </Link>
-            <a href="#problem" className="border-2 border-white/40 text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all">
-              Watch the Film
-            </a>
+            <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
+              <Link to="/login">Create Your Vault</Link>
+            </Button>
+            <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
+              <a href="#problem">Watch the Film</a>
+            </Button>
           </div>
         </div>
 
@@ -146,7 +150,7 @@ function Home() {
         </div>
       </header>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PROBLEM SECTION ═══════════════════ */}
       <section id="problem" className="relative z-10 grid md:grid-cols-2">
@@ -175,20 +179,24 @@ function Home() {
               and family confusion that can last for years. FinalWishes is the bridge that prevents both.
             </p>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-black/30 backdrop-blur-md rounded-xl p-5 border border-white/10">
-                <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">$2B+</div>
-                <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Annual Probate Costs</div>
-              </div>
-              <div className="bg-black/30 backdrop-blur-md rounded-xl p-5 border border-white/10">
-                <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">55%</div>
-                <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Adults Without a Will</div>
-              </div>
+              <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+                <CardContent className="p-5">
+                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">$2B+</div>
+                  <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Annual Probate Costs</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+                <CardContent className="p-5">
+                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">55%</div>
+                  <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Adults Without a Will</div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ VALUE PROPOSITION ═══════════════════ */}
       <section id="value" className="py-10 relative z-10 overflow-hidden">
@@ -198,12 +206,12 @@ function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
-            <Link to="/login" className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all">
-              Begin Your Legacy
-            </Link>
-            <a href="#protocol" className="border-2 border-white/30 text-white px-6 py-3 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all">
-              See How It Works
-            </a>
+            <Button asChild className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
+              <Link to="/login">Begin Your Legacy</Link>
+            </Button>
+            <Button variant="outline" asChild className="border-2 border-white/30 bg-transparent text-white px-6 py-3 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all h-auto">
+              <a href="#protocol">See How It Works</a>
+            </Button>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-5 text-white text-[0.65rem] tracking-[0.12em] uppercase font-semibold">
@@ -223,7 +231,7 @@ function Home() {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PROTOCOL — 4 Steps ═══════════════════ */}
       <section id="protocol" className="py-12 relative z-10 overflow-hidden">
@@ -316,9 +324,9 @@ function Home() {
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Passwords &amp; Keys</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Sentimental Items</li>
                 </ul>
-                <Link to="/login" className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all mt-6 self-start">
-                  Start Your Protocol
-                </Link>
+                <Button asChild className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all mt-6 self-start border-none h-auto">
+                  <Link to="/login">Start Your Protocol</Link>
+                </Button>
               </div>
               <div className="relative min-h-[280px] md:h-auto overflow-hidden order-1 md:order-2">
                 <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Family embracing together" className="w-full h-full object-cover" />
@@ -333,7 +341,7 @@ function Home() {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ SECURITY — Swiss Vault ═══════════════════ */}
       <section id="security" className="relative min-h-[45vh] flex items-center overflow-hidden z-10">
@@ -351,11 +359,11 @@ function Home() {
             </svg>
             <div className="absolute -top-3 -right-3 glass-card rounded-lg px-3 py-1 flex items-center gap-2">
               <div className="status-dot" />
-              <span className="text-[0.6rem] text-royal-bright uppercase tracking-widest font-bold">AES-256</span>
+              <Badge className="bg-transparent text-royal-bright text-[0.6rem] uppercase tracking-widest font-bold px-0 h-auto border-none">AES-256</Badge>
             </div>
             <div className="absolute -bottom-3 -left-3 glass-card rounded-lg px-3 py-1 flex items-center gap-2">
               <div className="status-dot" />
-              <span className="text-[0.6rem] text-gold uppercase tracking-widest font-bold">SOC 2</span>
+              <Badge className="bg-transparent text-gold text-[0.6rem] uppercase tracking-widest font-bold px-0 h-auto border-none">SOC 2</Badge>
             </div>
           </div>
         </div>
@@ -372,48 +380,54 @@ function Home() {
             </p>
 
             <div className="space-y-4">
-              <div className="glass-card rounded-xl p-4 flex gap-3 items-start">
-                <div className="w-8 h-8 rounded-full bg-royal/20 flex items-center justify-center shrink-0">
-                  <svg className="w-4 h-4 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Zero-Knowledge Architecture</h4>
-                  <p className="text-sm text-white/70">Your data is encrypted on your device before it ever touches our servers.</p>
-                </div>
-              </div>
+              <Card className="glass-card rounded-xl ring-0 border-0 bg-transparent py-0">
+                <CardContent className="p-4 flex gap-3 items-start">
+                  <div className="w-8 h-8 rounded-full bg-royal/20 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Zero-Knowledge Architecture</h4>
+                    <p className="text-sm text-white/70">Your data is encrypted on your device before it ever touches our servers.</p>
+                  </div>
+                </CardContent>
+              </Card>
 
-              <div className="glass-card rounded-xl p-4 flex gap-3 items-start">
-                <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
-                  <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Multi-Sig Release</h4>
-                  <p className="text-sm text-white/70">Requires cryptographic proof of death and identity verification from two separate executors.</p>
-                </div>
-              </div>
+              <Card className="glass-card rounded-xl ring-0 border-0 bg-transparent py-0">
+                <CardContent className="p-4 flex gap-3 items-start">
+                  <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Multi-Sig Release</h4>
+                    <p className="text-sm text-white/70">Requires cryptographic proof of death and identity verification from two separate executors.</p>
+                  </div>
+                </CardContent>
+              </Card>
 
-              <div className="glass-card rounded-xl p-4 flex gap-3 items-start">
-                <div className="w-8 h-8 rounded-full bg-royal/20 flex items-center justify-center shrink-0">
-                  <svg className="w-4 h-4 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Audit Trail</h4>
-                  <p className="text-sm text-white/70">Every access attempt is logged, timestamped, and immutably recorded on-chain.</p>
-                </div>
-              </div>
+              <Card className="glass-card rounded-xl ring-0 border-0 bg-transparent py-0">
+                <CardContent className="p-4 flex gap-3 items-start">
+                  <div className="w-8 h-8 rounded-full bg-royal/20 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Audit Trail</h4>
+                    <p className="text-sm text-white/70">Every access attempt is logged, timestamped, and immutably recorded on-chain.</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
           <div className="hidden md:block" />
         </div>
       </section>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
       <section id="stories" className="py-12 relative overflow-hidden z-10">
@@ -451,7 +465,7 @@ function Home() {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ ROADMAP ═══════════════════ */}
       <section id="roadmap" className="py-12 relative overflow-hidden z-10">
@@ -459,7 +473,7 @@ function Home() {
           <div className="text-center mb-10">
             <div className="flex items-center justify-center gap-2 mb-3">
               <div className="w-2 h-2 rounded-full bg-royal-bright animate-pulse" />
-              <div className="text-[0.6rem] tracking-[0.15em] text-gold uppercase font-bold">Coming Soon</div>
+              <Badge className="bg-transparent text-gold text-[0.6rem] tracking-[0.15em] uppercase font-bold px-0 h-auto border-none">Coming Soon</Badge>
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
               The Vision: <span className="text-gold">Expanding Your Legacy</span>
@@ -476,7 +490,7 @@ function Home() {
         </div>
       </section>
 
-      <div className="section-divider" />
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
       <section id="pricing" className="py-12 relative overflow-hidden z-10">
@@ -489,56 +503,62 @@ function Home() {
 
           <div className="grid md:grid-cols-3 gap-5 items-stretch">
             {/* Free */}
-            <div className="glass-card rounded-2xl p-6 flex flex-col">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="status-dot" />
-                <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">Self-Guided</div>
-              </div>
-              <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-              <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Forever</div>
-              <p className="text-white/60 text-sm mb-5 flex-grow">For families who need a roadmap but can handle the execution.</p>
-              <Link to="/login" className="w-full py-3 border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg">
-                Start Free
-              </Link>
-            </div>
+            <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0">
+              <CardContent className="p-6 flex flex-col h-full">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="status-dot" />
+                  <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">Self-Guided</div>
+                </div>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
+                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Forever</div>
+                <p className="text-white/60 text-sm mb-5 flex-grow">For families who need a roadmap but can handle the execution.</p>
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
+                  <Link to="/login">Start Free</Link>
+                </Button>
+              </CardContent>
+            </Card>
 
             {/* Concierge (Gold) */}
-            <div className="glass-card rounded-2xl p-6 flex flex-col border-2 !border-gold/50 relative md:-mt-3 md:mb-3">
+            <Card className="glass-card rounded-2xl ring-0 border-2 !border-gold/50 bg-transparent relative md:-mt-3 md:mb-3 py-0">
               <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
-              <div className="flex justify-between items-center mb-3">
-                <div className="flex items-center gap-2">
-                  <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-gold uppercase font-bold">Concierge</div>
+              <CardContent className="p-6 flex flex-col h-full">
+                <div className="flex justify-between items-center mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="status-dot" />
+                    <div className="text-[0.6rem] tracking-[0.15em] text-gold uppercase font-bold">Concierge</div>
+                  </div>
+                  <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="px-2 py-0.5 bg-gold text-black text-[0.55rem] font-bold uppercase rounded">Popular</div>
-              </div>
-              <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$2,997</div>
-              <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
-              <p className="text-white/60 text-sm mb-4 flex-grow">We do the heavy lifting. Automated filing and fraud protection included.</p>
-              <ul className="space-y-2 text-sm text-white/70 mb-5">
-                <li className="flex gap-2 items-center"><span className="text-gold">✓</span> 10 Certified Death Certificates</li>
-                <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Auto-Filing Service</li>
-                <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Priority Support</li>
-                <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Asset Discovery Scan</li>
-              </ul>
-              <Link to="/login" className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest text-center rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all">
-                Secure Membership
-              </Link>
-            </div>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$2,997</div>
+                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
+                <p className="text-white/60 text-sm mb-4 flex-grow">We do the heavy lifting. Automated filing and fraud protection included.</p>
+                <ul className="space-y-2 text-sm text-white/70 mb-5">
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> 10 Certified Death Certificates</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Auto-Filing Service</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Priority Support</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Asset Discovery Scan</li>
+                </ul>
+                <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest text-center rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
+                  <Link to="/login">Secure Membership</Link>
+                </Button>
+              </CardContent>
+            </Card>
 
             {/* White Glove */}
-            <div className="glass-card rounded-2xl p-6 flex flex-col">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="status-dot" />
-                <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">White Glove</div>
-              </div>
-              <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$9,997</div>
-              <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
-              <p className="text-white/60 text-sm mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
-              <Link to="/login" className="w-full py-3 border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg">
-                Contact Sales
-              </Link>
-            </div>
+            <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0">
+              <CardContent className="p-6 flex flex-col h-full">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="status-dot" />
+                  <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">White Glove</div>
+                </div>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$9,997</div>
+                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
+                <p className="text-white/60 text-sm mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
+                  <Link to="/login">Contact Sales</Link>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -572,12 +592,12 @@ function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link to="/login" className="bg-gold text-black px-8 py-3.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all">
-              Begin Your Legacy
-            </Link>
-            <a href="#protocol" className="border-2 border-white/30 text-white px-8 py-3.5 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all">
-              See How It Works
-            </a>
+            <Button asChild className="bg-gold text-black px-8 py-3.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
+              <Link to="/login">Begin Your Legacy</Link>
+            </Button>
+            <Button variant="outline" asChild className="border-2 border-white/30 bg-transparent text-white px-8 py-3.5 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all h-auto">
+              <a href="#protocol">See How It Works</a>
+            </Button>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-white text-[0.65rem] tracking-[0.12em] uppercase">
@@ -606,14 +626,23 @@ function Home() {
             <FooterCol title="Legal" links={[{ label: "Privacy", href: "#security" }, { label: "Terms", href: "#security" }, { label: "Compliance", href: "#security" }]} />
           </div>
 
-          <div className="gold-divider mb-3" />
+          <Separator className="bg-gold/20 mb-3" />
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-3">
             <div className="text-[0.6rem] text-white/40">© 2026 FinalWishes Inc. Powered by <strong>Sirsi Technologies</strong>.</div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 text-white/50 text-[0.6rem] uppercase tracking-wider"><div className="w-1.5 h-1.5 rounded-full bg-success" /><span>SOC 2</span></div>
-              <div className="flex items-center gap-1 text-white/50 text-[0.6rem] uppercase tracking-wider"><div className="w-1.5 h-1.5 rounded-full bg-success" /><span>HIPAA</span></div>
-              <div className="flex items-center gap-1 text-white/50 text-[0.6rem] uppercase tracking-wider"><div className="w-1.5 h-1.5 rounded-full bg-success" /><span>256-bit</span></div>
+              <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />
+                SOC 2
+              </Badge>
+              <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />
+                HIPAA
+              </Badge>
+              <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />
+                256-bit
+              </Badge>
             </div>
           </div>
         </div>
@@ -626,16 +655,18 @@ function Home() {
 
 function TestimonialCard({ image, name, tag, value, quote }: { image: string; name: string; tag: string; value: string; quote: string }) {
   return (
-    <div className="glass-card rounded-2xl overflow-hidden">
+    <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
       <div className="relative h-56 overflow-hidden">
         <img src={image} alt={name} className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md rounded-lg px-3 py-1.5 flex items-center gap-2 border border-white/20">
-          <div className="w-2 h-2 rounded-full bg-green-400" />
-          <span className="text-xs text-white uppercase tracking-widest font-semibold">Verified</span>
+        <div className="absolute top-4 right-4">
+          <Badge className="bg-black/60 backdrop-blur-md rounded-lg px-3 py-1.5 border border-white/20 text-white text-xs uppercase tracking-widest font-semibold h-auto gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-400" />
+            Verified
+          </Badge>
         </div>
       </div>
-      <div className="p-5 relative">
+      <CardContent className="p-5 relative">
         <p className="text-white/80 text-base leading-relaxed mb-4">&ldquo;{quote}&rdquo;</p>
         <div className="flex items-center justify-between">
           <div>
@@ -644,8 +675,8 @@ function TestimonialCard({ image, name, tag, value, quote }: { image: string; na
           </div>
           <div className="text-2xl font-bold text-royal-bright/30 font-[family-name:var(--font-cinzel)]">{value}</div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -653,15 +684,17 @@ function FeatureCard({ icon, color, title, desc }: { icon: string; color: "gold"
   const borderHover = color === "gold" ? "hover:!border-gold/50" : "hover:!border-royal-bright/50";
   const titleHover = color === "gold" ? "group-hover:text-gold" : "group-hover:text-royal-bright";
   return (
-    <div className={`glass-card rounded-2xl p-6 flex gap-4 items-start group ${borderHover} transition-all duration-500`}>
-      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-xl group-hover:scale-110 transition-transform">
-        {icon}
-      </div>
-      <div>
-        <h4 className={`text-white font-bold text-base uppercase tracking-widest mb-2 ${titleHover} transition-colors`}>{title}</h4>
-        <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
-      </div>
-    </div>
+    <Card className={`glass-card rounded-2xl ring-0 border-0 bg-transparent group ${borderHover} transition-all duration-500 py-0`}>
+      <CardContent className="p-6 flex gap-4 items-start">
+        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-xl group-hover:scale-110 transition-transform">
+          {icon}
+        </div>
+        <div>
+          <h4 className={`text-white font-bold text-base uppercase tracking-widest mb-2 ${titleHover} transition-colors`}>{title}</h4>
+          <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

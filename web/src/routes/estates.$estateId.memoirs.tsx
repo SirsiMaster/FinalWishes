@@ -3,13 +3,42 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 // YouTube embed via native iframe — zero bundle cost (no react-player)
 import { useCollection } from '../lib/firestore'
-import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogMedia,
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const Route = createFileRoute('/estates/$estateId/memoirs')({
   component: MemoirsPage,
@@ -40,7 +69,7 @@ function MemoirsPage() {
   )
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [modalMode, setModalMode] = useState<'file' | 'youtube' | 'youtube-upload'>('file')
+  const [modalMode, setModalMode] = useState<'file' | 'youtube'>('file')
   const [uploading, setUploading] = useState(false)
   const [selectedMemoir, setSelectedMemoir] = useState<Memoir | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Memoir | null>(null)
@@ -137,96 +166,6 @@ function MemoirsPage() {
     [estateId, user],
   )
 
-  // ─── YouTube Upload via API ────────────────────────────────────────────
-
-  const [ytUploadStatus, setYtUploadStatus] = useState<string | null>(null)
-  const [_ytEmbedUrl, setYtEmbedUrl] = useState<string | null>(null)
-
-  const handleYouTubeUpload = useCallback(
-    async (title: string, description: string, visibility: string, file: File) => {
-      if (!user) return
-      try {
-        setUploading(true)
-        setYtUploadStatus('uploading')
-
-        const token = await user.getIdToken()
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('title', title)
-        formData.append('description', description)
-        formData.append('estateId', estateId)
-
-        const res = await fetch(`${API_BASE}/api/v1/memoirs/upload-video`, {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        })
-
-        if (!res.ok) throw new Error('YouTube upload failed')
-        const data = await res.json()
-        const videoId = data.videoId
-
-        // Poll for video readiness
-        setYtUploadStatus('processing')
-        const pollInterval = setInterval(async () => {
-          try {
-            const statusRes = await fetch(
-              `${API_BASE}/api/v1/memoirs/video-status?video_id=${videoId}`,
-              { headers: { Authorization: `Bearer ${token}` } },
-            )
-            if (statusRes.ok) {
-              const statusData = await statusRes.json()
-              if (statusData.status === 'ready') {
-                clearInterval(pollInterval)
-                setYtUploadStatus(null)
-                setYtEmbedUrl(statusData.embedUrl)
-
-                // Save to Firestore
-                await addDoc(collection(db, `estates/${estateId}/memoirs`), {
-                  title,
-                  type: 'youtube',
-                  url: '',
-                  youtubeUrl: statusData.embedUrl,
-                  visibility,
-                  uploadedBy: user?.uid || 'unknown',
-                  date_added: new Date().toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  }),
-                  createdAt: serverTimestamp(),
-                })
-                setModalOpen(false)
-              } else if (statusData.status === 'failed') {
-                clearInterval(pollInterval)
-                setYtUploadStatus(null)
-                alert('YouTube processing failed. Please try again.')
-              }
-            }
-          } catch {
-            // continue polling
-          }
-        }, 3000)
-
-        // Timeout after 5 minutes
-        setTimeout(() => {
-          clearInterval(pollInterval)
-          if (ytUploadStatus === 'processing') {
-            setYtUploadStatus(null)
-            alert('Video processing timed out. Check back later.')
-          }
-        }, 300000)
-      } catch (err) {
-        console.error('YouTube upload failed:', err)
-        setYtUploadStatus(null)
-        alert('YouTube upload failed. Please try again.')
-      } finally {
-        setUploading(false)
-      }
-    },
-    [estateId, user, ytUploadStatus],
-  )
-
   // ─── Delete ───────────────────────────────────────────────────────────
 
   const handleDelete = useCallback(
@@ -245,48 +184,56 @@ function MemoirsPage() {
   // ─── Loading ──────────────────────────────────────────────────────────
 
   if (isLoading) {
-    return <CardGridSkeleton />
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[#133378]/50 uppercase tracking-[0.2em]">
+            Loading memories...
+          </span>
+        </div>
+      </div>
+    )
   }
 
   // ─── Render ───────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen">
+    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen">
       {/* Cinema Viewer */}
-      {selectedMemoir && (
-        <CinemaViewer
-          memoir={selectedMemoir}
-          onClose={() => setSelectedMemoir(null)}
-          onDelete={() => setDeleteTarget(selectedMemoir)}
-        />
-      )}
+      <CinemaViewer
+        memoir={selectedMemoir}
+        open={!!selectedMemoir}
+        onOpenChange={(open) => { if (!open) setSelectedMemoir(null) }}
+        onDelete={() => { if (selectedMemoir) setDeleteTarget(selectedMemoir) }}
+      />
 
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-[#133378]/10 pb-8 md:pb-16">
+      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-16">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
             <div className="w-10 h-px bg-[#133378]/20" />
             <span>Estate Heritage Vault</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
             Life Stories & Memories
           </h2>
-          <p className="text-[#133378]/50 text-base md:text-lg font-medium max-w-2xl leading-relaxed">
+          <p className="text-[#133378]/50 text-lg font-medium max-w-2xl leading-relaxed">
             Preserve your legacy with video recordings, YouTube memorials, and photo collections for future generations.
           </p>
         </div>
-        <button
+        <Button
           onClick={() => {
             setModalMode('file')
             setModalOpen(true)
           }}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 rounded-2xl font-bold text-[13px] md:text-[14px] transition-all shadow-lg flex items-center gap-3 w-full md:w-auto justify-center"
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 5v14M5 12h14" />
           </svg>
           Add Memory
-        </button>
+        </Button>
       </div>
 
       {/* Video Gallery */}
@@ -294,19 +241,20 @@ function MemoirsPage() {
         <div className="flex items-center gap-4">
           <h3 className="text-sm font-bold text-[#133378]/40 uppercase tracking-[0.3em]">Video Memorials</h3>
           <div className="flex-1 h-px bg-[#133378]/5" />
-          <button
+          <Button
+            variant="ghost"
             onClick={() => {
               setModalMode('youtube')
               setModalOpen(true)
             }}
-            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378] uppercase tracking-wider transition-colors flex items-center gap-2"
+            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378] uppercase tracking-wider h-auto px-3 py-1.5"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
               <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
             </svg>
             Add YouTube Link
-          </button>
+          </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {videos.map((v) => (
@@ -344,283 +292,231 @@ function MemoirsPage() {
         </div>
       </section>
 
-      {/* YouTube Upload Status Banner */}
-      {ytUploadStatus && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[800] bg-[#133378] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4">
-          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          <span className="font-bold text-sm">
-            {ytUploadStatus === 'uploading' ? 'Uploading to YouTube...' : 'Processing video...'}
-          </span>
-        </div>
-      )}
-
       {/* Upload Modal */}
-      {modalOpen && (
-        <UploadModal
-          mode={modalMode}
-          uploading={uploading}
-          fileInputRef={fileInputRef}
-          onClose={() => setModalOpen(false)}
-          onFileUpload={handleFileUpload}
-          onYouTubeSave={handleYouTubeSave}
-          onYouTubeUpload={handleYouTubeUpload}
-          onModeChange={setModalMode}
-        />
-      )}
+      <UploadModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        mode={modalMode}
+        uploading={uploading}
+        fileInputRef={fileInputRef}
+        onFileUpload={handleFileUpload}
+        onYouTubeSave={handleYouTubeSave}
+        onModeChange={setModalMode}
+      />
 
       {/* Delete Confirmation */}
-      {deleteTarget && (
-        <div
-          className="fixed inset-0 z-[700] flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => setDeleteTarget(null)}
-        >
-          <div className="bg-white rounded-[2rem] max-w-md w-full mx-4 p-8 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center text-red-500 mb-6 mx-auto">
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
+        <AlertDialogContent className="max-w-md rounded-[2rem] p-8">
+          <AlertDialogHeader>
+            <AlertDialogMedia className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 mx-auto">
               <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="3 6 5 6 21 6" />
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               </svg>
-            </div>
-            <h3 className="text-xl font-bold text-[#0F172A] text-center mb-2">Delete Memory</h3>
-            <p className="text-[14px] text-[#133378]/50 text-center mb-8">
-              <strong className="text-[#0F172A]">{deleteTarget.title}</strong> will be permanently removed.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeleteTarget(null)}
-                className="flex-1 py-3 rounded-xl border border-[#133378]/10 text-[#0F172A] font-bold text-[13px] hover:bg-[#F8FAFC] transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDelete(deleteTarget)}
-                className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-[13px] transition-all"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </AlertDialogMedia>
+            <AlertDialogTitle className="text-xl font-bold text-[#0F172A] text-center">
+              Delete Memory
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[14px] text-[#133378]/50 text-center">
+              <strong className="text-[#0F172A]">{deleteTarget?.title}</strong> will be permanently removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-3 sm:flex-row">
+            <AlertDialogCancel
+              variant="outline"
+              className="flex-1 py-3 rounded-xl border-[#133378]/10 text-[#0F172A] font-bold text-[13px]"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-[13px]"
+              onClick={() => { if (deleteTarget) handleDelete(deleteTarget) }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
 
-// ─── Cinema Viewer (Full-screen) ──────────────────────────────────────────
+// ─── Cinema Viewer (Full-screen Dialog) ──────────────────────────────────
 
 function CinemaViewer({
   memoir,
-  onClose,
+  open,
+  onOpenChange,
   onDelete,
 }: {
-  memoir: Memoir
-  onClose: () => void
+  memoir: Memoir | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onDelete: () => void
 }) {
   return (
-    <div
-      className="fixed inset-0 z-[500] flex items-center justify-center bg-[#0F172A]/95 backdrop-blur-xl p-8"
-      onClick={onClose}
-    >
-      <div
-        className="relative bg-white rounded-[3rem] overflow-hidden shadow-2xl max-w-[1200px] w-full border border-white/10"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className="max-w-[1200px] sm:max-w-[1200px] rounded-[3rem] overflow-hidden p-0 border-white/10 bg-white"
       >
-        <div className="relative aspect-video bg-black flex items-center justify-center">
-          {memoir.type === 'youtube' && memoir.youtubeUrl ? (
-            <YouTubeEmbed url={memoir.youtubeUrl} autoplay />
-          ) : memoir.type === 'video' ? (
-            <video src={memoir.url} controls autoPlay className="max-w-full max-h-full" />
-          ) : (
-            <img src={memoir.url} className="max-w-full max-h-full object-contain" alt={memoir.title} />
-          )}
-          <button
-            onClick={onClose}
-            className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-[#0F172A] transition-all"
-          >
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="p-12 bg-white flex justify-between items-center">
-          <div className="space-y-2">
-            <h3 className="text-3xl font-bold text-[#0F172A] tracking-tight">{memoir.title}</h3>
-            <div className="flex items-center gap-4 text-[#133378]/40 font-medium">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[#133378]">
-                {memoir.type === 'youtube' ? 'YouTube' : memoir.type}
-              </span>
-              <div className="w-1.5 h-1.5 rounded-full bg-[#133378]/10" />
-              <span className="text-sm">{memoir.dateAdded}</span>
+        {memoir && (
+          <>
+            <div className="relative aspect-video bg-black flex items-center justify-center">
+              {memoir.type === 'youtube' && memoir.youtubeUrl ? (
+                <YouTubeEmbed url={memoir.youtubeUrl} autoplay />
+              ) : memoir.type === 'video' ? (
+                <video src={memoir.url} controls autoPlay className="max-w-full max-h-full" />
+              ) : (
+                <img src={memoir.url} className="max-w-full max-h-full object-contain" alt={memoir.title} />
+              )}
+              <Button
+                variant="ghost"
+                onClick={() => onOpenChange(false)}
+                className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[#0F172A]"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </Button>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onDelete}
-              className="px-6 py-3 rounded-xl border border-red-200 text-red-500 font-bold text-[12px] hover:bg-red-50 transition-all"
-            >
-              Delete
-            </button>
-            <button
-              onClick={onClose}
-              className="px-8 py-3 bg-[#F8FAFC] hover:bg-[#133378]/5 rounded-xl text-[#0F172A] font-bold text-[13px] transition-all border border-[#133378]/10"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            <div className="p-12 bg-white flex justify-between items-center">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold text-[#0F172A] tracking-tight">{memoir.title}</h3>
+                <div className="flex items-center gap-4 text-[#133378]/40 font-medium">
+                  <Badge className="text-[11px] font-bold uppercase tracking-widest bg-[#133378]/10 text-[#133378] border-none">
+                    {memoir.type === 'youtube' ? 'YouTube' : memoir.type}
+                  </Badge>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#133378]/10" />
+                  <span className="text-sm">{memoir.dateAdded}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={onDelete}
+                  className="px-6 py-3 rounded-xl border-red-200 text-red-500 font-bold text-[12px] hover:bg-red-50 h-auto"
+                >
+                  Delete
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                  className="px-8 py-3 bg-[#F8FAFC] hover:bg-[#133378]/5 rounded-xl text-[#0F172A] font-bold text-[13px] border-[#133378]/10 h-auto"
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   )
 }
 
 // ─── Upload Modal ─────────────────────────────────────────────────────────
 
 function UploadModal({
+  open,
+  onOpenChange,
   mode,
   uploading,
   fileInputRef,
-  onClose,
   onFileUpload,
   onYouTubeSave,
-  onYouTubeUpload,
   onModeChange,
 }: {
-  mode: 'file' | 'youtube' | 'youtube-upload'
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  mode: 'file' | 'youtube'
   uploading: boolean
   fileInputRef: React.RefObject<HTMLInputElement | null>
-  onClose: () => void
   onFileUpload: (title: string, type: string, visibility: string, file: File) => void
   onYouTubeSave: (title: string, youtubeUrl: string, visibility: string) => void
-  onYouTubeUpload: (title: string, description: string, visibility: string, file: File) => void
-  onModeChange: (mode: 'file' | 'youtube' | 'youtube-upload') => void
+  onModeChange: (mode: 'file' | 'youtube') => void
 }) {
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [selectedFileName, setSelectedFileName] = useState('')
-  const ytFileRef = useRef<HTMLInputElement>(null)
+  const [mediaType, setMediaType] = useState('video')
+  const [visibility, setVisibility] = useState('private')
 
   return (
-    <div className="fixed inset-0 z-[600] flex items-center justify-center bg-[#0F172A]/40 backdrop-blur-sm p-4" onClick={onClose}>
-      <div className="bg-white rounded-[3rem] p-12 max-w-xl w-full border border-[#133378]/10 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-3xl font-bold text-[#0F172A] mb-3 tracking-tight">Add New Memory</h3>
-        <p className="text-[#133378]/40 font-medium text-sm mb-8">
-          Upload a file or paste a YouTube link to preserve a memory.
-        </p>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-xl sm:max-w-xl rounded-[3rem] p-12 border-[#133378]/10">
+        <DialogHeader>
+          <DialogTitle className="text-3xl font-bold text-[#0F172A] tracking-tight">
+            Add New Memory
+          </DialogTitle>
+          <DialogDescription className="text-[#133378]/40 font-medium text-sm">
+            Upload a file or paste a YouTube link to preserve a memory.
+          </DialogDescription>
+        </DialogHeader>
 
         {/* Mode Tabs */}
-        <div className="flex gap-2 mb-8 bg-[#F8FAFC] p-1.5 rounded-2xl">
-          <button
-            onClick={() => onModeChange('file')}
-            className={`flex-1 py-3 rounded-xl text-[12px] font-bold transition-all ${
-              mode === 'file' ? 'bg-[#133378] text-white shadow-md' : 'text-[#133378]/50 hover:text-[#133378]'
-            }`}
-          >
-            Upload to Vault
-          </button>
-          <button
-            onClick={() => onModeChange('youtube-upload')}
-            className={`flex-1 py-3 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-2 ${
-              mode === 'youtube-upload' ? 'bg-[#133378] text-white shadow-md' : 'text-[#133378]/50 hover:text-[#133378]'
-            }`}
-          >
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
-              <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
-            </svg>
-            Upload to YouTube
-          </button>
-          <button
-            onClick={() => onModeChange('youtube')}
-            className={`flex-1 py-3 rounded-xl text-[12px] font-bold transition-all flex items-center justify-center gap-2 ${
-              mode === 'youtube' ? 'bg-[#133378] text-white shadow-md' : 'text-[#133378]/50 hover:text-[#133378]'
-            }`}
-          >
-            YouTube Link
-          </button>
-        </div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            const formData = new FormData(e.currentTarget)
-            const title = formData.get('title') as string
-            const visibility = (formData.get('visibility') as string) || 'private'
-
-            if (mode === 'youtube') {
-              if (!youtubeUrl) { alert('Please paste a YouTube URL.'); return }
-              onYouTubeSave(title, youtubeUrl, visibility)
-            } else if (mode === 'youtube-upload') {
-              const file = ytFileRef.current?.files?.[0]
-              if (!file) { alert('Please select a video file.'); return }
-              const description = (formData.get('description') as string) || ''
-              onYouTubeUpload(title, description, visibility, file)
-            } else {
-              const file = fileInputRef.current?.files?.[0]
-              const type = (formData.get('type') as string) || 'photo'
-              if (!file) { alert('Please select a file.'); return }
-              onFileUpload(title, type, visibility, file)
-            }
-          }}
-          className="space-y-8"
+        <Tabs
+          value={mode}
+          onValueChange={(val) => onModeChange(val as 'file' | 'youtube')}
+          className="mt-2"
         >
-          {/* Title */}
-          <div className="space-y-2">
-            <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Title</label>
-            <input
-              name="title"
-              required
-              className="w-full px-6 py-4 rounded-2xl border border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] focus:ring-4 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] transition-all placeholder:text-[#133378]/20"
-              placeholder="e.g. Family Reunion 2025"
-            />
-          </div>
+          <TabsList className="w-full bg-[#F8FAFC] p-1.5 rounded-2xl h-auto">
+            <TabsTrigger
+              value="file"
+              className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[#133378] data-active:text-white data-active:shadow-md text-[#133378]/50 hover:text-[#133378]"
+            >
+              Upload File
+            </TabsTrigger>
+            <TabsTrigger
+              value="youtube"
+              className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[#133378] data-active:text-white data-active:shadow-md text-[#133378]/50 hover:text-[#133378]"
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+                <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
+              </svg>
+              YouTube Link
+            </TabsTrigger>
+          </TabsList>
 
-          {mode === 'youtube-upload' ? (
-            /* YouTube Upload — send video file to API */
-            <>
-              <div className="space-y-2">
-                <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Description (optional)</label>
-                <textarea
-                  name="description"
-                  rows={3}
-                  className="w-full px-6 py-4 rounded-2xl border border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] focus:ring-4 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] transition-all placeholder:text-[#133378]/20 resize-none"
-                  placeholder="A description for the YouTube video..."
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Video File</label>
-                <div
-                  onClick={() => ytFileRef.current?.click()}
-                  className="w-full h-36 border-2 border-dashed border-red-500/20 rounded-[2rem] flex flex-col items-center justify-center bg-red-50/30 hover:bg-red-50 hover:border-red-500/40 transition-all cursor-pointer group"
-                >
-                  <div className="w-12 h-12 rounded-full bg-white border border-red-200 flex items-center justify-center mb-3 group-hover:bg-red-600 group-hover:text-white transition-all duration-500 text-red-400">
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
-                      <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
-                    </svg>
-                  </div>
-                  <span className="text-[11px] font-bold text-red-400/60 uppercase tracking-[0.2em] group-hover:text-red-600">
-                    Select Video for YouTube (Unlisted)
-                  </span>
-                  <input
-                    ref={ytFileRef}
-                    type="file"
-                    className="hidden"
-                    accept="video/*"
-                  />
-                </div>
-                <p className="text-[10px] text-[#64748B] font-medium mt-1">
-                  Video will be uploaded as unlisted to YouTube via your estate account.
-                </p>
-              </div>
-            </>
-          ) : mode === 'youtube' ? (
-            /* YouTube URL Input */
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              const formData = new FormData(e.currentTarget)
+              const title = formData.get('title') as string
+
+              if (mode === 'youtube') {
+                if (!youtubeUrl) { alert('Please paste a YouTube URL.'); return }
+                onYouTubeSave(title, youtubeUrl, visibility)
+              } else {
+                const file = fileInputRef.current?.files?.[0]
+                if (!file) { alert('Please select a file.'); return }
+                onFileUpload(title, mediaType, visibility, file)
+              }
+            }}
+            className="space-y-8 mt-4"
+          >
+            {/* Title */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">YouTube URL</label>
-              <input
+              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                Title
+              </Label>
+              <Input
+                name="title"
+                required
+                className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                placeholder="e.g. Family Reunion 2025"
+              />
+            </div>
+
+            <TabsContent value="youtube" className="mt-0 space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                YouTube URL
+              </Label>
+              <Input
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
-                className="w-full px-6 py-4 rounded-2xl border border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] focus:ring-4 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] transition-all placeholder:text-[#133378]/20"
+                className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
                 placeholder="https://www.youtube.com/watch?v=..."
               />
               {youtubeUrl && extractYouTubeId(youtubeUrl) && (
@@ -632,23 +528,27 @@ function UploadModal({
                   />
                 </div>
               )}
-            </div>
-          ) : (
-            /* File Upload */
-            <>
+            </TabsContent>
+
+            <TabsContent value="file" className="mt-0 space-y-8">
               <div className="space-y-2">
-                <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Media Type</label>
-                <select
-                  name="type"
-                  required
-                  className="w-full px-6 py-4 rounded-2xl border border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] outline-none font-bold text-[#0F172A] appearance-none transition-all"
-                >
-                  <option value="video">Video</option>
-                  <option value="photo">Photo</option>
-                </select>
+                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                  Media Type
+                </Label>
+                <Select value={mediaType} onValueChange={setMediaType}>
+                  <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] font-bold text-[#0F172A]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="video">Video</SelectItem>
+                    <SelectItem value="photo">Photo</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
-                <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">File</label>
+                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                  File
+                </Label>
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full h-36 border-2 border-dashed border-[#133378]/15 rounded-[2rem] flex flex-col items-center justify-center bg-[#F8FAFC] hover:bg-white hover:border-[#133378]/30 transition-all cursor-pointer group"
@@ -672,41 +572,46 @@ function UploadModal({
                   />
                 </div>
               </div>
-            </>
-          )}
+            </TabsContent>
 
-          {/* Visibility */}
-          <div className="space-y-2">
-            <label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Visibility</label>
-            <select
-              name="visibility"
-              className="w-full px-6 py-4 rounded-2xl border border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus:border-[#133378] outline-none font-bold text-[#0F172A] appearance-none transition-all"
-            >
-              <option value="private">Private — Only You</option>
-              <option value="shared">Shared with Heirs</option>
-            </select>
-          </div>
+            {/* Visibility */}
+            <div className="space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                Visibility
+              </Label>
+              <Select value={visibility} onValueChange={setVisibility}>
+                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] font-bold text-[#0F172A]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="private">Private — Only You</SelectItem>
+                  <SelectItem value="shared">Shared with Heirs</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Actions */}
-          <div className="flex gap-4 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-4 rounded-2xl border border-[#133378]/10 font-bold text-[#133378]/40 text-sm hover:bg-[#F8FAFC] transition-all"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={uploading}
-              className="flex-1 py-4 rounded-2xl bg-[#133378] text-white font-bold text-sm transition-all hover:bg-[#1E3A5F] shadow-lg disabled:opacity-50"
-            >
-              {uploading ? 'Saving...' : mode === 'youtube' ? 'Save YouTube Link' : mode === 'youtube-upload' ? 'Upload to YouTube' : 'Upload & Save'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            {/* Actions */}
+            <div className="flex gap-4 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                className="flex-1 py-4 h-auto rounded-2xl border-[#133378]/10 font-bold text-[#133378]/40 text-sm"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={uploading}
+                className="flex-1 py-4 h-auto rounded-2xl bg-[#133378] text-white font-bold text-sm hover:bg-[#1E3A5F] shadow-lg disabled:opacity-50"
+              >
+                {uploading ? 'Saving...' : mode === 'youtube' ? 'Save YouTube Link' : 'Upload & Save'}
+              </Button>
+            </div>
+          </form>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
   )
 }
 
@@ -724,7 +629,7 @@ function VideoCard({
   const isYouTube = memoir.type === 'youtube' && memoir.youtubeUrl
 
   return (
-    <div className="bg-white rounded-[2.5rem] border border-[#133378]/10 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-xl transition-all relative">
+    <Card className="rounded-[2.5rem] border-[#133378]/10 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-xl transition-all relative p-0 gap-0">
       <div className="aspect-video bg-[#0F172A] relative overflow-hidden cursor-pointer" onClick={onClick}>
         {isYouTube && memoir.youtubeUrl ? (
           <YouTubeThumbnail url={memoir.youtubeUrl} />
@@ -753,30 +658,32 @@ function VideoCard({
           </div>
         )}
         {isYouTube && (
-          <div className="absolute top-4 left-4 px-3 py-1 bg-red-600 rounded-lg text-white text-[10px] font-bold uppercase tracking-wider">
+          <Badge className="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider border-none rounded-lg h-auto px-3 py-1">
             YouTube
-          </div>
+          </Badge>
         )}
       </div>
-      <div className="p-8 space-y-3">
+      <CardContent className="p-8 space-y-3">
         <h4 className="font-bold text-[#0F172A] text-lg tracking-tight group-hover:text-[#133378] transition-colors cursor-pointer" onClick={onClick}>
           {memoir.title}
         </h4>
         <div className="flex justify-between items-center">
           <span className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-widest">{memoir.dateAdded}</span>
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             onClick={(e) => { e.stopPropagation(); onDelete() }}
-            className="p-1.5 rounded-lg hover:bg-red-50 text-[#133378]/15 hover:text-red-500 transition-all"
+            className="text-[#133378]/15 hover:text-red-500 hover:bg-red-50"
             title="Delete"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -792,7 +699,7 @@ function PhotoCard({
   onDelete: () => void
 }) {
   return (
-    <div className="bg-white rounded-[2rem] border border-[#133378]/10 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-xl transition-all relative">
+    <Card className="rounded-[2rem] border-[#133378]/10 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-xl transition-all relative p-0 gap-0">
       <div className="aspect-square bg-[#F8FAFC] relative overflow-hidden cursor-pointer" onClick={onClick}>
         {memoir.url ? (
           <img
@@ -810,25 +717,27 @@ function PhotoCard({
           </div>
         )}
       </div>
-      <div className="p-6 border-t border-[#133378]/5 flex items-center justify-between">
+      <CardContent className="p-6 border-t border-[#133378]/5 flex items-center justify-between">
         <div className="min-w-0">
           <h4 className="font-bold text-[#0F172A] text-sm truncate group-hover:text-[#133378] transition-colors cursor-pointer" onClick={onClick}>
             {memoir.title}
           </h4>
           <p className="text-[10px] font-bold text-[#133378]/20 uppercase tracking-widest mt-0.5">{memoir.dateAdded}</p>
         </div>
-        <button
+        <Button
+          variant="ghost"
+          size="icon-xs"
           onClick={(e) => { e.stopPropagation(); onDelete() }}
-          className="p-1.5 rounded-lg hover:bg-red-50 text-[#133378]/15 hover:text-red-500 transition-all flex-shrink-0"
+          className="text-[#133378]/15 hover:text-red-500 hover:bg-red-50 flex-shrink-0"
           title="Delete"
         >
           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="3 6 5 6 21 6" />
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
-        </button>
-      </div>
-    </div>
+        </Button>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -836,11 +745,11 @@ function PhotoCard({
 
 function UploadPlaceholder({ type, onClick }: { type: string; onClick: () => void }) {
   return (
-    <button
+    <Card
       onClick={onClick}
       className={`rounded-[2.5rem] border-2 border-dashed border-[#133378]/10 flex flex-col items-center justify-center gap-5 text-[#133378]/20 hover:border-[#133378]/30 hover:bg-[#133378]/[0.02] hover:text-[#133378] transition-all ${
         type === 'video' ? 'aspect-video' : 'aspect-square'
-      } group shadow-sm`}
+      } group shadow-sm cursor-pointer p-0 bg-transparent ring-0`}
     >
       <div className="w-14 h-14 rounded-full border border-[#133378]/10 flex items-center justify-center group-hover:bg-[#133378] group-hover:text-white transition-all duration-500">
         <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
@@ -848,7 +757,7 @@ function UploadPlaceholder({ type, onClick }: { type: string; onClick: () => voi
         </svg>
       </div>
       <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Add {type}</span>
-    </button>
+    </Card>
   )
 }
 

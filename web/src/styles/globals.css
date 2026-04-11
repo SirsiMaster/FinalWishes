@@ -30,46 +30,38 @@
   /* Layout Spacing Protocol */
   --sidebar-width: 280px;
   --header-height: 80px;
-  /* ── shadcn theme: Royal Neo-Deco ── */
-  --background: #FFFFFF;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --card-foreground: #0F172A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
-  --primary: #133378;              /* Royal Blue */
-  --primary-foreground: #FFFFFF;
-  --secondary: #F1F5F9;
-  --secondary-foreground: #0F172A;
-  --muted: #F8FAFC;
-  --muted-foreground: #64748B;
-  --accent: #C8A951;               /* Metallic Gold */
-  --accent-foreground: #FFFFFF;
-  --destructive: #EF4444;
-  --border: #E2E8F0;
-  --input: #E2E8F0;
-  --ring: #133378;                 /* Focus ring = Royal Blue */
-  --chart-1: #133378;
-  --chart-2: #C8A951;
-  --chart-3: #2563EB;
-  --chart-4: #10B981;
-  --chart-5: #7C3AED;
-  --radius: 1rem;                  /* Rounded-2xl base (Royal Neo-Deco: 24px/32px) */
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #0F172A;
-  --sidebar-primary: #133378;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgba(19, 51, 120, 0.05);
-  --sidebar-accent-foreground: #133378;
-  --sidebar-border: rgba(19, 51, 120, 0.1);
-  --sidebar-ring: #133378;
-}
-
-@media (max-width: 767px) {
-  :root {
-    --sidebar-width: 0px;
-    --header-height: 64px;
-  }
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 /* ── TailwindCSS v4 Theme Tokens ── */
@@ -588,73 +580,5 @@ input::-webkit-contacts-auto-fill-button {
   }
   html {
     @apply font-sans;
-  }
-}
-
-/* ============================================
-   Print-Friendly Styles for Legal Documents
-   Directives, Obituary, Estate Summary
-   ============================================ */
-@media print {
-  /* Hide UI chrome */
-  aside, header, nav, .no-print,
-  [data-slot="dialog-overlay"],
-  button:not(.print-keep) {
-    display: none !important;
-  }
-
-  /* Reset layout */
-  body {
-    background: white !important;
-    color: black !important;
-    font-size: 12pt;
-  }
-
-  main {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  /* Card styling for print */
-  [data-slot="card"] {
-    border: 1px solid #ddd !important;
-    box-shadow: none !important;
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  /* Royal Neo-Deco header for printed docs */
-  .print-header {
-    display: block !important;
-    text-align: center;
-    border-bottom: 2px solid #C8A951;
-    padding-bottom: 16px;
-    margin-bottom: 24px;
-  }
-
-  .print-header h1 {
-    font-family: Georgia, serif;
-    color: #133378;
-    font-size: 24pt;
-    letter-spacing: 0.1em;
-  }
-
-  /* Page breaks */
-  .print-page-break {
-    page-break-before: always;
-  }
-
-  /* Footer for printed docs */
-  .print-footer {
-    display: block !important;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 9pt;
-    color: #666;
-    border-top: 1px solid #C8A951;
-    padding-top: 8px;
   }
 }

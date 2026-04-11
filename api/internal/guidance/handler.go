@@ -17,14 +17,15 @@ import (
 
 // Handler serves guidance/scoring endpoints.
 type Handler struct {
-	fs     *firestore.Client
-	genkit *GenkitAdvisor
+	fs      *firestore.Client
+	advisor Advisor
 }
 
-// NewHandler creates a guidance handler with optional Genkit AI advisor.
-// If genkit is nil, the handler falls back to deterministic insights.
-func NewHandler(fs *firestore.Client, genkit *GenkitAdvisor) *Handler {
-	return &Handler{fs: fs, genkit: genkit}
+// NewHandler creates a guidance handler with an AI advisor.
+// If advisor is nil, the handler falls back to deterministic insights.
+// Accepts either *ShepherdAdvisor (Claude Opus) or *GenkitAdvisor (legacy Gemini).
+func NewHandler(fs *firestore.Client, advisor Advisor) *Handler {
+	return &Handler{fs: fs, advisor: advisor}
 }
 
 // Score represents the estate completion assessment.
@@ -86,7 +87,7 @@ func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Enhance insight with Genkit AI if available
-	if h.genkit != nil {
+	if h.advisor != nil {
 		// Fetch estate name for personalized insight
 		estateName := estateID
 		estateSnap, err := h.fs.Collection("estates").Doc(estateID).Get(ctx)
@@ -96,7 +97,7 @@ func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		if aiInsight := h.genkit.GenerateInsight(ctx, score, estateName); aiInsight != "" {
+		if aiInsight := h.advisor.GenerateInsight(ctx, score, estateName); aiInsight != "" {
 			score.Insight = aiInsight
 		}
 	}
@@ -227,7 +228,7 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 // HandleAssistObituary accepts a prompt and returns an AI-drafted obituary.
 // POST /api/v1/guidance/assist-obituary
 func (h *Handler) HandleAssistObituary(w http.ResponseWriter, r *http.Request) {
-	if h.genkit == nil {
+	if h.advisor == nil {
 		writeError(w, http.StatusServiceUnavailable, "AI guidance is not available")
 		return
 	}
@@ -247,7 +248,7 @@ func (h *Handler) HandleAssistObituary(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 
-	text := h.genkit.GenerateObituary(ctx, req.Prompt)
+	text := h.advisor.GenerateObituary(ctx, req.Prompt)
 	if text == "" {
 		writeError(w, http.StatusInternalServerError, "Failed to generate obituary draft")
 		return
@@ -291,8 +292,8 @@ func (h *Handler) HandleSuggestions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var suggestions []string
-	if h.genkit != nil {
-		suggestions = h.genkit.SuggestNextActions(ctx, score)
+	if h.advisor != nil {
+		suggestions = h.advisor.SuggestNextActions(ctx, score)
 	} else {
 		suggestions = fallbackSuggestions(score)
 	}

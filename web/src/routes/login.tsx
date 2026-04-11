@@ -51,7 +51,7 @@ const DEMO_ACCOUNTS = [
 function LoginPage() {
   const navigate = useNavigate();
   const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-  const { signIn, signUp, resetPassword, loginDemo, user } = useAuth();
+  const { signIn, signUp, resetPassword, user } = useAuth();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -99,7 +99,6 @@ function LoginPage() {
 
       if (account) {
         localStorage.setItem('finalwishes_user', JSON.stringify(account.session));
-        loginDemo(account.session as unknown as Record<string, string | undefined>);
         navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
         setIsSubmitting(false);
         return;

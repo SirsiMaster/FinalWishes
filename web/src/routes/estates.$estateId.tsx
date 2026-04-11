@@ -47,18 +47,15 @@ function EstateLayout() {
 
   return (
     <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:bg-[#133378] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
-        Skip to content
-      </a>
       <Sidebar />
-      <div
+      <div 
         className="transition-all duration-300 min-h-screen flex flex-col"
-        style={{
+        style={{ 
           marginLeft: 'var(--sidebar-width)',
         }}
       >
         <AdminHeader title={estateName} subtitle={`${roleLabel} · Vault Secured · Active`} />
-        <main id="main-content" className="flex-1 p-8">
+        <main className="flex-1 p-8">
           <Outlet />
         </main>
       </div>

@@ -64,7 +64,6 @@ export function AdminHeader({
       {/* Center — Search */}
       <div className="flex-1 max-w-[350px] min-w-[150px] flex items-center gap-2 bg-royal/[0.03] border border-royal/10 py-2 px-4 focus-within:border-royal transition-all">
         <svg
-          aria-hidden="true"
           width="14"
           height="14"
           viewBox="0 0 24 24"
@@ -81,7 +80,6 @@ export function AdminHeader({
         <Input
           type="text"
           placeholder="Search protocols..."
-          aria-label="Search estate"
           className="flex-1 h-auto border-none bg-transparent shadow-none ring-0 outline-none text-[0.8rem] font-bold text-royal placeholder:text-royal/20 focus-visible:ring-0 focus-visible:border-none p-0"
         />
       </div>
@@ -119,9 +117,8 @@ export function AdminHeader({
       {/* Right — Actions */}
       <div className="flex items-center gap-4">
         {/* Notification Bell */}
-        <Button variant="ghost" size="icon" aria-label="Notifications" className="text-royal/30 hover:bg-royal/5 hover:text-royal transition-all relative">
+        <Button variant="ghost" size="icon" className="text-royal/30 hover:bg-royal/5 hover:text-royal transition-all relative">
           <svg
-            aria-hidden="true"
             width="18"
             height="18"
             viewBox="0 0 24 24"

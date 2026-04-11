@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export function VaultSkeleton() {
   return (
-    <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
+    <div role="status" aria-label="Loading vault" className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
       {/* Header */}
       <div className="flex justify-between items-end border-b border-[#133378]/10 pb-10">
         <div className="space-y-2">

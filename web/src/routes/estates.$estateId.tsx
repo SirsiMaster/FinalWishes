@@ -1,24 +1,13 @@
-/* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
-import { useState } from 'react'
-import { Sidebar, MobileSidebar } from '../components/layout/Sidebar'
+import { createFileRoute, Outlet, useParams, useNavigate } from '@tanstack/react-router'
+import { Sidebar } from '../components/layout/Sidebar'
 import { AdminHeader } from '../components/layout/AdminHeader'
-import { AuthGuard } from '../components/guards/AuthGuard'
-import { IdentityGate } from '../components/guards/IdentityGate'
-import { EmailVerificationBanner } from '../components/identity/EmailVerificationBanner'
-import { ErrorBoundary } from '../components/ErrorBoundary'
-import { useAuth } from '../lib/auth'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const ROLE_LABELS: Record<string, string> = {
   owner: 'Estate Owner',
-  principal: 'Estate Owner',
   admin: 'Administrator',
   beneficiary: 'Beneficiary',
-  heir: 'Beneficiary',
   executor: 'Legal Executor',
-  legal: 'Legal Counsel',
-  cpa: 'CPA Advisor',
 };
 
 export const Route = createFileRoute('/estates/$estateId')({
@@ -27,8 +16,9 @@ export const Route = createFileRoute('/estates/$estateId')({
 
 function EstateLayout() {
   const { estateId } = useParams({ from: '/estates/$estateId' });
-  const { profile } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [estateName, setEstateName] = useState('Lockhart Estate');
+  const [userRole, setUserRole] = useState('owner');
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -38,46 +28,40 @@ function EstateLayout() {
     }
   }, []);
 
-  const userRole = profile?.role || 'principal';
-  const estateName = profile?.primaryEstateName || 'My Estate';
-
-  // Check for demo mode — preserve Lockhart demo data
-  const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-  const displayEstateName = (isDemo && (estateId === 'lockhart' || estateId === 'estate_lockhart'))
-    ? 'Lockhart Estate'
-    : estateName;
+  useEffect(() => {
+    const session = localStorage.getItem('finalwishes_user');
+    if (session) {
+      const u = JSON.parse(session);
+      setUserRole(u.role || 'owner');
+      if (estateId === 'lockhart' || estateId === 'estate_lockhart') {
+        setEstateName('Lockhart Estate');
+      } else {
+        setEstateName(u.primaryEstateName);
+      }
+    } else {
+      navigate({ to: '/login', replace: true });
+    }
+  }, [estateId, navigate]);
 
   const roleLabel = ROLE_LABELS[userRole] || 'Member';
 
   return (
-    <AuthGuard>
-      <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:bg-[#133378] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
-          Skip to content
-        </a>
-        <Sidebar />
-        <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} />
-        <div
-          className="transition-all duration-300 min-h-screen flex flex-col"
-          style={{
-            marginLeft: 'var(--sidebar-width)',
-          }}
-        >
-          <AdminHeader
-            title={displayEstateName}
-            subtitle={`${roleLabel} · Vault Secured · Active`}
-            onMenuClick={() => setMobileMenuOpen(true)}
-          />
-          <EmailVerificationBanner />
-          <main id="main-content" className="flex-1 p-4 md:p-8">
-            <ErrorBoundary>
-              <IdentityGate estateId={estateId}>
-                <Outlet />
-              </IdentityGate>
-            </ErrorBoundary>
-          </main>
-        </div>
+    <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[999] focus:bg-[#133378] focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
+        Skip to content
+      </a>
+      <Sidebar />
+      <div
+        className="transition-all duration-300 min-h-screen flex flex-col"
+        style={{
+          marginLeft: 'var(--sidebar-width)',
+        }}
+      >
+        <AdminHeader title={estateName} subtitle={`${roleLabel} · Vault Secured · Active`} />
+        <main id="main-content" className="flex-1 p-8">
+          <Outlet />
+        </main>
       </div>
-    </AuthGuard>
+    </div>
   )
 }

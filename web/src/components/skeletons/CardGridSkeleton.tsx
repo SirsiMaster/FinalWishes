@@ -13,7 +13,7 @@ export function CardGridSkeleton({ columns = 2, cards = 4, timeline = false }: C
   const gridCols = columns === 3 ? "md:grid-cols-3" : "md:grid-cols-2"
 
   return (
-    <div className="max-w-[1240px] mx-auto space-y-10 pb-24 px-6">
+    <div role="status" aria-label="Loading content" className="max-w-[1240px] mx-auto space-y-10 pb-24 px-6">
       {/* Header */}
       <div className="flex justify-between items-end border-b border-slate-100 pb-10">
         <div className="space-y-2">

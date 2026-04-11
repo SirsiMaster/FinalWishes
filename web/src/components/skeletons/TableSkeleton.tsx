@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export function TableSkeleton() {
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div role="status" aria-label="Loading content" className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* Header */}
       <div className="flex justify-between items-end border-b border-slate-50 pb-16">
         <div className="space-y-4">

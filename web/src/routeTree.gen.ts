@@ -12,8 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as EstatesCreateRouteImport } from './routes/estates.create'
 import { Route as EstatesEstateIdRouteImport } from './routes/estates.$estateId'
+import { Route as DashboardVaultRouteImport } from './routes/dashboard.vault'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardObituaryRouteImport } from './routes/dashboard.obituary'
+import { Route as DashboardNotificationsRouteImport } from './routes/dashboard.notifications'
+import { Route as DashboardMemoirsRouteImport } from './routes/dashboard.memoirs'
+import { Route as DashboardEstatesRouteImport } from './routes/dashboard.estates'
+import { Route as DashboardBeneficiariesRouteImport } from './routes/dashboard.beneficiaries'
+import { Route as DashboardAssetsRouteImport } from './routes/dashboard.assets'
 import { Route as EstatesEstateIdIndexRouteImport } from './routes/estates.$estateId.index'
 import { Route as EstatesEstateIdVaultRouteImport } from './routes/estates.$estateId.vault'
 import { Route as EstatesEstateIdTimecapsuleRouteImport } from './routes/estates.$estateId.timecapsule'
@@ -46,6 +55,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const EstatesCreateRoute = EstatesCreateRouteImport.update({
   id: '/estates/create',
   path: '/estates/create',
@@ -55,6 +69,46 @@ const EstatesEstateIdRoute = EstatesEstateIdRouteImport.update({
   id: '/estates/$estateId',
   path: '/estates/$estateId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardVaultRoute = DashboardVaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardObituaryRoute = DashboardObituaryRouteImport.update({
+  id: '/obituary',
+  path: '/obituary',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMemoirsRoute = DashboardMemoirsRouteImport.update({
+  id: '/memoirs',
+  path: '/memoirs',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardEstatesRoute = DashboardEstatesRouteImport.update({
+  id: '/estates',
+  path: '/estates',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBeneficiariesRoute = DashboardBeneficiariesRouteImport.update({
+  id: '/beneficiaries',
+  path: '/beneficiaries',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAssetsRoute = DashboardAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const EstatesEstateIdIndexRoute = EstatesEstateIdIndexRouteImport.update({
   id: '/',
@@ -146,10 +200,19 @@ const EstatesEstateIdAssetsRoute = EstatesEstateIdAssetsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/assets': typeof DashboardAssetsRoute
+  '/dashboard/beneficiaries': typeof DashboardBeneficiariesRoute
+  '/dashboard/estates': typeof DashboardEstatesRoute
+  '/dashboard/memoirs': typeof DashboardMemoirsRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
+  '/dashboard/obituary': typeof DashboardObituaryRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/vault': typeof DashboardVaultRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/estates/create': typeof EstatesCreateRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
@@ -169,9 +232,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/dashboard/assets': typeof DashboardAssetsRoute
+  '/dashboard/beneficiaries': typeof DashboardBeneficiariesRoute
+  '/dashboard/estates': typeof DashboardEstatesRoute
+  '/dashboard/memoirs': typeof DashboardMemoirsRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
+  '/dashboard/obituary': typeof DashboardObituaryRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/vault': typeof DashboardVaultRoute
   '/estates/create': typeof EstatesCreateRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
@@ -192,10 +263,19 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/dashboard/assets': typeof DashboardAssetsRoute
+  '/dashboard/beneficiaries': typeof DashboardBeneficiariesRoute
+  '/dashboard/estates': typeof DashboardEstatesRoute
+  '/dashboard/memoirs': typeof DashboardMemoirsRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
+  '/dashboard/obituary': typeof DashboardObituaryRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/vault': typeof DashboardVaultRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/estates/create': typeof EstatesCreateRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
@@ -219,8 +299,17 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/assets'
+    | '/dashboard/beneficiaries'
+    | '/dashboard/estates'
+    | '/dashboard/memoirs'
+    | '/dashboard/notifications'
+    | '/dashboard/obituary'
+    | '/dashboard/settings'
+    | '/dashboard/vault'
     | '/estates/$estateId'
     | '/estates/create'
+    | '/dashboard/'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
@@ -240,9 +329,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/dashboard'
     | '/login'
+    | '/dashboard/assets'
+    | '/dashboard/beneficiaries'
+    | '/dashboard/estates'
+    | '/dashboard/memoirs'
+    | '/dashboard/notifications'
+    | '/dashboard/obituary'
+    | '/dashboard/settings'
+    | '/dashboard/vault'
     | '/estates/create'
+    | '/dashboard'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
@@ -264,8 +361,17 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/dashboard/assets'
+    | '/dashboard/beneficiaries'
+    | '/dashboard/estates'
+    | '/dashboard/memoirs'
+    | '/dashboard/notifications'
+    | '/dashboard/obituary'
+    | '/dashboard/settings'
+    | '/dashboard/vault'
     | '/estates/$estateId'
     | '/estates/create'
+    | '/dashboard/'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
@@ -286,7 +392,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   EstatesEstateIdRoute: typeof EstatesEstateIdRouteWithChildren
   EstatesCreateRoute: typeof EstatesCreateRoute
@@ -315,6 +421,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/estates/create': {
       id: '/estates/create'
       path: '/estates/create'
@@ -328,6 +441,62 @@ declare module '@tanstack/react-router' {
       fullPath: '/estates/$estateId'
       preLoaderRoute: typeof EstatesEstateIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/vault': {
+      id: '/dashboard/vault'
+      path: '/vault'
+      fullPath: '/dashboard/vault'
+      preLoaderRoute: typeof DashboardVaultRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/obituary': {
+      id: '/dashboard/obituary'
+      path: '/obituary'
+      fullPath: '/dashboard/obituary'
+      preLoaderRoute: typeof DashboardObituaryRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/notifications': {
+      id: '/dashboard/notifications'
+      path: '/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof DashboardNotificationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/memoirs': {
+      id: '/dashboard/memoirs'
+      path: '/memoirs'
+      fullPath: '/dashboard/memoirs'
+      preLoaderRoute: typeof DashboardMemoirsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/estates': {
+      id: '/dashboard/estates'
+      path: '/estates'
+      fullPath: '/dashboard/estates'
+      preLoaderRoute: typeof DashboardEstatesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/beneficiaries': {
+      id: '/dashboard/beneficiaries'
+      path: '/beneficiaries'
+      fullPath: '/dashboard/beneficiaries'
+      preLoaderRoute: typeof DashboardBeneficiariesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/assets': {
+      id: '/dashboard/assets'
+      path: '/assets'
+      fullPath: '/dashboard/assets'
+      preLoaderRoute: typeof DashboardAssetsRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/estates/$estateId/': {
       id: '/estates/$estateId/'
@@ -444,6 +613,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardAssetsRoute: typeof DashboardAssetsRoute
+  DashboardBeneficiariesRoute: typeof DashboardBeneficiariesRoute
+  DashboardEstatesRoute: typeof DashboardEstatesRoute
+  DashboardMemoirsRoute: typeof DashboardMemoirsRoute
+  DashboardNotificationsRoute: typeof DashboardNotificationsRoute
+  DashboardObituaryRoute: typeof DashboardObituaryRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardVaultRoute: typeof DashboardVaultRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAssetsRoute: DashboardAssetsRoute,
+  DashboardBeneficiariesRoute: DashboardBeneficiariesRoute,
+  DashboardEstatesRoute: DashboardEstatesRoute,
+  DashboardMemoirsRoute: DashboardMemoirsRoute,
+  DashboardNotificationsRoute: DashboardNotificationsRoute,
+  DashboardObituaryRoute: DashboardObituaryRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardVaultRoute: DashboardVaultRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 interface EstatesEstateIdRouteChildren {
   EstatesEstateIdAssetsRoute: typeof EstatesEstateIdAssetsRoute
   EstatesEstateIdAttestationRoute: typeof EstatesEstateIdAttestationRoute
@@ -488,7 +685,7 @@ const EstatesEstateIdRouteWithChildren = EstatesEstateIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   EstatesEstateIdRoute: EstatesEstateIdRouteWithChildren,
   EstatesCreateRoute: EstatesCreateRoute,

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 export function EditorSkeleton() {
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+    <div role="status" aria-label="Loading editor" className="max-w-4xl mx-auto space-y-8 pb-20">
       {/* Sidebar portrait area */}
       <div className="flex gap-8">
         <div className="flex-shrink-0 space-y-4">

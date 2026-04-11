@@ -268,20 +268,25 @@ func main() {
 		r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
 	})
 
-	// Guidance routes (The Shepherd v2 — estate completion scoring + Genkit AI)
+	// Guidance routes (The Shepherd v3 — Claude Opus via sirsi-ai, Genkit fallback)
 	if fs != nil {
-		genkitAdvisor := guidance.NewGenkitAdvisor(ctx)
-		guidanceHandler := guidance.NewHandler(fs, genkitAdvisor)
+		var advisor guidance.Advisor
+		if shepherd := guidance.NewShepherdAdvisor(ctx); shepherd != nil {
+			advisor = shepherd
+		} else {
+			advisor = guidance.NewGenkitAdvisor(ctx) // Legacy fallback
+		}
+		guidanceHandler := guidance.NewHandler(fs, advisor)
 		r.Route("/api/v1/guidance", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Get("/score", guidanceHandler.HandleGetScore)
 			r.Post("/assist-obituary", guidanceHandler.HandleAssistObituary)
 			r.Get("/suggestions", guidanceHandler.HandleSuggestions)
 		})
-		if genkitAdvisor != nil {
-			log.Info().Msg("Guidance API (The Shepherd v2) registered at /api/v1/guidance/* — Genkit AI active")
+		if advisor != nil {
+			log.Info().Msg("Guidance API (The Shepherd v3) registered at /api/v1/guidance/* — AI active")
 		} else {
-			log.Info().Msg("Guidance API (The Shepherd v2) registered at /api/v1/guidance/* — deterministic mode (no Genkit)")
+			log.Info().Msg("Guidance API registered at /api/v1/guidance/* — deterministic mode")
 		}
 	}
 

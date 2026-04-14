@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EstatesCreateRouteImport } from './routes/estates.create'
 import { Route as EstatesEstateIdRouteImport } from './routes/estates.$estateId'
@@ -39,6 +40,11 @@ const LoginRoute = LoginRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AcceptInviteRoute = AcceptInviteRouteImport.update({
+  id: '/accept-invite',
+  path: '/accept-invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -146,6 +152,7 @@ const EstatesEstateIdAssetsRoute = EstatesEstateIdAssetsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/accept-invite': typeof AcceptInviteRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
@@ -169,6 +176,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/accept-invite': typeof AcceptInviteRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/estates/create': typeof EstatesCreateRoute
@@ -192,6 +200,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/accept-invite': typeof AcceptInviteRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/accept-invite'
     | '/dashboard'
     | '/login'
     | '/estates/$estateId'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/accept-invite'
     | '/dashboard'
     | '/login'
     | '/estates/create'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/accept-invite'
     | '/dashboard'
     | '/login'
     | '/estates/$estateId'
@@ -286,6 +298,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcceptInviteRoute: typeof AcceptInviteRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   EstatesEstateIdRoute: typeof EstatesEstateIdRouteWithChildren
@@ -306,6 +319,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accept-invite': {
+      id: '/accept-invite'
+      path: '/accept-invite'
+      fullPath: '/accept-invite'
+      preLoaderRoute: typeof AcceptInviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -488,6 +508,7 @@ const EstatesEstateIdRouteWithChildren = EstatesEstateIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcceptInviteRoute: AcceptInviteRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   EstatesEstateIdRoute: EstatesEstateIdRouteWithChildren,

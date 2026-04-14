@@ -2,11 +2,12 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo } from 'react'
 import { useEstateAssets, type Asset } from '../lib/firestore'
-import { addAsset as addAssetAction } from '../lib/estate-actions'
+import { addAsset as addAssetAction, updateAsset, archiveAsset } from '../lib/estate-actions'
 
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Input } from '../components/ui/input'
+import { Textarea } from '../components/ui/textarea'
 import { Label } from '../components/ui/label'
 import { Separator } from '../components/ui/separator'
 import {
@@ -41,6 +42,9 @@ function AssetsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/assets' });
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editingAsset, setEditingAsset] = useState<any>(null);
+  const [editSaving, setEditSaving] = useState(false);
+  const [confirmArchive, setConfirmArchive] = useState(false);
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
 
   const { data: assets, loading: isLoading } = useEstateAssets(estateId);
@@ -58,6 +62,29 @@ function AssetsPage() {
     });
     setSaving(false);
     setModalOpen(false);
+  };
+
+  const handleUpdateAsset = async (data: { name: string; category: string; estimatedValue: string; description: string }) => {
+    if (!editingAsset) return;
+    setEditSaving(true);
+    await updateAsset(estateId, editingAsset.id, {
+      name: data.name,
+      category: data.category,
+      estimatedValue: parseFloat(data.estimatedValue.replace(/[^0-9.]/g, '')) || 0,
+      description: data.description,
+    });
+    setEditSaving(false);
+    setEditingAsset(null);
+    setConfirmArchive(false);
+  };
+
+  const handleArchiveAsset = async () => {
+    if (!editingAsset) return;
+    setEditSaving(true);
+    await archiveAsset(estateId, editingAsset.id);
+    setEditSaving(false);
+    setEditingAsset(null);
+    setConfirmArchive(false);
   };
 
   if (isLoading) {
@@ -130,7 +157,7 @@ function AssetsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="px-10 py-7 text-right">
-                  <Button variant="outline" className="text-[#133378] font-bold text-[12px] bg-[#F8FAFC] hover:bg-[#133378] hover:text-white px-5 py-2.5 rounded-xl border border-slate-100 h-auto">
+                  <Button variant="outline" onClick={() => setEditingAsset(a)} className="text-[#133378] font-bold text-[12px] bg-[#F8FAFC] hover:bg-[#133378] hover:text-white px-5 py-2.5 rounded-xl border border-slate-100 h-auto">
                     View Details
                   </Button>
                 </TableCell>
@@ -216,6 +243,116 @@ function AssetsPage() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* -- Edit Asset Dialog -- */}
+      <Dialog open={editingAsset !== null} onOpenChange={(open) => { if (!open) { setEditingAsset(null); setConfirmArchive(false); } }}>
+        <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-slate-100 shadow-2xl">
+          <DialogHeader className="space-y-3 mb-12">
+            <DialogTitle className="text-3xl font-bold text-[#0F172A] tracking-tight font-[family-name:var(--font-cinzel)]">Edit Asset</DialogTitle>
+            <DialogDescription className="text-slate-500 font-medium text-sm">
+              Update the details for this asset or archive it from your estate ledger.
+            </DialogDescription>
+          </DialogHeader>
+          {editingAsset && (
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.currentTarget);
+              handleUpdateAsset({
+                name: formData.get('edit-name') as string,
+                category: formData.get('edit-category') as string,
+                estimatedValue: formData.get('edit-value') as string,
+                description: formData.get('edit-description') as string,
+              });
+            }} className="space-y-10">
+              <div className="space-y-3">
+                <Label htmlFor="edit-asset-name" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Asset Name</Label>
+                <Input
+                  id="edit-asset-name"
+                  name="edit-name"
+                  required
+                  defaultValue={editingAsset.name}
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-lg h-auto"
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="edit-asset-category" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Asset Category</Label>
+                <select
+                  id="edit-asset-category"
+                  name="edit-category"
+                  defaultValue={editingAsset.category}
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] font-bold text-[#0F172A] text-lg h-auto appearance-none"
+                >
+                  <option value="Real Estate">Real Estate</option>
+                  <option value="Cash">Cash / Savings</option>
+                  <option value="Securities">Securities / Stocks</option>
+                  <option value="Personal Property">Personal Property</option>
+                  <option value="Digital Assets">Digital Assets</option>
+                </select>
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="edit-asset-value" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Estimated Value</Label>
+                <Input
+                  id="edit-asset-value"
+                  name="edit-value"
+                  required
+                  defaultValue={editingAsset.estimatedValue ? `$${editingAsset.estimatedValue.toLocaleString()}` : ''}
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-lg h-auto"
+                  placeholder="e.g. $125,000"
+                />
+              </div>
+              <div className="space-y-3">
+                <Label htmlFor="edit-asset-description" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Description</Label>
+                <Textarea
+                  id="edit-asset-description"
+                  name="edit-description"
+                  defaultValue={editingAsset.description || ''}
+                  rows={3}
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-base resize-none"
+                  placeholder="Optional notes about this asset"
+                />
+              </div>
+              <DialogFooter className="flex gap-4 pt-4 sm:flex-row">
+                {!confirmArchive ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setConfirmArchive(true)}
+                    className="py-5 rounded-2xl border border-red-100 font-bold text-red-500 text-sm hover:bg-red-50 h-auto px-6"
+                  >
+                    Archive
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleArchiveAsset}
+                    disabled={editSaving}
+                    className="py-5 rounded-2xl border border-red-300 font-bold text-white text-sm bg-red-500 hover:bg-red-600 h-auto px-6"
+                  >
+                    {editSaving ? 'Archiving...' : 'Confirm Archive'}
+                  </Button>
+                )}
+                <div className="flex-1" />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => { setEditingAsset(null); setConfirmArchive(false); }}
+                  className="py-5 rounded-2xl border border-slate-100 font-bold text-slate-400 text-sm hover:bg-slate-50 h-auto px-6"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={editSaving}
+                  className="py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm hover:bg-[#1E3A5F] shadow-xl h-auto px-10"
+                >
+                  {editSaving ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -1,6 +1,7 @@
-// Package guidance — Genkit AI integration for The Shepherd v2.
+// Package guidance — Genkit AI integration for The Shepherd (legacy).
 // Provides Gemini-powered natural language guidance, obituary drafting,
-// and action suggestions via Firebase Genkit.
+// and action suggestions via Firebase Genkit. Shared prompts are defined
+// here and used by both GenkitAdvisor and ShepherdAdvisor.
 package guidance
 
 import (
@@ -44,22 +45,47 @@ func NewGenkitAdvisor(ctx context.Context) (advisor *GenkitAdvisor) {
 	return &GenkitAdvisor{g: g}
 }
 
-const (
-	guidanceSystemPrompt = "You are The Shepherd, an AI estate planning advisor for FinalWishes. " +
-		"You provide warm, professional guidance to help users complete their estate plan. " +
-		"Never provide legal advice — always recommend consulting an attorney for legal matters. " +
-		"Keep responses concise (1-2 sentences)."
+// ---------------------------------------------------------------------------
+// Shared system prompts — used by both GenkitAdvisor and ShepherdAdvisor.
+// ---------------------------------------------------------------------------
 
-	obituarySystemPrompt = "You are a compassionate writer helping draft an obituary/life record. " +
-		"Write in a warm, dignified, third-person narrative style. " +
-		"Use the details provided to craft a complete obituary. " +
-		"If details are sparse, provide a thoughtful template with placeholders."
+const chatSystemPrompt = `You are The Shepherd, FinalWishes' AI estate planning guidance engine. You help families organize their estates with warmth and expertise.
 
-	suggestionsSystemPrompt = "Given the estate completion state, suggest 3-5 specific, actionable next steps. " +
-		"Format as a JSON array of strings. Be specific — reference the actual missing items."
+DOMAIN KNOWLEDGE:
+- Estate planning basics: wills, trusts, powers of attorney, healthcare directives, beneficiary designations
+- Probate process: typically 6-18 months, varies by state
+- State thresholds: Maryland small estate ≤$50K (personal) / $100K (real), Illinois ≤$100K, Minnesota ≤$75K
+- Key roles: executor (manages probate), trustee (manages trust), guardian (cares for minors), beneficiary (receives assets)
+- Common mistakes: not updating beneficiary designations after life changes, forgetting digital assets, not having healthcare directive
+- Tax awareness: federal estate tax exemption $13.61M (2024), state varies (MD $5M, IL $4M, MN $3M)
+- Digital assets: social media, email, cloud storage, crypto, domain names — often forgotten
 
-	modelName = "googleai/gemini-2.0-flash"
-)
+RULES:
+- You provide general educational guidance, NEVER specific legal advice
+- Always recommend consulting an attorney for specific legal questions
+- Be warm, compassionate, and encouraging — users may be grieving
+- Reference the user's specific estate data when available (assets, documents, beneficiaries)
+- If asked about a state you don't have rules for, say so honestly
+- Keep responses concise (2-4 sentences for simple questions, longer for complex topics)`
+
+const obituarySystemPrompt = `You are a compassionate writer helping draft an obituary for FinalWishes.
+Write in warm, dignified, third-person narrative style.
+Structure: full name, age, date of passing, survived by, education/career highlights, passions, service details.
+If details are sparse, provide a thoughtful template with [bracketed placeholders].
+Tone: celebrating a life lived, not dwelling on loss.`
+
+const suggestionsSystemPrompt = `Given this estate's completion state, suggest 3-5 specific next steps.
+Prioritize by urgency and impact. Format as a JSON array of strings.
+Reference specific missing items from the data provided.`
+
+// guidanceSystemPrompt is used for short insight generation (1-2 sentences).
+const guidanceSystemPrompt = chatSystemPrompt
+
+const modelName = "googleai/gemini-2.0-flash"
+
+// ---------------------------------------------------------------------------
+// GenkitAdvisor method implementations (legacy Gemini path).
+// ---------------------------------------------------------------------------
 
 // GenerateInsight produces a personalized 1-2 sentence guidance insight
 // using Gemini Flash, given the current estate completion score.
@@ -173,7 +199,35 @@ func (a *GenkitAdvisor) SuggestNextActions(ctx context.Context, score *Score) []
 	return suggestions
 }
 
-// fallbackSuggestions produces deterministic suggestions when Genkit is unavailable.
+// Chat handles a multi-turn conversation via Genkit (legacy Gemini path).
+// Provides the same interface as ShepherdAdvisor.Chat but uses Gemini Flash.
+func (a *GenkitAdvisor) Chat(ctx context.Context, estateContext string, message string, history []ChatMessage) (*ChatResponse, error) {
+	// Build the user prompt with estate context
+	userPrompt := message
+	if estateContext != "" {
+		userPrompt = fmt.Sprintf("ESTATE CONTEXT:\n%s\n\nUSER QUESTION:\n%s", estateContext, message)
+	}
+
+	resp, err := genkit.GenerateText(ctx, a.g,
+		ai.WithModelName(modelName),
+		ai.WithSystem(chatSystemPrompt),
+		ai.WithPrompt(userPrompt),
+		ai.WithConfig(&genai.GenerateContentConfig{
+			Temperature:     genai.Ptr[float32](0.7),
+			MaxOutputTokens: 500,
+		}),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("genkit chat failed: %w", err)
+	}
+
+	return &ChatResponse{
+		Reply:            strings.TrimSpace(resp),
+		SuggestedActions: []string{},
+	}, nil
+}
+
+// fallbackSuggestions produces deterministic suggestions when AI is unavailable.
 func fallbackSuggestions(score *Score) []string {
 	var suggestions []string
 	for _, s := range score.Steps {

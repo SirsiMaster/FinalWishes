@@ -13,7 +13,33 @@ import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    invite: (search.invite as string) ?? undefined,
+    demo: (search.demo === 'true' || search.demo === true) ? true : undefined,
+  }),
 })
+
+/* ─── Post-login routing helper ─── */
+interface UserProfile {
+  primaryEstateId?: string;
+  [key: string]: unknown;
+}
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function navigatePostLogin(
+  nav: ReturnType<typeof useNavigate>,
+  profile: UserProfile | null,
+  inviteId?: string,
+) {
+  if (inviteId) {
+    nav({ to: '/accept-invite', search: { id: inviteId } } as any);
+  } else if (profile?.primaryEstateId) {
+    const eid = profile.primaryEstateId === 'estate_lockhart' ? 'lockhart' : profile.primaryEstateId;
+    nav({ to: '/estates/$estateId/dashboard', params: { estateId: eid as string } } as any);
+  } else {
+    nav({ to: '/estates/create' } as any);
+  }
+}
 
 /* ─── Demo Test Account Registry (preserved for ?demo=true) ─── */
 const DEMO_ACCOUNTS = [
@@ -50,8 +76,10 @@ const DEMO_ACCOUNTS = [
 
 function LoginPage() {
   const navigate = useNavigate();
-  const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-  const { signIn, signUp, resetPassword, user } = useAuth();
+  const search = Route.useSearch();
+  const inviteId = search.invite;
+  const isDemo = search.demo === true;
+  const { signIn, signUp, resetPassword, user, profile } = useAuth();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -76,12 +104,12 @@ function LoginPage() {
     };
   }, []);
 
-  // If already authenticated, redirect to dashboard
+  // If already authenticated, redirect to their estate (or create one)
   useEffect(() => {
     if (user) {
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+      navigatePostLogin(navigate, profile, inviteId);
     }
-  }, [user, navigate]);
+  }, [user, profile, navigate, inviteId]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +127,7 @@ function LoginPage() {
 
       if (account) {
         localStorage.setItem('finalwishes_user', JSON.stringify(account.session));
-        navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+        navigatePostLogin(navigate, account.session as UserProfile, inviteId);
         setIsSubmitting(false);
         return;
       } else {
@@ -114,7 +142,7 @@ function LoginPage() {
     setIsSubmitting(false);
 
     if (result.success) {
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+      navigatePostLogin(navigate, result.profile ?? null, inviteId);
     } else if (result.mfaRequired && result.mfaResolver) {
       // Switch to MFA challenge mode
       setMfaResolver(result.mfaResolver);
@@ -135,7 +163,8 @@ function LoginPage() {
     setIsSubmitting(false);
 
     if (result.success) {
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+      // After MFA, the auth state listener will update profile — use it from context
+      navigatePostLogin(navigate, profile, inviteId);
     } else {
       setError(result.error || 'MFA verification failed.');
     }
@@ -183,7 +212,12 @@ function LoginPage() {
     setIsSubmitting(false);
 
     if (result.success) {
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'lockhart' } });
+      // New users have no estate — send to create, unless they have an invite
+      if (inviteId) {
+        navigate({ to: '/accept-invite', search: { id: inviteId } });
+      } else {
+        navigate({ to: '/estates/create' });
+      }
     } else {
       setError(result.error || 'Registration failed. Please try again.');
     }

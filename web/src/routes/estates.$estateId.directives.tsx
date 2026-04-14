@@ -47,6 +47,55 @@ const DIRECTIVE_TYPES = [
 
 type DirectiveType = (typeof DIRECTIVE_TYPES)[number]['value']
 
+// ─── Structured Templates ────────────────────────────────────────────────
+const DIRECTIVE_TEMPLATES: Record<DirectiveType, string> = {
+  ethical_will: [
+    '<h2>Values I Want to Pass On</h2>',
+    '<p class="directive-guidance">What principles, beliefs, or values have guided your life? What do you hope your family carries forward?</p>',
+    '<h2>Life Lessons Learned</h2>',
+    '<p class="directive-guidance">What wisdom would you share from your experiences? What do you wish someone had told you earlier?</p>',
+    '<h2>Hopes for My Family</h2>',
+    '<p class="directive-guidance">What are your wishes for your children, grandchildren, or loved ones? What kind of life do you hope they lead?</p>',
+    '<h2>Gratitude and Acknowledgments</h2>',
+    '<p class="directive-guidance">Who has made a difference in your life? What are you most grateful for?</p>',
+  ].join(''),
+
+  funeral_preferences: [
+    '<h2>Type of Service</h2>',
+    '<p class="directive-guidance">Do you prefer burial or cremation? A religious service, celebration of life, or private ceremony?</p>',
+    '<h2>Service Details</h2>',
+    '<p class="directive-guidance">Where would you like the service held? Any specific readings, hymns, or music? Who should officiate?</p>',
+    '<h2>Special Requests</h2>',
+    '<p class="directive-guidance">Any traditions, dress code preferences, or specific wishes for the service?</p>',
+    '<h2>Organ &amp; Tissue Donation</h2>',
+    '<p class="directive-guidance">Have you registered as an organ donor? Any specific wishes regarding donation?</p>',
+    '<h2>Final Resting Place</h2>',
+    '<p class="directive-guidance">Do you have a preferred cemetery, columbarium, or location for scattering?</p>',
+  ].join(''),
+
+  final_message: [
+    '<h2>To My Spouse / Partner</h2>',
+    '<p class="directive-guidance">What would you want to say to the person closest to you?</p>',
+    '<h2>To My Children</h2>',
+    '<p class="directive-guidance">What do you want each of your children to know?</p>',
+    '<h2>To My Friends</h2>',
+    '<p class="directive-guidance">Who deserves a personal word? What would you tell them?</p>',
+    '<h2>Final Thoughts</h2>',
+    '<p class="directive-guidance">Is there anything else you want the world to know?</p>',
+  ].join(''),
+
+  care_instructions: [
+    '<h2>Pet Care Arrangements</h2>',
+    '<p class="directive-guidance">Who should care for your pets? Any specific instructions for their care, vet information, or dietary needs?</p>',
+    '<h2>Subscriptions &amp; Memberships to Cancel</h2>',
+    '<p class="directive-guidance">List ongoing subscriptions, memberships, and services that should be cancelled or transferred.</p>',
+    '<h2>Digital Account Instructions</h2>',
+    '<p class="directive-guidance">Social media accounts, email, cloud storage — what should happen to each? Who has access?</p>',
+    '<h2>Home &amp; Property Maintenance</h2>',
+    '<p class="directive-guidance">Any ongoing maintenance, service contracts, or important information about your property?</p>',
+  ].join(''),
+}
+
 function getTypeConfig(value: string) {
   return DIRECTIVE_TYPES.find((t) => t.value === value) || DIRECTIVE_TYPES[0]
 }
@@ -203,6 +252,7 @@ function CreateDirectiveModal({ estateId, open, onOpenChange, onCreated }: { est
       estateId,
       type: selectedType,
       title: title.trim(),
+      content: DIRECTIVE_TEMPLATES[selectedType],
       recipientName: needsRecipient ? recipientName.trim() : undefined,
       recipientRelationship: needsRecipient ? recipientRelationship.trim() : undefined,
     })
@@ -340,17 +390,25 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     setMode('view')
   }, [editor, estateId, directive.id])
 
-  const handleExportPDF = useCallback(() => {
+  const handleExportPDF = useCallback(async () => {
     if (!editor) return
-    const content = editor.getText()
-    const blob = new Blob(
-      [`${directive.title}\n${'─'.repeat(40)}\nType: ${cfg.label}\n${directive.recipientName ? `To: ${directive.recipientName}\n` : ''}Date: ${new Date().toLocaleDateString()}\n\n${content}`],
-      { type: 'text/plain' }
-    )
+    const { pdf } = await import('@react-pdf/renderer')
+    const { DirectivePDF } = await import('@/components/pdf/DirectivePDF')
+    const blob = await pdf(
+      <DirectivePDF
+        title={directive.title}
+        typeLabel={cfg.label}
+        status={directive.status as 'draft' | 'finalized'}
+        content={editor.getHTML()}
+        recipientName={directive.recipientName}
+        recipientRelationship={directive.recipientRelationship}
+        date={new Date().toLocaleDateString()}
+      />
+    ).toBlob()
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${directive.title.replace(/[^a-zA-Z0-9]/g, '_')}.txt`
+    a.download = `${directive.title.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
     a.click()
     URL.revokeObjectURL(url)
   }, [editor, directive, cfg.label])

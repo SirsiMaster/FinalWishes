@@ -28,20 +28,14 @@ function NotificationsPage() {
     );
   }
 
-  const notifications = rawNotifications.length > 0
-    ? rawNotifications.map(n => ({
-        title: n.title || 'Activity',
-        time: n.createdAt?.toDate?.()
-          ? n.createdAt.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
-          : '',
-        type: n.type || 'activity',
-        desc: n.message || '',
-      }))
-    : [
-        { title: "Document access authorized", time: "6:42 PM", type: "security", desc: "Multi-factor authentication verified for Sarah Johnson (Executor)." },
-        { title: "Asset valuation updated", time: "4:20 PM", type: "success", desc: "Real estate valuation refreshed via automated market analysis." },
-        { title: "Estate status updated", time: "9:12 AM", type: "activity", desc: "Authority mode changed to Active Owner." },
-      ];
+  const notifications = rawNotifications.map(n => ({
+    title: n.title || 'Activity',
+    time: n.createdAt?.toDate?.()
+      ? n.createdAt.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+      : '',
+    type: n.type || 'activity',
+    desc: n.message || '',
+  }));
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
@@ -57,20 +51,27 @@ function NotificationsPage() {
       </div>
       <Separator />
 
-      <Card className="rounded-[2.5rem] border-slate-100 shadow-sm">
-        <CardContent className="p-10 space-y-0">
-          {notifications.map((n, i) => (
-            <NotificationItem key={i} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
-          ))}
-          {notifications.length === 0 && (
-            <Card className="border-slate-100">
-              <CardContent className="text-center py-24">
-                <p className="text-[#64748B] font-medium">No activity recorded yet.</p>
-              </CardContent>
-            </Card>
-          )}
-        </CardContent>
-      </Card>
+      {notifications.length === 0 ? (
+        <Card className="border-0 shadow-none bg-transparent text-center py-24">
+          <CardContent className="flex flex-col items-center">
+            <div className="w-20 h-20 bg-[#133378]/5 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#133378]/30" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-[#0F172A] mb-2">No notifications yet</h3>
+            <p className="text-[#64748B]">Activity in your estate will appear here.</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card className="rounded-[2.5rem] border-slate-100 shadow-sm">
+          <CardContent className="p-10 space-y-0">
+            {notifications.map((n, i) => (
+              <NotificationItem key={i} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
+            ))}
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

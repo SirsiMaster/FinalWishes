@@ -1,8 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { useHeirlooms, type Heirloom } from '../lib/firestore'
 import { addHeirloom, archiveHeirloom } from '../lib/estate-actions'
+import { estateClient } from '../lib/client'
 import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import {
   Plus,
@@ -18,6 +20,10 @@ import {
   Trophy,
   ScrollText,
   Package,
+  Upload,
+  X,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -29,6 +35,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
+import { Progress } from '@/components/ui/progress'
 
 export const Route = createFileRoute('/estates/$estateId/heirlooms')({
   component: HeirloomsPage,
@@ -295,6 +302,26 @@ function HeirloomCard({ item, estateId }: { item: Heirloom; estateId: string }) 
   )
 }
 
+// ─── Photo Upload Types ─────────────────────────────────────────────────────
+
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024 // 10 MB
+const MAX_IMAGES = 5
+const ACCEPTED_IMAGE_TYPES: Record<string, string[]> = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+  'image/heic': ['.heic'],
+}
+
+type PhotoUpload = {
+  file: File
+  previewUrl: string
+  finalUrl: string
+  progress: number
+  status: 'preparing' | 'uploading' | 'done' | 'error'
+  error?: string
+}
+
 // ─── Add Modal ──────────────────────────────────────────────────────────────
 
 function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -307,10 +334,13 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
     designatedHeir: '',
     location: '',
     provenance: '',
-    photoUrls: '',
+    manualUrls: '',
   })
+  const [photoUploads, setPhotoUploads] = useState<PhotoUpload[]>([])
 
   const resetForm = useCallback(() => {
+    // Revoke object URLs to prevent memory leaks
+    photoUploads.forEach((p) => URL.revokeObjectURL(p.previewUrl))
     setForm({
       name: '',
       category: 'jewelry',
@@ -319,17 +349,119 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
       designatedHeir: '',
       location: '',
       provenance: '',
-      photoUrls: '',
+      manualUrls: '',
+    })
+    setPhotoUploads([])
+  }, [photoUploads])
+
+  // ─── Upload a single image ────────────────────────────────────────────
+
+  const uploadImage = useCallback(async (file: File) => {
+    const previewUrl = URL.createObjectURL(file)
+    const newUpload: PhotoUpload = { file, previewUrl, finalUrl: '', progress: 0, status: 'preparing' }
+
+    setPhotoUploads((prev) => [...prev, newUpload])
+
+    const updateUpload = (patch: Partial<PhotoUpload>) => {
+      setPhotoUploads((prev) =>
+        prev.map((u) => (u.file === file ? { ...u, ...patch } : u)),
+      )
+    }
+
+    try {
+      updateUpload({ status: 'preparing', progress: 10 })
+      const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
+        estateId,
+        fileName: file.name,
+        contentType: file.type || 'image/jpeg',
+      })
+
+      updateUpload({ status: 'uploading', progress: 30 })
+
+      const xhr = new XMLHttpRequest()
+      await new Promise<void>((resolve, reject) => {
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            const pct = 30 + Math.round((e.loaded / e.total) * 60)
+            updateUpload({ progress: pct })
+          }
+        })
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve()
+          else reject(new Error(`Upload failed (${xhr.status})`))
+        })
+        xhr.addEventListener('error', () => reject(new Error('Network error')))
+        xhr.open('PUT', uploadUrl)
+        xhr.setRequestHeader('Content-Type', file.type || 'image/jpeg')
+        xhr.send(file)
+      })
+
+      updateUpload({ status: 'done', progress: 100, finalUrl })
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Upload failed'
+      updateUpload({ status: 'error', error: msg })
+    }
+  }, [estateId])
+
+  // ─── Remove an uploaded photo ─────────────────────────────────────────
+
+  const removePhoto = useCallback((file: File) => {
+    setPhotoUploads((prev) => {
+      const target = prev.find((u) => u.file === file)
+      if (target) URL.revokeObjectURL(target.previewUrl)
+      return prev.filter((u) => u.file !== file)
     })
   }, [])
+
+  // ─── Dropzone ─────────────────────────────────────────────────────────
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const remaining = MAX_IMAGES - photoUploads.length
+    const filesToUpload = acceptedFiles.slice(0, remaining)
+
+    for (const file of filesToUpload) {
+      if (file.size > MAX_IMAGE_SIZE) {
+        const previewUrl = URL.createObjectURL(file)
+        setPhotoUploads((prev) => [
+          ...prev,
+          { file, previewUrl, finalUrl: '', progress: 0, status: 'error', error: 'File exceeds 10 MB limit' },
+        ])
+        continue
+      }
+      uploadImage(file)
+    }
+  }, [photoUploads.length, uploadImage])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: ACCEPTED_IMAGE_TYPES,
+    maxSize: MAX_IMAGE_SIZE,
+    maxFiles: MAX_IMAGES - photoUploads.length,
+    disabled: photoUploads.length >= MAX_IMAGES,
+    multiple: true,
+  })
+
+  const isUploading = photoUploads.some((u) => u.status === 'preparing' || u.status === 'uploading')
+
+  // ─── Submit ───────────────────────────────────────────────────────────
 
   const handleSubmit = useCallback(async () => {
     if (!form.name.trim() || !form.description.trim()) return
     setSaving(true)
-    const photoUrls = form.photoUrls
+
+    // Collect URLs from successful uploads
+    const uploadedUrls = photoUploads
+      .filter((u) => u.status === 'done' && u.finalUrl)
+      .map((u) => u.finalUrl)
+
+    // Collect manually pasted URLs
+    const manualUrls = form.manualUrls
       .split(',')
       .map((u) => u.trim())
       .filter(Boolean)
+
+    const photoUrls = [...uploadedUrls, ...manualUrls]
+
     await addHeirloom({
       estateId,
       name: form.name.trim(),
@@ -344,7 +476,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
     setSaving(false)
     resetForm()
     onOpenChange(false)
-  }, [estateId, form, onOpenChange, resetForm])
+  }, [estateId, form, photoUploads, onOpenChange, resetForm])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -462,18 +594,115 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
             />
           </div>
 
-          {/* Photo URLs */}
-          <div className="space-y-2">
+          {/* ── Photo Upload ── */}
+          <div className="space-y-3">
             <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
-              Photo URLs
+              Photos
             </Label>
-            <Input
-              value={form.photoUrls}
-              onChange={(e) => setForm((f) => ({ ...f, photoUrls: e.target.value }))}
-              placeholder="Comma-separated URLs (Cloud Storage upload coming soon)"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
-            />
-            <p className="text-[11px] text-[#94A3B8]">Separate multiple URLs with commas. Direct photo upload will be available in a future update.</p>
+
+            {/* Dropzone */}
+            <div
+              {...getRootProps()}
+              className={`
+                border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all
+                ${photoUploads.length >= MAX_IMAGES
+                  ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
+                  : isDragActive
+                    ? 'border-[#133378] bg-[#133378]/5 scale-[1.01]'
+                    : 'border-[#133378]/20 hover:border-[#133378]/40 hover:bg-[#133378]/[0.02]'
+                }
+              `}
+            >
+              <input {...getInputProps()} />
+              <div className="flex flex-col items-center gap-3">
+                <div
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+                    isDragActive ? 'bg-[#133378] text-white' : 'bg-[#F8FAFC] text-[#133378] border border-[#133378]/10'
+                  }`}
+                >
+                  <Upload className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-[#0F172A] font-bold text-[14px]">
+                    {photoUploads.length >= MAX_IMAGES
+                      ? 'Maximum photos reached'
+                      : isDragActive
+                        ? 'Drop images here'
+                        : 'Drag & drop images, or click to browse'}
+                  </p>
+                  <p className="text-[12px] text-[#133378]/40 mt-1">
+                    JPEG, PNG, WebP, HEIC — Max 10 MB per image, up to {MAX_IMAGES} images
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Upload Thumbnails & Progress */}
+            {photoUploads.length > 0 && (
+              <div className="grid grid-cols-5 gap-3">
+                {photoUploads.map((upload, i) => (
+                  <div key={`${upload.file.name}-${i}`} className="relative group">
+                    <div className="aspect-square rounded-xl overflow-hidden border border-[#133378]/10 bg-[#F8FAFC]">
+                      <img
+                        src={upload.previewUrl}
+                        alt={upload.file.name}
+                        className={`w-full h-full object-cover transition-opacity ${
+                          upload.status === 'done' ? 'opacity-100' : 'opacity-60'
+                        }`}
+                      />
+                      {/* Progress overlay */}
+                      {(upload.status === 'preparing' || upload.status === 'uploading') && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 rounded-xl">
+                          <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mb-2" />
+                          <Progress
+                            value={upload.progress}
+                            className="w-3/4 h-1 [&>*]:bg-white bg-white/20"
+                          />
+                        </div>
+                      )}
+                      {/* Done indicator */}
+                      {upload.status === 'done' && (
+                        <div className="absolute top-1.5 right-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-green-500 drop-shadow-sm" />
+                        </div>
+                      )}
+                      {/* Error indicator */}
+                      {upload.status === 'error' && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-500/20 rounded-xl">
+                          <AlertCircle className="w-5 h-5 text-red-500" />
+                          <span className="text-[9px] text-red-600 font-bold mt-1 px-1 text-center leading-tight">
+                            {upload.error}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Remove button */}
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(upload.file)}
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#0F172A] text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Manual URL fallback */}
+            <Separator className="bg-slate-100" />
+            <div className="space-y-2">
+              <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                Or paste image URLs directly
+              </p>
+              <Input
+                value={form.manualUrls}
+                onChange={(e) => setForm((f) => ({ ...f, manualUrls: e.target.value }))}
+                placeholder="https://example.com/photo1.jpg, https://example.com/photo2.jpg"
+                className="px-5 py-3 h-auto rounded-2xl border-slate-200 text-[13px] text-[#0F172A]"
+              />
+              <p className="text-[11px] text-[#94A3B8]">Separate multiple URLs with commas.</p>
+            </div>
           </div>
         </div>
 
@@ -488,11 +717,11 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={saving || !form.name.trim() || !form.description.trim()}
+            disabled={saving || isUploading || !form.name.trim() || !form.description.trim()}
             className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
           >
             {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Gem className="w-4 h-4" />}
-            {saving ? 'Saving...' : 'Save Heirloom'}
+            {saving ? 'Saving...' : isUploading ? 'Uploading...' : 'Save Heirloom'}
           </Button>
         </DialogFooter>
       </DialogContent>

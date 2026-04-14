@@ -7,14 +7,15 @@ type RoutingRule struct {
 }
 
 // DefaultRoutes returns the standard routing table.
-// Opus is the default. Sonnet is the fallback. Gemma for fast/lightweight only.
-// Never Gemini — Claude models handle everything.
+// Chat/legal guidance -> Opus (strongest reasoning).
+// Creative writing (obituaries) -> Sonnet (creative, fast).
+// Scoring/suggestions/classification -> Gemma (cheapest).
 var DefaultRoutes = map[TaskType]RoutingRule{
 	TaskExplain:        {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
 	TaskChat:           {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
 	TaskAnalyzeComplex: {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
 	TaskAnalyzeSimple:  {Primary: ModelGemma, Fallback: []ModelID{ModelSonnet}},
-	TaskGenerate:       {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
+	TaskGenerate:       {Primary: ModelSonnet, Fallback: []ModelID{ModelClaude}},
 	TaskClassify:       {Primary: ModelGemma, Fallback: []ModelID{ModelSonnet}},
 }
 

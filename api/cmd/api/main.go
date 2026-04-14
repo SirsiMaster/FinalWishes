@@ -20,15 +20,15 @@ import (
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
-	appmw "github.com/sirsi-technologies/finalwishes-api/internal/middleware"
-	"github.com/sirsi-technologies/finalwishes-api/internal/ratelimit"
 	"github.com/sirsi-technologies/finalwishes-api/internal/capsules"
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guidance"
 	"github.com/sirsi-technologies/finalwishes-api/internal/lockbox"
+	appmw "github.com/sirsi-technologies/finalwishes-api/internal/middleware"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
 	"github.com/sirsi-technologies/finalwishes-api/internal/payments"
+	"github.com/sirsi-technologies/finalwishes-api/internal/ratelimit"
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/vault"
 	ythandler "github.com/sirsi-technologies/finalwishes-api/internal/youtube"
@@ -340,8 +340,8 @@ func main() {
 	srv := &http.Server{
 		Addr:         ":" + port,
 		Handler:      r,
-		ReadTimeout:  5 * time.Minute,  // Extended for video uploads
-		WriteTimeout: 6 * time.Minute,  // Extended for video uploads
+		ReadTimeout:  5 * time.Minute, // Extended for video uploads
+		WriteTimeout: 6 * time.Minute, // Extended for video uploads
 		IdleTimeout:  60 * time.Second,
 	}
 

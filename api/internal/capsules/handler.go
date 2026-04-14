@@ -142,7 +142,7 @@ func (h *Handler) HandleScheduleCapsule(w http.ResponseWriter, r *http.Request) 
 			Msg("Capsule delivery scheduled")
 
 		writeJSON(w, http.StatusOK, map[string]string{
-			"status":  "scheduled",
+			"status":   "scheduled",
 			"taskName": taskName,
 		})
 
@@ -279,7 +279,7 @@ func (h *Handler) HandleDeliverCapsule(w http.ResponseWriter, r *http.Request) {
 
 	// Write to Firestore `mail` collection — triggers Firebase SendGrid extension
 	_, _, err = h.fs.Collection("mail").Add(ctx, map[string]interface{}{
-		"to":      recipientEmail,
+		"to": recipientEmail,
 		"message": map[string]interface{}{
 			"subject": subject,
 			"html":    htmlBody,

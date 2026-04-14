@@ -277,57 +277,57 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		{
 			ID: "assets", Label: "Add Assets", Category: "Foundation",
 			Description: "Inventory your financial accounts, property, and valuables",
-			Complete: counts["assets"] >= 1, Route: "assets", Priority: 1,
+			Complete:    counts["assets"] >= 1, Route: "assets", Priority: 1,
 		},
 		{
 			ID: "beneficiaries", Label: "Add Beneficiaries", Category: "Foundation",
 			Description: "Designate heirs and their inheritance allocations",
-			Complete: counts["heirs"] >= 1, Route: "beneficiaries", Priority: 2,
+			Complete:    counts["heirs"] >= 1, Route: "beneficiaries", Priority: 2,
 		},
 		{
 			ID: "executors", Label: "Designate Executor", Category: "Foundation",
 			Description: "Appoint someone to manage your estate",
-			Complete: counts["executors"] >= 1, Route: "beneficiaries", Priority: 3,
+			Complete:    counts["executors"] >= 1, Route: "beneficiaries", Priority: 3,
 		},
 		{
 			ID: "documents", Label: "Upload Documents", Category: "Vault",
 			Description: "Upload your will, trust, insurance policies, and legal documents",
-			Complete: counts["documents"] >= 1, Route: "vault", Priority: 4,
+			Complete:    counts["documents"] >= 1, Route: "vault", Priority: 4,
 		},
 		{
 			ID: "documents_3", Label: "Upload 3+ Documents", Category: "Vault",
 			Description: "A complete vault should have at least 3 key documents",
-			Complete: counts["documents"] >= 3, Route: "vault", Priority: 5,
+			Complete:    counts["documents"] >= 3, Route: "vault", Priority: 5,
 		},
 		{
 			ID: "lockbox", Label: "Set Up Digital Lockbox", Category: "Security",
 			Description: "Store account credentials and access instructions for your heirs",
-			Complete: counts["lockbox"] >= 1, Route: "lockbox", Priority: 6,
+			Complete:    counts["lockbox"] >= 1, Route: "lockbox", Priority: 6,
 		},
 		{
 			ID: "memoirs", Label: "Create a Memory", Category: "Legacy",
 			Description: "Record a video message or upload photos for your family",
-			Complete: counts["memoirs"] >= 1, Route: "memoirs", Priority: 7,
+			Complete:    counts["memoirs"] >= 1, Route: "memoirs", Priority: 7,
 		},
 		{
 			ID: "directives", Label: "Write a Directive", Category: "Legacy",
 			Description: "Create an ethical will, funeral preferences, or final message",
-			Complete: counts["directives"] >= 1, Route: "directives", Priority: 8,
+			Complete:    counts["directives"] >= 1, Route: "directives", Priority: 8,
 		},
 		{
 			ID: "timecapsule", Label: "Create Time Capsule", Category: "Legacy",
 			Description: "Schedule a message for future delivery to someone you love",
-			Complete: counts["capsules"] >= 1, Route: "timecapsule", Priority: 9,
+			Complete:    counts["capsules"] >= 1, Route: "timecapsule", Priority: 9,
 		},
 		{
 			ID: "obituary", Label: "Draft Final Record", Category: "Legacy",
 			Description: "Write your life story and obituary in your own words",
-			Complete: obituaryExists, Route: "obituary", Priority: 10,
+			Complete:    obituaryExists, Route: "obituary", Priority: 10,
 		},
 		{
 			ID: "settings", Label: "Configure Governance", Category: "Security",
 			Description: "Set up MFA, alerts, and estate governance preferences",
-			Complete: settingsExists, Route: "settings", Priority: 11,
+			Complete:    settingsExists, Route: "settings", Priority: 11,
 		},
 	}
 
@@ -337,7 +337,7 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		steps = append(steps, Step{
 			ID: "guardian", Label: "Designate Guardian", Category: "Foundation",
 			Description: "Designate a guardian for your minor children",
-			Complete: false, Route: "beneficiaries", Priority: priority,
+			Complete:    false, Route: "beneficiaries", Priority: priority,
 		})
 		priority++
 	}
@@ -345,7 +345,7 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		steps = append(steps, Step{
 			ID: "property_deeds", Label: "Upload Property Deeds", Category: "Vault",
 			Description: "Upload property deeds to the vault",
-			Complete: false, Route: "vault", Priority: priority,
+			Complete:    false, Route: "vault", Priority: priority,
 		})
 		priority++
 	}
@@ -353,7 +353,7 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		steps = append(steps, Step{
 			ID: "business_succession", Label: "Business Succession Plan", Category: "Foundation",
 			Description: "Create a business succession plan",
-			Complete: false, Route: "vault", Priority: priority,
+			Complete:    false, Route: "vault", Priority: priority,
 		})
 		priority++
 	}
@@ -361,7 +361,7 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		steps = append(steps, Step{
 			ID: "beneficiary_review", Label: "Review Beneficiary Designations", Category: "Foundation",
 			Description: "Review and update beneficiary designations",
-			Complete: false, Route: "beneficiaries", Priority: priority,
+			Complete:    false, Route: "beneficiaries", Priority: priority,
 		})
 		priority++
 	}
@@ -372,21 +372,21 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		steps = append(steps, Step{
 			ID: "state_md", Label: "Review Maryland Thresholds", Category: "Legal",
 			Description: "Review Maryland's small estate threshold ($50K personal / $100K real)",
-			Complete: false, Route: "vault", Priority: priority,
+			Complete:    false, Route: "vault", Priority: priority,
 		})
 		priority++
 	case "IL", "ILLINOIS":
 		steps = append(steps, Step{
 			ID: "state_il", Label: "Review Illinois Thresholds", Category: "Legal",
 			Description: "Review Illinois' small estate threshold ($100K)",
-			Complete: false, Route: "vault", Priority: priority,
+			Complete:    false, Route: "vault", Priority: priority,
 		})
 		priority++
 	case "MN", "MINNESOTA":
 		steps = append(steps, Step{
 			ID: "state_mn", Label: "Review Minnesota Thresholds", Category: "Legal",
 			Description: "Review Minnesota's small estate threshold ($75K)",
-			Complete: false, Route: "vault", Priority: priority,
+			Complete:    false, Route: "vault", Priority: priority,
 		})
 		priority++
 	}

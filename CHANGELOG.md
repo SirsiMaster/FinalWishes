@@ -4,6 +4,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.2.0] — 2026-04-14
+### Session 4: CI/CD Pipeline Fix + Tier-Gating + Production Deploy
+
+### Added
+- **Tier-gating**: Stripe tier enforcement for media uploads (132cae0)
+  - Backend: `GET /api/v1/estates/{estateId}/media-usage` endpoint
+  - Backend: YouTube upload rejection for non-White Glove tiers
+  - Frontend: `useTierGating` hook, gold upgrade banners on vault/heirlooms/memoirs
+  - Limits: Free=10 media, Concierge=25, White Glove=unlimited + video
+- `TierLimits` config in payments package (reusable across handlers)
+- Estate interface updated with `tier`, `tierUpdatedAt`, `paymentStatus` fields
+
+### Fixed
+- **CI/CD pipeline fully unblocked** — 7 fixes across 4 commits:
+  - Added 5 missing ESLint devDependencies (1192c8a)
+  - Formatted 6 Go files with gofmt (1192c8a)
+  - Removed phantom web-test job that blocked all deploys (e06d244)
+  - Added 3 missing web dependencies: jszip, qrcode.react, vitest/@testing-library/react (758a091, 394b771)
+  - Fixed Dockerfile to copy local `sirsi-ai` package before `go mod download` (cd19398)
+  - Granted `artifactregistry.writer` IAM role to github-deployer SA
+
+### Changed
+- Deploy gates no longer require web-test job (re-enable when tests exist)
+- Cloud Run deployed as rev 11 (session 3 + tier-gating changes)
+
+### Removed
+- Stale `develop` branch (never used)
+- Stale Firebase staging channel (expired Apr 8 deployment)
+- 10 inactive Cloud Run revisions (001–010)
+- 464 MB of dangling Docker images
+
+---
+
 ## [Unreleased]
 
 ### Added
@@ -17,7 +50,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 - Playwright E2E smoke suite — 9 tests (b1d24c9)
 - 105 unit tests with >80% critical path coverage (a2c9614)
 - Cloud DNS zone configured for finalwishes.app
-- Staging environment via Firebase preview channel
 - SOC 2 evidence collection (9 files)
 - Cloud Monitoring uptime check
 - Firebase Resize Images extension deployed (a2c9614)

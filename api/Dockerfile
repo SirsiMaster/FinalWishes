@@ -6,8 +6,9 @@ WORKDIR /app
 # Install CA certificates for HTTPS
 RUN apk --no-cache add ca-certificates
 
-# Copy go mod files
+# Copy go mod files + local replace packages
 COPY go.mod go.sum* ./
+COPY packages/sirsi-ai/go.mod packages/sirsi-ai/go.sum* ./packages/sirsi-ai/
 RUN go mod download
 
 # Copy source code

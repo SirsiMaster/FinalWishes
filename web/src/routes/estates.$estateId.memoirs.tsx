@@ -7,6 +7,7 @@ import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
+import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
@@ -65,6 +66,7 @@ function MemoirsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/memoirs' })
   const { user } = useAuth()
   const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const { usage: tierUsage } = useTierGating(estateId)
 
   const { data: firestoreMemoirs, loading: isLoading } = useCollection<Record<string, string>>(
     `estates/${estateId}/memoirs`,
@@ -103,6 +105,7 @@ function MemoirsPage() {
   const handleFileUpload = useCallback(
     async (title: string, type: string, visibility: string, file: File) => {
       try {
+        if (tierUsage && !tierUsage.canUploadMedia) return
         setUploading(true)
         const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
           estateId,
@@ -137,7 +140,7 @@ function MemoirsPage() {
         setUploading(false)
       }
     },
-    [estateId, user],
+    [estateId, user, tierUsage],
   )
 
   // ─── YouTube Link Save ────────────────────────────────────────────────
@@ -145,6 +148,7 @@ function MemoirsPage() {
   const handleYouTubeSave = useCallback(
     async (title: string, youtubeUrl: string, visibility: string) => {
       try {
+        if (tierUsage && !tierUsage.canUploadVideo) return
         setUploading(true)
 
         await addDoc(collection(db, `estates/${estateId}/memoirs`), {
@@ -166,7 +170,7 @@ function MemoirsPage() {
         setUploading(false)
       }
     },
-    [estateId, user],
+    [estateId, user, tierUsage],
   )
 
   // ─── YouTube Direct Upload ────────────────────────────────────────────
@@ -292,7 +296,8 @@ function MemoirsPage() {
             setModalMode('file')
             setModalOpen(true)
           }}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg"
+          disabled={tierUsage ? !tierUsage.canUploadMedia : false}
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 5v14M5 12h14" />
@@ -300,6 +305,24 @@ function MemoirsPage() {
           Add Memory
         </Button>
       </div>
+
+      {/* Tier Limit Banner */}
+      {tierUsage && (!tierUsage.canUploadMedia || !tierUsage.canUploadVideo) && (
+        <div className="bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-2xl p-6 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-[#C8A951]/20 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-[#0F172A]">
+              {!tierUsage.canUploadMedia
+                ? tierUpgradeMessage(tierUsage, 'media')
+                : tierUpgradeMessage(tierUsage, 'video')}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Video Gallery */}
       <section className="space-y-10">
@@ -312,7 +335,8 @@ function MemoirsPage() {
               setModalMode('youtube')
               setModalOpen(true)
             }}
-            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378] uppercase tracking-wider h-auto px-3 py-1.5"
+            disabled={tierUsage ? !tierUsage.canUploadVideo : false}
+            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378] uppercase tracking-wider h-auto px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />

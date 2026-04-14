@@ -30,6 +30,7 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/payments"
 	"github.com/sirsi-technologies/finalwishes-api/internal/ratelimit"
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
+	"github.com/sirsi-technologies/finalwishes-api/internal/tiergate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/vault"
 	ythandler "github.com/sirsi-technologies/finalwishes-api/internal/youtube"
 )
@@ -304,6 +305,16 @@ func main() {
 			})
 			log.Info().Msg("YouTube memoir API routes registered at /api/v1/memoirs/*")
 		}
+	}
+
+	// Media usage / tier-gating endpoint
+	if fs != nil {
+		tierHandler := tiergate.NewHandler(fs)
+		r.Route("/api/v1/estates/{estateId}", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Get("/media-usage", tierHandler.HandleMediaUsage)
+		})
+		log.Info().Msg("Tier-gating media usage endpoint registered")
 	}
 
 	// Time Capsule routes (Cloud Tasks deferred delivery)

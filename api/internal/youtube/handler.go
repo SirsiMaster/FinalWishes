@@ -17,6 +17,7 @@ import (
 	"google.golang.org/api/youtube/v3"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
+	"github.com/sirsi-technologies/finalwishes-api/internal/payments"
 )
 
 // maxUploadSize is the maximum video file size we accept (256 MB).
@@ -103,6 +104,25 @@ func (h *Handler) HandleUploadVideo(w http.ResponseWriter, r *http.Request) {
 	if err != nil || !euSnap.Exists() {
 		log.Warn().Str("user_id", userID).Str("estate_id", estateID).Msg("YouTube upload denied — no estate access")
 		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
+
+	// Tier-gate: check video upload permission
+	estateSnap, err := h.fs.Collection("estates").Doc(estateID).Get(ctx)
+	if err != nil {
+		log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to read estate for tier check")
+		writeError(w, http.StatusInternalServerError, "Failed to verify upload permissions")
+		return
+	}
+	tier := "free"
+	if t, _ := estateSnap.DataAt("tier"); t != nil {
+		if s, ok := t.(string); ok && s != "" {
+			tier = s
+		}
+	}
+	limits := payments.GetTierLimits(tier)
+	if limits.MaxVideos == 0 {
+		writeError(w, http.StatusForbidden, "Video uploads require White Glove tier")
 		return
 	}
 

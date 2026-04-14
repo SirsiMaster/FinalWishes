@@ -45,6 +45,7 @@ export function IdentityGate({ estateId, children }: IdentityGateProps) {
 
   const isFiduciary = profile?.role && (FIDUCIARY_ROLES as readonly string[]).includes(profile.role);
   const mfaStatus = getMFAStatus(user);
+  const mountTimeRef = React.useRef(Date.now());
 
   // Fetch user's Firestore profile for createdAt and loginCount
   const { data: userFsProfile } = useDocument<UserFirestoreProfile>(
@@ -59,10 +60,11 @@ export function IdentityGate({ estateId, children }: IdentityGateProps) {
     const createdAt = userFsProfile.createdAt;
     const loginCount = userFsProfile.loginCount ?? 0;
 
-    // Check account age
+    // Check account age (use a stable reference time captured at mount)
     let accountAgeMs = Infinity;
-    if (createdAt && typeof (createdAt as any).toDate === 'function') {
-      accountAgeMs = Date.now() - (createdAt as any).toDate().getTime();
+    const now = mountTimeRef.current;
+    if (createdAt && typeof (createdAt as Timestamp).toDate === 'function') {
+      accountAgeMs = now - (createdAt as Timestamp).toDate().getTime();
     }
 
     const isNewAccount = accountAgeMs < GRACE_PERIOD_MS;

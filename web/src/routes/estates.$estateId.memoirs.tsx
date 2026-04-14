@@ -516,8 +516,7 @@ function UploadModal({
   const [description, setDescription] = useState('')
 
   // Detect if the selected file is a video for showing YouTube upload option
-  const selectedFile = fileInputRef.current?.files?.[0]
-  const isVideoFile = selectedFile?.type?.startsWith('video/') || mediaType === 'video'
+  const isVideoFile = mediaType === 'video'
   const maxSizeMB = uploadDest === 'youtube' ? 256 : 50
 
   return (

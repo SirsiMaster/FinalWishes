@@ -191,7 +191,7 @@ function SettingsPage() {
 
       {/* ── Profile Card ── */}
       <Card className="rounded-[3rem] border-slate-100 shadow-sm py-0 gap-0">
-        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-10 py-6 border-b border-slate-100 flex items-center gap-3">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
@@ -296,7 +296,7 @@ function SettingsPage() {
 
       {/* ── Data Export ── */}
       <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
-        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-10 py-6 border-b border-slate-100 flex items-center gap-3">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -351,7 +351,7 @@ function SettingsPage() {
         <div className="bg-red-50/50 px-10 py-5 border-b border-red-100">
           <h3 className="text-[11px] font-bold text-red-400 uppercase tracking-widest">Danger Zone</h3>
         </div>
-        <CardContent className="px-10 py-6 flex items-center justify-between">
+        <CardContent className="px-4 py-4 md:px-10 md:py-6 flex items-center justify-between">
           <div>
             <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Delete this estate</span>
             <p className="text-[13px] text-[#64748B] font-medium mt-1">
@@ -384,7 +384,7 @@ function SettingsToggle({ label, description, checked, onChange, disabled }: {
   label: string; description: string; checked: boolean; onChange?: () => void; disabled?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
+    <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-[#F8FAFC] transition-all group">
       <div className="flex flex-col">
         <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
         <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
@@ -401,7 +401,7 @@ function SettingsToggle({ label, description, checked, onChange, disabled }: {
 
 function SettingsStatus({ label, description, value }: { label: string; description: string; value: string }) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
+    <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-[#F8FAFC] transition-all group">
       <div className="flex flex-col">
         <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
         <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>
@@ -418,7 +418,7 @@ function SettingsSelect({ label, description, value, options, onChange }: {
   label: string; description: string; value: string; options: string[]; onChange: (v: string) => void;
 }) {
   return (
-    <div className="flex items-center justify-between px-10 py-6 hover:bg-[#F8FAFC] transition-all group">
+    <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-[#F8FAFC] transition-all group">
       <div className="flex flex-col">
         <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">{label}</span>
         <span className="text-[13px] text-[#64748B] font-medium mt-1">{description}</span>

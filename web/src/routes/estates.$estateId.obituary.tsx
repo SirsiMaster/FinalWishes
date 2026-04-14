@@ -221,7 +221,7 @@ function ObituaryPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+    <div className="max-w-4xl mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 pb-20">
       {/* Hidden file input for photo upload */}
       <input
         ref={fileInputRef}
@@ -313,7 +313,7 @@ function ObituaryPage() {
 
       <Separator className="mb-8" />
 
-      <div className="grid grid-cols-[1fr_2fr] gap-8 max-md:grid-cols-1">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-4 md:gap-8">
         <div className="space-y-6">
           {/* Portrait */}
           <Card

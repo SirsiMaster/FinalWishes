@@ -96,7 +96,7 @@ function AssetsPage() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* -- Page Header -- */}
       <div className="flex justify-between items-end pb-16">
         <div className="space-y-4">
@@ -120,7 +120,7 @@ function AssetsPage() {
       </div>
 
       {/* -- Asset Table -- */}
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden overflow-x-auto shadow-sm">
         <Table>
           <TableHeader>
             <TableRow className="bg-[#F8FAFC] border-b border-slate-100 hover:bg-[#F8FAFC]">

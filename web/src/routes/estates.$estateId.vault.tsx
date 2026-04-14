@@ -232,7 +232,7 @@ function VaultPage() {
     [routeId],
   )
 
-  const { usage: tierUsage, loading: tierLoading } = useTierGating(estateId)
+  const { usage: tierUsage } = useTierGating(estateId)
   const { data: firestoreDocs, loading: isLoading } = useEstateDocuments(estateId)
   const [uploads, setUploads] = useState<UploadState[]>([])
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
@@ -378,7 +378,7 @@ function VaultPage() {
         uploadFile(file)
       }
     },
-    [uploadFile],
+    [uploadFile, tierUsage],
   )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

@@ -197,7 +197,7 @@ function AddBeneficiaryDialog({
             <Label htmlFor="name" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Full Name</Label>
             <Input name="name" id="name" required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-semibold text-[#0F172A] text-base" placeholder="Jane Doe" />
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <Label htmlFor="relation" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Relationship</Label>
               <Input name="relation" id="relation" required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" placeholder="Spouse" />
@@ -328,7 +328,7 @@ function EditBeneficiaryDialog({
             <Label htmlFor="edit-fullName" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Full Name</Label>
             <Input name="fullName" id="edit-fullName" defaultValue={heir.fullName} required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-semibold text-[#0F172A] text-base" />
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <Label htmlFor="edit-relationship" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Relationship</Label>
               <Input name="relationship" id="edit-relationship" defaultValue={heir.relationship ?? ''} required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" />

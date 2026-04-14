@@ -192,7 +192,7 @@ function CreateEstatePage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-3 gap-6 mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-16">
                 <FeatureCard
                   icon={<path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />}
                   title="Assets"

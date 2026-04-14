@@ -562,7 +562,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
           </div>
 
           {/* Two-column row: Value + Heir */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
                 Estimated Value
@@ -660,7 +660,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
 
             {/* Upload Thumbnails & Progress */}
             {photoUploads.length > 0 && (
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
                 {photoUploads.map((upload, i) => (
                   <div key={`${upload.file.name}-${i}`} className="relative group">
                     <div className="aspect-square rounded-xl overflow-hidden border border-[#133378]/10 bg-[#F8FAFC]">

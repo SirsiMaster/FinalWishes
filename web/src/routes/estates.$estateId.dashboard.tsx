@@ -191,7 +191,7 @@ function ShepherdChat({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="w-[400px] sm:max-w-[400px] p-0 flex flex-col gap-0 bg-white"
+        className="w-full sm:w-[400px] sm:max-w-[400px] p-0 flex flex-col gap-0 bg-white"
       >
         {/* Header */}
         <SheetHeader className="px-6 py-4 bg-[#133378] gap-0 flex-shrink-0">
@@ -394,7 +394,7 @@ function DashboardIndex() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-6 md:space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Page Header ── */}
       <div className="space-y-3 mb-16">
         <div className="flex items-center gap-3 text-[11px] font-bold text-royal/40 uppercase tracking-[0.2em] mb-4">
@@ -437,14 +437,14 @@ function DashboardIndex() {
       </Card>
 
       {/* ── Stat Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8 lg:gap-12">
         <MiniStat label="Total Assets" value={assets.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>} />
         <MiniStat label="Stored Documents" value={documents.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>} />
         <MiniStat label="Beneficiaries" value={heirs.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>} />
         <MiniStat label="Completion" value={scoreLoading ? '—' : `${percent}%`} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-16 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-6 md:gap-10 lg:gap-16 py-12">
         {/* ── Shepherd Checklist ── */}
         <Card className="rounded-[3rem] p-16 border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)] ring-0 bg-white">
           <CardContent className="space-y-12 px-0">
@@ -505,7 +505,7 @@ function DashboardIndex() {
           <Card className="rounded-[3rem] p-12 border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)] ring-0 bg-white">
             <CardContent className="px-0">
               <h3 className="text-xl font-bold text-[#0F172A] mb-10 tracking-tight">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-4 md:gap-8">
                 <ActionBtn label="Add Asset" route={`/estates/${routeId}/assets`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12H3m9-9v18" /></svg>} />
                 <ActionBtn label="Upload Doc" route={`/estates/${routeId}/vault`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>} />
                 <ActionBtn label="Add Heir" route={`/estates/${routeId}/beneficiaries`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /></svg>} />

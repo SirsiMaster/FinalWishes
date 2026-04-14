@@ -268,7 +268,7 @@ function MemoirsPage() {
   // ─── Render ───────────────────────────────────────────────────────────
 
   return (
-    <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen">
       {/* Cinema Viewer */}
       <CinemaViewer
         memoir={selectedMemoir}
@@ -366,7 +366,7 @@ function MemoirsPage() {
           <h3 className="text-sm font-bold text-[#133378]/40 uppercase tracking-[0.3em]">Photo Archives</h3>
           <div className="flex-1 h-px bg-[#133378]/5" />
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {photos.map((p) => (
             <PhotoCard
               key={p.id}

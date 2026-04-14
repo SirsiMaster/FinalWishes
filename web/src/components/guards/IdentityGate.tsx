@@ -45,33 +45,30 @@ export function IdentityGate({ estateId, children }: IdentityGateProps) {
 
   const isFiduciary = profile?.role && (FIDUCIARY_ROLES as readonly string[]).includes(profile.role);
   const mfaStatus = getMFAStatus(user);
-  const mountTimeRef = React.useRef(Date.now());
 
   // Fetch user's Firestore profile for createdAt and loginCount
   const { data: userFsProfile } = useDocument<UserFirestoreProfile>(
     user ? `users/${user.uid}` : null
   );
 
-  // Determine if principal is within the grace period
-  const principalGracePeriodActive = React.useMemo(() => {
-    if (isFiduciary) return false; // Grace period only applies to principals
-    if (!userFsProfile) return true; // Default to grace if profile hasn't loaded yet
+  // Determine if principal is within the grace period (computed in effect to avoid impure render)
+  const [principalGracePeriodActive, setPrincipalGracePeriodActive] = React.useState(true);
+  React.useEffect(() => {
+    if (isFiduciary) { setPrincipalGracePeriodActive(false); return; }
+    if (!userFsProfile) { setPrincipalGracePeriodActive(true); return; }
 
     const createdAt = userFsProfile.createdAt;
     const loginCount = userFsProfile.loginCount ?? 0;
 
-    // Check account age (use a stable reference time captured at mount)
     let accountAgeMs = Infinity;
-    const now = mountTimeRef.current;
+    const now = Date.now();
     if (createdAt && typeof (createdAt as Timestamp).toDate === 'function') {
       accountAgeMs = now - (createdAt as Timestamp).toDate().getTime();
     }
 
     const isNewAccount = accountAgeMs < GRACE_PERIOD_MS;
     const hasLowLoginCount = loginCount < MIN_LOGINS_BEFORE_ENFORCE;
-
-    // Grace period is active if account is new OR login count is low
-    return isNewAccount || hasLowLoginCount;
+    setPrincipalGracePeriodActive(isNewAccount || hasLowLoginCount);
   }, [isFiduciary, userFsProfile]);
 
   // Check attestation status from Firestore (only for fiduciary roles)

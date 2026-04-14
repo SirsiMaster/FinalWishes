@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import { useHeirlooms, type Heirloom } from '../lib/firestore'
 import { addHeirloom, archiveHeirloom } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
+import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
 import {
   Plus,
@@ -68,6 +69,7 @@ function formatCurrency(value: number): string {
 function HeirloomsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/heirlooms' })
   const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const { usage: tierUsage } = useTierGating(estateId)
 
   const { data: items, loading } = useHeirlooms(estateId)
   const [modalOpen, setModalOpen] = useState(false)
@@ -109,12 +111,30 @@ function HeirloomsPage() {
         </div>
         <Button
           onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)] w-full md:w-auto justify-center"
+          disabled={tierUsage ? !tierUsage.canUploadMedia : false}
+          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)] w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Plus className="w-5 h-5" />
           Add Heirloom
         </Button>
       </div>
+
+      {/* Tier Limit Banner */}
+      {tierUsage && !tierUsage.canUploadMedia && (
+        <div className="bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-2xl p-6 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-[#C8A951]/20 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-[#0F172A]">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-[#64748B] mt-1">
+              {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── Stats ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
@@ -416,6 +436,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
   // ─── Dropzone ─────────────────────────────────────────────────────────
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (tierUsage && !tierUsage.canUploadMedia) return
     const remaining = MAX_IMAGES - photoUploads.length
     const filesToUpload = acceptedFiles.slice(0, remaining)
 

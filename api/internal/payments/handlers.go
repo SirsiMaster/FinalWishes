@@ -102,6 +102,27 @@ var DefaultTiers = []Tier{
 	},
 }
 
+// TierLimits defines upload quotas for each tier.
+type TierLimits struct {
+	MaxMedia  int // -1 = unlimited
+	MaxVideos int // -1 = unlimited
+}
+
+// DefaultTierLimits maps tier IDs to their upload quotas.
+var DefaultTierLimits = map[string]TierLimits{
+	"free":        {MaxMedia: 10, MaxVideos: 0},
+	"concierge":   {MaxMedia: 25, MaxVideos: 0},
+	"white_glove": {MaxMedia: -1, MaxVideos: -1},
+}
+
+// GetTierLimits returns upload limits for a tier (defaults to free).
+func GetTierLimits(tierID string) TierLimits {
+	if lim, ok := DefaultTierLimits[tierID]; ok {
+		return lim
+	}
+	return DefaultTierLimits["free"]
+}
+
 // NewHandler creates a payment handler with Stripe configured.
 func NewHandler(fs *firestore.Client, cfg Config) *Handler {
 	stripe.Key = cfg.SecretKey

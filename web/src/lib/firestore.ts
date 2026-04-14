@@ -48,6 +48,9 @@ export interface Estate {
   estimatedValue?: number;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  tier?: 'free' | 'concierge' | 'white_glove';
+  tierUpdatedAt?: Timestamp;
+  paymentStatus?: 'active' | 'cancelled';
 }
 
 // Asset (subcollection)

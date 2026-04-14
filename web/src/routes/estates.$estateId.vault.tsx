@@ -7,6 +7,7 @@ import { createDocumentRecord, archiveDocument } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
+import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
@@ -231,6 +232,7 @@ function VaultPage() {
     [routeId],
   )
 
+  const { usage: tierUsage, loading: tierLoading } = useTierGating(estateId)
   const { data: firestoreDocs, loading: isLoading } = useEstateDocuments(estateId)
   const [uploads, setUploads] = useState<UploadState[]>([])
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
@@ -355,6 +357,9 @@ function VaultPage() {
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
+      if (tierUsage && !tierUsage.canUploadMedia) {
+        return
+      }
       for (const file of acceptedFiles) {
         if (file.size > MAX_FILE_SIZE) {
           setUploads((prev) => [
@@ -618,15 +623,34 @@ function VaultPage() {
         )}
       </Card>
 
+      {/* Tier Limit Banner */}
+      {tierUsage && !tierUsage.canUploadMedia && (
+        <div className="bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-2xl p-6 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-[#C8A951]/20 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-[#0F172A]">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-[#64748B] mt-1">
+              {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Dropzone */}
       <div
         ref={dropzoneRef}
         {...getRootProps()}
         className={`
           border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all
-          ${isDragActive
-            ? 'border-[#133378] bg-[#133378]/5 scale-[1.01]'
-            : 'border-[#133378]/20 hover:border-[#133378]/40 hover:bg-[#133378]/[0.02]'
+          ${tierUsage && !tierUsage.canUploadMedia
+            ? 'border-[#64748B]/20 opacity-50 pointer-events-none'
+            : isDragActive
+              ? 'border-[#133378] bg-[#133378]/5 scale-[1.01]'
+              : 'border-[#133378]/20 hover:border-[#133378]/40 hover:bg-[#133378]/[0.02]'
           }
         `}
       >
@@ -650,6 +674,11 @@ function VaultPage() {
             <p className="text-[13px] text-[#133378]/40 mt-1">
               PDF, JPEG, PNG, HEIC, DOC, DOCX, TXT — Max 50 MB per file
             </p>
+            {tierUsage && tierUsage.limits.maxMedia > 0 && (
+              <p className="text-[11px] text-[#C8A951] font-bold mt-2">
+                {tierUsage.mediaCount} / {tierUsage.limits.maxMedia} uploads used
+              </p>
+            )}
           </div>
         </div>
       </div>

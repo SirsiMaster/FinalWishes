@@ -42,7 +42,7 @@ function AssetsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/assets' });
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [editingAsset, setEditingAsset] = useState<any>(null);
+  const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [editSaving, setEditSaving] = useState(false);
   const [confirmArchive, setConfirmArchive] = useState(false);
   const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);

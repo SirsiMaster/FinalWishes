@@ -7,8 +7,7 @@
  * @version 1.0.0
  */
 
-import React, { useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import React, { useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { type SearchResult, TYPE_META } from '@/lib/search';

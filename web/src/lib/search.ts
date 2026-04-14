@@ -18,14 +18,6 @@ import {
   useTimeCapsules,
   useHeirlooms,
   useCollection,
-  type Asset,
-  type Heir,
-  type Executor,
-  type VaultDocument,
-  type LockboxItem,
-  type Directive,
-  type TimeCapsule,
-  type Heirloom,
 } from './firestore';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

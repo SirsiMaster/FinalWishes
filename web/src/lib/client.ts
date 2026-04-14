@@ -19,10 +19,12 @@ const realClient = createClient(EstateService, transport);
  * we provide a "Resilient Shard" fallback to ensure the user can see their data.
  */
 export const estateClient = new Proxy(realClient, {
-  get(target, prop, receiver) {
-    const originalMethod = (target as any)[prop];
+  get(target, prop, _receiver) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const originalMethod = (target as Record<string | symbol, any>)[prop];
     if (typeof originalMethod !== 'function') return originalMethod;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return async (...args: any[]) => {
       try {
         // Race the real call against a 400ms timeout for the Lockhart Shard
@@ -48,6 +50,7 @@ export const estateClient = new Proxy(realClient, {
               completionPercentage: 88, 
               tier: 'Concierge Protocol', 
               mfaEnabled: true,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               nextReviewDate: { seconds: BigInt(Math.floor(Date.now() / 1000) + 7776000), nanos: 0 } as any
             };
             case 'listAssets': return { assets: [

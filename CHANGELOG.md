@@ -4,8 +4,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.2.1] — 2026-04-14
+### Session 4b: Responsive Audit + Security Remediation
+
+### Fixed
+- **Responsive**: 13 mobile-first breakpoint fixes across 10 estate routes (4cb1e3f)
+  - Critical: Dashboard sheet overflow, lockbox/memoirs/heirlooms/create grid collapse
+  - High: Container padding, gap scaling, form stacking, table overflow, settings cards
+- **Security**: All 32 Dependabot vulnerabilities resolved (b0946c8)
+  - Critical: grpc 1.66 → 1.80 (auth bypass via missing leading slash in :path)
+  - High: vite 8.0.1 → 8.0.8, picomatch ReDoS
+  - Medium: golang.org/x/crypto, hono (6 vulns), brace-expansion
+
+---
+
 ## [0.2.0] — 2026-04-14
-### Session 4: CI/CD Pipeline Fix + Tier-Gating + Production Deploy
+### Session 4a: CI/CD Pipeline Fix + Tier-Gating + Production Deploy
 
 ### Added
 - **Tier-gating**: Stripe tier enforcement for media uploads (132cae0)

@@ -1,23 +1,35 @@
 # FinalWishes — Continuation Prompt
-**Version:** 16.0 — **Date:** April 14, 2026 — **Session:** CI/CD fix + Tier-gating + Production deploy
+**Version:** 16.1 — **Date:** April 14, 2026 — **Session:** CI/CD + Tier-gating + Responsive + Security
 
 ---
 
 ## Resume Key
 
-**Last commit:** `cd19398` (main) — Clean working tree, all builds passing, production deployed
+**Last commit:** `b0946c8` (main) — Clean working tree, 0 lint errors, 0 vulnerabilities
 **Repo:** `/Users/thekryptodragon/Development/FinalWishes`
 **Contract:** MSA-2025-111-FW | SOW-2025-001 | $95K Fixed Bid | 16 Weeks
 **Production:** `https://finalwishes-prod.web.app` | API rev 11 at Cloud Run
 **Deployed:** April 14, 2026 — CI/CD pipeline green, both frontend and API live
+**Security:** 0 npm vulnerabilities, 0 Go advisories (32 resolved this session)
+
+---
+
+## Resume Prompt
+
+```
+Pick up FinalWishes from commit b0946c8. Read docs/CONTINUATION-PROMPT.md for
+full context. Session 4 shipped CI/CD fixes, tier-gating, responsive audit,
+and security remediation. All 32 Dependabot vulns resolved. Next priorities:
+domain acquisition, GA4 setup, and web test suite.
+```
 
 ---
 
 ## Session Summary
 
-### Session 4 (Apr 14): CI/CD Fix + Tier-Gating + Production Deploy
+### Session 4 (Apr 14): CI/CD + Tier-Gating + Responsive + Security — 12 commits
 
-The CI/CD pipeline had never successfully deployed — 7 distinct failures blocked it. This session fixed all of them, implemented Stripe tier-gating for media uploads, deployed to production, and cleaned up all infrastructure hygiene.
+The CI/CD pipeline had never successfully deployed — 7 distinct failures blocked it. This session fixed all of them, implemented Stripe tier-gating for media uploads, audited and fixed 13 responsive design issues, resolved all 32 Dependabot vulnerabilities, deployed to production, and cleaned up all infrastructure hygiene.
 
 **CI/CD Fixes (7 issues resolved):**
 - 5 undeclared ESLint devDependencies (eslint-plugin-react-hooks, react-refresh, typescript-eslint, @eslint/js, globals)
@@ -45,6 +57,16 @@ The CI/CD pipeline had never successfully deployed — 7 distinct failures block
 - Deleted stale Firebase staging channel
 - Removed 464 MB of dangling Docker images
 
+**Responsive Audit (13 fixes across 10 routes):**
+- 5 critical: Dashboard sheet overflow, lockbox/memoirs/heirlooms/create grids missing mobile breakpoints
+- 8 high: Container padding (p-12 → px-4 py-6 md:p-8 lg:p-12), gap scaling, form grids stacking, table overflow, obituary desktop-first → mobile-first, settings card padding
+
+**Security Remediation (32 → 0 vulnerabilities):**
+- Critical: google.golang.org/grpc 1.66 → 1.80 (auth bypass via missing leading slash)
+- High: vite 8.0.1 → 8.0.8 (arbitrary file read + server.fs.deny bypass), picomatch ReDoS
+- Medium: golang.org/x/crypto 0.40 → 0.50, hono (6 vulns), brace-expansion
+- Result: 0 npm vulnerabilities, 0 Go advisories
+
 ### Prior Sessions
 - Session 3 (Apr 14): Full product overhaul — 22 fixes across 4 waves
 - Session 2 (Apr 10): Email templates, skeletons, CSP, OpenAPI spec, accessibility, monitoring
@@ -64,12 +86,7 @@ The CI/CD pipeline had never successfully deployed — 7 distinct failures block
 
 ## What's Next (Priority Order)
 
-### 1. Responsive Re-Verification
-- Stash conflict from session 3 may have corrupted responsive styles
-- Verify all estate routes on mobile (375px), tablet (768px), desktop (1440px)
-- Check: vault dropzone, heirloom grid, memoir gallery, dashboard stats
-
-### 2. Domain Acquisition (when ready)
+### 1. Domain Acquisition (when ready)
 Available: myfinalwishes.org (~$15/yr), myfinalwishes.io (~$50/yr), myfinalwishes.ai (~$90/yr)
 For sale: finalwishes.org ($250 min offer on Afternic)
 Competitor: myfinalwishes.com (active business — avoid)
@@ -78,9 +95,9 @@ Competitor: myfinalwishes.com (active business — avoid)
 Firebase Console -> Project Settings -> Integrations -> Google Analytics -> Enable
 
 ### 4. Remaining Technical Debt
-- Dependabot: 32 vulnerabilities (mostly Go transitive deps, 1 critical)
-- react-pdf chunk: 1.5MB (lazy-loaded, code-split)
-- Web test suite: vitest added as dep but no test script or config yet
+- react-pdf chunk: 1.5MB (lazy-loaded, code-split — consider dynamic import)
+- Web test suite: vitest added as dep but no test script or vitest.config.ts yet
+- 23 ESLint warnings (pre-existing: unused vars, exhaustive-deps, no-explicit-any)
 - Plaid integration (in compliance process — deferred)
 - Google Photos API (deferred — using Cloud Storage interim)
 
@@ -116,6 +133,7 @@ All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (s
 | Stripe | Webhook `we_1TKV5L...` registered |
 | Secrets | 8 in Secret Manager |
 | Monitoring | 3 alert policies -> sirsimaster@gmail.com |
+| Security | 0 npm vulns, 0 Go advisories (32 resolved session 4) |
 | CI/CD | GitHub Actions — 5 jobs, all green |
 | CI/CD SA | github-deployer@finalwishes-prod.iam.gserviceaccount.com |
 | sign.sirsi.ai | 3 CRITICALs fixed, contracts-grpc rev 8 deployed |

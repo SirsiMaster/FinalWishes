@@ -4,6 +4,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.3.0] — 2026-04-14
+### Session 5: Test Suite + Code Quality
+
+### Added
+- **Web test suite operational**: 129 tests across 8 files, all passing
+  - New: tier-gating tests (15 tests — constants, helpers, hook with fetch mocking)
+  - New: export sanitization tests (14 tests — ZIP structure, timestamp conversion, PII stripping)
+  - Existing 6 test files (105 tests) now runnable with `npm test`
+- `test`, `test:watch`, `test:coverage` scripts in package.json
+- CI: `web-test` job enabled in pipeline (was commented out), gates `web-build`
+- jsdom + @testing-library/jest-dom added as devDependencies
+
+### Fixed
+- **ESLint warnings**: 24 → 0 warnings
+  - Removed 8 unused type imports in search.ts
+  - Removed unused imports in SearchResults.tsx (useCallback, useNavigate)
+  - Fixed missing `updateSearchQuery` in useCallback deps (AdminHeader.tsx — potential stale closure)
+  - Replaced 3 `as any` casts in obituary.tsx with typed alternatives
+  - Typed `editingAsset` state as `Asset | null` instead of `any` (assets route)
+  - Added `caughtErrorsIgnorePattern` to ESLint config for `_err` convention
+  - Excluded `src/gen/**` from ESLint (auto-generated protobuf code)
+  - Suppressed `react-refresh/only-export-components` on shadcn button + TanStack route files
+  - Added `allowExportNames` for TanStack Router conventions (Route, loader, action)
+  - Inline-suppressed `no-explicit-any` on ConnectRPC proxy (genuinely dynamic types)
+
+### Changed
+- tsconfig.json: Removed Next.js remnants (next-env.d.ts, .next/types, next plugin)
+- ESLint config: Added `src/gen/**` to ignores, `caughtErrorsIgnorePattern`, route export names
+
+---
+
 ## [0.2.1] — 2026-04-14
 ### Session 4b: Responsive Audit + Security Remediation
 

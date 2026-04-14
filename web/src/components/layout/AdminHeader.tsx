@@ -62,7 +62,7 @@ export function AdminHeader({
     setSearchFocused(false);
     updateSearchQuery('');
     navigate({ to: result.route });
-  }, [navigate]);
+  }, [navigate, updateSearchQuery]);
 
   // Keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {

@@ -52,7 +52,8 @@ function ObituaryPage() {
     if (!obit?.last_updated) return 'Never';
     const ts = obit.last_updated;
     // Firestore Timestamp has toDate()
-    const date = typeof (ts as any).toDate === 'function' ? (ts as any).toDate() : new Date(ts as any);
+    const tsObj = ts as { toDate?: () => Date };
+    const date = typeof tsObj.toDate === 'function' ? tsObj.toDate() : new Date(ts as string | number);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);

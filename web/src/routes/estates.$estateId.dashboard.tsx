@@ -165,7 +165,7 @@ function ShepherdChat({
           suggestedActions: data.suggestedActions,
         }
         setMessages((prev) => [...prev, shepherdMsg])
-      } catch (err) {
+      } catch (_err) {
         const errorMsg: ChatMessage = {
           id: crypto.randomUUID(),
           role: 'shepherd',

@@ -335,7 +335,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userProfile = await fetchUserProfile(credential.user.uid);
       setProfile(userProfile);
 
-      return { success: true };
+      return { success: true, profile: userProfile };
     } catch (error: unknown) {
       // Check if this is an MFA challenge
       if ((error as { code?: string }).code === 'auth/multi-factor-auth-required') {
@@ -398,7 +398,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userProfile = await fetchUserProfile(uid);
       setProfile(userProfile);
 
-      return { success: true };
+      return { success: true, profile: userProfile };
     } catch (error: unknown) {
       return { success: false, error: formatAuthError(error) };
     }

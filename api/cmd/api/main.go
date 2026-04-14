@@ -280,6 +280,7 @@ func main() {
 		r.Route("/api/v1/guidance", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Get("/score", guidanceHandler.HandleGetScore)
+			r.Post("/chat", guidanceHandler.HandleChat)
 			r.Post("/assist-obituary", guidanceHandler.HandleAssistObituary)
 			r.Get("/suggestions", guidanceHandler.HandleSuggestions)
 		})

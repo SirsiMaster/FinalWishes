@@ -571,6 +571,12 @@ input::-webkit-contacts-auto-fill-button {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ── Directive Template Guidance ── */
+.ProseMirror .directive-guidance {
+  color: #94A3B8;
+  font-style: italic;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

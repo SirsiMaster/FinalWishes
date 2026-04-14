@@ -43,6 +43,157 @@ const ALLOWED_TYPES = [
   'text/plain',
 ]
 
+// ─── Document Checklist Data ────────────────────────────────────────────────
+
+type ChecklistItem = {
+  id: string
+  name: string
+  description: string
+  category: 'essential' | 'financial' | 'property_identity'
+  /** folderId to match in vault documents */
+  matchFolder: string
+  /** Regex pattern to match against document names */
+  matchPattern: RegExp
+}
+
+const CHECKLIST_ITEMS: ChecklistItem[] = [
+  // Essential Documents
+  {
+    id: 'will',
+    name: 'Last Will & Testament',
+    description: 'The legal document that directs how your assets are distributed',
+    category: 'essential',
+    matchFolder: 'Legal',
+    matchPattern: /will|testament/i,
+  },
+  {
+    id: 'poa',
+    name: 'Power of Attorney',
+    description: 'Authorizes someone to act on your behalf if you\'re incapacitated',
+    category: 'essential',
+    matchFolder: 'Legal',
+    matchPattern: /power.of.attorney|poa/i,
+  },
+  {
+    id: 'healthcare_directive',
+    name: 'Healthcare Directive / Living Will',
+    description: 'Specifies your medical treatment preferences',
+    category: 'essential',
+    matchFolder: 'Legal',
+    matchPattern: /healthcare.directive|living.will|advance.directive|medical.directive/i,
+  },
+  {
+    id: 'life_insurance',
+    name: 'Life Insurance Policies',
+    description: 'Policies that provide financial support to your beneficiaries',
+    category: 'essential',
+    matchFolder: 'Financial',
+    matchPattern: /life.insurance|insurance.polic/i,
+  },
+  // Financial Documents
+  {
+    id: 'bank_statements',
+    name: 'Bank Account Statements',
+    description: 'Recent statements from all checking and savings accounts',
+    category: 'financial',
+    matchFolder: 'Financial',
+    matchPattern: /bank.*(statement|account)|checking|savings/i,
+  },
+  {
+    id: 'retirement',
+    name: 'Retirement Account Statements',
+    description: '401(k), IRA, pension plan documents',
+    category: 'financial',
+    matchFolder: 'Financial',
+    matchPattern: /retirement|401k|401\(k\)|ira|pension/i,
+  },
+  {
+    id: 'investment',
+    name: 'Investment / Brokerage Statements',
+    description: 'Stock, bond, and mutual fund accounts',
+    category: 'financial',
+    matchFolder: 'Financial',
+    matchPattern: /invest|brokerage|stock|bond|mutual.fund/i,
+  },
+  {
+    id: 'tax_returns',
+    name: 'Tax Returns (Last 3 Years)',
+    description: 'Federal and state tax returns',
+    category: 'financial',
+    matchFolder: 'Financial',
+    matchPattern: /tax.return|tax.filing|1040|w-?2/i,
+  },
+  // Property & Identity
+  {
+    id: 'property_deeds',
+    name: 'Property Deeds / Mortgage Documents',
+    description: 'Ownership records for real estate',
+    category: 'property_identity',
+    matchFolder: 'Legal',
+    matchPattern: /deed|mortgage|property.title|real.estate/i,
+  },
+  {
+    id: 'vehicle_titles',
+    name: 'Vehicle Titles',
+    description: 'Registration and title for cars, boats, etc.',
+    category: 'property_identity',
+    matchFolder: 'Legal',
+    matchPattern: /vehicle.title|car.title|registration|boat.title/i,
+  },
+  {
+    id: 'birth_certificate',
+    name: 'Birth Certificate',
+    description: 'Official proof of identity',
+    category: 'property_identity',
+    matchFolder: 'Personal',
+    matchPattern: /birth.certificate/i,
+  },
+  {
+    id: 'marriage_certificate',
+    name: 'Marriage Certificate',
+    description: 'If applicable',
+    category: 'property_identity',
+    matchFolder: 'Personal',
+    matchPattern: /marriage.certificate/i,
+  },
+  {
+    id: 'ssn_card',
+    name: 'Social Security Card',
+    description: 'For identity verification purposes',
+    category: 'property_identity',
+    matchFolder: 'Personal',
+    matchPattern: /social.security|ss.card|ssn/i,
+  },
+]
+
+const CHECKLIST_CATEGORIES: Record<string, { label: string; icon: React.ReactNode }> = {
+  essential: {
+    label: 'Essential Documents',
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+  },
+  financial: {
+    label: 'Financial Documents',
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
+  },
+  property_identity: {
+    label: 'Property & Identity',
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    ),
+  },
+}
+
 const CATEGORY_MAP: Record<string, { label: string; icon: React.ReactNode }> = {
   Legal: {
     label: 'Legal Documents',
@@ -85,6 +236,39 @@ function VaultPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [previewDoc, setPreviewDoc] = useState<VaultDocument | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<VaultDocument | null>(null)
+  const [checklistOpen, setChecklistOpen] = useState(true)
+
+  // ─── Checklist Status Computation ───────────────────────────────────────
+
+  const checklistStatus = useMemo(() => {
+    const activeDocs = firestoreDocs.filter((d) => d.status === 'active')
+    const statusMap: Record<string, boolean> = {}
+
+    for (const item of CHECKLIST_ITEMS) {
+      statusMap[item.id] = activeDocs.some((doc) => {
+        const nameToCheck = (doc.displayName || doc.originalName || '').toLowerCase()
+        return item.matchPattern.test(nameToCheck)
+      })
+    }
+    return statusMap
+  }, [firestoreDocs])
+
+  const checklistProgress = useMemo(() => {
+    const total = CHECKLIST_ITEMS.length
+    const uploaded = Object.values(checklistStatus).filter(Boolean).length
+    return { total, uploaded, percent: total > 0 ? Math.round((uploaded / total) * 100) : 0 }
+  }, [checklistStatus])
+
+  const dropzoneRef = React.useRef<HTMLDivElement>(null)
+
+  const scrollToUpload = useCallback(() => {
+    dropzoneRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    // Briefly flash the dropzone
+    dropzoneRef.current?.classList.add('ring-2', 'ring-[#C8A951]')
+    setTimeout(() => {
+      dropzoneRef.current?.classList.remove('ring-2', 'ring-[#C8A951]')
+    }, 2000)
+  }, [])
 
   // ─── Upload Logic ───────────────────────────────────────────────────────
 
@@ -288,8 +472,155 @@ function VaultPage() {
         </Badge>
       </div>
 
+      {/* Document Checklist Panel */}
+      <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm overflow-hidden">
+        {/* Checklist Header — always visible */}
+        <button
+          type="button"
+          onClick={() => setChecklistOpen((o) => !o)}
+          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-[#F8FAFC]/50 transition-colors"
+        >
+          <div className="flex items-center gap-4 min-w-0">
+            <div className="w-12 h-12 rounded-2xl bg-[#133378] flex items-center justify-center text-white flex-shrink-0">
+              <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 11l3 3L22 4" />
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+                Documents Your Estate Needs
+              </h3>
+              <p className="text-[13px] text-[#133378]/50 font-medium mt-0.5">
+                {checklistProgress.uploaded} of {checklistProgress.total} essential documents uploaded
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 flex-shrink-0">
+            <div className="hidden sm:flex items-center gap-3 mr-2">
+              <Progress
+                value={checklistProgress.percent}
+                className="w-32 h-2 [&>*]:bg-[#C8A951] bg-[#133378]/10"
+              />
+              <span className="text-[13px] font-bold text-[#C8A951] min-w-[3ch]">
+                {checklistProgress.percent}%
+              </span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              className={`w-5 h-5 text-[#133378]/30 transition-transform duration-300 ${checklistOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
+        </button>
+
+        {/* Checklist Body — collapsible */}
+        {checklistOpen && (
+          <CardContent className="px-8 pb-8 pt-0">
+            {/* Mobile progress bar */}
+            <div className="sm:hidden flex items-center gap-3 mb-6">
+              <Progress
+                value={checklistProgress.percent}
+                className="flex-1 h-2 [&>*]:bg-[#C8A951] bg-[#133378]/10"
+              />
+              <span className="text-[13px] font-bold text-[#C8A951]">
+                {checklistProgress.percent}%
+              </span>
+            </div>
+
+            <div className="space-y-8">
+              {(['essential', 'financial', 'property_identity'] as const).map((catKey) => {
+                const catInfo = CHECKLIST_CATEGORIES[catKey]
+                const items = CHECKLIST_ITEMS.filter((i) => i.category === catKey)
+                const catUploaded = items.filter((i) => checklistStatus[i.id]).length
+
+                return (
+                  <div key={catKey}>
+                    {/* Category sub-heading */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-8 h-8 rounded-xl bg-[#F8FAFC] border border-[#133378]/10 flex items-center justify-center text-[#133378]/60">
+                        {catInfo.icon}
+                      </div>
+                      <span className="text-[12px] font-bold text-[#133378]/50 uppercase tracking-widest">
+                        {catInfo.label}
+                      </span>
+                      <Badge className="bg-[#F8FAFC] text-[#133378]/40 border border-[#133378]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
+                        {catUploaded}/{items.length}
+                      </Badge>
+                    </div>
+
+                    {/* Items */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {items.map((item) => {
+                        const isUploaded = checklistStatus[item.id]
+                        return (
+                          <button
+                            key={item.id}
+                            type="button"
+                            onClick={() => {
+                              if (!isUploaded) scrollToUpload()
+                            }}
+                            className={`flex items-start gap-3 p-4 rounded-2xl border text-left transition-all ${
+                              isUploaded
+                                ? 'bg-[#C8A951]/5 border-[#C8A951]/30'
+                                : 'bg-white border-[#133378]/10 hover:border-[#133378]/25 hover:bg-[#F8FAFC] cursor-pointer'
+                            }`}
+                          >
+                            {/* Status indicator */}
+                            <div
+                              className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                                isUploaded
+                                  ? 'bg-[#C8A951] text-white'
+                                  : 'border-2 border-[#133378]/15 text-transparent'
+                              }`}
+                            >
+                              {isUploaded && (
+                                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="3">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <span
+                                className={`text-[14px] font-bold block ${
+                                  isUploaded ? 'text-[#C8A951]' : 'text-[#0F172A]'
+                                }`}
+                              >
+                                {item.name}
+                              </span>
+                              <span className="text-[12px] text-[#133378]/40 font-medium leading-snug block mt-0.5">
+                                {item.description}
+                              </span>
+                              {isUploaded ? (
+                                <Badge className="mt-2 bg-[#C8A951]/10 text-[#C8A951] border-[#C8A951]/20 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-[#C8A951]" />
+                                  Uploaded
+                                </Badge>
+                              ) : (
+                                <span className="text-[11px] text-[#133378]/30 font-semibold mt-2 block">
+                                  Click to upload
+                                </span>
+                              )}
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        )}
+      </Card>
+
       {/* Dropzone */}
       <div
+        ref={dropzoneRef}
         {...getRootProps()}
         className={`
           border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all

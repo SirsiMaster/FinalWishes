@@ -13,8 +13,12 @@ function DashboardRedirect() {
     const session = localStorage.getItem('finalwishes_user');
     if (session) {
       const u = JSON.parse(session);
-      const estateSlug = u.primaryEstateId === 'estate_lockhart' ? 'lockhart' : (u.primaryEstateId || 'lockhart');
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
+      const estateSlug = u.primaryEstateId === 'estate_lockhart' ? 'lockhart' : u.primaryEstateId;
+      if (estateSlug) {
+        navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
+      } else {
+        navigate({ to: '/estates/create', replace: true });
+      }
     } else {
       navigate({ to: '/login', replace: true });
     }

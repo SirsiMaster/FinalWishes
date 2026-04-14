@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -221,11 +222,11 @@ function Home() {
             </div>
             <div className="flex items-center gap-2">
               <div className="status-dot" />
-              <span>SOC 2 Compliant</span>
+              <span>Designed for SOC 2 Compliance</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="status-dot" />
-              <span>Zero-Knowledge</span>
+              <span>Bank-Grade Encryption</span>
             </div>
           </div>
         </div>
@@ -272,11 +273,11 @@ function Home() {
               <div className="flex flex-col justify-center p-8 glass-panel border-r-2 border-gold/20 order-2 md:order-1">
                 <h3 className="text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">VERIFY &amp; LOCK</h3>
                 <p className="text-base text-white/80 leading-relaxed mb-4">
-                  We stand watch. When the time comes, our system verifies the transition via government API and biometric checks. Your estate enters &quot;Fortress Mode&quot;, instantly securing digital assets against bad actors.
+                  We stand watch. When the time comes, designated contacts initiate the verification process. Your estate enters a secure state, protecting digital assets against unauthorized access.
                 </p>
                 <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Biometric Auth</li>
-                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Death Cert Verification</li>
+                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Multi-Factor Authentication</li>
+                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Executor Identity Verification</li>
                 </ul>
               </div>
               <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
@@ -317,10 +318,10 @@ function Home() {
               <div className="flex flex-col justify-center p-8 glass-panel border-r-2 border-gold/20 order-2 md:order-1">
                 <h3 className="text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">DISTRIBUTE</h3>
                 <p className="text-base text-white/80 leading-relaxed mb-4">
-                  The final transfer. Your assets—crypto, keys, and keepsakes—are distributed seamlessly according to your protocols. The friction of probate is replaced by the certainty of code.
+                  The final transfer. Your documented wishes—accounts, credentials, and keepsakes—are shared with designated beneficiaries according to your instructions. Clear guidance replaces confusion.
                 </p>
                 <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Crypto &amp; Digital Assets</li>
+                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Digital Account Access</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Passwords &amp; Keys</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Sentimental Items</li>
                 </ul>
@@ -363,7 +364,7 @@ function Home() {
             </div>
             <div className="absolute -bottom-3 -left-3 glass-card rounded-lg px-3 py-1 flex items-center gap-2">
               <div className="status-dot" />
-              <Badge className="bg-transparent text-gold text-[0.6rem] uppercase tracking-widest font-bold px-0 h-auto border-none">SOC 2</Badge>
+              <Badge className="bg-transparent text-gold text-[0.6rem] uppercase tracking-widest font-bold px-0 h-auto border-none">KMS</Badge>
             </div>
           </div>
         </div>
@@ -375,8 +376,8 @@ function Home() {
             </h2>
             <p className="text-base md:text-lg text-white/90 leading-relaxed mb-6">
               Your family&apos;s data is more valuable than gold. We treat it that way.
-              FinalWishes uses military-grade encryption to ensure your asset map is visible to{" "}
-              <strong className="text-gold">no one</strong>—not even us—until verification.
+              FinalWishes uses AES-256 encryption with Cloud KMS envelope keys to protect your estate data{" "}
+              <strong className="text-gold">at every layer</strong>—at rest and in transit.
             </p>
 
             <div className="space-y-4">
@@ -388,8 +389,8 @@ function Home() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Zero-Knowledge Architecture</h4>
-                    <p className="text-sm text-white/70">Your data is encrypted on your device before it ever touches our servers.</p>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">AES-256 Encryption at Rest</h4>
+                    <p className="text-sm text-white/70">Your data is encrypted with bank-grade AES-256 encryption, secured by Cloud KMS envelope encryption.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -402,8 +403,8 @@ function Home() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Multi-Sig Release</h4>
-                    <p className="text-sm text-white/70">Requires cryptographic proof of death and identity verification from two separate executors.</p>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Multi-Party Verification</h4>
+                    <p className="text-sm text-white/70">Requires identity verification from designated executors before any estate data is released.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -417,7 +418,7 @@ function Home() {
                   </div>
                   <div>
                     <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Audit Trail</h4>
-                    <p className="text-sm text-white/70">Every access attempt is logged, timestamped, and immutably recorded on-chain.</p>
+                    <p className="text-sm text-white/70">Every access attempt is logged and timestamped for full accountability.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -434,34 +435,33 @@ function Home() {
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              From Grief to <span className="text-gold">Gratitude</span>
+              What Families <span className="text-gold">Experience</span>
             </h2>
-            <p className="text-base text-white/60 max-w-xl mx-auto">Real families who found peace through our platform.</p>
+            <p className="text-base text-white/60 max-w-xl mx-auto">How organized estate planning transforms the hardest moments.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
             <TestimonialCard
-              image="https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?q=80&w=3840&auto=format&fit=crop"
+              initials="DM"
               name="David M."
-              tag="Estate Settled in 3 Weeks"
-              value="$1.2M"
-              quote="When my father passed, I was handed a box of paperwork and told to 'figure it out.' FinalWish gave me the space to actually mourn him."
+              tag="Estate Settled Smoothly"
+              quote="When my father passed, I was handed a box of paperwork and told to 'figure it out.' FinalWishes gave me the space to actually mourn him."
             />
             <TestimonialCard
-              image="https://images.unsplash.com/photo-1589156280159-27698a70f29e?q=80&w=3840&auto=format&fit=crop"
+              initials="AW"
               name="Angela W."
-              tag="Hidden Assets Found"
-              value="$47K"
-              quote="I didn't know my mother had a crypto wallet until FinalWish's discovery scan found it. It paid for the funeral and grandkids' college."
+              tag="Everything Organized"
+              quote="Having all of my mother's accounts and wishes documented in one place meant we could focus on honoring her memory instead of scrambling for paperwork."
             />
             <TestimonialCard
-              image="https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?q=80&w=3840&auto=format&fit=crop"
+              initials="MT"
               name="Marcus T."
-              tag="Member Since 2023"
-              value="∞"
-              quote="'Peace of Mind' isn't just a slogan. Knowing my wife won't fight bureaucrats when I'm gone is the best gift I could give her."
+              tag="Peace of Mind"
+              quote="Knowing my wife won't have to fight bureaucrats when I'm gone is the best gift I could give her. Everything is documented and ready."
             />
           </div>
+
+          <p className="text-center text-white/40 text-xs mt-6 italic">Illustrative examples. Individual experiences may vary.</p>
         </div>
       </section>
 
@@ -484,7 +484,7 @@ function Home() {
           <div className="grid md:grid-cols-2 gap-5">
             <FeatureCard icon="💰" color="gold" title="LegacyFund" desc="Crowd-sourced support for final wishes. Activate a verified fundraising campaign for funeral costs or charitable causes in one click." />
             <FeatureCard icon="🌳" color="royal" title="AncestryMap" desc="Visual lineage that lives forever. Connect generations through shared stories, verified history, and an interactive family tree." />
-            <FeatureCard icon="📊" color="gold" title="AssetFlow" desc="Real-time transparent allocation. End family disputes with an immutable, view-only ledger of every asset distribution." />
+            <FeatureCard icon="📊" color="gold" title="AssetFlow" desc="Real-time transparent allocation. End family disputes with a clear, view-only record of every asset distribution." />
             <FeatureCard icon="🔐" color="royal" title="LifeLocker" desc="Central command for insurance policies, property deeds, and financial records. Biometrically secured and ready for rapid release." />
           </div>
         </div>
@@ -533,10 +533,10 @@ function Home() {
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
                 <p className="text-white/60 text-sm mb-4 flex-grow">We do the heavy lifting. Automated filing and fraud protection included.</p>
                 <ul className="space-y-2 text-sm text-white/70 mb-5">
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> 10 Certified Death Certificates</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Auto-Filing Service</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Full Vault Access</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Automated Notifications <Badge className="bg-white/10 text-white/50 text-[0.5rem] font-semibold uppercase tracking-wider px-1.5 py-0 h-auto border-none ml-1">Coming Soon</Badge></li>
                   <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Priority Support</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Asset Discovery Scan</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> E-Sign Integration <Badge className="bg-white/10 text-white/50 text-[0.5rem] font-semibold uppercase tracking-wider px-1.5 py-0 h-auto border-none ml-1">Coming Soon</Badge></li>
                 </ul>
                 <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest text-center rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
                   <Link to="/login">Secure Membership</Link>
@@ -633,15 +633,15 @@ function Home() {
             <div className="flex items-center gap-3">
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                SOC 2
+                AES-256
               </Badge>
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                HIPAA
+                Cloud KMS
               </Badge>
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                256-bit
+                Built with HIPAA Considerations
               </Badge>
             </div>
           </div>
@@ -653,28 +653,20 @@ function Home() {
 
 /* ─── Sub-components ─── */
 
-function TestimonialCard({ image, name, tag, value, quote }: { image: string; name: string; tag: string; value: string; quote: string }) {
+function TestimonialCard({ initials, name, tag, quote }: { initials: string; name: string; tag: string; quote: string }) {
   return (
     <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
-      <div className="relative h-56 overflow-hidden">
-        <img src={image} alt={name} className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute top-4 right-4">
-          <Badge className="bg-black/60 backdrop-blur-md rounded-lg px-3 py-1.5 border border-white/20 text-white text-xs uppercase tracking-widest font-semibold h-auto gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-400" />
-            Verified
-          </Badge>
-        </div>
-      </div>
-      <CardContent className="p-5 relative">
-        <p className="text-white/80 text-base leading-relaxed mb-4">&ldquo;{quote}&rdquo;</p>
-        <div className="flex items-center justify-between">
+      <CardContent className="p-6 relative">
+        <div className="flex items-center gap-3 mb-4">
+          <Avatar className="w-12 h-12 border-2 border-gold/30">
+            <AvatarFallback className="bg-royal/30 text-gold font-bold text-sm font-[family-name:var(--font-cinzel)]">{initials}</AvatarFallback>
+          </Avatar>
           <div>
             <div className="text-white font-bold text-base font-[family-name:var(--font-cinzel)]">{name}</div>
             <div className="text-gold text-xs uppercase tracking-widest font-semibold">{tag}</div>
           </div>
-          <div className="text-2xl font-bold text-royal-bright/30 font-[family-name:var(--font-cinzel)]">{value}</div>
         </div>
+        <p className="text-white/80 text-base leading-relaxed">&ldquo;{quote}&rdquo;</p>
       </CardContent>
     </Card>
   );

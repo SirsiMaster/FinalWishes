@@ -6,7 +6,9 @@ import { useCollection } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../lib/firebase'
+import { db, auth as firebaseAuth } from '../lib/firebase'
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -71,6 +73,7 @@ function MemoirsPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'file' | 'youtube'>('file')
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedMemoir, setSelectedMemoir] = useState<Memoir | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Memoir | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -164,6 +167,68 @@ function MemoirsPage() {
       }
     },
     [estateId, user],
+  )
+
+  // ─── YouTube Direct Upload ────────────────────────────────────────────
+
+  const handleYouTubeUpload = useCallback(
+    async (title: string, description: string, file: File) => {
+      try {
+        setUploading(true)
+        setUploadProgress(0)
+
+        const token = await firebaseAuth.currentUser?.getIdToken()
+        if (!token) {
+          alert('You must be signed in to upload.')
+          return
+        }
+
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('title', title)
+        formData.append('description', description)
+        formData.append('estateId', estateId)
+
+        await new Promise<void>((resolve, reject) => {
+          const xhr = new XMLHttpRequest()
+          xhr.open('POST', `${API_BASE}/api/v1/youtube/upload`)
+          xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+
+          xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+              setUploadProgress(Math.round((e.loaded / e.total) * 100))
+            }
+          })
+
+          xhr.addEventListener('load', () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve()
+            } else {
+              let msg = 'Upload failed'
+              try {
+                const resp = JSON.parse(xhr.responseText)
+                msg = resp?.error?.message || msg
+              } catch { /* ignore parse errors */ }
+              reject(new Error(msg))
+            }
+          })
+
+          xhr.addEventListener('error', () => reject(new Error('Network error during upload')))
+          xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')))
+
+          xhr.send(formData)
+        })
+
+        setModalOpen(false)
+      } catch (err) {
+        console.error('YouTube upload failed:', err)
+        alert(err instanceof Error ? err.message : 'YouTube upload failed. Please try again.')
+      } finally {
+        setUploading(false)
+        setUploadProgress(0)
+      }
+    },
+    [estateId],
   )
 
   // ─── Delete ───────────────────────────────────────────────────────────
@@ -298,9 +363,11 @@ function MemoirsPage() {
         onOpenChange={setModalOpen}
         mode={modalMode}
         uploading={uploading}
+        uploadProgress={uploadProgress}
         fileInputRef={fileInputRef}
         onFileUpload={handleFileUpload}
         onYouTubeSave={handleYouTubeSave}
+        onYouTubeUpload={handleYouTubeUpload}
         onModeChange={setModalMode}
       />
 
@@ -423,24 +490,35 @@ function UploadModal({
   onOpenChange,
   mode,
   uploading,
+  uploadProgress,
   fileInputRef,
   onFileUpload,
   onYouTubeSave,
+  onYouTubeUpload,
   onModeChange,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   mode: 'file' | 'youtube'
   uploading: boolean
+  uploadProgress: number
   fileInputRef: React.RefObject<HTMLInputElement | null>
   onFileUpload: (title: string, type: string, visibility: string, file: File) => void
   onYouTubeSave: (title: string, youtubeUrl: string, visibility: string) => void
+  onYouTubeUpload: (title: string, description: string, file: File) => void
   onModeChange: (mode: 'file' | 'youtube') => void
 }) {
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [selectedFileName, setSelectedFileName] = useState('')
   const [mediaType, setMediaType] = useState('video')
   const [visibility, setVisibility] = useState('private')
+  const [uploadDest, setUploadDest] = useState<'cloud' | 'youtube'>('cloud')
+  const [description, setDescription] = useState('')
+
+  // Detect if the selected file is a video for showing YouTube upload option
+  const selectedFile = fileInputRef.current?.files?.[0]
+  const isVideoFile = selectedFile?.type?.startsWith('video/') || mediaType === 'video'
+  const maxSizeMB = uploadDest === 'youtube' ? 256 : 50
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -491,7 +569,21 @@ function UploadModal({
               } else {
                 const file = fileInputRef.current?.files?.[0]
                 if (!file) { alert('Please select a file.'); return }
-                onFileUpload(title, mediaType, visibility, file)
+
+                // Route video files to YouTube upload when that destination is selected
+                if (uploadDest === 'youtube' && file.type.startsWith('video/')) {
+                  if (file.size > 256 * 1024 * 1024) {
+                    alert('File exceeds the 256MB YouTube upload limit.')
+                    return
+                  }
+                  onYouTubeUpload(title, description, file)
+                } else {
+                  if (file.size > 50 * 1024 * 1024) {
+                    alert('File exceeds the 50MB Cloud Storage upload limit.')
+                    return
+                  }
+                  onFileUpload(title, mediaType, visibility, file)
+                }
               }
             }}
             className="space-y-8 mt-4"
@@ -568,10 +660,81 @@ function UploadModal({
                     type="file"
                     className="hidden"
                     accept="video/*,image/*"
-                    onChange={(e) => setSelectedFileName(e.target.files?.[0]?.name || '')}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0]
+                      setSelectedFileName(f?.name || '')
+                      // Auto-detect media type from file
+                      if (f?.type.startsWith('video/')) setMediaType('video')
+                      else if (f?.type.startsWith('image/')) setMediaType('photo')
+                    }}
                   />
                 </div>
               </div>
+
+              {/* Upload Destination — only shown for video files */}
+              {isVideoFile && selectedFileName && (
+                <div className="space-y-2">
+                  <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                    Upload Destination
+                  </Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setUploadDest('cloud')}
+                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+                        uploadDest === 'cloud'
+                          ? 'border-[#133378] bg-[#133378]/5'
+                          : 'border-[#133378]/10 bg-[#F8FAFC] hover:border-[#133378]/20'
+                      }`}
+                    >
+                      <svg viewBox="0 0 24 24" className="w-6 h-6 text-[#133378]/60" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+                      </svg>
+                      <span className="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider">Cloud Storage</span>
+                      <span className="text-[10px] text-[#133378]/40 font-medium">Max 50MB</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUploadDest('youtube')}
+                      className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+                        uploadDest === 'youtube'
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-[#133378]/10 bg-[#F8FAFC] hover:border-red-300'
+                      }`}
+                    >
+                      <svg viewBox="0 0 24 24" className="w-6 h-6 text-red-500" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
+                        <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
+                      </svg>
+                      <span className="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider">YouTube</span>
+                      <span className="text-[10px] text-[#133378]/40 font-medium">Max 256MB &middot; Unlisted</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Description — shown when YouTube destination is selected */}
+              {uploadDest === 'youtube' && isVideoFile && selectedFileName && (
+                <div className="space-y-2">
+                  <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                    Description <span className="normal-case tracking-normal font-medium">(optional)</span>
+                  </Label>
+                  <Input
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                    placeholder="A brief description for this video"
+                  />
+                </div>
+              )}
+
+              {/* File size limit hint */}
+              {selectedFileName && (
+                <p className="text-[10px] font-medium text-[#133378]/30 text-center">
+                  Maximum file size: {maxSizeMB}MB
+                  {uploadDest === 'youtube' && isVideoFile && ' — Video will be uploaded as unlisted on YouTube'}
+                </p>
+              )}
             </TabsContent>
 
             {/* Visibility */}
@@ -590,12 +753,34 @@ function UploadModal({
               </Select>
             </div>
 
+            {/* Upload Progress */}
+            {uploading && uploadProgress > 0 && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                  <span>Uploading to YouTube</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full h-2 bg-[#133378]/10 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-red-500 rounded-full transition-all duration-300 ease-out"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+                {uploadProgress === 100 && (
+                  <p className="text-[10px] font-medium text-[#133378]/40 text-center">
+                    Processing on YouTube servers...
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* Actions */}
             <div className="flex gap-4 pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
+                disabled={uploading}
                 className="flex-1 py-4 h-auto rounded-2xl border-[#133378]/10 font-bold text-[#133378]/40 text-sm"
               >
                 Cancel
@@ -603,9 +788,21 @@ function UploadModal({
               <Button
                 type="submit"
                 disabled={uploading}
-                className="flex-1 py-4 h-auto rounded-2xl bg-[#133378] text-white font-bold text-sm hover:bg-[#1E3A5F] shadow-lg disabled:opacity-50"
+                className={`flex-1 py-4 h-auto rounded-2xl text-white font-bold text-sm shadow-lg disabled:opacity-50 ${
+                  mode === 'file' && uploadDest === 'youtube' && isVideoFile && selectedFileName
+                    ? 'bg-red-600 hover:bg-red-700'
+                    : 'bg-[#133378] hover:bg-[#1E3A5F]'
+                }`}
               >
-                {uploading ? 'Saving...' : mode === 'youtube' ? 'Save YouTube Link' : 'Upload & Save'}
+                {uploading
+                  ? uploadProgress > 0
+                    ? `Uploading ${uploadProgress}%`
+                    : 'Saving...'
+                  : mode === 'youtube'
+                    ? 'Save YouTube Link'
+                    : uploadDest === 'youtube' && isVideoFile && selectedFileName
+                      ? 'Upload to YouTube'
+                      : 'Upload & Save'}
               </Button>
             </div>
           </form>

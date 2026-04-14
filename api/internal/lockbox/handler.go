@@ -202,8 +202,11 @@ func (h *Handler) HandleStoreCredentials(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Audit log
-	h.logAudit(ctx, userID, req.EstateID, req.ItemID, "store_credentials", r.RemoteAddr, r.UserAgent())
+	// Audit log — blocking: credential operations must always be audited (SOC 2)
+	if err := h.logAudit(ctx, userID, req.EstateID, req.ItemID, "store_credentials", r.RemoteAddr, r.UserAgent()); err != nil {
+		writeError(w, http.StatusInternalServerError, "Credential operation aborted: audit logging failed")
+		return
+	}
 
 	log.Info().
 		Str("estate_id", req.EstateID).
@@ -339,8 +342,11 @@ func (h *Handler) HandleRetrieveCredentials(w http.ResponseWriter, r *http.Reque
 		resp.Notes = string(plaintext)
 	}
 
-	// Audit log the retrieval
-	h.logAudit(ctx, userID, req.EstateID, req.ItemID, "retrieve_credentials", r.RemoteAddr, r.UserAgent())
+	// Audit log the retrieval — blocking: credential access must always be audited (SOC 2)
+	if err := h.logAudit(ctx, userID, req.EstateID, req.ItemID, "retrieve_credentials", r.RemoteAddr, r.UserAgent()); err != nil {
+		writeError(w, http.StatusInternalServerError, "Credential retrieval aborted: audit logging failed")
+		return
+	}
 
 	log.Info().
 		Str("estate_id", req.EstateID).
@@ -397,7 +403,10 @@ func (h *Handler) verifyEstateAccess(ctx context.Context, userID, estateID strin
 // --- Audit Logging ---
 
 // logAudit writes a credential access event to the estate's audit_log subcollection.
-func (h *Handler) logAudit(ctx context.Context, userID, estateID, itemID, action, ipAddress, userAgent string) {
+// This is a blocking operation — if the audit write fails, the caller MUST treat it
+// as an error and abort the credential operation. SOC 2 requires that every credential
+// access is audited; unaudited access is not permitted.
+func (h *Handler) logAudit(ctx context.Context, userID, estateID, itemID, action, ipAddress, userAgent string) error {
 	auditRef := h.fs.Collection("estates").Doc(estateID).Collection("audit_log").NewDoc()
 	_, err := auditRef.Set(ctx, map[string]interface{}{
 		"userId":       userID,
@@ -410,14 +419,15 @@ func (h *Handler) logAudit(ctx context.Context, userID, estateID, itemID, action
 		"timestamp":    time.Now().UTC(),
 	})
 	if err != nil {
-		// Audit logging failure is logged but does not block the operation
 		log.Error().Err(err).
 			Str("user_id", userID).
 			Str("estate_id", estateID).
 			Str("item_id", itemID).
 			Str("action", action).
-			Msg("Failed to write lockbox audit log")
+			Msg("Failed to write lockbox audit log — blocking credential operation")
+		return fmt.Errorf("audit log write failed: %w", err)
 	}
+	return nil
 }
 
 // --- HTTP Helpers ---

@@ -1,12 +1,14 @@
-// Package guidance implements the Shepherd — FinalWishes' estate completion
-// scoring engine. v1 is deterministic (counts subcollections). v2 will add
-// Gemini/Genkit for natural language suggestions.
+// Package guidance implements the Shepherd — FinalWishes' estate planning
+// guidance engine. v4 adds conversational chat, situational checklists
+// driven by intake metadata, and multi-model AI routing.
 package guidance
 
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -30,14 +32,14 @@ func NewHandler(fs *firestore.Client, advisor Advisor) *Handler {
 
 // Score represents the estate completion assessment.
 type Score struct {
-	EstateID           string       `json:"estateId"`
-	CompletionPercent  int          `json:"completionPercent"`
-	CompletedSteps     int          `json:"completedSteps"`
-	TotalSteps         int          `json:"totalSteps"`
-	Steps              []Step       `json:"steps"`
-	NextAction         *Step        `json:"nextAction"`
-	Insight            string       `json:"insight"`
-	LastCalculated     time.Time    `json:"lastCalculated"`
+	EstateID          string    `json:"estateId"`
+	CompletionPercent int       `json:"completionPercent"`
+	CompletedSteps    int       `json:"completedSteps"`
+	TotalSteps        int       `json:"totalSteps"`
+	Steps             []Step    `json:"steps"`
+	NextAction        *Step     `json:"nextAction"`
+	Insight           string    `json:"insight"`
+	LastCalculated    time.Time `json:"lastCalculated"`
 }
 
 // Step is a single checklist item in the estate completion assessment.
@@ -49,6 +51,16 @@ type Step struct {
 	Complete    bool   `json:"complete"`
 	Route       string `json:"route"` // Frontend route to complete this step
 	Priority    int    `json:"priority"`
+}
+
+// intakeData holds the onboarding wizard answers from estates/{id}/metadata/intake.
+type intakeData struct {
+	HasMinors    bool   `firestore:"hasMinors"`
+	OwnsProperty bool   `firestore:"ownsProperty"`
+	HasBusiness  bool   `firestore:"hasBusiness"`
+	IsMarried    bool   `firestore:"isMarried"`
+	State        string `firestore:"state"`
+	PlanningMode string `firestore:"planningMode"` // "ahead" or "after_loss"
 }
 
 // HandleGetScore computes and returns the estate completion score.
@@ -86,7 +98,7 @@ func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Enhance insight with Genkit AI if available
+	// Enhance insight with AI if available
 	if h.advisor != nil {
 		// Fetch estate name for personalized insight
 		estateName := estateID
@@ -103,6 +115,126 @@ func (h *Handler) HandleGetScore(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, score)
+}
+
+// HandleChat handles a conversational estate planning question.
+// POST /api/v1/guidance/chat
+func (h *Handler) HandleChat(w http.ResponseWriter, r *http.Request) {
+	if h.advisor == nil {
+		writeError(w, http.StatusServiceUnavailable, "AI guidance is not available")
+		return
+	}
+
+	var req struct {
+		EstateID            string        `json:"estateId"`
+		Message             string        `json:"message"`
+		ConversationHistory []ChatMessage `json:"conversationHistory"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+	if req.Message == "" {
+		writeError(w, http.StatusBadRequest, "message is required")
+		return
+	}
+	if req.EstateID == "" {
+		writeError(w, http.StatusBadRequest, "estateId is required")
+		return
+	}
+
+	// Verify access
+	userID, err := auth.RequireUserID(r.Context())
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
+	defer cancel()
+
+	euDocID := userID + "_" + req.EstateID
+	euSnap, err := h.fs.Collection("estate_users").Doc(euDocID).Get(ctx)
+	if err != nil || !euSnap.Exists() {
+		log.Warn().Str("user_id", userID).Str("estate_id", req.EstateID).Msg("Chat denied — no access")
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
+
+	// Enrich the prompt with estate context
+	estateCtx := h.buildEstateContext(ctx, req.EstateID)
+
+	resp, err := h.advisor.Chat(ctx, estateCtx, req.Message, req.ConversationHistory)
+	if err != nil {
+		log.Error().Err(err).Str("estate_id", req.EstateID).Msg("Chat generation failed")
+		writeError(w, http.StatusInternalServerError, "Failed to generate response")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, resp)
+}
+
+// buildEstateContext fetches estate metadata and formats it for the AI prompt.
+func (h *Handler) buildEstateContext(ctx context.Context, estateID string) string {
+	estateRef := h.fs.Collection("estates").Doc(estateID)
+
+	// Fetch estate doc
+	var estateName, estateState string
+	estateSnap, err := estateRef.Get(ctx)
+	if err == nil {
+		if name, ok := estateSnap.Data()["name"].(string); ok {
+			estateName = name
+		}
+		if state, ok := estateSnap.Data()["state"].(string); ok {
+			estateState = state
+		}
+	}
+
+	// Fetch subcollection counts
+	assetCount, _ := countCollection(ctx, estateRef.Collection("assets"))
+	heirCount, _ := countCollection(ctx, estateRef.Collection("heirs"))
+	executorCount, _ := countCollection(ctx, estateRef.Collection("executors"))
+	documentCount, _ := countCollection(ctx, estateRef.Collection("documents"))
+
+	// Fetch intake metadata
+	intake := h.fetchIntake(ctx, estateID)
+
+	// Compute completion score
+	score, _ := h.computeScore(ctx, estateID)
+	completionPercent := 0
+	if score != nil {
+		completionPercent = score.CompletionPercent
+	}
+
+	var parts []string
+	parts = append(parts, fmt.Sprintf("Estate: %s", estateName))
+	if estateState != "" {
+		parts = append(parts, fmt.Sprintf("State: %s", estateState))
+	} else if intake.State != "" {
+		parts = append(parts, fmt.Sprintf("State: %s", intake.State))
+	}
+	parts = append(parts, fmt.Sprintf("Completion: %d%%", completionPercent))
+	parts = append(parts, fmt.Sprintf("Assets: %d, Beneficiaries: %d, Executors: %d, Documents: %d", assetCount, heirCount, executorCount, documentCount))
+
+	if intake.HasMinors {
+		parts = append(parts, "Has minor children")
+	}
+	if intake.OwnsProperty {
+		parts = append(parts, "Owns real property")
+	}
+	if intake.HasBusiness {
+		parts = append(parts, "Has business interests")
+	}
+	if intake.IsMarried {
+		parts = append(parts, "Married")
+	}
+	if intake.PlanningMode == "after_loss" {
+		parts = append(parts, "Mode: settling an estate after a loss")
+	} else {
+		parts = append(parts, "Mode: planning ahead")
+	}
+
+	return strings.Join(parts, "\n")
 }
 
 func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, error) {
@@ -137,7 +269,10 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 	obituaryExists := docExists(ctx, estateRef.Collection("governance").Doc("obituary"))
 	settingsExists := docExists(ctx, estateRef.Collection("governance").Doc("settings"))
 
-	// Build steps
+	// Fetch intake metadata for situational steps
+	intake := h.fetchIntake(ctx, estateID)
+
+	// Build base steps (always present)
 	steps := []Step{
 		{
 			ID: "assets", Label: "Add Assets", Category: "Foundation",
@@ -196,6 +331,86 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		},
 	}
 
+	// Add situational steps based on intake metadata
+	priority := 12
+	if intake.HasMinors {
+		steps = append(steps, Step{
+			ID: "guardian", Label: "Designate Guardian", Category: "Foundation",
+			Description: "Designate a guardian for your minor children",
+			Complete: false, Route: "beneficiaries", Priority: priority,
+		})
+		priority++
+	}
+	if intake.OwnsProperty {
+		steps = append(steps, Step{
+			ID: "property_deeds", Label: "Upload Property Deeds", Category: "Vault",
+			Description: "Upload property deeds to the vault",
+			Complete: false, Route: "vault", Priority: priority,
+		})
+		priority++
+	}
+	if intake.HasBusiness {
+		steps = append(steps, Step{
+			ID: "business_succession", Label: "Business Succession Plan", Category: "Foundation",
+			Description: "Create a business succession plan",
+			Complete: false, Route: "vault", Priority: priority,
+		})
+		priority++
+	}
+	if intake.IsMarried {
+		steps = append(steps, Step{
+			ID: "beneficiary_review", Label: "Review Beneficiary Designations", Category: "Foundation",
+			Description: "Review and update beneficiary designations",
+			Complete: false, Route: "beneficiaries", Priority: priority,
+		})
+		priority++
+	}
+
+	// State-specific steps
+	switch strings.ToUpper(intake.State) {
+	case "MD", "MARYLAND":
+		steps = append(steps, Step{
+			ID: "state_md", Label: "Review Maryland Thresholds", Category: "Legal",
+			Description: "Review Maryland's small estate threshold ($50K personal / $100K real)",
+			Complete: false, Route: "vault", Priority: priority,
+		})
+		priority++
+	case "IL", "ILLINOIS":
+		steps = append(steps, Step{
+			ID: "state_il", Label: "Review Illinois Thresholds", Category: "Legal",
+			Description: "Review Illinois' small estate threshold ($100K)",
+			Complete: false, Route: "vault", Priority: priority,
+		})
+		priority++
+	case "MN", "MINNESOTA":
+		steps = append(steps, Step{
+			ID: "state_mn", Label: "Review Minnesota Thresholds", Category: "Legal",
+			Description: "Review Minnesota's small estate threshold ($75K)",
+			Complete: false, Route: "vault", Priority: priority,
+		})
+		priority++
+	}
+
+	// Adjust language for after-loss mode
+	if intake.PlanningMode == "after_loss" {
+		for i := range steps {
+			switch steps[i].ID {
+			case "assets":
+				steps[i].Label = "Inventory Estate Assets"
+				steps[i].Description = "Identify and catalog all financial accounts, property, and valuables in the estate"
+			case "beneficiaries":
+				steps[i].Label = "Identify Heirs"
+				steps[i].Description = "Document all beneficiaries and their designations"
+			case "executors":
+				steps[i].Label = "Confirm Executor"
+				steps[i].Description = "Verify the named executor or petition the court to appoint one"
+			case "obituary":
+				steps[i].Label = "Prepare Obituary"
+				steps[i].Description = "Draft the obituary and final record for your loved one"
+			}
+		}
+	}
+
 	completed := 0
 	var nextAction *Step
 	for i := range steps {
@@ -223,6 +438,20 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		Insight:           insight,
 		LastCalculated:    time.Now(),
 	}, nil
+}
+
+// fetchIntake reads the onboarding wizard data from estates/{id}/metadata/intake.
+func (h *Handler) fetchIntake(ctx context.Context, estateID string) intakeData {
+	var intake intakeData
+	snap, err := h.fs.Collection("estates").Doc(estateID).Collection("metadata").Doc("intake").Get(ctx)
+	if err != nil {
+		// Intake not filled out yet — return zero values
+		return intake
+	}
+	if err := snap.DataTo(&intake); err != nil {
+		log.Warn().Err(err).Str("estate_id", estateID).Msg("Failed to parse intake metadata")
+	}
+	return intake
 }
 
 // HandleAssistObituary accepts a prompt and returns an AI-drafted obituary.

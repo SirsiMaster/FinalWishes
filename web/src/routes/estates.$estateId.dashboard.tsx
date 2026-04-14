@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams, Link } from '@tanstack/react-router'
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '../lib/auth'
 import { useEstate, useEstateAssets, useEstateHeirs, useEstateDocuments } from '../lib/firestore'
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Input } from '@/components/ui/input'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -36,6 +39,287 @@ interface ShepherdScore {
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
+// ─── Shepherd Chat Types ────────────────────────────────────────────────────
+
+interface ChatMessage {
+  id: string
+  role: 'user' | 'shepherd'
+  content: string
+  suggestedActions?: string[]
+}
+
+// ─── Shepherd Typing Indicator ──────────────────────────────────────────────
+
+function ShepherdTypingIndicator() {
+  return (
+    <div className="flex items-start gap-2 mb-3">
+      <div className="bg-[#F8FAFC] rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
+        <div className="flex gap-1.5 items-center h-5">
+          <span className="w-2 h-2 bg-[#C8A951] rounded-full animate-bounce [animation-delay:0ms]" />
+          <span className="w-2 h-2 bg-[#C8A951] rounded-full animate-bounce [animation-delay:150ms]" />
+          <span className="w-2 h-2 bg-[#C8A951] rounded-full animate-bounce [animation-delay:300ms]" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Shepherd Chat Panel ────────────────────────────────────────────────────
+
+function ShepherdChat({
+  open,
+  onOpenChange,
+  estateId,
+  initialInsight,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  estateId: string
+  initialInsight: string
+}) {
+  const { user } = useAuth()
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  // Seed the initial insight message when the panel first opens
+  useEffect(() => {
+    if (open && messages.length === 0 && initialInsight) {
+      setMessages([
+        {
+          id: crypto.randomUUID(),
+          role: 'shepherd',
+          content: initialInsight,
+          suggestedActions: [
+            'What should I do next?',
+            'Explain my score',
+            'Who needs to be notified?',
+          ],
+        },
+      ])
+    }
+  }, [open, messages.length, initialInsight])
+
+  // Auto-scroll on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, isLoading])
+
+  // Focus input when opened
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => inputRef.current?.focus(), 150)
+    }
+  }, [open])
+
+  // Build conversation history (last 10 messages for token control)
+  const buildHistory = useCallback(
+    (currentMessages: ChatMessage[]) =>
+      currentMessages.slice(-10).map((m) => ({
+        role: m.role === 'shepherd' ? 'assistant' : 'user',
+        content: m.content,
+      })),
+    [],
+  )
+
+  const sendMessage = useCallback(
+    async (text: string) => {
+      const trimmed = text.trim()
+      if (!trimmed || isLoading || !user) return
+
+      const userMsg: ChatMessage = {
+        id: crypto.randomUUID(),
+        role: 'user',
+        content: trimmed,
+      }
+      const updatedMessages = [...messages, userMsg]
+      setMessages(updatedMessages)
+      setInput('')
+      setIsLoading(true)
+
+      try {
+        const token = await user.getIdToken()
+        const res = await fetch(`${API_BASE}/api/v1/guidance/chat`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            estateId,
+            message: trimmed,
+            conversationHistory: buildHistory(updatedMessages),
+          }),
+        })
+
+        if (!res.ok) throw new Error(`Server error (${res.status})`)
+
+        const data = await res.json()
+        const shepherdMsg: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'shepherd',
+          content: data.reply || data.message || 'I understand. Let me look into that for you.',
+          suggestedActions: data.suggestedActions,
+        }
+        setMessages((prev) => [...prev, shepherdMsg])
+      } catch (err) {
+        const errorMsg: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'shepherd',
+          content: `I'm having trouble connecting right now. Please try again in a moment.`,
+        }
+        setMessages((prev) => [...prev, errorMsg])
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [isLoading, user, messages, estateId, buildHistory],
+  )
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage(input)
+    }
+  }
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        className="w-[400px] sm:max-w-[400px] p-0 flex flex-col gap-0 bg-white"
+      >
+        {/* Header */}
+        <SheetHeader className="px-6 py-4 bg-[#133378] gap-0 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* Shepherd compass icon */}
+              <div className="w-8 h-8 rounded-full bg-[#C8A951]/20 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
+                </svg>
+              </div>
+              <SheetTitle className="text-white font-[family-name:var(--font-cinzel)] text-base tracking-wide font-bold">
+                The Shepherd
+              </SheetTitle>
+            </div>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="text-white/60 hover:text-white transition-colors p-1 rounded"
+              aria-label="Close chat"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </div>
+          <SheetDescription className="text-white/50 text-xs mt-1">
+            Your AI estate planning guide
+          </SheetDescription>
+          <div className="w-full h-[1px] bg-[#C8A951]/30 mt-3" />
+        </SheetHeader>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-1 min-h-0">
+          {messages.map((msg) => (
+            <div key={msg.id}>
+              <div
+                className={cn(
+                  'flex mb-3',
+                  msg.role === 'user' ? 'justify-end' : 'justify-start',
+                )}
+              >
+                <div
+                  className={cn(
+                    'rounded-2xl px-4 py-2.5 max-w-[85%] text-sm leading-relaxed',
+                    msg.role === 'user'
+                      ? 'bg-[#133378] text-white rounded-tr-sm'
+                      : 'bg-[#F8FAFC] text-[#0F172A] rounded-tl-sm border border-slate-100',
+                  )}
+                >
+                  {msg.content}
+                </div>
+              </div>
+              {/* Suggestion chips */}
+              {msg.role === 'shepherd' && msg.suggestedActions && msg.suggestedActions.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4 ml-1">
+                  {msg.suggestedActions.map((action) => (
+                    <button
+                      key={action}
+                      onClick={() => sendMessage(action)}
+                      disabled={isLoading}
+                      className="text-xs px-3 py-1.5 rounded-full border border-[#C8A951]/40 text-[#133378] bg-white hover:bg-[#C8A951]/10 hover:border-[#C8A951] transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {action}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {isLoading && <ShepherdTypingIndicator />}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input area */}
+        <div className="border-t border-slate-200 px-4 py-3 bg-white flex-shrink-0">
+          <div className="flex gap-2">
+            <Input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask the Shepherd..."
+              className="flex-1 text-sm h-10 rounded-xl"
+              disabled={isLoading}
+            />
+            <Button
+              size="icon"
+              onClick={() => sendMessage(input)}
+              disabled={!input.trim() || isLoading}
+              className="bg-[#133378] hover:bg-[#1E3A5F] text-white h-10 w-10 shrink-0 rounded-xl"
+              aria-label="Send message"
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </Button>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+// ─── Floating Shepherd Button ───────────────────────────────────────────────
+
+function ShepherdFAB({ onClick, hasInteracted }: { onClick: () => void; hasInteracted: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[#133378] hover:bg-[#1E3A5F] text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center',
+        !hasInteracted && 'animate-pulse',
+      )}
+      aria-label="Ask the Shepherd"
+    >
+      {/* Compass/shepherd icon */}
+      <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <circle cx="12" cy="12" r="10" />
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
+      </svg>
+    </button>
+  )
+}
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
@@ -74,6 +358,15 @@ function DashboardIndex() {
     load()
     return () => { cancelled = true }
   }, [user, estateId])
+
+  // Shepherd chat state
+  const [shepherdOpen, setShepherdOpen] = useState(false)
+  const [shepherdInteracted, setShepherdInteracted] = useState(false)
+
+  const openShepherd = useCallback(() => {
+    setShepherdOpen(true)
+    setShepherdInteracted(true)
+  }, [])
 
   const isLoading = metaLoading || assetsLoading || beneLoading || vaultLoading
 
@@ -226,13 +519,27 @@ function DashboardIndex() {
             <CardContent className="relative z-10 px-0">
               <h4 className="text-xl font-bold mb-4 font-[family-name:var(--font-cinzel)] uppercase tracking-widest">Need Support?</h4>
               <p className="text-white/70 text-sm mb-8 leading-relaxed font-medium">Your dedicated Concierge is available 24/7 to help you navigate your estate plan.</p>
-              <Button variant="outline" size="lg" className="w-full py-4 h-auto bg-white text-[#133378] border-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] hover:bg-[#C8A951] hover:text-white hover:border-[#C8A951] transition-all active:scale-[0.98]">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={openShepherd}
+                className="w-full py-4 h-auto bg-white text-[#133378] border-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] hover:bg-[#C8A951] hover:text-white hover:border-[#C8A951] transition-all active:scale-[0.98]"
+              >
                 Contact Concierge
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      {/* Shepherd Chat */}
+      <ShepherdFAB onClick={openShepherd} hasInteracted={shepherdInteracted} />
+      <ShepherdChat
+        open={shepherdOpen}
+        onOpenChange={setShepherdOpen}
+        estateId={estateId}
+        initialInsight={insight}
+      />
     </div>
   )
 }

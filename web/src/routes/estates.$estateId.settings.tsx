@@ -11,11 +11,23 @@
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useMemo, useCallback } from 'react'
-import { useDocument } from '../lib/firestore'
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import {
+  useDocument,
+  useCollection,
+  useEstate,
+  useEstateAssets,
+  useEstateHeirs,
+  useEstateDocuments,
+  useLockboxItems,
+  useDirectives,
+  useTimeCapsules,
+  useHeirlooms,
+} from '../lib/firestore'
+import { doc, setDoc, serverTimestamp, orderBy } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { getMFAStatus } from '../lib/mfa'
+import { exportEstateData, downloadBlob } from '../lib/export'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
 import { InviteTeamMember } from '../components/estate/InviteTeamMember'
 
@@ -46,10 +58,57 @@ function SettingsPage() {
 
   const { data: settingsDoc, loading: isLoading } = useDocument<Record<string, unknown>>(`estates/${estateId}/governance/settings`);
 
+  // ── Estate data hooks for ZIP export ──
+  const { data: estate } = useEstate(estateId);
+  const { data: assets } = useEstateAssets(estateId);
+  const { data: heirs } = useEstateHeirs(estateId);
+  const { data: documents } = useEstateDocuments(estateId);
+  const { data: lockboxItems } = useLockboxItems(estateId);
+  const { data: directives } = useDirectives(estateId);
+  const { data: capsules } = useTimeCapsules(estateId);
+  const { data: heirlooms } = useHeirlooms(estateId);
+  const memoirConstraints = useMemo(() => [orderBy('createdAt', 'desc')], []);
+  const { data: memoirs } = useCollection<Record<string, unknown>>(
+    estateId ? `estates/${estateId}/memoirs` : null,
+    memoirConstraints,
+  );
+
   // Local settings state for toggle changes
   const [localSettings, setLocalSettings] = useState<Record<string, unknown>>({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Export state
+  const [exporting, setExporting] = useState(false);
+  const [exportDone, setExportDone] = useState(false);
+
+  const handleExport = useCallback(async () => {
+    setExporting(true);
+    setExportDone(false);
+    try {
+      const estateName = estate?.name || 'Estate';
+      const blob = await exportEstateData({
+        estateId,
+        estateName,
+        assets: assets as Record<string, unknown>[],
+        heirs: heirs as Record<string, unknown>[],
+        documents: documents as Record<string, unknown>[],
+        lockboxItems: lockboxItems as Record<string, unknown>[],
+        directives: directives as Record<string, unknown>[],
+        capsules: capsules as Record<string, unknown>[],
+        heirlooms: heirlooms as Record<string, unknown>[],
+        memoirs: memoirs as Record<string, unknown>[],
+      });
+      const filename = `${estateName.replace(/\s+/g, '_')}_export_${new Date().toISOString().slice(0, 10)}.zip`;
+      downloadBlob(blob, filename);
+      setExportDone(true);
+      setTimeout(() => setExportDone(false), 4000);
+    } catch (err) {
+      console.error('[Settings] Export error:', err);
+    } finally {
+      setExporting(false);
+    }
+  }, [estateId, estate, assets, heirs, documents, lockboxItems, directives, capsules, heirlooms, memoirs]);
 
   // Merge Firestore doc with local overrides
   const s = useMemo(() => ({ ...settingsDoc, ...localSettings }), [settingsDoc, localSettings]);
@@ -233,6 +292,58 @@ function SettingsPage() {
           />
           <SettingsStatus label="Beneficiary access" description="Control what your beneficiaries can see" value="Restricted" />
         </SettingsSection>
+      </Card>
+
+      {/* ── Data Export ── */}
+      <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-10 py-6 border-b border-slate-100 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </div>
+          <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em] font-[family-name:var(--font-cinzel)]">Data Export</h3>
+        </div>
+        <CardContent className="px-10 py-8 flex items-center justify-between">
+          <div>
+            <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Export Estate Data</span>
+            <p className="text-[13px] text-[#64748B] font-medium mt-1 max-w-md">
+              Download a complete ZIP archive of your estate data for compliance and portability.
+            </p>
+          </div>
+          <Button
+            onClick={handleExport}
+            disabled={exporting}
+            className={`px-6 py-2.5 rounded-xl font-bold text-[12px] shadow-md transition-all active:scale-95 ${
+              exportDone
+                ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
+                : 'bg-[#133378] hover:bg-[#1E3A5F] text-white border-[#133378]'
+            }`}
+          >
+            {exporting ? (
+              <span className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Exporting...
+              </span>
+            ) : exportDone ? (
+              <span className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                Downloaded
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export Estate Data
+              </span>
+            )}
+          </Button>
+        </CardContent>
       </Card>
 
       {/* ── Danger Zone ── */}

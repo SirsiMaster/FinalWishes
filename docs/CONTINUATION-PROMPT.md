@@ -1,73 +1,66 @@
 # FinalWishes — Continuation Prompt
-**Version:** 16.1 — **Date:** April 14, 2026 — **Session:** CI/CD + Tier-gating + Responsive + Security
+**Version:** 17.0 — **Date:** April 14, 2026 — **Session:** Test Suite + Code Quality
 
 ---
 
 ## Resume Key
 
-**Last commit:** `b0946c8` (main) — Clean working tree, 0 lint errors, 0 vulnerabilities
+**Last commit:** `(pending)` (main) — Clean working tree, 0 lint warnings, 0 vulnerabilities, 129 tests passing
 **Repo:** `/Users/thekryptodragon/Development/FinalWishes`
 **Contract:** MSA-2025-111-FW | SOW-2025-001 | $95K Fixed Bid | 16 Weeks
 **Production:** `https://finalwishes-prod.web.app` | API rev 11 at Cloud Run
 **Deployed:** April 14, 2026 — CI/CD pipeline green, both frontend and API live
-**Security:** 0 npm vulnerabilities, 0 Go advisories (32 resolved this session)
+**Security:** 0 npm vulnerabilities, 0 Go advisories
+**Tests:** 129 passing (8 files) — lint 0 warnings
 
 ---
 
 ## Resume Prompt
 
 ```
-Pick up FinalWishes from commit b0946c8. Read docs/CONTINUATION-PROMPT.md for
-full context. Session 4 shipped CI/CD fixes, tier-gating, responsive audit,
-and security remediation. All 32 Dependabot vulns resolved. Next priorities:
-domain acquisition, GA4 setup, and web test suite.
+Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md for
+full context. Session 5 shipped the web test suite (129 tests), eliminated all
+24 ESLint warnings, cleaned tsconfig, and enabled the CI test gate.
+Next priorities: domain acquisition and remaining tech debt.
 ```
 
 ---
 
 ## Session Summary
 
-### Session 4 (Apr 14): CI/CD + Tier-Gating + Responsive + Security — 12 commits
+### Session 5 (Apr 14): Test Suite + Code Quality
 
-The CI/CD pipeline had never successfully deployed — 7 distinct failures blocked it. This session fixed all of them, implemented Stripe tier-gating for media uploads, audited and fixed 13 responsive design issues, resolved all 32 Dependabot vulnerabilities, deployed to production, and cleaned up all infrastructure hygiene.
+Made the test infrastructure fully operational — vitest was installed but couldn't run (missing jsdom). Fixed deps, added test scripts, enabled the CI gate, expanded coverage with tier-gating and export sanitization tests, and eliminated all 24 ESLint warnings.
 
-**CI/CD Fixes (7 issues resolved):**
-- 5 undeclared ESLint devDependencies (eslint-plugin-react-hooks, react-refresh, typescript-eslint, @eslint/js, globals)
-- 6 Go files with `gofmt` formatting drift
-- Phantom web-test (Vitest) job with no test script blocking all deploy gates
-- 3 undeclared web dependencies (jszip, qrcode.react, vitest/@testing-library/react)
-- Dockerfile missing local `sirsi-ai` package copy before `go mod download`
-- Missing `artifactregistry.writer` IAM role on `github-deployer` SA
-- All 5 CI jobs now green: lint, API test, web build, Firebase deploy, Cloud Run deploy
+**Test Suite:**
+- Installed `jsdom` and `@testing-library/jest-dom` (missing peer deps)
+- Added `test`, `test:watch`, `test:coverage` scripts to package.json
+- All 6 existing test files (105 tests) now run and pass
+- New: `tier-gating.test.ts` — 15 tests covering constants, `tierUpgradeMessage` helpers, and `useTierGating` hook (fetch mocking, error states, refresh)
+- New: `export.test.ts` — 14 tests covering ZIP structure, Firestore Timestamp sanitization, lockbox credential stripping, document storage key stripping, manifest exclusion notices
+- Total: 129 tests across 8 files, all passing
 
-**Tier-Gating (Stripe Feature Gates):**
-- Backend: `TierLimits` config (Free=10 media/0 video, Concierge=25/0, WhiteGlove=unlimited)
-- Backend: `GET /api/v1/estates/{estateId}/media-usage` — counts docs, heirlooms, memoirs
-- Backend: YouTube upload handler rejects non-WhiteGlove tiers
-- Frontend: `useTierGating(estateId)` hook fetches usage + limits
-- Frontend: Vault dropzone disabled + gold banner at limit, usage counter
-- Frontend: Heirlooms "Add Heirloom" button disabled at limit
-- Frontend: Memoirs "Add Memory" + "Add YouTube Link" disabled per tier
-- Estate TypeScript interface updated with tier/paymentStatus fields
+**CI Pipeline:**
+- Uncommented and wired `web-test` job into firebase-hosting-merge.yml
+- Pipeline: `web-check` → `web-test` → `web-build` → `deploy-hosting`
+- Tests now gate deployment (web-build depends on [web-check, web-test])
 
-**Infrastructure Cleanup:**
-- Deleted stale `develop` branch
-- Cancelled 2 stuck Dependabot CI runs
-- Purged 10 inactive Cloud Run revisions (001–010)
-- Deleted stale Firebase staging channel
-- Removed 464 MB of dangling Docker images
+**ESLint: 24 → 0 Warnings:**
+- 8 unused type imports removed (search.ts)
+- 2 unused imports removed (SearchResults.tsx)
+- 1 stale closure fixed (AdminHeader.tsx missing useCallback dep)
+- 3 `as any` replaced with typed alternatives (obituary.tsx)
+- 1 `any` state typed as `Asset | null` (assets route)
+- ESLint config: added `src/gen/**` ignore, `caughtErrorsIgnorePattern`, TanStack route export names
+- 2 framework false positives suppressed (shadcn button, TanStack route)
+- 3 ConnectRPC proxy `any`s inline-suppressed (genuinely dynamic)
 
-**Responsive Audit (13 fixes across 10 routes):**
-- 5 critical: Dashboard sheet overflow, lockbox/memoirs/heirlooms/create grids missing mobile breakpoints
-- 8 high: Container padding (p-12 → px-4 py-6 md:p-8 lg:p-12), gap scaling, form grids stacking, table overflow, obituary desktop-first → mobile-first, settings card padding
-
-**Security Remediation (32 → 0 vulnerabilities):**
-- Critical: google.golang.org/grpc 1.66 → 1.80 (auth bypass via missing leading slash)
-- High: vite 8.0.1 → 8.0.8 (arbitrary file read + server.fs.deny bypass), picomatch ReDoS
-- Medium: golang.org/x/crypto 0.40 → 0.50, hono (6 vulns), brace-expansion
-- Result: 0 npm vulnerabilities, 0 Go advisories
+**tsconfig Cleanup:**
+- Removed Next.js remnants: `next-env.d.ts`, `.next/types/**/*.ts`, `next` plugin
+- Added `dist` to exclude
 
 ### Prior Sessions
+- Session 4 (Apr 14): CI/CD fixes, tier-gating, responsive audit, security remediation (32 → 0 vulns)
 - Session 3 (Apr 14): Full product overhaul — 22 fixes across 4 waves
 - Session 2 (Apr 10): Email templates, skeletons, CSP, OpenAPI spec, accessibility, monitoring
 - Session 1 (Apr 8): shadcn refactor, Phases 2-4, 163 tests, infrastructure
@@ -91,17 +84,17 @@ Available: myfinalwishes.org (~$15/yr), myfinalwishes.io (~$50/yr), myfinalwishe
 For sale: finalwishes.org ($250 min offer on Afternic)
 Competitor: myfinalwishes.com (active business — avoid)
 
-### 3. GA4 Property Setup (5 min manual)
+### 2. GA4 Property Setup (5 min manual)
 Firebase Console -> Project Settings -> Integrations -> Google Analytics -> Enable
+Code instrumentation already in place (analytics.ts + firebase.ts)
 
-### 4. Remaining Technical Debt
+### 3. Remaining Technical Debt
 - react-pdf chunk: 1.5MB (lazy-loaded, code-split — consider dynamic import)
-- Web test suite: vitest added as dep but no test script or vitest.config.ts yet
-- 23 ESLint warnings (pre-existing: unused vars, exhaustive-deps, no-explicit-any)
+- 23+ TypeScript strict errors (pre-existing, don't block build — Vite doesn't use tsc)
 - Plaid integration (in compliance process — deferred)
 - Google Photos API (deferred — using Cloud Storage interim)
 
-### 5. Future Features (Tier 3, not purchased)
+### 4. Future Features (Tier 3, not purchased)
 - Estate Administration ($25K)
 - Probate Engine MD/IL/MN ($35K)
 - Advanced AI ($15K)
@@ -134,7 +127,7 @@ All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (s
 | Secrets | 8 in Secret Manager |
 | Monitoring | 3 alert policies -> sirsimaster@gmail.com |
 | Security | 0 npm vulns, 0 Go advisories (32 resolved session 4) |
-| CI/CD | GitHub Actions — 5 jobs, all green |
+| CI/CD | GitHub Actions — 6 jobs (web-check, web-test, web-build, deploy-hosting, api-check, deploy-api) |
 | CI/CD SA | github-deployer@finalwishes-prod.iam.gserviceaccount.com |
 | sign.sirsi.ai | 3 CRITICALs fixed, contracts-grpc rev 8 deployed |
 
@@ -143,19 +136,17 @@ All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (s
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | Operational directive |
-| `CHANGELOG.md` | **UPDATED** — Session 4 entry |
+| `CHANGELOG.md` | **UPDATED** — Session 5 entry (v0.3.0) |
 | `docs/CANONICAL_DEVELOPMENT_PLAN.md` | Contract dev plan |
 | `docs/api-spec.yaml` | OpenAPI 3.0 (28+ endpoints) |
-| `api/internal/tiergate/handler.go` | **NEW** — Media usage endpoint |
-| `api/internal/payments/handlers.go` | **UPDATED** — TierLimits config |
-| `api/internal/youtube/handler.go` | **UPDATED** — Tier enforcement on video upload |
-| `web/src/lib/tier-gating.ts` | **NEW** — useTierGating hook + helpers |
-| `web/src/lib/firestore.ts` | **UPDATED** — Estate interface with tier fields |
-| `web/src/routes/estates.$estateId.vault.tsx` | **UPDATED** — Tier-gated dropzone |
-| `web/src/routes/estates.$estateId.heirlooms.tsx` | **UPDATED** — Tier-gated add button |
-| `web/src/routes/estates.$estateId.memoirs.tsx` | **UPDATED** — Tier-gated upload + YouTube |
-| `.github/workflows/firebase-hosting-merge.yml` | **UPDATED** — Fixed CI pipeline |
-| `api/Dockerfile` | **UPDATED** — sirsi-ai package copy fix |
+| `web/vitest.config.ts` | Vitest config (jsdom, v8 coverage) |
+| `web/src/test/setup.ts` | Test setup (jest-dom, firebase mock, env stub) |
+| `web/src/lib/tier-gating.test.ts` | **NEW** — Tier-gating tests (15 tests) |
+| `web/src/lib/export.test.ts` | **NEW** — Export sanitization tests (14 tests) |
+| `web/eslint.config.mjs` | **UPDATED** — gen/ ignore, caught errors, route exports |
+| `web/tsconfig.json` | **UPDATED** — Removed Next.js remnants |
+| `web/package.json` | **UPDATED** — test/test:watch/test:coverage scripts |
+| `.github/workflows/firebase-hosting-merge.yml` | **UPDATED** — web-test job enabled |
 
 ---
 

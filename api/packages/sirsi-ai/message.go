@@ -4,12 +4,12 @@ package ai
 type ModelID string
 
 const (
-	ModelClaude ModelID = "claude"  // Claude Opus 4.6 (primary)
-	ModelSonnet ModelID = "sonnet"  // Claude Sonnet 4.6 (fallback)
-	ModelMythos ModelID = "mythos"  // Claude Mythos (when available)
-	ModelGemma  ModelID = "gemma"   // Gemma for fast/lightweight tasks only
-	ModelGemini ModelID = "gemini"  // Gemini 3 (absolute last resort only)
-	ModelAuto   ModelID = "auto"    // Router decides based on task
+	ModelClaude ModelID = "claude" // Claude Opus 4.6 (primary)
+	ModelSonnet ModelID = "sonnet" // Claude Sonnet 4.6 (fallback)
+	ModelMythos ModelID = "mythos" // Claude Mythos (when available)
+	ModelGemma  ModelID = "gemma"  // Gemma for fast/lightweight tasks only
+	ModelGemini ModelID = "gemini" // Gemini 3 (absolute last resort only)
+	ModelAuto   ModelID = "auto"   // Router decides based on task
 )
 
 // TaskType categorizes AI requests for routing.
@@ -17,11 +17,11 @@ type TaskType int
 
 const (
 	TaskExplain        TaskType = iota // General explanation
-	TaskChat                          // Multi-turn conversation
-	TaskAnalyzeComplex                // Deep reasoning (deals, legal, code)
-	TaskAnalyzeSimple                 // Quick scoring, classification
-	TaskGenerate                      // Creative writing
-	TaskClassify                      // Fast categorization
+	TaskChat                           // Multi-turn conversation
+	TaskAnalyzeComplex                 // Deep reasoning (deals, legal, code)
+	TaskAnalyzeSimple                  // Quick scoring, classification
+	TaskGenerate                       // Creative writing
+	TaskClassify                       // Fast categorization
 )
 
 // Role in a conversation.
@@ -41,13 +41,13 @@ type Message struct {
 
 // AnalysisResult holds structured AI analysis output.
 type AnalysisResult struct {
-	Text       string            `json:"text"`
-	Model      string            `json:"model"`
-	Provider   string            `json:"provider"` // "claude", "gemma", "gemini"
-	TokensIn   int               `json:"tokens_in,omitempty"`
-	TokensOut  int               `json:"tokens_out,omitempty"`
-	LatencyMs  int64             `json:"latency_ms"`
-	Metadata   map[string]string `json:"metadata,omitempty"`
+	Text      string            `json:"text"`
+	Model     string            `json:"model"`
+	Provider  string            `json:"provider"` // "claude", "gemma", "gemini"
+	TokensIn  int               `json:"tokens_in,omitempty"`
+	TokensOut int               `json:"tokens_out,omitempty"`
+	LatencyMs int64             `json:"latency_ms"`
+	Metadata  map[string]string `json:"metadata,omitempty"`
 }
 
 // Option configures an AI request.

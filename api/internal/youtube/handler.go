@@ -214,8 +214,8 @@ func (h *Handler) HandleGetVideoStatus(w http.ResponseWriter, r *http.Request) {
 
 	item := resp.Items[0]
 	status := videoStatusResponse{
-		VideoID:      videoID,
-		UploadStatus: item.Status.UploadStatus,
+		VideoID:       videoID,
+		UploadStatus:  item.Status.UploadStatus,
 		PrivacyStatus: item.Status.PrivacyStatus,
 	}
 

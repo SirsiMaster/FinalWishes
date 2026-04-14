@@ -5,8 +5,8 @@
 package payments
 
 import (
-	"encoding/json"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -25,11 +25,11 @@ import (
 
 // Handler holds dependencies for payment endpoints.
 type Handler struct {
-	fs              *firestore.Client
-	webhookSecret   string
-	successURL      string
-	cancelURL       string
-	publishableKey  string
+	fs             *firestore.Client
+	webhookSecret  string
+	successURL     string
+	cancelURL      string
+	publishableKey string
 }
 
 // Config holds payment configuration from environment.
@@ -43,11 +43,11 @@ type Config struct {
 
 // Tier represents a pricing tier.
 type Tier struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	PriceCents  int64  `json:"priceCents"`
-	Interval    string `json:"interval"` // "month" or "year" or "one_time"
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	PriceCents  int64    `json:"priceCents"`
+	Interval    string   `json:"interval"` // "month" or "year" or "one_time"
 	Features    []string `json:"features"`
 }
 
@@ -327,12 +327,12 @@ func (h *Handler) handleCheckoutCompleted(event stripe.Event) {
 		fctx, cancel := newCtx()
 		defer cancel()
 		_, err := h.fs.Collection("estates").Doc(estateID).Set(fctx, map[string]interface{}{
-			"tier":              tierID,
-			"tierUpdatedAt":     time.Now(),
-			"stripeSessionId":   sess.ID,
-			"stripeCustomerId":  sess.Customer,
-			"subscriptionId":    sess.Subscription,
-			"paymentStatus":     "active",
+			"tier":             tierID,
+			"tierUpdatedAt":    time.Now(),
+			"stripeSessionId":  sess.ID,
+			"stripeCustomerId": sess.Customer,
+			"subscriptionId":   sess.Subscription,
+			"paymentStatus":    "active",
 		}, firestore.MergeAll)
 		if err != nil {
 			log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to update estate tier in Firestore")

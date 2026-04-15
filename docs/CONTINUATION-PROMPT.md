@@ -20,8 +20,8 @@
 ```
 Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md for
 full context. Session 5 shipped the web test suite (129 tests), eliminated all
-24 ESLint warnings, cleaned tsconfig, and enabled the CI test gate.
-Next priorities: domain acquisition and remaining tech debt.
+ESLint warnings and TypeScript errors, wired GA4 analytics, enabled CI test
+gate with typecheck. All tech debt resolved. Only GA4 console enable remains.
 ```
 
 ---
@@ -92,25 +92,29 @@ Made the test infrastructure fully operational — vitest was installed but coul
 
 ## What's Next (Priority Order)
 
-### 1. Domain Acquisition (when ready)
-Available: myfinalwishes.org (~$15/yr), myfinalwishes.io (~$50/yr), myfinalwishes.ai (~$90/yr)
-For sale: finalwishes.org ($250 min offer on Afternic)
-Competitor: myfinalwishes.com (active business — avoid)
+### 1. GA4 Property Setup (5 min manual)
+Firebase Console → Project Settings → Integrations → Google Analytics → Enable
+Then set `VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXX` in environment.
+Code instrumentation is fully wired:
+- `trackEstateCreated` → estates.create.tsx (on successful estate creation)
+- `trackDocumentUploaded` → vault.tsx (on successful upload)
+- `trackCheckoutStarted` → pricing.tsx (before Stripe redirect)
+- `trackPaymentSuccess` → defined but needs Stripe webhook callback to fire
+- Firebase Performance auto-collects LCP, FID, CLS
 
-### 2. GA4 Property Setup (5 min manual)
-Firebase Console -> Project Settings -> Integrations -> Google Analytics -> Enable
-Code instrumentation already in place (analytics.ts + firebase.ts)
-
-### 3. Remaining Technical Debt
-- react-pdf chunk: 1.5MB — already lazy-loaded via dynamic import, no further optimization needed
-- ~~TypeScript strict errors~~ **RESOLVED** — 0 errors, `tsc --noEmit` clean
-- ~~Plaid~~ **PERMANENTLY OUT** — Stripe is operational, Plaid has zero code references
-- Google Photos API (deferred — using Cloud Storage interim)
-
-### 4. Future Features (Tier 3, not purchased)
+### 2. Future Features (Tier 3, not purchased)
 - Estate Administration ($25K)
 - Probate Engine MD/IL/MN ($35K)
 - Advanced AI ($15K)
+- Google Photos API (deferred — Cloud Storage handles all media currently)
+
+### Resolved This Session
+- ~~Domain acquisition~~ **PERMANENTLY OFF LIST**
+- ~~TypeScript strict errors~~ **0 errors** (`tsc --noEmit` + `typecheck` script)
+- ~~ESLint warnings~~ **0 warnings**
+- ~~Web test suite~~ **129 tests, CI gate active**
+- ~~Plaid~~ **PERMANENTLY OUT** — Stripe operational
+- ~~react-pdf chunk~~ Already lazy-loaded, no action needed
 
 ---
 
@@ -157,7 +161,11 @@ All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (s
 | `web/src/lib/export.test.ts` | **NEW** — Export sanitization tests (14 tests) |
 | `web/eslint.config.mjs` | **UPDATED** — gen/ ignore, caught errors, route exports |
 | `web/tsconfig.json` | **UPDATED** — Removed Next.js remnants |
-| `web/package.json` | **UPDATED** — test/test:watch/test:coverage scripts |
+| `web/package.json` | **UPDATED** — test/typecheck/test:watch/test:coverage scripts |
+| `web/src/vite-env.d.ts` | **NEW** — Vite + Vitest ambient type declarations |
+| `web/src/routes/estates.create.tsx` | **UPDATED** — GA4 trackEstateCreated wired |
+| `web/src/routes/estates.$estateId.vault.tsx` | **UPDATED** — GA4 trackDocumentUploaded wired |
+| `web/src/routes/estates.$estateId.pricing.tsx` | **UPDATED** — GA4 trackCheckoutStarted wired |
 | `.github/workflows/firebase-hosting-merge.yml` | **UPDATED** — web-test job enabled |
 
 ---

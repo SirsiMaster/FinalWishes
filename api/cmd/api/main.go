@@ -19,10 +19,14 @@ import (
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 
+	sai "github.com/SirsiMaster/sirsi-ai"
+
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 	"github.com/sirsi-technologies/finalwishes-api/internal/capsules"
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
+	"github.com/sirsi-technologies/finalwishes-api/internal/docintell"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
+	"github.com/sirsi-technologies/finalwishes-api/internal/guardian"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guidance"
 	"github.com/sirsi-technologies/finalwishes-api/internal/lockbox"
 	appmw "github.com/sirsi-technologies/finalwishes-api/internal/middleware"
@@ -250,13 +254,28 @@ func main() {
 		log.Warn().Msg("Cloud KMS unavailable — lockbox credential encryption endpoints disabled")
 	}
 
-	// Document Vault REST endpoints (download URLs — not in proto, pure REST)
+	// Document Vault REST endpoints (download URLs + Document Intelligence)
 	if sc != nil {
+		// Initialize Document Intelligence AI (optional — degrades gracefully)
+		var docintellHandler *docintell.Handler
+		if fs != nil {
+			if engine, err := sai.New(ctx, sai.LoadConfig()); err == nil {
+				vaultBucket := getEnvOrDefault("VAULT_BUCKET", "finalwishes-vault")
+				docintellHandler = docintell.NewHandler(fs, sc, engine, vaultBucket)
+				log.Info().Msg("Document Intelligence AI initialized")
+			} else {
+				log.Warn().Err(err).Msg("Sirsi AI unavailable — Document Intelligence disabled")
+			}
+		}
+
 		r.Route("/api/v1/documents", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Get("/download-url", estate.HandleDownloadURL(sc, fs))
+			if docintellHandler != nil {
+				r.Post("/analyze", docintellHandler.HandleAnalyze)
+			}
 		})
-		log.Info().Msg("Document Vault download URL endpoint registered at /api/v1/documents/download-url")
+		log.Info().Msg("Document Vault API registered at /api/v1/documents/*")
 	}
 
 	// API routes (OpenSign integration — protected by auth)
@@ -328,6 +347,19 @@ func main() {
 			r.Get("/media-usage", tierHandler.HandleMediaUsage)
 		})
 		log.Info().Msg("Tier-gating media usage endpoint registered")
+	}
+
+	// Guardian Protocol routes (inactivity detection + settlement)
+	if fs != nil {
+		guardianHandler := guardian.NewHandler(fs)
+		r.Route("/api/v1/guardian", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/check-in", guardianHandler.HandleCheckIn)
+			r.Get("/status", guardianHandler.HandleGetStatus)
+			r.Post("/report-status", guardianHandler.HandleReportStatus)
+			r.Post("/run-inactivity-check", guardianHandler.HandleRunInactivityCheck)
+		})
+		log.Info().Msg("Guardian Protocol API routes registered at /api/v1/guardian/*")
 	}
 
 	// Time Capsule routes (Cloud Tasks deferred delivery)

@@ -4,8 +4,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.6.1] — 2026-04-15
+### Session 7b: Page Transitions, Empty States, Shepherd Nudges, Security Rules
+
+### Added
+- **Page transitions** — Framer Motion `AnimatePresence` wraps estate Outlet with fade+slide (0.25s ease)
+- **SectionEmptyState component** — Section-themed empty states with unique SVG illustrations per group
+  - Soul Log: journal + heartbeat, Memories: photo stack + film, Letters: envelope + wax seal
+  - My People: connected figures + shield, Vault: vault door + dial, Legacy: timeline + cards
+- **Shepherd section nudges** — `getSectionNudge()` returns contextual per-section hints
+  - 4-6 nudges per section, condition-gated (e.g. "Write to each heir" only if heirs exist)
+  - Integrated into SectionHeader via `shepherdHint` prop
+  - Compass icon + italic text in section accent color
+- **Firestore security rules** — `life-chapters` subcollection (rule 3o): read for estate access, write for estate writers, delete for principal only
+
+### Changed
+- Estate layout `<Outlet>` wrapped with `AnimatePresence` + `motion.div` for section transitions
+- Empty states in heirlooms, lockbox, directives, beneficiaries now use themed `SectionEmptyState`
+
+---
+
 ## [0.6.0] — 2026-04-15
-### Session 7: Emotional Section Design + Life Chapters
+### Session 7a: Emotional Section Design + Life Chapters
 
 ### Added
 - **SectionHeader component** — Shared emotional section header (`web/src/components/estate/SectionHeader.tsx`)

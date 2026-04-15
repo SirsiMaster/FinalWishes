@@ -131,6 +131,8 @@ interface SectionHeaderProps {
   subtitle?: string
   /** Right-side action slot (e.g. a "New Entry" button) */
   action?: ReactNode
+  /** Shepherd contextual nudge — shown as a subtle hint below the header */
+  shepherdHint?: string | null
   /** Additional content below the header (e.g. search bar, tabs) */
   children?: ReactNode
 }
@@ -140,6 +142,7 @@ export function SectionHeader({
   title,
   subtitle,
   action,
+  shepherdHint,
   children,
 }: SectionHeaderProps) {
   const theme = SECTION_THEMES[section]
@@ -208,6 +211,27 @@ export function SectionHeader({
           {/* Action slot */}
           {action && <div className="flex-shrink-0">{action}</div>}
         </div>
+
+        {/* Shepherd nudge */}
+        {shepherdHint && (
+          <div className="mt-5 flex items-start gap-3">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style={{ backgroundColor: `${theme.accentColor}10` }}
+            >
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: theme.accentColor }}>
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
+              </svg>
+            </div>
+            <p
+              className="text-[13px] leading-relaxed italic"
+              style={{ color: `${theme.accentColor}70` }}
+            >
+              {shepherdHint}
+            </p>
+          </div>
+        )}
 
         {/* Optional children (search, tabs, etc.) */}
         {children && <div className="mt-6">{children}</div>}

@@ -39,6 +39,7 @@ import { Separator } from '@/components/ui/separator'
 import { Progress } from '@/components/ui/progress'
 
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
 
 export const Route = createFileRoute('/estates/$estateId/heirlooms')({
   component: HeirloomsPage,
@@ -177,19 +178,13 @@ function HeirloomsPage() {
 
       {/* ── Items Grid ── */}
       {filtered.length === 0 ? (
-        <div className="text-center py-24">
-          <div className="w-20 h-20 bg-[#C8A951]/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
-            <Gem className="w-8 h-8 text-[#C8A951]/40" />
-          </div>
-          <h3 className="text-xl font-bold text-[#0F172A] mb-2">No heirlooms registered yet</h3>
-          <p className="text-[#64748B] mb-8">Document your family treasures to ensure they reach the right hands.</p>
-          <Button
-            onClick={() => setModalOpen(true)}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[14px]"
-          >
-            <Plus className="w-4 h-4" /> Add First Heirloom
-          </Button>
-        </div>
+        <SectionEmptyState
+          section="memories"
+          heading="No heirlooms registered yet"
+          message="Document your family treasures to ensure they reach the right hands."
+          ctaLabel="Add First Heirloom"
+          onAction={() => setModalOpen(true)}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filtered.map((item) => (

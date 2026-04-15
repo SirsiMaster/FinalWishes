@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useParams, useLocation } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Sidebar, MobileSidebar } from '../components/layout/Sidebar'
 import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
@@ -32,6 +33,7 @@ function EstateLayout() {
   const { estateId } = useParams({ from: '/estates/$estateId' });
   const { profile } = useAuth();
   const { data: estate } = useEstate(estateId);
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
 
@@ -108,10 +110,20 @@ function EstateLayout() {
             onMenuClick={() => setMobileMenuOpen(true)}
           />
           <EmailVerificationBanner />
-          <main className="flex-1 p-4 md:p-8">
+          <main className="flex-1 p-4 md:p-8 overflow-hidden">
             <ErrorBoundary>
               <IdentityGate estateId={estateId}>
-                <Outlet />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={location.pathname}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                  >
+                    <Outlet />
+                  </motion.div>
+                </AnimatePresence>
               </IdentityGate>
             </ErrorBoundary>
           </main>

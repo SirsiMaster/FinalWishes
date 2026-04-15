@@ -29,6 +29,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
@@ -221,19 +222,13 @@ function LockboxPage() {
 
       {/* ── Items Grid ── */}
       {filtered.length === 0 ? (
-        <div className="text-center py-24">
-          <div className="w-20 h-20 bg-[#133378]/5 rounded-3xl flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-8 h-8 text-[#133378]/30" />
-          </div>
-          <h3 className="text-xl font-bold text-[#0F172A] mb-2">No credentials stored yet</h3>
-          <p className="text-[#64748B] mb-8">Add your first account to help your heirs manage your digital life.</p>
-          <Button
-            onClick={() => setModalOpen(true)}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[14px]"
-          >
-            <Plus className="w-4 h-4" /> Add First Credential
-          </Button>
-        </div>
+        <SectionEmptyState
+          section="the-vault"
+          heading="No credentials stored yet"
+          message="Add your first account to help your heirs manage your digital life."
+          ctaLabel="Add First Credential"
+          onAction={() => setModalOpen(true)}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filtered.map((item) => (

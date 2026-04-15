@@ -1,13 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Outlet, useParams } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Sidebar, MobileSidebar } from '../components/layout/Sidebar'
 import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { IdentityGate } from '../components/guards/IdentityGate'
+import { HeirWelcome, shouldShowHeirWelcome, markWelcomeSeen } from '../components/guards/HeirWelcome'
 import { EmailVerificationBanner } from '../components/identity/EmailVerificationBanner'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
+import { useEstate } from '../lib/firestore'
 import { useEffect } from 'react'
 
 const ROLE_LABELS: Record<string, string> = {
@@ -28,7 +30,9 @@ export const Route = createFileRoute('/estates/$estateId')({
 function EstateLayout() {
   const { estateId } = useParams({ from: '/estates/$estateId' });
   const { profile } = useAuth();
+  const { data: estate } = useEstate(estateId);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -37,6 +41,24 @@ function EstateLayout() {
       document.body.classList.remove('dashboard-theme');
     }
   }, []);
+
+  const handleWelcomeContinue = useCallback(() => {
+    if (profile?.uid) {
+      markWelcomeSeen(estateId, profile.uid);
+    }
+    setWelcomeDismissed(true);
+  }, [estateId, profile]);
+
+  // Show the Heir Welcome Screen when conditions are met
+  const showWelcome = !welcomeDismissed && shouldShowHeirWelcome(profile, estate?.status, estateId);
+
+  if (showWelcome) {
+    return (
+      <AuthGuard>
+        <HeirWelcome estateId={estateId} onContinue={handleWelcomeContinue} />
+      </AuthGuard>
+    );
+  }
 
   const userRole = profile?.role || 'principal';
   const estateName = profile?.primaryEstateName || 'My Estate';

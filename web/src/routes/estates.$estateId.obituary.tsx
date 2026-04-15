@@ -53,7 +53,7 @@ function ObituaryPage() {
     const ts = obit.last_updated;
     // Firestore Timestamp has toDate()
     const tsObj = ts as { toDate?: () => Date };
-    const date = typeof tsObj.toDate === 'function' ? tsObj.toDate() : new Date(ts as string | number);
+    const date = typeof tsObj.toDate === 'function' ? tsObj.toDate() : new Date(ts as unknown as string);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);

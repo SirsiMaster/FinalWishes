@@ -429,6 +429,7 @@ function DashboardIndex() {
         </CardContent>
         {nextAction && (
           <Button asChild size="lg" className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-14 py-6 rounded-2xl font-bold text-[15px] h-auto shadow-[0_20px_50px_rgba(19,51,120,0.15)] hover:shadow-[0_25px_60px_rgba(19,51,120,0.25)] hover:-translate-y-1 active:scale-95 z-10">
+            {/* @ts-expect-error — dynamic route from checklist */}
             <Link to={`/estates/${routeId}/${nextAction.route}`}>
               {nextAction.label} →
             </Link>
@@ -463,6 +464,7 @@ function DashboardIndex() {
                       {catSteps.map((step) => (
                         <Link
                           key={step.id}
+                          // @ts-expect-error — dynamic route from checklist
                           to={`/estates/${routeId}/${step.route}`}
                           className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all no-underline group/step ${
                             step.complete

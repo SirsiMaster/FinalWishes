@@ -6,21 +6,21 @@ const mockAddDoc = vi.fn()
 const mockSetDoc = vi.fn()
 const mockUpdateDoc = vi.fn()
 const mockGetDocs = vi.fn()
-const mockCollection = vi.fn(() => 'mock-collection-ref')
-const mockDoc = vi.fn(() => 'mock-doc-ref')
-const mockQuery = vi.fn((...args: unknown[]) => args[0])
-const mockWhere = vi.fn((...args: unknown[]) => ({ type: 'where', args }))
+const mockCollection = vi.fn((..._: any[]) => 'mock-collection-ref')
+const mockDoc = vi.fn((..._: any[]) => 'mock-doc-ref')
+const mockQuery = vi.fn((...args: any[]) => args[0])
+const mockWhere = vi.fn((...args: any[]) => ({ type: 'where', args }))
 const mockServerTimestamp = vi.fn(() => 'MOCK_TIMESTAMP')
 
 vi.mock('firebase/firestore', () => ({
-  addDoc: (...args: unknown[]) => mockAddDoc(...args),
-  setDoc: (...args: unknown[]) => mockSetDoc(...args),
-  updateDoc: (...args: unknown[]) => mockUpdateDoc(...args),
-  getDocs: (...args: unknown[]) => mockGetDocs(...args),
-  collection: (...args: unknown[]) => mockCollection(...args),
-  doc: (...args: unknown[]) => mockDoc(...args),
-  query: (...args: unknown[]) => mockQuery(...args),
-  where: (...args: unknown[]) => mockWhere(...args),
+  addDoc: (...args: any[]) => mockAddDoc(...args),
+  setDoc: (...args: any[]) => mockSetDoc(...args),
+  updateDoc: (...args: any[]) => mockUpdateDoc(...args),
+  getDocs: (...args: any[]) => mockGetDocs(...args),
+  collection: (...args: any[]) => mockCollection(...args),
+  doc: (...args: any[]) => mockDoc(...args),
+  query: (...args: any[]) => mockQuery(...args),
+  where: (...args: any[]) => mockWhere(...args),
   serverTimestamp: () => mockServerTimestamp(),
 }))
 

@@ -33,7 +33,7 @@ export function trackCheckoutStarted(tierId: string) {
 
 /** Track successful payment */
 export function trackPaymentSuccess(tierId: string) {
-  if (analytics) logEvent(analytics, 'purchase', { tier_id: tierId });
+  if (analytics) logEvent(analytics, 'purchase' as string, { tier_id: tierId });
 }
 
 // ─── Performance Trace Helpers ─────────────────────────────────────────────

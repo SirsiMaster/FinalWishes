@@ -345,6 +345,7 @@ type PhotoUpload = {
 // ─── Add Modal ──────────────────────────────────────────────────────────────
 
 function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { usage: tierUsage } = useTierGating(estateId)
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState({
     name: '',
@@ -451,7 +452,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
       }
       uploadImage(file)
     }
-  }, [photoUploads.length, uploadImage])
+  }, [photoUploads.length, uploadImage, tierUsage])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

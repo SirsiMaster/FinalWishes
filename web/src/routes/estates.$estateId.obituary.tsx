@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+import { Download } from 'lucide-react'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -214,6 +215,27 @@ function ObituaryPage() {
     }
   }, [estateId, user]);
 
+  const handleExportPDF = useCallback(async () => {
+    const content = obit?.content;
+    if (!content) return;
+    const { pdf } = await import('@react-pdf/renderer');
+    const { ObituaryPDF } = await import('@/components/pdf/ObituaryPDF');
+    const blob = await pdf(
+      <ObituaryPDF
+        name={userName || 'Estate Principal'}
+        content={content}
+        photoUrl={profilePhoto}
+        date={new Date().toLocaleDateString()}
+      />
+    ).toBlob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(userName || 'Obituary').replace(/[^a-zA-Z0-9]/g, '_')}_Obituary.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [obit?.content, userName, profilePhoto]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
@@ -296,6 +318,15 @@ function ObituaryPage() {
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
             Review & Sign
           </Button>
+          {obit?.content && (
+            <Button
+              onClick={handleExportPDF}
+              className="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#334155] px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-sm active:scale-95"
+            >
+              <Download className="w-4 h-4" />
+              Export PDF
+            </Button>
+          )}
           <Button
             onClick={handleShare}
             disabled={shareLoading || !obit?.content}

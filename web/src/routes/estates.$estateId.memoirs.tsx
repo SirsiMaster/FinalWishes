@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
 // YouTube embed via native iframe — zero bundle cost (no react-player)
 import { useCollection } from '../lib/firestore'
 import { estateClient } from '../lib/client'
@@ -115,12 +116,31 @@ function MemoirsPage() {
         })
 
         if (uploadUrl) {
-          const response = await fetch(uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': file.type },
-            body: file,
+          setUploadProgress(0)
+          await new Promise<void>((resolve, reject) => {
+            const xhr = new XMLHttpRequest()
+            xhr.open('PUT', uploadUrl)
+            xhr.setRequestHeader('Content-Type', file.type)
+
+            xhr.upload.addEventListener('progress', (e) => {
+              if (e.lengthComputable) {
+                setUploadProgress(Math.round((e.loaded / e.total) * 100))
+              }
+            })
+
+            xhr.addEventListener('load', () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve()
+              } else {
+                reject(new Error('Failed to upload file'))
+              }
+            })
+
+            xhr.addEventListener('error', () => reject(new Error('Network error during upload')))
+            xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')))
+
+            xhr.send(file)
           })
-          if (!response.ok) throw new Error('Failed to upload file')
         }
 
         await addDoc(collection(db, `estates/${estateId}/memoirs`), {
@@ -139,6 +159,7 @@ function MemoirsPage() {
         toast.error('Upload failed. Please try again.')
       } finally {
         setUploading(false)
+        setUploadProgress(0)
       }
     },
     [estateId, user, tierUsage],
@@ -540,6 +561,27 @@ function UploadModal({
   const [uploadDest, setUploadDest] = useState<'cloud' | 'youtube'>('cloud')
   const [description, setDescription] = useState('')
 
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const f = acceptedFiles[0]
+    if (!f) return
+    // Assign file to the file input ref via DataTransfer
+    const dt = new DataTransfer()
+    dt.items.add(f)
+    if (fileInputRef.current) {
+      fileInputRef.current.files = dt.files
+    }
+    setSelectedFileName(f.name)
+    if (f.type.startsWith('video/')) setMediaType('video')
+    else if (f.type.startsWith('image/')) setMediaType('photo')
+  }, [fileInputRef])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'video/*': [], 'image/*': [] },
+    multiple: false,
+    noClick: false,
+  })
+
   // Detect if the selected file is a video for showing YouTube upload option
   const isVideoFile = mediaType === 'video'
   const maxSizeMB = uploadDest === 'youtube' ? 256 : 50
@@ -666,19 +708,14 @@ function UploadModal({
                   File
                 </Label>
                 <div
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full h-36 border-2 border-dashed border-[#133378]/15 rounded-[2rem] flex flex-col items-center justify-center bg-[#F8FAFC] hover:bg-white hover:border-[#133378]/30 transition-all cursor-pointer group"
+                  {...getRootProps()}
+                  className={`w-full h-36 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center transition-all cursor-pointer group ${
+                    isDragActive
+                      ? 'border-[#133378] bg-[#133378]/5'
+                      : 'border-[#133378]/15 bg-[#F8FAFC] hover:bg-white hover:border-[#133378]/30'
+                  }`}
                 >
-                  <div className="w-12 h-12 rounded-full bg-white border border-[#133378]/10 flex items-center justify-center mb-3 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 text-[#133378]/30">
-                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="17 8 12 3 7 8" />
-                      <line x1="12" y1="3" x2="12" y2="15" />
-                    </svg>
-                  </div>
-                  <span className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.2em] group-hover:text-[#133378]">
-                    {selectedFileName || 'Select Media File'}
-                  </span>
+                  <input {...getInputProps()} />
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -687,11 +724,20 @@ function UploadModal({
                     onChange={(e) => {
                       const f = e.target.files?.[0]
                       setSelectedFileName(f?.name || '')
-                      // Auto-detect media type from file
                       if (f?.type.startsWith('video/')) setMediaType('video')
                       else if (f?.type.startsWith('image/')) setMediaType('photo')
                     }}
                   />
+                  <div className="w-12 h-12 rounded-full bg-white border border-[#133378]/10 flex items-center justify-center mb-3 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 text-[#133378]/30">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                  </div>
+                  <span className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.2em] group-hover:text-[#133378]">
+                    {isDragActive ? 'Drop file here' : selectedFileName || 'Drag & drop or click to select'}
+                  </span>
                 </div>
               </div>
 
@@ -781,18 +827,18 @@ function UploadModal({
             {uploading && uploadProgress > 0 && (
               <div className="space-y-2">
                 <div className="flex justify-between text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
-                  <span>Uploading to YouTube</span>
+                  <span>Uploading</span>
                   <span>{uploadProgress}%</span>
                 </div>
                 <div className="w-full h-2 bg-[#133378]/10 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-red-500 rounded-full transition-all duration-300 ease-out"
+                    className="h-full bg-[#133378] rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
                 {uploadProgress === 100 && (
                   <p className="text-[10px] font-medium text-[#133378]/40 text-center">
-                    Processing on YouTube servers...
+                    Processing...
                   </p>
                 )}
               </div>

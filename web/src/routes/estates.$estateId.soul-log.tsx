@@ -681,10 +681,47 @@ function ExpandedContent({
         </div>
       )}
       {entry.transcriptStatus === 'failed' && (
-        <div className="flex items-center gap-2 p-3 rounded-2xl bg-red-50 border border-red-100">
-          <span className="text-sm text-red-400 italic">Transcription failed</span>
-        </div>
+        <TranscriptionRetry entry={entry} />
       )}
+    </div>
+  )
+}
+
+// ─── Transcription Retry ────────────────────────────────────────────────────
+
+function TranscriptionRetry({ entry }: { entry: SoulLogEntry }) {
+  const { estateId: routeId } = useParams({ from: '/estates/$estateId/soul-log' })
+  const [retrying, setRetrying] = useState(false)
+
+  const handleRetry = useCallback(async () => {
+    if (!entry.mediaUrl || !entry.storageKey) return
+    setRetrying(true)
+    const mimeType = entry.type === 'video' ? 'video/webm' : 'audio/webm'
+    await requestTranscription(routeId, entry.id, entry.storageKey, mimeType)
+    // Mark as processing in Firestore
+    try {
+      const entryRef = doc(db, `estates/${routeId}/soul-log/${entry.id}`)
+      await setDoc(entryRef, { transcriptStatus: 'processing' }, { merge: true })
+      toast.success('Retrying transcription...')
+    } catch {
+      toast.error('Failed to retry transcription')
+    }
+    setRetrying(false)
+  }, [entry, routeId])
+
+  return (
+    <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-red-50 border border-red-100">
+      <span className="text-sm text-red-400 italic">Transcription failed</span>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => { e.stopPropagation(); handleRetry() }}
+        disabled={retrying}
+        className="text-xs text-red-500 hover:text-red-700 hover:bg-red-100 rounded-lg gap-1.5 h-7 px-3"
+      >
+        {retrying ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+        Retry
+      </Button>
     </div>
   )
 }
@@ -881,6 +918,8 @@ function ComposerDialog({
   const [sealedTrigger, setSealedTrigger] = useState<'date' | 'on_passing'>('on_passing')
   const [sealedDate, setSealedDate] = useState('')
   const [saving, setSaving] = useState(false)
+  const [saveStep, setSaveStep] = useState<'idle' | 'uploading' | 'saving' | 'transcribing' | 'done'>('idle')
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   // Recording state
   const [recording, setRecording] = useState(false)
@@ -1006,6 +1045,8 @@ function ComposerDialog({
   const handleSave = useCallback(async () => {
     if (saving) return
     setSaving(true)
+    setSaveStep('idle')
+    setUploadProgress(0)
 
     try {
       let mediaUrl = ''
@@ -1015,8 +1056,11 @@ function ComposerDialog({
         if (tierUsage && !tierUsage.canUploadMedia) {
           toast.error('You have reached your media upload limit. Upgrade your plan to continue.')
           setSaving(false)
+          setSaveStep('idle')
           return
         }
+
+        setSaveStep('uploading')
 
         const fileName = `soul-log-${Date.now()}.webm`
         const contentType = entryType === 'video' ? 'video/webm' : 'audio/webm'
@@ -1028,16 +1072,29 @@ function ComposerDialog({
         })
 
         if (uploadUrl) {
-          const resp = await fetch(uploadUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': contentType },
-            body: recordedBlob,
+          // XHR upload with progress tracking
+          await new Promise<void>((resolve, reject) => {
+            const xhr = new XMLHttpRequest()
+            xhr.open('PUT', uploadUrl)
+            xhr.setRequestHeader('Content-Type', contentType)
+            xhr.upload.onprogress = (e) => {
+              if (e.lengthComputable) {
+                setUploadProgress(Math.round((e.loaded / e.total) * 100))
+              }
+            }
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) resolve()
+              else reject(new Error(`Upload failed: ${xhr.status}`))
+            }
+            xhr.onerror = () => reject(new Error('Upload network error'))
+            xhr.send(recordedBlob)
           })
-          if (!resp.ok) throw new Error('Failed to upload media')
         }
 
         mediaUrl = finalUrl || ''
       }
+
+      setSaveStep('saving')
 
       // Build the document
       const entryDoc: Record<string, unknown> = {
@@ -1093,9 +1150,11 @@ function ComposerDialog({
 
       // Fire background transcription for audio/video entries
       if ((entryType === 'video' || entryType === 'audio') && mediaUrl) {
+        setSaveStep('transcribing')
         requestTranscription(estateId, entryRef.id, mediaUrl, entryType === 'video' ? 'video/webm' : 'audio/webm')
       }
 
+      setSaveStep('done')
       toast.success('Entry saved to your Soul Log')
       onOpenChange(false)
     } catch (err) {
@@ -1103,6 +1162,8 @@ function ComposerDialog({
       toast.error('Failed to save entry. Please try again.')
     } finally {
       setSaving(false)
+      setSaveStep('idle')
+      setUploadProgress(0)
     }
   }, [
     saving, entryType, recordedBlob, tierUsage, estateId, title,
@@ -1334,9 +1395,17 @@ function ComposerDialog({
             <Button
               onClick={handleSave}
               disabled={!canSave || saving}
-              className="flex-1 rounded-xl bg-[#133378] hover:bg-[#0F2860] text-white font-semibold"
+              className="flex-1 rounded-xl bg-[#133378] hover:bg-[#0F2860] text-white font-semibold gap-2"
             >
-              {saving ? 'Saving...' : 'Save Entry'}
+              {saving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {saveStep === 'uploading' ? `Uploading ${uploadProgress}%` :
+                   saveStep === 'saving' ? 'Saving entry...' :
+                   saveStep === 'transcribing' ? 'Starting transcription...' :
+                   'Saving...'}
+                </>
+              ) : 'Save Entry'}
             </Button>
           </div>
         </div>

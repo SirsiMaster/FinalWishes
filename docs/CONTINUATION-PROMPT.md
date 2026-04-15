@@ -1,17 +1,17 @@
 # FinalWishes — Continuation Prompt
-**Version:** 17.0 — **Date:** April 14, 2026 — **Session:** Test Suite + Code Quality
+**Version:** 17.1 — **Date:** April 14, 2026 — **Session:** Test Suite + Code Quality + Type Safety
 
 ---
 
 ## Resume Key
 
-**Last commit:** `(pending)` (main) — Clean working tree, 0 lint warnings, 0 vulnerabilities, 129 tests passing
+**Last commit:** `(pending)` (main) — Clean working tree, 0 lint warnings, 0 TS errors, 0 vulnerabilities, 129 tests passing
 **Repo:** `/Users/thekryptodragon/Development/FinalWishes`
 **Contract:** MSA-2025-111-FW | SOW-2025-001 | $95K Fixed Bid | 16 Weeks
 **Production:** `https://finalwishes-prod.web.app` | API rev 11 at Cloud Run
 **Deployed:** April 14, 2026 — CI/CD pipeline green, both frontend and API live
 **Security:** 0 npm vulnerabilities, 0 Go advisories
-**Tests:** 129 passing (8 files) — lint 0 warnings
+**Tests:** 129 passing (8 files) — lint 0 warnings — tsc 0 errors
 
 ---
 
@@ -57,7 +57,20 @@ Made the test infrastructure fully operational — vitest was installed but coul
 
 **tsconfig Cleanup:**
 - Removed Next.js remnants: `next-env.d.ts`, `.next/types/**/*.ts`, `next` plugin
-- Added `dist` to exclude
+- Added `dist` to exclude, `vite/client` to types
+
+**TypeScript Strict: 50 → 0 errors:**
+- Added `vite/client` + `vitest/globals` ambient types (`vite-env.d.ts`)
+- Fixed all `/login` navigate calls with `search: {}` (TanStack Router validateSearch)
+- Typed login validateSearch return as `{ invite?: string; demo?: boolean }`
+- Imported `UserProfile` from auth.tsx (was locally redefined in login.tsx)
+- Fixed test mock signatures for vi.fn spread compatibility
+- Fixed `AddHeirloomModal` missing `useTierGating` hook (tierUsage was undefined in callback scope)
+- Added inline `timeAgo` to NotificationBell (missing utils export)
+- Fixed export.ts sanitize fns to accept readonly arrays
+- Fixed estateId index redirect with useParams approach
+
+**Plaid:** Permanently out of scope. Zero code/dep references. Stripe integration operational.
 
 ### Prior Sessions
 - Session 4 (Apr 14): CI/CD fixes, tier-gating, responsive audit, security remediation (32 → 0 vulns)
@@ -89,16 +102,15 @@ Firebase Console -> Project Settings -> Integrations -> Google Analytics -> Enab
 Code instrumentation already in place (analytics.ts + firebase.ts)
 
 ### 3. Remaining Technical Debt
-- react-pdf chunk: 1.5MB (lazy-loaded, code-split — consider dynamic import)
-- 23+ TypeScript strict errors (pre-existing, don't block build — Vite doesn't use tsc)
-- Plaid integration (in compliance process — deferred)
+- react-pdf chunk: 1.5MB — already lazy-loaded via dynamic import, no further optimization needed
+- ~~TypeScript strict errors~~ **RESOLVED** — 0 errors, `tsc --noEmit` clean
+- ~~Plaid~~ **PERMANENTLY OUT** — Stripe is operational, Plaid has zero code references
 - Google Photos API (deferred — using Cloud Storage interim)
 
 ### 4. Future Features (Tier 3, not purchased)
 - Estate Administration ($25K)
 - Probate Engine MD/IL/MN ($35K)
 - Advanced AI ($15K)
-- Financial Integration / Plaid ($20K)
 
 ---
 

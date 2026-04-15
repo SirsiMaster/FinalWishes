@@ -29,9 +29,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   - Added `allowExportNames` for TanStack Router conventions (Route, loader, action)
   - Inline-suppressed `no-explicit-any` on ConnectRPC proxy (genuinely dynamic types)
 
+### Fixed (cont.)
+- **TypeScript strict errors**: 50 → 0 (`tsc --noEmit` clean)
+  - Added `vite/client` + `vitest/globals` ambient types via `vite-env.d.ts`
+  - Fixed all `/login` navigate calls with `search: {}` (TanStack Router strict typing)
+  - Typed `validateSearch` return as `{ invite?: string; demo?: boolean }`
+  - Imported `UserProfile` from auth.tsx (was redefined locally in login.tsx)
+  - Fixed test mock signatures for vi.fn spread compatibility
+  - Fixed `AddHeirloomModal` missing `useTierGating` hook (tierUsage was undefined)
+  - Added inline `timeAgo` utility to NotificationBell (was missing from utils export)
+  - Fixed export.ts sanitize functions to accept readonly arrays
+
 ### Changed
-- tsconfig.json: Removed Next.js remnants (next-env.d.ts, .next/types, next plugin)
-- ESLint config: Added `src/gen/**` to ignores, `caughtErrorsIgnorePattern`, route export names
+- tsconfig.json: Removed Next.js remnants, added `vite/client` types
+- ESLint config: Added `src/gen/**` to ignores, `caughtErrorsIgnorePattern`, TanStack route names, `no-explicit-any` off for test files
+- **Plaid permanently out of scope** — zero code/dep references, Stripe integration operational
 
 ---
 

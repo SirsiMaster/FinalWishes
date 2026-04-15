@@ -18,7 +18,8 @@ import {
   type TimeCapsule,
   type Heirloom,
 } from '../lib/firestore'
-import { orderBy, type Timestamp } from 'firebase/firestore'
+import { orderBy, type Timestamp, doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { db } from '../lib/firebase'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -61,6 +62,20 @@ interface ShepherdScore {
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+
+// ─── Shepherd Persistence ────────────────────────────────────────────────────
+
+/** Fire-and-forget: save a chat message to Firestore for conversation memory */
+function persistMessage(estateId: string, msg: ChatMessage) {
+  setDoc(doc(db, `estates/${estateId}/shepherd-messages/${msg.id}`), {
+    role: msg.role,
+    content: msg.content,
+    suggestedActions: msg.suggestedActions || null,
+    createdAt: serverTimestamp(),
+  }).catch(() => {
+    // Non-blocking — persistence failure is silent
+  })
+}
 
 // ─── Shepherd Chat Types ────────────────────────────────────────────────────
 
@@ -115,26 +130,53 @@ function ShepherdChat({
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [historyLoaded, setHistoryLoaded] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Seed the initial insight message when the panel first opens
+  // Load conversation history from Firestore on first open
   useEffect(() => {
-    if (open && messages.length === 0 && initialInsight) {
-      setMessages([
-        {
-          id: crypto.randomUUID(),
-          role: 'shepherd',
-          content: initialInsight,
-          suggestedActions: [
-            'What should I do next?',
-            'Explain my score',
-            'Who needs to be notified?',
-          ],
-        },
-      ])
+    if (!open || historyLoaded) return
+    setHistoryLoaded(true)
+    const loadHistory = async () => {
+      try {
+        const { getDocs, query, collection: col, orderBy: ob, limit: lim } = await import('firebase/firestore')
+        const q = query(
+          col(db, `estates/${estateId}/shepherd-messages`),
+          ob('createdAt', 'desc'),
+          lim(10),
+        )
+        const snap = await getDocs(q)
+        if (snap.empty) {
+          // No history — seed with initial insight
+          setMessages([
+            {
+              id: crypto.randomUUID(),
+              role: 'shepherd',
+              content: initialInsight,
+              suggestedActions: ['What should I do next?', 'Explain my score', 'Who needs to be notified?'],
+            },
+          ])
+        } else {
+          const loaded: ChatMessage[] = snap.docs
+            .map((d) => ({ id: d.id, ...(d.data() as Omit<ChatMessage, 'id'>) }))
+            .reverse()
+          setMessages(loaded)
+        }
+      } catch {
+        // Fallback to initial insight if Firestore load fails
+        setMessages([
+          {
+            id: crypto.randomUUID(),
+            role: 'shepherd',
+            content: initialInsight,
+            suggestedActions: ['What should I do next?', 'Explain my score', 'Who needs to be notified?'],
+          },
+        ])
+      }
     }
-  }, [open, messages.length, initialInsight])
+    loadHistory()
+  }, [open, historyLoaded, estateId, initialInsight])
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -173,6 +215,9 @@ function ShepherdChat({
       setInput('')
       setIsLoading(true)
 
+      // Persist user message to Firestore (fire-and-forget)
+      persistMessage(estateId, userMsg)
+
       try {
         const token = await user.getIdToken()
         const res = await fetch(`${API_BASE}/api/v1/guidance/chat`, {
@@ -198,6 +243,8 @@ function ShepherdChat({
           suggestedActions: data.suggestedActions,
         }
         setMessages((prev) => [...prev, shepherdMsg])
+        // Persist Shepherd reply
+        persistMessage(estateId, shepherdMsg)
       } catch (_err) {
         const errorMsg: ChatMessage = {
           id: crypto.randomUUID(),

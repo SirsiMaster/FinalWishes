@@ -335,6 +335,15 @@ service cloud.firestore {
         allow update: if canWriteEstate(estateId);
         allow delete: if isEstatePrincipal(estateId);
       }
+
+      // ── 3p. Shepherd Conversation Messages (AI Chat Memory) ──
+      match /shepherd-messages/{messageId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['role', 'content', 'createdAt'])
+          && request.resource.data.role in ['user', 'shepherd'];
+        allow delete: if isEstatePrincipal(estateId);
+      }
     }
     
     // =============================================

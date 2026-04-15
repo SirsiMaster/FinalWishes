@@ -1,5 +1,5 @@
 # FinalWishes — Continuation Prompt
-**Version:** 19.0 — **Date:** April 15, 2026 — **Session:** Emotional Section Design + Life Chapters
+**Version:** 19.2 — **Date:** April 15, 2026 — **Session:** Emotional Sections + Life Chapters + Media Polish + Shepherd Memory
 
 ---
 
@@ -24,8 +24,10 @@ ETHOS.md for full context. Sessions 5-7 shipped the Life-First Reframe: Soul Log
 Legacy Timeline, Heir Welcome Screen, Guardian Protocol, Document Intelligence,
 Shepherd companion, Letters experience, security fixes, demo purge, emotional
 section headers, Life Chapters, page transitions, themed empty states, Shepherd
-section nudges, and life-chapters security rules. Next: Soul Log media pipeline
-polish, chapter cover image uploads, Shepherd conversation memory.
+section nudges, security rules, Soul Log upload progress + transcription retry,
+chapter cover images, and Shepherd conversation memory. Next: deploy to
+production, Firestore rules deploy, performance audit (Lighthouse), E2E tests
+for new features.
 ```
 
 ---
@@ -156,6 +158,9 @@ Code instrumentation already wired (trackEstateCreated, trackDocumentUploaded, t
 - ~~Empty-state illustrations~~ **COMPLETE** — SectionEmptyState with 6 SVG illustrations
 - ~~Shepherd section nudges~~ **COMPLETE** — getSectionNudge() with per-section contextual hints
 - ~~Life-chapters security rules~~ **COMPLETE** — Firestore rule 3o added
+- ~~Soul Log upload progress~~ **COMPLETE** — XHR with percentage, step-by-step status, transcription retry
+- ~~Chapter cover images~~ **COMPLETE** — Upload via Cloud Storage, displayed on chapter cards
+- ~~Shepherd conversation memory~~ **COMPLETE** — Firestore persistence, loads last 10 messages, rule 3p
 
 ---
 

@@ -9,10 +9,11 @@
  * @version 1.0.0
  */
 import { createFileRoute, useParams, Link } from '@tanstack/react-router'
-import { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useRef } from 'react'
 import { useLifeChapters, type LifeChapter, type ChapterEntryRef, useCollection } from '../lib/firestore'
 import { addLifeChapter, updateLifeChapter, archiveLifeChapter } from '../lib/estate-actions'
 import { toast } from 'sonner'
+import { estateClient } from '../lib/client'
 import { orderBy, type Timestamp } from 'firebase/firestore'
 
 import { Button } from '@/components/ui/button'
@@ -52,6 +53,9 @@ import {
   Gem,
   ChevronRight,
   GripVertical,
+  ImagePlus,
+  X,
+  Loader2,
 } from 'lucide-react'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { getSectionNudge } from '../lib/shepherd-prompts'
@@ -108,11 +112,13 @@ function LifeChaptersPage() {
     description: string
     dateFrom: string
     dateTo: string
+    coverImageUrl?: string
   }) => {
     const result = await addLifeChapter({
       estateId,
       title: data.title,
       description: data.description,
+      coverImageUrl: data.coverImageUrl,
       dateFrom: data.dateFrom || undefined,
       dateTo: data.dateTo || undefined,
       order: chapters.length,
@@ -130,12 +136,14 @@ function LifeChaptersPage() {
     description: string
     dateFrom: string
     dateTo: string
+    coverImageUrl?: string
   }) => {
     const result = await updateLifeChapter(estateId, chapterId, {
       title: data.title,
       description: data.description,
       dateFrom: data.dateFrom || null,
       dateTo: data.dateTo || null,
+      ...(data.coverImageUrl !== undefined ? { coverImageUrl: data.coverImageUrl } : {}),
     })
     if (result.success) {
       toast.success('Chapter updated')
@@ -260,6 +268,7 @@ function LifeChaptersPage() {
           }
         }}
         chapter={editingChapter}
+        estateId={estateId}
         onSubmit={(data) => {
           if (editingChapter) {
             handleUpdate(editingChapter.id, data)
@@ -322,6 +331,17 @@ function LifeChaptersPage() {
                 key={chapter.id}
                 className="rounded-3xl border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
+                {/* Cover Image */}
+                {chapter.coverImageUrl && (
+                  <div className="h-32 md:h-40 overflow-hidden">
+                    <img
+                      src={chapter.coverImageUrl}
+                      alt={chapter.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
                 {/* Chapter Header */}
                 <button
                   type="button"
@@ -478,17 +498,23 @@ function ChapterFormDialog({
   open,
   onOpenChange,
   chapter,
+  estateId,
   onSubmit,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   chapter: LifeChapter | null
-  onSubmit: (data: { title: string; description: string; dateFrom: string; dateTo: string }) => void
+  estateId: string
+  onSubmit: (data: { title: string; description: string; dateFrom: string; dateTo: string; coverImageUrl?: string }) => void
 }) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
+  const [coverPreview, setCoverPreview] = useState<string>('')
+  const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Reset form when chapter changes
   const resetKey = chapter?.id || 'new'
@@ -498,18 +524,69 @@ function ChapterFormDialog({
       setDescription(chapter.description)
       setDateFrom(chapter.dateFrom || '')
       setDateTo(chapter.dateTo || '')
+      setCoverPreview(chapter.coverImageUrl || '')
     } else {
       setTitle('')
       setDescription('')
       setDateFrom('')
       setDateTo('')
+      setCoverPreview('')
     }
+    setCoverFile(null)
   })
 
-  const handleSubmit = () => {
+  const handleCoverSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image must be under 5MB')
+      return
+    }
+    setCoverFile(file)
+    setCoverPreview(URL.createObjectURL(file))
+  }, [])
+
+  const handleSubmit = useCallback(async () => {
     if (!title.trim()) return
-    onSubmit({ title: title.trim(), description: description.trim(), dateFrom, dateTo })
-  }
+    setUploading(true)
+
+    let coverImageUrl: string | undefined
+    if (coverFile) {
+      try {
+        const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
+          estateId,
+          fileName: `chapter-cover-${Date.now()}.${coverFile.name.split('.').pop()}`,
+          contentType: coverFile.type,
+        })
+        if (uploadUrl) {
+          const resp = await fetch(uploadUrl, {
+            method: 'PUT',
+            headers: { 'Content-Type': coverFile.type },
+            body: coverFile,
+          })
+          if (!resp.ok) throw new Error('Upload failed')
+        }
+        coverImageUrl = finalUrl || undefined
+      } catch {
+        toast.error('Failed to upload cover image')
+        setUploading(false)
+        return
+      }
+    }
+
+    setUploading(false)
+    onSubmit({
+      title: title.trim(),
+      description: description.trim(),
+      dateFrom,
+      dateTo,
+      coverImageUrl,
+    })
+  }, [title, description, dateFrom, dateTo, coverFile, estateId, onSubmit])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} key={resetKey}>
@@ -526,6 +603,42 @@ function ChapterFormDialog({
         </DialogHeader>
 
         <div className="space-y-5 py-2">
+          {/* Cover Image */}
+          <div className="space-y-2">
+            <Label className="text-sm font-semibold text-[#0F172A]">
+              Cover Image (optional)
+            </Label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleCoverSelect}
+              className="hidden"
+            />
+            {coverPreview ? (
+              <div className="relative h-32 rounded-xl overflow-hidden border border-slate-200">
+                <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 text-white hover:bg-black/60 hover:text-white"
+                  onClick={() => { setCoverPreview(''); setCoverFile(null) }}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full h-24 rounded-xl border-2 border-dashed border-[#7C3AED]/15 hover:border-[#7C3AED]/30 bg-[#FAF5FF]/50 flex items-center justify-center gap-2 text-sm text-[#7C3AED]/50 hover:text-[#7C3AED]/80 transition-colors cursor-pointer"
+              >
+                <ImagePlus className="w-5 h-5" />
+                Choose a cover photo
+              </button>
+            )}
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="chapter-title" className="text-sm font-semibold text-[#0F172A]">
               Chapter Title
@@ -586,10 +699,15 @@ function ChapterFormDialog({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={!title.trim()}
-            className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-8"
+            disabled={!title.trim() || uploading}
+            className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-8 gap-2"
           >
-            {chapter ? 'Save Changes' : 'Create Chapter'}
+            {uploading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Uploading cover...
+              </>
+            ) : chapter ? 'Save Changes' : 'Create Chapter'}
           </Button>
         </DialogFooter>
       </DialogContent>

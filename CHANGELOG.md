@@ -4,6 +4,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.6.2] — 2026-04-15
+### Session 7c: Media Pipeline Polish, Cover Images, Shepherd Memory
+
+### Added
+- **Soul Log upload progress** — XHR upload with real-time percentage, step-by-step save status (Uploading → Saving → Transcribing)
+- **Transcription retry** — Failed transcriptions now show a Retry button that re-fires the transcription request and updates status to `processing`
+- **Chapter cover images** — Life Chapters form now supports cover image upload via Cloud Storage signed URLs, displayed as banner on chapter cards
+- **Shepherd conversation memory** — Chat messages persisted to Firestore `estates/{id}/shepherd-messages` subcollection
+  - Loads last 10 messages on panel open (replaces ephemeral state)
+  - Both user messages and Shepherd replies saved with `serverTimestamp()`
+  - Fire-and-forget persistence (non-blocking)
+- **Firestore security rules** — `shepherd-messages` subcollection (rule 3p): read for estate access, create for estate writers
+
+---
+
 ## [0.6.1] — 2026-04-15
 ### Session 7b: Page Transitions, Empty States, Shepherd Nudges, Security Rules
 

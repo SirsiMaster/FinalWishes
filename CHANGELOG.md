@@ -12,7 +12,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
   - New: tier-gating tests (15 tests — constants, helpers, hook with fetch mocking)
   - New: export sanitization tests (14 tests — ZIP structure, timestamp conversion, PII stripping)
   - Existing 6 test files (105 tests) now runnable with `npm test`
-- `test`, `test:watch`, `test:coverage` scripts in package.json
+- `test`, `test:watch`, `test:coverage`, `typecheck` scripts in package.json
+- **GA4 analytics wired** to key conversion points:
+  - `trackEstateCreated` in estates.create.tsx (onboarding conversion)
+  - `trackDocumentUploaded` in vault.tsx (engagement)
+  - `trackCheckoutStarted` in pricing.tsx (revenue conversion)
+  - Just needs `VITE_FIREBASE_MEASUREMENT_ID` env var once GA4 enabled in Console
 - CI: `web-test` job enabled in pipeline (was commented out), gates `web-build`
 - jsdom + @testing-library/jest-dom added as devDependencies
 

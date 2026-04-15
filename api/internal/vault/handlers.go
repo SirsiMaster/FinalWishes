@@ -16,11 +16,20 @@ package vault
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
+
+func clientIP(r *http.Request) string {
+	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+		parts := strings.Split(xff, ",")
+		return strings.TrimSpace(parts[len(parts)-1])
+	}
+	return r.RemoteAddr
+}
 
 // Handler wraps the vault repository with HTTP handlers.
 type Handler struct {
@@ -119,7 +128,7 @@ func (h *Handler) HandleStoreUserPII(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Audit: log the store operation
-	_ = h.repo.LogAccess(ctx, userID, req.EstateID, "store", "user_pii", userID, r.RemoteAddr, r.UserAgent())
+	_ = h.repo.LogAccess(ctx, userID, req.EstateID, "store", "user_pii", userID, clientIP(r), r.UserAgent())
 
 	pii := &UserPII{
 		FirebaseUID: userID,
@@ -154,7 +163,7 @@ func (h *Handler) HandleRetrieveUserPII(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Audit: log the retrieval
-	_ = h.repo.LogAccess(ctx, userID, estateID, "retrieve", "user_pii", userID, r.RemoteAddr, r.UserAgent())
+	_ = h.repo.LogAccess(ctx, userID, estateID, "retrieve", "user_pii", userID, clientIP(r), r.UserAgent())
 
 	pii, err := h.repo.RetrieveUserPII(ctx, userID, estateID)
 	if err != nil {
@@ -215,7 +224,7 @@ func (h *Handler) HandleStoreAssetPII(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.repo.LogAccess(ctx, userID, req.EstateID, "store", "asset_pii", req.AssetID, r.RemoteAddr, r.UserAgent())
+	_ = h.repo.LogAccess(ctx, userID, req.EstateID, "store", "asset_pii", req.AssetID, clientIP(r), r.UserAgent())
 
 	pii := &AssetPII{
 		AssetID:       req.AssetID,
@@ -251,7 +260,7 @@ func (h *Handler) HandleRetrieveAssetPII(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	_ = h.repo.LogAccess(ctx, userID, estateID, "retrieve", "asset_pii", assetID, r.RemoteAddr, r.UserAgent())
+	_ = h.repo.LogAccess(ctx, userID, estateID, "retrieve", "asset_pii", assetID, clientIP(r), r.UserAgent())
 
 	pii, err := h.repo.RetrieveAssetPII(ctx, assetID, estateID)
 	if err != nil {
@@ -321,7 +330,7 @@ func (h *Handler) HandleStoreHeirPII(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = h.repo.LogAccess(ctx, userID, req.EstateID, "store", "heir_pii", req.HeirID, r.RemoteAddr, r.UserAgent())
+	_ = h.repo.LogAccess(ctx, userID, req.EstateID, "store", "heir_pii", req.HeirID, clientIP(r), r.UserAgent())
 
 	pii := &HeirPII{
 		HeirID:      req.HeirID,
@@ -356,7 +365,7 @@ func (h *Handler) HandleRetrieveHeirPII(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	_ = h.repo.LogAccess(ctx, userID, estateID, "retrieve", "heir_pii", heirID, r.RemoteAddr, r.UserAgent())
+	_ = h.repo.LogAccess(ctx, userID, estateID, "retrieve", "heir_pii", heirID, clientIP(r), r.UserAgent())
 
 	pii, err := h.repo.RetrieveHeirPII(ctx, heirID, estateID)
 	if err != nil {

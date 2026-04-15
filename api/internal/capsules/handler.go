@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
@@ -20,11 +21,18 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
-const (
+var (
 	queueLocation = "us-central1"
 	queueName     = "capsule-delivery"
-	deliverURL    = "https://finalwishes-api-860699311615.us-central1.run.app/api/v1/capsules/deliver"
+	deliverURL    string
 )
+
+func init() {
+	deliverURL = os.Getenv("CAPSULE_DELIVERY_URL")
+	if deliverURL == "" {
+		deliverURL = "https://finalwishes-api-860699311615.us-central1.run.app/api/v1/capsules/deliver"
+	}
+}
 
 // Handler manages time capsule scheduling and delivery.
 type Handler struct {

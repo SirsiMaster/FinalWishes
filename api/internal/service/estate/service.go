@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 	estatev1 "github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 )
@@ -31,9 +33,29 @@ func NewServer(fs *firestore.Client, sc *storage.Client) *Server {
 	}
 }
 
+func (s *Server) checkEstateOwnership(ctx context.Context, estateID string) error {
+	userID := auth.UserIDFromContext(ctx)
+	if userID == "" {
+		return connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("authentication required"))
+	}
+	if s.fs == nil {
+		return nil
+	}
+	docRef := s.fs.Collection("estate_users").Doc(userID + "_" + estateID)
+	doc, err := docRef.Get(ctx)
+	if err != nil || !doc.Exists() {
+		return connect.NewError(connect.CodePermissionDenied, fmt.Errorf("access denied"))
+	}
+	return nil
+}
+
 // --- Vault & Storage (Signed URLs) ---
 
 func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[estatev1.GenerateUploadUrlRequest]) (*connect.Response[estatev1.GenerateUploadUrlResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.sc == nil {
 		return nil, connect.NewError(connect.CodeFailedPrecondition, fmt.Errorf("storage client not initialized"))
 	}
@@ -43,7 +65,7 @@ func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[est
 		bucketName = "finalwishes-vault"
 	}
 
-	objectName := fmt.Sprintf("estates/%s/vault/%d-%s", req.Msg.EstateId, time.Now().UnixMilli(), req.Msg.FileName)
+	objectName := fmt.Sprintf("estates/%s/vault/%d-%s", req.Msg.EstateId, time.Now().UnixMilli(), filepath.Base(req.Msg.FileName))
 
 	uploadURL, err := s.sc.Bucket(bucketName).SignedURL(objectName, &storage.SignedURLOptions{
 		Scheme:      storage.SigningSchemeV4,
@@ -73,6 +95,10 @@ func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[est
 // --- Core Estate Management (Firestore) ---
 
 func (s *Server) ListBeneficiaries(ctx context.Context, req *connect.Request[estatev1.ListBeneficiariesRequest]) (*connect.Response[estatev1.ListBeneficiariesResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		return connect.NewResponse(&estatev1.ListBeneficiariesResponse{
 			Beneficiaries: []*estatev1.Beneficiary{
@@ -104,6 +130,10 @@ func (s *Server) ListBeneficiaries(ctx context.Context, req *connect.Request[est
 }
 
 func (s *Server) AddBeneficiary(ctx context.Context, req *connect.Request[estatev1.AddBeneficiaryRequest]) (*connect.Response[estatev1.AddBeneficiaryResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		return nil, connect.NewError(connect.CodeUnimplemented, fmt.Errorf("firestore not initialized"))
 	}
@@ -230,6 +260,10 @@ func (s *Server) GetEstateMetadata(ctx context.Context, req *connect.Request[est
 }
 
 func (s *Server) ListAssets(ctx context.Context, req *connect.Request[estatev1.ListAssetsRequest]) (*connect.Response[estatev1.ListAssetsResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		var assets []*estatev1.Asset
 		if req.Msg.EstateId == "estate_lockhart" {
@@ -270,6 +304,10 @@ func (s *Server) ListAssets(ctx context.Context, req *connect.Request[estatev1.L
 }
 
 func (s *Server) AddAsset(ctx context.Context, req *connect.Request[estatev1.AddAssetRequest]) (*connect.Response[estatev1.AddAssetResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		return nil, connect.NewError(connect.CodeUnimplemented, fmt.Errorf("firestore not initialized"))
 	}
@@ -295,6 +333,10 @@ func (s *Server) AddAsset(ctx context.Context, req *connect.Request[estatev1.Add
 }
 
 func (s *Server) ListVaultDocuments(ctx context.Context, req *connect.Request[estatev1.ListVaultDocumentsRequest]) (*connect.Response[estatev1.ListVaultDocumentsResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		var docs []*estatev1.VaultDocument
 		if req.Msg.EstateId == "estate_lockhart" {
@@ -334,6 +376,10 @@ func (s *Server) ListVaultDocuments(ctx context.Context, req *connect.Request[es
 }
 
 func (s *Server) ListMemoirs(ctx context.Context, req *connect.Request[estatev1.ListMemoirsRequest]) (*connect.Response[estatev1.ListMemoirsResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		var memoirs []*estatev1.Memoir
 		if req.Msg.EstateId == "estate_lockhart" {
@@ -374,6 +420,10 @@ func (s *Server) ListMemoirs(ctx context.Context, req *connect.Request[estatev1.
 }
 
 func (s *Server) UploadMemoir(ctx context.Context, req *connect.Request[estatev1.UploadMemoirRequest]) (*connect.Response[estatev1.UploadMemoirResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		return nil, connect.NewError(connect.CodeUnimplemented, fmt.Errorf("firestore not initialized"))
 	}
@@ -436,6 +486,10 @@ func (s *Server) GetObituary(ctx context.Context, req *connect.Request[estatev1.
 }
 
 func (s *Server) SaveObituary(ctx context.Context, req *connect.Request[estatev1.SaveObituaryRequest]) (*connect.Response[estatev1.SaveObituaryResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		return nil, connect.NewError(connect.CodeUnimplemented, fmt.Errorf("firestore not initialized"))
 	}
@@ -453,6 +507,10 @@ func (s *Server) SaveObituary(ctx context.Context, req *connect.Request[estatev1
 }
 
 func (s *Server) GetAIInsight(ctx context.Context, req *connect.Request[estatev1.GetAIInsightRequest]) (*connect.Response[estatev1.GetAIInsightResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	insight := "Heritage Protocol Synchronized. Your estate is 100% complete and secured via the Protocol Ledger. All shards are active and verified."
 	if req.Msg.EstateId != "estate_lockhart" {
 		insight = "Protocol Optimization Required. Your estate is 34% complete. Assigning remaining beneficiary shares will activate the full Guardian Protocol."
@@ -465,6 +523,10 @@ func (s *Server) GetAIInsight(ctx context.Context, req *connect.Request[estatev1
 }
 
 func (s *Server) GetGovernanceSettings(ctx context.Context, req *connect.Request[estatev1.GetGovernanceSettingsRequest]) (*connect.Response[estatev1.GetGovernanceSettingsResponse], error) {
+	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+		return nil, err
+	}
+
 	if s.fs == nil {
 		return connect.NewResponse(&estatev1.GetGovernanceSettingsResponse{
 			Settings: &estatev1.GovernanceSettings{

@@ -38,7 +38,9 @@ import (
 func main() {
 	// Configure structured logging
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	if os.Getenv("GOOGLE_CLOUD_PROJECT") == "" {
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	}
 
 	// Get port from environment or default
 	port := os.Getenv("PORT")
@@ -251,7 +253,7 @@ func main() {
 	if sc != nil {
 		r.Route("/api/v1/documents", func(r chi.Router) {
 			r.Use(authMiddleware)
-			r.Get("/download-url", estate.HandleDownloadURL(sc))
+			r.Get("/download-url", estate.HandleDownloadURL(sc, fs))
 		})
 		log.Info().Msg("Document Vault download URL endpoint registered at /api/v1/documents/download-url")
 	}

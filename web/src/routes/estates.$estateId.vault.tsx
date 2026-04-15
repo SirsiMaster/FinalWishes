@@ -8,6 +8,7 @@ import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
+import { trackDocumentUploaded } from '../lib/analytics'
 
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
@@ -340,6 +341,7 @@ function VaultPage() {
         })
 
         updateUpload({ status: 'done', progress: 100 })
+        trackDocumentUploaded(estateId, file.type || 'unknown')
 
         // Remove from upload list after 3 seconds
         setTimeout(() => {

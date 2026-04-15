@@ -2,6 +2,7 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
+import { trackCheckoutStarted } from '../lib/analytics'
 import { useEstate } from '../lib/firestore'
 import {
   Crown,
@@ -128,7 +129,8 @@ function PricingPage() {
           email: user.email || '',
           token,
         })
-        // Redirect to Stripe Checkout
+        // Track conversion + redirect to Stripe Checkout
+        trackCheckoutStarted(tierId)
         window.location.href = result.checkoutUrl
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Checkout failed')

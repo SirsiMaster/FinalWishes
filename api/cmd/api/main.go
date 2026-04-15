@@ -32,6 +32,7 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/service/estate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/tiergate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/vault"
+	"github.com/sirsi-technologies/finalwishes-api/internal/transcription"
 	ythandler "github.com/sirsi-technologies/finalwishes-api/internal/youtube"
 )
 
@@ -307,6 +308,16 @@ func main() {
 			})
 			log.Info().Msg("YouTube memoir API routes registered at /api/v1/memoirs/*")
 		}
+	}
+
+	// Transcription routes (Speech-to-Text for Soul Log audio/video)
+	if fs != nil {
+		transcriptionHandler := transcription.NewHandler(fs, projectID)
+		r.Route("/api/v1/transcription", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/transcribe", transcriptionHandler.HandleTranscribe)
+		})
+		log.Info().Msg("Transcription API routes registered at /api/v1/transcription/*")
 	}
 
 	// Media usage / tier-gating endpoint

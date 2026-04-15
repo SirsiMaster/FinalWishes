@@ -14,8 +14,8 @@ import { useCollection, type Heir } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { useTierGating } from '../lib/tier-gating'
-import { collection, addDoc, serverTimestamp, orderBy, type Timestamp } from 'firebase/firestore'
-import { db } from '../lib/firebase'
+import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc } from 'firebase/firestore'
+import { db, auth as firebaseAuth } from '../lib/firebase'
 import { toast } from 'sonner'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -64,6 +64,9 @@ import {
   Calendar,
   Clock,
   X,
+  Search,
+  FileText,
+  Loader2,
 } from 'lucide-react'
 
 export const Route = createFileRoute('/estates/$estateId/soul-log')({
@@ -83,15 +86,20 @@ interface SoulLogEntry {
   mood?: string
   content?: string // HTML for text entries
   mediaUrl?: string // Cloud Storage URL for video/audio
+  storageKey?: string // Cloud Storage path (for transcription)
   taggedPeople: string[]
   sealedDelivery?: {
     trigger: 'date' | 'on_passing'
     date?: string
   }
   duration?: number // seconds, for audio/video
+  transcript?: string // Auto-transcribed text from audio/video
+  transcriptStatus?: 'processing' | 'complete' | 'failed' // Transcription state
   createdAt: Timestamp
   createdBy: string
 }
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -183,11 +191,38 @@ function stripHtml(html: string): string {
   return div.textContent || div.innerText || ''
 }
 
+/** Fire-and-forget transcription request to the Go API. */
+async function requestTranscription(
+  estateId: string,
+  entryId: string,
+  storageUri: string,
+  mimeType: string,
+) {
+  try {
+    const token = await firebaseAuth.currentUser?.getIdToken()
+    if (!token) return
+    const resp = await fetch(`${API_BASE}/api/v1/transcription/transcribe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ estateId, entryId, storageUri, mimeType }),
+    })
+    if (!resp.ok) {
+      console.warn('Transcription request failed:', resp.status)
+    }
+  } catch (err) {
+    // Background request — don't block the UI
+    console.warn('Transcription request error:', err)
+  }
+}
+
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 function SoulLogPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/soul-log' })
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const estateId = routeId
   const { usage: tierUsage } = useTierGating(estateId)
 
@@ -206,18 +241,46 @@ function SoulLogPage() {
   const [composerOpen, setComposerOpen] = useState(false)
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null)
   const [viewerEntry, setViewerEntry] = useState<SoulLogEntry | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Shepherd prompt rotation
   const [promptIndex] = useState(() => Math.floor(Math.random() * SHEPHERD_PROMPTS.length))
 
-  const entries = useMemo(
-    () =>
-      rawEntries.map((e) => ({
-        ...e,
-        taggedPeople: e.taggedPeople || [],
-      })),
-    [rawEntries],
-  )
+  const userRole = profile?.role || 'principal'
+  const isOwner = userRole === 'principal' || userRole === 'admin'
+
+  // Normalize entries and apply visibility filtering
+  const entries = useMemo(() => {
+    const normalized = rawEntries.map((e) => ({
+      ...e,
+      taggedPeople: e.taggedPeople || [],
+    }))
+
+    // Owner/admin sees everything
+    if (isOwner) return normalized
+
+    // Other roles: see entries they created OR shared entries where they are tagged
+    const userName = profile?.displayName || user?.displayName || ''
+    return normalized.filter((entry) => {
+      // Always see your own entries
+      if (entry.createdBy === user?.uid) return true
+      // See shared entries where you are tagged
+      if (entry.visibility === 'shared' && entry.taggedPeople.includes(userName)) return true
+      return false
+    })
+  }, [rawEntries, isOwner, profile?.displayName, user?.displayName, user?.uid])
+
+  // Search filtering (client-side across title, content, transcript)
+  const filteredEntries = useMemo(() => {
+    if (!searchQuery.trim()) return entries
+    const q = searchQuery.toLowerCase()
+    return entries.filter((entry) => {
+      if (entry.title?.toLowerCase().includes(q)) return true
+      if (entry.content && stripHtml(entry.content).toLowerCase().includes(q)) return true
+      if (entry.transcript?.toLowerCase().includes(q)) return true
+      return false
+    })
+  }, [entries, searchQuery])
 
   // ─── Render ──────────────────────────────────────────────────────────
 
@@ -243,6 +306,18 @@ function SoulLogPage() {
         <p className="text-[#0F172A]/50 text-sm max-w-md mx-auto">
           Your personal diary — thoughts, feelings, and experiences captured in the moment.
         </p>
+        {/* Search */}
+        {entries.length > 0 && (
+          <div className="relative max-w-sm mx-auto pt-2">
+            <Search className="absolute left-3 top-1/2 mt-1 -translate-y-1/2 w-4 h-4 text-[#0F172A]/30" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search entries, transcripts..."
+              className="pl-9 rounded-full border-[#133378]/10 text-sm bg-[#F8FAFC]"
+            />
+          </div>
+        )}
       </div>
 
       {/* Shepherd Card */}
@@ -266,9 +341,14 @@ function SoulLogPage() {
       {/* Feed */}
       {entries.length === 0 ? (
         <EmptyState onRecord={() => setComposerOpen(true)} />
+      ) : filteredEntries.length === 0 ? (
+        <div className="text-center py-12">
+          <Search className="w-8 h-8 text-[#0F172A]/20 mx-auto mb-3" />
+          <p className="text-sm text-[#0F172A]/40">No entries match your search.</p>
+        </div>
       ) : (
         <div className="space-y-4">
-          {entries.map((entry) => (
+          {filteredEntries.map((entry) => (
             <EntryCard
               key={entry.id}
               entry={entry}
@@ -472,6 +552,34 @@ function EntryCard({
             </div>
           </div>
 
+          {/* Visibility detail badges */}
+          {entry.visibility === 'shared' && entry.taggedPeople.length > 0 && (
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Users className="w-3 h-3 text-blue-400" />
+              <span className="text-[10px] text-blue-500">
+                {entry.taggedPeople.join(', ')}
+              </span>
+            </div>
+          )}
+          {entry.visibility === 'sealed' && entry.sealedDelivery && (
+            <div className="flex items-center gap-1.5">
+              <Mail className="w-3 h-3 text-amber-500" />
+              <span className="text-[10px] text-amber-600 italic">
+                {entry.sealedDelivery.trigger === 'date' && entry.sealedDelivery.date
+                  ? `Delivers on ${new Date(entry.sealedDelivery.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+                  : 'Delivers upon passing'}
+              </span>
+            </div>
+          )}
+
+          {/* Transcription badge */}
+          {(entry.type === 'audio' || entry.type === 'video') && entry.transcriptStatus === 'processing' && (
+            <div className="flex items-center gap-1.5">
+              <Loader2 className="w-3 h-3 text-[#7C3AED] animate-spin" />
+              <span className="text-[10px] text-[#7C3AED] italic">Transcribing...</span>
+            </div>
+          )}
+
           {/* Preview */}
           {!expanded && entry.type === 'text' && entry.content && (
             <p className="text-sm text-[#0F172A]/50 line-clamp-2 leading-relaxed">
@@ -487,6 +595,17 @@ function EntryCard({
               {entry.duration != null && entry.duration > 0 && (
                 <span className="font-mono text-xs">{formatDuration(entry.duration)}</span>
               )}
+            </div>
+          )}
+
+          {/* Transcript preview (when not expanded) */}
+          {!expanded && entry.transcript && entry.transcriptStatus === 'complete' && (
+            <div className="flex items-start gap-2 mt-1">
+              <FileText className="w-3.5 h-3.5 text-[#0F172A]/25 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-[#0F172A]/40 line-clamp-2 leading-relaxed italic">
+                {entry.transcript.slice(0, 150)}
+                {entry.transcript.length > 150 ? '...' : ''}
+              </p>
             </div>
           )}
 
@@ -553,6 +672,30 @@ function ExpandedContent({
               {person}
             </Badge>
           ))}
+        </div>
+      )}
+
+      {/* Transcript (full, in expanded view) */}
+      {entry.transcript && entry.transcriptStatus === 'complete' && (
+        <div className="rounded-2xl bg-slate-50/80 p-4 border border-slate-100 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-[#0F172A]/40 uppercase tracking-wider">
+            <FileText className="w-3 h-3" />
+            Transcript
+          </div>
+          <p className="text-sm text-[#0F172A]/60 leading-relaxed whitespace-pre-wrap">
+            {entry.transcript}
+          </p>
+        </div>
+      )}
+      {entry.transcriptStatus === 'processing' && (
+        <div className="flex items-center gap-2 p-3 rounded-2xl bg-[#7C3AED]/5 border border-[#7C3AED]/10">
+          <Loader2 className="w-4 h-4 text-[#7C3AED] animate-spin" />
+          <span className="text-sm text-[#7C3AED]/70 italic">Transcribing audio...</span>
+        </div>
+      )}
+      {entry.transcriptStatus === 'failed' && (
+        <div className="flex items-center gap-2 p-3 rounded-2xl bg-red-50 border border-red-100">
+          <span className="text-sm text-red-400 italic">Transcription failed</span>
         </div>
       )}
     </div>
@@ -934,7 +1077,37 @@ function ComposerDialog({
         }
       }
 
-      await addDoc(collection(db, `estates/${estateId}/soul-log`), entryDoc)
+      // Store the storage key for transcription
+      if (mediaUrl) {
+        entryDoc.storageKey = mediaUrl
+      }
+
+      const entryRef = await addDoc(collection(db, `estates/${estateId}/soul-log`), entryDoc)
+
+      // If sealed, also write a capsule document for the Guardian Protocol delivery system
+      if (visibility === 'sealed') {
+        const capsuleDoc: Record<string, unknown> = {
+          type: 'soul-log',
+          sourceEntryId: entryRef.id,
+          estateId,
+          title: entryDoc.title,
+          visibility: 'sealed',
+          taggedPeople,
+          sealedDelivery: entryDoc.sealedDelivery || { trigger: 'on_passing' },
+          status: 'pending',
+          createdBy: userId,
+          createdAt: serverTimestamp(),
+        }
+        await setDoc(
+          doc(db, `estates/${estateId}/capsules`, `soul-log-${entryRef.id}`),
+          capsuleDoc,
+        )
+      }
+
+      // Fire background transcription for audio/video entries
+      if ((entryType === 'video' || entryType === 'audio') && mediaUrl) {
+        requestTranscription(estateId, entryRef.id, mediaUrl, entryType === 'video' ? 'video/webm' : 'audio/webm')
+      }
 
       toast.success('Entry saved to your Soul Log')
       onOpenChange(false)

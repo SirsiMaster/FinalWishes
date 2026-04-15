@@ -371,6 +371,8 @@ export async function addTimeCapsule(params: {
   deliveryType: 'scheduled_date' | 'on_death' | 'on_settlement' | 'anniversary';
   scheduledDate?: Date;
   anniversaryDate?: string;
+  voiceMemoUrl?: string;
+  photoUrls?: string[];
 }): Promise<ActionResult> {
   try {
     const { estateId, scheduledDate, ...data } = params;

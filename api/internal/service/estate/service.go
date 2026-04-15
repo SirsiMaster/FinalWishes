@@ -33,7 +33,9 @@ func NewServer(fs *firestore.Client, sc *storage.Client) *Server {
 	}
 }
 
-func (s *Server) checkEstateOwnership(ctx context.Context, estateID string) error {
+// checkEstateAccess verifies the caller is a member of the estate.
+// If writeRequired is true, only principal, executor, and admin roles may proceed.
+func (s *Server) checkEstateAccess(ctx context.Context, estateID string, writeRequired bool) error {
 	userID := auth.UserIDFromContext(ctx)
 	if userID == "" {
 		return connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("authentication required"))
@@ -46,13 +48,20 @@ func (s *Server) checkEstateOwnership(ctx context.Context, estateID string) erro
 	if err != nil || !doc.Exists() {
 		return connect.NewError(connect.CodePermissionDenied, fmt.Errorf("access denied"))
 	}
+	if writeRequired {
+		data := doc.Data()
+		role, _ := data["role"].(string)
+		if role != "principal" && role != "executor" && role != "admin" {
+			return connect.NewError(connect.CodePermissionDenied, fmt.Errorf("insufficient permissions: role %q cannot perform write operations", role))
+		}
+	}
 	return nil
 }
 
 // --- Vault & Storage (Signed URLs) ---
 
 func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[estatev1.GenerateUploadUrlRequest]) (*connect.Response[estatev1.GenerateUploadUrlResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, true); err != nil {
 		return nil, err
 	}
 
@@ -95,7 +104,7 @@ func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[est
 // --- Core Estate Management (Firestore) ---
 
 func (s *Server) ListBeneficiaries(ctx context.Context, req *connect.Request[estatev1.ListBeneficiariesRequest]) (*connect.Response[estatev1.ListBeneficiariesResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
 		return nil, err
 	}
 
@@ -130,7 +139,7 @@ func (s *Server) ListBeneficiaries(ctx context.Context, req *connect.Request[est
 }
 
 func (s *Server) AddBeneficiary(ctx context.Context, req *connect.Request[estatev1.AddBeneficiaryRequest]) (*connect.Response[estatev1.AddBeneficiaryResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, true); err != nil {
 		return nil, err
 	}
 
@@ -260,7 +269,7 @@ func (s *Server) GetEstateMetadata(ctx context.Context, req *connect.Request[est
 }
 
 func (s *Server) ListAssets(ctx context.Context, req *connect.Request[estatev1.ListAssetsRequest]) (*connect.Response[estatev1.ListAssetsResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
 		return nil, err
 	}
 
@@ -304,7 +313,7 @@ func (s *Server) ListAssets(ctx context.Context, req *connect.Request[estatev1.L
 }
 
 func (s *Server) AddAsset(ctx context.Context, req *connect.Request[estatev1.AddAssetRequest]) (*connect.Response[estatev1.AddAssetResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, true); err != nil {
 		return nil, err
 	}
 
@@ -333,7 +342,7 @@ func (s *Server) AddAsset(ctx context.Context, req *connect.Request[estatev1.Add
 }
 
 func (s *Server) ListVaultDocuments(ctx context.Context, req *connect.Request[estatev1.ListVaultDocumentsRequest]) (*connect.Response[estatev1.ListVaultDocumentsResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
 		return nil, err
 	}
 
@@ -376,7 +385,7 @@ func (s *Server) ListVaultDocuments(ctx context.Context, req *connect.Request[es
 }
 
 func (s *Server) ListMemoirs(ctx context.Context, req *connect.Request[estatev1.ListMemoirsRequest]) (*connect.Response[estatev1.ListMemoirsResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
 		return nil, err
 	}
 
@@ -420,7 +429,7 @@ func (s *Server) ListMemoirs(ctx context.Context, req *connect.Request[estatev1.
 }
 
 func (s *Server) UploadMemoir(ctx context.Context, req *connect.Request[estatev1.UploadMemoirRequest]) (*connect.Response[estatev1.UploadMemoirResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, true); err != nil {
 		return nil, err
 	}
 
@@ -486,7 +495,7 @@ func (s *Server) GetObituary(ctx context.Context, req *connect.Request[estatev1.
 }
 
 func (s *Server) SaveObituary(ctx context.Context, req *connect.Request[estatev1.SaveObituaryRequest]) (*connect.Response[estatev1.SaveObituaryResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, true); err != nil {
 		return nil, err
 	}
 
@@ -507,7 +516,7 @@ func (s *Server) SaveObituary(ctx context.Context, req *connect.Request[estatev1
 }
 
 func (s *Server) GetAIInsight(ctx context.Context, req *connect.Request[estatev1.GetAIInsightRequest]) (*connect.Response[estatev1.GetAIInsightResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
 		return nil, err
 	}
 
@@ -523,7 +532,7 @@ func (s *Server) GetAIInsight(ctx context.Context, req *connect.Request[estatev1
 }
 
 func (s *Server) GetGovernanceSettings(ctx context.Context, req *connect.Request[estatev1.GetGovernanceSettingsRequest]) (*connect.Response[estatev1.GetGovernanceSettingsResponse], error) {
-	if err := s.checkEstateOwnership(ctx, req.Msg.EstateId); err != nil {
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
 		return nil, err
 	}
 

@@ -155,6 +155,7 @@ function SettingsPage() {
 
   const mfaStatus = getMFAStatus(user);
   const isFiduciary = profile?.role && ['heir', 'executor', 'legal', 'cpa'].includes(profile.role);
+  const isPrincipalOrAdmin = profile?.role === 'principal' || profile?.role === 'admin';
   const hasChanges = Object.keys(localSettings).length > 0;
 
   return (
@@ -165,7 +166,7 @@ function SettingsPage() {
           <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Settings</h2>
           <p className="text-lg text-[#64748B] font-medium">Manage your profile, security, and estate preferences.</p>
         </div>
-        <Button
+        {isPrincipalOrAdmin && <Button
           onClick={handleSave}
           disabled={!hasChanges || saving}
           variant={saved ? 'default' : hasChanges ? 'default' : 'secondary'}
@@ -189,7 +190,7 @@ function SettingsPage() {
               Saved
             </span>
           ) : 'Save Changes'}
-        </Button>
+        </Button>}
       </div>
 
       {/* ── Profile Card ── */}
@@ -240,7 +241,8 @@ function SettingsPage() {
       {/* ── Estate Team Invitations ── */}
       <InviteTeamMember estateId={estateId} />
 
-      {/* ── Settings Panels ── */}
+      {/* ── Settings Panels (principal/admin only) ── */}
+      {isPrincipalOrAdmin && (
       <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
         <SettingsSection title="Security" first>
           <SettingsToggle
@@ -296,8 +298,10 @@ function SettingsPage() {
           <SettingsStatus label="Beneficiary access" description="Control what your beneficiaries can see" value="Restricted" />
         </SettingsSection>
       </Card>
+      )}
 
-      {/* ── Data Export ── */}
+      {/* ── Data Export (principal/admin only) ── */}
+      {isPrincipalOrAdmin && (
       <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
         <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
@@ -348,6 +352,7 @@ function SettingsPage() {
           </Button>
         </CardContent>
       </Card>
+      )}
 
     </div>
   )

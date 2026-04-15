@@ -5,8 +5,46 @@
 ```
 components/estate/
 ├── InviteTeamMember.tsx    # Team invitation form + member list
+├── SectionHeader.tsx       # Shared emotional section header
+├── SettlementPanel.tsx     # Settlement transition UI
 └── README.md               # This file
 ```
+
+## SectionHeader
+
+Shared header component that gives each of the 6 navigation groups (+ Life Chapters) a distinct visual identity.
+
+### Props
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `section` | `SectionId` | Yes | Which section theme to apply |
+| `title` | `string` | No | Override the default section title |
+| `subtitle` | `string` | No | Override the default tagline |
+| `action` | `ReactNode` | No | Right-side action slot (button, badge, etc.) |
+| `children` | `ReactNode` | No | Content below the header (search, tabs, stats) |
+
+### Section Themes
+| Section | Accent Color | Gradient |
+|---------|-------------|---------|
+| `soul-log` | Amber `#B8860B` | Warm cream |
+| `my-legacy` | Royal Blue `#133378` | Soft indigo |
+| `memories` | Rose `#9D174D` | Blush pink |
+| `letters` | Sage `#4D7C4D` | Soft green |
+| `my-people` | Teal `#0F766E` | Mint |
+| `the-vault` | Steel `#334155` | Cool slate |
+| `life-chapters` | Purple `#7C3AED` | Lavender |
+
+### Usage
+```tsx
+<SectionHeader
+  section="memories"
+  title="Heirloom Registry"
+  subtitle="Physical assets and family treasures."
+  action={<Button>Add Heirloom</Button>}
+/>
+```
+
+---
 
 ## InviteTeamMember
 

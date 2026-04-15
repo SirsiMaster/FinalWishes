@@ -1,5 +1,5 @@
 # FinalWishes — Continuation Prompt
-**Version:** 18.0 — **Date:** April 14, 2026 — **Session:** Life-First Reframe + Canonical Doc Update
+**Version:** 19.0 — **Date:** April 15, 2026 — **Session:** Emotional Section Design + Life Chapters
 
 ---
 
@@ -12,7 +12,7 @@
 **Deployed:** April 14, 2026 — CI/CD pipeline green, both frontend and API live
 **Security:** 0 npm vulnerabilities, 0 Go advisories
 **Tests:** 129 passing (8 files) — lint 0 warnings — tsc 0 errors
-**Product Phase:** Life-First Reframe (ADR-038) — navigation restructure, Soul Log, Legacy Timeline
+**Product Phase:** Life-First Reframe (ADR-038) — SectionHeader + Life Chapters implemented
 
 ---
 
@@ -20,16 +20,41 @@
 
 ```
 Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md and
-ETHOS.md for full context. Session 6 completed the Life-First Reframe — the
-product pivot from estate-planning-as-chore to living-companion. ADR-038
-accepted, all canonical docs updated, navigation restructured into 6 emotional
-groups (Soul Log, My Legacy, Memories, Letters, My People, The Vault). Next:
-implement Soul Log recording UI + Legacy Timeline dashboard + Heir Welcome Screen.
+ETHOS.md for full context. Sessions 5-7 shipped the Life-First Reframe: Soul Log,
+Legacy Timeline, Heir Welcome Screen, Guardian Protocol, Document Intelligence,
+Shepherd companion, Letters experience, security fixes, demo purge, emotional
+section headers, and Life Chapters. Next: section page transitions (Framer Motion),
+empty-state illustrations, Firestore security rules for life-chapters collection.
 ```
 
 ---
 
 ## Session Summary
+
+### Session 7 (Apr 15): Emotional Section Design + Life Chapters
+
+Built the visual identity layer and narrative organization feature for the Life-First Reframe.
+
+**SectionHeader Component:**
+- Shared component with 7 distinct visual themes (amber, royal blue, rose, sage, teal, steel, purple)
+- Gradient backgrounds, section icons, taglines, action/children slots
+- Integrated into all 10 estate section pages, replacing bespoke headers
+- CTA buttons colored per-section for emotional cohesion
+
+**Life Chapters Feature:**
+- New route: `/estates/$estateId/life-chapters`
+- Firestore subcollection `life-chapters` with CRUD (add, update, archive)
+- Chapter creation: title, description, date range
+- Entry picker: add Soul Log and Memoir entries into chapters
+- Entry management: remove entries, reorder
+- Empty state with compelling onboarding CTA
+- Sidebar: My Legacy group expanded with "Legacy Timeline" + "Life Chapters" (New badge)
+- Role permissions: accessible to principal, admin, executor, heir
+
+**Documentation:**
+- User guide: `docs/user-guides/life-chapters.md`
+- Developer README: SectionHeader docs in `web/src/components/estate/README.md`
+- CHANGELOG v0.6.0
 
 ### Session 6 (Apr 14): Life-First Reframe + Canonical Doc Update
 
@@ -124,6 +149,8 @@ Code instrumentation already wired (trackEstateCreated, trackDocumentUploaded, t
 - ~~ETHOS.md~~ **WRITTEN** — Permanent soul document
 - ~~ADR-038~~ **ACCEPTED** — Life-First Reframe documented
 - ~~Canonical doc alignment~~ **COMPLETE** — All docs reflect new direction
+- ~~Emotional section headers~~ **COMPLETE** — SectionHeader component, 7 themes, 10 pages integrated
+- ~~Life Chapters~~ **COMPLETE** — Route, Firestore CRUD, entry picker, sidebar nav
 
 ---
 

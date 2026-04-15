@@ -14,6 +14,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 
 export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
   component: BeneficiariesPage,
@@ -83,20 +84,20 @@ function BeneficiariesPage() {
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-24 px-6">
-      <div className="flex justify-between items-end pb-10">
-        <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Family & Heirs</h2>
-          <p className="text-lg text-[#64748B] font-medium">Add and manage the people who will receive your assets or help manage your estate.</p>
-        </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
-        >
-          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Add Family Member
-        </Button>
-      </div>
-      <Separator className="!-mt-10 mb-0" />
+      <SectionHeader
+        section="my-people"
+        title="Family & Heirs"
+        subtitle="Add and manage the people who will receive your assets or help manage your estate."
+        action={
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-[#0F766E] hover:bg-[#0D6B64] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
+          >
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add Family Member
+          </Button>
+        }
+      />
 
       {/* Allocation Warning */}
       {totalAllocation > 100 && (

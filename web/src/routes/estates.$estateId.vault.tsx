@@ -27,6 +27,7 @@ import {
 } from '../components/ui/alert-dialog'
 import { Badge } from '../components/ui/badge'
 import { Progress } from '../components/ui/progress'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 
 export const Route = createFileRoute('/estates/$estateId/vault')({
   component: VaultPage,
@@ -474,21 +475,17 @@ function VaultPage() {
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
-      {/* Header */}
-      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-10">
-        <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
-            Document Vault
-          </h2>
-          <p className="text-lg text-[#133378]/50 font-medium">
-            All your important documents are safely stored and encrypted here.
-          </p>
-        </div>
-        <Badge className="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider h-auto gap-2">
-          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          AES-256 Encrypted
-        </Badge>
-      </div>
+      <SectionHeader
+        section="the-vault"
+        title="Document Vault"
+        subtitle="All your important documents are safely stored and encrypted here."
+        action={
+          <Badge className="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider h-auto gap-2">
+            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            AES-256 Encrypted
+          </Badge>
+        }
+      />
 
       {/* Document Checklist Panel */}
       <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm overflow-hidden">

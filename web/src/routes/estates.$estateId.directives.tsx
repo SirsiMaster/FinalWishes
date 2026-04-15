@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 
 export const Route = createFileRoute('/estates/$estateId/directives')({
   component: DirectivesPage,
@@ -137,28 +138,20 @@ function DirectivesPage() {
   // ── List View ──
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
-      {/* ── Header ── */}
-      <div className="flex justify-between items-end border-b border-slate-50 pb-16">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
-            <div className="w-10 h-px bg-[#133378]/20" />
-            <span>Legacy Directives</span>
-          </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
-            Final Directives
-          </h2>
-          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
-            Ethical wills, funeral wishes, personal messages, and care instructions for the people you love.
-          </p>
-        </div>
-        <Button
-          onClick={() => setCreateModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)]"
-        >
-          <Plus className="w-5 h-5" />
-          Create Directive
-        </Button>
-      </div>
+      <SectionHeader
+        section="letters"
+        title="Final Directives"
+        subtitle="Ethical wills, funeral wishes, personal messages, and care instructions for the people you love."
+        action={
+          <Button
+            onClick={() => setCreateModalOpen(true)}
+            className="bg-[#4D7C4D] hover:bg-[#3D6B3D] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
+          >
+            <Plus className="w-5 h-5" />
+            Create Directive
+          </Button>
+        }
+      />
 
       {/* ── Cards ── */}
       {directives.length === 0 ? (

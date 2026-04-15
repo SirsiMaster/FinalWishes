@@ -28,6 +28,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
@@ -158,28 +159,20 @@ function LockboxPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
-      {/* ── Page Header ── */}
-      <div className="flex justify-between items-end border-b border-slate-50 pb-16">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
-            <div className="w-10 h-px bg-[#133378]/20" />
-            <span>Secure Credential Vault</span>
-          </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
-            Digital Lockbox
-          </h2>
-          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
-            Store account credentials, access instructions, and transition guidance for your heirs.
-          </p>
-        </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)]"
-        >
-          <Plus className="w-5 h-5" />
-          Add Credential
-        </Button>
-      </div>
+      <SectionHeader
+        section="the-vault"
+        title="Digital Lockbox"
+        subtitle="Store account credentials, access instructions, and transition guidance for your heirs."
+        action={
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-[#334155] hover:bg-[#1E293B] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
+          >
+            <Plus className="w-5 h-5" />
+            Add Credential
+          </Button>
+        }
+      />
 
       {/* ── Stats ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">

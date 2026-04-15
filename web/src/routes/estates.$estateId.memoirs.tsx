@@ -45,6 +45,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+import { SectionHeader } from '@/components/estate/SectionHeader'
+
 export const Route = createFileRoute('/estates/$estateId/memoirs')({
   component: MemoirsPage,
 })
@@ -299,34 +301,26 @@ function MemoirsPage() {
         onDelete={() => { if (selectedMemoir) setDeleteTarget(selectedMemoir) }}
       />
 
-      {/* Page Header */}
-      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-16">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
-            <div className="w-10 h-px bg-[#133378]/20" />
-            <span>Estate Heritage Vault</span>
-          </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
-            Life Stories & Memories
-          </h2>
-          <p className="text-[#133378]/50 text-lg font-medium max-w-2xl leading-relaxed">
-            Preserve your legacy with video recordings, YouTube memorials, and photo collections for future generations.
-          </p>
-        </div>
-        <Button
-          onClick={() => {
-            setModalMode('file')
-            setModalOpen(true)
-          }}
-          disabled={tierUsage ? !tierUsage.canUploadMedia : false}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Add Memory
-        </Button>
-      </div>
+      <SectionHeader
+        section="memories"
+        title="Life Stories & Memories"
+        subtitle="Preserve your legacy with video recordings, YouTube memorials, and photo collections for future generations."
+        action={
+          <Button
+            onClick={() => {
+              setModalMode('file')
+              setModalOpen(true)
+            }}
+            disabled={tierUsage ? !tierUsage.canUploadMedia : false}
+            className="bg-[#9D174D] hover:bg-[#831843] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Add Memory
+          </Button>
+        }
+      />
 
       {/* Tier Limit Banner */}
       {tierUsage && (!tierUsage.canUploadMedia || !tierUsage.canUploadVideo) && (

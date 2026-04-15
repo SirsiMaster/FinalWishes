@@ -482,3 +482,38 @@ export function useHeirlooms(estateId: string | null): FirestoreListResult<Heirl
   );
   return useCollection<Heirloom>(path, constraints);
 }
+
+// ─── Life Chapters ────────────────────────────────────────────────────────────
+
+export interface LifeChapter {
+  id: string;
+  title: string;
+  description: string;
+  coverImageUrl?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  entryRefs: ChapterEntryRef[];
+  order: number;
+  status: 'active' | 'archived';
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
+}
+
+export interface ChapterEntryRef {
+  collection: 'soul-logs' | 'memoirs' | 'capsules' | 'directives' | 'heirlooms';
+  docId: string;
+  title: string;
+  addedAt: string;
+}
+
+/**
+ * Subscribe to life chapters for an estate (sorted by display order).
+ */
+export function useLifeChapters(estateId: string | null): FirestoreListResult<LifeChapter> {
+  const path = estateId ? `estates/${estateId}/life-chapters` : null;
+  const constraints = useMemo(
+    () => [where('status', '==', 'active'), orderBy('order', 'asc')],
+    []
+  );
+  return useCollection<LifeChapter>(path, constraints);
+}

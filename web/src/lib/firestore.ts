@@ -51,6 +51,16 @@ export interface Estate {
   tier?: 'free' | 'concierge' | 'white_glove';
   tierUpdatedAt?: Timestamp;
   paymentStatus?: 'active' | 'cancelled';
+  // Guardian Protocol fields
+  lastActivityAt?: Timestamp;
+  guardianThreshold?: number;
+  escalationLevel?: string;
+  ownerName?: string;
+  ownerEmail?: string;
+  executorName?: string;
+  settlementType?: string;
+  settlementReportedAt?: string;
+  settlementReportedBy?: string;
 }
 
 // Asset (subcollection)
@@ -97,6 +107,26 @@ export interface Executor {
   updatedAt: Timestamp;
 }
 
+// Document Intelligence analysis result
+export interface DocumentAnalysis {
+  documentType: 'will' | 'trust' | 'insurance' | 'deed' | 'financial' | 'medical' | 'other';
+  signingDate: string | null;
+  notarized: boolean | null;
+  namedBeneficiaries: string[];
+  namedExecutor: string | null;
+  namedTrustee: string | null;
+  assetsMentioned: string[];
+  jurisdiction: string | null;
+  summary: string;
+  flags: string[];
+}
+
+export interface DocumentDiscrepancy {
+  type: 'unknown_beneficiary' | 'unknown_executor' | 'unknown_trustee';
+  name: string;
+  message: string;
+}
+
 // Document (subcollection — vault)
 export interface VaultDocument {
   id: string;
@@ -114,6 +144,11 @@ export interface VaultDocument {
   uploadedBy: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  // Document Intelligence fields (populated after AI analysis)
+  analysis?: DocumentAnalysis;
+  analysisStatus?: 'processing' | 'complete' | 'failed';
+  discrepancies?: DocumentDiscrepancy[];
+  analyzedAt?: Timestamp;
 }
 
 // EstateUser (junction table)
@@ -169,6 +204,8 @@ export interface TimeCapsule {
   deliveryType: 'scheduled_date' | 'on_death' | 'on_settlement' | 'anniversary';
   scheduledDate?: Timestamp;
   anniversaryDate?: string; // MM-DD format
+  voiceMemoUrl?: string;
+  photoUrls?: string[];
   status: 'pending' | 'delivered' | 'cancelled';
   deliveredAt?: Timestamp;
   createdAt: Timestamp;

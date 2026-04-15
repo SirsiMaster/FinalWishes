@@ -2,7 +2,23 @@
 import { createFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '../lib/auth'
-import { useEstate, useEstateAssets, useEstateHeirs, useEstateDocuments } from '../lib/firestore'
+import {
+  useEstate,
+  useEstateAssets,
+  useEstateHeirs,
+  useEstateDocuments,
+  useDirectives,
+  useTimeCapsules,
+  useHeirlooms,
+  useCollection,
+  type Asset,
+  type Heir,
+  type VaultDocument,
+  type Directive,
+  type TimeCapsule,
+  type Heirloom,
+} from '../lib/firestore'
+import { orderBy, type Timestamp } from 'firebase/firestore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -10,6 +26,11 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
@@ -47,6 +68,17 @@ interface ChatMessage {
   role: 'user' | 'shepherd'
   content: string
   suggestedActions?: string[]
+}
+
+// ─── Timeline Types ─────────────────────────────────────────────────────────
+
+interface TimelineEntry {
+  id: string
+  type: 'soul-log' | 'asset' | 'document' | 'heir' | 'heirloom' | 'capsule' | 'directive' | 'memoir'
+  title: string
+  subtitle?: string
+  createdAt: Timestamp
+  date: Date
 }
 
 // ─── Shepherd Typing Indicator ──────────────────────────────────────────────
@@ -197,7 +229,6 @@ function ShepherdChat({
         <SheetHeader className="px-6 py-4 bg-[#133378] gap-0 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {/* Shepherd compass icon */}
               <div className="w-8 h-8 rounded-full bg-[#C8A951]/20 flex items-center justify-center">
                 <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="10" />
@@ -246,7 +277,6 @@ function ShepherdChat({
                   {msg.content}
                 </div>
               </div>
-              {/* Suggestion chips */}
               {msg.role === 'shepherd' && msg.suggestedActions && msg.suggestedActions.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4 ml-1">
                   {msg.suggestedActions.map((action) => (
@@ -312,7 +342,6 @@ function ShepherdFAB({ onClick, hasInteracted }: { onClick: () => void; hasInter
       )}
       aria-label="Ask the Shepherd"
     >
-      {/* Compass/shepherd icon */}
       <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5">
         <circle cx="12" cy="12" r="10" />
         <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
@@ -320,6 +349,249 @@ function ShepherdFAB({ onClick, hasInteracted }: { onClick: () => void; hasInter
     </button>
   )
 }
+
+// ─── Timeline Icons ─────────────────────────────────────────────────────────
+
+function TimelineIcon({ type }: { type: TimelineEntry['type'] }) {
+  const iconClass = 'w-4 h-4'
+  switch (type) {
+    case 'soul-log':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          <line x1="12" y1="19" x2="12" y2="23" />
+          <line x1="8" y1="23" x2="16" y2="23" />
+        </svg>
+      )
+    case 'asset':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+      )
+    case 'document':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+      )
+    case 'heir':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      )
+    case 'heirloom':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M6 3h12l4 6-10 13L2 9z" />
+          <path d="M11 3l1 6h6" />
+          <path d="M2 9h20" />
+          <path d="M13 3l-1 6H6" />
+        </svg>
+      )
+    case 'capsule':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      )
+    case 'directive':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z" />
+          <path d="M15 5l4 4" />
+        </svg>
+      )
+    case 'memoir':
+      return (
+        <svg viewBox="0 0 24 24" className={iconClass} fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+          <circle cx="12" cy="13" r="4" />
+        </svg>
+      )
+  }
+}
+
+// ─── Date Formatting ────────────────────────────────────────────────────────
+
+function formatRelativeDate(date: Date): string {
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const diffDays = Math.floor((today.getTime() - target.getTime()) / (1000 * 60 * 60 * 24))
+
+  if (diffDays === 0) return 'Today'
+  if (diffDays === 1) return 'Yesterday'
+  if (diffDays < 7) return date.toLocaleDateString('en-US', { weekday: 'long' })
+
+  const sameYear = date.getFullYear() === now.getFullYear()
+  if (sameYear) {
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })
+  }
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}
+
+function formatGroupKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+}
+
+// ─── Timeline Entry Builders ────────────────────────────────────────────────
+
+interface SoulLogEntry {
+  id: string
+  title?: string
+  type?: string
+  createdAt: Timestamp
+}
+
+interface MemoirEntry {
+  id: string
+  caption?: string
+  fileName?: string
+  createdAt: Timestamp
+}
+
+function buildTimelineEntries(
+  assets: Asset[],
+  heirs: Heir[],
+  documents: VaultDocument[],
+  directives: Directive[],
+  capsules: TimeCapsule[],
+  heirlooms: Heirloom[],
+  soulLogs: SoulLogEntry[],
+  memoirs: MemoirEntry[],
+): TimelineEntry[] {
+  const entries: TimelineEntry[] = []
+
+  for (const a of assets) {
+    if (!a.createdAt) continue
+    entries.push({
+      id: `asset-${a.id}`,
+      type: 'asset',
+      title: `${a.name} added to assets`,
+      subtitle: a.category?.replace('_', ' '),
+      createdAt: a.createdAt,
+      date: a.createdAt.toDate(),
+    })
+  }
+
+  for (const h of heirs) {
+    if (!h.createdAt) continue
+    entries.push({
+      id: `heir-${h.id}`,
+      type: 'heir',
+      title: `${h.fullName} added as beneficiary`,
+      subtitle: h.relationship || undefined,
+      createdAt: h.createdAt,
+      date: h.createdAt.toDate(),
+    })
+  }
+
+  for (const d of documents) {
+    if (!d.createdAt) continue
+    entries.push({
+      id: `doc-${d.id}`,
+      type: 'document',
+      title: `${d.displayName || d.originalName} uploaded to vault`,
+      subtitle: d.tags?.join(', ') || undefined,
+      createdAt: d.createdAt,
+      date: d.createdAt.toDate(),
+    })
+  }
+
+  for (const dir of directives) {
+    if (!dir.createdAt) continue
+    entries.push({
+      id: `directive-${dir.id}`,
+      type: 'directive',
+      title: `Directive written: ${dir.title}`,
+      subtitle: dir.type?.replace('_', ' '),
+      createdAt: dir.createdAt,
+      date: dir.createdAt.toDate(),
+    })
+  }
+
+  for (const c of capsules) {
+    if (!c.createdAt) continue
+    entries.push({
+      id: `capsule-${c.id}`,
+      type: 'capsule',
+      title: `Time capsule sealed for ${c.recipientName}`,
+      subtitle: c.scheduledDate
+        ? `Delivers ${c.scheduledDate.toDate().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+        : c.deliveryType?.replace('_', ' '),
+      createdAt: c.createdAt,
+      date: c.createdAt.toDate(),
+    })
+  }
+
+  for (const hl of heirlooms) {
+    if (!hl.createdAt) continue
+    entries.push({
+      id: `heirloom-${hl.id}`,
+      type: 'heirloom',
+      title: `${hl.name} documented as heirloom`,
+      subtitle: hl.category?.replace('_', ' '),
+      createdAt: hl.createdAt,
+      date: hl.createdAt.toDate(),
+    })
+  }
+
+  for (const sl of soulLogs) {
+    if (!sl.createdAt) continue
+    const logType = sl.type === 'video' ? 'Video' : sl.type === 'audio' ? 'Voice memo' : 'Reflection'
+    entries.push({
+      id: `soul-${sl.id}`,
+      type: 'soul-log',
+      title: sl.title ? `${logType}: ${sl.title}` : `${logType} recorded`,
+      createdAt: sl.createdAt,
+      date: sl.createdAt.toDate(),
+    })
+  }
+
+  for (const m of memoirs) {
+    if (!m.createdAt) continue
+    entries.push({
+      id: `memoir-${m.id}`,
+      type: 'memoir',
+      title: m.caption || m.fileName || 'Memory uploaded',
+      createdAt: m.createdAt,
+      date: m.createdAt.toDate(),
+    })
+  }
+
+  // Sort descending by date
+  entries.sort((a, b) => b.date.getTime() - a.date.getTime())
+
+  return entries
+}
+
+// ─── Shepherd Companion Prompts ─────────────────────────────────────────────
+
+const SHEPHERD_PROMPTS_NEW = [
+  "Your story starts here. What's the first thing you want your family to remember?",
+  "Every life has a moment worth preserving. What's yours?",
+  "The people you love will treasure the sound of your voice. Start with a simple hello.",
+]
+
+const SHEPHERD_PROMPTS_ACTIVE = [
+  "You haven't recorded a voice memo in a while. Your family will treasure the sound of your voice.",
+  "Every photo tells a story. Have you added any heirloom photos recently?",
+  "Time capsules turn ordinary moments into extraordinary gifts. Who deserves one?",
+  "A few words written today could mean everything to someone tomorrow.",
+  "Your estate is growing beautifully. What story does it tell?",
+  "Consider recording a message for someone you love — just because.",
+]
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
@@ -333,6 +605,20 @@ function DashboardIndex() {
   const { data: assets, loading: assetsLoading } = useEstateAssets(estateId)
   const { data: heirs, loading: beneLoading } = useEstateHeirs(estateId)
   const { data: documents, loading: vaultLoading } = useEstateDocuments(estateId)
+  const { data: directives } = useDirectives(estateId)
+  const { data: capsules } = useTimeCapsules(estateId)
+  const { data: heirlooms } = useHeirlooms(estateId)
+
+  // Soul log + memoirs via generic useCollection
+  const soulLogConstraints = useMemo(() => [orderBy('createdAt', 'desc')], [])
+  const { data: soulLogs } = useCollection<SoulLogEntry>(
+    estateId ? `estates/${estateId}/soul-log` : null,
+    soulLogConstraints,
+  )
+  const { data: memoirs } = useCollection<MemoirEntry>(
+    estateId ? `estates/${estateId}/memoirs` : null,
+    soulLogConstraints,
+  )
 
   // Shepherd score
   const [score, setScore] = useState<ShepherdScore | null>(null)
@@ -368,11 +654,16 @@ function DashboardIndex() {
     setShepherdInteracted(true)
   }, [])
 
+  // Checklist collapsible state
+  const [checklistOpen, setChecklistOpen] = useState(false)
+
+  // Timeline pagination
+  const [visibleCount, setVisibleCount] = useState(50)
+
   const isLoading = metaLoading || assetsLoading || beneLoading || vaultLoading
 
   const percent = score?.completionPercent ?? 0
   const insight = score?.insight ?? 'Loading your estate guidance...'
-  const nextAction = score?.nextAction
 
   // Group steps by category
   const categories = useMemo(() => {
@@ -385,6 +676,40 @@ function DashboardIndex() {
     return map
   }, [score])
 
+  // Build timeline
+  const allEntries = useMemo(
+    () => buildTimelineEntries(assets, heirs, documents, directives, capsules, heirlooms, soulLogs, memoirs),
+    [assets, heirs, documents, directives, capsules, heirlooms, soulLogs, memoirs],
+  )
+
+  const visibleEntries = useMemo(() => allEntries.slice(0, visibleCount), [allEntries, visibleCount])
+  const hasMore = allEntries.length > visibleCount
+  const totalEntryCount = allEntries.length
+
+  // Group visible entries by date
+  const groupedEntries = useMemo(() => {
+    const groups: { key: string; label: string; entries: TimelineEntry[] }[] = []
+    let currentKey = ''
+    for (const entry of visibleEntries) {
+      const key = formatGroupKey(entry.date)
+      if (key !== currentKey) {
+        currentKey = key
+        groups.push({ key, label: formatRelativeDate(entry.date), entries: [] })
+      }
+      groups[groups.length - 1].entries.push(entry)
+    }
+    return groups
+  }, [visibleEntries])
+
+  // Shepherd companion prompt — pick index once on mount to avoid impure render
+  const [promptIndex] = useState(() => ({
+    newIdx: Math.floor(Math.random() * SHEPHERD_PROMPTS_NEW.length),
+    activeIdx: Math.floor(Math.random() * SHEPHERD_PROMPTS_ACTIVE.length),
+  }))
+  const shepherdPrompt = totalEntryCount === 0
+    ? SHEPHERD_PROMPTS_NEW[promptIndex.newIdx]
+    : SHEPHERD_PROMPTS_ACTIVE[promptIndex.activeIdx]
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
@@ -394,145 +719,315 @@ function DashboardIndex() {
   }
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-6 md:space-y-12 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+    <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       {/* ── Page Header ── */}
-      <div className="space-y-3 mb-16">
+      <div className="space-y-3 mb-8">
         <div className="flex items-center gap-3 text-[11px] font-bold text-royal/40 uppercase tracking-[0.2em] mb-4">
           <Separator className="w-10 bg-royal/20" />
-          <span>The Shepherd — Estate Guidance</span>
+          <span>Your Legacy</span>
         </div>
-        <h1 className="text-[3.5rem] font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] leading-tight tracking-tight">
+        <h1 className="text-[2.5rem] md:text-[3.5rem] font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] leading-tight tracking-tight">
           Welcome back, {userName || 'there'}.
         </h1>
-        <p className="text-[#64748B] text-xl font-medium max-w-3xl leading-relaxed">{insight}</p>
       </div>
 
-      {/* ── Primary Action Card ── */}
-      <Card className="rounded-[3rem] p-16 flex-row items-center justify-between border-slate-100 shadow-sm relative overflow-hidden group bg-[#F8FAFC] ring-0">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-royal/[0.015] rounded-bl-full pointer-events-none" />
-        <CardContent className="flex-1 space-y-10 relative z-10 px-0">
-          <div className="space-y-3">
-            <div className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em]">Estate Completion</div>
-            <div className="flex items-end gap-5">
-              <span className="text-8xl font-black text-[#0F172A] tracking-tighter leading-none tabular-nums">
-                {scoreLoading ? '—' : `${percent}%`}
-              </span>
-              <span className="text-slate-400 font-semibold text-2xl pb-2">
-                {score ? `${score.completedSteps} of ${score.totalSteps} steps` : 'calculating...'}
-              </span>
+      {/* ── 1. Shepherd Companion Card ── */}
+      <Card className={cn(
+        'rounded-3xl border-slate-100 shadow-sm overflow-hidden',
+        totalEntryCount === 0 && 'bg-gradient-to-br from-[#F8FAFC] to-[#EEF2FF]',
+      )}>
+        <CardContent className={cn('px-8 py-8', totalEntryCount === 0 && 'py-16')}>
+          <div className="flex items-start gap-5">
+            {/* Shepherd compass icon */}
+            <div className="w-12 h-12 rounded-full bg-[#133378]/10 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" className="w-6 h-6 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-[#0F172A] mb-2 font-[family-name:var(--font-cinzel)]">
+                The Shepherd
+              </h3>
+              <p className="text-[#64748B] text-base leading-relaxed mb-5">
+                {shepherdPrompt}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {totalEntryCount === 0 ? (
+                  <Button asChild className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl px-6 h-11 font-semibold">
+                    {/* @ts-expect-error — dynamic route */}
+                    <Link to={`/estates/${routeId}/soul-log`}>
+                      Record Your First Memory
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button asChild variant="outline" className="rounded-xl px-5 h-10 border-[#133378]/20 text-[#133378] hover:bg-[#133378]/5 font-semibold">
+                    {/* @ts-expect-error — dynamic route */}
+                    <Link to={`/estates/${routeId}/soul-log`}>
+                      Record a Memory
+                    </Link>
+                  </Button>
+                )}
+                <Button
+                  variant="ghost"
+                  onClick={openShepherd}
+                  className="rounded-xl px-5 h-10 text-[#C8A951] hover:bg-[#C8A951]/10 font-semibold"
+                >
+                  Talk to the Shepherd
+                </Button>
+              </div>
             </div>
           </div>
-          <Progress
-            value={percent}
-            className="w-full max-w-xl h-2 bg-slate-200 shadow-inner"
-          />
         </CardContent>
-        {nextAction && (
-          <Button asChild size="lg" className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-14 py-6 rounded-2xl font-bold text-[15px] h-auto shadow-[0_20px_50px_rgba(19,51,120,0.15)] hover:shadow-[0_25px_60px_rgba(19,51,120,0.25)] hover:-translate-y-1 active:scale-95 z-10">
-            {/* @ts-expect-error — dynamic route from checklist */}
-            <Link to={`/estates/${routeId}/${nextAction.route}`}>
-              {nextAction.label} →
-            </Link>
-          </Button>
-        )}
       </Card>
 
-      {/* ── Stat Grid ── */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8 lg:gap-12">
-        <MiniStat label="Total Assets" value={assets.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>} />
-        <MiniStat label="Stored Documents" value={documents.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>} />
-        <MiniStat label="Beneficiaries" value={heirs.length.toString()} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>} />
-        <MiniStat label="Completion" value={scoreLoading ? '—' : `${percent}%`} icon={<svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-6 md:gap-10 lg:gap-16 py-12">
-        {/* ── Shepherd Checklist ── */}
-        <Card className="rounded-[3rem] p-16 border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)] ring-0 bg-white">
-          <CardContent className="space-y-12 px-0">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold text-[#0F172A] tracking-tight">Estate Checklist</h3>
-              <Badge variant="secondary" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-4 py-2 rounded-full border border-slate-100 h-auto">
-                {score ? `${score.completedSteps}/${score.totalSteps}` : '...'} Complete
-              </Badge>
-            </div>
-            {Object.entries(categories).length > 0 ? (
-              <div className="space-y-10">
-                {Object.entries(categories).map(([category, catSteps]) => (
-                  <div key={category}>
-                    <div className="text-[10px] font-bold text-[#133378]/30 uppercase tracking-[0.3em] mb-4">{category}</div>
-                    <div className="space-y-3">
-                      {catSteps.map((step) => (
-                        <Link
-                          key={step.id}
-                          // @ts-expect-error — dynamic route from checklist
-                          to={`/estates/${routeId}/${step.route}`}
-                          className={`flex items-center gap-4 px-5 py-4 rounded-2xl transition-all no-underline group/step ${
-                            step.complete
-                              ? 'bg-[#059669]/5 border border-[#059669]/10'
-                              : 'bg-[#F8FAFC] border border-slate-100 hover:border-[#133378]/20 hover:bg-white'
-                          }`}
-                        >
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                            step.complete ? 'bg-[#059669]' : 'border-2 border-slate-200 group-hover/step:border-[#133378]'
-                          }`}>
-                            {step.complete && (
-                              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className={`text-[14px] font-bold ${step.complete ? 'text-[#059669]' : 'text-[#0F172A] group-hover/step:text-[#133378]'} transition-colors`}>
-                              {step.label}
-                            </p>
-                            <p className="text-[12px] text-[#64748B] truncate">{step.description}</p>
-                          </div>
-                          {!step.complete && (
-                            <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/step:text-[#133378] transition-colors" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6" /></svg>
-                          )}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-12">
-                <ChecklistItem label="Loading..." percent={0} status="Calculating" color="bg-slate-200" />
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* ── Quick Actions + Support ── */}
-        <div className="space-y-12">
-          <Card className="rounded-[3rem] p-12 border-slate-100 shadow-[0_2px_40px_rgba(15,23,42,0.02)] ring-0 bg-white">
-            <CardContent className="px-0">
-              <h3 className="text-xl font-bold text-[#0F172A] mb-10 tracking-tight">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-4 md:gap-8">
-                <ActionBtn label="Add Asset" route={`/estates/${routeId}/assets`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 12H3m9-9v18" /></svg>} />
-                <ActionBtn label="Upload Doc" route={`/estates/${routeId}/vault`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>} />
-                <ActionBtn label="Add Heir" route={`/estates/${routeId}/beneficiaries`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /></svg>} />
-                <ActionBtn label="Memory" route={`/estates/${routeId}/memoirs`} icon={<svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" /></svg>} />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-[3rem] p-12 border-0 ring-0 bg-[#133378] text-white shadow-xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-bl-[4rem] group-hover:bg-white/10 transition-colors" />
-            <CardContent className="relative z-10 px-0">
-              <h4 className="text-xl font-bold mb-4 font-[family-name:var(--font-cinzel)] uppercase tracking-widest">Need Support?</h4>
-              <p className="text-white/70 text-sm mb-8 leading-relaxed font-medium">Your dedicated Concierge is available 24/7 to help you navigate your estate plan.</p>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={openShepherd}
-                className="w-full py-4 h-auto bg-white text-[#133378] border-white rounded-2xl font-bold text-xs uppercase tracking-[0.2em] hover:bg-[#C8A951] hover:text-white hover:border-[#C8A951] transition-all active:scale-[0.98]"
-              >
-                Contact Concierge
-              </Button>
-            </CardContent>
-          </Card>
+      {/* ── 2. Legacy Timeline ── */}
+      {totalEntryCount === 0 ? (
+        /* Empty state — the Shepherd card above already expanded */
+        <div className="text-center py-16 space-y-4">
+          <div className="text-6xl mb-4 opacity-20">
+            <svg viewBox="0 0 24 24" className="w-16 h-16 mx-auto text-[#133378]/20" fill="none" stroke="currentColor" strokeWidth="1">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-[#0F172A]/40 font-[family-name:var(--font-cinzel)]">
+            Your Legacy Timeline
+          </h3>
+          <p className="text-[#64748B] max-w-md mx-auto leading-relaxed">
+            Every voice memo, photo, document, and heirloom you add will appear here — a living portrait of the life you're preserving.
+          </p>
         </div>
+      ) : (
+        <div className="space-y-2">
+          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em] mb-6">
+            <span>Legacy Timeline</span>
+            <Badge variant="secondary" className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+              {totalEntryCount} {totalEntryCount === 1 ? 'moment' : 'moments'}
+            </Badge>
+          </div>
+
+          <div className="relative">
+            {/* Timeline spine */}
+            <div className="absolute left-[23px] top-0 bottom-0 w-[2px] bg-[#133378]/10" />
+
+            {groupedEntries.map((group) => (
+              <div key={group.key} className="mb-8">
+                {/* Date group header */}
+                <div className="relative flex items-center gap-4 mb-4">
+                  <div className="w-12 flex justify-center relative z-10">
+                    <div className="w-3 h-3 rounded-full bg-[#133378]/20 border-2 border-white" />
+                  </div>
+                  <span className="text-sm font-bold text-[#0F172A] font-[family-name:var(--font-cinzel)] tracking-wide">
+                    {group.label}
+                  </span>
+                </div>
+
+                {/* Entries for this date */}
+                <div className="space-y-1">
+                  {group.entries.map((entry) => (
+                    <div
+                      key={entry.id}
+                      className="relative flex items-start gap-4 group/entry"
+                    >
+                      {/* Timeline dot */}
+                      <div className="w-12 flex justify-center pt-3.5 relative z-10">
+                        <div className="w-2 h-2 rounded-full bg-[#133378]/15 group-hover/entry:bg-[#133378]/40 transition-colors" />
+                      </div>
+
+                      {/* Entry card */}
+                      <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-default min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-[#133378]/5 flex items-center justify-center flex-shrink-0 text-[#133378]/50 group-hover/entry:text-[#133378] group-hover/entry:bg-[#133378]/10 transition-colors">
+                          <TimelineIcon type={entry.type} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-[#0F172A] truncate">
+                            {entry.title}
+                          </p>
+                          {entry.subtitle && (
+                            <p className="text-xs text-[#64748B] truncate mt-0.5">
+                              {entry.subtitle}
+                            </p>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-slate-300 flex-shrink-0 tabular-nums">
+                          {entry.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Load more */}
+          {hasMore && (
+            <div className="flex justify-center pt-4">
+              <Button
+                variant="ghost"
+                onClick={() => setVisibleCount((prev) => prev + 50)}
+                className="text-[#133378] hover:bg-[#133378]/5 rounded-xl font-semibold"
+              >
+                Load more moments
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── 3. Quick Actions Row ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <QuickAction
+          label="Record a Memory"
+          route={`/estates/${routeId}/soul-log`}
+          icon={
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+          }
+          primary
+        />
+        <QuickAction
+          label="Upload Doc"
+          route={`/estates/${routeId}/vault`}
+          icon={
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+          }
+        />
+        <QuickAction
+          label="Add Heir"
+          route={`/estates/${routeId}/beneficiaries`}
+          icon={
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+            </svg>
+          }
+        />
+        <QuickAction
+          label="Add Asset"
+          route={`/estates/${routeId}/assets`}
+          icon={
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          }
+        />
       </div>
+
+      {/* ── 4. Quick Stats Row ── */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <MiniStat label="Assets" value={assets.length.toString()} />
+        <MiniStat label="Documents" value={documents.length.toString()} />
+        <MiniStat label="Beneficiaries" value={heirs.length.toString()} />
+        <MiniStat label="Completion" value={scoreLoading ? '...' : `${percent}%`} />
+      </div>
+
+      {/* ── 5. Estate Health Check (Collapsible) ── */}
+      <Collapsible open={checklistOpen} onOpenChange={setChecklistOpen}>
+        <Card className="rounded-2xl border-slate-100 shadow-sm">
+          <CollapsibleTrigger asChild>
+            <button className="w-full flex items-center justify-between px-8 py-5 text-left group">
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-[#059669]/10 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#059669]" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="text-base font-bold text-[#0F172A]">Estate Health Check</span>
+                  <span className="text-sm text-[#64748B] ml-3">
+                    {scoreLoading ? '...' : `${percent}% complete`}
+                    {score && ` — ${score.completedSteps} of ${score.totalSteps} steps`}
+                  </span>
+                </div>
+              </div>
+              <svg
+                viewBox="0 0 24 24"
+                className={cn(
+                  'w-5 h-5 text-slate-300 transition-transform',
+                  checklistOpen && 'rotate-180',
+                )}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="px-8 pb-8">
+              <Progress
+                value={percent}
+                className="w-full h-2 bg-slate-100 mb-8"
+              />
+              {Object.entries(categories).length > 0 ? (
+                <div className="space-y-8">
+                  {Object.entries(categories).map(([category, catSteps]) => (
+                    <div key={category}>
+                      <div className="text-[10px] font-bold text-[#133378]/30 uppercase tracking-[0.3em] mb-3">{category}</div>
+                      <div className="space-y-2">
+                        {catSteps.map((step) => (
+                          <Link
+                            key={step.id}
+                            // @ts-expect-error — dynamic route from checklist
+                            to={`/estates/${routeId}/${step.route}`}
+                            className={cn(
+                              'flex items-center gap-3 px-4 py-3 rounded-xl transition-all no-underline group/step',
+                              step.complete
+                                ? 'bg-[#059669]/5'
+                                : 'bg-[#F8FAFC] hover:bg-white hover:shadow-sm',
+                            )}
+                          >
+                            <div className={cn(
+                              'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
+                              step.complete ? 'bg-[#059669]' : 'border-2 border-slate-200 group-hover/step:border-[#133378]',
+                            )}>
+                              {step.complete && (
+                                <svg viewBox="0 0 24 24" className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={cn(
+                                'text-sm font-semibold transition-colors',
+                                step.complete ? 'text-[#059669]' : 'text-[#0F172A] group-hover/step:text-[#133378]',
+                              )}>
+                                {step.label}
+                              </p>
+                              <p className="text-xs text-[#64748B] truncate">{step.description}</p>
+                            </div>
+                            {!step.complete && (
+                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/step:text-[#133378] transition-colors" fill="none" stroke="currentColor" strokeWidth="2">
+                                <polyline points="9 18 15 12 9 6" />
+                              </svg>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[#64748B]">Loading checklist...</p>
+              )}
+            </div>
+          </CollapsibleContent>
+        </Card>
+      </Collapsible>
 
       {/* Shepherd Chat */}
       <ShepherdFAB onClick={openShepherd} hasInteracted={shepherdInteracted} />
@@ -548,73 +1043,45 @@ function DashboardIndex() {
 
 // ── Shared UI Components ──
 
-interface MiniStatProps {
-  label: string
-  value: string
-  icon: React.ReactNode
-}
-
-function MiniStat({ label, value, icon }: MiniStatProps) {
+function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <Card className="p-10 rounded-[2.5rem] border-slate-100 shadow-[0_2px_30px_rgba(15,23,42,0.01)] ring-0 bg-white hover:border-[#133378]/20 transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1">
-      <CardContent className="flex flex-col gap-8 px-0">
-        <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover/card:bg-[#133378] group-hover/card:text-white transition-all duration-500 shadow-sm border border-slate-100">
-          {icon}
-        </div>
-        <div>
-          <div className="text-[11px] font-bold text-slate-300 uppercase tracking-[0.3em] mb-2">{label}</div>
-          <div className="text-4xl font-bold text-[#0F172A] tracking-tighter tabular-nums">{value}</div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-interface ChecklistItemProps {
-  label: string
-  percent: number
-  status: string
-  color: string
-}
-
-function ChecklistItem({ label, percent, status, color }: ChecklistItemProps) {
-  return (
-    <div className="space-y-5 group/item">
-      <div className="flex justify-between items-end">
-        <div>
-          <h4 className="font-bold text-[#0F172A] text-xl tracking-tight group-hover/item:text-[#133378] transition-colors">{label}</h4>
-          <p className="text-slate-400 text-[13px] font-semibold tracking-wide mt-1">{status}</p>
-        </div>
-        <span className="font-bold text-slate-600 text-lg tabular-nums">{percent}%</span>
-      </div>
-      <Progress
-        value={percent}
-        className={`w-full h-2 bg-slate-50 border border-slate-100 p-0.5 shadow-inner [&>[data-slot=progress-indicator]]:${color} [&>[data-slot=progress-indicator]]:transition-all [&>[data-slot=progress-indicator]]:duration-[1500ms] [&>[data-slot=progress-indicator]]:ease-out [&>[data-slot=progress-indicator]]:shadow-sm`}
-      />
+    <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-[#F8FAFC] border border-slate-100">
+      <div className="text-2xl font-bold text-[#0F172A] tabular-nums">{value}</div>
+      <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</div>
     </div>
   )
 }
 
-interface ActionBtnProps {
+interface QuickActionProps {
   label: string
   icon: React.ReactNode
   route: string
+  primary?: boolean
 }
 
-function ActionBtn({ label, icon, route }: ActionBtnProps) {
+function QuickAction({ label, icon, route, primary }: QuickActionProps) {
   return (
-    <Card className="rounded-3xl border-slate-100 bg-slate-50 ring-0 hover:bg-white hover:border-[#133378]/20 hover:shadow-[0_20px_60px_rgba(19,51,120,0.06)] transition-all active:scale-[0.98] p-0">
-      <CardContent className="px-0 py-0">
-        <Link
-          to={route}
-          className="flex flex-col items-center justify-center gap-6 p-10 no-underline group"
-        >
-          <div className="text-slate-300 group-hover:text-[#133378] transition-all duration-500 scale-110 group-hover:scale-125">
-            {icon}
-          </div>
-          <span className="text-[11px] font-bold text-slate-400 group-hover:text-[#0F172A] uppercase tracking-[0.2em] mt-2">{label}</span>
-        </Link>
-      </CardContent>
-    </Card>
+    <Link
+      to={route as '/'}
+      className={cn(
+        'flex items-center gap-3 px-5 py-4 rounded-xl transition-all no-underline group',
+        primary
+          ? 'bg-[#133378] text-white hover:bg-[#1E3A5F] shadow-sm'
+          : 'bg-[#F8FAFC] border border-slate-100 text-[#0F172A] hover:border-[#133378]/20 hover:shadow-sm',
+      )}
+    >
+      <div className={cn(
+        'transition-colors',
+        primary ? 'text-white/70 group-hover:text-white' : 'text-slate-400 group-hover:text-[#133378]',
+      )}>
+        {icon}
+      </div>
+      <span className={cn(
+        'text-sm font-semibold',
+        primary ? 'text-white' : 'text-[#0F172A] group-hover:text-[#133378]',
+      )}>
+        {label}
+      </span>
+    </Link>
   )
 }

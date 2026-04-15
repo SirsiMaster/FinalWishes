@@ -6,6 +6,7 @@ package ratelimit
 
 import (
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -116,9 +117,9 @@ func Middleware(limiter *Limiter) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ip := r.RemoteAddr
-			// Use X-Forwarded-For if behind a proxy (Cloud Run sets this)
 			if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-				ip = xff
+				parts := strings.Split(xff, ",")
+				ip = strings.TrimSpace(parts[len(parts)-1])
 			}
 
 			if !limiter.allow(ip) {

@@ -38,9 +38,10 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if apiKey == "" {
 		log.Warn().Msg("OpenSign API key missing (OPENSIGN_API_KEY)")
-		// Proceeding might allow unauthenticated calls if the upstream doesn't require it?
-		// Unlikely, but let's not hard fail here if we want to debug 401s.
-		// Actually, standard practice is to fail early or let upstream fail.
+		if os.Getenv("GOOGLE_CLOUD_PROJECT") != "" {
+			http.Error(w, "Signing service unavailable", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	targetURL := ""

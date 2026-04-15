@@ -32,6 +32,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
 
 export const Route = createFileRoute('/estates/$estateId/directives')({
   component: DirectivesPage,
@@ -155,21 +156,13 @@ function DirectivesPage() {
 
       {/* ── Cards ── */}
       {directives.length === 0 ? (
-        <Card className="border-0 shadow-none bg-transparent text-center py-24">
-          <CardContent className="flex flex-col items-center">
-            <div className="w-20 h-20 bg-[#133378]/5 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <FileText className="w-8 h-8 text-[#133378]/30" />
-            </div>
-            <h3 className="text-xl font-bold text-[#0F172A] mb-2">No directives yet</h3>
-            <p className="text-[#64748B] mb-8">Create your first ethical will, funeral preference, or personal message.</p>
-            <Button
-              onClick={() => setCreateModalOpen(true)}
-              className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[14px]"
-            >
-              <Plus className="w-4 h-4" /> Create First Directive
-            </Button>
-          </CardContent>
-        </Card>
+        <SectionEmptyState
+          section="letters"
+          heading="No directives yet"
+          message="Create your first ethical will, funeral preference, or personal message."
+          ctaLabel="Create First Directive"
+          onAction={() => setCreateModalOpen(true)}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {directives.map((d) => {

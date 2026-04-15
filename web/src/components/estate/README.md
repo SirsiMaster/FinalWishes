@@ -5,6 +5,7 @@
 ```
 components/estate/
 ├── InviteTeamMember.tsx    # Team invitation form + member list
+├── SectionEmptyState.tsx   # Section-themed empty states with SVG illustrations
 ├── SectionHeader.tsx       # Shared emotional section header
 ├── SettlementPanel.tsx     # Settlement transition UI
 └── README.md               # This file
@@ -43,6 +44,31 @@ Shared header component that gives each of the 6 navigation groups (+ Life Chapt
   action={<Button>Add Heirloom</Button>}
 />
 ```
+
+---
+
+## SectionEmptyState
+
+Section-themed empty state with SVG illustration, emotionally-aware copy, and CTA button.
+
+### Props
+| Prop | Type | Required | Description |
+|------|------|----------|-------------|
+| `section` | `SectionId` | Yes | Which section theme to apply |
+| `heading` | `string` | No | Override default heading |
+| `message` | `string` | No | Override default message |
+| `ctaLabel` | `string` | No | Override default CTA label |
+| `onAction` | `() => void` | No | CTA click handler |
+| `hideCta` | `boolean` | No | Hide the CTA button |
+
+### Illustrations
+Each section has a unique hand-drawn SVG illustration:
+- Soul Log: Journal + heartbeat line
+- Memories: Photo stack + film strip
+- Letters: Envelope + wax seal + heart
+- My People: Connected people + shield
+- The Vault: Vault door + dial + bolts
+- My Legacy / Life Chapters: Timeline + cards
 
 ---
 

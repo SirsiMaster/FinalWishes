@@ -15,6 +15,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
+import { getSectionNudge } from '../lib/shepherd-prompts'
 
 export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
   component: BeneficiariesPage,
@@ -88,6 +90,11 @@ function BeneficiariesPage() {
         section="my-people"
         title="Family & Heirs"
         subtitle="Add and manage the people who will receive your assets or help manage your estate."
+        shepherdHint={getSectionNudge('my-people', {
+          estateId, userName: '', soulLogCount: 0, lastSoulLogDate: null,
+          assetCount: 0, documentCount: 0, heirCount: heirs.length, heirloomCount: 0,
+          capsuleCount: 0, directiveCount: 0, memoirCount: 0, heirs: [], completionPercent: 0,
+        })}
         action={
           <Button
             onClick={() => setModalOpen(true)}
@@ -121,15 +128,15 @@ function BeneficiariesPage() {
           />
         ))}
         {heirs.length === 0 && (
-          <Card className="col-span-2 rounded-[2.5rem] border-slate-100 bg-[#F8FAFC]">
-            <CardContent className="text-center py-32 flex flex-col items-center justify-center">
-              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm border border-slate-100">
-                <svg viewBox="0 0 24 24" className="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-              </div>
-              <p className="text-lg font-medium text-[#64748B]">No family members have been added to this estate yet.</p>
-              <p className="text-sm text-slate-400 mt-2">Click "Add Family Member" to get started.</p>
-            </CardContent>
-          </Card>
+          <div className="col-span-2">
+            <SectionEmptyState
+              section="my-people"
+              heading="No family members yet"
+              message="Add the people who will carry your legacy forward — heirs, executors, and trusted advisors."
+              ctaLabel="Add Family Member"
+              onAction={() => setModalOpen(true)}
+            />
+          </div>
         )}
       </div>
 

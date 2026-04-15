@@ -54,6 +54,7 @@ import {
   GripVertical,
 } from 'lucide-react'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { getSectionNudge } from '../lib/shepherd-prompts'
 
 export const Route = createFileRoute('/estates/$estateId/life-chapters')({
   component: LifeChaptersPage,
@@ -232,6 +233,12 @@ function LifeChaptersPage() {
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 bg-white min-h-screen font-[family-name:var(--font-inter)]">
       <SectionHeader
         section="life-chapters"
+        shepherdHint={getSectionNudge('life-chapters', {
+          estateId, userName: '', soulLogCount: soulLogs.length, lastSoulLogDate: null,
+          assetCount: 0, documentCount: 0, heirCount: 0, heirloomCount: 0,
+          capsuleCount: 0, directiveCount: 0, memoirCount: memoirDocs.length,
+          heirs: [], completionPercent: 0,
+        })}
         action={
           <Button
             onClick={() => setCreateOpen(true)}

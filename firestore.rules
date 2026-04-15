@@ -325,6 +325,16 @@ service cloud.firestore {
         allow delete: if canWriteEstate(estateId)
           && resource.data.status != 'delivered';
       }
+
+      // ── 3o. Life Chapters (Narrative Organization) ──
+      match /life-chapters/{chapterId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['title', 'status', 'order', 'createdAt'])
+          && request.resource.data.status == 'active';
+        allow update: if canWriteEstate(estateId);
+        allow delete: if isEstatePrincipal(estateId);
+      }
     }
     
     // =============================================

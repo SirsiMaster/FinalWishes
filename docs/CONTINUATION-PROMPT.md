@@ -23,8 +23,9 @@ Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md and
 ETHOS.md for full context. Sessions 5-7 shipped the Life-First Reframe: Soul Log,
 Legacy Timeline, Heir Welcome Screen, Guardian Protocol, Document Intelligence,
 Shepherd companion, Letters experience, security fixes, demo purge, emotional
-section headers, and Life Chapters. Next: section page transitions (Framer Motion),
-empty-state illustrations, Firestore security rules for life-chapters collection.
+section headers, Life Chapters, page transitions, themed empty states, Shepherd
+section nudges, and life-chapters security rules. Next: Soul Log media pipeline
+polish, chapter cover image uploads, Shepherd conversation memory.
 ```
 
 ---
@@ -151,6 +152,10 @@ Code instrumentation already wired (trackEstateCreated, trackDocumentUploaded, t
 - ~~Canonical doc alignment~~ **COMPLETE** — All docs reflect new direction
 - ~~Emotional section headers~~ **COMPLETE** — SectionHeader component, 7 themes, 10 pages integrated
 - ~~Life Chapters~~ **COMPLETE** — Route, Firestore CRUD, entry picker, sidebar nav
+- ~~Page transitions~~ **COMPLETE** — Framer Motion AnimatePresence in estate layout
+- ~~Empty-state illustrations~~ **COMPLETE** — SectionEmptyState with 6 SVG illustrations
+- ~~Shepherd section nudges~~ **COMPLETE** — getSectionNudge() with per-section contextual hints
+- ~~Life-chapters security rules~~ **COMPLETE** — Firestore rule 3o added
 
 ---
 

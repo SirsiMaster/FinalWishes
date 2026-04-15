@@ -4,6 +4,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.7.0] — 2026-04-15
+### Session 7d: Code Splitting + E2E Tests
+
+### Added
+- **Route-level code splitting** — 6 heaviest estate routes (soul-log, vault, timecapsule, dashboard, memoirs, lockbox) now use TanStack Router `.lazy.tsx` convention
+  - Main bundle: **2,210 KB → 745 KB** (66% reduction)
+  - Each route loads as a separate ~7-10 KB gzipped chunk on navigation
+- **E2E tests** — `e2e/life-first-features.spec.ts` with 8 Playwright tests:
+  - Soul Log: page load, composer dialog, written entry tab
+  - Life Chapters: page load, create dialog, title validation
+  - Section headers: all 7 sections verify distinctive SectionHeader
+  - Page transitions: navigation between sections
+  - Shepherd: FAB + chat panel
+
+### Changed
+- Updated `authenticated.spec.ts` to match new sidebar nav labels ("Photos & Videos" instead of "Memories")
+
+---
+
 ## [0.6.2] — 2026-04-15
 ### Session 7c: Media Pipeline Polish, Cover Images, Shepherd Memory
 

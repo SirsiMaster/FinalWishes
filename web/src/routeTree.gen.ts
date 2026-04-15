@@ -85,18 +85,24 @@ const EstatesEstateIdVaultRoute = EstatesEstateIdVaultRouteImport.update({
   id: '/vault',
   path: '/vault',
   getParentRoute: () => EstatesEstateIdRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/estates.$estateId.vault.lazy').then((d) => d.Route),
+)
 const EstatesEstateIdTimecapsuleRoute =
   EstatesEstateIdTimecapsuleRouteImport.update({
     id: '/timecapsule',
     path: '/timecapsule',
     getParentRoute: () => EstatesEstateIdRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/estates.$estateId.timecapsule.lazy').then((d) => d.Route),
+  )
 const EstatesEstateIdSoulLogRoute = EstatesEstateIdSoulLogRouteImport.update({
   id: '/soul-log',
   path: '/soul-log',
   getParentRoute: () => EstatesEstateIdRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/estates.$estateId.soul-log.lazy').then((d) => d.Route),
+)
 const EstatesEstateIdSettingsRoute = EstatesEstateIdSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -122,12 +128,16 @@ const EstatesEstateIdMemoirsRoute = EstatesEstateIdMemoirsRouteImport.update({
   id: '/memoirs',
   path: '/memoirs',
   getParentRoute: () => EstatesEstateIdRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/estates.$estateId.memoirs.lazy').then((d) => d.Route),
+)
 const EstatesEstateIdLockboxRoute = EstatesEstateIdLockboxRouteImport.update({
   id: '/lockbox',
   path: '/lockbox',
   getParentRoute: () => EstatesEstateIdRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/estates.$estateId.lockbox.lazy').then((d) => d.Route),
+)
 const EstatesEstateIdLifeChaptersRoute =
   EstatesEstateIdLifeChaptersRouteImport.update({
     id: '/life-chapters',
@@ -156,7 +166,9 @@ const EstatesEstateIdDashboardRoute =
     id: '/dashboard',
     path: '/dashboard',
     getParentRoute: () => EstatesEstateIdRoute,
-  } as any)
+  } as any).lazy(() =>
+    import('./routes/estates.$estateId.dashboard.lazy').then((d) => d.Route),
+  )
 const EstatesEstateIdBeneficiariesRoute =
   EstatesEstateIdBeneficiariesRouteImport.update({
     id: '/beneficiaries',

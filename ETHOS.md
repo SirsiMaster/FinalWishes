@@ -59,6 +59,25 @@ FinalWishes walks with all of them. Through youth, marriage, parenthood, career,
 
 ---
 
+## The Soul Log
+
+The Soul Log is the heartbeat of FinalWishes. It is your personal diary — video or audio, your choice — of thoughts, feelings, and experiences captured in the moment they happen.
+
+Not a social media post. Not a performance for an audience. A private conversation with yourself and the people who matter to you. The entry you record at 2am when you can't sleep and you're thinking about your father. The video from the hospital room the day your child was born. The voice memo from the parking lot after your first day at a new job, still shaking, saying "I think this is going to be good."
+
+The Soul Log is what makes someone open FinalWishes tomorrow. Not next year when they remember to update their will — tomorrow, because they had a thought worth preserving. It turns the app from a filing cabinet into a daily companion.
+
+Each entry can be:
+- **Video diary** — face-to-camera, capturing not just words but expression, emotion, the way you look right now
+- **Audio diary** — voice-only, for the moments when you just need to talk
+- **Written reflection** — for those who think in words on a page
+
+Each entry can be private (for you alone), shared (tagged for specific people), or sealed (delivered on a future date or event). A Soul Log entry tagged for your daughter becomes part of her heir experience. A sealed entry becomes a time capsule. A private entry stays yours — a diary that nobody reads until you decide otherwise.
+
+The Soul Log is the reason FinalWishes is not estate planning software. It is a life companion. Estate planning is something you do inside it. Living is what you do with it.
+
+---
+
 ## The Companion Vision
 
 FinalWishes is not an app you open once a year to update your will. It is a living companion.

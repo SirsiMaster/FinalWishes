@@ -9,7 +9,7 @@ import { Badge } from '../components/ui/badge'
 import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Label } from '../components/ui/label'
-import { Separator } from '../components/ui/separator'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 import {
   Dialog,
   DialogContent,
@@ -97,27 +97,20 @@ function AssetsPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
-      {/* -- Page Header -- */}
-      <div className="flex justify-between items-end pb-16">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
-            <div className="w-10 h-px bg-[#133378]/20" />
-            <span>Estate Asset Ledger</span>
-          </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">My Assets</h2>
-          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
-            A complete inventory of everything you own and want to pass on to your beneficiaries.
-          </p>
-        </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)] h-auto gap-3"
-        >
-          <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          Add Asset
-        </Button>
-        <Separator className="absolute bottom-0 left-0 right-0 bg-slate-50" />
-      </div>
+      <SectionHeader
+        section="the-vault"
+        title="My Assets"
+        subtitle="A complete inventory of everything you own and want to pass on to your beneficiaries."
+        action={
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-[#334155] hover:bg-[#1E293B] text-white px-10 py-5 rounded-2xl font-bold text-[14px] shadow-lg h-auto gap-3"
+          >
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Add Asset
+          </Button>
+        }
+      />
 
       {/* -- Asset Table -- */}
       <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden overflow-x-auto shadow-sm">

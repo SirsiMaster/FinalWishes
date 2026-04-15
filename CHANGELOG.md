@@ -4,6 +4,35 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.6.0] — 2026-04-15
+### Session 7: Emotional Section Design + Life Chapters
+
+### Added
+- **SectionHeader component** — Shared emotional section header (`web/src/components/estate/SectionHeader.tsx`)
+  - 7 distinct visual themes: Soul Log (amber), My Legacy (royal blue), Memories (rose), Letters (sage), My People (teal), The Vault (steel), Life Chapters (purple)
+  - Gradient backgrounds, section icons, taglines, action slots, children slots
+  - Replaces 10 bespoke page headers with consistent structure + distinct personality
+- **Life Chapters feature** — Narrative life organization (`/estates/$estateId/life-chapters`)
+  - Create themed chapters (childhood, military service, parenthood, career)
+  - Date ranges, descriptions, cover images
+  - Add entries from Soul Log and Memories into chapters
+  - Remove entries, edit/archive chapters
+  - Entry picker shows available unassigned entries
+  - Firestore subcollection: `estates/{id}/life-chapters`
+  - CRUD actions in `estate-actions.ts` (addLifeChapter, updateLifeChapter, archiveLifeChapter)
+  - Types + hook in `firestore.ts` (LifeChapter, ChapterEntryRef, useLifeChapters)
+- **Sidebar updated** — My Legacy group now has children: Legacy Timeline + Life Chapters (New badge)
+- **Role permissions** — Life Chapters accessible to principal, admin, executor, heir
+- **User guide** — `docs/user-guides/life-chapters.md`
+- **Developer README** — SectionHeader docs added to `web/src/components/estate/README.md`
+
+### Changed
+- All 10 estate section pages now use SectionHeader for visual consistency
+- CTA buttons colored per-section (rose for Memories, sage for Letters, teal for My People, steel for Vault)
+- Removed unused Separator imports from assets and dashboard routes
+
+---
+
 ## [0.5.0] — 2026-04-14
 ### Session 6: Life-First Reframe + Security Hardening
 

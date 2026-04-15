@@ -69,6 +69,7 @@ import {
   Loader2,
 } from 'lucide-react'
 import { getDailySoulLogPrompt } from '../lib/shepherd-prompts'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 
 export const Route = createFileRoute('/estates/$estateId/soul-log')({
   component: SoulLogPage,
@@ -288,27 +289,23 @@ function SoulLogPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 md:py-12 space-y-8 bg-white min-h-screen">
-      {/* Page Header */}
-      <div className="text-center space-y-3 pb-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#133378] tracking-wide font-[family-name:var(--font-cinzel)] uppercase">
-          Soul Log
-        </h1>
-        <p className="text-[#0F172A]/50 text-sm max-w-md mx-auto">
-          Your personal diary — thoughts, feelings, and experiences captured in the moment.
-        </p>
-        {/* Search */}
-        {entries.length > 0 && (
-          <div className="relative max-w-sm mx-auto pt-2">
-            <Search className="absolute left-3 top-1/2 mt-1 -translate-y-1/2 w-4 h-4 text-[#0F172A]/30" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search entries, transcripts..."
-              className="pl-9 rounded-full border-[#133378]/10 text-sm bg-[#F8FAFC]"
-            />
-          </div>
-        )}
-      </div>
+      <SectionHeader
+        section="soul-log"
+        subtitle="Your personal diary — thoughts, feelings, and experiences captured in the moment."
+        action={
+          entries.length > 0 ? (
+            <div className="relative w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#0F172A]/30" />
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search entries, transcripts..."
+                className="pl-9 rounded-full border-[#B8860B]/15 text-sm bg-white/80"
+              />
+            </div>
+          ) : undefined
+        }
+      />
 
       {/* Shepherd Card */}
       <ShepherdCard

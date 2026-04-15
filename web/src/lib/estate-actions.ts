@@ -507,3 +507,51 @@ export async function markAllNotificationsRead(estateId: string): Promise<Action
     return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }
+
+// ─── Life Chapter CRUD ────────────────────────────────────────────────────────
+
+export async function addLifeChapter(params: {
+  estateId: string;
+  title: string;
+  description: string;
+  coverImageUrl?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  order: number;
+}): Promise<ActionResult> {
+  try {
+    const { estateId, ...data } = params;
+    await addDoc(collection(db, `estates/${estateId}/life-chapters`), {
+      ...data,
+      entryRefs: [],
+      status: 'active',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[addLifeChapter] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function updateLifeChapter(
+  estateId: string,
+  chapterId: string,
+  updates: Record<string, unknown>,
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/life-chapters/${chapterId}`), {
+      ...updates,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[updateLifeChapter] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function archiveLifeChapter(estateId: string, chapterId: string): Promise<ActionResult> {
+  return updateLifeChapter(estateId, chapterId, { status: 'archived' });
+}

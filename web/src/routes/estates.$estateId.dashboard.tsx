@@ -23,7 +23,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import {
@@ -33,6 +32,7 @@ import {
 } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
 import { getShepherdPrompt, type ShepherdContext } from '../lib/shepherd-prompts'
+import { SectionHeader } from '@/components/estate/SectionHeader'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -729,16 +729,10 @@ function DashboardIndex() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 bg-white min-h-screen font-[family-name:var(--font-inter)]">
-      {/* ── Page Header ── */}
-      <div className="space-y-3 mb-8">
-        <div className="flex items-center gap-3 text-[11px] font-bold text-royal/40 uppercase tracking-[0.2em] mb-4">
-          <Separator className="w-10 bg-royal/20" />
-          <span>Your Legacy</span>
-        </div>
-        <h1 className="text-[2.5rem] md:text-[3.5rem] font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] leading-tight tracking-tight">
-          Welcome back, {userName || 'there'}.
-        </h1>
-      </div>
+      <SectionHeader
+        section="my-legacy"
+        title={`Welcome back, ${userName || 'there'}.`}
+      />
 
       {/* ── 1. Shepherd Companion Card ── */}
       <Card className={cn(

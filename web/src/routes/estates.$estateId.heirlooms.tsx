@@ -38,6 +38,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { Progress } from '@/components/ui/progress'
 
+import { SectionHeader } from '@/components/estate/SectionHeader'
+
 export const Route = createFileRoute('/estates/$estateId/heirlooms')({
   component: HeirloomsPage,
 })
@@ -95,29 +97,21 @@ function HeirloomsPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
-      {/* ── Page Header ── */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-50 pb-8 md:pb-16">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#133378]/40 uppercase tracking-[0.2em] mb-2">
-            <div className="w-10 h-px bg-[#133378]/20" />
-            <span>Physical Asset Inventory</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
-            Heirloom Registry
-          </h2>
-          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
-            Physical assets, family treasures, and sentimental items worth preserving for future generations.
-          </p>
-        </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          disabled={tierUsage ? !tierUsage.canUploadMedia : false}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-[0_20px_50px_rgba(19,51,120,0.1)] w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Plus className="w-5 h-5" />
-          Add Heirloom
-        </Button>
-      </div>
+      <SectionHeader
+        section="memories"
+        title="Heirloom Registry"
+        subtitle="Physical assets, family treasures, and sentimental items worth preserving for future generations."
+        action={
+          <Button
+            onClick={() => setModalOpen(true)}
+            disabled={tierUsage ? !tierUsage.canUploadMedia : false}
+            className="bg-[#9D174D] hover:bg-[#831843] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-lg w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Plus className="w-5 h-5" />
+            Add Heirloom
+          </Button>
+        }
+      />
 
       {/* Tier Limit Banner */}
       {tierUsage && !tierUsage.canUploadMedia && (

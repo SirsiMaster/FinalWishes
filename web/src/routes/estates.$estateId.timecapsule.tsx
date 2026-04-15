@@ -66,6 +66,8 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 
+import { SectionHeader } from '@/components/estate/SectionHeader'
+
 export const Route = createFileRoute('/estates/$estateId/timecapsule')({
   component: TimeCapsulePage,
 })
@@ -1147,48 +1149,41 @@ function TimeCapsulePage() {
 
   return (
     <div className="max-w-[1440px] mx-auto p-12 space-y-16 bg-white min-h-screen">
-      {/* Page Header */}
-      <div className="flex justify-between items-end border-b border-[#C8A951]/15 pb-16">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-[11px] font-bold text-[#C8A951]/60 uppercase tracking-[0.2em] mb-2">
-            <div className="w-10 h-px bg-[#C8A951]/30" />
-            <span>Letters &amp; Time Capsules</span>
+      <SectionHeader
+        section="letters"
+        title="Time Capsules"
+        subtitle="Write letters to the people you love. Seal them today. They will be delivered when the moment is right."
+        action={
+          <Button
+            onClick={() => setModalOpen(true)}
+            className="bg-[#4D7C4D] hover:bg-[#3D6B3D] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg gap-3 active:scale-95"
+          >
+            <Plus className="w-5 h-5" />
+            Write a Letter
+          </Button>
+        }
+      >
+        {/* Stats */}
+        {capsules.length > 0 && (
+          <div className="flex items-center gap-6">
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[#4D7C4D]/10 text-[#0F172A] border-none">
+              <Hourglass className="w-4 h-4 text-[#4D7C4D]" />
+              <span className="text-[13px] font-bold">{pendingCount}</span>
+              <span className="text-[13px] text-[#64748B] font-normal">sealed</span>
+            </Badge>
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-green-50 text-[#0F172A] border-none">
+              <CheckCircle2 className="w-4 h-4 text-green-500" />
+              <span className="text-[13px] font-bold">{deliveredCount}</span>
+              <span className="text-[13px] text-[#64748B] font-normal">delivered</span>
+            </Badge>
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[#4D7C4D]/5 text-[#0F172A] border-none">
+              <Send className="w-4 h-4 text-[#4D7C4D]/60" />
+              <span className="text-[13px] font-bold">{capsules.length}</span>
+              <span className="text-[13px] text-[#64748B] font-normal">total</span>
+            </Badge>
           </div>
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
-            Time Capsules
-          </h2>
-          <p className="text-[#64748B] text-lg font-medium max-w-2xl leading-relaxed">
-            Write letters to the people you love. Seal them today. They will be delivered when the moment is right.
-          </p>
-          {/* Stats */}
-          {capsules.length > 0 && (
-            <div className="flex items-center gap-6 pt-2">
-              <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[#C8A951]/10 text-[#0F172A] border-none">
-                <Hourglass className="w-4 h-4 text-[#C8A951]" />
-                <span className="text-[13px] font-bold">{pendingCount}</span>
-                <span className="text-[13px] text-[#64748B] font-normal">sealed</span>
-              </Badge>
-              <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-green-50 text-[#0F172A] border-none">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
-                <span className="text-[13px] font-bold">{deliveredCount}</span>
-                <span className="text-[13px] text-[#64748B] font-normal">delivered</span>
-              </Badge>
-              <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[#C8A951]/5 text-[#0F172A] border-none">
-                <Send className="w-4 h-4 text-[#C8A951]/60" />
-                <span className="text-[13px] font-bold">{capsules.length}</span>
-                <span className="text-[13px] text-[#64748B] font-normal">total</span>
-              </Badge>
-            </div>
-          )}
-        </div>
-        <Button
-          onClick={() => setModalOpen(true)}
-          className="bg-[#C8A951] hover:bg-[#A07D3A] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg gap-3 active:scale-95"
-        >
-          <Plus className="w-5 h-5" />
-          Write a Letter
-        </Button>
-      </div>
+        )}
+      </SectionHeader>
 
       {/* Empty State or Grid */}
       {capsules.length === 0 ? (

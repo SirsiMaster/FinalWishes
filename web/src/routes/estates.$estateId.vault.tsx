@@ -2,13 +2,14 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useCallback, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { useEstateDocuments, type VaultDocument } from '../lib/firestore'
+import { useEstateDocuments, useEstateHeirs, type VaultDocument, type DocumentAnalysis, type DocumentDiscrepancy } from '../lib/firestore'
 import { createDocumentRecord, archiveDocument } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { trackDocumentUploaded } from '../lib/analytics'
+import { analyzeDocument } from '../lib/doc-intelligence'
 
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
@@ -324,7 +325,7 @@ function VaultPage() {
         const bucketName = 'finalwishes-vault'
         const category = inferCategory(file.name)
 
-        await createDocumentRecord({
+        const docResult = await createDocumentRecord({
           estateId,
           originalName: file.name,
           displayName: file.name,
@@ -339,6 +340,19 @@ function VaultPage() {
 
         updateUpload({ status: 'done', progress: 100 })
         trackDocumentUploaded(estateId, file.type || 'unknown')
+
+        // Fire background Document Intelligence analysis (non-blocking)
+        if (docResult.success && docResult.id) {
+          analyzeDocument({
+            estateId,
+            documentId: docResult.id,
+            storageKey: storageKey,
+            mimeType: file.type || 'application/octet-stream',
+            fileName: file.name,
+          }).catch(() => {
+            // Silent failure — AI analysis is best-effort
+          })
+        }
 
         // Remove from upload list after 3 seconds
         setTimeout(() => {
@@ -740,6 +754,7 @@ function VaultPage() {
                 onDownload={() => handleDownload(doc)}
                 onPreview={() => setPreviewDoc(doc)}
                 onDelete={() => setDeleteConfirm(doc)}
+                estateId={estateId}
               />
             ))}
             {documents.length === 0 && (
@@ -916,78 +931,125 @@ function DocItem({
   onDownload,
   onPreview,
   onDelete,
+  estateId,
 }: {
   doc: VaultDocument
   onDownload: () => void
   onPreview: () => void
   onDelete: () => void
+  estateId: string
 }) {
+  const [insightsOpen, setInsightsOpen] = useState(false)
   const dateStr = doc.createdAt?.toDate?.()
     ? doc.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : ''
   const sizeStr = doc.fileSize ? formatFileSize(doc.fileSize) : ''
   const isPreviewable = doc.mimeType?.startsWith('image/') || doc.mimeType === 'application/pdf'
+  const hasAnalysis = doc.analysisStatus === 'complete' && doc.analysis
+  const isAnalyzing = doc.analysisStatus === 'processing'
 
   return (
-    <div className="flex items-center justify-between p-5 bg-white border border-[#133378]/10 rounded-2xl hover:bg-[#F8FAFC] transition-all group">
-      <div className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer" onClick={isPreviewable ? onPreview : onDownload}>
-        <div className="w-11 h-11 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-[#133378]/30 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 border border-[#133378]/10 flex-shrink-0">
-          <FileIcon mimeType={doc.mimeType} />
-        </div>
-        <div className="min-w-0">
-          <div className="text-[#0F172A] font-bold text-[15px] mb-0.5 group-hover:text-[#133378] transition-colors truncate">
-            {doc.displayName || doc.originalName}
+    <div className="rounded-2xl border border-[#133378]/10 overflow-hidden transition-all group">
+      <div className="flex items-center justify-between p-5 bg-white hover:bg-[#F8FAFC] transition-all">
+        <div className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer" onClick={isPreviewable ? onPreview : onDownload}>
+          <div className="w-11 h-11 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-[#133378]/30 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 border border-[#133378]/10 flex-shrink-0">
+            <FileIcon mimeType={doc.mimeType} />
           </div>
-          <div className="flex items-center gap-3 text-[12px] font-medium text-[#133378]/40">
-            {dateStr && <span>{dateStr}</span>}
-            {dateStr && sizeStr && <div className="w-1 h-1 rounded-full bg-[#133378]/20" />}
-            {sizeStr && <span>{sizeStr}</span>}
-            {doc.folderId && (
-              <>
-                <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
-                <Badge variant="ghost" className="text-[#C8A951] font-semibold text-[12px] h-auto py-0 px-0">
-                  {doc.folderId}
-                </Badge>
-              </>
-            )}
+          <div className="min-w-0">
+            <div className="text-[#0F172A] font-bold text-[15px] mb-0.5 group-hover:text-[#133378] transition-colors truncate">
+              {doc.displayName || doc.originalName}
+            </div>
+            <div className="flex items-center gap-3 text-[12px] font-medium text-[#133378]/40 flex-wrap">
+              {dateStr && <span>{dateStr}</span>}
+              {dateStr && sizeStr && <div className="w-1 h-1 rounded-full bg-[#133378]/20" />}
+              {sizeStr && <span>{sizeStr}</span>}
+              {doc.folderId && (
+                <>
+                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
+                  <Badge variant="ghost" className="text-[#C8A951] font-semibold text-[12px] h-auto py-0 px-0">
+                    {doc.folderId}
+                  </Badge>
+                </>
+              )}
+              {isAnalyzing && (
+                <>
+                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
+                  <Badge className="bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5 animate-pulse">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    Analyzing...
+                  </Badge>
+                </>
+              )}
+              {hasAnalysis && (
+                <>
+                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
+                  <Badge className="bg-[#133378]/5 text-[#133378] border border-[#133378]/10 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
+                    <DocTypeBadgeLabel type={doc.analysis!.documentType} />
+                  </Badge>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-        {isPreviewable && (
+        <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+          {hasAnalysis && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setInsightsOpen(!insightsOpen)}
+              className="text-[#133378]/40 hover:text-[#133378] hover:bg-[#133378]/5 gap-1.5 text-[11px] font-bold"
+              title="AI Insights"
+            >
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+              </svg>
+              Insights
+            </Button>
+          )}
+          {isPreviewable && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onPreview}
+              className="text-[#133378]/30 hover:text-[#133378] hover:bg-[#133378]/5"
+              title="Preview"
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </Button>
+          )}
+          <Button
+            onClick={onDownload}
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[11px] font-bold shadow-sm"
+            size="sm"
+          >
+            Download
+          </Button>
           <Button
             variant="ghost"
             size="icon"
-            onClick={onPreview}
-            className="text-[#133378]/30 hover:text-[#133378] hover:bg-[#133378]/5"
-            title="Preview"
+            onClick={onDelete}
+            className="text-[#133378]/20 hover:text-red-500 hover:bg-red-50"
+            title="Delete"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
+              <polyline points="3 6 5 6 21 6" />
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
           </Button>
-        )}
-        <Button
-          onClick={onDownload}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[11px] font-bold shadow-sm"
-          size="sm"
-        >
-          Download
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onDelete}
-          className="text-[#133378]/20 hover:text-red-500 hover:bg-red-50"
-          title="Delete"
-        >
-          <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="3 6 5 6 21 6" />
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-          </svg>
-        </Button>
+        </div>
       </div>
+
+      {/* AI Insights Panel — collapsible */}
+      {hasAnalysis && insightsOpen && (
+        <AIInsightsPanel
+          analysis={doc.analysis!}
+          discrepancies={doc.discrepancies || []}
+          estateId={estateId}
+        />
+      )}
     </div>
   )
 }
@@ -1114,6 +1176,214 @@ function DeleteModalContent({
         </AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
+  )
+}
+
+// ─── AI Insights Panel ───────────────────────────────────────────────────
+
+const DOC_TYPE_LABELS: Record<string, string> = {
+  will: 'Last Will & Testament',
+  trust: 'Trust Document',
+  insurance: 'Insurance Policy',
+  deed: 'Property Deed',
+  financial: 'Financial Document',
+  medical: 'Medical Directive',
+  other: 'Document',
+}
+
+function DocTypeBadgeLabel({ type }: { type: string }) {
+  return <>{DOC_TYPE_LABELS[type] || type}</>
+}
+
+function AIInsightsPanel({
+  analysis,
+  discrepancies,
+  estateId,
+}: {
+  analysis: DocumentAnalysis
+  discrepancies: DocumentDiscrepancy[]
+  estateId: string
+}) {
+  const { data: heirs } = useEstateHeirs(estateId)
+  const heirNames = useMemo(
+    () => new Set(heirs.map((h) => h.fullName.toLowerCase().trim())),
+    [heirs],
+  )
+
+  return (
+    <div className="border-t border-[#133378]/10 bg-[#F0F5FF] px-6 py-5 space-y-4">
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        </svg>
+        <span className="text-[12px] font-bold text-[#133378] uppercase tracking-widest">
+          AI Insights
+        </span>
+      </div>
+
+      {/* Summary */}
+      <p className="text-[14px] text-[#0F172A]/80 leading-relaxed">
+        {analysis.summary}
+      </p>
+
+      {/* Key Details Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {analysis.signingDate && (
+          <div className="flex items-center gap-2 text-[13px]">
+            <span className="text-[#133378]/40 font-medium">Signed:</span>
+            <span className="text-[#0F172A] font-semibold">{analysis.signingDate}</span>
+          </div>
+        )}
+        {analysis.jurisdiction && (
+          <div className="flex items-center gap-2 text-[13px]">
+            <span className="text-[#133378]/40 font-medium">Jurisdiction:</span>
+            <span className="text-[#0F172A] font-semibold">{analysis.jurisdiction}</span>
+          </div>
+        )}
+        {analysis.notarized !== null && (
+          <div className="flex items-center gap-2 text-[13px]">
+            <span className="text-[#133378]/40 font-medium">Notarized:</span>
+            <span className={`font-semibold ${analysis.notarized ? 'text-green-600' : 'text-amber-600'}`}>
+              {analysis.notarized ? 'Yes' : 'No'}
+            </span>
+          </div>
+        )}
+        {analysis.namedExecutor && (
+          <div className="flex items-center gap-2 text-[13px]">
+            <span className="text-[#133378]/40 font-medium">Executor:</span>
+            <span className="text-[#0F172A] font-semibold">{analysis.namedExecutor}</span>
+            {heirNames.has(analysis.namedExecutor.toLowerCase().trim()) ? (
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M12 9v4M12 17h.01" />
+              </svg>
+            )}
+          </div>
+        )}
+        {analysis.namedTrustee && (
+          <div className="flex items-center gap-2 text-[13px]">
+            <span className="text-[#133378]/40 font-medium">Trustee:</span>
+            <span className="text-[#0F172A] font-semibold">{analysis.namedTrustee}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Named Beneficiaries */}
+      {analysis.namedBeneficiaries.length > 0 && (
+        <div className="space-y-2">
+          <span className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+            Named Beneficiaries
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {analysis.namedBeneficiaries.map((name) => {
+              const isKnown = heirNames.has(name.toLowerCase().trim())
+              return (
+                <Badge
+                  key={name}
+                  className={`text-[12px] font-semibold h-auto py-1 px-3 rounded-xl gap-1.5 ${
+                    isKnown
+                      ? 'bg-green-50 text-green-700 border border-green-200'
+                      : 'bg-amber-50 text-amber-700 border border-amber-200'
+                  }`}
+                >
+                  {isKnown ? (
+                    <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M12 9v4M12 17h.01" />
+                    </svg>
+                  )}
+                  {name}
+                </Badge>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Assets Mentioned */}
+      {analysis.assetsMentioned.length > 0 && (
+        <div className="space-y-2">
+          <span className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+            Assets Referenced
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {analysis.assetsMentioned.map((asset, i) => (
+              <Badge
+                key={i}
+                className="bg-[#F8FAFC] text-[#133378]/60 border border-[#133378]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
+              >
+                {asset}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Discrepancy Alerts */}
+      {discrepancies.length > 0 && (
+        <div className="space-y-2">
+          {discrepancies.map((d, i) => (
+            <div
+              key={i}
+              className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+              </svg>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-bold text-amber-800">
+                  {d.type === 'unknown_executor'
+                    ? `Your document names "${d.name}" as executor, but they're not in your estate.`
+                    : d.type === 'unknown_trustee'
+                      ? `Your document names "${d.name}" as trustee, but they're not in your estate.`
+                      : `"${d.name}" is named in this document but not in your estate beneficiaries.`}
+                </p>
+                <p className="text-[12px] text-amber-600 mt-0.5">
+                  Add them to ensure your estate records match your legal documents.
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-amber-300 text-amber-700 hover:bg-amber-100 text-[11px] font-bold rounded-lg flex-shrink-0"
+                onClick={() => {
+                  window.location.hash = ''
+                  window.location.pathname = `/estates/${estateId}/beneficiaries`
+                }}
+              >
+                Add to Estate
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Flags */}
+      {analysis.flags.length > 0 && (
+        <div className="space-y-2">
+          {analysis.flags.map((flag, i) => (
+            <div
+              key={i}
+              className="flex items-start gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-xl"
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              <p className="text-[13px] text-yellow-800 font-medium">{flag}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 

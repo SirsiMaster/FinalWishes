@@ -17,6 +17,7 @@ import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { createEstate } from '../lib/estate-actions'
+import { trackEstateCreated } from '../lib/analytics'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -157,6 +158,7 @@ function CreateEstatePage() {
         console.error('[CreateEstate] Metadata write failed (non-blocking):', metaErr)
       }
 
+      trackEstateCreated(result.id)
       navigate({ to: '/estates/$estateId/dashboard', params: { estateId: result.id } })
     } else {
       setError(result.error || 'Something went wrong. Please try again.')

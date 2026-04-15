@@ -1,5 +1,5 @@
 # FinalWishes — Continuation Prompt
-**Version:** 17.1 — **Date:** April 14, 2026 — **Session:** Test Suite + Code Quality + Type Safety
+**Version:** 18.0 — **Date:** April 14, 2026 — **Session:** Life-First Reframe + Canonical Doc Update
 
 ---
 
@@ -12,67 +12,57 @@
 **Deployed:** April 14, 2026 — CI/CD pipeline green, both frontend and API live
 **Security:** 0 npm vulnerabilities, 0 Go advisories
 **Tests:** 129 passing (8 files) — lint 0 warnings — tsc 0 errors
+**Product Phase:** Life-First Reframe (ADR-038) — navigation restructure, Soul Log, Legacy Timeline
 
 ---
 
 ## Resume Prompt
 
 ```
-Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md for
-full context. Session 5 shipped the web test suite (129 tests), eliminated all
-ESLint warnings and TypeScript errors, wired GA4 analytics, enabled CI test
-gate with typecheck. All tech debt resolved. Only GA4 console enable remains.
+Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md and
+ETHOS.md for full context. Session 6 completed the Life-First Reframe — the
+product pivot from estate-planning-as-chore to living-companion. ADR-038
+accepted, all canonical docs updated, navigation restructured into 6 emotional
+groups (Soul Log, My Legacy, Memories, Letters, My People, The Vault). Next:
+implement Soul Log recording UI + Legacy Timeline dashboard + Heir Welcome Screen.
 ```
 
 ---
 
 ## Session Summary
 
-### Session 5 (Apr 14): Test Suite + Code Quality
+### Session 6 (Apr 14): Life-First Reframe + Canonical Doc Update
 
-Made the test infrastructure fully operational — vitest was installed but couldn't run (missing jsdom). Fixed deps, added test scripts, enabled the CI gate, expanded coverage with tier-gating and export sanitization tests, and eliminated all 24 ESLint warnings.
+Completed the foundational product pivot documented in ETHOS.md. This session was about aligning every canonical document with the new vision: FinalWishes is not estate planning software, it is a living companion with estate planning built in.
 
-**Test Suite:**
-- Installed `jsdom` and `@testing-library/jest-dom` (missing peer deps)
-- Added `test`, `test:watch`, `test:coverage` scripts to package.json
-- All 6 existing test files (105 tests) now run and pass
-- New: `tier-gating.test.ts` — 15 tests covering constants, `tierUpgradeMessage` helpers, and `useTierGating` hook (fetch mocking, error states, refresh)
-- New: `export.test.ts` — 14 tests covering ZIP structure, Firestore Timestamp sanitization, lockbox credential stripping, document storage key stripping, manifest exclusion notices
-- Total: 129 tests across 8 files, all passing
+**ETHOS.md (Permanent):**
+- Written and committed as the soul of the application
+- Defines the emotional core: life-first, death-second
+- Soul Log concept, heir welcome screen, companion vision, design principles
+- Permanent document — does not version, does not archive
 
-**CI Pipeline:**
-- Uncommented and wired `web-test` job into firebase-hosting-merge.yml
-- Pipeline: `web-check` → `web-test` → `web-build` → `deploy-hosting`
-- Tests now gate deployment (web-build depends on [web-check, web-test])
+**ADR-038: Life-First Reframe (Accepted):**
+- Documents the product pivot from estate-mechanics navigation to emotional-intent navigation
+- Six navigation groups: Soul Log, My Legacy, Memories, Letters, My People, The Vault
+- Soul Log as daily-use diary (video/audio/text, private/shared/sealed visibility)
+- Legacy Timeline replaces completion-percentage dashboard
+- Heir Welcome Screen as the product's defining moment
+- Shepherd AI reframed from estate-assistant to life-companion
 
-**ESLint: 24 → 0 Warnings:**
-- 8 unused type imports removed (search.ts)
-- 2 unused imports removed (SearchResults.tsx)
-- 1 stale closure fixed (AdminHeader.tsx missing useCallback dep)
-- 3 `as any` replaced with typed alternatives (obituary.tsx)
-- 1 `any` state typed as `Asset | null` (assets route)
-- ESLint config: added `src/gen/**` ignore, `caughtErrorsIgnorePattern`, TanStack route export names
-- 2 framework false positives suppressed (shadcn button, TanStack route)
-- 3 ConnectRPC proxy `any`s inline-suppressed (genuinely dynamic)
+**Canonical Documents Updated:**
+- ADR-INDEX.md — ADR-038 added to registry and Consumer Experience category
+- CANONICAL_DEVELOPMENT_PLAN.md — Phase 5 (Life-First Reframe) with 8 sub-phases
+- CHANGELOG.md — v0.5.0 entry with full reframe changelog
+- CONTINUATION-PROMPT.md — Session 6 context, updated resume prompt, new priorities
+- VERSION_REGISTRY.md — Updated with current component versions and new canon docs
 
-**tsconfig Cleanup:**
-- Removed Next.js remnants: `next-env.d.ts`, `.next/types/**/*.ts`, `next` plugin
-- Added `dist` to exclude, `vite/client` to types
-
-**TypeScript Strict: 50 → 0 errors:**
-- Added `vite/client` + `vitest/globals` ambient types (`vite-env.d.ts`)
-- Fixed all `/login` navigate calls with `search: {}` (TanStack Router validateSearch)
-- Typed login validateSearch return as `{ invite?: string; demo?: boolean }`
-- Imported `UserProfile` from auth.tsx (was locally redefined in login.tsx)
-- Fixed test mock signatures for vi.fn spread compatibility
-- Fixed `AddHeirloomModal` missing `useTierGating` hook (tierUsage was undefined in callback scope)
-- Added inline `timeAgo` to NotificationBell (missing utils export)
-- Fixed export.ts sanitize fns to accept readonly arrays
-- Fixed estateId index redirect with useParams approach
-
-**Plaid:** Permanently out of scope. Zero code/dep references. Stripe integration operational.
+**Security Hardening (Session 5, carried forward):**
+- IDOR protection, path traversal prevention, XFF spoofing blocked
+- Demo user purge, rate limiting on auth
+- 32 Dependabot vulns resolved to 0
 
 ### Prior Sessions
+- Session 5 (Apr 14): Test suite (129 tests), ESLint 24→0, TypeScript 50→0, GA4 wired, CI gate
 - Session 4 (Apr 14): CI/CD fixes, tier-gating, responsive audit, security remediation (32 → 0 vulns)
 - Session 3 (Apr 14): Full product overhaul — 22 fixes across 4 waves
 - Session 2 (Apr 10): Email templates, skeletons, CSP, OpenAPI spec, accessibility, monitoring
@@ -92,29 +82,48 @@ Made the test infrastructure fully operational — vitest was installed but coul
 
 ## What's Next (Priority Order)
 
-### 1. GA4 Property Setup (5 min manual)
+### 1. Soul Log Implementation (Phase 5b — Next Feature)
+The Soul Log is the heartbeat of the Life-First Reframe. Implementation order:
+1. Recording UI — video (camera), audio (mic), text input components
+2. Storage pipeline — video → YouTube (unlisted), audio → Cloud Storage, text → Firestore
+3. Visibility modes — private/shared/sealed controls per entry
+4. Feed view — chronological diary with date grouping
+5. Transcription — Vertex AI Speech-to-Text on audio/video uploads
+
+### 2. Navigation Restructure (Phase 5a)
+Reorganize existing routes into 6 emotional groups:
+- Soul Log (new), My Legacy (directives/capsules), Memories (memoirs/heirlooms)
+- Letters (new, extracted from time capsules), My People (beneficiaries), The Vault (assets/docs/lockbox)
+
+### 3. Legacy Timeline Dashboard (Phase 5c)
+Replace completion-percentage dashboard with chronological life narrative.
+
+### 4. Heir Welcome Screen (Phase 5d)
+The sacred moment — heir's first login shows loved one's face, voice, message. Practical matters come after.
+
+### 5. Role Mapping Fix + Access Enforcement (Phase 5g)
+Correct Principal/Executor/Heir/Guardian role assignments. Enforce visibility modes per beneficiary.
+
+### 6. GA4 Property Setup (5 min manual)
 Firebase Console → Project Settings → Integrations → Google Analytics → Enable
 Then set `VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXX` in environment.
-Code instrumentation is fully wired:
-- `trackEstateCreated` → estates.create.tsx (on successful estate creation)
-- `trackDocumentUploaded` → vault.tsx (on successful upload)
-- `trackCheckoutStarted` → pricing.tsx (before Stripe redirect)
-- `trackPaymentSuccess` → defined but needs Stripe webhook callback to fire
-- Firebase Performance auto-collects LCP, FID, CLS
+Code instrumentation already wired (trackEstateCreated, trackDocumentUploaded, trackCheckoutStarted).
 
-### 2. Future Features (Tier 3, not purchased)
+### 7. Future Features (Tier 3, not purchased)
 - Estate Administration ($25K)
 - Probate Engine MD/IL/MN ($35K)
 - Advanced AI ($15K)
-- Google Photos API (deferred — Cloud Storage handles all media currently)
+- Guardian Protocol (Phase 5h — content staging for minor heirs)
 
-### Resolved This Session
+### Resolved Prior Sessions
 - ~~Domain acquisition~~ **PERMANENTLY OFF LIST**
 - ~~TypeScript strict errors~~ **0 errors** (`tsc --noEmit` + `typecheck` script)
 - ~~ESLint warnings~~ **0 warnings**
 - ~~Web test suite~~ **129 tests, CI gate active**
 - ~~Plaid~~ **PERMANENTLY OUT** — Stripe operational
-- ~~react-pdf chunk~~ Already lazy-loaded, no action needed
+- ~~ETHOS.md~~ **WRITTEN** — Permanent soul document
+- ~~ADR-038~~ **ACCEPTED** — Life-First Reframe documented
+- ~~Canonical doc alignment~~ **COMPLETE** — All docs reflect new direction
 
 ---
 
@@ -151,9 +160,11 @@ All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (s
 
 | File | Purpose |
 |------|---------|
+| `ETHOS.md` | **NEW** — Soul of the application (permanent, non-versioned) |
 | `CLAUDE.md` | Operational directive |
-| `CHANGELOG.md` | **UPDATED** — Session 5 entry (v0.3.0) |
-| `docs/CANONICAL_DEVELOPMENT_PLAN.md` | Contract dev plan |
+| `CHANGELOG.md` | **UPDATED** — Session 6 entry (v0.5.0, Life-First Reframe) |
+| `docs/ADR-038-LIFE-FIRST-REFRAME.md` | **NEW** — Life-First Reframe product pivot decision |
+| `docs/CANONICAL_DEVELOPMENT_PLAN.md` | **UPDATED** — Phase 5 (Life-First Reframe) added |
 | `docs/api-spec.yaml` | OpenAPI 3.0 (28+ endpoints) |
 | `web/vitest.config.ts` | Vitest config (jsdom, v8 coverage) |
 | `web/src/test/setup.ts` | Test setup (jest-dom, firebase mock, env stub) |
@@ -170,4 +181,4 @@ All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (s
 
 ---
 
-**Updated:** April 14, 2026 (Claude Opus 4.6)
+**Updated:** April 14, 2026 (Claude Opus 4.6 — Session 6: Life-First Reframe)

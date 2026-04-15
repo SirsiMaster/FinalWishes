@@ -1,6 +1,6 @@
 # Version Registry — FinalWishes Component Tracker
 ## Age, Date, Status of Every Component
-**Last Updated:** 2026-03-19 — **Current Release:** v0.2.0-alpha
+**Last Updated:** 2026-04-14 — **Current Release:** v0.5.0
 
 ---
 
@@ -8,29 +8,29 @@
 
 | Component | Version | Created | Last Modified | Status | Tech |
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
-| **Web Dashboard** | 0.1.0-alpha | 2026-02-17 | 2026-03-18 | ⚠️ UI Shells (mock data) | React 18 + Vite + TanStack |
-| **Landing Page** | 1.0.0 | 2026-02-17 | 2026-03-18 | ✅ Deployed | React (single route) |
-| **Login Page** | 0.2.0 | 2026-03-01 | 2026-03-19 | ✅ Firebase Auth (email + username) | React + Firebase Auth |
-| **iOS App** | 0.0.1 | 2026-03-18 | 2026-03-18 | 🔲 Stubs | React Native + Expo |
-| **Android App** | 0.0.1 | 2026-03-18 | 2026-03-18 | 🔲 Stubs | React Native + Expo |
-| **macOS Desktop** | 0.0.1 | 2026-03-18 | 2026-03-18 | 🔲 Config only | Tauri (Rust) |
+| **Web Dashboard** | 0.5.0 | 2026-02-17 | 2026-04-14 | ✅ Production (22 routes, 129 tests) | React 19 + Vite 8 + TanStack |
+| **Landing Page** | 1.0.0 | 2026-02-17 | 2026-04-14 | ✅ Deployed | React (single route) |
+| **Login Page** | 0.3.0 | 2026-03-01 | 2026-04-14 | ✅ Firebase Auth (email + username + MFA) | React + Firebase Auth |
+| **iOS App** | — | — | — | Removed (Apr 2026) | Deferred until web stable |
+| **Android App** | — | — | — | Removed (Apr 2026) | Deferred until web stable |
+| **macOS Desktop** | — | — | — | Removed (Apr 2026) | Deferred until web stable |
 
 ## Backend Services
 
 | Component | Version | Created | Last Modified | Status | Tech |
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
-| **Go API (Cloud Run)** | 0.1.0 | 2026-03-01 | 2026-03-19 | ⚠️ Auth middleware, mock mode | Go + ConnectRPC + Firebase Admin |
-| **Proto Definitions** | 0.0.1 | 2026-03-01 | 2026-03-17 | 🔲 EstateService only | Protobuf + ConnectRPC |
-| **Firebase Functions** | 0.1.0 | 2026-03-17 | 2026-03-17 | ⚠️ Cloud Storage trigger | Node.js |
-| **Firestore Rules** | 0.1.0 | 2026-02-17 | 2026-03-17 | ⚠️ Basic, not estate-scoped | Firestore Rules DSL |
+| **Go API (Cloud Run)** | 0.5.0 | 2026-03-01 | 2026-04-14 | ✅ Production — rev 11, ~10,500 lines | Go 1.26 + ConnectRPC + Firebase Admin |
+| **Proto Definitions** | 0.2.0 | 2026-03-01 | 2026-04-14 | ✅ Active — 18 RPC methods, ~253 lines | Protobuf + ConnectRPC |
+| **Firebase Functions** | 0.1.0 | 2026-03-17 | 2026-04-14 | ✅ Production — autoMatchInvitation | Node.js 20 |
+| **Firestore Rules** | 5.0.0 | 2026-02-17 | 2026-04-14 | ✅ Production — comprehensive RBAC, ~573 lines | Firestore Rules DSL |
 
 ## Shared Libraries
 
 | Component | Version | Created | Last Modified | Status | Tech |
 |-----------|:-------:|:-------:|:-------------:|:------:|------|
-| **shared/crypto** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Complete | TypeScript (Web Crypto API) |
-| **shared/types** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Complete | TypeScript |
-| **shared/api-client** | 0.2.0 | 2026-03-18 | 2026-03-19 | ⚠️ Firebase auth headers, demo fallback | TypeScript |
+| **shared/crypto** | — | — | — | Removed (Apr 2026) | Client-side encryption never used; Cloud KMS handles all encryption |
+| **shared/types** | 1.0.0 | 2026-03-18 | 2026-04-14 | ✅ Active — proto-aligned type definitions | TypeScript |
+| **shared/api-client** | — | — | — | Removed (Apr 2026) | Web uses ConnectRPC directly |
 
 ## Design System
 
@@ -92,13 +92,16 @@
 
 | Document | Version | Created | Last Modified | Status |
 |----------|:-------:|:-------:|:-------------:|:------:|
-| **GEMINI.md** | 1.1.0 | 2026-02-17 | 2026-03-18 | ✅ Active |
-| **CANONICAL_DEVELOPMENT_PLAN.md** | 2.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
+| **ETHOS.md** | — | 2026-04-14 | 2026-04-14 | ✅ Permanent (non-versioned) |
+| **CLAUDE.md** | 2.0.0 | 2026-02-17 | 2026-04-07 | ✅ Active |
+| **CANONICAL_DEVELOPMENT_PLAN.md** | 3.0.0 | 2026-03-18 | 2026-04-14 | ✅ Active (Phase 5 added) |
 | **PRODUCT_SPECIFICATION.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
 | **DATA_MODEL_LOCK.md** | 1.0.0 | 2026-03-17 | 2026-03-17 | 🔒 Locked |
-| **CHANGELOG.md** | 1.0.0 | 2026-03-18 | 2026-03-18 | ✅ Active |
-| **VERSION_REGISTRY.md** | 1.2.0 | 2026-03-18 | 2026-03-19 | ✅ Active |
+| **CHANGELOG.md** | 1.0.0 | 2026-03-18 | 2026-04-14 | ✅ Active (v0.5.0) |
+| **VERSION_REGISTRY.md** | 2.0.0 | 2026-03-18 | 2026-04-14 | ✅ Active |
 | **ADR-034** | 1.0.0 | 2026-03-19 | 2026-03-19 | ✅ Accepted |
+| **ADR-038** | 1.0.0 | 2026-04-14 | 2026-04-14 | ✅ Accepted (Life-First Reframe) |
+| **CONTINUATION-PROMPT.md** | 18.0 | 2026-02-17 | 2026-04-14 | ✅ Active (Session 6) |
 
 ---
 

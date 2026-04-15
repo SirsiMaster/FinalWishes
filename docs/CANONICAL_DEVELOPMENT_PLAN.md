@@ -383,6 +383,97 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 
 ---
 
+### Phase 5: Life-First Reframe (Post-Tier 1 — ADR-038)
+
+> [!IMPORTANT]
+> This phase implements the product pivot from estate-planning-as-chore to living-companion-with-estate-planning. See [ETHOS.md](/ETHOS.md) for the full vision and [ADR-038](/docs/ADR-038-LIFE-FIRST-REFRAME.md) for the architectural decision.
+
+#### 5a. Navigation Restructure
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Route reorganization | Restructure all existing routes into 6 emotional groups | Updated TanStack Router file tree |
+| Sidebar redesign | Replace estate-mechanics nav with Soul Log, My Legacy, Memories, Letters, My People, The Vault | New sidebar component |
+| Mobile nav | Bottom tab bar with 6 group icons | Responsive navigation |
+| Route aliases | Ensure old routes redirect to new group locations | No broken links |
+
+**Six Navigation Groups:**
+
+| Group | Contains | Existing Routes Mapped |
+|-------|----------|----------------------|
+| Soul Log | Video/audio/text diary entries | NEW (net-new feature) |
+| My Legacy | Time capsules, ethical wills, directives, obituary | `/directives`, `/time-capsules` |
+| Memories | Photos, videos, heirlooms, stories | `/memoirs`, `/heirlooms` |
+| Letters | Sealed letters, future-dated messages | NEW (extracted from time capsules) |
+| My People | Beneficiaries, executors, guardians, invitations | `/beneficiaries`, `/settings` (people section) |
+| The Vault | Assets, documents, lockbox, financials | `/vault`, `/assets`, `/lockbox` |
+
+#### 5b. Soul Log (Core New Feature)
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Recording UI | Video (camera), audio (mic), text input | Soul Log entry creation screen |
+| Visibility modes | Private, Shared (tagged beneficiaries), Sealed (future delivery) | Entry privacy controls |
+| Storage | Video → YouTube (unlisted), audio → Cloud Storage, text → Firestore | Multi-backend storage |
+| Feed view | Chronological diary feed with date grouping | Soul Log feed page |
+| Transcription | Vertex AI Speech-to-Text for audio/video entries | Auto-generated transcripts |
+| Search | Full-text search across transcripts and text entries | Soul Log search |
+
+#### 5c. Legacy Timeline (Replaces Completion Dashboard)
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Timeline component | Chronological view of all user activity (entries, uploads, milestones) | Legacy Timeline page |
+| Milestone markers | Key life events (marriage, birth, deployment, retirement) | User-defined milestones |
+| Estate health indicator | Secondary completion metric (replaces primary dashboard percentage) | Subtle progress widget |
+| Activity integration | Pull from Soul Log, Memories, Letters, Vault activity | Unified timeline feed |
+
+#### 5d. Heir Welcome Screen (The Sacred Moment)
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Heir first-login detection | Detect first login after estate activation | Auth flow hook |
+| Welcome screen | Full-screen: loved one's face, voice, personal message | Heir welcome page |
+| Letter reveal | Display sealed letters addressed to this specific heir | Per-heir letter queue |
+| Guided transition | After the emotional moment, guide heir to practical matters | Welcome → estate nav flow |
+| Role-based content | Show only what the deceased chose to share with this heir | Visibility enforcement |
+
+#### 5e. Voice Memoir Recording + Transcription
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| MediaRecorder API | Browser-based audio/video recording | Recording component |
+| Upload pipeline | Chunk upload → Cloud Storage → transcription trigger | Async upload flow |
+| Vertex AI STT | Speech-to-Text transcription on upload complete | Auto-transcription |
+| Transcript editing | User can review and edit auto-generated transcript | Transcript editor |
+
+#### 5f. Shepherd AI Reframe
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Companion prompts | Rewrite Shepherd system prompts from estate-assistant to life-companion | Updated Genkit flows |
+| Soul Log suggestions | "You haven't recorded in a while" / "Your anniversary is coming" | Proactive nudges |
+| Memory curation | Suggest organizing entries into themed collections | Curation AI flow |
+| Estate guidance | Retain all estate completion logic as secondary capability | Unchanged backend |
+
+#### 5g. Role-Based Access Enforcement
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Role mapping fix | Correct Principal/Executor/Heir/Guardian role assignments | API + Firestore rules |
+| Visibility enforcement | Soul Log entries respect visibility modes per beneficiary | Backend access checks |
+| Heir content filtering | Heirs see only content tagged/shared with them | Query-level filtering |
+
+#### 5h. Guardian Protocol (Future)
+
+| Task | Description | Deliverable |
+|------|-------------|-------------|
+| Guardian role definition | Trusted person who manages estate on behalf of minor heirs | Role + permissions spec |
+| Guardian activation | Triggered when heir is under 18 at time of estate activation | Conditional access flow |
+| Content staging | Guardian reviews content before minor heir sees it | Approval queue |
+
+---
+
 ## 7. Architecture Diagram (Post-Consolidation — April 2026)
 
 ```
@@ -486,6 +577,6 @@ Firestore Triggers (Firebase Functions — Node.js 20):
 
 ---
 
-**Updated:** April 8, 2026 (Claude — acceptance criteria + code stats update)
+**Updated:** April 14, 2026 (Claude — Phase 5: Life-First Reframe added per ADR-038)
 **Canon Established:** March 18, 2026 (Antigravity)
 **Source of Truth:** MSA-2025-111-FW + SOW-2025-001 (Feb 17 Pivot)

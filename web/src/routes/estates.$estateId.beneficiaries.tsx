@@ -36,7 +36,7 @@ function BeneficiariesPage() {
   const [saving, setSaving] = useState(false);
   const [_feedback, setFeedback] = useState<string | null>(null);
   const [roleValue, setRoleValue] = useState('heir');
-  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
+  const estateId = routeId;
 
   // Edit state
   const [editingHeir, setEditingHeir] = useState<Heir | null>(null);

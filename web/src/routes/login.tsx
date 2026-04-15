@@ -13,9 +13,8 @@ import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
-  validateSearch: (search: Record<string, unknown>): { invite?: string; demo?: boolean } => ({
+  validateSearch: (search: Record<string, unknown>): { invite?: string } => ({
     invite: (search.invite as string) ?? undefined,
-    demo: (search.demo === 'true' || search.demo === true) ? true : undefined,
   }),
 })
 
@@ -29,51 +28,17 @@ function navigatePostLogin(
   if (inviteId) {
     nav({ to: '/accept-invite', search: { id: inviteId } } as any);
   } else if (profile?.primaryEstateId) {
-    const eid = profile.primaryEstateId === 'estate_lockhart' ? 'lockhart' : profile.primaryEstateId;
-    nav({ to: '/estates/$estateId/dashboard', params: { estateId: eid as string } } as any);
+    nav({ to: '/estates/$estateId/dashboard', params: { estateId: profile.primaryEstateId as string } } as any);
   } else {
     nav({ to: '/estates/create' } as any);
   }
 }
 
-/* ─── Demo Test Account Registry (preserved for ?demo=true) ─── */
-const DEMO_ACCOUNTS = [
-  {
-    logins: ['Tameeka116', 'Tameekalockhart@gmail.com', '123-456-7890'],
-    password: 'ML6824!',
-    session: {
-      id: 'user_tameeka',
-      name: 'Tameeka Lockhart',
-      role: 'owner',
-      email: 'Tameekalockhart@gmail.com',
-      phone: '123-456-7890',
-      login: 'Tameeka116',
-      profilePhotoUrl: '/assets/tameeka/mom dance.jpg',
-      primaryEstateId: 'estate_lockhart',
-      primaryEstateName: 'Lockhart Estate',
-    },
-  },
-  {
-    logins: ['cylton@sirsi.ai'],
-    password: 'Sirsi2026!',
-    session: {
-      id: 'user_cylton',
-      name: 'Cylton Collymore',
-      role: 'admin',
-      email: 'cylton@sirsi.ai',
-      login: 'cylton@sirsi.ai',
-      profilePhotoUrl: '',
-      primaryEstateId: 'estate_lockhart',
-      primaryEstateName: 'Lockhart Estate',
-    },
-  },
-];
 
 function LoginPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
   const inviteId = search.invite;
-  const isDemo = search.demo === true;
   const { signIn, signUp, resetPassword, user, profile } = useAuth();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
@@ -111,28 +76,7 @@ function LoginPage() {
     setError('');
     setIsSubmitting(true);
 
-    // Demo mode — use hardcoded test accounts
-    if (isDemo) {
-      const account = DEMO_ACCOUNTS.find(
-        (a) =>
-          a.logins.some(
-            (l) => l.toLowerCase() === identifier.toLowerCase()
-          ) && a.password === password
-      );
-
-      if (account) {
-        localStorage.setItem('finalwishes_user', JSON.stringify(account.session));
-        navigatePostLogin(navigate, account.session as unknown as UserProfile, inviteId);
-        setIsSubmitting(false);
-        return;
-      } else {
-        setError('Invalid demo credentials. Check your email/username and password.');
-        setIsSubmitting(false);
-        return;
-      }
-    }
-
-    // Real Firebase Auth — supports email or username
+    // Firebase Auth — supports email or username
     const result = await signIn(identifier, password);
     setIsSubmitting(false);
 
@@ -255,13 +199,6 @@ function LoginPage() {
               ? 'Enter your email and we\'ll send a reset link'
               : 'Enter the 6-digit code from your authenticator app'}
           </p>
-          {isDemo && (
-            <div className="mt-3">
-              <Badge className="bg-[#C8A951]/10 text-[#C8A951] border-[#C8A951]/30 text-[11px] font-bold uppercase tracking-wider hover:bg-[#C8A951]/10">
-                Demo Mode
-              </Badge>
-            </div>
-          )}
         </CardHeader>
 
         <CardContent className="px-10 pt-6 pb-0">
@@ -275,7 +212,7 @@ function LoginPage() {
                   type="text"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  placeholder="e.g. cylton@sirsi.ai or Tameeka116"
+                  placeholder="e.g. jane@example.com"
                   autoComplete="username"
                   className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm"
                 />
@@ -346,7 +283,7 @@ function LoginPage() {
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="Cylton"
+                    placeholder="Jane"
                     autoComplete="given-name"
                     className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm"
                   />
@@ -358,7 +295,7 @@ function LoginPage() {
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder="Collymore"
+                    placeholder="Doe"
                     autoComplete="family-name"
                     className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm"
                   />
@@ -371,7 +308,7 @@ function LoginPage() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="e.g. CyltonC"
+                  placeholder="e.g. janedoe"
                   autoComplete="username"
                   className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm"
                 />
@@ -384,7 +321,7 @@ function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. cylton@sirsi.ai"
+                  placeholder="e.g. jane@example.com"
                   autoComplete="email"
                   className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm"
                 />
@@ -597,7 +534,7 @@ function LoginPage() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <Badge variant="outline" className="text-[11px] text-[#133378]/40 font-bold uppercase tracking-widest border-0 px-0 h-auto bg-transparent hover:bg-transparent">SOC 2</Badge>
+              <Badge variant="outline" className="text-[11px] text-[#133378]/40 font-bold uppercase tracking-widest border-0 px-0 h-auto bg-transparent hover:bg-transparent">Designed for SOC 2</Badge>
             </div>
           </div>
         </CardFooter>

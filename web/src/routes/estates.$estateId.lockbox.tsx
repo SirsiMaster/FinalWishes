@@ -131,7 +131,7 @@ function getCategoryConfig(value: string) {
 
 function LockboxPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/lockbox' })
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
 
   const { data: items, loading } = useLockboxItems(estateId)
   const [modalOpen, setModalOpen] = useState(false)

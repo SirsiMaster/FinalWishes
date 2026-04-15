@@ -75,6 +75,7 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-sapphire: #1E3A5F;
   --font-heading: var(--font-sans);
   --font-body: var(--font-inter);
   --font-sans: 'Geist Variable', sans-serif;

@@ -4,6 +4,7 @@ import { useAuth } from '../../lib/auth'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { useEstateSearch, type SearchResult } from '@/lib/search'
 import { SearchResults } from '@/components/search/SearchResults'
+import { NotificationBell } from '@/components/layout/NotificationBell'
 
 export function AdminHeader({
   title,
@@ -18,15 +19,15 @@ export function AdminHeader({
   const { profile } = useAuth();
   const navigate = useNavigate();
   const params = useParams({ strict: false }) as { estateId?: string };
-  const estateId = params.estateId || 'lockhart';
+  const estateId = params.estateId || '';
 
   const user = profile ? {
     name: profile.displayName,
-    profilePhotoUrl: profile.profilePhotoUrl || '/assets/tameeka/mom dance.jpg',
-  } : { name: 'Guest', profilePhotoUrl: '' };
+    profilePhotoUrl: profile.profilePhotoUrl || undefined,
+  } : { name: 'Guest', profilePhotoUrl: undefined };
 
   const getInitials = (name: string) => {
-    return name?.split(' ').map(n => n[0]).join('') || 'TL';
+    return name?.split(' ').map(n => n[0]).join('') || '?';
   };
 
   const [showPhotoModal, setShowPhotoModal] = useState(false);
@@ -234,23 +235,7 @@ export function AdminHeader({
 
       {/* Right — Actions */}
       <div className="flex items-center gap-2 md:gap-4 shrink-0">
-        {/* Notification Bell */}
-        <button className="p-2 text-royal/30 hover:bg-royal/5 hover:text-royal transition-all relative">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-          </svg>
-          <span className="absolute top-2 right-2 w-2 h-2 bg-royal shadow-[0_0_5px_rgba(19,51,120,0.4)]" />
-        </button>
+        <NotificationBell estateId={estateId} />
 
         {/* Avatar */}
         {user?.profilePhotoUrl ? (

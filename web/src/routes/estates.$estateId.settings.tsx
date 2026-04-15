@@ -36,6 +36,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
 
 const ROLE_DISPLAY: Record<string, string> = {
@@ -54,7 +55,7 @@ export const Route = createFileRoute('/estates/$estateId/settings')({
 function SettingsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/settings' });
   const { user, profile } = useAuth();
-  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
+  const estateId = routeId;
 
   const { data: settingsDoc, loading: isLoading } = useDocument<Record<string, unknown>>(`estates/${estateId}/governance/settings`);
 
@@ -105,6 +106,7 @@ function SettingsPage() {
       setTimeout(() => setExportDone(false), 4000);
     } catch (err) {
       console.error('[Settings] Export error:', err);
+      toast.error('Failed to export estate data');
     } finally {
       setExporting(false);
     }
@@ -134,6 +136,7 @@ function SettingsPage() {
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       console.error('[Settings] Save error:', err);
+      toast.error('Failed to save settings');
     } finally {
       setSaving(false);
     }
@@ -346,23 +349,6 @@ function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* ── Danger Zone ── */}
-      <Card className="rounded-[2.5rem] border-red-100 shadow-sm py-0 gap-0">
-        <div className="bg-red-50/50 px-10 py-5 border-b border-red-100">
-          <h3 className="text-[11px] font-bold text-red-400 uppercase tracking-widest">Danger Zone</h3>
-        </div>
-        <CardContent className="px-4 py-4 md:px-10 md:py-6 flex items-center justify-between">
-          <div>
-            <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Delete this estate</span>
-            <p className="text-[13px] text-[#64748B] font-medium mt-1">
-              Permanently remove this estate and all associated data. This action cannot be undone.
-            </p>
-          </div>
-          <Button variant="destructive" className="px-6 py-2.5 rounded-xl border border-red-200 font-bold text-[12px]">
-            Delete Estate
-          </Button>
-        </CardContent>
-      </Card>
     </div>
   )
 }

@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
@@ -32,6 +34,16 @@ import { Route as EstatesEstateIdBeneficiariesRouteImport } from './routes/estat
 import { Route as EstatesEstateIdAttestationRouteImport } from './routes/estates.$estateId.attestation'
 import { Route as EstatesEstateIdAssetsRouteImport } from './routes/estates.$estateId.assets'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -155,6 +167,8 @@ export interface FileRoutesByFullPath {
   '/accept-invite': typeof AcceptInviteRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/estates/create': typeof EstatesCreateRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
@@ -179,6 +193,8 @@ export interface FileRoutesByTo {
   '/accept-invite': typeof AcceptInviteRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/estates/create': typeof EstatesCreateRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
@@ -203,6 +219,8 @@ export interface FileRoutesById {
   '/accept-invite': typeof AcceptInviteRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/estates/create': typeof EstatesCreateRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
@@ -229,6 +247,8 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/dashboard'
     | '/login'
+    | '/privacy'
+    | '/terms'
     | '/estates/$estateId'
     | '/estates/create'
     | '/estates/$estateId/assets'
@@ -253,6 +273,8 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/dashboard'
     | '/login'
+    | '/privacy'
+    | '/terms'
     | '/estates/create'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
@@ -276,6 +298,8 @@ export interface FileRouteTypes {
     | '/accept-invite'
     | '/dashboard'
     | '/login'
+    | '/privacy'
+    | '/terms'
     | '/estates/$estateId'
     | '/estates/create'
     | '/estates/$estateId/assets'
@@ -301,12 +325,28 @@ export interface RootRouteChildren {
   AcceptInviteRoute: typeof AcceptInviteRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
   EstatesEstateIdRoute: typeof EstatesEstateIdRouteWithChildren
   EstatesCreateRoute: typeof EstatesCreateRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -511,6 +551,8 @@ const rootRouteChildren: RootRouteChildren = {
   AcceptInviteRoute: AcceptInviteRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
   EstatesEstateIdRoute: EstatesEstateIdRouteWithChildren,
   EstatesCreateRoute: EstatesCreateRoute,
 }

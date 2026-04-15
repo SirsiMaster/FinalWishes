@@ -68,7 +68,7 @@ function formatCurrency(value: number): string {
 
 function HeirloomsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/heirlooms' })
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
   const { usage: tierUsage } = useTierGating(estateId)
 
   const { data: items, loading } = useHeirlooms(estateId)

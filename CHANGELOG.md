@@ -4,6 +4,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.5.0] — 2026-04-14
+### Session 6: Life-First Reframe + Security Hardening
+
+### Added
+- **ETHOS.md** — Permanent document defining the soul of the application: life-first, not death-first
+- **ADR-038: Life-First Reframe** — Product pivot from estate-planning-as-chore to living companion
+  - Navigation restructure: 6 emotional groups (Soul Log, My Legacy, Memories, Letters, My People, The Vault)
+  - Soul Log feature spec (video/audio/text diary with private/shared/sealed visibility modes)
+  - Legacy Timeline (replaces completion-percentage dashboard)
+  - Heir Welcome Screen (the sacred moment — loved one's face, voice, message on first login)
+  - Voice memoir recording + Vertex AI transcription pipeline
+  - Shepherd AI reframe from estate-assistant to life-companion
+  - Guardian Protocol (future — content staging for minor heirs)
+- **Phase 5 added to CANONICAL_DEVELOPMENT_PLAN.md** — Full roadmap for Life-First Reframe implementation
+- All canonical documents updated to reflect new product direction
+
+### Changed
+- Navigation model: estate-mechanics grouping (assets/vault/lockbox) replaced with emotional-intent grouping
+- Dashboard concept: completion percentage replaced with Legacy Timeline
+- Shepherd AI positioning: estate completion assistant becomes life companion
+- Product positioning: "estate operating system" becomes "living legacy platform"
+
+### Security (Session 5 — carried forward)
+- IDOR protection on all estate endpoints
+- Path traversal prevention on document uploads
+- X-Forwarded-For header spoofing blocked
+- Demo user data purge on session end
+- Rate limiting on auth endpoints
+
+---
+
 ## [0.3.0] — 2026-04-14
 ### Session 5: Test Suite + Code Quality
 

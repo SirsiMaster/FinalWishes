@@ -45,6 +45,7 @@ Each ADR follows this structure:
 | [ADR-035](ADR-035-TIERED-IDENTITY-VERIFICATION.md) | Tiered Identity Verification | Accepted | 2026-03-19 | — |
 | [ADR-036](ADR-036-FIRESTORE-DIRECT-READS.md) | Firestore Direct Reads | Accepted | 2026-03-19 | — |
 | [ADR-037](ADR-037-CLOUD-SQL-PII-VAULT.md) | Cloud SQL PII Vault — Estate-Grade Encryption | Accepted | 2026-03-20 | — |
+| [ADR-038](ADR-038-LIFE-FIRST-REFRAME.md) | Life-First Reframe — Living Companion Product Pivot | Accepted | 2026-04-14 | — |
 
 ## Categories
 
@@ -52,6 +53,7 @@ Each ADR follows this structure:
 - ADR-031: Secure Enclave Dashboard Standard (Industrial-Consumer Merge)
 - ADR-031 §2: Secure Shroud — Session-Based Estate Siloing
 - ADR-031 §3: Shard Status — Visibility for Encryption (AES-256) & Compliance
+- ADR-038: Life-First Reframe — Navigation restructure, Soul Log, Legacy Timeline, Heir Welcome Screen
 
 ### Security
 - ADR-001 §1: SOC 2 + AES-256 (not FIPS 140-3)
@@ -110,4 +112,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-04-07*
+*Last updated: 2026-04-14*

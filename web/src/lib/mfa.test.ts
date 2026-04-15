@@ -8,7 +8,7 @@ const mockEnroll = vi.fn()
 const mockUnenroll = vi.fn()
 const mockEnrolledFactors: Array<{ factorId: string; displayName: string; uid: string }> = []
 
-const mockMultiFactor = vi.fn(() => ({
+const mockMultiFactor = vi.fn((..._: any[]) => ({
   getSession: mockGetSession,
   enroll: mockEnroll,
   unenroll: mockUnenroll,
@@ -16,20 +16,20 @@ const mockMultiFactor = vi.fn(() => ({
 }))
 
 const mockGenerateSecret = vi.fn()
-const mockAssertionForEnrollment = vi.fn(() => 'mock-assertion-enroll')
-const mockAssertionForSignIn = vi.fn(() => 'mock-assertion-signin')
+const mockAssertionForEnrollment = vi.fn((..._: any[]) => 'mock-assertion-enroll')
+const mockAssertionForSignIn = vi.fn((..._: any[]) => 'mock-assertion-signin')
 const mockGetMultiFactorResolver = vi.fn()
 
 vi.mock('firebase/auth', () => ({
-  multiFactor: (...args: unknown[]) => mockMultiFactor(...args),
+  multiFactor: (...args: any[]) => mockMultiFactor(...args),
   TotpMultiFactorGenerator: {
-    generateSecret: (...args: unknown[]) => mockGenerateSecret(...args),
-    assertionForEnrollment: (...args: unknown[]) => mockAssertionForEnrollment(...args),
-    assertionForSignIn: (...args: unknown[]) => mockAssertionForSignIn(...args),
+    generateSecret: (...args: any[]) => mockGenerateSecret(...args),
+    assertionForEnrollment: (...args: any[]) => mockAssertionForEnrollment(...args),
+    assertionForSignIn: (...args: any[]) => mockAssertionForSignIn(...args),
     FACTOR_ID: 'totp',
   },
   TotpSecret: {},
-  getMultiFactorResolver: (...args: unknown[]) => mockGetMultiFactorResolver(...args),
+  getMultiFactorResolver: (...args: any[]) => mockGetMultiFactorResolver(...args),
 }))
 
 import {

@@ -90,14 +90,14 @@ function SettingsPage() {
       const blob = await exportEstateData({
         estateId,
         estateName,
-        assets: assets as Record<string, unknown>[],
-        heirs: heirs as Record<string, unknown>[],
-        documents: documents as Record<string, unknown>[],
-        lockboxItems: lockboxItems as Record<string, unknown>[],
-        directives: directives as Record<string, unknown>[],
-        capsules: capsules as Record<string, unknown>[],
-        heirlooms: heirlooms as Record<string, unknown>[],
-        memoirs: memoirs as Record<string, unknown>[],
+        assets: assets as unknown as Record<string, unknown>[],
+        heirs: heirs as unknown as Record<string, unknown>[],
+        documents: documents as unknown as Record<string, unknown>[],
+        lockboxItems: lockboxItems as unknown as Record<string, unknown>[],
+        directives: directives as unknown as Record<string, unknown>[],
+        capsules: capsules as unknown as Record<string, unknown>[],
+        heirlooms: heirlooms as unknown as Record<string, unknown>[],
+        memoirs: memoirs as unknown as Record<string, unknown>[],
       });
       const filename = `${estateName.replace(/\s+/g, '_')}_export_${new Date().toISOString().slice(0, 10)}.zip`;
       downloadBlob(blob, filename);

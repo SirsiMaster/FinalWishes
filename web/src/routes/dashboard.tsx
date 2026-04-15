@@ -21,7 +21,7 @@ function DashboardRedirect() {
         navigate({ to: '/estates/create', replace: true });
       }
     } else {
-      navigate({ to: '/login', replace: true });
+      navigate({ to: '/login', search: {}, replace: true });
     }
   }, [navigate]);
 

@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '../lib/auth'
+import { useAuth, type UserProfile } from '../lib/auth'
 import { resolveTotpChallenge } from '../lib/mfa'
 import { type MultiFactorResolver } from 'firebase/auth'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
@@ -13,18 +13,13 @@ import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
-  validateSearch: (search: Record<string, unknown>) => ({
+  validateSearch: (search: Record<string, unknown>): { invite?: string; demo?: boolean } => ({
     invite: (search.invite as string) ?? undefined,
     demo: (search.demo === 'true' || search.demo === true) ? true : undefined,
   }),
 })
 
 /* ─── Post-login routing helper ─── */
-interface UserProfile {
-  primaryEstateId?: string;
-  [key: string]: unknown;
-}
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function navigatePostLogin(
   nav: ReturnType<typeof useNavigate>,
@@ -127,7 +122,7 @@ function LoginPage() {
 
       if (account) {
         localStorage.setItem('finalwishes_user', JSON.stringify(account.session));
-        navigatePostLogin(navigate, account.session as UserProfile, inviteId);
+        navigatePostLogin(navigate, account.session as unknown as UserProfile, inviteId);
         setIsSubmitting(false);
         return;
       } else {
@@ -142,7 +137,7 @@ function LoginPage() {
     setIsSubmitting(false);
 
     if (result.success) {
-      navigatePostLogin(navigate, result.profile ?? null, inviteId);
+      navigatePostLogin(navigate, profile, inviteId);
     } else if (result.mfaRequired && result.mfaResolver) {
       // Switch to MFA challenge mode
       setMfaResolver(result.mfaResolver);

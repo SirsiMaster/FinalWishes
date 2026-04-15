@@ -15,6 +15,7 @@ import {
   TotpSecret,
   getMultiFactorResolver,
   type MultiFactorResolver,
+  type MultiFactorError,
   type User,
 } from 'firebase/auth';
 import { auth } from './firebase';
@@ -171,7 +172,7 @@ export async function unenrollTotp(user: User): Promise<{ success: boolean; erro
  */
 export function getMFAResolver(error: unknown): MultiFactorResolver | null {
   try {
-    return getMultiFactorResolver(auth, error);
+    return getMultiFactorResolver(auth, error as MultiFactorError);
   } catch {
     return null;
   }

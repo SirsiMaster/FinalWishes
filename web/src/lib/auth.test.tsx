@@ -13,13 +13,13 @@ const mockSendPasswordResetEmail = vi.fn()
 const mockSendEmailVerification = vi.fn()
 
 vi.mock('firebase/auth', () => ({
-  signInWithEmailAndPassword: (...args: unknown[]) => mockSignInWithEmailAndPassword(...args),
-  createUserWithEmailAndPassword: (...args: unknown[]) => mockCreateUserWithEmailAndPassword(...args),
-  signOut: (...args: unknown[]) => mockFirebaseSignOut(...args),
-  onAuthStateChanged: (...args: unknown[]) => mockOnAuthStateChanged(...args),
-  updateProfile: (...args: unknown[]) => mockUpdateProfile(...args),
-  sendPasswordResetEmail: (...args: unknown[]) => mockSendPasswordResetEmail(...args),
-  sendEmailVerification: (...args: unknown[]) => mockSendEmailVerification(...args),
+  signInWithEmailAndPassword: (...args: any[]) => mockSignInWithEmailAndPassword(...args),
+  createUserWithEmailAndPassword: (...args: any[]) => mockCreateUserWithEmailAndPassword(...args),
+  signOut: (...args: any[]) => mockFirebaseSignOut(...args),
+  onAuthStateChanged: (...args: any[]) => mockOnAuthStateChanged(...args),
+  updateProfile: (...args: any[]) => mockUpdateProfile(...args),
+  sendPasswordResetEmail: (...args: any[]) => mockSendPasswordResetEmail(...args),
+  sendEmailVerification: (...args: any[]) => mockSendEmailVerification(...args),
   getMultiFactorResolver: vi.fn(() => null),
 }))
 
@@ -27,12 +27,12 @@ vi.mock('firebase/auth', () => ({
 
 const mockGetDoc = vi.fn()
 const mockSetDoc = vi.fn()
-const mockDoc = vi.fn(() => 'mock-doc-ref')
+const mockDoc = vi.fn((..._args: any[]) => 'mock-doc-ref')
 
 vi.mock('firebase/firestore', () => ({
-  doc: (...args: unknown[]) => mockDoc(...args),
-  getDoc: (...args: unknown[]) => mockGetDoc(...args),
-  setDoc: (...args: unknown[]) => mockSetDoc(...args),
+  doc: (...args: any[]) => mockDoc(...args),
+  getDoc: (...args: any[]) => mockGetDoc(...args),
+  setDoc: (...args: any[]) => mockSetDoc(...args),
   serverTimestamp: () => 'MOCK_TIMESTAMP',
 }))
 

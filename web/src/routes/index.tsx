@@ -81,10 +81,10 @@ function Home() {
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild className="text-xs font-bold tracking-[0.15em] uppercase text-white/70 hover:text-white hover:bg-transparent transition-colors">
-              <Link to="/login">Sign In</Link>
+              <Link to="/login" search={{}}>Sign In</Link>
             </Button>
             <Button asChild className="bg-gold text-black px-5 py-2.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none">
-              <Link to="/login">Get Started</Link>
+              <Link to="/login" search={{}}>Get Started</Link>
             </Button>
           </div>
         </div>
@@ -135,7 +135,7 @@ function Home() {
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
             <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
-              <Link to="/login">Create Your Vault</Link>
+              <Link to="/login" search={{}}>Create Your Vault</Link>
             </Button>
             <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
               <a href="#problem">Watch the Film</a>
@@ -208,7 +208,7 @@ function Home() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
             <Button asChild className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
-              <Link to="/login">Begin Your Legacy</Link>
+              <Link to="/login" search={{}}>Begin Your Legacy</Link>
             </Button>
             <Button variant="outline" asChild className="border-2 border-white/30 bg-transparent text-white px-6 py-3 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all h-auto">
               <a href="#protocol">See How It Works</a>
@@ -326,7 +326,7 @@ function Home() {
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Sentimental Items</li>
                 </ul>
                 <Button asChild className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all mt-6 self-start border-none h-auto">
-                  <Link to="/login">Start Your Protocol</Link>
+                  <Link to="/login" search={{}}>Start Your Protocol</Link>
                 </Button>
               </div>
               <div className="relative min-h-[280px] md:h-auto overflow-hidden order-1 md:order-2">
@@ -513,7 +513,7 @@ function Home() {
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Forever</div>
                 <p className="text-white/60 text-sm mb-5 flex-grow">For families who need a roadmap but can handle the execution.</p>
                 <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
-                  <Link to="/login">Start Free</Link>
+                  <Link to="/login" search={{}}>Start Free</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -539,7 +539,7 @@ function Home() {
                   <li className="flex gap-2 items-center"><span className="text-gold">✓</span> E-Sign Integration <Badge className="bg-white/10 text-white/50 text-[0.5rem] font-semibold uppercase tracking-wider px-1.5 py-0 h-auto border-none ml-1">Coming Soon</Badge></li>
                 </ul>
                 <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest text-center rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
-                  <Link to="/login">Secure Membership</Link>
+                  <Link to="/login" search={{}}>Secure Membership</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -555,7 +555,7 @@ function Home() {
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
                 <p className="text-white/60 text-sm mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
                 <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
-                  <Link to="/login">Contact Sales</Link>
+                  <Link to="/login" search={{}}>Contact Sales</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -593,7 +593,7 @@ function Home() {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Button asChild className="bg-gold text-black px-8 py-3.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
-              <Link to="/login">Begin Your Legacy</Link>
+              <Link to="/login" search={{}}>Begin Your Legacy</Link>
             </Button>
             <Button variant="outline" asChild className="border-2 border-white/30 bg-transparent text-white px-8 py-3.5 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all h-auto">
               <a href="#protocol">See How It Works</a>

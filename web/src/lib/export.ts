@@ -16,14 +16,14 @@ import type { Timestamp } from 'firebase/firestore'
 export interface ExportOptions {
   estateId: string
   estateName: string
-  assets: Record<string, unknown>[]
-  heirs: Record<string, unknown>[]
-  documents: Record<string, unknown>[]
-  lockboxItems: Record<string, unknown>[]
-  directives: Record<string, unknown>[]
-  capsules: Record<string, unknown>[]
-  heirlooms: Record<string, unknown>[]
-  memoirs: Record<string, unknown>[]
+  assets: readonly Record<string, unknown>[]
+  heirs: readonly Record<string, unknown>[]
+  documents: readonly Record<string, unknown>[]
+  lockboxItems: readonly Record<string, unknown>[]
+  directives: readonly Record<string, unknown>[]
+  capsules: readonly Record<string, unknown>[]
+  heirlooms: readonly Record<string, unknown>[]
+  memoirs: readonly Record<string, unknown>[]
 }
 
 // ─── Timestamp Serialization ─────────────────────────────────────────────────
@@ -63,7 +63,7 @@ function sanitizeValue(value: unknown): unknown {
   return value
 }
 
-function sanitizeArray(items: Record<string, unknown>[]): unknown[] {
+function sanitizeArray(items: readonly Record<string, unknown>[]): unknown[] {
   return items.map((item) => sanitizeValue(item))
 }
 
@@ -73,7 +73,7 @@ function sanitizeArray(items: Record<string, unknown>[]): unknown[] {
  * Strips encrypted credentials from lockbox items.
  * Only exports metadata: account names, categories, institution, status.
  */
-function sanitizeLockboxItems(items: Record<string, unknown>[]): unknown[] {
+function sanitizeLockboxItems(items: readonly Record<string, unknown>[]): unknown[] {
   return items.map((item) => {
     const safe = sanitizeValue({
       id: item.id,
@@ -95,7 +95,7 @@ function sanitizeLockboxItems(items: Record<string, unknown>[]): unknown[] {
  * Strips file contents / storage keys from vault documents.
  * Only exports metadata: names, types, dates, sizes.
  */
-function sanitizeDocuments(items: Record<string, unknown>[]): unknown[] {
+function sanitizeDocuments(items: readonly Record<string, unknown>[]): unknown[] {
   return items.map((item) => {
     const safe = sanitizeValue({
       id: item.id,

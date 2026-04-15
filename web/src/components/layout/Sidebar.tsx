@@ -296,7 +296,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
 
   const handleLogout = async () => {
     await signOut();
-    navigate({ to: '/login' });
+    navigate({ to: '/login', search: {} });
   };
 
   return (
@@ -418,7 +418,7 @@ export function Sidebar() {
 
   const handleLogout = async () => {
     await signOut();
-    navigate({ to: '/login' });
+    navigate({ to: '/login', search: {} });
   };
 
   return (

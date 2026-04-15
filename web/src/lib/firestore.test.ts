@@ -10,21 +10,21 @@ let capturedOnSnapshotCallback: SnapshotCallback | null = null
 let capturedOnSnapshotError: ErrorCallback | null = null
 
 const mockOnSnapshot = vi.fn()
-const mockDoc = vi.fn(() => 'mock-doc-ref')
-const mockCollection = vi.fn(() => 'mock-collection-ref')
-const mockQuery = vi.fn((...args: unknown[]) => args[0])
-const mockWhere = vi.fn((...args: unknown[]) => ({ type: 'where', args }))
-const mockOrderBy = vi.fn((...args: unknown[]) => ({ type: 'orderBy', args }))
-const mockLimit = vi.fn((...args: unknown[]) => ({ type: 'limit', args }))
+const mockDoc = vi.fn((..._: any[]) => 'mock-doc-ref')
+const mockCollection = vi.fn((..._: any[]) => 'mock-collection-ref')
+const mockQuery = vi.fn((...args: any[]) => args[0])
+const mockWhere = vi.fn((...args: any[]) => ({ type: 'where', args }))
+const mockOrderBy = vi.fn((...args: any[]) => ({ type: 'orderBy', args }))
+const mockLimit = vi.fn((...args: any[]) => ({ type: 'limit', args }))
 
 vi.mock('firebase/firestore', () => ({
-  doc: (...args: unknown[]) => mockDoc(...args),
-  collection: (...args: unknown[]) => mockCollection(...args),
-  query: (...args: unknown[]) => mockQuery(...args),
-  where: (...args: unknown[]) => mockWhere(...args),
-  orderBy: (...args: unknown[]) => mockOrderBy(...args),
-  limit: (...args: unknown[]) => mockLimit(...args),
-  onSnapshot: (...args: unknown[]) => mockOnSnapshot(...args),
+  doc: (...args: any[]) => mockDoc(...args),
+  collection: (...args: any[]) => mockCollection(...args),
+  query: (...args: any[]) => mockQuery(...args),
+  where: (...args: any[]) => mockWhere(...args),
+  orderBy: (...args: any[]) => mockOrderBy(...args),
+  limit: (...args: any[]) => mockLimit(...args),
+  onSnapshot: (...args: any[]) => mockOnSnapshot(...args),
 }))
 
 import {

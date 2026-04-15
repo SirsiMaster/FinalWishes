@@ -54,7 +54,7 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
       { nav: 'Final Directives', heading: /Final Directives/i },
       { nav: 'Time Capsules', heading: /Time Capsule/i },
       { nav: 'Heirlooms', heading: /Heirloom/i },
-      { nav: 'Memories', heading: /Memori/i },
+      { nav: 'Photos & Videos', heading: /Memori|Life Stories/i },
       { nav: 'Upgrade Plan', heading: /Choose Your Plan|Pricing/i },
       { nav: 'Settings', heading: /Settings/i },
       { nav: 'Notifications', heading: /Notification/i },

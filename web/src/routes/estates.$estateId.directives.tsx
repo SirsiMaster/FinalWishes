@@ -104,7 +104,7 @@ function getTypeConfig(value: string) {
 
 function DirectivesPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/directives' })
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
 
   const { data: directives, loading } = useDirectives(estateId)
   const [createModalOpen, setCreateModalOpen] = useState(false)

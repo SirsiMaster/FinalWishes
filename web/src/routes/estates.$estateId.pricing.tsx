@@ -85,7 +85,7 @@ async function createCheckout(params: {
 
 function PricingPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/pricing' })
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
   const { user } = useAuth()
   const { data: estate } = useEstate(estateId)
 

@@ -8,6 +8,7 @@ import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
+import { toast } from 'sonner'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
@@ -65,7 +66,7 @@ interface Memoir {
 function MemoirsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/memoirs' })
   const { user } = useAuth()
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
   const { usage: tierUsage } = useTierGating(estateId)
 
   const { data: firestoreMemoirs, loading: isLoading } = useCollection<Record<string, string>>(
@@ -135,7 +136,7 @@ function MemoirsPage() {
         setModalOpen(false)
       } catch (err) {
         console.error('Upload failed:', err)
-        alert('Upload failed. Please try again.')
+        toast.error('Upload failed. Please try again.')
       } finally {
         setUploading(false)
       }
@@ -165,7 +166,7 @@ function MemoirsPage() {
         setModalOpen(false)
       } catch (err) {
         console.error('Save failed:', err)
-        alert('Failed to save YouTube link.')
+        toast.error('Failed to save YouTube link.')
       } finally {
         setUploading(false)
       }
@@ -183,7 +184,7 @@ function MemoirsPage() {
 
         const token = await firebaseAuth.currentUser?.getIdToken()
         if (!token) {
-          alert('You must be signed in to upload.')
+          toast.error('You must be signed in to upload.')
           return
         }
 
@@ -226,7 +227,7 @@ function MemoirsPage() {
         setModalOpen(false)
       } catch (err) {
         console.error('YouTube upload failed:', err)
-        alert(err instanceof Error ? err.message : 'YouTube upload failed. Please try again.')
+        toast.error(err instanceof Error ? err.message : 'YouTube upload failed. Please try again.')
       } finally {
         setUploading(false)
         setUploadProgress(0)
@@ -587,22 +588,22 @@ function UploadModal({
               const title = formData.get('title') as string
 
               if (mode === 'youtube') {
-                if (!youtubeUrl) { alert('Please paste a YouTube URL.'); return }
+                if (!youtubeUrl) { toast.error('Please paste a YouTube URL.'); return }
                 onYouTubeSave(title, youtubeUrl, visibility)
               } else {
                 const file = fileInputRef.current?.files?.[0]
-                if (!file) { alert('Please select a file.'); return }
+                if (!file) { toast.error('Please select a file.'); return }
 
                 // Route video files to YouTube upload when that destination is selected
                 if (uploadDest === 'youtube' && file.type.startsWith('video/')) {
                   if (file.size > 256 * 1024 * 1024) {
-                    alert('File exceeds the 256MB YouTube upload limit.')
+                    toast.error('File exceeds the 256MB YouTube upload limit.')
                     return
                   }
                   onYouTubeUpload(title, description, file)
                 } else {
                   if (file.size > 50 * 1024 * 1024) {
-                    alert('File exceeds the 50MB Cloud Storage upload limit.')
+                    toast.error('File exceeds the 50MB Cloud Storage upload limit.')
                     return
                   }
                   onFileUpload(title, mediaType, visibility, file)

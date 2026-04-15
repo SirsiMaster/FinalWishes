@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { useEstateAssets, type Asset } from '../lib/firestore'
 import { addAsset as addAssetAction, updateAsset, archiveAsset } from '../lib/estate-actions'
 
@@ -45,7 +45,7 @@ function AssetsPage() {
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const [editSaving, setEditSaving] = useState(false);
   const [confirmArchive, setConfirmArchive] = useState(false);
-  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
+  const estateId = routeId;
 
   const { data: assets, loading: isLoading } = useEstateAssets(estateId);
 

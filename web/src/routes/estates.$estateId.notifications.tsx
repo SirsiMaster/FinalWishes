@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useEstateNotifications } from '../lib/firestore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/estates/$estateId/notifications')({
 
 function NotificationsPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/notifications' });
-  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
+  const estateId = routeId;
 
   const { data: rawNotifications, loading: isLoading } = useEstateNotifications(estateId);
 
@@ -29,6 +29,7 @@ function NotificationsPage() {
   }
 
   const notifications = rawNotifications.map(n => ({
+    id: n.id,
     title: n.title || 'Activity',
     time: n.createdAt?.toDate?.()
       ? n.createdAt.toDate().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
@@ -43,10 +44,6 @@ function NotificationsPage() {
         <div className="space-y-2">
           <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Activity History</h2>
           <p className="text-lg text-[#64748B] font-medium">A record of everything that has happened with your estate plan.</p>
-        </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="px-6 py-3 h-auto rounded-2xl text-[13px] font-bold text-[#64748B]">Export</Button>
-          <Button variant="default" className="px-6 py-3 h-auto rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-[13px] font-bold shadow-lg">Print History</Button>
         </div>
       </div>
       <Separator />
@@ -67,7 +64,7 @@ function NotificationsPage() {
         <Card className="rounded-[2.5rem] border-slate-100 shadow-sm">
           <CardContent className="p-10 space-y-0">
             {notifications.map((n, i) => (
-              <NotificationItem key={i} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
+              <NotificationItem key={n.id} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
             ))}
           </CardContent>
         </Card>

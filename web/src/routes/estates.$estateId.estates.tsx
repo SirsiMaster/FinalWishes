@@ -160,7 +160,7 @@ function EstateCard({ estateId, role, routeId, navigate }: {
   estateId: string; role: string; routeId: string; navigate: (opts: { to: string }) => void;
 }) {
   const { data: estate } = useEstate(estateId);
-  const isCurrent = routeId === estateId || (routeId === 'lockhart' && estateId === 'estate_lockhart');
+  const isCurrent = routeId === estateId;
   const displayName = estate?.name || estateId;
 
   return (
@@ -184,15 +184,9 @@ function EstateCard({ estateId, role, routeId, navigate }: {
         </p>
         <div className="flex gap-4">
           <Button
-            variant="outline"
-            className="flex-1 bg-[#F8FAFC] border border-slate-100 text-[#0F172A] px-8 py-4 h-auto rounded-2xl text-sm font-bold hover:bg-slate-100"
-          >
-            View History
-          </Button>
-          <Button
             onClick={() => {
               if (isCurrent) return;
-              const nextId = estateId === 'estate_lockhart' ? 'lockhart' : estateId;
+              const nextId = estateId;
               navigate({ to: `/estates/${nextId}/dashboard` });
             }}
             className={`flex-1 ${isCurrent ? 'bg-[#F8FAFC] text-slate-400 border border-slate-100 cursor-default hover:bg-[#F8FAFC]' : 'bg-[#133378] text-white hover:bg-[#1E3A5F]'} px-8 py-4 h-auto rounded-2xl text-sm font-bold shadow-sm`}

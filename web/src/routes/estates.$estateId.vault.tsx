@@ -228,10 +228,7 @@ type UploadState = {
 function VaultPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/vault' })
   const { user } = useAuth()
-  const estateId = useMemo(
-    () => (routeId === 'lockhart' ? 'estate_lockhart' : routeId),
-    [routeId],
-  )
+  const estateId = routeId
 
   const { usage: tierUsage } = useTierGating(estateId)
   const { data: firestoreDocs, loading: isLoading } = useEstateDocuments(estateId)

@@ -264,7 +264,7 @@ function SidebarNavContent({
 export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const location = useLocation();
   const params = useParams({ strict: false }) as { estateId?: string };
-  const estateId = params.estateId || "lockhart";
+  const estateId = params.estateId || "";
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -381,7 +381,7 @@ export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const params = useParams({ strict: false }) as { estateId?: string };
-  const estateId = params.estateId || "lockhart";
+  const estateId = params.estateId || "";
   const { profile, signOut } = useAuth();
 
   const [showPhotoModal, setShowPhotoModal] = useState(false);
@@ -481,7 +481,7 @@ export function Sidebar() {
             className="w-full flex items-center justify-between gap-2 px-3 py-2.5 h-auto bg-white border-slate-200 hover:border-[#133378]/30 rounded-xl text-left overflow-hidden group"
           >
             <div className="flex-1 truncate text-left">
-              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate group-hover/button:text-[#133378] transition-colors">{user?.primaryEstateName || "Lockhart Estate"}</div>
+              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate group-hover/button:text-[#133378] transition-colors">{user?.primaryEstateName || "My Estate"}</div>
               <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
             </div>
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[#133378] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
@@ -510,11 +510,11 @@ export function Sidebar() {
               className="rounded-xl object-cover"
             />
             <AvatarFallback className="rounded-xl bg-[#133378] text-white font-bold text-xs">
-              {getInitials(user?.name || 'TL')}
+              {getInitials(user?.name || 'User')}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "Tameeka Lockhart"}</div>
+            <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
             <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
           </div>
         </div>

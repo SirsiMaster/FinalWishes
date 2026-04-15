@@ -41,11 +41,7 @@ function EstateLayout() {
   const userRole = profile?.role || 'principal';
   const estateName = profile?.primaryEstateName || 'My Estate';
 
-  // Check for demo mode — preserve Lockhart demo data
-  const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-  const displayEstateName = (isDemo && (estateId === 'lockhart' || estateId === 'estate_lockhart'))
-    ? 'Lockhart Estate'
-    : estateName;
+  const displayEstateName = estateName;
 
   const roleLabel = ROLE_LABELS[userRole] || 'Member';
 
@@ -55,10 +51,7 @@ function EstateLayout() {
         <Sidebar />
         <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} />
         <div
-          className="transition-all duration-300 min-h-screen flex flex-col"
-          style={{
-            marginLeft: 'var(--sidebar-width)',
-          }}
+          className="transition-all duration-300 min-h-screen flex flex-col md:ml-[var(--sidebar-width)]"
         >
           <AdminHeader
             title={displayEstateName}

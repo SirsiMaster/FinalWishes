@@ -326,7 +326,7 @@ function ShepherdFAB({ onClick, hasInteracted }: { onClick: () => void; hasInter
 function DashboardIndex() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/dashboard' })
   const { user, profile } = useAuth()
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
   const userName = profile?.firstName || profile?.displayName || ''
 
   const { data: _estate, loading: metaLoading } = useEstate(estateId)

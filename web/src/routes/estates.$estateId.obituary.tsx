@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import { toast } from 'sonner'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -37,7 +38,7 @@ function ObituaryPage() {
   const [photoUploading, setPhotoUploading] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const estateId = useMemo(() => routeId === 'lockhart' ? 'estate_lockhart' : routeId, [routeId]);
+  const estateId = routeId;
   const { user, profile } = useAuth();
   const userName = profile?.displayName || '';
   const profilePhoto = profile?.profilePhotoUrl;
@@ -88,6 +89,7 @@ function ObituaryPage() {
       setEditing(false);
     } catch (err) {
       console.error('[SaveObituary] Error:', err);
+      toast.error('Failed to save obituary. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -104,6 +106,7 @@ function ObituaryPage() {
       setTimeout(() => setModalOpen(false), 800);
     } catch (err) {
       console.error('[SignObituary] Error:', err);
+      toast.error('Failed to sign obituary. Please try again.');
     }
   };
 
@@ -137,6 +140,7 @@ function ObituaryPage() {
       }, 100);
     } catch (err) {
       console.error('[AIDraft] Error:', err);
+      toast.error('Failed to generate AI draft. Please try again.');
     } finally {
       setAiLoading(false);
     }
@@ -166,10 +170,10 @@ function ObituaryPage() {
         estateId,
         createdAt: serverTimestamp(),
       });
-      alert('Obituary shared via email.');
+      toast.success('Obituary shared via email.');
     } catch (err) {
       console.error('[ShareObituary] Error:', err);
-      alert('Failed to share obituary. Please try again.');
+      toast.error('Failed to share obituary. Please try again.');
     } finally {
       setShareLoading(false);
     }
@@ -202,7 +206,7 @@ function ObituaryPage() {
       }
     } catch (err) {
       console.error('[UpdatePhoto] Error:', err);
-      alert('Failed to upload photo. Please try again.');
+      toast.error('Failed to upload photo. Please try again.');
     } finally {
       setPhotoUploading(false);
       // Reset file input

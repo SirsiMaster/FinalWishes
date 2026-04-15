@@ -494,7 +494,7 @@ function CreateModal({
 
 function TimeCapsulePage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/timecapsule' })
-  const estateId = useMemo(() => (routeId === 'lockhart' ? 'estate_lockhart' : routeId), [routeId])
+  const estateId = routeId
 
   const { data: capsules, loading: isLoading } = useTimeCapsules(estateId)
 

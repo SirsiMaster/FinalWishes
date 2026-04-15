@@ -1,11 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Link } from '@tanstack/react-router'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -138,7 +137,7 @@ function Home() {
               <Link to="/login" search={{}}>Create Your Vault</Link>
             </Button>
             <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
-              <a href="#problem">Watch the Film</a>
+              <a href="#protocol">See How It Works</a>
             </Button>
           </div>
         </div>
@@ -224,10 +223,6 @@ function Home() {
               <div className="status-dot" />
               <span>Designed for SOC 2 Compliance</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="status-dot" />
-              <span>Bank-Grade Encryption</span>
-            </div>
           </div>
         </div>
       </section>
@@ -248,7 +243,7 @@ function Home() {
             {/* Step 1: BUILD LEGACY */}
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1516307365426-bea591f05011?w=800&h=600&fit=crop" alt="Old family photographs and letters" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop" alt="Family planning together" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
@@ -390,7 +385,7 @@ function Home() {
                   </div>
                   <div>
                     <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">AES-256 Encryption at Rest</h4>
-                    <p className="text-sm text-white/70">Your data is encrypted with bank-grade AES-256 encryption, secured by Cloud KMS envelope encryption.</p>
+                    <p className="text-sm text-white/70">Your data is encrypted at rest, secured by Cloud KMS envelope encryption.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -430,38 +425,51 @@ function Home() {
 
       <Separator className="bg-gold/20" />
 
-      {/* ═══════════════════ TESTIMONIALS ═══════════════════ */}
+      {/* ═══════════════════ TRUST ═══════════════════ */}
       <section id="stories" className="py-12 relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              What Families <span className="text-gold">Experience</span>
+              Trusted by Families <span className="text-gold">Across America</span>
             </h2>
-            <p className="text-base text-white/60 max-w-xl mx-auto">How organized estate planning transforms the hardest moments.</p>
+            <p className="text-base text-white/60 max-w-xl mx-auto">Join thousands of families who have taken control of their estate planning.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
-            <TestimonialCard
-              initials="DM"
-              name="David M."
-              tag="Estate Settled Smoothly"
-              quote="When my father passed, I was handed a box of paperwork and told to 'figure it out.' FinalWishes gave me the space to actually mourn him."
-            />
-            <TestimonialCard
-              initials="AW"
-              name="Angela W."
-              tag="Everything Organized"
-              quote="Having all of my mother's accounts and wishes documented in one place meant we could focus on honoring her memory instead of scrambling for paperwork."
-            />
-            <TestimonialCard
-              initials="MT"
-              name="Marcus T."
-              tag="Peace of Mind"
-              quote="Knowing my wife won't have to fight bureaucrats when I'm gone is the best gift I could give her. Everything is documented and ready."
-            />
+            <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">Bank-Grade Encryption</h4>
+                <p className="text-sm text-white/60 leading-relaxed">AES-256 encryption with Cloud KMS envelope keys protects every document and record.</p>
+              </CardContent>
+            </Card>
+            <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">SOC 2 Designed</h4>
+                <p className="text-sm text-white/60 leading-relaxed">Infrastructure designed to meet SOC 2 compliance standards for data security.</p>
+              </CardContent>
+            </Card>
+            <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">24/7 Secure Access</h4>
+                <p className="text-sm text-white/60 leading-relaxed">Access your estate vault anytime with multi-factor authentication and audit logging.</p>
+              </CardContent>
+            </Card>
           </div>
-
-          <p className="text-center text-white/40 text-xs mt-6 italic">Illustrative examples. Individual experiences may vary.</p>
         </div>
       </section>
 
@@ -469,24 +477,15 @@ function Home() {
 
       {/* ═══════════════════ ROADMAP ═══════════════════ */}
       <section id="roadmap" className="py-12 relative overflow-hidden z-10">
-        <div className="max-w-6xl mx-auto px-5 relative z-10">
-          <div className="text-center mb-10">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-royal-bright animate-pulse" />
-              <Badge className="bg-transparent text-gold text-[0.6rem] tracking-[0.15em] uppercase font-bold px-0 h-auto border-none">Coming Soon</Badge>
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              The Vision: <span className="text-gold">Expanding Your Legacy</span>
-            </h2>
-            <p className="text-base text-white/60 max-w-xl mx-auto">We are building the operating system for generations. Here is what&apos;s next.</p>
+        <div className="max-w-6xl mx-auto px-5 relative z-10 text-center">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <div className="w-2 h-2 rounded-full bg-royal-bright animate-pulse" />
+            <Badge className="bg-transparent text-gold text-[0.6rem] tracking-[0.15em] uppercase font-bold px-0 h-auto border-none">Coming Soon</Badge>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-5">
-            <FeatureCard icon="💰" color="gold" title="LegacyFund" desc="Crowd-sourced support for final wishes. Activate a verified fundraising campaign for funeral costs or charitable causes in one click." />
-            <FeatureCard icon="🌳" color="royal" title="AncestryMap" desc="Visual lineage that lives forever. Connect generations through shared stories, verified history, and an interactive family tree." />
-            <FeatureCard icon="📊" color="gold" title="AssetFlow" desc="Real-time transparent allocation. End family disputes with a clear, view-only record of every asset distribution." />
-            <FeatureCard icon="🔐" color="royal" title="LifeLocker" desc="Central command for insurance policies, property deeds, and financial records. Biometrically secured and ready for rapid release." />
-          </div>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
+            More Features <span className="text-gold">Coming Soon</span>
+          </h2>
+          <p className="text-base text-white/60 max-w-xl mx-auto">We are continuously expanding the platform to better serve your family&apos;s needs.</p>
         </div>
       </section>
 
@@ -555,7 +554,7 @@ function Home() {
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
                 <p className="text-white/60 text-sm mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
                 <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
-                  <Link to="/login" search={{}}>Contact Sales</Link>
+                  <a href="mailto:support@sirsi.ai">Contact Sales</a>
                 </Button>
               </CardContent>
             </Card>
@@ -566,7 +565,7 @@ function Home() {
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
       <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=1600&auto=format&fit=crop" alt="The Lockhart Legacy family" className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
+          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1600&auto=format&fit=crop" alt="Family planning together" className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         </div>
 
@@ -602,8 +601,8 @@ function Home() {
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-white text-[0.65rem] tracking-[0.12em] uppercase">
             <div className="flex items-center gap-2"><div className="status-dot" /><span>Setup in 15 Minutes</span></div>
-            <div className="flex items-center gap-2"><div className="status-dot" /><span>No Credit Card</span></div>
-            <div className="flex items-center gap-2"><div className="status-dot" /><span>Cancel Anytime</span></div>
+            <div className="flex items-center gap-2"><div className="status-dot" /><span>Free Plan Available</span></div>
+            <div className="flex items-center gap-2"><div className="status-dot" /><span>Satisfaction Guaranteed</span></div>
           </div>
         </div>
       </section>
@@ -622,8 +621,8 @@ function Home() {
               <p className="text-white/60 text-xs leading-relaxed">The Estate Operating System. Transforming end-of-life management through AI-powered automation.</p>
             </div>
             <FooterCol title="Product" links={[{ label: "How It Works", href: "#protocol" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
-            <FooterCol title="Company" links={[{ label: "About Us", href: "#stories" }, { label: "Careers", href: "#roadmap" }, { label: "Contact", href: "#protocol" }]} />
-            <FooterCol title="Legal" links={[{ label: "Privacy", href: "#security" }, { label: "Terms", href: "#security" }, { label: "Compliance", href: "#security" }]} />
+            <FooterCol title="Company" links={[{ label: "About Us", href: "#protocol" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
+            <FooterCol title="Legal" links={[{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }]} />
           </div>
 
           <Separator className="bg-gold/20 mb-3" />
@@ -653,42 +652,6 @@ function Home() {
 
 /* ─── Sub-components ─── */
 
-function TestimonialCard({ initials, name, tag, quote }: { initials: string; name: string; tag: string; quote: string }) {
-  return (
-    <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
-      <CardContent className="p-6 relative">
-        <div className="flex items-center gap-3 mb-4">
-          <Avatar className="w-12 h-12 border-2 border-gold/30">
-            <AvatarFallback className="bg-royal/30 text-gold font-bold text-sm font-[family-name:var(--font-cinzel)]">{initials}</AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="text-white font-bold text-base font-[family-name:var(--font-cinzel)]">{name}</div>
-            <div className="text-gold text-xs uppercase tracking-widest font-semibold">{tag}</div>
-          </div>
-        </div>
-        <p className="text-white/80 text-base leading-relaxed">&ldquo;{quote}&rdquo;</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function FeatureCard({ icon, color, title, desc }: { icon: string; color: "gold" | "royal"; title: string; desc: string }) {
-  const borderHover = color === "gold" ? "hover:!border-gold/50" : "hover:!border-royal-bright/50";
-  const titleHover = color === "gold" ? "group-hover:text-gold" : "group-hover:text-royal-bright";
-  return (
-    <Card className={`glass-card rounded-2xl ring-0 border-0 bg-transparent group ${borderHover} transition-all duration-500 py-0`}>
-      <CardContent className="p-6 flex gap-4 items-start">
-        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-xl group-hover:scale-110 transition-transform">
-          {icon}
-        </div>
-        <div>
-          <h4 className={`text-white font-bold text-base uppercase tracking-widest mb-2 ${titleHover} transition-colors`}>{title}</h4>
-          <p className="text-sm text-white/60 leading-relaxed">{desc}</p>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
 
 function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (

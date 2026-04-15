@@ -23,9 +23,7 @@ const firebaseConfig = {
   storageBucket: "finalwishes-prod.firebasestorage.app",
   messagingSenderId: "860699311615",
   appId: "1:860699311615:web:545c1e083bc6f4417e3bca",
-  // measurementId required for GA4 — enable Analytics in Firebase Console,
-  // then paste the G-XXXXXXX value here. Analytics will no-op until set.
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || undefined,
+  measurementId: "G-K5WEF5EEDV",
 };
 
 // Initialize Firebase — singleton

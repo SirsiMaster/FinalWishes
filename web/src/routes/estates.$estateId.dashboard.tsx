@@ -32,6 +32,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
+import { getShepherdPrompt, type ShepherdContext } from '../lib/shepherd-prompts'
 
 export const Route = createFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -576,22 +577,7 @@ function buildTimelineEntries(
   return entries
 }
 
-// ─── Shepherd Companion Prompts ─────────────────────────────────────────────
-
-const SHEPHERD_PROMPTS_NEW = [
-  "Your story starts here. What's the first thing you want your family to remember?",
-  "Every life has a moment worth preserving. What's yours?",
-  "The people you love will treasure the sound of your voice. Start with a simple hello.",
-]
-
-const SHEPHERD_PROMPTS_ACTIVE = [
-  "You haven't recorded a voice memo in a while. Your family will treasure the sound of your voice.",
-  "Every photo tells a story. Have you added any heirloom photos recently?",
-  "Time capsules turn ordinary moments into extraordinary gifts. Who deserves one?",
-  "A few words written today could mean everything to someone tomorrow.",
-  "Your estate is growing beautifully. What story does it tell?",
-  "Consider recording a message for someone you love — just because.",
-]
+// ─── Shepherd Companion Prompts (powered by shepherd-prompts engine) ────────
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
@@ -701,14 +687,37 @@ function DashboardIndex() {
     return groups
   }, [visibleEntries])
 
-  // Shepherd companion prompt — pick index once on mount to avoid impure render
-  const [promptIndex] = useState(() => ({
-    newIdx: Math.floor(Math.random() * SHEPHERD_PROMPTS_NEW.length),
-    activeIdx: Math.floor(Math.random() * SHEPHERD_PROMPTS_ACTIVE.length),
-  }))
-  const shepherdPrompt = totalEntryCount === 0
-    ? SHEPHERD_PROMPTS_NEW[promptIndex.newIdx]
-    : SHEPHERD_PROMPTS_ACTIVE[promptIndex.activeIdx]
+  // Shepherd companion prompt — context-aware via prompt engine
+  const shepherdCtx: ShepherdContext = useMemo(() => {
+    // Derive lastSoulLogDate from the most recent soul log entry
+    let lastSoulLogDate: Date | null = null
+    if (soulLogs.length > 0 && soulLogs[0].createdAt && typeof soulLogs[0].createdAt.toDate === 'function') {
+      lastSoulLogDate = soulLogs[0].createdAt.toDate()
+    }
+
+    return {
+      estateId,
+      userName: userName || '',
+      soulLogCount: soulLogs.length,
+      lastSoulLogDate,
+      assetCount: assets.length,
+      documentCount: documents.length,
+      heirCount: heirs.length,
+      heirloomCount: heirlooms.length,
+      capsuleCount: capsules.length,
+      directiveCount: directives.length,
+      memoirCount: memoirs.length,
+      heirs: heirs.map((h) => ({
+        fullName: h.fullName,
+        relationship: h.relationship || undefined,
+        email: h.email || undefined,
+      })),
+      completionPercent: percent,
+    }
+  }, [estateId, userName, soulLogs, assets, documents, heirs, heirlooms, capsules, directives, memoirs, percent])
+
+  const shepherdResult = useMemo(() => getShepherdPrompt(shepherdCtx), [shepherdCtx])
+  const shepherdPrompt = shepherdResult.message
 
   if (isLoading) {
     return (
@@ -753,11 +762,16 @@ function DashboardIndex() {
                 {shepherdPrompt}
               </p>
               <div className="flex flex-wrap gap-3">
-                {totalEntryCount === 0 ? (
-                  <Button asChild className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl px-6 h-11 font-semibold">
+                {shepherdResult.cta ? (
+                  <Button asChild className={cn(
+                    'rounded-xl px-6 h-11 font-semibold',
+                    totalEntryCount === 0
+                      ? 'bg-[#133378] hover:bg-[#1E3A5F] text-white'
+                      : 'border border-[#133378]/20 text-[#133378] hover:bg-[#133378]/5 bg-transparent',
+                  )}>
                     {/* @ts-expect-error — dynamic route */}
-                    <Link to={`/estates/${routeId}/soul-log`}>
-                      Record Your First Memory
+                    <Link to={`/estates/${routeId}/${shepherdResult.cta.route}`}>
+                      {shepherdResult.cta.label}
                     </Link>
                   </Button>
                 ) : (

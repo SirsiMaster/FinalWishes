@@ -68,6 +68,7 @@ import {
   FileText,
   Loader2,
 } from 'lucide-react'
+import { getDailySoulLogPrompt } from '../lib/shepherd-prompts'
 
 export const Route = createFileRoute('/estates/$estateId/soul-log')({
   component: SoulLogPage,
@@ -114,18 +115,7 @@ const MOODS = [
   { emoji: '\u{1F60C}', label: 'Peaceful' },
 ]
 
-const SHEPHERD_PROMPTS = [
-  'Tell the story of how you met your spouse.',
-  "What's your earliest memory?",
-  'What do you want your children to know about your parents?',
-  'Describe a moment that changed the course of your life.',
-  'What lesson took you the longest to learn?',
-  "What's the bravest thing you've ever done?",
-  'If you could relive one day, which would it be?',
-  'What tradition do you hope your family carries forward?',
-  'What does home mean to you?',
-  'What are you most proud of?',
-]
+// Soul Log prompts are now served by the shepherd-prompts engine (date-seeded, 20-prompt pool)
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -243,8 +233,8 @@ function SoulLogPage() {
   const [viewerEntry, setViewerEntry] = useState<SoulLogEntry | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Shepherd prompt rotation
-  const [promptIndex] = useState(() => Math.floor(Math.random() * SHEPHERD_PROMPTS.length))
+  // Shepherd prompt — date-seeded daily rotation from 20-prompt pool
+  const dailyPrompt = useMemo(() => getDailySoulLogPrompt(), [])
 
   const userRole = profile?.role || 'principal'
   const isOwner = userRole === 'principal' || userRole === 'admin'
@@ -323,7 +313,7 @@ function SoulLogPage() {
       {/* Shepherd Card */}
       <ShepherdCard
         hasEntries={entries.length > 0}
-        prompt={SHEPHERD_PROMPTS[promptIndex]}
+        prompt={dailyPrompt}
         onRecord={() => setComposerOpen(true)}
       />
 

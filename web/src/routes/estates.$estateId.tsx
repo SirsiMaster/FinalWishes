@@ -10,7 +10,8 @@ import { EmailVerificationBanner } from '../components/identity/EmailVerificatio
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
 import { useEstate } from '../lib/firestore'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { auth as firebaseAuth } from '../lib/firebase'
 
 const ROLE_LABELS: Record<string, string> = {
   owner: 'Estate Owner',
@@ -41,6 +42,32 @@ function EstateLayout() {
       document.body.classList.remove('dashboard-theme');
     }
   }, []);
+
+  // Guardian Protocol: check-in on mount for principal/admin
+  const checkedIn = useRef(false);
+  useEffect(() => {
+    if (checkedIn.current) return;
+    const isPrincipalOrAdmin = profile?.role === 'principal' || profile?.role === 'admin';
+    if (!isPrincipalOrAdmin || !estateId) return;
+    checkedIn.current = true;
+    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    (async () => {
+      try {
+        const token = await firebaseAuth.currentUser?.getIdToken();
+        if (!token) return;
+        await fetch(`${API_BASE}/api/v1/guardian/check-in`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ estateId }),
+        });
+      } catch {
+        // Non-blocking — check-in failure is silent
+      }
+    })();
+  }, [profile?.role, estateId]);
 
   const handleWelcomeContinue = useCallback(() => {
     if (profile?.uid) {

@@ -10,7 +10,7 @@
  */
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import {
   useDocument,
   useCollection,
@@ -23,13 +23,15 @@ import {
   useTimeCapsules,
   useHeirlooms,
 } from '../lib/firestore'
-import { doc, setDoc, serverTimestamp, orderBy } from 'firebase/firestore'
+import { doc, setDoc, updateDoc, serverTimestamp, orderBy } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { getMFAStatus } from '../lib/mfa'
 import { exportEstateData, downloadBlob } from '../lib/export'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
 import { InviteTeamMember } from '../components/estate/InviteTeamMember'
+import { SettlementPanel } from '../components/estate/SettlementPanel'
+import { auth } from '../lib/firebase'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -79,6 +81,37 @@ function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  // Guardian Protocol state
+  const [guardianStatus, setGuardianStatus] = useState<{
+    lastActivityAt: string | null;
+    daysSinceActivity: number;
+    inactivityThreshold: number;
+    escalationLevel: string;
+    settlementType: string | null;
+  } | null>(null);
+
+  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
+  useEffect(() => {
+    if (!estateId) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const token = await auth.currentUser?.getIdToken();
+        if (!token || cancelled) return;
+        const res = await fetch(`${API_BASE}/api/v1/guardian/status?estate_id=${estateId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok && !cancelled) {
+          setGuardianStatus(await res.json());
+        }
+      } catch {
+        // Silent — guardian status is best-effort on the settings page
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [estateId, API_BASE]);
+
   // Export state
   const [exporting, setExporting] = useState(false);
   const [exportDone, setExportDone] = useState(false);
@@ -123,14 +156,22 @@ function SettingsPage() {
   const handleSave = useCallback(async () => {
     setSaving(true);
     try {
+      // Separate guardian threshold — lives on estate doc, not governance/settings
+      const { guardianThreshold, ...govSettings } = localSettings;
       await setDoc(
         doc(db, `estates/${estateId}/governance`, 'settings'),
         {
-          ...localSettings,
+          ...govSettings,
           updatedAt: serverTimestamp(),
         },
         { merge: true }
       );
+      // Write guardianThreshold to estate doc if changed
+      if (guardianThreshold != null) {
+        await updateDoc(doc(db, 'estates', estateId), {
+          guardianThreshold: Number(guardianThreshold),
+        });
+      }
       setSaved(true);
       setLocalSettings({}); // Clear local overrides — Firestore hook will pick up
       setTimeout(() => setSaved(false), 3000);
@@ -240,6 +281,79 @@ function SettingsPage() {
 
       {/* ── Estate Team Invitations ── */}
       <InviteTeamMember estateId={estateId} />
+
+      {/* ── Guardian Protocol (principal/admin only) ── */}
+      {isPrincipalOrAdmin && (
+        <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
+          <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em] font-[family-name:var(--font-cinzel)]">Guardian Protocol</h3>
+          </div>
+          <div className="divide-y divide-slate-100">
+            <SettingsSelect
+              label="Inactivity threshold"
+              description={`If you are inactive for this many days, your executor will be notified.`}
+              value={String(localSettings.guardianThreshold ?? estate?.guardianThreshold ?? 90)}
+              options={['60', '90', '120', '180']}
+              onChange={(v) => { setLocalSettings(prev => ({ ...prev, guardianThreshold: Number(v) })); setSaved(false); }}
+            />
+            <SettingsStatus
+              label="Emergency contact"
+              description="Your designated executor will be notified if you become inactive."
+              value={estate?.executorName || 'Not set'}
+            />
+            {guardianStatus && (
+              <>
+                <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-[#F8FAFC] transition-all group">
+                  <div className="flex flex-col">
+                    <span className="text-[#0F172A] font-bold text-[15px] leading-tight group-hover:text-[#133378] transition-colors">Days since last activity</span>
+                    <span className="text-[13px] text-[#64748B] font-medium mt-1">Based on your last check-in with FinalWishes</span>
+                  </div>
+                  <Badge
+                    variant="secondary"
+                    className={`h-auto px-3 py-1.5 rounded-lg text-[11px] font-bold flex items-center gap-2 ${
+                      guardianStatus.daysSinceActivity > (guardianStatus.inactivityThreshold * 0.75)
+                        ? 'bg-amber-50 border border-amber-200 text-amber-600'
+                        : 'bg-green-50 border border-green-200 text-green-600'
+                    }`}
+                  >
+                    <div className={`w-1.5 h-1.5 rounded-full ${
+                      guardianStatus.daysSinceActivity > (guardianStatus.inactivityThreshold * 0.75)
+                        ? 'bg-amber-400'
+                        : 'bg-green-400'
+                    }`} />
+                    {guardianStatus.daysSinceActivity} days
+                  </Badge>
+                </div>
+                <SettingsStatus
+                  label="Escalation level"
+                  description="Current state of the Guardian Protocol for this estate"
+                  value={guardianStatus.escalationLevel === 'none' ? 'All Clear' :
+                    guardianStatus.escalationLevel === 'reminder_sent' ? 'Reminder Sent' :
+                    guardianStatus.escalationLevel === 'executor_notified' ? 'Executor Notified' :
+                    guardianStatus.escalationLevel === 'in_settlement' ? 'In Settlement' :
+                    guardianStatus.escalationLevel}
+                />
+              </>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* ── Settlement Panel (executor only) ── */}
+      {profile?.role === 'executor' && (
+        <SettlementPanel
+          estateId={estateId}
+          ownerName={estate?.ownerName}
+          estateStatus={estate?.status}
+          settlementType={estate?.settlementType}
+          settlementReportedAt={estate?.settlementReportedAt}
+        />
+      )}
 
       {/* ── Settings Panels (principal/admin only) ── */}
       {isPrincipalOrAdmin && (

@@ -4,7 +4,7 @@
     "description": "FinalWishes Cloud Functions — Firestore triggers only (HTTP API lives in Go on Cloud Run)",
     "main": "index.js",
     "engines": {
-        "node": "20"
+        "node": "22"
     },
     "dependencies": {
         "firebase-admin": "^13.7.0",

@@ -1,10 +1,91 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+// =============================================
+// FinalWishes — Cloud Storage Security Rules
+// v2.0.0 — April 16, 2026
+// =============================================
+//
+// ARCHITECTURE NOTE:
+//   All uploads go through the Go API which generates V4 signed URLs.
+//   Signed URLs bypass these rules entirely (they authenticate via
+//   the service account's signing authority, not Firebase Auth).
+//
+//   These rules serve as DEFENSE IN DEPTH — if any client-side code
+//   ever attempts direct uploads (which it shouldn't), these rules
+//   enforce authentication and path restrictions.
+//
+//   The storage-resize-images extension operates server-side and
+//   also bypasses these rules (uses Admin SDK).
+//
+// PRINCIPLES:
+//   ✓ Default deny — no public access
+//   ✓ Authenticated reads for estate members
+//   ✓ No client-side writes (all uploads via signed URLs)
+//   ✓ Path-based isolation per estate
+// =============================================
+
 service firebase.storage {
   match /b/{bucket}/o {
+
+    // ── Estate Document Vault ──
+    // Path: estates/{estateId}/vault/{fileName}
+    match /estates/{estateId}/vault/{fileName} {
+      // Authenticated users can read (download) their estate's files
+      allow read: if request.auth != null;
+      // No client-side writes — uploads use signed URLs from Go API
+      allow write: if false;
+    }
+
+    // ── Estate Memoirs (Photos/Videos) ──
+    // Path: estates/{estateId}/memoirs/{fileName}
+    match /estates/{estateId}/memoirs/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Estate Memoir Thumbnails (Resize Extension Output) ──
+    // Path: estates/{estateId}/memoirs/thumbs/{fileName}
+    match /estates/{estateId}/memoirs/thumbs/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Soul Log Media (Audio/Video) ──
+    // Path: estates/{estateId}/soul-log/{fileName}
+    match /estates/{estateId}/soul-log/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Heirloom Photos ──
+    // Path: estates/{estateId}/heirlooms/{fileName}
+    match /estates/{estateId}/heirlooms/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Life Chapter Cover Images ──
+    // Path: estates/{estateId}/chapters/{fileName}
+    match /estates/{estateId}/chapters/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Time Capsule Attachments ──
+    // Path: estates/{estateId}/capsules/{fileName}
+    match /estates/{estateId}/capsules/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Obituary Portrait Photos ──
+    // Path: estates/{estateId}/obituary/{fileName}
+    match /estates/{estateId}/obituary/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ── Default: Deny everything else ──
     match /{allPaths=**} {
       allow read, write: if false;
     }

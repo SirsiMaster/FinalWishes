@@ -97,6 +97,7 @@ function Home() {
             src="/assets/images/hero-family.jpg"
             alt="Happy African American multi-generational family portrait"
             className="w-full h-full object-cover"
+            fetchPriority="high"
             style={{ objectPosition: "center 30%" }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -156,9 +157,10 @@ function Home() {
       <section id="problem" className="relative z-10 grid md:grid-cols-2">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=3840&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=1200&auto=format&fit=crop"
             alt="Old photographs and letters"
             className="w-full h-full object-cover"
+            loading="lazy"
           />
           {/* Stat overlay */}
           <div className="absolute bottom-6 left-6 bg-black/70 backdrop-blur-md rounded-xl p-5 border border-white/10">
@@ -243,7 +245,7 @@ function Home() {
             {/* Step 1: BUILD LEGACY */}
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop" alt="Family planning together" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop" alt="Family planning together" className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
@@ -276,7 +278,7 @@ function Home() {
                 </ul>
               </div>
               <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Digital security verification" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Digital security verification" className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">02</span>
@@ -288,7 +290,7 @@ function Home() {
             {/* Step 3: NOTIFY */}
             <div className="grid md:grid-cols-2 gap-0">
               <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal documents and notifications" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal documents and notifications" className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
                 <div className="absolute top-5 left-5 flex items-center gap-3">
                   <div className="status-dot" />
@@ -325,7 +327,7 @@ function Home() {
                 </Button>
               </div>
               <div className="relative min-h-[280px] md:h-auto overflow-hidden order-1 md:order-2">
-                <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Family embracing together" className="w-full h-full object-cover" />
+                <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Family embracing together" className="w-full h-full object-cover" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
                 <div className="absolute top-5 right-5 flex items-center gap-3">
                   <span className="text-5xl font-bold text-gold/30 font-[family-name:var(--font-cinzel)]">04</span>
@@ -342,7 +344,7 @@ function Home() {
       {/* ═══════════════════ SECURITY — Swiss Vault ═══════════════════ */}
       <section id="security" className="relative min-h-[45vh] flex items-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3840&auto=format&fit=crop" alt="Secure data center vault" className="w-full h-full object-cover" />
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop" alt="Secure data center vault" className="w-full h-full object-cover" loading="lazy" />
           <div className="absolute inset-0 bg-black/80" />
         </div>
 
@@ -565,7 +567,7 @@ function Home() {
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
       <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1600&auto=format&fit=crop" alt="Family planning together" className="w-full h-full object-cover" style={{ objectPosition: "center 20%" }} />
+          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family planning together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         </div>
 

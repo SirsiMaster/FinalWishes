@@ -12,6 +12,7 @@ import { createFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useState, useMemo, useCallback, useRef } from 'react'
 import { useLifeChapters, type LifeChapter, type ChapterEntryRef, useCollection } from '../lib/firestore'
 import { addLifeChapter, updateLifeChapter, archiveLifeChapter } from '../lib/estate-actions'
+import { useAuth } from '../lib/auth'
 import { toast } from 'sonner'
 import { estateClient } from '../lib/client'
 import { orderBy, type Timestamp } from 'firebase/firestore'
@@ -90,6 +91,8 @@ const ENTRY_ICONS: Record<string, typeof FileText> = {
 function LifeChaptersPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/life-chapters' })
   const estateId = routeId
+  const { profile } = useAuth()
+  const canEdit = profile?.role === 'principal' || profile?.role === 'admin'
 
   const { data: chapters, loading } = useLifeChapters(estateId)
   const [createOpen, setCreateOpen] = useState(false)
@@ -247,7 +250,7 @@ function LifeChaptersPage() {
           capsuleCount: 0, directiveCount: 0, memoirCount: memoirDocs.length,
           heirs: [], completionPercent: 0,
         })}
-        action={
+        action={canEdit ? (
           <Button
             onClick={() => setCreateOpen(true)}
             className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg gap-3"
@@ -255,7 +258,7 @@ function LifeChaptersPage() {
             <Plus className="w-5 h-5" />
             New Chapter
           </Button>
-        }
+        ) : undefined}
       />
 
       {/* Create / Edit Modal */}
@@ -310,13 +313,15 @@ function LifeChaptersPage() {
               Organize your life into meaningful chapters — childhood memories, career milestones, parenthood, adventures.
               Each chapter becomes a curated story for the people you love.
             </p>
-            <Button
-              onClick={() => setCreateOpen(true)}
-              className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg gap-3"
-            >
-              <Plus className="w-5 h-5" />
-              Create Your First Chapter
-            </Button>
+            {canEdit && (
+              <Button
+                onClick={() => setCreateOpen(true)}
+                className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg gap-3"
+              >
+                <Plus className="w-5 h-5" />
+                Create Your First Chapter
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
@@ -378,22 +383,26 @@ function LifeChaptersPage() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-[#64748B] hover:text-[#7C3AED] hover:bg-[#7C3AED]/5 rounded-xl"
-                        onClick={(e) => { e.stopPropagation(); setEditingChapter(chapter) }}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-[#64748B] hover:text-red-500 hover:bg-red-50 rounded-xl"
-                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(chapter) }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      {canEdit && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-[#64748B] hover:text-[#7C3AED] hover:bg-[#7C3AED]/5 rounded-xl"
+                            onClick={(e) => { e.stopPropagation(); setEditingChapter(chapter) }}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-[#64748B] hover:text-red-500 hover:bg-red-50 rounded-xl"
+                            onClick={(e) => { e.stopPropagation(); setDeleteTarget(chapter) }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </>
+                      )}
                       <ChevronRight className={`w-5 h-5 text-[#64748B]/40 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                     </div>
                   </div>
@@ -420,22 +429,24 @@ function LifeChaptersPage() {
                               <Badge variant="outline" className="text-[10px] text-[#64748B] border-slate-200 rounded-md">
                                 {ref.collection.replace('-', ' ')}
                               </Badge>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-7 w-7 text-slate-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={() => handleRemoveEntry(chapter.id, ref.docId)}
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </Button>
+                              {canEdit && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-7 w-7 text-slate-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => handleRemoveEntry(chapter.id, ref.docId)}
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </Button>
+                              )}
                             </div>
                           )
                         })}
                       </div>
                     )}
 
-                    {/* Add entries section */}
-                    <div className="px-6 md:px-8 py-4 border-t border-slate-50">
+                    {/* Add entries section — only for editors */}
+                    {canEdit && <div className="px-6 md:px-8 py-4 border-t border-slate-50">
                       <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-[0.15em] mb-3">
                         Add entries to this chapter
                       </p>
@@ -467,7 +478,7 @@ function LifeChaptersPage() {
                           })}
                         </div>
                       )}
-                    </div>
+                    </div>}
                   </div>
                 )}
               </Card>

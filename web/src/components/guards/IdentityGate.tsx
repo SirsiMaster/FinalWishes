@@ -14,12 +14,13 @@
  * @version 2.0.0
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../lib/auth';
 import { getMFAStatus } from '../../lib/mfa';
 import { useDocument } from '../../lib/firestore';
 import { collection, query, where, getDocs, type Timestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { Button } from '@/components/ui/button';
 
 const FIDUCIARY_ROLES = ['heir', 'executor', 'legal', 'cpa'] as const;
 
@@ -39,7 +40,7 @@ interface UserFirestoreProfile {
 }
 
 export function IdentityGate({ estateId, children }: IdentityGateProps) {
-  const { user, profile } = useAuth();
+  const { user, profile, emailVerified, resendVerification } = useAuth();
   const [attestationVerified, setAttestationVerified] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -115,6 +116,11 @@ export function IdentityGate({ estateId, children }: IdentityGateProps) {
         </div>
       </div>
     );
+  }
+
+  // ── Email verification gate (all roles) ──
+  if (user && !emailVerified) {
+    return <EmailVerificationGate user={user} resendVerification={resendVerification} />;
   }
 
   // ── Principal path ──
@@ -340,6 +346,104 @@ function VerificationStep({
             Complete Step {step - 1} first
           </span>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ── Email Verification Gate ──
+
+function EmailVerificationGate({
+  user,
+  resendVerification,
+}: {
+  user: { email: string | null; reload: () => Promise<void> };
+  resendVerification: () => Promise<{ success: boolean }>;
+}) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [checking, setChecking] = useState(false);
+
+  const handleResend = async () => {
+    setSending(true);
+    await resendVerification();
+    setSending(false);
+    setSent(true);
+    setTimeout(() => setSent(false), 15000);
+  };
+
+  const handleCheckAgain = async () => {
+    setChecking(true);
+    try {
+      await user.reload();
+      // Auth state listener will pick up the change and re-render
+      window.location.reload();
+    } catch {
+      // Ignore — user will try again
+    }
+    setChecking(false);
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto py-12 px-6">
+      <div className="text-center mb-12">
+        <div className="w-20 h-20 bg-[#C8A951]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[#C8A951]/20">
+          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="M22 7l-10 7L2 7" />
+          </svg>
+        </div>
+        <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-[#133378] uppercase tracking-tight mb-3">
+          Verify Your Email
+        </h2>
+        <p className="text-[#133378]/40 font-bold text-[13px] uppercase tracking-widest max-w-md mx-auto leading-relaxed">
+          We sent a verification link to{' '}
+          <span className="text-[#C8A951]">{user.email}</span>.
+          Please check your inbox and click the link to continue.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-[2.5rem] border border-[#133378]/10 p-8 text-center space-y-6">
+        <p className="text-[#64748B] text-sm leading-relaxed">
+          Email verification protects your estate by ensuring only you can access your account.
+          Check your spam folder if you don't see the email.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button
+            onClick={handleResend}
+            disabled={sending || sent}
+            className="bg-[#C8A951] hover:bg-[#B89941] text-white px-6 py-3 h-auto rounded-2xl font-bold text-sm"
+          >
+            {sending ? (
+              <span className="flex items-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Sending...
+              </span>
+            ) : sent ? (
+              <span className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                Email Sent
+              </span>
+            ) : 'Resend Verification Email'}
+          </Button>
+
+          <Button
+            onClick={handleCheckAgain}
+            disabled={checking}
+            variant="outline"
+            className="border-[#133378]/20 text-[#133378] px-6 py-3 h-auto rounded-2xl font-bold text-sm hover:bg-[#133378]/5"
+          >
+            {checking ? 'Checking...' : 'I\'ve Verified — Continue'}
+          </Button>
+        </div>
+      </div>
+
+      <div className="mt-12 p-8 bg-[#133378]/[0.02] rounded-[2.5rem] border border-[#133378]/5 text-center">
+        <p className="text-[10px] font-black text-[#133378]/20 uppercase tracking-[0.3em] leading-relaxed">
+          Your data is protected with AES-256 encryption<br />
+          and enterprise-grade security infrastructure.
+        </p>
       </div>
     </div>
   );

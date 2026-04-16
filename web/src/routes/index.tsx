@@ -223,7 +223,7 @@ function Home() {
             </div>
             <div className="flex items-center gap-2">
               <div className="status-dot" />
-              <span>Designed for SOC 2 Compliance</span>
+              <span>SOC 2 Architecture</span>
             </div>
           </div>
         </div>
@@ -432,9 +432,9 @@ function Home() {
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              Trusted by Families <span className="text-gold">Across America</span>
+              Built with <span className="text-gold">Enterprise-Grade</span> Security
             </h2>
-            <p className="text-base text-white/60 max-w-xl mx-auto">Join thousands of families who have taken control of their estate planning.</p>
+            <p className="text-base text-white/60 max-w-xl mx-auto">Your family&apos;s most sensitive information deserves infrastructure you can trust.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
@@ -456,8 +456,8 @@ function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">SOC 2 Designed</h4>
-                <p className="text-sm text-white/60 leading-relaxed">Infrastructure designed to meet SOC 2 compliance standards for data security.</p>
+                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">SOC 2 Architecture</h4>
+                <p className="text-sm text-white/60 leading-relaxed">Infrastructure built to SOC 2 standards — audit trails, access controls, and encryption at every layer.</p>
               </CardContent>
             </Card>
             <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
@@ -472,22 +472,6 @@ function Home() {
               </CardContent>
             </Card>
           </div>
-        </div>
-      </section>
-
-      <Separator className="bg-gold/20" />
-
-      {/* ═══════════════════ ROADMAP ═══════════════════ */}
-      <section id="roadmap" className="py-12 relative overflow-hidden z-10">
-        <div className="max-w-6xl mx-auto px-5 relative z-10 text-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="w-2 h-2 rounded-full bg-royal-bright animate-pulse" />
-            <Badge className="bg-transparent text-gold text-[0.6rem] tracking-[0.15em] uppercase font-bold px-0 h-auto border-none">Coming Soon</Badge>
-          </div>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-            More Features <span className="text-gold">Coming Soon</span>
-          </h2>
-          <p className="text-base text-white/60 max-w-xl mx-auto">We are continuously expanding the platform to better serve your family&apos;s needs.</p>
         </div>
       </section>
 
@@ -530,17 +514,17 @@ function Home() {
                   </div>
                   <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$2,997</div>
-                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
-                <p className="text-white/60 text-sm mb-4 flex-grow">We do the heavy lifting. Automated filing and fraud protection included.</p>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-white/50">/mo</span></div>
+                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <p className="text-white/60 text-sm mb-4 flex-grow">Full vault access, unlimited documents, and priority support.</p>
                 <ul className="space-y-2 text-sm text-white/70 mb-5">
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Full Vault Access</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Automated Notifications <Badge className="bg-white/10 text-white/50 text-[0.5rem] font-semibold uppercase tracking-wider px-1.5 py-0 h-auto border-none ml-1">Coming Soon</Badge></li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Unlimited Document Uploads</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> PII Vault Encryption</li>
+                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Video Memorials</li>
                   <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Priority Support</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> E-Sign Integration <Badge className="bg-white/10 text-white/50 text-[0.5rem] font-semibold uppercase tracking-wider px-1.5 py-0 h-auto border-none ml-1">Coming Soon</Badge></li>
                 </ul>
                 <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest text-center rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
-                  <Link to="/login" search={{}}>Secure Membership</Link>
+                  <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -552,11 +536,11 @@ function Home() {
                   <div className="status-dot" />
                   <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">White Glove</div>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$9,997</div>
-                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">One-Time Payment</div>
-                <p className="text-white/60 text-sm mb-5 flex-grow">Dedicated human estate agent for complex asset administration.</p>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-white/50">/mo</span></div>
+                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <p className="text-white/60 text-sm mb-5 flex-grow">Everything in Concierge plus AI guidance, legal review, and a dedicated advisor.</p>
                 <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
-                  <a href="mailto:support@sirsi.ai">Contact Sales</a>
+                  <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -620,7 +604,7 @@ function Home() {
                 </svg>
                 <span className="text-sm font-bold text-white tracking-widest font-[family-name:var(--font-cinzel)]">FINALWISHES</span>
               </div>
-              <p className="text-white/60 text-xs leading-relaxed">The Estate Operating System. Transforming end-of-life management through AI-powered automation.</p>
+              <p className="text-white/60 text-xs leading-relaxed">The place where your life lives. Preserve your story, protect your people, and give your family clarity when it matters most.</p>
             </div>
             <FooterCol title="Product" links={[{ label: "How It Works", href: "#protocol" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
             <FooterCol title="Company" links={[{ label: "About Us", href: "#protocol" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
@@ -642,7 +626,7 @@ function Home() {
               </Badge>
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                Built with HIPAA Considerations
+                HIPAA-Aligned Architecture
               </Badge>
             </div>
           </div>

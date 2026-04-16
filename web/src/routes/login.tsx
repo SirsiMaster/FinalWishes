@@ -534,7 +534,7 @@ function LoginPage() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <Badge variant="outline" className="text-[11px] text-[#133378]/40 font-bold uppercase tracking-widest border-0 px-0 h-auto bg-transparent hover:bg-transparent">Designed for SOC 2</Badge>
+              <Badge variant="outline" className="text-[11px] text-[#133378]/40 font-bold uppercase tracking-widest border-0 px-0 h-auto bg-transparent hover:bg-transparent">SOC 2 Architecture</Badge>
             </div>
           </div>
         </CardFooter>

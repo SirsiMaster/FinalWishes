@@ -1,5 +1,5 @@
 # FinalWishes — Continuation Prompt
-**Version:** 19.3 — **Date:** April 15, 2026 — **Session:** Life-First Phase 3 Complete
+**Version:** 19.4 — **Date:** April 15, 2026 — **Session:** Life-First Phase 3 Complete + Production Deploy
 
 ---
 
@@ -26,8 +26,10 @@ Shepherd companion, Letters experience, security fixes, demo purge, emotional
 section headers, Life Chapters, page transitions, themed empty states, Shepherd
 section nudges, security rules, Soul Log upload progress + transcription retry,
 chapter cover images, Shepherd conversation memory, route-level code splitting
-(66% bundle reduction), and E2E tests. Next: deploy to production (firebase
-login --reauth needed), Firestore rules deploy, Lighthouse audit post-deploy.
+(66% bundle reduction), E2E tests, Lighthouse audit + image optimization
+(69% transfer reduction), and RBAC enforcement for Life Chapters. All
+deployed to production. Next: Dependabot vulns (20), Soul Log collection
+name fix (soul-log vs soul-logs), further E2E coverage.
 ```
 
 ---
@@ -163,6 +165,10 @@ Code instrumentation already wired (trackEstateCreated, trackDocumentUploaded, t
 - ~~Shepherd conversation memory~~ **COMPLETE** — Firestore persistence, loads last 10 messages, rule 3p
 - ~~Code splitting~~ **COMPLETE** — 6 lazy routes, main bundle 2,210→745 KB (66% reduction)
 - ~~E2E tests~~ **COMPLETE** — 8 Playwright tests for Life-First features
+- ~~Lighthouse audit~~ **COMPLETE** — Score 61 perf, 100 best practices; images optimized (4.9MB→1.5MB)
+- ~~Hero image optimization~~ **COMPLETE** — 675KB→282KB, preload hint, preconnect
+- ~~RBAC for Life Chapters~~ **COMPLETE** — Read-only for heirs/executors, edit for principal/admin
+- ~~Production deploy~~ **COMPLETE** — Hosting + Firestore rules live
 
 ---
 

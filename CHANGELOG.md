@@ -4,6 +4,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.7.1] — 2026-04-15
+### Session 7e: Production Deploy, Perf Audit, RBAC Enforcement
+
+### Added
+- **Lighthouse audit** — Performance 61, Accessibility 86, Best Practices 100, SEO 83
+- **Role-based access enforcement** — Life Chapters: heirs/executors get read-only view; create/edit/delete/entry-picker hidden for non-principal roles
+- **Hero image preload** — `<link rel="preload">` for hero-family.jpg + `preconnect` for Unsplash CDN
+
+### Changed
+- **Landing page images optimized** — Unsplash URLs downsized from `w=3840` to `w=1200`, `loading="lazy"` on all below-fold images, `fetchPriority="high"` on hero
+- **Hero image compressed** — 675 KB → 282 KB via EXIF strip + 75% quality
+- **Total landing transfer** — 4,971 KB → 1,542 KB (69% reduction)
+
+### Deployed
+- Firebase Hosting: https://finalwishes-prod.web.app
+- Firestore rules: life-chapters (3o) + shepherd-messages (3p) live
+
+---
+
 ## [0.7.0] — 2026-04-15
 ### Session 7d: Code Splitting + E2E Tests
 

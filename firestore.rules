@@ -326,6 +326,18 @@ service cloud.firestore {
           && resource.data.status != 'delivered';
       }
 
+      // ── 3n2. Soul Log (Personal Diary Entries) ──
+      match /soul-log/{entryId} {
+        // Owner/admin: full access; heirs: see shared entries tagged for them
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['title', 'type', 'visibility', 'createdBy', 'createdAt'])
+          && request.resource.data.type in ['video', 'audio', 'text']
+          && request.resource.data.visibility in ['private', 'shared', 'sealed'];
+        allow update: if canWriteEstate(estateId);
+        allow delete: if isEstatePrincipal(estateId);
+      }
+
       // ── 3o. Life Chapters (Narrative Organization) ──
       match /life-chapters/{chapterId} {
         allow read: if canAccessEstate(estateId);

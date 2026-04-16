@@ -79,7 +79,7 @@ function formatDateRange(from?: string, to?: string): string {
 }
 
 const ENTRY_ICONS: Record<string, typeof FileText> = {
-  'soul-logs': Mic,
+  'soul-log': Mic,
   'memoirs': Camera,
   'capsules': PenLine,
   'directives': FileText,
@@ -102,7 +102,7 @@ function LifeChaptersPage() {
 
   // Load available entries for the entry picker
   const { data: soulLogs } = useCollection<{ id: string; title?: string; content?: string; createdAt: Timestamp }>(
-    `estates/${estateId}/soul-logs`,
+    `estates/${estateId}/soul-log`,
     useMemo(() => [orderBy('createdAt', 'desc')], []),
   )
   const { data: memoirDocs } = useCollection<{ id: string; title: string; createdAt: Timestamp }>(
@@ -199,10 +199,10 @@ function LifeChaptersPage() {
     const entries: Array<ChapterEntryRef & { label: string }> = []
 
     for (const s of soulLogs) {
-      const key = `soul-logs:${s.id}`
+      const key = `soul-log:${s.id}`
       if (!assigned.has(key)) {
         entries.push({
-          collection: 'soul-logs',
+          collection: 'soul-log',
           docId: s.id,
           title: s.title || (s.content ? s.content.substring(0, 40) + '...' : 'Soul Log Entry'),
           addedAt: new Date().toISOString(),

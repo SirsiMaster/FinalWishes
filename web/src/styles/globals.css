@@ -27,6 +27,10 @@
   --warning: #F59E0B;
   --danger: #EF4444;
 
+  /* Typography */
+  --font-cinzel: 'Cinzel', serif;
+  --font-inter: 'Inter', sans-serif;
+
   /* Layout Spacing Protocol */
   --sidebar-width: 280px;
   --header-height: 80px;

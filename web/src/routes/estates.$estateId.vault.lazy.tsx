@@ -10,6 +10,7 @@ import { auth } from '../lib/firebase'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { trackDocumentUploaded } from '../lib/analytics'
 import { analyzeDocument } from '../lib/doc-intelligence'
+import { toast } from 'sonner'
 
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
@@ -340,6 +341,9 @@ function VaultPage() {
         })
 
         updateUpload({ status: 'done', progress: 100 })
+        toast.success(`${file.name} uploaded securely`, {
+          description: docResult.success && docResult.id ? 'AI analysis running in background...' : undefined,
+        })
         trackDocumentUploaded(estateId, file.type || 'unknown')
 
         // Fire background Document Intelligence analysis (non-blocking)
@@ -434,6 +438,7 @@ function VaultPage() {
       const result = await archiveDocument(estateId, doc.id)
       if (result.success) {
         setDeleteConfirm(null)
+        toast.success('Document archived')
       }
     },
     [estateId],

@@ -3,6 +3,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState } from 'react'
 import { useEstateAssets, type Asset } from '../lib/firestore'
 import { addAsset as addAssetAction, updateAsset, archiveAsset } from '../lib/estate-actions'
+import { toast } from 'sonner'
 
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
@@ -62,6 +63,7 @@ function AssetsPage() {
     });
     setSaving(false);
     setModalOpen(false);
+    toast.success(`${vars.name} added to your estate`);
   };
 
   const handleUpdateAsset = async (data: { name: string; category: string; estimatedValue: string; description: string }) => {

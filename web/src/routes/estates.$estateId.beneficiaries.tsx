@@ -5,6 +5,7 @@ import { useEstateHeirs, type Heir } from '../lib/firestore'
 import { useAuth } from '../lib/auth'
 import { sendEstateInvitation } from '../lib/invitations'
 import { updateHeir } from '../lib/estate-actions'
+import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -62,8 +63,12 @@ function BeneficiariesPage() {
     setSaving(false);
     if (result.success) {
       setFeedback(result.autoLinked ? 'Linked \u2014 they already have an account!' : 'Invitation sent!');
+      toast.success(`${vars.name} added to your estate`, {
+        description: result.autoLinked ? 'Account already linked' : 'Invitation email sent',
+      });
       setTimeout(() => { setModalOpen(false); setFeedback(null); }, 1500);
     } else {
+      toast.error('Failed to add family member', { description: result.error });
       setFeedback(`Error: ${result.error}`);
     }
   };
@@ -98,7 +103,7 @@ function BeneficiariesPage() {
         action={
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-[#0F766E] hover:bg-[#0D6B64] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
             Add Family Member

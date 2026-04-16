@@ -312,7 +312,7 @@ function MemoirsPage() {
               setModalOpen(true)
             }}
             disabled={tierUsage ? !tierUsage.canUploadMedia : false}
-            className="bg-[#9D174D] hover:bg-[#831843] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 5v14M5 12h14" />

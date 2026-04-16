@@ -3,6 +3,7 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
 import { useDirectives, type Directive } from '../lib/firestore'
 import { addDirective, updateDirective } from '../lib/estate-actions'
+import { toast } from 'sonner'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import {
@@ -146,7 +147,7 @@ function DirectivesPage() {
         action={
           <Button
             onClick={() => setCreateModalOpen(true)}
-            className="bg-[#4D7C4D] hover:bg-[#3D6B3D] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Create Directive
@@ -366,6 +367,7 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     setSaving(true)
     await updateDirective(estateId, directive.id, { content: editor.getHTML() })
     setSaving(false)
+    toast.success('Draft saved')
   }, [editor, estateId, directive.id])
 
   const handleFinalize = useCallback(async () => {
@@ -374,6 +376,7 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     await updateDirective(estateId, directive.id, { content: editor.getHTML(), status: 'finalized' })
     setSaving(false)
     setMode('view')
+    toast.success('Directive finalized', { description: 'This document is now locked and ready for review.' })
   }, [editor, estateId, directive.id])
 
   const handleExportPDF = useCallback(async () => {

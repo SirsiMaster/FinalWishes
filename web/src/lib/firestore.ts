@@ -500,7 +500,7 @@ export interface LifeChapter {
 }
 
 export interface ChapterEntryRef {
-  collection: 'soul-logs' | 'memoirs' | 'capsules' | 'directives' | 'heirlooms';
+  collection: 'soul-log' | 'memoirs' | 'capsules' | 'directives' | 'heirlooms';
   docId: string;
   title: string;
   addedAt: string;

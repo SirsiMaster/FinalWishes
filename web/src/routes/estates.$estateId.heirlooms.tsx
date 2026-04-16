@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useHeirlooms, type Heirloom } from '../lib/firestore'
 import { addHeirloom, archiveHeirloom } from '../lib/estate-actions'
+import { toast } from 'sonner'
 import { estateClient } from '../lib/client'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { CardGridSkeleton } from '@/components/skeletons/CardGridSkeleton'
@@ -106,7 +107,7 @@ function HeirloomsPage() {
           <Button
             onClick={() => setModalOpen(true)}
             disabled={tierUsage ? !tierUsage.canUploadMedia : false}
-            className="bg-[#9D174D] hover:bg-[#831843] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-lg w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-lg w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-5 h-5" />
             Add Heirloom
@@ -210,6 +211,7 @@ function HeirloomCard({ item, estateId }: { item: Heirloom; estateId: string }) 
   const handleArchive = useCallback(async () => {
     await archiveHeirloom(estateId, item.id)
     setConfirming(false)
+    toast.success('Heirloom archived')
   }, [estateId, item.id])
 
   return (
@@ -485,6 +487,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
       provenance: form.provenance.trim() || undefined,
     })
     setSaving(false)
+    toast.success(`${form.name} added to heirlooms`)
     resetForm()
     onOpenChange(false)
   }, [estateId, form, photoUploads, onOpenChange, resetForm])

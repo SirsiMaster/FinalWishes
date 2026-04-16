@@ -825,7 +825,7 @@ function AudioPlayer({ url }: { url: string }) {
         variant="ghost"
         size="icon"
         onClick={togglePlay}
-        className="w-10 h-10 rounded-xl bg-[#7C3AED] text-white hover:bg-[#6D28D9] hover:text-white flex-shrink-0"
+        className="w-10 h-10 rounded-xl bg-[#133378] text-white hover:bg-[#1E3A5F] hover:text-white flex-shrink-0"
       >
         {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
       </Button>
@@ -1643,7 +1643,7 @@ function AudioRecorder({
           <span className="text-xs text-[#0F172A]/40 font-mono">
             Duration: {formatDuration(recordDuration)}
           </span>
-          <Button variant="outline" size="sm" onClick={onRetake} className="rounded-xl text-xs border-[#7C3AED]/20 text-[#7C3AED]">
+          <Button variant="outline" size="sm" onClick={onRetake} className="rounded-xl text-xs border-[#133378]/20 text-[#133378]">
             Record again
           </Button>
         </div>
@@ -1679,7 +1679,7 @@ function AudioRecorder({
         {!recording ? (
           <button
             onClick={onStart}
-            className="w-16 h-16 rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] transition-colors flex items-center justify-center shadow-lg shadow-[#7C3AED]/20 hover:shadow-xl"
+            className="w-16 h-16 rounded-full bg-[#133378] hover:bg-[#1E3A5F] transition-colors flex items-center justify-center shadow-lg shadow-[#133378]/20 hover:shadow-xl"
             type="button"
             aria-label="Start recording"
           >
@@ -1688,7 +1688,7 @@ function AudioRecorder({
         ) : (
           <button
             onClick={onStop}
-            className="w-16 h-16 rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] transition-colors flex items-center justify-center shadow-lg shadow-[#7C3AED]/20 animate-pulse"
+            className="w-16 h-16 rounded-full bg-[#133378] hover:bg-[#1E3A5F] transition-colors flex items-center justify-center shadow-lg shadow-[#133378]/20 animate-pulse"
             type="button"
             aria-label="Stop recording"
           >

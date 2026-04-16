@@ -233,7 +233,7 @@ function LifeChaptersPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#7C3AED]/20 border-t-[#7C3AED] rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
           <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading chapters...</span>
         </div>
       </div>
@@ -253,7 +253,7 @@ function LifeChaptersPage() {
         action={canEdit ? (
           <Button
             onClick={() => setCreateOpen(true)}
-            className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg gap-3"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg gap-3"
           >
             <Plus className="w-5 h-5" />
             New Chapter
@@ -316,7 +316,7 @@ function LifeChaptersPage() {
             {canEdit && (
               <Button
                 onClick={() => setCreateOpen(true)}
-                className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg gap-3"
+                className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg gap-3"
               >
                 <Plus className="w-5 h-5" />
                 Create Your First Chapter
@@ -388,7 +388,7 @@ function LifeChaptersPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-[#64748B] hover:text-[#7C3AED] hover:bg-[#7C3AED]/5 rounded-xl"
+                            className="h-8 w-8 text-[#64748B] hover:text-[#133378] hover:bg-[#133378]/5 rounded-xl"
                             onClick={(e) => { e.stopPropagation(); setEditingChapter(chapter) }}
                           >
                             <Pencil className="w-4 h-4" />
@@ -468,7 +468,7 @@ function LifeChaptersPage() {
                                   title: entry.title,
                                   addedAt: entry.addedAt,
                                 })}
-                                className="flex items-center gap-3 py-2.5 px-3 rounded-xl border border-dashed border-[#7C3AED]/15 hover:border-[#7C3AED]/40 hover:bg-[#FAF5FF] transition-all text-left cursor-pointer"
+                                className="flex items-center gap-3 py-2.5 px-3 rounded-xl border border-dashed border-[#133378]/15 hover:border-[#133378]/40 hover:bg-[#133378]/5 transition-all text-left cursor-pointer"
                               >
                                 <Icon className="w-4 h-4 text-[#7C3AED]/40" />
                                 <span className="flex-1 text-sm text-[#64748B] truncate">{entry.label}</span>
@@ -493,7 +493,7 @@ function LifeChaptersPage() {
           <Link
             to="/estates/$estateId/dashboard"
             params={{ estateId }}
-            className="text-sm font-medium text-[#7C3AED] hover:text-[#6D28D9] no-underline"
+            className="text-sm font-medium text-[#133378] hover:text-[#1E3A5F] no-underline"
           >
             View Legacy Timeline <ChevronRight className="inline w-4 h-4" />
           </Link>
@@ -642,7 +642,7 @@ function ChapterFormDialog({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full h-24 rounded-xl border-2 border-dashed border-[#7C3AED]/15 hover:border-[#7C3AED]/30 bg-[#FAF5FF]/50 flex items-center justify-center gap-2 text-sm text-[#7C3AED]/50 hover:text-[#7C3AED]/80 transition-colors cursor-pointer"
+                className="w-full h-24 rounded-xl border-2 border-dashed border-[#133378]/15 hover:border-[#133378]/30 bg-[#F8FAFC]/50 flex items-center justify-center gap-2 text-sm text-[#133378]/50 hover:text-[#133378]/80 transition-colors cursor-pointer"
               >
                 <ImagePlus className="w-5 h-5" />
                 Choose a cover photo
@@ -711,7 +711,7 @@ function ChapterFormDialog({
           <Button
             onClick={handleSubmit}
             disabled={!title.trim() || uploading}
-            className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl px-8 gap-2"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl px-8 gap-2"
           >
             {uploading ? (
               <>

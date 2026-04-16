@@ -297,7 +297,7 @@ function ObituaryPage() {
           <Button
             onClick={handleAIDraft}
             disabled={aiLoading || isSigned}
-            className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
+            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
           >
             {aiLoading ? (
               <>

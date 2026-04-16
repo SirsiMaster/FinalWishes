@@ -27,7 +27,6 @@
     "rules": "storage.rules"
   },
   "extensions": {
-    "firestore-send-email": "firebase/firestore-send-email@0.2.6",
     "storage-resize-images": "firebase/storage-resize-images@0.3.2"
   }
 }

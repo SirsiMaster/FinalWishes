@@ -95,11 +95,11 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 | **Database** | **Cloud SQL (PostgreSQL 15) + Firestore** | Hybrid: SQL for PII/Vault (encrypted), NoSQL for real-time |
 | **Auth** | **Firebase Auth** | MFA (TOTP) Required, 3-tier identity verification |
 | **Security** | **SOC 2 + Cloud KMS** | AES-256-GCM envelope encryption, per-estate AAD |
-| **AI** | **Gemini Flash (Firebase Genkit)** | The "Shepherd" — AI guidance engine, completion scoring |
+| **AI** | **Claude Opus (sirsi-ai SDK)** | "The Shepherd" — AI guidance engine, completion scoring, obituary drafting (Genkit/Gemini fallback) |
 | **E-Sign** | **Sirsi Sign** (sign.sirsi.ai) | Go API proxies to OpenSign via `/api/v1/opensign/*` |
 | **Payments** | **Stripe** | Checkout flow via Go API |
 | **Hosting** | **Firebase Hosting** | CDN for SPA, SPA rewrites |
-| **Triggers** | **Firebase Functions (Node.js 20)** | Firestore triggers only (e.g., auto-match invitations). No HTTP endpoints. |
+| **Triggers** | **Firebase Functions (Node.js 22)** | Firestore triggers only: `autoMatchInvitation` + `sendMail`. No HTTP endpoints. |
 
 > **Removed (April 2026):** Mobile (Expo) and Desktop (Tauri) scaffolds deleted — premature. Will rebuild when web is stable.
 > **Consolidated:** All HTTP API endpoints live in the Go API on Cloud Run. Firebase Functions handle only event-driven Firestore triggers.
@@ -190,7 +190,7 @@ These documents are the source of truth for this repo:
 | E-Signing | Sirsi Sign (OpenSign) | sign.sirsi.ai — proxied via Go API `/api/v1/opensign/*` |
 | Payments | Stripe | Go API checkout integration |
 | Auth | Firebase Auth | Configured in this repo |
-| Email | SendGrid | Firebase Extension (Firestore trigger on `mail` collection) |
+| Email | Gmail API | Cloud Function `sendMail` (Firestore trigger on `mail` collection, domain-wide delegation via admin@sirsi.ai) |
 | PII Encryption | Cloud KMS | `finalwishes-keyring/pii-vault-key` (us-central1) |
 
 ## 10. Test Credentials

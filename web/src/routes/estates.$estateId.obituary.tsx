@@ -13,7 +13,8 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { Download } from 'lucide-react'
+import { Download, QrCode } from 'lucide-react'
+import { ShareMemorial } from '@/components/estate/ShareMemorial'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -37,6 +38,7 @@ function ObituaryPage() {
   const [aiLoading, setAiLoading] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [shareMemorialOpen, setShareMemorialOpen] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const estateId = routeId;
@@ -328,6 +330,14 @@ function ObituaryPage() {
             </Button>
           )}
           <Button
+            onClick={() => setShareMemorialOpen(true)}
+            disabled={!obit?.content}
+            className="bg-[#059669] hover:bg-[#047857] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-sm active:scale-95 disabled:opacity-50"
+          >
+            <QrCode className="w-4 h-4" />
+            Public Memorial
+          </Button>
+          <Button
             onClick={handleShare}
             disabled={shareLoading || !obit?.content}
             className="bg-[#C8A951] hover:bg-[#b8993f] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
@@ -465,6 +475,15 @@ function ObituaryPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ShareMemorial
+        estateId={estateId}
+        open={shareMemorialOpen}
+        onOpenChange={setShareMemorialOpen}
+        personName={userName || 'Memorial'}
+        obituaryContent={obit?.content}
+        profilePhotoUrl={profilePhoto}
+      />
     </div>
   )
 }

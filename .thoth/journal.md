@@ -56,3 +56,43 @@ Surface-level audits miss infrastructure issues. Always deep audit before declar
 10. Document version history
 
 ---
+
+## Entry 004 — 2026-04-17 — Session 11: Full Gap Remediation (10 Items)
+
+**Context**: Cylton said "fix it all" after Session 10's deep audit. This session addressed 10 of the 13 identified gaps.
+
+### Completed:
+1. **False user guide claims fixed** — Removed lies about digital signing + 72hr unseal from directives.md
+2. **Auto-save for directives** — Debounced 1.5s TipTap onUpdate → Firestore, with saving/saved indicator
+3. **OpenSign signing ceremony wired** — Finalized directives get "Sign Document" button → POST /api/v1/opensign/create-envelope → opens signing URL in new tab, tracks envelope ID + signing status
+4. **Estate Owner Welcome** — New OwnerWelcome component shows once after estate creation. Life-first emotional tone: "This is where your life lives." Three pillars: Record your voice, Organize what matters, Protect your people.
+5. **Heir Welcome verified** — Component already solid: portrait, messages, heirlooms, video/audio players. Wired properly in estate layout.
+6. **Public memorial links + QR codes** — New `/memorial/$memorialId` public route (no auth), `ShareMemorial` component with QR code generation (qrcode.react), Firestore `public_memorials` collection with public read rules, DOMPurify for obituary content sanitization
+7. **Broadcasting/event pages** — New `/estates/$estateId/events` route with create modal (6 event types), event cards with date/time/location/RSVP, sidebar nav integration, Firestore rules for events collection
+8. **SMS invitations** — Phone number field added to InviteTeamMember form, `sms_queue` Firestore collection for Cloud Function processing, phone stored on invitation record
+9. **Granular per-person permissions** — `visibleTo` array field on directives, visibility picker in editor (Everyone vs. specific heirs), instant Firestore persist on selection change
+10. **Document version history** — Version badge in vault UI (shows "v2", "v3" etc.), `previousVersions` array field on VaultDocument type
+
+### Architecture Decisions:
+- DOMPurify installed for HTML sanitization on public pages (security requirement)
+- Public memorial uses estateId as memorialId (one memorial per estate)
+- SMS queue pattern matches email queue pattern (write to collection → Cloud Function processes)
+- Owner Welcome uses same guard pattern as Heir Welcome (localStorage-based seen tracking)
+- Events are a subcollection under estates (same access pattern as all estate data)
+- Firestore rules updated: public_memorials (§11), events (§3o), sms_queue (§9b)
+
+### Still Remaining:
+- Shepherd proactivity improvements (inline nudges)
+- Per-document role assignment for vault documents
+- SMS Cloud Function implementation (queue exists, processor needed)
+
+---
+
+## Entry 005 — 2026-04-17 00:04 — Session Compact (COMPACT)
+
+> Persisted via `thoth compact` before context compression.
+
+**Decisions**:
+- {"session_id":"a8f39bec-1cfb-4805-9bec-384b33f0fdd1","transcript_path":"/Users/thekryptodragon/.claude/projects/-Users-thekryptodragon/a8f39bec-1cfb-4805-9bec-384b33f0fdd1.jsonl","cwd":"/Users/thekryptodragon/Development/FinalWishes","hook_event_name":"PreCompact","trigger":"manual","custom_instructions":""}
+
+---

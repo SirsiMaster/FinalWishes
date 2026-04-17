@@ -32,6 +32,7 @@ import { estateInvitationEmail } from './email-templates';
 export interface InvitationParams {
   estateId: string;
   email: string;
+  phone?: string; // Optional phone number for SMS notification
   fullName: string;
   role: 'executor' | 'heir' | 'legal' | 'cpa';
   relationship?: string;
@@ -60,7 +61,7 @@ interface InvitationResult {
  * 5. If user doesn't exist → Cloud Function autoMatchInvitation handles it on signup
  */
 export async function sendEstateInvitation(params: InvitationParams): Promise<InvitationResult> {
-  const { estateId, email, fullName, role, relationship, invitedBy, inviterName, estateName, priority } = params;
+  const { estateId, email, phone, fullName, role, relationship, invitedBy, inviterName, estateName, priority } = params;
   const normalizedEmail = email.toLowerCase().trim();
 
   try {
@@ -74,6 +75,7 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
     const invRef = await addDoc(collection(db, 'estate_invitations'), {
       estateId,
       email: normalizedEmail,
+      ...(phone ? { phone: phone.trim() } : {}),
       fullName,
       role,
       relationship: relationship || '',
@@ -166,6 +168,24 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
     } catch (emailErr) {
       // Email failure should not fail the invitation itself
       console.warn('[sendEstateInvitation] Email send failed (invitation still created):', emailErr);
+    }
+
+    // 6. Queue SMS notification if phone number was provided
+    if (phone) {
+      try {
+        const smsBody = `${inviterName || 'Someone'} has invited you to ${estateName || 'an estate'} on FinalWishes. Open the invitation: https://finalwishes-prod.web.app/accept-invite?id=${invRef.id}`;
+        await addDoc(collection(db, 'sms_queue'), {
+          to: phone.trim(),
+          body: smsBody,
+          invitationId: invRef.id,
+          estateId,
+          status: 'pending',
+          createdAt: serverTimestamp(),
+          createdBy: invitedBy,
+        });
+      } catch (smsErr) {
+        console.warn('[sendEstateInvitation] SMS queue failed (invitation still created):', smsErr);
+      }
     }
 
     return { success: true, invitationId: invRef.id, autoLinked: false };

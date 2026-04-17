@@ -1,202 +1,183 @@
 # Deployment Guide
-## Sirsi Sign — The Professional Document Vault
-**Version:** 2.0.0 | **Date:** February 9, 2026
+## FinalWishes — The Estate Operating System
+**Version:** 3.0.0 | **Date:** April 2026
 
 ---
 
 ## 1. Overview
 
-This guide documents the **verified deployment procedures** for the Sirsi Sign platform. All infrastructure runs on Google Cloud, with Firebase Hosting as the CDN edge and Cloud Run as the backend compute layer.
+This guide documents the deployment procedures for the FinalWishes estate planning platform. All infrastructure runs on Google Cloud Platform, with Firebase Hosting as the CDN edge, Cloud Run as the backend compute layer, and Cloud SQL as the encrypted PII vault.
 
-**Live Domain:** `https://sign.sirsi.ai`
-**Firebase Project:** `sirsi-nexus-live`
-**Backend Service:** `contracts-grpc` on Cloud Run (`us-east4`)
+**Firebase Project:** `finalwishes-prod`
+**Hosting URL:** `https://finalwishes-prod.web.app`
+**Backend Service:** `finalwishes-api` on Cloud Run (`us-central1`)
 
 ---
 
-## 2. Repository Architecture
+## 2. Infrastructure
 
-| Repository | Purpose | Branch |
+| Layer | Technology | Details |
 |:---|:---|:---|
-| `SirsiNexusApp` (Monorepo) | Core engine, gRPC services, UI packages | `main` |
-| `111-Venture-Projects` | Studio governance, tenant configs, canonical docs | `main` |
-
-### Key Packages (within SirsiNexusApp)
-
-| Package | Role |
-|:---|:---|
-| `packages/finalwishes-contracts` | React 18 + Vite contract workflow application |
-| `packages/sirsi-opensign` | Firebase Hosting + Cloud Functions deployment target |
-| `packages/sirsi-ui` | Shared component library (Sirsi First — Rule 1) |
+| **Frontend** | React 19 + Vite 8 SPA | Firebase Hosting at `finalwishes-prod.web.app` |
+| **API Backend** | Go 1.26 (Chi + ConnectRPC) | Cloud Run service `finalwishes-api` in `us-central1` |
+| **Database (Real-time)** | Firestore | Estate data, invitations, real-time sync |
+| **Database (PII Vault)** | Cloud SQL PostgreSQL 15 | Envelope encryption via Cloud KMS |
+| **Auth** | Firebase Auth + Identity Platform | MFA (TOTP) required |
+| **Storage** | Cloud Storage | Signed URL uploads via Go API |
+| **Functions** | Firebase Cloud Functions (Node.js 22) | `us-central1`, 2 triggers: `autoMatchInvitation` + `sendMail` |
+| **Email** | Gmail API via Cloud Function | Domain-wide delegation, impersonates `admin@sirsi.ai` |
+| **AI** | Claude Opus (sirsi-ai SDK) | Primary; Genkit fallback |
+| **Payments** | Stripe | Checkout + Webhooks via Go API |
+| **E-Signatures** | OpenSign proxy via Go API | `/api/v1/opensign/create-envelope` |
+| **Encryption** | Cloud KMS | Keyring `finalwishes-keyring/pii-vault-key` (us-central1), AES-256-GCM |
+| **CI/CD** | GitHub Actions | `firebase-hosting-merge.yml` (deploy on merge), `firebase-hosting-pull-request.yml` (preview on PR) |
 
 ---
 
-## 3. Frontend Deployment Pipeline
+## 3. Deployment Commands
 
-### 3.1 Build → Sync → Deploy (Manual)
-
-The verified deployment sequence for the contract workflow UI:
+### 3.1 Frontend (Firebase Hosting)
 
 ```bash
-# Step 1: Build the React application
-cd packages/finalwishes-contracts
-npx vite build
-
-# Step 2: Sync build artifacts to hosting target
-rsync -av --delete dist/ ../sirsi-opensign/public/
-
-# Step 3: Deploy to Firebase Hosting
-cd ../sirsi-opensign
-npx firebase deploy --only hosting
+cd web && npm run build && firebase deploy --only hosting
 ```
 
-**Result:** `sirsi-sign.web.app` (served via `sign.sirsi.ai`)
+### 3.2 Cloud Functions
 
-### 3.2 Critical Asset Sync Points
+```bash
+firebase deploy --only functions
+```
 
-Static assets must be synchronized across these paths to prevent "technical drift":
+### 3.3 Go API (Cloud Run)
 
-| Source | Target |
-|:---|:---|
-| `finalwishes-contracts/public/assets/js/security-init.js` | `sirsi-opensign/public/assets/js/security-init.js` |
-| `finalwishes-contracts/public/finalwishes/contracts/printable-msa.html` | `sirsi-opensign/public/finalwishes/contracts/printable-msa.html` |
+```bash
+gcloud run deploy finalwishes-api --source api/ --region us-central1
+```
 
-The `rsync --delete` in Step 2 handles this automatically when syncing from the Vite `dist/` output.
+### 3.4 Firestore Rules
 
-### 3.3 Domain Mapping
+```bash
+firebase deploy --only firestore:rules
+```
 
-| Domain | Target | Method |
-|:---|:---|:---|
-| `sign.sirsi.ai` | `sirsi-sign.web.app` | Firebase Hosting custom domain (DNS A/TXT verified) |
+### 3.5 Storage Rules
+
+```bash
+firebase deploy --only storage
+```
 
 ---
 
-## 4. Backend Deployment (Cloud Run)
+## 4. CI/CD Pipelines
 
-### 4.1 gRPC Service (`contracts-grpc`)
-
-```bash
-# From packages/sirsi-opensign/services/contracts-grpc
-gcloud run deploy contracts-grpc \
-  --source . \
-  --region us-east4 \
-  --project sirsi-nexus-live \
-  --allow-unauthenticated
-```
-
-**Live Endpoint:** `https://contracts-grpc-210890802638.us-east4.run.app`
-
-### 4.2 Service Capabilities
-
-| Endpoint | Method | Purpose |
+| Workflow | File | Trigger |
 |:---|:---|:---|
-| `CreateContract` | gRPC | Create new agreement in Firestore |
-| `UpdateContract` | gRPC | Update status, amounts, signatures |
-| `ListContracts` | gRPC | Query agreements by user/status |
-| `DeleteContract` | gRPC | Remove agreement (admin) |
-| `/stripe/create-checkout` | REST | Initialize Stripe Checkout Session |
-| `/webhook` | REST | Stripe webhook receiver (payment confirmation) |
+| Production Deploy | `.github/workflows/firebase-hosting-merge.yml` | Merge to `main` |
+| Preview Deploy | `.github/workflows/firebase-hosting-pull-request.yml` | Pull request opened/updated |
 
-### 4.3 Environment Configuration
+---
 
-Secrets are managed via Cloud Run environment variables and Firestore vault:
+## 5. Environment Variables (Cloud Run)
 
 | Variable | Source | Purpose |
 |:---|:---|:---|
-| `STRIPE_SECRET_KEY` | Cloud Run env | Stripe API authentication |
-| `STRIPE_WEBHOOK_SECRET` | Cloud Run env | Webhook signature verification |
-| `FIREBASE_PROJECT_ID` | Cloud Run env | Firestore connection |
+| `GOOGLE_CLOUD_PROJECT` | Set to `finalwishes-prod` | GCP project identification |
+| `STRIPE_SECRET_KEY` | Secret Manager | Stripe API authentication |
+| `STRIPE_WEBHOOK_SECRET` | Secret Manager | Webhook signature verification |
+| `OPENSIGN_API_URL` | Secret Manager | OpenSign e-signature service URL |
+| `OPENSIGN_API_KEY` | Secret Manager | OpenSign API authentication |
+| `VAULT_DB_*` | Secret Manager / Cloud SQL | Cloud SQL connection parameters |
+| `GEMINI_API_KEY` | Secret Manager | Fallback AI (Genkit) |
+| `STRIPE_SUCCESS_URL` | Environment | `https://finalwishes-prod.web.app/estates/{estate_id}/pricing?success=true` |
+| `STRIPE_CANCEL_URL` | Environment | `https://finalwishes-prod.web.app/estates/{estate_id}/pricing?cancelled=true` |
 
 ---
 
-## 5. Financial Rails
+## 6. Secret Manager Secrets
 
-### 5.1 Stripe (Card Payments)
-
-| Item | Status |
+| Secret Name | Purpose |
 |:---|:---|
-| Checkout Integration | ✅ Live |
-| Webhook Registration | ✅ Active (11 events) |
-| Live Mode | ✅ Enabled |
-| Payment Methods | Card, Apple Pay (pending domain verification) |
-
-### 5.2 Wire Transfer (Out-of-Band)
-
-| Item | Status |
-|:---|:---|
-| Chase Instructions | ✅ Embedded in printable MSA |
-| Settlement | Out-of-band, manual reconciliation |
-
-### 5.3 Plaid ACH (Deferred)
-
-| Item | Status |
-|:---|:---|
-| Link Infrastructure | 🔲 Scaffolded, not wired |
-| Target | Weeks out |
+| `stripe-secret-key` | Stripe API key |
+| `stripe-publishable-key` | Stripe client-side key |
+| `stripe-webhook-secret` | Stripe webhook signature verification |
+| `vault-db-password` | Cloud SQL PII vault database password |
+| `opensign-api-url` | OpenSign service endpoint |
+| `gemini-api-key` | Genkit fallback AI key |
+| `gmail-sa-key` | Gmail service account key (domain-wide delegation) |
 
 ---
 
-## 6. Authentication & Security
+## 7. Firebase Project Configuration
 
-| Component | Implementation | Status |
-|:---|:---|:---|
-| Firebase Auth | `browserLocalPersistence` | ✅ Live |
-| MFA (TOTP) | Gate component exists | ⏳ Known issues (deferred) |
-| CSP Headers | Stripe + Firebase whitelisted | ✅ Hardened |
-| E-Signatures | SHA-256 hash + timestamp + envelopeId | ✅ Rule 18 compliant |
+| Setting | Value |
+|:---|:---|
+| **Project ID** | `finalwishes-prod` |
+| **Hosting** | `finalwishes-prod.web.app` |
+| **Functions Runtime** | Node.js 22 |
+| **Functions Region** | `us-central1` |
+| **Firestore Rules** | v5.0.0+ |
+| **Storage Rules** | v2.0.0 |
 
 ---
 
-## 7. Rollback Procedures
+## 8. Encryption
 
-### 7.1 Frontend Rollback
+All PII is encrypted at rest using Cloud KMS envelope encryption:
+
+- **Keyring:** `finalwishes-keyring` (us-central1)
+- **Key:** `pii-vault-key`
+- **Algorithm:** AES-256-GCM
+- **Storage:** Cloud SQL PostgreSQL 15 (encrypted columns)
+- **AAD:** Per-estate additional authenticated data
+
+---
+
+## 9. Rollback Procedures
+
+### 9.1 Frontend Rollback
 
 ```bash
-# Revert to previous commit
-cd packages/finalwishes-contracts
-git revert HEAD
-npx vite build
-rsync -av --delete dist/ ../sirsi-opensign/public/
-cd ../sirsi-opensign
-npx firebase deploy --only hosting
+# Option A: Firebase Console → Hosting → Release History → Roll back
+# Option B: Redeploy previous commit
+cd web && git checkout <previous-sha> && npm run build && firebase deploy --only hosting
 ```
 
-### 7.2 Backend Rollback
+### 9.2 Backend Rollback (Cloud Run)
 
 ```bash
-# Revert to previous Cloud Run revision
-gcloud run services update-traffic contracts-grpc \
+gcloud run services update-traffic finalwishes-api \
   --to-revisions=PREVIOUS_REVISION=100 \
-  --region us-east4 \
-  --project sirsi-nexus-live
+  --region us-central1 \
+  --project finalwishes-prod
 ```
 
-### 7.3 Firebase Hosting Rollback
+### 9.3 Cloud Functions Rollback
 
 ```bash
-# Roll back to previous hosting version via Console
-# Firebase Console → Hosting → Release History → Roll back
+git checkout <previous-sha> -- functions/
+firebase deploy --only functions
 ```
 
 ---
 
-## 8. Pre-Deployment Checklist
+## 10. Pre-Deployment Checklist
 
-- [ ] `npx vite build` succeeds with zero errors
-- [ ] `rsync` from `dist/` to `sirsi-opensign/public/`
-- [ ] `firebase deploy --only hosting` succeeds
-- [ ] Git commit with descriptive message
+- [ ] `npm run build` succeeds with zero errors (in `web/`)
+- [ ] Firestore rules validated locally
+- [ ] Storage rules validated locally
+- [ ] Go API builds and passes tests (`cd api && go test ./...`)
+- [ ] Git commit with traceability refs (per Rule 29)
 - [ ] Git push to `origin main`
-- [ ] Verify live at `https://sign.sirsi.ai`
 
-## 9. Post-Deployment Verification
+## 11. Post-Deployment Verification
 
-- [ ] Landing page renders at `sign.sirsi.ai`
-- [ ] Contract workflow loads at `/contracts/finalwishes`
-- [ ] Printable MSA hydrates from URL params
+- [ ] SPA loads at `https://finalwishes-prod.web.app`
+- [ ] Authentication flow completes (login, MFA prompt)
+- [ ] Estate dashboard renders with real-time data
+- [ ] Stripe checkout redirects correctly
+- [ ] Document upload via signed URL succeeds
 - [ ] No console errors in DevTools
-- [ ] Stripe Checkout redirects correctly
-- [ ] Vault Dashboard loads at `/vault`
+- [ ] Cloud Run logs show healthy API responses
 
 ---
 
@@ -205,4 +186,5 @@ gcloud run services update-traffic contracts-grpc \
 | Version | Date | Author | Changes |
 |:--------|:-----|:-------|:--------|
 | 1.0.0 | 2025-11-26 | Legacy Team | Initial draft (AWS/Terraform) |
-| 2.0.0 | 2026-02-09 | Antigravity | **Complete rewrite** for Stack V4 (GCP/Firebase/Cloud Run) |
+| 2.0.0 | 2026-02-09 | Antigravity | Rewrite for Sirsi Sign (GCP/Firebase/Cloud Run) |
+| 3.0.0 | 2026-04-17 | Antigravity | Complete rewrite for FinalWishes estate platform |

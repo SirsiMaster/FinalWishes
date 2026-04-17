@@ -46,6 +46,12 @@ Each ADR follows this structure:
 | [ADR-036](ADR-036-FIRESTORE-DIRECT-READS.md) | Firestore Direct Reads | Accepted | 2026-03-19 | — |
 | [ADR-037](ADR-037-CLOUD-SQL-PII-VAULT.md) | Cloud SQL PII Vault — Estate-Grade Encryption | Accepted | 2026-03-20 | — |
 | [ADR-038](ADR-038-LIFE-FIRST-REFRAME.md) | Life-First Reframe — Living Companion Product Pivot | Accepted | 2026-04-14 | — |
+| ADR-039 | Gmail API Replaces SendGrid — Zero-Vendor Email | Accepted | 2026-04-16 | — |
+| ADR-040 | Claude Opus via sirsi-ai — Primary AI for Shepherd | Accepted | 2026-04-17 | ADR-002 (AI section) |
+| ADR-041 | Public Memorials + QR Sharing — Unauthenticated Access | Accepted | 2026-04-17 | — |
+| ADR-042 | Events & Broadcasting — Funeral/Memorial/Repast Pages | Accepted | 2026-04-17 | — |
+
+> **Note on scope:** ADRs 004, 005, 008, 010–016, 018 were created in the context of Sirsi Sign (sign.sirsi.ai), not FinalWishes. They remain in the index for portfolio-level traceability but do not apply to FinalWishes deployment.
 
 ## Categories
 

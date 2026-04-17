@@ -7,6 +7,7 @@ import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { IdentityGate } from '../components/guards/IdentityGate'
 import { HeirWelcome, shouldShowHeirWelcome, markWelcomeSeen } from '../components/guards/HeirWelcome'
+import { OwnerWelcome, shouldShowOwnerWelcome, markOwnerWelcomeSeen } from '../components/guards/OwnerWelcome'
 import { EmailVerificationBanner } from '../components/identity/EmailVerificationBanner'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
@@ -36,6 +37,7 @@ function EstateLayout() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
+  const [ownerWelcomeDismissed, setOwnerWelcomeDismissed] = useState(false);
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -77,6 +79,28 @@ function EstateLayout() {
     }
     setWelcomeDismissed(true);
   }, [estateId, profile]);
+
+  // Owner Welcome — shows once after estate creation for the principal
+  const handleOwnerWelcomeContinue = useCallback(() => {
+    if (profile?.uid) {
+      markOwnerWelcomeSeen(estateId, profile.uid);
+    }
+    setOwnerWelcomeDismissed(true);
+  }, [estateId, profile]);
+
+  const showOwnerWelcome = !ownerWelcomeDismissed && shouldShowOwnerWelcome(profile?.role, estateId, profile?.uid);
+
+  if (showOwnerWelcome) {
+    return (
+      <AuthGuard>
+        <OwnerWelcome
+          estateId={estateId}
+          estateName={estate?.name || profile?.primaryEstateName || 'Your Estate'}
+          onContinue={handleOwnerWelcomeContinue}
+        />
+      </AuthGuard>
+    );
+  }
 
   // Show the Heir Welcome Screen when conditions are met
   const showWelcome = !welcomeDismissed && shouldShowHeirWelcome(profile, estate?.status, estateId);

@@ -1,8 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import { useState, useMemo, useCallback } from 'react'
-import { useDirectives, type Directive } from '../lib/firestore'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import { useDirectives, useEstateHeirs, type Directive } from '../lib/firestore'
+import { useAuth } from '../lib/auth'
 import { addDirective, updateDirective } from '../lib/estate-actions'
+import { API_BASE } from '../lib/client'
 import { toast } from 'sonner'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -24,6 +26,12 @@ import {
   Heading2,
   Undo2,
   Redo2,
+  Check,
+  Loader2,
+  PenTool,
+  ExternalLink,
+  Users,
+  Globe,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -34,6 +42,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
+import { ShepherdNudge, useShepherdNudge } from '@/components/estate/ShepherdNudge'
 
 export const Route = createFileRoute('/estates/$estateId/directives')({
   component: DirectivesPage,
@@ -113,6 +122,13 @@ function DirectivesPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
 
+  // Shepherd inline nudge
+  const noDirectivesNudge = useShepherdNudge(
+    estateId,
+    'directives-no-entries',
+    !loading && directives.length === 0,
+  )
+
   const editingDirective = useMemo(
     () => directives.find((d) => d.id === editingId) || null,
     [directives, editingId]
@@ -155,6 +171,15 @@ function DirectivesPage() {
         }
       />
 
+      {/* Shepherd Inline Nudge */}
+      {noDirectivesNudge.visible && (
+        <ShepherdNudge
+          message="Start with what feels easiest. Many people begin with funeral preferences."
+          ctaLabel="Create a directive"
+          onDismiss={noDirectivesNudge.dismiss}
+        />
+      )}
+
       {/* ── Cards ── */}
       {directives.length === 0 ? (
         <SectionEmptyState
@@ -186,12 +211,19 @@ function DirectivesPage() {
                         <p className="text-[12px] text-[#64748B] font-medium">{cfg.label}</p>
                       </div>
                     </div>
-                    <Badge
-                      variant="secondary"
-                      className={`px-3 py-1.5 h-auto text-[10px] font-bold uppercase tracking-widest rounded-lg ${d.status === 'finalized' ? 'bg-[#059669]/10 text-[#059669]' : 'bg-[#F59E0B]/10 text-[#F59E0B]'}`}
-                    >
-                      {d.status === 'finalized' ? 'Finalized' : 'Draft'}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {d.status === 'finalized' && d.signedAt && (
+                        <Badge variant="secondary" className="px-2.5 py-1 h-auto text-[10px] font-bold uppercase tracking-widest rounded-lg bg-[#7C3AED]/10 text-[#7C3AED]">
+                          Signed
+                        </Badge>
+                      )}
+                      <Badge
+                        variant="secondary"
+                        className={`px-3 py-1.5 h-auto text-[10px] font-bold uppercase tracking-widest rounded-lg ${d.status === 'finalized' ? 'bg-[#059669]/10 text-[#059669]' : 'bg-[#F59E0B]/10 text-[#F59E0B]'}`}
+                      >
+                        {d.status === 'finalized' ? 'Finalized' : 'Draft'}
+                      </Badge>
+                    </div>
                   </div>
                   {d.recipientName && (
                     <p className="text-[13px] text-[#334155] mb-3">
@@ -346,10 +378,39 @@ function CreateDirectiveModal({ estateId, open, onOpenChange, onCreated }: { est
 // ─── Directive Editor ──────────────────────────────────────────────────────
 
 function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive; estateId: string; onBack: () => void }) {
+  const { user, profile } = useAuth()
+  const { data: heirs } = useEstateHeirs(estateId)
   const cfg = getTypeConfig(directive.type)
   const Icon = cfg.icon
   const [mode, setMode] = useState<'edit' | 'view'>(directive.status === 'finalized' ? 'view' : 'edit')
   const [saving, setSaving] = useState(false)
+  const [visibleTo, setVisibleTo] = useState<string[]>(directive.visibleTo || [])
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const savedIndicatorTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Auto-save: debounced 1.5s after last keystroke
+  const doAutoSave = useCallback(async (html: string) => {
+    if (directive.status === 'finalized') return
+    setAutoSaveStatus('saving')
+    await updateDirective(estateId, directive.id, { content: html })
+    setAutoSaveStatus('saved')
+    if (savedIndicatorTimer.current) clearTimeout(savedIndicatorTimer.current)
+    savedIndicatorTimer.current = setTimeout(() => setAutoSaveStatus('idle'), 2000)
+  }, [estateId, directive.id, directive.status])
+
+  const scheduleAutoSave = useCallback((html: string) => {
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
+    autoSaveTimer.current = setTimeout(() => doAutoSave(html), 1500)
+  }, [doAutoSave])
+
+  // Cleanup timers
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
+      if (savedIndicatorTimer.current) clearTimeout(savedIndicatorTimer.current)
+    }
+  }, [])
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -360,24 +421,81 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
         class: 'prose prose-lg max-w-none min-h-[400px] focus:outline-none p-8 text-[#0F172A]',
       },
     },
+    onUpdate: ({ editor: ed }) => {
+      scheduleAutoSave(ed.getHTML())
+    },
   })
 
   const handleSave = useCallback(async () => {
     if (!editor) return
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     setSaving(true)
     await updateDirective(estateId, directive.id, { content: editor.getHTML() })
     setSaving(false)
+    setAutoSaveStatus('saved')
+    if (savedIndicatorTimer.current) clearTimeout(savedIndicatorTimer.current)
+    savedIndicatorTimer.current = setTimeout(() => setAutoSaveStatus('idle'), 2000)
     toast.success('Draft saved')
   }, [editor, estateId, directive.id])
 
   const handleFinalize = useCallback(async () => {
     if (!editor) return
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     setSaving(true)
     await updateDirective(estateId, directive.id, { content: editor.getHTML(), status: 'finalized' })
     setSaving(false)
     setMode('view')
-    toast.success('Directive finalized', { description: 'This document is now locked and ready for review.' })
+    toast.success('Directive finalized', { description: 'This document is now locked and ready for signing.' })
   }, [editor, estateId, directive.id])
+
+  const [signingLoading, setSigningLoading] = useState(false)
+  const isSigned = !!directive.signedAt
+
+  const handleSign = useCallback(async () => {
+    if (!user || !profile) return
+    setSigningLoading(true)
+    try {
+      const token = await user.getIdToken()
+      const redirectUrl = `${window.location.origin}/estates/${estateId}/directives`
+      const res = await fetch(`${API_BASE}/api/v1/opensign/create-envelope`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          templateId: `directive-${directive.type}`,
+          signerName: profile.displayName || profile.firstName || 'Estate Owner',
+          signerEmail: profile.email || user.email || '',
+          redirectUrl,
+        }),
+      })
+
+      if (!res.ok) {
+        const errText = await res.text()
+        throw new Error(errText || `Server error (${res.status})`)
+      }
+
+      const data = await res.json()
+      if (data.signingUrl) {
+        // Record that signing was initiated
+        await updateDirective(estateId, directive.id, {
+          signingEnvelopeId: data.envelopeId,
+          signingInitiatedAt: new Date().toISOString(),
+        })
+        // Open signing ceremony in new tab
+        window.open(data.signingUrl, '_blank', 'noopener')
+        toast.success('Signing ceremony opened', { description: 'Complete the signing in the new tab.' })
+      } else {
+        toast.error('Signing unavailable', { description: 'The signing service did not return a signing URL.' })
+      }
+    } catch (err) {
+      console.error('[handleSign] Error:', err)
+      toast.error('Signing failed', { description: err instanceof Error ? err.message : 'Could not initiate signing.' })
+    } finally {
+      setSigningLoading(false)
+    }
+  }, [user, profile, estateId, directive.id, directive.type])
 
   const handleExportPDF = useCallback(async () => {
     if (!editor) return
@@ -414,6 +532,14 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
           <ChevronLeft className="w-4 h-4" /> Back to Directives
         </Button>
         <div className="flex items-center gap-3">
+          {/* Auto-save indicator */}
+          {directive.status !== 'finalized' && autoSaveStatus !== 'idle' && (
+            <span className="flex items-center gap-1.5 text-[11px] text-[#64748B] font-medium mr-1">
+              {autoSaveStatus === 'saving' && <Loader2 className="w-3 h-3 animate-spin" />}
+              {autoSaveStatus === 'saved' && <Check className="w-3 h-3 text-[#059669]" />}
+              {autoSaveStatus === 'saving' ? 'Saving...' : 'Saved'}
+            </span>
+          )}
           {directive.status !== 'finalized' && (
             <>
               <Button
@@ -438,6 +564,21 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
                 <Lock className="w-3.5 h-3.5" /> Finalize
               </Button>
             </>
+          )}
+          {directive.status === 'finalized' && !isSigned && (
+            <Button
+              onClick={handleSign}
+              disabled={signingLoading}
+              className="px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[#C8A951] text-white hover:bg-[#B8993E]"
+            >
+              {signingLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PenTool className="w-3.5 h-3.5" />}
+              {signingLoading ? 'Preparing...' : 'Sign Document'}
+            </Button>
+          )}
+          {directive.status === 'finalized' && isSigned && (
+            <span className="flex items-center gap-1.5 px-5 py-2.5 text-[12px] font-bold uppercase tracking-wider text-[#059669]">
+              <Check className="w-3.5 h-3.5" /> Signed
+            </span>
           )}
           <Button
             variant="secondary"
@@ -473,6 +614,59 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
             To: <span className="text-[#0F172A] font-medium">{directive.recipientName}</span>
             {directive.recipientRelationship && <span> ({directive.recipientRelationship})</span>}
           </p>
+        )}
+
+        {/* Visibility Picker */}
+        {directive.status !== 'finalized' && heirs.length > 0 && (
+          <div className="mt-5 pt-5 border-t border-slate-50">
+            <div className="flex items-center gap-2 mb-3">
+              {visibleTo.length === 0 ? (
+                <Globe className="w-3.5 h-3.5 text-[#64748B]" />
+              ) : (
+                <Users className="w-3.5 h-3.5 text-[#133378]" />
+              )}
+              <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">
+                {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => {
+                  setVisibleTo([])
+                  updateDirective(estateId, directive.id, { visibleTo: [] })
+                }}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
+                  visibleTo.length === 0
+                    ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
+                    : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                }`}
+              >
+                Everyone
+              </button>
+              {heirs.filter(h => h.status === 'active').map((heir) => {
+                const selected = visibleTo.includes(heir.fullName)
+                return (
+                  <button
+                    key={heir.id}
+                    onClick={() => {
+                      const next = selected
+                        ? visibleTo.filter((n) => n !== heir.fullName)
+                        : [...visibleTo, heir.fullName]
+                      setVisibleTo(next)
+                      updateDirective(estateId, directive.id, { visibleTo: next })
+                    }}
+                    className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
+                      selected
+                        ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
+                        : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                    }`}
+                  >
+                    {heir.fullName}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
         )}
       </div>
 

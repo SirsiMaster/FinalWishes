@@ -19,8 +19,10 @@ import {
   getDocs,
   query,
   where,
+  orderBy,
   writeBatch,
   serverTimestamp,
+  arrayUnion,
 } from 'firebase/firestore';
 import { db } from './firebase';
 
@@ -261,6 +263,109 @@ export async function archiveDocument(estateId: string, docId: string): Promise<
     return { success: true };
   } catch (err: unknown) {
     console.error('[archiveDocument] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Create a document record with version awareness.
+ * If a document with the same displayName already exists (active),
+ * archives the old one (pushing its metadata to previousVersions)
+ * and creates the new one with version = old.version + 1.
+ */
+export async function createOrReplaceDocumentRecord(params: {
+  estateId: string;
+  originalName: string;
+  displayName?: string;
+  mimeType: string;
+  fileSize: number;
+  storageKey: string;
+  storageBucket: string;
+  uploadedBy: string;
+  folderId?: string;
+  tags?: string[];
+}): Promise<ActionResult> {
+  try {
+    const { estateId, ...data } = params;
+    const displayName = data.displayName || data.originalName;
+
+    // Look for an existing active document with the same displayName
+    const colRef = collection(db, `estates/${estateId}/documents`);
+    const q = query(
+      colRef,
+      where('status', '==', 'active'),
+      where('displayName', '==', displayName),
+      orderBy('version', 'desc'),
+    );
+    const snapshot = await getDocs(q);
+
+    let newVersion = 1;
+
+    if (!snapshot.empty) {
+      // Archive the most recent existing version
+      const existingDoc = snapshot.docs[0];
+      const existingData = existingDoc.data();
+      const oldVersion = existingData.version || 1;
+      newVersion = oldVersion + 1;
+
+      // Archive old document and push its metadata to previousVersions on the new doc later
+      await updateDoc(existingDoc.ref, {
+        status: 'archived',
+        updatedAt: serverTimestamp(),
+      });
+    }
+
+    // Build previousVersions from the archived doc (if any)
+    const previousVersions: { version: number; storageKey: string; uploadedAt: string; uploadedBy: string }[] = [];
+    if (!snapshot.empty) {
+      const existingData = snapshot.docs[0].data();
+      // Carry forward any existing previousVersions from the old doc
+      if (existingData.previousVersions && Array.isArray(existingData.previousVersions)) {
+        previousVersions.push(...existingData.previousVersions);
+      }
+      // Add the old doc itself as a previous version
+      previousVersions.push({
+        version: existingData.version || 1,
+        storageKey: existingData.storageKey,
+        uploadedAt: existingData.createdAt?.toDate?.()
+          ? existingData.createdAt.toDate().toISOString()
+          : new Date().toISOString(),
+        uploadedBy: existingData.uploadedBy || 'unknown',
+      });
+    }
+
+    // Create new document record
+    const ref = await addDoc(colRef, {
+      ...data,
+      displayName,
+      estateId,
+      version: newVersion,
+      previousVersions: previousVersions.length > 0 ? previousVersions : [],
+      status: 'active',
+      ocrProcessed: false,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, id: ref.id };
+  } catch (err: unknown) {
+    console.error('[createOrReplaceDocumentRecord] Error:', err);
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
+  }
+}
+
+export async function updateVaultDocument(
+  estateId: string,
+  docId: string,
+  data: Record<string, unknown>
+): Promise<ActionResult> {
+  try {
+    await updateDoc(doc(db, `estates/${estateId}/documents`, docId), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('[updateVaultDocument] Error:', err);
     return { success: false, error: err instanceof Error ? err.message : 'Unknown error' };
   }
 }

@@ -36,6 +36,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
   const { user, profile } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<'executor' | 'heir' | 'legal' | 'cpa'>('heir');
   const [sending, setSending] = useState(false);
@@ -79,6 +80,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
     const result = await inviteTeamMember({
       estateId,
       email: email.trim(),
+      phone: phone.trim() || undefined,
       fullName: fullName.trim(),
       role,
       invitedBy: user.uid,
@@ -89,6 +91,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
     if (result.success) {
       setSuccess(`Invitation sent to ${fullName || email}`);
       setEmail('');
+      setPhone('');
       setFullName('');
       setShowForm(false);
       refreshInvitations();
@@ -252,6 +255,16 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="jane@example.com"
                   required
+                  className="w-full bg-white border border-royal/10 rounded-xl px-4 py-3 text-[14px] font-semibold text-royal outline-none focus:border-royal transition-all placeholder:text-royal/20"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Phone Number <span className="text-royal/15">(Optional — for SMS notification)</span></label>
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 (555) 123-4567"
                   className="w-full bg-white border border-royal/10 rounded-xl px-4 py-3 text-[14px] font-semibold text-royal outline-none focus:border-royal transition-all placeholder:text-royal/20"
                 />
               </div>

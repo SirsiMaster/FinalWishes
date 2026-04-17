@@ -722,6 +722,82 @@ CREATE INDEX idx_audit_user ON vault_audit_log(user_id, created_at DESC);
 
 ---
 
+## 10. New Collections (April 2026)
+
+### 10.1 Events (Broadcasting)
+
+**Path:** `estates/{estateId}/events/{eventId}`
+
+```
+{
+  type: 'funeral' | 'memorial_service' | 'celebration_of_life' | 'repast' | 'graveside' | 'other',
+  title: string,
+  date: string,
+  time?: string,
+  endTime?: string,
+  location: string,
+  address?: string,
+  description?: string,
+  dressCode?: string,
+  notes?: string,
+  rsvpEnabled: boolean,
+  rsvpCount: number,
+  status: 'upcoming' | 'completed' | 'cancelled',
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+```
+
+**Security:** Same as estate subcollections — `canAccessEstate()` for read, `canWriteEstate()` for write.
+
+### 10.2 Public Memorials
+
+**Path:** `public_memorials/{memorialId}` (memorialId = estateId)
+
+```
+{
+  estateId: string,
+  personName: string,
+  profilePhotoUrl?: string,
+  birthDate?: string,
+  deathDate?: string,
+  obituaryContent?: string,       // HTML, sanitized with DOMPurify on display
+  serviceDetails?: {
+    type?: string,
+    date?: string,
+    time?: string,
+    location?: string,
+    address?: string,
+    notes?: string
+  },
+  publishedBy: string,            // UID of estate principal
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+```
+
+**Security:** Public read (no auth). Write restricted to estate principal (`isEstatePrincipal(memorialId)`).
+
+### 10.3 SMS Queue
+
+**Path:** `sms_queue/{smsId}`
+
+```
+{
+  to: string,                     // Phone number
+  body: string,                   // SMS message text
+  invitationId: string,
+  estateId: string,
+  status: 'pending' | 'sent' | 'failed',
+  createdBy: string,              // UID
+  createdAt: Timestamp
+}
+```
+
+**Security:** Authenticated create only. No client reads/updates (processed by Cloud Function).
+
+---
+
 ## Document Control
 
 | Version | Date | Author | Changes |
@@ -730,3 +806,4 @@ CREATE INDEX idx_audit_user ON vault_audit_log(user_id, created_at DESC);
 | 2.0.0 | 2025-12-05 | Claude | Complete rewrite for Firestore + Cloud SQL hybrid |
 | 3.0.0 | 2025-12-05 | Claude | Rebranded to FinalWishes, updated to 5 launch states |
 | **4.0.0** | **2026-03-20** | **Antigravity** | **Updated §9 Cloud SQL schema to match live implementation (ADR-037): envelope encryption columns, vault_audit_log, estate_id scoping** |
+| **5.0.0** | **2026-04-17** | **Claude** | **Added §10: Events, Public Memorials, SMS Queue collections** |

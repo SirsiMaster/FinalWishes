@@ -147,6 +147,7 @@ const ILLUSTRATIONS: Record<SectionId, (props: { color: string }) => ReactNode> 
   'my-people': PeopleIllustration,
   'the-vault': VaultIllustration,
   'life-chapters': LegacyIllustration,
+  'events': LettersIllustration,
 }
 
 // ─── Empty State Content ────────────────────────────────────────────────────
@@ -192,6 +193,11 @@ const EMPTY_CONTENT: Record<SectionId, EmptyStateContent> = {
     heading: 'Your story begins here',
     message: 'Organize your life into meaningful chapters — childhood memories, career milestones, parenthood, adventures.',
     ctaLabel: 'Create your first chapter',
+  },
+  'events': {
+    heading: 'No events yet',
+    message: 'Create funeral services, memorials, celebrations of life, or receptions to share with family and friends.',
+    ctaLabel: 'Create your first event',
   },
 }
 

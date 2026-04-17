@@ -149,6 +149,10 @@ export interface VaultDocument {
   analysisStatus?: 'processing' | 'complete' | 'failed';
   discrepancies?: DocumentDiscrepancy[];
   analyzedAt?: Timestamp;
+  // Per-document role/person visibility (empty = visible to everyone)
+  visibleTo?: string[];
+  // Version history metadata
+  previousVersions?: { version: number; storageKey: string; uploadedAt: string; uploadedBy: string }[];
 }
 
 // EstateUser (junction table)
@@ -188,6 +192,10 @@ export interface Directive {
   recipientName?: string;
   recipientRelationship?: string;
   status: 'draft' | 'finalized';
+  signingEnvelopeId?: string;
+  signingInitiatedAt?: string;
+  signedAt?: string;
+  visibleTo?: string[]; // UIDs or names — empty means visible to all
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -224,6 +232,7 @@ export interface Heirloom {
   photoUrls: string[];
   location?: string;
   provenance?: string;
+  visibleTo?: string[]; // Heir names — empty means visible to all
   status: 'active' | 'archived';
   createdAt: Timestamp;
   updatedAt: Timestamp;

@@ -338,7 +338,18 @@ service cloud.firestore {
         allow delete: if isEstatePrincipal(estateId);
       }
 
-      // ── 3o. Life Chapters (Narrative Organization) ──
+      // ── 3o. Events / Broadcasting (Funerals, Services, Repasts) ──
+      match /events/{eventId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['type', 'title', 'date', 'location', 'status', 'createdAt'])
+          && request.resource.data.type in ['funeral', 'memorial_service', 'celebration_of_life', 'repast', 'graveside', 'other']
+          && request.resource.data.status == 'upcoming';
+        allow update: if canWriteEstate(estateId);
+        allow delete: if isEstatePrincipal(estateId) || isAdmin();
+      }
+
+      // ── 3p. Life Chapters (Narrative Organization) ──
       match /life-chapters/{chapterId} {
         allow read: if canAccessEstate(estateId);
         allow create: if canWriteEstate(estateId)
@@ -533,6 +544,15 @@ service cloud.firestore {
       allow update, delete: if false;
     }
     
+    // SMS queue: authenticated users create SMS requests,
+    // Cloud Function processes and sends via Google Cloud SMS API.
+    match /sms_queue/{smsId} {
+      allow read: if isAuthenticated()
+        && resource.data.createdBy == request.auth.uid;
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
     // Email templates: admin-only, read by the extension
     match /email_templates/{templateId} {
       allow read: if isAuthenticated();
@@ -555,7 +575,27 @@ service cloud.firestore {
     }
 
     // =============================================
-    // 11. DEFAULT DENY — Catch-All
+    // 11. PUBLIC MEMORIALS — Shareable Without Account
+    // =============================================
+    // Public memorial pages readable by anyone (no auth required).
+    // Created/updated by estate principals only.
+    // Document ID = estateId (one memorial per estate).
+
+    match /public_memorials/{memorialId} {
+      // Anyone can read — this is the whole point
+      allow read: if true;
+
+      // Only the estate principal can publish/update
+      allow create, update: if isAuthenticated()
+        && isEstatePrincipal(memorialId);
+
+      // Only principal or admin can unpublish
+      allow delete: if isAuthenticated()
+        && (isEstatePrincipal(memorialId) || isAdmin());
+    }
+
+    // =============================================
+    // 12. DEFAULT DENY — Catch-All
     // =============================================
     // Any collection not explicitly matched above is DENIED.
     // This is the Firestore default behavior, but we document it

@@ -2,8 +2,8 @@
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { useHeirlooms, type Heirloom } from '../lib/firestore'
-import { addHeirloom, archiveHeirloom } from '../lib/estate-actions'
+import { useHeirlooms, useEstateHeirs, type Heirloom } from '../lib/firestore'
+import { addHeirloom, archiveHeirloom, updateHeirloom } from '../lib/estate-actions'
 import { toast } from 'sonner'
 import { estateClient } from '../lib/client'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
@@ -26,6 +26,8 @@ import {
   X,
   CheckCircle2,
   AlertCircle,
+  Users,
+  Globe,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -76,6 +78,7 @@ function HeirloomsPage() {
   const { usage: tierUsage } = useTierGating(estateId)
 
   const { data: items, loading } = useHeirlooms(estateId)
+  const { data: heirs } = useEstateHeirs(estateId)
   const [modalOpen, setModalOpen] = useState(false)
   const [filterCategory, setFilterCategory] = useState<CategoryValue | 'all'>('all')
 
@@ -189,7 +192,7 @@ function HeirloomsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filtered.map((item) => (
-            <HeirloomCard key={item.id} item={item} estateId={estateId} />
+            <HeirloomCard key={item.id} item={item} estateId={estateId} heirs={heirs} />
           ))}
         </div>
       )}
@@ -202,11 +205,13 @@ function HeirloomsPage() {
 
 // ─── Heirloom Card ──────────────────────────────────────────────────────────
 
-function HeirloomCard({ item, estateId }: { item: Heirloom; estateId: string }) {
+function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: string; heirs: { id: string; fullName: string; status: string }[] }) {
   const cat = getCategoryConfig(item.category)
   const [confirming, setConfirming] = useState(false)
+  const [visibleTo, setVisibleTo] = useState<string[]>(item.visibleTo || [])
   const Icon = cat.icon
   const hasPhoto = item.photoUrls && item.photoUrls.length > 0
+  const activeHeirs = heirs.filter(h => h.status === 'active')
 
   const handleArchive = useCallback(async () => {
     await archiveHeirloom(estateId, item.id)
@@ -279,6 +284,61 @@ function HeirloomCard({ item, estateId }: { item: Heirloom; estateId: string }) 
             <div className="bg-[#F8FAFC] rounded-2xl p-5 mb-4">
               <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest mb-2">Provenance</p>
               <p className="text-[13px] text-[#334155] line-clamp-3">{item.provenance}</p>
+            </div>
+          )}
+
+          {/* Visibility Picker */}
+          {activeHeirs.length > 0 && (
+            <div className="mb-4 pt-3">
+              <div className="flex items-center gap-2 mb-2.5">
+                {visibleTo.length === 0 ? (
+                  <Globe className="w-3.5 h-3.5 text-[#64748B]" />
+                ) : (
+                  <Users className="w-3.5 h-3.5 text-[#133378]" />
+                )}
+                <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">
+                  {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setVisibleTo([])
+                    updateHeirloom(estateId, item.id, { visibleTo: [] })
+                  }}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
+                    visibleTo.length === 0
+                      ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
+                      : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                  }`}
+                >
+                  Everyone
+                </button>
+                {activeHeirs.map((heir) => {
+                  const selected = visibleTo.includes(heir.fullName)
+                  return (
+                    <button
+                      key={heir.id}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        const next = selected
+                          ? visibleTo.filter((n) => n !== heir.fullName)
+                          : [...visibleTo, heir.fullName]
+                        setVisibleTo(next)
+                        updateHeirloom(estateId, item.id, { visibleTo: next })
+                      }}
+                      className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
+                        selected
+                          ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
+                          : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                      }`}
+                    >
+                      {heir.fullName}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           )}
 

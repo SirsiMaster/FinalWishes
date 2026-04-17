@@ -24,9 +24,9 @@ import {
 
 /* ─── Role-Based Permission Matrix ─── */
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-  principal: ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log'],
-  admin:     ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log'],
-  executor:  ['dashboard', 'life-chapters', 'assets', 'heirlooms', 'beneficiaries', 'obituary', 'vault', 'lockbox', 'directives', 'notifications'],
+  principal: ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events'],
+  admin:     ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events'],
+  executor:  ['dashboard', 'life-chapters', 'assets', 'heirlooms', 'beneficiaries', 'obituary', 'vault', 'lockbox', 'directives', 'notifications', 'events'],
   heir:      ['dashboard', 'life-chapters', 'assets', 'memoirs', 'obituary', 'directives', 'notifications'],
   legal:     ['dashboard', 'assets', 'vault', 'directives', 'notifications'],
   cpa:       ['dashboard', 'assets', 'vault', 'notifications'],
@@ -111,6 +111,7 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Directives', id: 'directives', route: 'directives' },
       { label: 'Time Capsules', id: 'timecapsule', route: 'timecapsule' },
       { label: 'Final Record', id: 'obituary', route: 'obituary' },
+      { label: 'Events', id: 'events', route: 'events' },
     ],
   },
   {

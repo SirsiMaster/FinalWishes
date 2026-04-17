@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useAuth } from '../lib/auth'
+import { toast } from 'sonner'
 import { trackCheckoutStarted } from '../lib/analytics'
 import { useEstate } from '../lib/firestore'
 import {
@@ -100,6 +101,19 @@ function PricingPage() {
     return params.get('payment')
   }, [])
 
+  // Show toast for payment result (once)
+  const toastShownRef = useRef(false)
+  useEffect(() => {
+    if (toastShownRef.current) return
+    if (paymentResult === 'success') {
+      toast.success('Payment successful! Your estate plan has been upgraded.')
+      toastShownRef.current = true
+    } else if (paymentResult === 'cancelled') {
+      toast.info('Payment cancelled. You can try again anytime.')
+      toastShownRef.current = true
+    }
+  }, [paymentResult])
+
   const currentTier = estate?.tier || 'free'
 
   useEffect(() => {
@@ -111,6 +125,7 @@ function PricingPage() {
       .catch((err) => {
         console.error('Failed to fetch tiers:', err)
         setError(err.message)
+        toast.error('Failed to load pricing plans')
         setLoading(false)
       })
   }, [])
@@ -133,7 +148,9 @@ function PricingPage() {
         trackCheckoutStarted(tierId)
         window.location.href = result.checkoutUrl
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Checkout failed')
+        const message = err instanceof Error ? err.message : 'Checkout failed'
+        setError(message)
+        toast.error(message)
         setCheckoutLoading(null)
       }
     },

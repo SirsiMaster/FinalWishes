@@ -70,6 +70,7 @@ import {
 } from 'lucide-react'
 import { getDailySoulLogPrompt } from '../lib/shepherd-prompts'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { ShepherdNudge, useShepherdNudge } from '@/components/estate/ShepherdNudge'
 
 export const Route = createLazyFileRoute('/estates/$estateId/soul-log')({
   component: SoulLogPage,
@@ -237,6 +238,32 @@ function SoulLogPage() {
   // Shepherd prompt — date-seeded daily rotation from 20-prompt pool
   const dailyPrompt = useMemo(() => getDailySoulLogPrompt(), [])
 
+  // Shepherd inline nudges
+  const lastEntryDate = useMemo(() => {
+    if (rawEntries.length === 0) return null
+    const first = rawEntries[0]
+    if (first?.createdAt && typeof first.createdAt.toDate === 'function') {
+      return first.createdAt.toDate()
+    }
+    return null
+  }, [rawEntries])
+
+  const daysSinceLastEntry = useMemo(() => {
+    if (!lastEntryDate) return Infinity
+    return Math.floor((Date.now() - lastEntryDate.getTime()) / (1000 * 60 * 60 * 24))
+  }, [lastEntryDate])
+
+  const noEntriesNudge = useShepherdNudge(
+    estateId,
+    'soul-log-no-entries',
+    !loading && rawEntries.length === 0,
+  )
+  const staleNudge = useShepherdNudge(
+    estateId,
+    'soul-log-stale',
+    !loading && rawEntries.length > 0 && daysSinceLastEntry > 7,
+  )
+
   const userRole = profile?.role || 'principal'
   const isOwner = userRole === 'principal' || userRole === 'admin'
 
@@ -306,6 +333,22 @@ function SoulLogPage() {
           ) : undefined
         }
       />
+
+      {/* Shepherd Inline Nudges */}
+      {noEntriesNudge.visible && (
+        <ShepherdNudge
+          message="Your voice is your most precious gift. Record a thought — even 30 seconds makes a difference."
+          ctaLabel="Record now"
+          onDismiss={noEntriesNudge.dismiss}
+        />
+      )}
+      {staleNudge.visible && (
+        <ShepherdNudge
+          message="It's been a while since your last reflection. What's on your mind today?"
+          ctaLabel="Record a thought"
+          onDismiss={staleNudge.dismiss}
+        />
+      )}
 
       {/* Shepherd Card */}
       <ShepherdCard

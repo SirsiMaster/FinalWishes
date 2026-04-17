@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AcceptInviteRouteImport } from './routes/accept-invite'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MemorialMemorialIdRouteImport } from './routes/memorial.$memorialId'
 import { Route as EstatesCreateRouteImport } from './routes/estates.create'
 import { Route as EstatesEstateIdRouteImport } from './routes/estates.$estateId'
 import { Route as EstatesEstateIdIndexRouteImport } from './routes/estates.$estateId.index'
@@ -29,6 +30,7 @@ import { Route as EstatesEstateIdMemoirsRouteImport } from './routes/estates.$es
 import { Route as EstatesEstateIdLockboxRouteImport } from './routes/estates.$estateId.lockbox'
 import { Route as EstatesEstateIdLifeChaptersRouteImport } from './routes/estates.$estateId.life-chapters'
 import { Route as EstatesEstateIdHeirloomsRouteImport } from './routes/estates.$estateId.heirlooms'
+import { Route as EstatesEstateIdEventsRouteImport } from './routes/estates.$estateId.events'
 import { Route as EstatesEstateIdEstatesRouteImport } from './routes/estates.$estateId.estates'
 import { Route as EstatesEstateIdDirectivesRouteImport } from './routes/estates.$estateId.directives'
 import { Route as EstatesEstateIdDashboardRouteImport } from './routes/estates.$estateId.dashboard'
@@ -64,6 +66,11 @@ const AcceptInviteRoute = AcceptInviteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemorialMemorialIdRoute = MemorialMemorialIdRouteImport.update({
+  id: '/memorial/$memorialId',
+  path: '/memorial/$memorialId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EstatesCreateRoute = EstatesCreateRouteImport.update({
@@ -150,6 +157,11 @@ const EstatesEstateIdHeirloomsRoute =
     path: '/heirlooms',
     getParentRoute: () => EstatesEstateIdRoute,
   } as any)
+const EstatesEstateIdEventsRoute = EstatesEstateIdEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
 const EstatesEstateIdEstatesRoute = EstatesEstateIdEstatesRouteImport.update({
   id: '/estates',
   path: '/estates',
@@ -196,12 +208,14 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/estates/create': typeof EstatesCreateRoute
+  '/memorial/$memorialId': typeof MemorialMemorialIdRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
   '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
   '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesRoute
   '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
+  '/estates/$estateId/events': typeof EstatesEstateIdEventsRoute
   '/estates/$estateId/heirlooms': typeof EstatesEstateIdHeirloomsRoute
   '/estates/$estateId/life-chapters': typeof EstatesEstateIdLifeChaptersRoute
   '/estates/$estateId/lockbox': typeof EstatesEstateIdLockboxRoute
@@ -223,12 +237,14 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/estates/create': typeof EstatesCreateRoute
+  '/memorial/$memorialId': typeof MemorialMemorialIdRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
   '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
   '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesRoute
   '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
+  '/estates/$estateId/events': typeof EstatesEstateIdEventsRoute
   '/estates/$estateId/heirlooms': typeof EstatesEstateIdHeirloomsRoute
   '/estates/$estateId/life-chapters': typeof EstatesEstateIdLifeChaptersRoute
   '/estates/$estateId/lockbox': typeof EstatesEstateIdLockboxRoute
@@ -252,12 +268,14 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/estates/$estateId': typeof EstatesEstateIdRouteWithChildren
   '/estates/create': typeof EstatesCreateRoute
+  '/memorial/$memorialId': typeof MemorialMemorialIdRoute
   '/estates/$estateId/assets': typeof EstatesEstateIdAssetsRoute
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
   '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
   '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesRoute
   '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
+  '/estates/$estateId/events': typeof EstatesEstateIdEventsRoute
   '/estates/$estateId/heirlooms': typeof EstatesEstateIdHeirloomsRoute
   '/estates/$estateId/life-chapters': typeof EstatesEstateIdLifeChaptersRoute
   '/estates/$estateId/lockbox': typeof EstatesEstateIdLockboxRoute
@@ -282,12 +300,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/estates/$estateId'
     | '/estates/create'
+    | '/memorial/$memorialId'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
     | '/estates/$estateId/dashboard'
     | '/estates/$estateId/directives'
     | '/estates/$estateId/estates'
+    | '/estates/$estateId/events'
     | '/estates/$estateId/heirlooms'
     | '/estates/$estateId/life-chapters'
     | '/estates/$estateId/lockbox'
@@ -309,12 +329,14 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/estates/create'
+    | '/memorial/$memorialId'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
     | '/estates/$estateId/dashboard'
     | '/estates/$estateId/directives'
     | '/estates/$estateId/estates'
+    | '/estates/$estateId/events'
     | '/estates/$estateId/heirlooms'
     | '/estates/$estateId/life-chapters'
     | '/estates/$estateId/lockbox'
@@ -337,12 +359,14 @@ export interface FileRouteTypes {
     | '/terms'
     | '/estates/$estateId'
     | '/estates/create'
+    | '/memorial/$memorialId'
     | '/estates/$estateId/assets'
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
     | '/estates/$estateId/dashboard'
     | '/estates/$estateId/directives'
     | '/estates/$estateId/estates'
+    | '/estates/$estateId/events'
     | '/estates/$estateId/heirlooms'
     | '/estates/$estateId/life-chapters'
     | '/estates/$estateId/lockbox'
@@ -366,6 +390,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   EstatesEstateIdRoute: typeof EstatesEstateIdRouteWithChildren
   EstatesCreateRoute: typeof EstatesCreateRoute
+  MemorialMemorialIdRoute: typeof MemorialMemorialIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -410,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memorial/$memorialId': {
+      id: '/memorial/$memorialId'
+      path: '/memorial/$memorialId'
+      fullPath: '/memorial/$memorialId'
+      preLoaderRoute: typeof MemorialMemorialIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/estates/create': {
@@ -510,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstatesEstateIdHeirloomsRouteImport
       parentRoute: typeof EstatesEstateIdRoute
     }
+    '/estates/$estateId/events': {
+      id: '/estates/$estateId/events'
+      path: '/events'
+      fullPath: '/estates/$estateId/events'
+      preLoaderRoute: typeof EstatesEstateIdEventsRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
     '/estates/$estateId/estates': {
       id: '/estates/$estateId/estates'
       path: '/estates'
@@ -562,6 +601,7 @@ interface EstatesEstateIdRouteChildren {
   EstatesEstateIdDashboardRoute: typeof EstatesEstateIdDashboardRoute
   EstatesEstateIdDirectivesRoute: typeof EstatesEstateIdDirectivesRoute
   EstatesEstateIdEstatesRoute: typeof EstatesEstateIdEstatesRoute
+  EstatesEstateIdEventsRoute: typeof EstatesEstateIdEventsRoute
   EstatesEstateIdHeirloomsRoute: typeof EstatesEstateIdHeirloomsRoute
   EstatesEstateIdLifeChaptersRoute: typeof EstatesEstateIdLifeChaptersRoute
   EstatesEstateIdLockboxRoute: typeof EstatesEstateIdLockboxRoute
@@ -583,6 +623,7 @@ const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
   EstatesEstateIdDashboardRoute: EstatesEstateIdDashboardRoute,
   EstatesEstateIdDirectivesRoute: EstatesEstateIdDirectivesRoute,
   EstatesEstateIdEstatesRoute: EstatesEstateIdEstatesRoute,
+  EstatesEstateIdEventsRoute: EstatesEstateIdEventsRoute,
   EstatesEstateIdHeirloomsRoute: EstatesEstateIdHeirloomsRoute,
   EstatesEstateIdLifeChaptersRoute: EstatesEstateIdLifeChaptersRoute,
   EstatesEstateIdLockboxRoute: EstatesEstateIdLockboxRoute,
@@ -610,6 +651,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   EstatesEstateIdRoute: EstatesEstateIdRouteWithChildren,
   EstatesCreateRoute: EstatesCreateRoute,
+  MemorialMemorialIdRoute: MemorialMemorialIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

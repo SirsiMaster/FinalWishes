@@ -347,6 +347,18 @@ service cloud.firestore {
           && request.resource.data.status == 'upcoming';
         allow update: if canWriteEstate(estateId);
         allow delete: if isEstatePrincipal(estateId) || isAdmin();
+
+        // ── 3o-i. RSVPs (Event Subcollection) ──
+        // Anyone with estate access can read and create RSVPs.
+        // Only estate writers can update/delete RSVPs.
+        match /rsvps/{rsvpId} {
+          allow read: if canAccessEstate(estateId);
+          allow create: if canAccessEstate(estateId)
+            && request.resource.data.keys().hasAll(['name', 'response', 'guests', 'createdAt'])
+            && request.resource.data.response in ['attending', 'maybe', 'not_attending'];
+          allow update: if canWriteEstate(estateId);
+          allow delete: if canWriteEstate(estateId);
+        }
       }
 
       // ── 3p. Life Chapters (Narrative Organization) ──

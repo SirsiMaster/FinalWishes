@@ -121,6 +121,31 @@ function DirectivesPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
 
+  // ── Signing redirect detection ──
+  useEffect(() => {
+    if (loading || directives.length === 0) return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('signed') !== 'true') return
+
+    const envelopeId = params.get('envelopeId')
+    // Find the directive that matches the envelope, or the most recently initiated signing
+    const match = envelopeId
+      ? directives.find((d) => d.signingEnvelopeId === envelopeId && !d.signedAt)
+      : directives.find((d) => d.signingEnvelopeId && !d.signedAt)
+
+    if (match) {
+      updateDirective(estateId, match.id, { signedAt: new Date().toISOString() })
+        .then(() => toast.success('Document signed successfully'))
+        .catch(() => toast.error('Failed to record signing completion'))
+    }
+
+    // Clean the URL params regardless
+    const url = new URL(window.location.href)
+    url.searchParams.delete('signed')
+    url.searchParams.delete('envelopeId')
+    window.history.replaceState({}, '', url.pathname)
+  }, [loading, directives, estateId])
+
   // Shepherd inline nudge
   const noDirectivesNudge = useShepherdNudge(
     estateId,
@@ -565,14 +590,28 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
             </>
           )}
           {directive.status === 'finalized' && !isSigned && (
-            <Button
-              onClick={handleSign}
-              disabled={signingLoading}
-              className="px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[#C8A951] text-white hover:bg-[#B8993E]"
-            >
-              {signingLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PenTool className="w-3.5 h-3.5" />}
-              {signingLoading ? 'Preparing...' : 'Sign Document'}
-            </Button>
+            <>
+              <Button
+                onClick={handleSign}
+                disabled={signingLoading}
+                className="px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[#C8A951] text-white hover:bg-[#B8993E]"
+              >
+                {signingLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <PenTool className="w-3.5 h-3.5" />}
+                {signingLoading ? 'Preparing...' : 'Sign Document'}
+              </Button>
+              {directive.signingEnvelopeId && (
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    await updateDirective(estateId, directive.id, { signedAt: new Date().toISOString() })
+                    toast.success('Document marked as signed')
+                  }}
+                  className="px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider border-[#059669]/30 text-[#059669] hover:bg-[#059669]/5"
+                >
+                  <Check className="w-3.5 h-3.5" /> Confirm Signed
+                </Button>
+              )}
+            </>
           )}
           {directive.status === 'finalized' && isSigned && (
             <span className="flex items-center gap-1.5 px-5 py-2.5 text-[12px] font-bold uppercase tracking-wider text-[#059669]">
@@ -643,14 +682,14 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
                 Everyone
               </button>
               {heirs.filter(h => h.status === 'active').map((heir) => {
-                const selected = visibleTo.includes(heir.fullName)
+                const selected = visibleTo.includes(heir.id)
                 return (
                   <button
                     key={heir.id}
                     onClick={() => {
                       const next = selected
-                        ? visibleTo.filter((n) => n !== heir.fullName)
-                        : [...visibleTo, heir.fullName]
+                        ? visibleTo.filter((n) => n !== heir.id)
+                        : [...visibleTo, heir.id]
                       setVisibleTo(next)
                       updateDirective(estateId, directive.id, { visibleTo: next })
                     }}

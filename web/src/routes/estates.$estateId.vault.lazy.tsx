@@ -1147,14 +1147,14 @@ function DocItem({
               Everyone
             </button>
             {heirs.filter(h => h.status === 'active').map((heir) => {
-              const selected = visibleTo.includes(heir.fullName)
+              const selected = visibleTo.includes(heir.id)
               return (
                 <button
                   key={heir.id}
                   onClick={() => {
                     const next = selected
-                      ? visibleTo.filter((n) => n !== heir.fullName)
-                      : [...visibleTo, heir.fullName]
+                      ? visibleTo.filter((n) => n !== heir.id)
+                      : [...visibleTo, heir.id]
                     setVisibleTo(next)
                     updateVaultDocument(estateId, doc.id, { visibleTo: next })
                   }}

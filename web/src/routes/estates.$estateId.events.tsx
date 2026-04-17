@@ -12,7 +12,7 @@
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
-import { collection, addDoc, serverTimestamp, type Timestamp } from 'firebase/firestore'
+import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, type Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useCollection } from '../lib/firestore'
 import { toast } from 'sonner'
@@ -24,6 +24,10 @@ import {
   Users,
   Copy,
   Check,
+  MoreHorizontal,
+  Pencil,
+  XCircle,
+  Trash2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -33,6 +37,23 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
 
@@ -80,6 +101,7 @@ function EventsPage() {
     [],
   )
   const [createOpen, setCreateOpen] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<EstateEvent | null>(null)
 
   if (loading) {
     return (
@@ -91,6 +113,7 @@ function EventsPage() {
 
   const upcoming = events.filter((e) => e.status === 'upcoming')
   const past = events.filter((e) => e.status === 'completed')
+  const cancelled = events.filter((e) => e.status === 'cancelled')
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 md:space-y-16 bg-white min-h-screen font-[family-name:var(--font-inter)]">
@@ -125,7 +148,7 @@ function EventsPage() {
               <div className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em]">Upcoming</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {upcoming.map((event) => (
-                  <EventCard key={event.id} event={event} estateId={estateId} />
+                  <EventCard key={event.id} event={event} estateId={estateId} onEdit={setEditingEvent} />
                 ))}
               </div>
             </div>
@@ -137,7 +160,19 @@ function EventsPage() {
               <div className="text-[11px] font-bold text-[#64748B]/40 uppercase tracking-[0.3em]">Past</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {past.map((event) => (
-                  <EventCard key={event.id} event={event} estateId={estateId} />
+                  <EventCard key={event.id} event={event} estateId={estateId} onEdit={setEditingEvent} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Cancelled */}
+          {cancelled.length > 0 && (
+            <div className="space-y-4">
+              <div className="text-[11px] font-bold text-red-400/50 uppercase tracking-[0.3em]">Cancelled</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {cancelled.map((event) => (
+                  <EventCard key={event.id} event={event} estateId={estateId} onEdit={setEditingEvent} />
                 ))}
               </div>
             </div>
@@ -149,6 +184,13 @@ function EventsPage() {
         estateId={estateId}
         open={createOpen}
         onOpenChange={setCreateOpen}
+      />
+
+      <EditEventModal
+        estateId={estateId}
+        event={editingEvent}
+        open={editingEvent !== null}
+        onOpenChange={(open) => { if (!open) setEditingEvent(null) }}
       />
     </div>
   )

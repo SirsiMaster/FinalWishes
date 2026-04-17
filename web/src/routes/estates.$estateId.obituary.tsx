@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
-import { useDocument, useEstateHeirs } from '../lib/firestore'
+import { useDocument, useEstateHeirs, useCollection } from '../lib/firestore'
 import { doc, setDoc, addDoc, collection, serverTimestamp, type Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
@@ -48,6 +48,11 @@ function ObituaryPage() {
 
   const { data: obit, loading: isLoading } = useDocument<ObitDocument>(`estates/${estateId}/governance/obituary`);
   const { data: heirs } = useEstateHeirs(estateId);
+  const { data: events } = useCollection<{ type: string; date: string; time?: string; location: string; address?: string; notes?: string }>(
+    `estates/${estateId}/events`,
+    []
+  );
+  const serviceEvent = events.find(e => e.type === 'funeral' || e.type === 'memorial_service');
 
   const isSigned = !!obit?.signature;
 
@@ -483,6 +488,9 @@ function ObituaryPage() {
         personName={userName || 'Memorial'}
         obituaryContent={obit?.content}
         profilePhotoUrl={profilePhoto}
+        birthDate={profile?.birthDate}
+        deathDate={profile?.deathDate}
+        serviceDetails={serviceEvent ? { type: serviceEvent.type, date: serviceEvent.date, time: serviceEvent.time, location: serviceEvent.location, address: serviceEvent.address, notes: serviceEvent.notes } : undefined}
       />
     </div>
   )

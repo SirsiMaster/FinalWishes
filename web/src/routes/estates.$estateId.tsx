@@ -11,7 +11,7 @@ import { OwnerWelcome, shouldShowOwnerWelcome, markOwnerWelcomeSeen } from '../c
 import { EmailVerificationBanner } from '../components/identity/EmailVerificationBanner'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
-import { useEstate } from '../lib/firestore'
+import { useEstate, useDocument, type EstateUser } from '../lib/firestore'
 import { useEffect, useRef } from 'react'
 import { auth as firebaseAuth } from '../lib/firebase'
 
@@ -35,6 +35,12 @@ function EstateLayout() {
   const { profile } = useAuth();
   const { data: estate } = useEstate(estateId);
   const location = useLocation();
+
+  // Fetch estate-specific role from the estate_users junction record.
+  // This is critical: a user's global profile.role may be 'principal' (for their own estate)
+  // but they may be an 'heir' or 'executor' on THIS estate.
+  const estateUserPath = profile?.uid ? `estate_users/${profile.uid}_${estateId}` : null;
+  const { data: estateUser } = useDocument<EstateUser>(estateUserPath);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const [ownerWelcomeDismissed, setOwnerWelcomeDismissed] = useState(false);
@@ -103,7 +109,7 @@ function EstateLayout() {
   }
 
   // Show the Heir Welcome Screen when conditions are met
-  const showWelcome = !welcomeDismissed && shouldShowHeirWelcome(profile, estate?.status, estateId);
+  const showWelcome = !welcomeDismissed && shouldShowHeirWelcome(profile, estate?.status, estateId, estateUser?.role);
 
   if (showWelcome) {
     return (

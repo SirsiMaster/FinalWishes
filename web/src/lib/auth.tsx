@@ -53,6 +53,8 @@ export interface UserProfile {
   phone?: string;
   status: 'active' | 'suspended' | 'deleted';
   profilePhotoUrl?: string;
+  birthDate?: string;
+  deathDate?: string;
   primaryEstateId?: string;
   primaryEstateName?: string;
 }
@@ -152,6 +154,8 @@ async function fetchUserProfile(uid: string): Promise<UserProfile | null> {
         phone: data.phone,
         status: data.status || 'active',
         profilePhotoUrl: data.profilePhotoUrl,
+        birthDate: data.birthDate,
+        deathDate: data.deathDate,
         primaryEstateId: data.primaryEstateId,
         primaryEstateName: data.primaryEstateName,
       };

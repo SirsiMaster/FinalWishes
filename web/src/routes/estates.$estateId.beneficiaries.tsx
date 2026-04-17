@@ -63,7 +63,7 @@ function BeneficiariesPage() {
     !isLoading && heirs.length > 0 && executors.length === 0,
   );
 
-  const handleAddHeir = async (vars: { name: string, relation: string, email: string }) => {
+  const handleAddHeir = async (vars: { name: string, relation: string, email: string, phone?: string }) => {
     if (!user) return;
     setSaving(true);
     setFeedback(null);
@@ -74,6 +74,7 @@ function BeneficiariesPage() {
       role: roleValue as 'executor' | 'heir',
       relationship: vars.relation,
       invitedBy: user.uid,
+      ...(vars.phone ? { phone: vars.phone } : {}),
     });
     setSaving(false);
     if (result.success) {
@@ -215,7 +216,7 @@ function AddBeneficiaryDialog({
   onOpenChange: (open: boolean) => void;
   roleValue: string;
   onRoleChange: (value: string) => void;
-  onSubmit: (vars: { name: string; relation: string; email: string }) => void;
+  onSubmit: (vars: { name: string; relation: string; email: string; phone?: string }) => void;
   saving: boolean;
   feedback: string | null;
 }) {
@@ -231,10 +232,12 @@ function AddBeneficiaryDialog({
         <form onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
+          const phoneVal = (formData.get('phone') as string)?.trim();
           onSubmit({
             name: formData.get('name') as string,
             relation: formData.get('relation') as string,
-            email: formData.get('email') as string
+            email: formData.get('email') as string,
+            ...(phoneVal ? { phone: phoneVal } : {}),
           });
         }} className="space-y-8">
           <div className="space-y-2">
@@ -272,6 +275,10 @@ function AddBeneficiaryDialog({
           <div className="space-y-2">
             <Label htmlFor="email" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Email Address</Label>
             <Input name="email" id="email" required type="email" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" placeholder="jane@example.com" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Phone (optional — for SMS notification)</Label>
+            <Input name="phone" id="phone" type="tel" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" placeholder="+1 (555) 123-4567" />
           </div>
 
           {feedback && (

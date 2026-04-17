@@ -197,14 +197,16 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const typeLabel = EVENT_TYPES.find((t) => t.value === event.type)?.label || event.type
 
-  const shareLink = `${window.location.origin}/memorial/${estateId}`
-
-  const copyLink = useCallback(async () => {
-    await navigator.clipboard.writeText(shareLink)
+  const copyDetails = useCallback(async () => {
+    const lines = [event.title]
+    if (event.date) lines.push(`\u{1F4C5} ${event.date}${event.time ? ` at ${event.time}` : ''}`)
+    if (event.location) lines.push(`\u{1F4CD} ${event.location}${event.address ? `, ${event.address}` : ''}`)
+    if (event.description) lines.push(event.description)
+    await navigator.clipboard.writeText(lines.join('\n'))
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
-    toast.success('Event link copied')
-  }, [shareLink])
+    toast.success('Event details copied')
+  }, [event])
 
   return (
     <Card className="rounded-3xl border-slate-100 p-0 hover:border-[#133378]/20 hover:shadow-lg transition-all">
@@ -256,11 +258,11 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
-            onClick={copyLink}
+            onClick={copyDetails}
             className="text-[12px] font-bold text-[#64748B] hover:text-[#133378] rounded-xl"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[#059669]" /> : <Copy className="w-3.5 h-3.5" />}
-            {copied ? 'Copied' : 'Copy Link'}
+            {copied ? 'Copied' : 'Copy Details'}
           </Button>
           {event.status !== 'cancelled' && onEdit && (
             <Button

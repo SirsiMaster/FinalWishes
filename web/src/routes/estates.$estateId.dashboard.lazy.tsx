@@ -398,6 +398,19 @@ function ShepherdFAB({ onClick, hasInteracted }: { onClick: () => void; hasInter
   )
 }
 
+// ─── Timeline Route Map ────────────────────────────────────────────────────
+
+const TIMELINE_TYPE_ROUTES: Record<TimelineEntry['type'], string> = {
+  'soul-log': 'soul-log',
+  asset: 'assets',
+  document: 'vault',
+  heir: 'beneficiaries',
+  heirloom: 'heirlooms',
+  capsule: 'timecapsule',
+  directive: 'directives',
+  memoir: 'memoirs',
+}
+
 // ─── Timeline Icons ─────────────────────────────────────────────────────────
 
 function TimelineIcon({ type }: { type: TimelineEntry['type'] }) {
@@ -892,8 +905,12 @@ function DashboardIndex() {
                         <div className="w-2 h-2 rounded-full bg-[#133378]/15 group-hover/entry:bg-[#133378]/40 transition-colors" />
                       </div>
 
-                      {/* Entry card */}
-                      <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-default min-w-0">
+                      {/* Entry card — clickable link to source page */}
+                      <Link
+                        // @ts-expect-error — dynamic route from timeline type
+                        to={`/estates/${routeId}/${TIMELINE_TYPE_ROUTES[entry.type]}`}
+                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#F8FAFC] transition-colors cursor-pointer min-w-0 no-underline"
+                      >
                         <div className="w-8 h-8 rounded-lg bg-[#133378]/5 flex items-center justify-center flex-shrink-0 text-[#133378]/50 group-hover/entry:text-[#133378] group-hover/entry:bg-[#133378]/10 transition-colors">
                           <TimelineIcon type={entry.type} />
                         </div>
@@ -910,7 +927,7 @@ function DashboardIndex() {
                         <span className="text-[11px] text-slate-300 flex-shrink-0 tabular-nums">
                           {entry.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                         </span>
-                      </div>
+                      </Link>
                     </div>
                   ))}
                 </div>

@@ -566,11 +566,15 @@ export function shouldShowHeirWelcome(
   profile: UserProfile | null,
   estateStatus: string | undefined,
   estateId: string,
+  estateRole?: string | null,
 ): boolean {
   if (!profile) return false
 
-  // Only show for heirs and executors
-  const role = profile.role
+  // Check estate-specific role first (from estate_users junction),
+  // then fall back to the global profile role.
+  // This handles users who are a principal on their own estate
+  // but an heir/executor on someone else's estate.
+  const role = estateRole || profile.role
   if (role !== 'heir' && role !== 'executor') return false
 
   const userId = profile.uid

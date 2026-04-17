@@ -9,7 +9,7 @@
 ## Step by Step
 
 ### Creating Your Account
-1. Visit **finalwishes.com** and click **Get Started**
+1. Visit **FinalWishes** and click **Get Started**
 2. Enter your name, email address, and a strong password
 3. Check your inbox for a verification email and click the confirmation link
 

@@ -24,15 +24,12 @@
 - **Anniversary** -- Sent on a recurring date (e.g., every wedding anniversary)
 
 ### Sealing a Capsule
-When you seal a capsule, it becomes locked and scheduled for delivery. After sealing:
-- You have a **72-hour window** to unseal and make changes
-- After 72 hours, the capsule is permanently sealed
+When you seal a capsule, it becomes locked and scheduled for delivery. A sealed capsule cannot be edited.
 
 ### Cancelling a Capsule
 You can cancel any capsule that hasn't been delivered yet:
 1. Open the capsule from your list
-2. If it's within the 72-hour window, click **Unseal**
-3. To cancel entirely, click **Delete Capsule**
+2. Click **Delete Capsule** to cancel it entirely
 
 ### What Recipients Receive
 When a time capsule is delivered, the recipient receives:
@@ -49,4 +46,4 @@ When a time capsule is delivered, the recipient receives:
 A: Yes. Click **Preview** on any capsule to see exactly what the recipient will see.
 
 **Q: What if I change my mind after sealing?**
-A: You have 72 hours to unseal and edit or delete the capsule. After that, contact support for assistance.
+A: You can delete a sealed capsule as long as it hasn't been delivered yet. If you need to make changes, delete the sealed capsule and create a new one.

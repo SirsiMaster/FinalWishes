@@ -10,7 +10,7 @@
  */
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   useDocument,
   useCollection,
@@ -26,6 +26,7 @@ import {
 import { doc, setDoc, updateDoc, serverTimestamp, orderBy } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
+import { estateClient } from '../lib/client'
 import { getMFAStatus } from '../lib/mfa'
 import { exportEstateData, downloadBlob } from '../lib/export'
 import { MFAEnrollment } from '../components/identity/MFAEnrollment'
@@ -111,6 +112,44 @@ function SettingsPage() {
     })();
     return () => { cancelled = true; };
   }, [estateId, API_BASE]);
+
+  // Profile photo upload state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
+
+  const handlePhotoUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setPhotoUploading(true);
+    try {
+      const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
+        estateId,
+        fileName: `profile-photo-${user.uid}.${file.name.split('.').pop() || 'jpg'}`,
+        contentType: file.type || 'image/jpeg',
+      });
+
+      // Upload to Cloud Storage via signed URL
+      await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type || 'image/jpeg' },
+        body: file,
+      });
+
+      // Update user profile with new photo URL
+      await setDoc(doc(db, 'users', user.uid), {
+        profilePhotoUrl: finalUrl,
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+
+      toast.success('Profile photo updated');
+    } catch (err) {
+      console.error('[Settings] Photo upload error:', err);
+      toast.error('Failed to upload photo. Please try again.');
+    } finally {
+      setPhotoUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }, [estateId, user]);
 
   // Export state
   const [exporting, setExporting] = useState(false);
@@ -247,10 +286,46 @@ function SettingsPage() {
           <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em]">Your Profile</h3>
         </div>
         <CardContent className="p-10 flex items-start gap-8">
-          {/* Avatar */}
-          <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center text-white text-3xl font-[family-name:var(--font-cinzel)] font-bold shadow-lg shrink-0">
-            {(profile?.firstName?.[0] || profile?.displayName?.[0] || 'U').toUpperCase()}
-          </div>
+          {/* Avatar — clickable for photo upload */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handlePhotoUpload}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={photoUploading}
+            className="relative w-24 h-24 rounded-[2rem] shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#133378] focus-visible:ring-offset-2"
+            aria-label="Upload profile photo"
+          >
+            {photoUploading ? (
+              <div className="w-full h-full rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center shadow-lg">
+                <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              </div>
+            ) : profile?.profilePhotoUrl ? (
+              <img
+                src={profile.profilePhotoUrl}
+                alt="Profile"
+                className="w-full h-full rounded-[2rem] object-cover shadow-lg"
+              />
+            ) : (
+              <div className="w-full h-full rounded-[2rem] bg-gradient-to-br from-[#133378] to-[#1E3A5F] flex items-center justify-center text-white text-3xl font-[family-name:var(--font-cinzel)] font-bold shadow-lg">
+                {(profile?.firstName?.[0] || profile?.displayName?.[0] || 'U').toUpperCase()}
+              </div>
+            )}
+            {/* Camera overlay on hover */}
+            {!photoUploading && (
+              <div className="absolute inset-0 rounded-[2rem] bg-black/0 group-hover:bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+                <svg viewBox="0 0 24 24" className="w-7 h-7 text-white drop-shadow-lg" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </div>
+            )}
+          </button>
           {/* Info */}
           <div className="flex-1 space-y-4">
             <div>

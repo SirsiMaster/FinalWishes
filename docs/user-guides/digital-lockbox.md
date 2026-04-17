@@ -43,7 +43,7 @@ Each credential entry includes a space for instructions. Write clear, specific d
 
 ## FAQ
 **Q: Can my executor see my passwords right now?**
-A: No. Lockbox credentials are only accessible to your executor after your passing is confirmed and the 72-hour cooling-off period has ended.
+A: No. Lockbox credentials are only accessible to your executor after your passing is confirmed.
 
 **Q: What if I forget to update a password here?**
 A: Review your lockbox periodically. The Shepherd AI will remind you if it's been a while since your last update.

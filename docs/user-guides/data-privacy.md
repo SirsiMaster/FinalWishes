@@ -67,9 +67,9 @@ They **cannot**:
 
 ## Your Rights
 - You can download your data at any time
-- You can request account deletion
+- You can request account deletion (coming soon -- contact support@finalwishes.app in the meantime)
 - You can revoke access for any team member at any time
 - You control who is part of your estate team
 
 ## Questions?
-If you have questions about how your data is protected, contact us at **support@finalwishes.com**.
+If you have questions about how your data is protected, contact us at **support@finalwishes.app**.

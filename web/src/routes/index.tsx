@@ -274,7 +274,7 @@ function Home() {
                 </p>
                 <ul className="space-y-2 text-base text-white/60">
                   <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Multi-Factor Authentication</li>
-                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Executor Identity Verification</li>
+                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Executor Invitation &amp; Role Assignment</li>
                 </ul>
               </div>
               <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
@@ -300,10 +300,10 @@ function Home() {
               <div className="flex flex-col justify-center p-8 glass-panel border-l-2 border-gold/20">
                 <h3 className="text-3xl text-gold mb-3 font-[family-name:var(--font-cinzel)]">AUTOMATED NOTIFICATION</h3>
                 <p className="text-base text-white/80 leading-relaxed mb-4">
-                  The silence is broken on your terms. Your pre-recorded messages and legal directives are dispatched instantly to heirs, attorneys, and loved ones. No delays. No secrets.
+                  The silence is broken on your terms. Your pre-recorded messages and personal letters are delivered to heirs and loved ones on your terms. No delays. No secrets.
                 </p>
                 <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Legal Notifications</li>
+                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Heir &amp; Beneficiary Notifications</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Personal Letters</li>
                   <li className="flex items-center gap-2"><span className="text-gold">✓</span> Funeral Instructions</li>
                 </ul>
@@ -400,8 +400,8 @@ function Home() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Multi-Party Verification</h4>
-                    <p className="text-sm text-white/70">Requires identity verification from designated executors before any estate data is released.</p>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Role-Based Access Control</h4>
+                    <p className="text-sm text-white/70">Designated executors and beneficiaries access only what you authorize, with attestation-based safeguards.</p>
                   </div>
                 </CardContent>
               </Card>
@@ -538,7 +538,7 @@ function Home() {
                 </div>
                 <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-white/50">/mo</span></div>
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <p className="text-white/60 text-sm mb-5 flex-grow">Everything in Concierge plus AI guidance, legal review, and a dedicated advisor.</p>
+                <p className="text-white/60 text-sm mb-5 flex-grow">Everything in Concierge plus Shepherd AI guidance, extended media storage, and premium support.</p>
                 <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
@@ -588,7 +588,7 @@ function Home() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-white text-[0.65rem] tracking-[0.12em] uppercase">
             <div className="flex items-center gap-2"><div className="status-dot" /><span>Setup in 15 Minutes</span></div>
             <div className="flex items-center gap-2"><div className="status-dot" /><span>Free Plan Available</span></div>
-            <div className="flex items-center gap-2"><div className="status-dot" /><span>Satisfaction Guaranteed</span></div>
+            <div className="flex items-center gap-2"><div className="status-dot" /><span>Cancel Anytime</span></div>
           </div>
         </div>
       </section>
@@ -626,7 +626,7 @@ function Home() {
               </Badge>
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                HIPAA-Aligned Architecture
+                SOC 2 Architecture
               </Badge>
             </div>
           </div>

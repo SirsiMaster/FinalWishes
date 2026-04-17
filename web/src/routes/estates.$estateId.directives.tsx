@@ -29,7 +29,6 @@ import {
   Check,
   Loader2,
   PenTool,
-  ExternalLink,
   Users,
   Globe,
 } from 'lucide-react'

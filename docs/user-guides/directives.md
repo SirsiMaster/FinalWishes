@@ -26,8 +26,10 @@ FinalWishes supports four types of final directives:
 ### Finalizing a Directive
 When you're satisfied with a directive, click **Finalize**. This locks the document:
 - A finalized directive cannot be edited (to preserve its legal and personal integrity)
-- You'll be asked to review and digitally sign it through our secure signing process
-- A 72-hour window is provided after finalizing, during which you can unseal it if you change your mind
+- You can export the finalized document as a PDF for your records or to share with your attorney
+
+### Auto-Save
+Your directive is automatically saved as you write. A subtle indicator in the toolbar confirms when changes are saved, so you never lose your work.
 
 ### Exporting to PDF
 Click the **Export PDF** button on any directive to download a beautifully formatted, printable version. This is useful for sharing with your attorney or keeping a physical copy.
@@ -38,7 +40,7 @@ Click the **Export PDF** button on any directive to download a beautifully forma
 
 ## FAQ
 **Q: Can I edit a finalized directive?**
-A: Within 72 hours of finalizing, you can unseal it to make changes. After that, you'll need to create a new version.
+A: No. Once finalized, a directive is permanently locked to preserve its integrity. If you need to make changes, create a new version of the directive.
 
 **Q: Who sees my directives?**
 A: Only you can see them while you're alive. After your passing, they are delivered to the recipients you designated.

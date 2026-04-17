@@ -748,27 +748,24 @@ The **FinalWishes Partnership Agreement Generator** is a full-stack React applic
 
 ---
 
-## 10. Admin Infrastructure Engineering (v2.0)
+## 10. Observability & Operations
 
-The Admin Control Plane provides high-fidelity governance across the Sirsi portfolio, transitioning from "simulated" monitoring to a live, gRPC-backed operational environment.
+> **Status:** Foundational implementation. Admin portal and telemetry streaming are planned for post-launch.
 
-### 10.1 Live Telemetry Stream (gRPC)
-The `AdminService.ListAuditTrail` RPC provides a pull-based telemetry stream for the Admin Portal.
-- **Backend Implementation**: Go service fetches security and system events from the primary audit log.
-- **Frontend Integration**: React `useAuditTrail` hook with TanStack Query for polling/streaming management.
-- **Data Model**: `AuditLogEntry` includes `id`, `timestamp` (Int64), `level`, `source`, and `message`.
+### 10.1 Audit Trail
+- **Storage**: Firestore `audit_logs` collection (append-only, immutable per security rules)
+- **Sources**: Cloud Functions write audit entries on invitation matches and status changes
+- **Estate Timeline**: Per-estate `timeline` subcollection captures user-facing activity
 
-### 10.2 Vault Storage Listing
-The Data Room utilizes a backend indexing service to explore the physical secure storage without bypassing PII protections.
-- **Endpoint**: `GET /api/vault/list` (Authenticated).
-- **Functionality**: Lists objects with the `vault/` prefix in Google Cloud Storage.
-- **Metadata Extraction**: Returns `id`, `name`, `size`, `type` (MIME-map), and `updated` timestamp.
+### 10.2 Health Monitoring
+- **API Health**: `GET /health` returns JSON with vault, encryption, and KMS status
+- **Liveness Probe**: `GET /healthz` for Cloud Run health checks
+- **Logging**: Structured JSON logging via zerolog (Google Cloud Logging compatible)
 
-### 10.3 Asynchronous Payment Rails
-Refined Stripe integration to handle the "Settlement Lag" inherent in professional asset transfers (ACH/Wire).
-- **Webhook Logic**: Distinguishes between card-based `completed` and bank-based `async_payment_succeeded`.
-- **State Guard**: Provisioning is deferred globally until funds are settled.
-- **Reversion**: `async_payment_failed` triggers automatic contract status reversion from `waiting_for_payment` to `failed`.
+### 10.3 Payment Reconciliation
+- **Stripe Webhook**: `POST /api/v1/payments/webhook` processes checkout.session.completed events
+- **Signature Verification**: Webhook handler validates Stripe signature (no auth middleware)
+- **Payment Records**: Written to Firestore `payments` collection with user + estate linkage
 
 ---
 

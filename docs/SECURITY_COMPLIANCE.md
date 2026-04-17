@@ -88,19 +88,17 @@ user → role → estate → permissions
 - **Security Groups:** Whitelist-based firewall rules
 - **NAT Gateway:** Outbound-only internet access for private subnets
 
-### 4.2 Cloud Armor (WAF)
-- **Provider:** **Google Cloud Armor**
-- **Rules enabled:**
-  - **SQL injection protection** (WAF module)
-  - **Cross-site scripting (XSS)** protection
-  - **Rate limiting** (Global DDoS protection)
-  - **IP reputation filtering**
-  - **Bot detection** (reCAPTCHA Enterprise)
+### 4.2 Application-Level Rate Limiting
+- **Provider:** Custom Go middleware (`internal/ratelimit`)
+- **Configuration:** 100 requests per 60 seconds per IP address
+- **Scope:** All authenticated API endpoints on Cloud Run
+- **Note:** Cloud Armor WAF is planned for production hardening but not yet deployed. Cloud Run direct invocation does not use Global External Load Balancer required for Cloud Armor.
 
 ### 4.3 DDoS Protection
-- **Cloud Load Balancer:** Global anycast IP network
-- **Cloud Armor:** Built-in DDoS mitigation
-- **Rate limiting:** API and application level
+- **Cloud Run:** Built-in auto-scaling absorbs traffic spikes
+- **Rate limiting:** Application-level per-IP limiting (see 4.2)
+- **Firebase Hosting:** CDN edge caching reduces origin load
+- **Planned:** Cloud Armor integration via Global External Load Balancer
 
 ---
 
@@ -170,19 +168,21 @@ All security-relevant events are logged:
 
 ## 7. Compliance Frameworks
 
-### 7.1 SOC 2 Type II Readiness
+### 7.1 SOC 2 Architecture (Not Yet Certified)
+
+> **Important:** FinalWishes implements SOC 2-aligned architecture but has NOT completed a formal SOC 2 audit. All marketing materials must use "SOC 2 Architecture" — never "SOC 2 Compliant" or "SOC 2 Certified."
 
 **Trust Service Criteria addressed:**
 
-| Criteria | Status | Implementation |
-|----------|--------|----------------|
-| **Security** | Ready | Encryption, access controls, monitoring |
-| **Availability** | Ready | Multi-AZ, 99.9% SLA, DR plan |
-| **Processing Integrity** | Ready | Data validation, error handling |
-| **Confidentiality** | Ready | Encryption, access controls |
-| **Privacy** | Ready | GDPR/CCPA compliance |
+| Criteria | Architecture Status | Audit Status |
+|----------|-------------------|--------------|
+| **Security** | Implemented | Not audited |
+| **Availability** | Cloud Run auto-scaling, Firebase CDN | Not audited |
+| **Processing Integrity** | Data validation, Firestore rules | Not audited |
+| **Confidentiality** | Cloud KMS AES-256-GCM, PII vault | Not audited |
+| **Privacy** | GDPR/CCPA data model support | Not audited |
 
-**Timeline:** SOC 2 Type I audit to be conducted within 6 months of launch.
+**Timeline:** SOC 2 Type I audit planned post-launch when revenue supports audit costs (~$30K–$50K).
 
 ### 7.2 GDPR Compliance
 
@@ -252,7 +252,7 @@ If a breach occurs involving user PII:
 | AWS | Infrastructure | Yes | Full (encrypted) |
 | Auth0 | Authentication | Yes | Credentials only |
 | Stripe | Payments | Yes | Payment info |
-| SendGrid | Email | Yes | Email addresses |
+| Gmail API (Cloud Function) | Email | Yes | Email addresses (domain-wide delegation via admin@sirsi.ai) |
 | Persona | ID Verification | Yes | ID documents |
 
 ### 9.2 Data Processing Agreements

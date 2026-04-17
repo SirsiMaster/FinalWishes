@@ -16,6 +16,7 @@ import {
   Users,
   Shield,
   BookOpen,
+  Calendar,
 } from 'lucide-react'
 
 // ─── Section Definitions ────────────────────────────────────────────────────
@@ -28,6 +29,7 @@ export type SectionId =
   | 'my-people'
   | 'the-vault'
   | 'life-chapters'
+  | 'events'
 
 interface SectionTheme {
   label: string
@@ -118,6 +120,17 @@ const SECTION_THEMES: Record<SectionId, SectionTheme> = {
     gradientTo: '#F3E8FF',
     icon: <BookOpen className="w-5 h-5" />,
     iconBg: 'rgba(124, 58, 237, 0.10)',
+  },
+  'events': {
+    label: 'Events',
+    tagline: 'Services, memorials, and gatherings.',
+    breadcrumb: 'Letters & Wishes',
+    accentColor: '#133378',
+    accentLight: 'rgba(19, 51, 120, 0.06)',
+    gradientFrom: '#EEF2FF',
+    gradientTo: '#E0E7FF',
+    icon: <Calendar className="w-5 h-5" />,
+    iconBg: 'rgba(19, 51, 120, 0.10)',
   },
 }
 

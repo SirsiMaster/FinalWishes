@@ -2,8 +2,8 @@
 import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useCallback, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { useEstateDocuments, useEstateHeirs, type VaultDocument, type DocumentAnalysis, type DocumentDiscrepancy } from '../lib/firestore'
-import { createDocumentRecord, archiveDocument } from '../lib/estate-actions'
+import { useEstateDocuments, useEstateHeirs, type VaultDocument, type Heir, type DocumentAnalysis, type DocumentDiscrepancy } from '../lib/firestore'
+import { createOrReplaceDocumentRecord, archiveDocument, updateVaultDocument } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { auth } from '../lib/firebase'
@@ -29,6 +29,7 @@ import {
 import { Badge } from '../components/ui/badge'
 import { Progress } from '../components/ui/progress'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { ShepherdNudge, useShepherdNudge } from '@/components/estate/ShepherdNudge'
 
 export const Route = createLazyFileRoute('/estates/$estateId/vault')({
   component: VaultPage,
@@ -235,11 +236,23 @@ function VaultPage() {
 
   const { usage: tierUsage } = useTierGating(estateId)
   const { data: firestoreDocs, loading: isLoading } = useEstateDocuments(estateId)
+  const { data: heirs } = useEstateHeirs(estateId)
   const [uploads, setUploads] = useState<UploadState[]>([])
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [previewDoc, setPreviewDoc] = useState<VaultDocument | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<VaultDocument | null>(null)
   const [checklistOpen, setChecklistOpen] = useState(true)
+
+  // Shepherd inline nudge
+  const activeDocCount = useMemo(
+    () => firestoreDocs.filter((d) => d.status === 'active').length,
+    [firestoreDocs],
+  )
+  const noDocsNudge = useShepherdNudge(
+    estateId,
+    'vault-no-docs',
+    !isLoading && activeDocCount === 0,
+  )
 
   // ─── Checklist Status Computation ───────────────────────────────────────
 
@@ -327,7 +340,7 @@ function VaultPage() {
         const bucketName = 'finalwishes-vault'
         const category = inferCategory(file.name)
 
-        const docResult = await createDocumentRecord({
+        const docResult = await createOrReplaceDocumentRecord({
           estateId,
           originalName: file.name,
           displayName: file.name,
@@ -491,6 +504,15 @@ function VaultPage() {
           </Badge>
         }
       />
+
+      {/* Shepherd Inline Nudge */}
+      {noDocsNudge.visible && (
+        <ShepherdNudge
+          message="Upload your most important document first — a will, insurance policy, or deed."
+          ctaLabel="Upload now"
+          onDismiss={noDocsNudge.dismiss}
+        />
+      )}
 
       {/* Document Checklist Panel */}
       <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm overflow-hidden">
@@ -757,6 +779,7 @@ function VaultPage() {
                 onPreview={() => setPreviewDoc(doc)}
                 onDelete={() => setDeleteConfirm(doc)}
                 estateId={estateId}
+                heirs={heirs}
               />
             ))}
             {documents.length === 0 && (
@@ -934,14 +957,18 @@ function DocItem({
   onPreview,
   onDelete,
   estateId,
+  heirs,
 }: {
   doc: VaultDocument
   onDownload: () => void
   onPreview: () => void
   onDelete: () => void
   estateId: string
+  heirs: Heir[]
 }) {
   const [insightsOpen, setInsightsOpen] = useState(false)
+  const [visibilityOpen, setVisibilityOpen] = useState(false)
+  const [visibleTo, setVisibleTo] = useState<string[]>(doc.visibleTo || [])
   const dateStr = doc.createdAt?.toDate?.()
     ? doc.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : ''
@@ -965,11 +992,31 @@ function DocItem({
               {dateStr && <span>{dateStr}</span>}
               {dateStr && sizeStr && <div className="w-1 h-1 rounded-full bg-[#133378]/20" />}
               {sizeStr && <span>{sizeStr}</span>}
+              {doc.version > 1 && (
+                <>
+                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
+                  <Badge variant="secondary" className="bg-[#7C3AED]/10 text-[#7C3AED] text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg">
+                    v{doc.version}
+                  </Badge>
+                </>
+              )}
               {doc.folderId && (
                 <>
                   <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
                   <Badge variant="ghost" className="text-[#C8A951] font-semibold text-[12px] h-auto py-0 px-0">
                     {doc.folderId}
+                  </Badge>
+                </>
+              )}
+              {visibleTo.length > 0 && (
+                <>
+                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
+                  <Badge className="bg-[#C8A951]/10 text-[#C8A951] border border-[#C8A951]/20 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
+                    <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    {visibleTo.length} heir{visibleTo.length !== 1 ? 's' : ''}
                   </Badge>
                 </>
               )}
@@ -994,6 +1041,25 @@ function DocItem({
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+          {heirs.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setVisibilityOpen(!visibilityOpen)}
+              className={`gap-1.5 text-[11px] font-bold ${
+                visibilityOpen || visibleTo.length > 0
+                  ? 'text-[#C8A951] hover:text-[#C8A951] hover:bg-[#C8A951]/5'
+                  : 'text-[#133378]/40 hover:text-[#133378] hover:bg-[#133378]/5'
+              }`}
+              title="Set visibility"
+            >
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              {visibleTo.length > 0 ? `${visibleTo.length} selected` : 'Visibility'}
+            </Button>
+          )}
           {hasAnalysis && (
             <Button
               variant="ghost"
@@ -1043,6 +1109,68 @@ function DocItem({
           </Button>
         </div>
       </div>
+
+      {/* Visibility Picker — collapsible */}
+      {visibilityOpen && heirs.length > 0 && (
+        <div className="border-t border-[#133378]/10 bg-[#FAFBFD] px-6 py-4">
+          <div className="flex items-center gap-2 mb-3">
+            {visibleTo.length === 0 ? (
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[#64748B]" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="2" y1="12" x2="22" y2="12" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            )}
+            <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">
+              {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => {
+                setVisibleTo([])
+                updateVaultDocument(estateId, doc.id, { visibleTo: [] })
+              }}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
+                visibleTo.length === 0
+                  ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
+                  : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+              }`}
+            >
+              Everyone
+            </button>
+            {heirs.filter(h => h.status === 'active').map((heir) => {
+              const selected = visibleTo.includes(heir.fullName)
+              return (
+                <button
+                  key={heir.id}
+                  onClick={() => {
+                    const next = selected
+                      ? visibleTo.filter((n) => n !== heir.fullName)
+                      : [...visibleTo, heir.fullName]
+                    setVisibleTo(next)
+                    updateVaultDocument(estateId, doc.id, { visibleTo: next })
+                  }}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
+                    selected
+                      ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
+                      : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                  }`}
+                >
+                  {heir.fullName}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* AI Insights Panel — collapsible */}
       {hasAnalysis && insightsOpen && (

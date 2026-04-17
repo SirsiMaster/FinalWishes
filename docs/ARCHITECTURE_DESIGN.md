@@ -44,7 +44,7 @@ All implementations within the Sirsi ecosystem MUST leverage these technologies:
 | **Mobile** | **React Native + Expo** | **gRPC + Protobuf**, Shared logic with Web, iOS/Android |
 | **Database** | **Cloud SQL + Firestore** | Hybrid: SQL for PII/Vault |
 | **Security** | **SOC 2 + KMS** | Software Keys (AES-256) |
-| **AI** | **Gemini 3.0 (Vertex AI)** | The "Guidance Engine" (Sirsi Persona) |
+| **AI** | **Claude Opus (sirsi-ai SDK)** | "The Shepherd" — AI estate guidance engine (Genkit fallback) |
 
 **Architecture Decision Records:** See `docs/ADR-001-ARCHITECTURE-DECISIONS.md`
 
@@ -87,7 +87,7 @@ api/
 │   │   ├── storage/             # Cloud Storage integration
 │   │   ├── kms/                 # Cloud KMS integration
 │   │   ├── payment/             # Stripe integration
-│   │   └── email/               # SendGrid integration
+│   │   └── email/               # Gmail API (Cloud Function, domain-wide delegation)
 │   └── config/
 │       └── config.go            # Configuration management
 ├── pkg/
@@ -339,7 +339,7 @@ mobile/
 | **Secret Manager** | Credentials | `vault-db-password` |
 | **Firebase Hosting** | Web hosting | Global CDN, auto SSL |
 | **Cloud Logging** | Centralized logs | 30-day retention |
-| **Vertex AI** | LLM processing | gemini-pro model |
+| **Claude Opus (sirsi-ai)** | LLM processing | Primary AI for Shepherd chat, obituary drafting, estate guidance |
 
 ### 5.3 Environment Strategy
 
@@ -521,26 +521,24 @@ finalwishes-contracts/
 
 ---
 
-## 10. Sirsi Admin & Audit Infrastructure (Nexus Control Plane)
+## 10. Admin & Audit Infrastructure
 
-The **Sirsi Admin Portal** serves as the central control plane for the Sirsi ecosystem, providing high-fidelity governance across all multi-tenant estates.
+> **Status: Proposed** — The items below describe planned capabilities. Current implementation provides Firestore audit_logs collection (append-only, immutable) and application-level rate limiting.
 
-**Location:** `packages/finalwishes-contracts/src/components/admin/`
+### 10.1 Audit Trail
+- Firestore `audit_logs` collection captures estate mutations (invitation matching, status changes)
+- Cloud Functions write audit entries on Firestore triggers
+- Timeline subcollections under each estate track user-facing activity
 
-### 10.1 Live Telemetry & Audit Stream
-The Admin system is decoupled from transient frontend state and is backed by a persistent **gRPC Audit Trail** (`AdminService`). 
-- **Telemetry Source**: All developer actions, security events, and system health checks are streamed in real-time from the backend.
-- **Durable Records**: Logs are immutable and stored for forensics and compliance (SOC 2).
+### 10.2 Admin Capabilities (Planned)
+- Admin dashboard for estate oversight
+- Vault storage indexing for compliance verification
+- Bulk audit log export for SOC 2 evidence collection
 
-### 10.2 Vault Storage Indexing
-The platform provides a secure window into the **Cryptographic Vault** without circumventing PII protections.
-- **Direct Indexing**: The Data Room uses a dedicated `/api/vault/list` endpoint to list real objects in the Cloud Storage `vault/` bucket.
-- **Artifact Verification**: Admin can verify the presence of executed PDFs and their SHA-256 hashes directly from the source of truth.
-
-### 10.3 Asynchronous Financial Rails
-To support professional estate settlement (ACH/Wire), the architecture explicitly handles **Asynchronous Payment Finality**.
-- **Webhook Bridge**: The Stripe webhook handler manages the gap between "payment initiation" and "fund settlement."
-- **Status Normalization**: Contracts are placed in `waiting_for_payment` and only provisioned upon receipt of the `async_payment_succeeded` event, eliminating financial float risk.
+### 10.3 Payment Reconciliation
+- Stripe webhook handler at `/api/v1/payments/webhook` processes checkout events
+- Payment records written to Firestore `payments` collection with user linkage
+- Webhook signature verification prevents spoofed events
 
 ---
 

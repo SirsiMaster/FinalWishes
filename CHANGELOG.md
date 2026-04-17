@@ -4,6 +4,52 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.9.0] — 2026-04-17
+### Sessions 9–11: Infrastructure Hardening, Gap Remediation, Life Companion Features
+
+### Added (Session 9 — April 16)
+- **Toast notifications** — Sonner provider wired globally, 6 key user actions now have success/error feedback
+- **Email verification gate** — IdentityGate blocks estate access until email is verified
+- **API client retry interceptor** — Exponential backoff with 2 retries on transient failures
+- **Gmail API Cloud Function** — `sendMail` trigger replaces SendGrid; domain-wide delegation via admin@sirsi.ai, zero vendor cost
+- **Storage rules v2.0.0** — Deployed (was deny-all); supports signed URL uploads
+
+### Added (Session 10 — April 17)
+- **Gap analysis and remediation plan** — Systematic audit of all known gaps from Session 9 deep audit
+- **Owner experience priority** — Life companion vision documented and prioritized over settlement mechanics
+- **Life companion vision** — Documented as deferred long-term direction
+
+### Added (Session 11 — April 17)
+- **Auto-save for directives** — Debounced 1.5-second TipTap persistence replaces manual "Save Draft" button
+- **OpenSign signing ceremony** — Frontend wired to Go API `/api/v1/opensign/*` proxy; e-signature workflow functional
+- **Estate Owner Welcome screen** — Life-first emotional onboarding for new owners
+- **Heir Welcome verified** — Confirmed functional: owner portrait, voice messages, heirloom presentation
+- **Public memorial pages** — Shareable without account, QR code generation for invitations and sharing
+- **Events & broadcasting pages** — Funeral, memorial, and repast ceremony pages with RSVP
+- **SMS invitation queue** — Phone number collection + SMS notification queuing for heir invitations
+- **Per-person content visibility** — Granular access control per heir on directive documents
+- **Document version history** — Version badge displayed in vault for tracked documents
+
+### Changed (Session 9)
+- **Landing page credibility** — False social proof removed (fabricated user counts, review scores); pricing aligned to actual Stripe tiers ($29/$99)
+- **Design normalization** — 7 files corrected from rogue colors to Royal Blue (#133378) palette
+- **Node.js 22 runtime** — Cloud Functions upgraded from Node.js 20 (deprecated April 30, 2026)
+- **Stripe redirect URLs** — Fixed to point to correct production domain
+
+### Changed (Session 11)
+- **10 canonical documents updated** — REQUIREMENTS_SPECIFICATION.md, CHANGELOG.md, and 8 others corrected for accuracy
+
+### Removed (Session 9)
+- **SendGrid dependency** — Replaced entirely by Gmail API Cloud Function
+
+### Infrastructure
+- Firebase Hosting: https://finalwishes-prod.web.app (deployed April 16–17)
+- Cloud Functions: Node.js 22, us-central1 (autoMatchInvitation + sendMail)
+- Storage rules: v2.0.0 live
+- Firestore rules: v5.0.0 live
+
+---
+
 ## [0.7.1] — 2026-04-15
 ### Session 7e: Production Deploy, Perf Audit, RBAC Enforcement
 

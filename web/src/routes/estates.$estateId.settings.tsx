@@ -136,6 +136,7 @@ function SettingsPage() {
       const filename = `${estateName.replace(/\s+/g, '_')}_export_${new Date().toISOString().slice(0, 10)}.zip`;
       downloadBlob(blob, filename);
       setExportDone(true);
+      toast.success('Estate data exported successfully');
       setTimeout(() => setExportDone(false), 4000);
     } catch (err) {
       console.error('[Settings] Export error:', err);
@@ -174,6 +175,7 @@ function SettingsPage() {
       }
       setSaved(true);
       setLocalSettings({}); // Clear local overrides — Firestore hook will pick up
+      toast.success('Settings saved successfully');
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
       console.error('[Settings] Save error:', err);

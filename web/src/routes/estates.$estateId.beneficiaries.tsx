@@ -18,6 +18,8 @@ import { Separator } from '@/components/ui/separator'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
 import { getSectionNudge } from '../lib/shepherd-prompts'
+import { ShepherdNudge, useShepherdNudge } from '@/components/estate/ShepherdNudge'
+import { useEstateExecutors } from '../lib/firestore'
 
 export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
   component: BeneficiariesPage,
@@ -47,6 +49,19 @@ function BeneficiariesPage() {
   const [editModalOpen, setEditModalOpen] = useState(false);
 
   const { data: heirs, loading: isLoading } = useEstateHeirs(estateId);
+  const { data: executors } = useEstateExecutors(estateId);
+
+  // Shepherd inline nudges
+  const noHeirsNudge = useShepherdNudge(
+    estateId,
+    'beneficiaries-no-heirs',
+    !isLoading && heirs.length === 0,
+  );
+  const noExecutorNudge = useShepherdNudge(
+    estateId,
+    'beneficiaries-no-executor',
+    !isLoading && heirs.length > 0 && executors.length === 0,
+  );
 
   const handleAddHeir = async (vars: { name: string, relation: string, email: string }) => {
     if (!user) return;
@@ -122,6 +137,22 @@ function BeneficiariesPage() {
             Total share allocation is {totalAllocation}% — exceeds 100%. Please adjust individual shares.
           </p>
         </div>
+      )}
+
+      {/* Shepherd Inline Nudges */}
+      {noHeirsNudge.visible && (
+        <ShepherdNudge
+          message="Your estate needs at least one beneficiary. Who should inherit your legacy?"
+          ctaLabel="Add a beneficiary"
+          onDismiss={noHeirsNudge.dismiss}
+        />
+      )}
+      {noExecutorNudge.visible && (
+        <ShepherdNudge
+          message="You have beneficiaries but no executor. Who should manage your estate?"
+          ctaLabel="Add an executor"
+          onDismiss={noExecutorNudge.dismiss}
+        />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

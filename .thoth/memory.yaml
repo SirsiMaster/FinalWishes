@@ -1,6 +1,6 @@
 # 𓁟 Thoth — Project Memory for FinalWishes
 # Read this FIRST before any source files.
-# Last updated: 2026-04-17T02:55:00-04:00
+# Last updated: 2026-04-17T00:04:45-04:00
 
 ## Identity
 project: finalwishes
@@ -99,3 +99,6 @@ route_line_count: 22164
 # proposals/           — Financial Trinity
 # .thoth/memory.yaml   — THIS FILE
 # .thoth/journal.md    — Decision history
+
+## Session Decisions
+# 2026-04-17: {"session_id":"a8f39bec-1cfb-4805-9bec-384b33f0fdd1","transcript_path":"/Users/thekryptodragon/.claude/projects/-Users-thekryptodragon/a8f39bec-1cfb-4805-9bec-384b33f0fdd1.jsonl","cwd":"/Users/thekryptodragon/Development/FinalWishes","hook_event_name":"PreCompact","trigger":"manual","custom_instructions":""}

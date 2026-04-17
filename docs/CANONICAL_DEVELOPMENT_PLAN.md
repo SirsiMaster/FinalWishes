@@ -20,7 +20,7 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 |-------------|-------------|
 | **Vault Architecture** | Zero-knowledge encryption (Cloud KMS + AES-256) for all legacy assets |
 | **Legacy Engine ("The Shepherd")** | Time-capsule scheduling, memory curation logic, AI guidance |
-| **Media Integration** | YouTube API (video memorials) + Google Photos API (photo galleries) |
+| **Media Integration** | YouTube API (video memorials) + Cloud Storage (photo uploads). Google Photos API deferred. |
 | **Web App** | React 19/Vite + TanStack Router + shadcn/ui (web-first; mobile/desktop deferred) |
 
 ### Tier 2: Purchased Add-Ons (Contracted, Scope Impacts Design)
@@ -142,13 +142,14 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 
 | Feature | Google Service | Custom Code |
 |---------|--------------|:-----------:|
-| AI flow orchestration | **Firebase Genkit** (Go SDK) | ~100 lines (flow defs) |
-| Gemini model access | **Vertex AI** (Gemini Pro/Flash) | None (via Genkit) |
-| Legacy guidance Q&A | **Genkit** (structured prompts) | Prompts only |
-| Obituary generation assistance | **Genkit** (creative flow) | Prompts only |
-| Estate completion score | **Genkit** (structured output → JSON) | Prompts only |
-| Memory curation suggestions | **Genkit** (recommendation flow) | Prompts only |
-| Legal disclaimers (guardrails) | **Genkit** (system prompt) | Config only |
+| AI routing + orchestration | **sirsi-ai SDK** (Go) | ~100 lines (handler defs) |
+| LLM access (primary) | **Claude Opus** (via sirsi-ai) | None (SDK handles) |
+| LLM access (fallback) | **Genkit** (Vertex AI Gemini) | Config only |
+| Legacy guidance Q&A | **sirsi-ai** (structured prompts) | Prompts only |
+| Obituary generation assistance | **Claude Opus** (creative, high temp) | Prompts only |
+| Estate completion score | **Go handler** (structured output → JSON) | ~50 lines |
+| Memory curation suggestions | **Claude Opus** (recommendation) | Prompts only |
+| Legal disclaimers (guardrails) | **sirsi-ai** (system prompt) | Config only |
 
 ### 3.7 Time Capsule & Scheduled Delivery
 
@@ -212,7 +213,7 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 | Shared types | TypeScript | ~97 | ✅ Active — proto-aligned type definitions |
 
 **Total custom code: ~30,000 lines** (up from ~6,100 at v0.10.0)
-**Total Google-managed services: 14 active (Firebase Auth, Firestore, Cloud SQL, Cloud KMS, Cloud Storage, Cloud Run, Firebase Hosting, SendGrid Extension, Cloud Build, Secret Manager, IAM, Cloud DNS, Cloud Tasks, Resize Images Extension)**
+**Total Google-managed services: 13 active (Firebase Auth, Firestore, Cloud SQL, Cloud KMS, Cloud Storage, Cloud Run, Firebase Hosting, Gmail API, Cloud Build, Secret Manager, IAM, Cloud DNS, Cloud Tasks)**
 
 > **Removed (April 2026):** `shared/crypto/` (client-side encryption never used), `shared/api-client/` (web uses ConnectRPC), React Native mobile (~0 lines actual), Tauri desktop (~0 lines actual)
 
@@ -225,11 +226,11 @@ The "Living Legacy" — a vault-grade media preservation and directive managemen
 | Google Cloud (Run + SQL + Storage + KMS) | ~$60/mo |
 | Firebase (Auth, Hosting, Firestore, FCM, Extensions) | Free tier |
 | YouTube Data API | Free (10K quota units/day) |
-| Google Photos API | Free (with Google OAuth) |
-| Vertex AI (Gemini Flash) | ~$5/1M tokens |
+| Claude Opus (via sirsi-ai) | ~$15/1M tokens (primary AI) |
+| Vertex AI Gemini (fallback) | ~$5/1M tokens |
 | OpenSign (via Sirsi Sign) | $20/mo |
-| SendGrid (via Firebase Extension) | Free tier (100/day) |
-| **Total** | **~$85/mo + usage** |
+| Gmail API (domain-wide delegation) | Free (Workspace included) |
+| **Total** | **~$80/mo + AI usage** |
 
 ---
 

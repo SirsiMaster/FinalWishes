@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useUserEstates, useEstate } from '../lib/firestore'
 import { createEstate } from '../lib/estate-actions'
 import { useAuth } from '../lib/auth'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
@@ -45,14 +46,20 @@ function EstatesPage() {
     e.preventDefault();
     if (!user || !planName.trim()) return;
     setSaving(true);
-    await createEstate({
-      name: planName,
-      principalId: user.uid,
-    });
-    setSaving(false);
-    setModalOpen(false);
-    setPlanName('');
-    setPlanType('Personal');
+    try {
+      await createEstate({
+        name: planName,
+        principalId: user.uid,
+      });
+      toast.success(`Estate "${planName}" created successfully`);
+      setModalOpen(false);
+      setPlanName('');
+      setPlanType('Personal');
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Failed to create estate');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

@@ -39,4 +39,4 @@ Every file you upload is encrypted using AES-256 -- the same standard used by ba
 A: No. Your files are encrypted before storage. FinalWishes staff cannot decrypt or view them.
 
 **Q: What happens if I accidentally delete a document?**
-A: Deleting a document archives it rather than permanently removing it. Archived documents can be restored if needed.
+A: Deleting a document permanently removes it from your vault. Be sure you want to remove a document before confirming deletion.

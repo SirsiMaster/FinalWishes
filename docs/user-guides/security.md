@@ -19,7 +19,7 @@ MFA ensures that even if someone learns your password, they still can't access y
 ### Role-Based Access
 FinalWishes uses strict role-based access controls:
 - **You (the Principal)** have full access to your estate
-- **Executors** can only access your estate after your passing is confirmed and a 72-hour cooling-off period ends
+- **Executors** can only access your estate after your passing is confirmed
 - **Heirs** can only see items specifically designated to them
 - No one at FinalWishes can view your data
 
@@ -35,4 +35,4 @@ SOC 2 is an industry audit standard that verifies a company handles your data se
 A: No. Your data is encrypted with keys managed by Google Cloud KMS. FinalWishes staff cannot decrypt or view your information.
 
 **Q: What happens to my data if I cancel my account?**
-A: Your data remains encrypted and stored for a grace period. You can request permanent deletion at any time through your Settings page under Privacy.
+A: Your data remains encrypted and stored for a grace period. Account deletion is coming soon -- contact **support@finalwishes.app** if you need to request data removal.

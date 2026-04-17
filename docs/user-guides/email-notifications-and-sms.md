@@ -23,19 +23,17 @@ Security alerts (password resets, suspicious login attempts) cannot be turned of
 
 ## Are My Emails Secure?
 
-- Emails are sent through **SendGrid**, a trusted email delivery service used by companies like Uber, Spotify, and Airbnb.
+- Emails are sent through the **Gmail API** using domain-wide delegation, keeping all email delivery within Google's infrastructure.
 - We never include sensitive information (SSN, account numbers) in email content.
 - Invitation emails contain a link to log in — they do not expose any estate details.
 
-## SMS Verification
+## Multi-Factor Authentication
 
-For added security, FinalWishes supports **SMS verification** as part of Multi-Factor Authentication (MFA). When enabled:
-- You'll receive a text message with a 6-digit code when logging in
-- This is powered by Firebase Identity Platform (Google's infrastructure)
-- Standard messaging rates from your carrier may apply
-- SMS codes expire after 5 minutes
+For added security, FinalWishes supports **TOTP-based Multi-Factor Authentication** (MFA). When enabled:
+- You'll use an authenticator app (such as Google Authenticator, Authy, or 1Password) to generate a 6-digit code when logging in
+- This is powered by Firebase Authentication (Google's infrastructure)
 
-You can enable SMS MFA in **Settings → Security → Multi-Factor Authentication**.
+You can enable TOTP MFA in **Settings → Security → Multi-Factor Authentication**.
 
 ## Questions?
 

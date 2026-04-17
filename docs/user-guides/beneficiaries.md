@@ -16,7 +16,7 @@
 5. Click **Send Invitation**
 
 ### Roles Explained
-- **Primary Executor** -- The person responsible for managing your estate after your passing. They gain full access after a 72-hour confirmation period.
+- **Primary Executor** -- The person responsible for managing your estate after your passing. They gain full access after your passing is confirmed.
 - **Backup Executor** -- Steps in if your primary executor is unable to serve.
 - **Heir** -- A person designated to receive specific assets, messages, or time capsules. They can only view what you've shared with them.
 - **Trustee** -- A person managing assets on behalf of a minor heir.

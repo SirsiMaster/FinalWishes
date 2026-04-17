@@ -34,7 +34,7 @@ When your obituary is complete:
 ## Tips
 - Write in your own voice. This is your story -- it doesn't have to follow a formula.
 - Ask a trusted family member to review your draft for any details you may have missed.
-- You can update your obituary as life changes. Just unseal it, edit, and re-finalize.
+- You can update your obituary as life changes. Edit your draft and re-finalize when ready.
 
 ## FAQ
 **Q: Can I keep my obituary private?**

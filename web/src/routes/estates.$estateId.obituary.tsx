@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState, useRef, useMemo, useCallback } from 'react'
+import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
 import { useDocument, useEstateHeirs, useCollection } from '../lib/firestore'
 import { doc, setDoc, addDoc, collection, serverTimestamp, type Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
@@ -11,10 +11,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
-import { Download, QrCode } from 'lucide-react'
+import { Download, QrCode, Bold, Italic, List, ListOrdered, Heading2, Undo2, Redo2 } from 'lucide-react'
 import { ShareMemorial } from '@/components/estate/ShareMemorial'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -39,7 +40,6 @@ function ObituaryPage() {
   const [shareLoading, setShareLoading] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [shareMemorialOpen, setShareMemorialOpen] = useState(false);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const estateId = routeId;
   const { user, profile } = useAuth();
@@ -55,6 +55,32 @@ function ObituaryPage() {
   const serviceEvent = events.find(e => e.type === 'funeral' || e.type === 'memorial_service');
 
   const isSigned = !!obit?.signature;
+
+  // Backwards-compatible: wrap plaintext in <p> tags
+  const initialContent = useMemo(() => {
+    const raw = obit?.content;
+    if (!raw) return '';
+    if (raw.trimStart().startsWith('<')) return raw;
+    return raw.split('\n').filter(Boolean).map(line => `<p>${line}</p>`).join('');
+  }, [obit?.content]);
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: initialContent || '<p>Start drafting the final record here...</p>',
+    editable: editing && !isSigned,
+    editorProps: {
+      attributes: {
+        class: 'prose prose-lg max-w-none min-h-[400px] focus:outline-none p-8 text-[#0F172A] font-[family-name:var(--font-inter)] leading-relaxed',
+      },
+    },
+  });
+
+  // Sync editable state when editing or isSigned changes
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(editing && !isSigned);
+    }
+  }, [editor, editing, isSigned]);
 
   // Format the last_updated timestamp for display
   const lastUpdateDisplay = useMemo(() => {
@@ -86,7 +112,8 @@ function ObituaryPage() {
   const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   const handleSave = async () => {
-    const content = textAreaRef.current?.value || '';
+    if (!editor) return;
+    const content = editor.getHTML();
     setSaving(true);
     try {
       await setDoc(doc(db, `estates/${estateId}/governance`, 'obituary'), {
@@ -138,12 +165,16 @@ function ObituaryPage() {
       const data = await res.json();
       const draft = data.content || data.text || data.response || '';
 
-      // Populate the textarea — switch to editing mode if not already
+      // Populate the editor — switch to editing mode if not already
       if (!editing) setEditing(true);
-      // Use a short delay so the textarea renders before we set its value
+      // Use a short delay so the editor updates after editing state changes
       setTimeout(() => {
-        if (textAreaRef.current) {
-          textAreaRef.current.value = draft;
+        if (editor) {
+          // Wrap plaintext AI draft in paragraphs if needed
+          const htmlDraft = draft.trimStart().startsWith('<')
+            ? draft
+            : draft.split('\n').filter(Boolean).map((line: string) => `<p>${line}</p>`).join('');
+          editor.commands.setContent(htmlDraft);
         }
       }, 100);
     } catch (err) {
@@ -423,19 +454,22 @@ function ObituaryPage() {
                </div>
              )}
           </CardHeader>
-          <CardContent className="flex-1 p-8">
-             {editing ? (
-               <Textarea
-                  ref={textAreaRef}
-                  defaultValue={obit?.content}
-                  className="w-full h-full min-h-[400px] border-none focus-visible:ring-0 focus-visible:border-transparent text-[#0F172A] font-[family-name:var(--font-inter)] leading-relaxed text-lg outline-none resize-none"
-                  placeholder="Start drafting the final record here..."
-               />
-             ) : (
-               <p className="text-[#0F172A] font-[family-name:var(--font-inter)] leading-relaxed text-lg whitespace-pre-wrap">
-                 {obit?.content || "No content drafted yet. Click 'Edit' to begin writing the record."}
-               </p>
-             )}
+          {/* Toolbar — only visible when editing */}
+          {editing && !isSigned && editor && (
+            <div className="flex items-center gap-1 mx-6 mt-4 p-3 bg-[#F8FAFC] rounded-2xl border border-slate-100">
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBold().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bold') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><Bold className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleItalic().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('italic') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><Italic className="w-4 h-4" /></Button>
+              <Separator orientation="vertical" className="h-5 mx-1" />
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`w-9 h-9 rounded-xl ${editor.isActive('heading', { level: 2 }) ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><Heading2 className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bulletList') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><List className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('orderedList') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><ListOrdered className="w-4 h-4" /></Button>
+              <Separator orientation="vertical" className="h-5 mx-1" />
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().undo().run()} className="w-9 h-9 rounded-xl text-[#64748B] hover:bg-[#E2E8F0]"><Undo2 className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().redo().run()} className="w-9 h-9 rounded-xl text-[#64748B] hover:bg-[#E2E8F0]"><Redo2 className="w-4 h-4" /></Button>
+            </div>
+          )}
+          <CardContent className="flex-1 p-0">
+            <EditorContent editor={editor} />
           </CardContent>
         </Card>
       </div>

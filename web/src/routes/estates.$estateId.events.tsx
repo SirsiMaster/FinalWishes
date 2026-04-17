@@ -12,7 +12,7 @@
 
 import { createFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useCallback } from 'react'
-import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, type Timestamp } from 'firebase/firestore'
+import { collection, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, orderBy, type Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useCollection } from '../lib/firestore'
 import { toast } from 'sonner'
@@ -27,6 +27,9 @@ import {
   Pencil,
   XCircle,
   Trash2,
+  ChevronDown,
+  ChevronUp,
+  Send,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -49,6 +52,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
+import { RSVPDialog, type RSVPRecord, type RSVPResponse } from '@/components/estate/RSVPDialog'
 
 export const Route = createFileRoute('/estates/$estateId/events')({
   component: EventsPage,
@@ -195,7 +199,15 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
   const [copied, setCopied] = useState(false)
   const [cancelOpen, setCancelOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [rsvpOpen, setRsvpOpen] = useState(false)
+  const [rsvpListOpen, setRsvpListOpen] = useState(false)
   const typeLabel = EVENT_TYPES.find((t) => t.value === event.type)?.label || event.type
+
+  // Load RSVPs for this event (real-time)
+  const { data: rsvps } = useCollection<RSVPRecord>(
+    rsvpListOpen ? `estates/${estateId}/events/${event.id}/rsvps` : null,
+    rsvpListOpen ? [orderBy('createdAt', 'desc')] : [],
+  )
 
   const copyDetails = useCallback(async () => {
     const lines = [event.title]
@@ -255,7 +267,16 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
           <p className="text-sm text-[#64748B] mb-6 line-clamp-3">{event.description}</p>
         )}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* RSVP button — only for upcoming events with RSVP enabled */}
+          {event.status === 'upcoming' && event.rsvpEnabled && (
+            <Button
+              onClick={() => setRsvpOpen(true)}
+              className="bg-[#133378] hover:bg-[#1E3A5F] text-white text-[12px] font-bold rounded-xl px-4 py-2 h-auto"
+            >
+              <Send className="w-3.5 h-3.5" /> RSVP
+            </Button>
+          )}
           <Button
             variant="ghost"
             onClick={copyDetails}
@@ -292,6 +313,41 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             </Button>
           )}
         </div>
+
+        {/* View RSVPs — collapsible list (estate owner/executor view) */}
+        {event.rsvpEnabled && (
+          <div className="mt-4 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onClick={() => setRsvpListOpen(!rsvpListOpen)}
+              className="flex items-center gap-2 text-[12px] font-bold text-[#133378]/60 hover:text-[#133378] uppercase tracking-widest transition-colors"
+            >
+              {rsvpListOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              View RSVPs {event.rsvpCount ? `(${event.rsvpCount})` : ''}
+            </button>
+
+            {rsvpListOpen && (
+              <div className="mt-3 space-y-2">
+                {rsvps.length === 0 ? (
+                  <p className="text-[13px] text-[#94A3B8] italic">No RSVPs yet.</p>
+                ) : (
+                  rsvps.map((rsvp) => (
+                    <RSVPRow key={rsvp.id} rsvp={rsvp} />
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* RSVP Dialog */}
+        <RSVPDialog
+          estateId={estateId}
+          eventId={event.id}
+          eventTitle={event.title}
+          open={rsvpOpen}
+          onOpenChange={setRsvpOpen}
+        />
 
         {/* Cancel confirmation */}
         <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
@@ -342,6 +398,43 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
         </AlertDialog>
       </CardContent>
     </Card>
+  )
+}
+
+// ─── RSVP Row (compact display for the list) ────────────────────────────────
+
+const RESPONSE_BADGES: Record<RSVPResponse, { label: string; className: string }> = {
+  attending: { label: 'Attending', className: 'bg-emerald-50 text-emerald-700' },
+  maybe: { label: 'Maybe', className: 'bg-amber-50 text-amber-700' },
+  not_attending: { label: 'Not Attending', className: 'bg-slate-100 text-slate-600' },
+}
+
+function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
+  const badge = RESPONSE_BADGES[rsvp.response] || RESPONSE_BADGES.attending
+  return (
+    <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
+      <div className="flex items-center gap-3 min-w-0">
+        <span className="text-[13px] font-semibold text-[#0F172A] truncate">{rsvp.name}</span>
+        <Badge
+          variant="secondary"
+          className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${badge.className}`}
+        >
+          {badge.label}
+        </Badge>
+      </div>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        {rsvp.response !== 'not_attending' && rsvp.guests > 0 && (
+          <span className="text-[12px] text-[#64748B]">
+            <Users className="w-3 h-3 inline mr-1" />{rsvp.guests}
+          </span>
+        )}
+        {rsvp.message && (
+          <span className="text-[11px] text-[#94A3B8] italic max-w-[120px] truncate" title={rsvp.message}>
+            "{rsvp.message}"
+          </span>
+        )}
+      </div>
+    </div>
   )
 }
 

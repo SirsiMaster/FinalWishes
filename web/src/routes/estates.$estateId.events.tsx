@@ -24,7 +24,6 @@ import {
   Users,
   Copy,
   Check,
-  MoreHorizontal,
   Pencil,
   XCircle,
   Trash2,
@@ -37,13 +36,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+// DropdownMenu available but using inline buttons for simplicity
 import {
   AlertDialog,
   AlertDialogAction,
@@ -198,8 +191,10 @@ function EventsPage() {
 
 // ─── Event Card ──────────────────────────────────────────────────────────────
 
-function EventCard({ event, estateId }: { event: EstateEvent; estateId: string }) {
+function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: string; onEdit?: (event: EstateEvent) => void }) {
   const [copied, setCopied] = useState(false)
+  const [cancelOpen, setCancelOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   const typeLabel = EVENT_TYPES.find((t) => t.value === event.type)?.label || event.type
 
   const shareLink = `${window.location.origin}/memorial/${estateId}`
@@ -267,7 +262,82 @@ function EventCard({ event, estateId }: { event: EstateEvent; estateId: string }
             {copied ? <Check className="w-3.5 h-3.5 text-[#059669]" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? 'Copied' : 'Copy Link'}
           </Button>
+          {event.status !== 'cancelled' && onEdit && (
+            <Button
+              variant="ghost"
+              onClick={() => onEdit(event)}
+              className="text-[12px] font-bold text-[#64748B] hover:text-[#133378] rounded-xl"
+            >
+              <Pencil className="w-3.5 h-3.5" /> Edit
+            </Button>
+          )}
+          {event.status === 'upcoming' && (
+            <Button
+              variant="ghost"
+              onClick={() => setCancelOpen(true)}
+              className="text-[12px] font-bold text-red-400 hover:text-red-600 rounded-xl"
+            >
+              <XCircle className="w-3.5 h-3.5" /> Cancel
+            </Button>
+          )}
+          {event.status === 'cancelled' && (
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteOpen(true)}
+              className="text-[12px] font-bold text-red-400 hover:text-red-600 rounded-xl"
+            >
+              <Trash2 className="w-3.5 h-3.5" /> Delete
+            </Button>
+          )}
         </div>
+
+        {/* Cancel confirmation */}
+        <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
+          <AlertDialogContent className="rounded-3xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel this event?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will mark <strong>{event.title}</strong> as cancelled. Attendees will see the cancellation.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="rounded-xl">Keep Event</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700 rounded-xl"
+                onClick={async () => {
+                  await updateDoc(doc(db, `estates/${estateId}/events`, event.id), { status: 'cancelled', updatedAt: serverTimestamp() })
+                  toast.success('Event cancelled')
+                }}
+              >
+                Cancel Event
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Delete confirmation */}
+        <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <AlertDialogContent className="rounded-3xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this event?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently remove <strong>{event.title}</strong>. This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="rounded-xl">Keep</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-600 hover:bg-red-700 rounded-xl"
+                onClick={async () => {
+                  await deleteDoc(doc(db, `estates/${estateId}/events`, event.id))
+                  toast.success('Event deleted')
+                }}
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   )
@@ -470,6 +540,130 @@ function CreateEventModal({
             className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
           >
             {saving ? 'Creating...' : 'Create Event'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// ─── Edit Event Modal ───────────────────────────────────────────────────────
+
+function EditEventModal({
+  estateId,
+  event,
+  open,
+  onOpenChange,
+}: {
+  estateId: string
+  event: EstateEvent | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  const [saving, setSaving] = useState(false)
+  const [form, setForm] = useState({
+    type: (event?.type || 'funeral') as EstateEvent['type'],
+    title: event?.title || '',
+    date: event?.date || '',
+    time: event?.time || '',
+    endTime: event?.endTime || '',
+    location: event?.location || '',
+    address: event?.address || '',
+    description: event?.description || '',
+    dressCode: event?.dressCode || '',
+    notes: event?.notes || '',
+  })
+
+  // Sync form when event changes
+  const [loadedId, setLoadedId] = useState<string | null>(null)
+  if (event && event.id !== loadedId) {
+    setLoadedId(event.id)
+    setForm({
+      type: event.type,
+      title: event.title,
+      date: event.date,
+      time: event.time || '',
+      endTime: event.endTime || '',
+      location: event.location,
+      address: event.address || '',
+      description: event.description || '',
+      dressCode: event.dressCode || '',
+      notes: event.notes || '',
+    })
+  }
+  if (!open && loadedId !== null) {
+    setLoadedId(null)
+  }
+
+  const update = (key: string, value: string) => setForm((p) => ({ ...p, [key]: value }))
+
+  const handleSave = useCallback(async () => {
+    if (!event || !form.title.trim() || !form.date || !form.location.trim()) return
+    setSaving(true)
+    try {
+      await updateDoc(doc(db, `estates/${estateId}/events`, event.id), {
+        ...form,
+        title: form.title.trim(),
+        location: form.location.trim(),
+        address: form.address.trim() || null,
+        description: form.description.trim() || null,
+        dressCode: form.dressCode.trim() || null,
+        notes: form.notes.trim() || null,
+        updatedAt: serverTimestamp(),
+      })
+      toast.success('Event updated')
+      onOpenChange(false)
+    } catch (err) {
+      console.error('[EditEvent] Error:', err)
+      toast.error('Failed to update event')
+    } finally {
+      setSaving(false)
+    }
+  }, [estateId, event, form, onOpenChange])
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
+        <DialogHeader className="mb-6">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+            Edit Event
+          </DialogTitle>
+          <DialogDescription className="sr-only">Edit event details</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Title *</Label>
+            <Input value={form.title} onChange={(e) => update('title', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Date *</Label>
+              <Input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Start Time</Label>
+              <Input type="time" value={form.time} onChange={(e) => update('time', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">End Time</Label>
+              <Input type="time" value={form.endTime} onChange={(e) => update('endTime', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Location *</Label>
+            <Input value={form.location} onChange={(e) => update('location', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Description</Label>
+            <Textarea value={form.description} onChange={(e) => update('description', e.target.value)} rows={3} className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] resize-none" />
+          </div>
+        </div>
+
+        <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-slate-100">
+          <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]">Cancel</Button>
+          <Button onClick={handleSave} disabled={saving || !form.title.trim() || !form.date || !form.location.trim()} className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]">
+            {saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </DialogFooter>
       </DialogContent>

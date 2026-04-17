@@ -1,93 +1,101 @@
 # 𓁟 Thoth — Project Memory for FinalWishes
 # Read this FIRST before any source files.
-# Last updated: 2026-03-23T05:10:00-04:00
+# Last updated: 2026-04-17T02:55:00-04:00
 
 ## Identity
 project: finalwishes
 repo: github.com/SirsiMaster/FinalWishes
 type: Tenant Application — Estate Planning Platform
-language: TypeScript (React 18 + Vite) + Go (API backend)
-version: 0.1.0-alpha
-line_count: TBD
+language: TypeScript (React 19 + Vite 8) + Go 1.26 (API backend)
+version: 0.8.0-alpha
+route_line_count: 22164
 
 ## Architecture Quick Reference
-# web/            — React 18 frontend (Vite, TailwindCSS, Zustand)
-# api/            — Go backend (Cloud Run, gRPC + Protobuf)
-# shared/         — Shared types/utils (TypeScript)
-# functions/      — Firebase Cloud Functions
-# proposals/      — Legal documents (CONTRACT, SOW, COST_PROPOSAL)
+# web/            — React 19 frontend (Vite 8, TanStack Router, TailwindCSS v4, shadcn/ui)
+# api/            — Go backend (Cloud Run, Chi + ConnectRPC)
+# functions/      — Firebase Cloud Functions (Node.js 22, 2 triggers)
 # proto/          — Protobuf definitions
-# mobile/         — React Native + Expo (iOS/Android)
-# desktop/        — Desktop app scaffold
-# extensions/     — Browser extension scaffold
-# improvements/   — Feature improvement tracking
+# proposals/      — Legal documents (CONTRACT, SOW, COST_PROPOSAL)
 # firebase.json   — Firebase project config
-# firestore.rules — Firestore security rules
-# storage.rules   — Cloud Storage security rules
-# go.work         — Go workspace (api + shared modules)
+# firestore.rules — Firestore security rules v5.0.0
+# storage.rules   — Cloud Storage security rules v2.0.0
+# ETHOS.md        — Soul of the product (permanent, never version)
+
+## Production Status (as of Apr 17 2026)
+# Frontend: https://finalwishes-prod.web.app (Firebase Hosting, deployed Apr 16)
+# API: https://finalwishes-api-860699311615.us-central1.run.app (Cloud Run, healthy)
+# API Health: vault=active, encryption=AES-256-GCM, kms=Cloud KMS
+# Stripe: LIVE ($29/mo Concierge, $99/mo White Glove)
+# Email: Gmail API via Cloud Function (domain-wide delegation, admin@sirsi.ai)
+# Functions: autoMatchInvitation + sendMail (Node.js 22, us-central1)
+# GA4: G-K5WEF5EEDV (wired in firebase.ts)
+# Tests: 129 passing (8 files), 0 lint, 0 TS errors
+# Security: 0 npm vulns, 0 Go advisories, Firestore rules hardened
 
 ## Critical Design Decisions
-# 1. Royal Neo-Deco design system — Royal Blue (#1E3A5F) + Gold (#C8A951)
-#    NOT the Sirsi emerald — explicitly firewalled (Rule 27)
+# 1. Royal Neo-Deco design system — Royal Blue (#133378) + Gold (#C8A951)
 # 2. Hybrid database: Cloud SQL for PII/vault + Firestore for real-time
-# 3. Sirsi Sign consumed as service (from SirsiNexusApp) — no own payment infra
-# 4. Firebase Auth with MFA (TOTP required)
-# 5. SOC 2 + KMS security model (AES-256)
-# 6. Vault concept — documents stored as legal evidence, not just files
-# 7. Secure Enclave Dashboard — session-based estate ID, no URL slugs (ADR-031)
-# 8. Cloud SQL PII Vault (ADR-037)
-# 9. Tiered Identity Verification (ADR-035)
-# 10. Firestore Direct Reads (ADR-036)
+# 3. Firebase Auth with MFA (TOTP required after grace period)
+# 4. SOC 2 architecture (not yet certified)
+# 5. AES-256-GCM envelope encryption via Cloud KMS
+# 6. Gmail API replaces SendGrid (zero vendor cost, domain-wide delegation)
+# 7. Signed URL uploads bypass storage rules (Go API generates V4 URLs)
+# 8. Sonner toasts for action feedback across all pages
+# 9. Email verification gate blocks estate access until verified
+# 10. API client has retry interceptor (exponential backoff, 2 retries)
 
-## ADRs (25 total)
-# ADR-001: Architecture Decisions (founding)
-# ADR-031: Secure Enclave Dashboard Standard
-# ADR-032: Universal Enclave Implementation
-# ADR-033: Design System Acceleration
-# ADR-034: Firebase Auth Implementation
-# ADR-035: Tiered Identity Verification
-# ADR-036: Firestore Direct Reads
-# ADR-037: Cloud SQL PII Vault
-# (see docs/ADR-INDEX.md for full list)
-
-## Known Limitations
-# - Go API backend is early stage (api/ directory)
-# - Mobile and desktop scaffolds are stubs
-# - Cloud SQL PII Vault not yet deployed to production
-# - SendGrid email integration planned but not deployed
-# - 2 uncommitted files in working tree
-# - Thoth memory was skeleton until Session 9 update
-
-## Recent Changes
-# 2026-03-22: Case study stub + ROI calculator deployed
-# 2026-03-20: Continuation prompt for Phase B (Cloud SQL) + Phase C (SendGrid)
-# 2026-03-19: GEMINI.md v1.2.0 (Traceability Hardened)
-# 2026-03-19: Firebase email extension exploration
+## Known Gaps (Session 9 Deep Audit — Apr 16-17)
+# CRITICAL:
+# - Document signing NOT wired to UI (OpenSign backend exists, zero frontend calls)
+# - User guide falsely claims signing + 72hr unseal (neither exists)
+# - Heir Welcome needs verification — may not show voice/video as ETHOS describes
+# - No auto-save on directives (manual "Save Draft" only)
+# HIGH:
+# - No public shareable memorial links (account required to view anything)
+# - No QR code generation for invitations or sharing
+# - No SMS/iMessage/WhatsApp invitations (email only)
+# - No broadcasting capability (funerals, services, repasts)
+# - No per-document role assignment (all-or-nothing visibility)
+# - Dashboard is checklist-first, not life-first (contradicts ETHOS)
+# MEDIUM:
+# - No document version history
+# - No granular per-person content permissions
+# - Shepherd is reactive only (no proactive suggestions)
+# - No in-app messaging (FR-801 in spec)
 
 ## CI
 # .github/workflows/firebase-hosting-merge.yml — Deploy on merge
 # .github/workflows/firebase-hosting-pull-request.yml — Preview on PR
-# CI Status: ✅ Green (as of Mar 23)
+# Ma'at pre-push gate: lint → typecheck → build (auto on git push)
 
-## Compliance
-# HIPAA-adjacent (estate documents contain PII)
-# SOC 2 target
-# PII siloed in Cloud SQL, never in Firestore or client state (Rule 26)
-# No telemetry on sensitive data
+## Session History
+# Session 9 (Apr 16-17): Investor polish + infrastructure fixes
+#   - Landing page: false social proof removed, pricing aligned to Stripe
+#   - Design: 7 files normalized from rogue colors to Royal Blue
+#   - Toasts: Sonner wired, 6 key actions have success feedback
+#   - Storage rules v2.0.0 deployed (was deny-all)
+#   - Email: SendGrid removed → Gmail API Cloud Function (working)
+#   - Verification gate: email verification blocks estate access
+#   - API client: retry interceptor with exponential backoff
+#   - Node.js 22 runtime (was 20, deprecated Apr 30)
+#   - Stripe redirect URLs fixed (was pointing to non-existent domain)
+#   - Deep audit revealed: signing not wired, user guide lies, sharing gaps
+# Prior sessions 1-8: See docs/CONTINUATION-PROMPT.md
 
-## Pantheon Status
-# Thoth: ✅ Active (this file — populated Session 9)
-# Ma'at: ❌ Not yet deployed
-# Pre-push hook: ❌ Not installed
-# Session workflows: ✅ .agent/workflows/session-start.md
+## Secrets (in GCP Secret Manager)
+# stripe-secret-key, stripe-publishable-key, stripe-webhook-secret
+# vault-db-password, opensign-api-url, gemini-api-key
+# gmail-sa-key (firebase-adminsdk SA key for Gmail API delegation)
+# sendgrid-api-key (deprecated, no longer used)
 
 ## File Map
-# package.json           — root workspace config (npm)
-# GEMINI.md / CLAUDE.md  — governance rules
-# CHANGELOG.md           — release changelog
-# web/                   — React frontend
-# api/                   — Go backend
-# functions/             — Firebase functions
-# docs/                  — ADRs, architecture, design, legal
-# proposals/             — Financial Trinity (Contract, SOW, Cost Proposal)
-# .thoth/memory.yaml     — THIS FILE
+# ETHOS.md             — Soul of the product (permanent)
+# CLAUDE.md            — Governance rules
+# CHANGELOG.md         — Release changelog
+# web/                 — React 19 frontend
+# api/                 — Go backend (Cloud Run)
+# functions/           — Cloud Functions (autoMatchInvitation, sendMail)
+# docs/                — ADRs, architecture, design, legal
+# proposals/           — Financial Trinity
+# .thoth/memory.yaml   — THIS FILE
+# .thoth/journal.md    — Decision history

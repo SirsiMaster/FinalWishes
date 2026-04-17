@@ -29,7 +29,7 @@ interface OwnerWelcomeProps {
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
-export function OwnerWelcome({ estateId, estateName, onContinue }: OwnerWelcomeProps) {
+export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: OwnerWelcomeProps) {
   const { profile } = useAuth()
   const firstName = profile?.firstName || profile?.displayName?.split(' ')[0] || 'there'
 

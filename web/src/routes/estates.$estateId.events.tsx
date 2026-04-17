@@ -22,7 +22,6 @@ import {
   Clock,
   MapPin,
   Users,
-  Link2,
   Copy,
   Check,
 } from 'lucide-react'

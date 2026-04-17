@@ -9,7 +9,7 @@
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import DOMPurify from 'dompurify'
@@ -64,10 +64,8 @@ function PublicMemorialPage() {
     load()
   }, [memorialId])
 
-  const sanitizedObituary = useMemo(
-    () => (memorial?.obituaryContent ? DOMPurify.sanitize(memorial.obituaryContent) : ''),
-    [memorial?.obituaryContent],
-  )
+  const obituaryContent = memorial?.obituaryContent
+  const sanitizedObituary = obituaryContent ? DOMPurify.sanitize(obituaryContent) : ''
 
   if (loading) {
     return (

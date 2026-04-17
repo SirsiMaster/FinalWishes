@@ -248,10 +248,11 @@ function SoulLogPage() {
     return null
   }, [rawEntries])
 
+  const [now] = useState(() => Date.now())
   const daysSinceLastEntry = useMemo(() => {
     if (!lastEntryDate) return Infinity
-    return Math.floor((Date.now() - lastEntryDate.getTime()) / (1000 * 60 * 60 * 24))
-  }, [lastEntryDate])
+    return Math.floor((now - lastEntryDate.getTime()) / (1000 * 60 * 60 * 24))
+  }, [lastEntryDate, now])
 
   const noEntriesNudge = useShepherdNudge(
     estateId,

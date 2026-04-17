@@ -8,12 +8,12 @@
  *
  * @version 1.0.0
  */
-import { createLazyFileRoute, useParams } from '@tanstack/react-router'
+import { createLazyFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { useCollection, type Heir } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
-import { useTierGating } from '../lib/tier-gating'
+import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { toast } from 'sonner'
@@ -1215,9 +1215,13 @@ function ComposerDialog({
     sealedTrigger, sealedDate, onOpenChange,
   ])
 
+  const mediaGated = (entryType === 'video' || entryType === 'audio') && tierUsage && !tierUsage.canUploadMedia
+
   const canSave =
-    entryType === 'text' ? textContent.length > 0 :
-    recordedBlob !== null
+    !mediaGated && (
+      entryType === 'text' ? textContent.length > 0 :
+      recordedBlob !== null
+    )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -1257,33 +1261,41 @@ function ComposerDialog({
 
             {/* Video Recording */}
             <TabsContent value="video" className="mt-4 space-y-4">
-              <VideoRecorder
-                recording={recording}
-                recordedUrl={recordedUrl}
-                recordDuration={recordDuration}
-                permissionDenied={permissionDenied}
-                videoPreviewRef={videoPreviewRef}
-                onStart={startRecording}
-                onStop={stopRecording}
-                onRetake={() => {
-                  resetRecordingState()
-                }}
-              />
+              {tierUsage && !tierUsage.canUploadMedia ? (
+                <TierGatePrompt estateId={estateId} tierUsage={tierUsage} mediaType="media" />
+              ) : (
+                <VideoRecorder
+                  recording={recording}
+                  recordedUrl={recordedUrl}
+                  recordDuration={recordDuration}
+                  permissionDenied={permissionDenied}
+                  videoPreviewRef={videoPreviewRef}
+                  onStart={startRecording}
+                  onStop={stopRecording}
+                  onRetake={() => {
+                    resetRecordingState()
+                  }}
+                />
+              )}
             </TabsContent>
 
             {/* Audio Recording */}
             <TabsContent value="audio" className="mt-4 space-y-4">
-              <AudioRecorder
-                recording={recording}
-                recordedUrl={recordedUrl}
-                recordDuration={recordDuration}
-                permissionDenied={permissionDenied}
-                onStart={startRecording}
-                onStop={stopRecording}
-                onRetake={() => {
-                  resetRecordingState()
-                }}
-              />
+              {tierUsage && !tierUsage.canUploadMedia ? (
+                <TierGatePrompt estateId={estateId} tierUsage={tierUsage} mediaType="media" />
+              ) : (
+                <AudioRecorder
+                  recording={recording}
+                  recordedUrl={recordedUrl}
+                  recordDuration={recordDuration}
+                  permissionDenied={permissionDenied}
+                  onStart={startRecording}
+                  onStop={stopRecording}
+                  onRetake={() => {
+                    resetRecordingState()
+                  }}
+                />
+              )}
             </TabsContent>
 
             {/* Written Reflection */}
@@ -1455,6 +1467,48 @@ function ComposerDialog({
         </div>
       </DialogContent>
     </Dialog>
+  )
+}
+
+// ─── Tier Gate Prompt ────────────────────────────────────────────────────────
+
+function TierGatePrompt({
+  estateId,
+  tierUsage,
+  mediaType,
+}: {
+  estateId: string
+  tierUsage: NonNullable<ReturnType<typeof useTierGating>['usage']>
+  mediaType: 'media' | 'video'
+}) {
+  const message = tierUpgradeMessage(tierUsage, mediaType)
+
+  return (
+    <div className="rounded-2xl bg-[#C8A951]/10 border border-[#C8A951]/30 p-8 text-center space-y-4">
+      <div className="w-14 h-14 rounded-2xl bg-[#C8A951]/20 flex items-center justify-center mx-auto">
+        <svg viewBox="0 0 24 24" className="w-7 h-7 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+        </svg>
+      </div>
+      <div className="space-y-1">
+        <p className="text-sm font-bold text-[#0F172A]">
+          {message || 'You have reached your upload limit for this plan.'}
+        </p>
+        <p className="text-xs text-[#64748B]">
+          Written reflections are always free. Upgrade your plan for video and audio recording.
+        </p>
+      </div>
+      <Link
+        to="/estates/$estateId/pricing"
+        params={{ estateId }}
+        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C8A951] hover:bg-[#B8952F] text-white font-bold text-sm transition-colors"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+        </svg>
+        View Upgrade Options
+      </Link>
+    </div>
   )
 }
 

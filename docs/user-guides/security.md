@@ -35,4 +35,4 @@ SOC 2 is an industry audit standard that verifies a company handles your data se
 A: No. Your data is encrypted with keys managed by Google Cloud KMS. FinalWishes staff cannot decrypt or view your information.
 
 **Q: What happens to my data if I cancel my account?**
-A: Your data remains encrypted and stored for a grace period. Account deletion is coming soon -- contact **support@finalwishes.app** if you need to request data removal.
+A: You can delete your account from **Settings → Delete Account**. This permanently removes your profile, all estates you own, and all associated data. Estates where you are an heir, executor, or advisor will not be affected — only your access is removed.

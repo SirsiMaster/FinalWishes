@@ -9,7 +9,7 @@
  * @version 3.0.0 — Refactored to shadcn/ui primitives
  */
 
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute, useParams, useNavigate } from '@tanstack/react-router'
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   useDocument,
@@ -23,7 +23,7 @@ import {
   useTimeCapsules,
   useHeirlooms,
 } from '../lib/firestore'
-import { doc, setDoc, updateDoc, serverTimestamp, orderBy } from 'firebase/firestore'
+import { doc, setDoc, updateDoc, deleteDoc, getDocs, query, where, collection, serverTimestamp, orderBy } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { estateClient } from '../lib/client'
@@ -39,8 +39,19 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 const ROLE_DISPLAY: Record<string, string> = {
   principal: 'Estate Owner',
@@ -151,9 +162,48 @@ function SettingsPage() {
     }
   }, [estateId, user]);
 
+  // Navigation
+  const navigate = useNavigate();
+
+  // Subscription management state
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const handleManageSubscription = useCallback(async () => {
+    if (!user) return;
+    setPortalLoading(true);
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error('Not authenticated');
+      const res = await fetch(`${API_BASE}/api/v1/payments/portal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estateId }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error?.message || 'Failed to open subscription management');
+      }
+      const data = await res.json();
+      window.location.href = data.url;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to open subscription management';
+      console.error('[Settings] Portal session error:', err);
+      toast.error(message);
+      setPortalLoading(false);
+    }
+  }, [user, estateId, API_BASE]);
+
   // Export state
   const [exporting, setExporting] = useState(false);
   const [exportDone, setExportDone] = useState(false);
+
+  // Account deletion state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   const handleExport = useCallback(async () => {
     setExporting(true);
@@ -184,6 +234,41 @@ function SettingsPage() {
       setExporting(false);
     }
   }, [estateId, estate, assets, heirs, documents, lockboxItems, directives, capsules, heirlooms, memoirs]);
+
+  const handleDeleteAccount = useCallback(async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      // 1. Delete user's Firestore profile
+      await deleteDoc(doc(db, 'users', user.uid));
+
+      // 2. Delete all estate_users records where userId === uid
+      //    (removes access from estates where user is heir/executor/etc.)
+      const estateUsersQuery = query(
+        collection(db, 'estate_users'),
+        where('userId', '==', user.uid),
+      );
+      const estateUsersSnapshot = await getDocs(estateUsersQuery);
+      const deletePromises = estateUsersSnapshot.docs.map((d) => deleteDoc(d.ref));
+      await Promise.all(deletePromises);
+
+      // 3. Sign out via Firebase Auth
+      await auth.signOut();
+
+      // 4. Redirect to home
+      navigate({ to: '/' });
+
+      // 5. Toast confirmation
+      toast.success('Account deleted successfully');
+    } catch (err) {
+      console.error('[Settings] Account deletion error:', err);
+      toast.error('Failed to delete account. Please try again or contact support.');
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+      setDeleteConfirmText('');
+    }
+  }, [user, navigate]);
 
   // Merge Firestore doc with local overrides
   const s = useMemo(() => ({ ...settingsDoc, ...localSettings }), [settingsDoc, localSettings]);
@@ -491,6 +576,55 @@ function SettingsPage() {
       </Card>
       )}
 
+      {/* ── Subscription Management (principal/admin on paid plans) ── */}
+      {isPrincipalOrAdmin && estate?.tier && estate.tier !== 'free' && (
+      <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
+        <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg>
+          </div>
+          <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em] font-[family-name:var(--font-cinzel)]">Subscription</h3>
+        </div>
+        <CardContent className="px-10 py-8 flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Manage Subscription</span>
+              <Badge variant="outline" className="px-3 py-1 h-auto bg-[#133378]/5 border-[#133378]/10 rounded-lg text-[10px] font-black text-[#133378] uppercase tracking-[0.15em]">
+                {estate.tier === 'white_glove' ? 'White Glove' : estate.tier === 'concierge' ? 'Concierge' : estate.tier}
+              </Badge>
+            </div>
+            <p className="text-[13px] text-[#64748B] font-medium mt-1 max-w-md">
+              Update your payment method, change your plan, or cancel your subscription via Stripe.
+            </p>
+          </div>
+          <Button
+            onClick={handleManageSubscription}
+            disabled={portalLoading}
+            className="px-6 py-2.5 rounded-xl font-bold text-[12px] shadow-md transition-all active:scale-95 bg-[#133378] hover:bg-[#1E3A5F] text-white border-[#133378]"
+          >
+            {portalLoading ? (
+              <span className="flex items-center gap-2">
+                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Redirecting...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Manage Subscription
+              </span>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+      )}
+
       {/* ── Data Export (principal/admin only) ── */}
       {isPrincipalOrAdmin && (
       <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
@@ -544,6 +678,90 @@ function SettingsPage() {
         </CardContent>
       </Card>
       )}
+
+      {/* ── Delete Account — Danger Zone ── */}
+      <Card className="rounded-[2.5rem] border-red-200 shadow-sm py-0 gap-0 bg-red-50/30">
+        <div className="bg-gradient-to-r from-red-500/[0.06] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-red-200 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-red-100 flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+          </div>
+          <h3 className="text-[11px] font-black text-red-600/80 uppercase tracking-[0.3em] font-[family-name:var(--font-cinzel)]">Danger Zone</h3>
+        </div>
+        <CardContent className="px-10 py-8 flex items-center justify-between gap-6">
+          <div>
+            <span className="text-[#0F172A] font-bold text-[15px] leading-tight">Delete Account</span>
+            <p className="text-[13px] text-[#64748B] font-medium mt-1 max-w-md">
+              This will permanently delete your account, all estates you own, and all associated data. This cannot be undone.
+            </p>
+          </div>
+          <Button
+            variant="destructive"
+            onClick={() => setDeleteDialogOpen(true)}
+            className="px-6 py-2.5 rounded-xl font-bold text-[12px] shadow-md transition-all active:scale-95 bg-red-600 hover:bg-red-700 text-white border-red-600 shrink-0"
+          >
+            <svg viewBox="0 0 24 24" className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+            Delete My Account
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* ── Delete Account Confirmation Dialog ── */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={(open) => { setDeleteDialogOpen(open); if (!open) setDeleteConfirmText(''); }}>
+        <AlertDialogContent className="rounded-3xl max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-600 text-lg font-bold">Delete your account?</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="text-[14px] leading-relaxed space-y-3 text-sm text-muted-foreground">
+                <p>This action is <strong className="text-foreground">permanent and irreversible</strong>. The following will be deleted:</p>
+                <ul className="pl-4 space-y-1 list-none">
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 mt-0.5">&#x2022;</span> Your user account and profile
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 mt-0.5">&#x2022;</span> All estates you own and their data
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 mt-0.5">&#x2022;</span> All documents, assets, and lockbox items
+                  </li>
+                </ul>
+                <p>Your access to estates where you are an heir, executor, or advisor will be removed, but those estates will not be affected.</p>
+                <p className="font-semibold mt-2">Type <span className="font-mono bg-red-50 px-1.5 py-0.5 rounded text-red-600 border border-red-200">DELETE</span> to confirm:</p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Input
+            value={deleteConfirmText}
+            onChange={(e) => setDeleteConfirmText(e.target.value)}
+            placeholder="Type DELETE to confirm"
+            className="rounded-xl border-slate-200 focus:border-red-400 focus:ring-red-200 font-mono text-center"
+            autoComplete="off"
+          />
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-xl" disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={deleteConfirmText !== 'DELETE' || deleting}
+              onClick={async (e) => {
+                e.preventDefault();
+                await handleDeleteAccount();
+              }}
+            >
+              {deleting ? (
+                <span className="flex items-center gap-2">
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Deleting...
+                </span>
+              ) : (
+                'Permanently Delete Account'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
     </div>
   )

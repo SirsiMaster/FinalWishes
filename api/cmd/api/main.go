@@ -385,6 +385,7 @@ func main() {
 		r.Route("/api/v1/payments", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Post("/create-checkout", paymentHandler.HandleCreateCheckout)
+			r.Post("/portal", paymentHandler.HandleCreatePortalSession)
 		})
 		r.Post("/api/v1/payments/webhook", paymentHandler.HandleWebhook) // Stripe calls this — no auth, uses webhook signature
 		log.Info().Msg("Payment API routes registered at /api/v1/payments/*")

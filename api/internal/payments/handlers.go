@@ -17,6 +17,7 @@ import (
 	"github.com/stripe/stripe-go/v81"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
+	portalsession "github.com/stripe/stripe-go/v81/billingportal/session"
 	"github.com/stripe/stripe-go/v81/checkout/session"
 	"github.com/stripe/stripe-go/v81/webhook"
 
@@ -271,6 +272,94 @@ func (h *Handler) HandleCreateCheckout(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{
 		"sessionId":   sess.ID,
 		"checkoutUrl": sess.URL,
+	})
+}
+
+// HandleCreatePortalSession creates a Stripe Billing Portal session so the user
+// can manage their subscription (cancel, change plan, update payment method).
+//
+// PREREQUISITE: The Stripe Customer Portal must be configured in the Stripe Dashboard
+// (Settings > Billing > Customer Portal). Without this configuration, the portal URL
+// will return a Stripe error. This is a one-time manual step for the account owner.
+func (h *Handler) HandleCreatePortalSession(w http.ResponseWriter, r *http.Request) {
+	// Verify authenticated caller
+	callerUID, err := auth.RequireUserID(r.Context())
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+
+	// Parse request
+	var req struct {
+		EstateID string `json:"estateId"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	if req.EstateID == "" {
+		writeError(w, http.StatusBadRequest, "estateId is required")
+		return
+	}
+
+	// Verify caller has access to this estate
+	if h.fs != nil {
+		euDocID := callerUID + "_" + req.EstateID
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		euSnap, fsErr := h.fs.Collection("estate_users").Doc(euDocID).Get(ctx)
+		if fsErr != nil || !euSnap.Exists() {
+			writeError(w, http.StatusForbidden, "You do not have access to this estate")
+			return
+		}
+	}
+
+	// Look up the Stripe customer ID from the estate document
+	if h.fs == nil {
+		writeError(w, http.StatusServiceUnavailable, "Firestore unavailable")
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+	estateSnap, err := h.fs.Collection("estates").Doc(req.EstateID).Get(ctx)
+	if err != nil {
+		log.Error().Err(err).Str("estate_id", req.EstateID).Msg("Failed to fetch estate for portal session")
+		writeError(w, http.StatusNotFound, "Estate not found")
+		return
+	}
+
+	customerID, _ := estateSnap.DataAt("stripeCustomerId")
+	customerIDStr, ok := customerID.(string)
+	if !ok || customerIDStr == "" {
+		writeError(w, http.StatusBadRequest, "No active subscription found. Please subscribe to a plan first.")
+		return
+	}
+
+	// Build return URL — user returns here after managing subscription
+	returnURL := fmt.Sprintf("https://finalwishes-prod.web.app/estates/%s/settings", req.EstateID)
+	if os.Getenv("GOOGLE_CLOUD_PROJECT") == "" {
+		returnURL = fmt.Sprintf("http://localhost:5173/estates/%s/settings", req.EstateID)
+	}
+
+	// Create Stripe Billing Portal session
+	params := &stripe.BillingPortalSessionParams{
+		Customer:  stripe.String(customerIDStr),
+		ReturnURL: stripe.String(returnURL),
+	}
+
+	sess, err := portalsession.New(params)
+	if err != nil {
+		log.Error().Err(err).Str("customer_id", customerIDStr).Str("estate_id", req.EstateID).Msg("Stripe portal session creation failed")
+		writeError(w, http.StatusInternalServerError, "Failed to create subscription management session")
+		return
+	}
+
+	log.Info().Str("estate_id", req.EstateID).Str("customer_id", customerIDStr).Msg("Stripe portal session created")
+
+	writeJSON(w, http.StatusOK, map[string]string{
+		"url": sess.URL,
 	})
 }
 

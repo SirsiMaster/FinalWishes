@@ -270,3 +270,64 @@ describe('ROLE_LABELS', () => {
     expect(ROLE_LABELS.principal).toBe('Estate Owner')
   })
 })
+
+// ─── Phone Number Support ───────────────────────────────────────────────────
+
+describe('sendEstateInvitation with phone', () => {
+  it('includes phone in invitation document when provided', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'test@example.com',
+      phone: '+1-555-123-4567',
+      fullName: 'Phone User',
+      role: 'heir',
+      invitedBy: 'user-1',
+    })
+
+    // First addDoc call is the invitation record
+    const invitationData = mockAddDoc.mock.calls[0][1]
+    expect(invitationData.phone).toBe('+1-555-123-4567')
+  })
+
+  it('does not include phone field when not provided', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'nophone@example.com',
+      fullName: 'No Phone',
+      role: 'heir',
+      invitedBy: 'user-1',
+    })
+
+    const invitationData = mockAddDoc.mock.calls[0][1]
+    expect(invitationData).not.toHaveProperty('phone')
+  })
+
+  it('queues SMS notification when phone is provided', async () => {
+    mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
+
+    await sendEstateInvitation({
+      estateId: 'estate-1',
+      email: 'sms@example.com',
+      phone: '  +1-555-999-0000  ',
+      fullName: 'SMS User',
+      role: 'executor',
+      invitedBy: 'user-1',
+      inviterName: 'Cylton',
+      estateName: 'Collymore Estate',
+      priority: 1,
+    })
+
+    // Without phone: 3 addDoc calls (invitation + executor subcollection + email)
+    // With phone: 4 addDoc calls (+ sms_queue)
+    expect(mockAddDoc).toHaveBeenCalledTimes(4)
+
+    // The last addDoc call is the sms_queue entry
+    const lastCall = mockAddDoc.mock.calls[3]
+    expect(lastCall[1].to).toBe('+1-555-999-0000')
+    expect(lastCall[1].status).toBe('pending')
+  })
+})

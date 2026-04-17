@@ -24,25 +24,42 @@ const db = admin.firestore();
 //   Add Client ID for firebase-adminsdk service account
 //   Grant scope: https://www.googleapis.com/auth/gmail.send
 
-const SENDER_EMAIL = 'noreply@sirsi.ai';
+// Domain-wide delegation requires JWT auth with a service account key.
+// Cloud Functions 2nd gen use Compute metadata auth which doesn't support
+// the 'subject' field. We load the firebase-adminsdk key from Secret Manager
+// and create a JWT client that can impersonate Workspace users.
+const IMPERSONATE_USER = 'admin@sirsi.ai';
+const SENDER_EMAIL = 'admin@sirsi.ai';
 const SENDER_NAME = 'FinalWishes';
+
+let _cachedGmailClient = null;
 
 /**
  * Get an authenticated Gmail client via domain-wide delegation.
- * Falls back to basic transport if delegation isn't configured yet.
+ * Uses firebase-adminsdk service account key (from Secret Manager)
+ * to create a JWT that impersonates admin@sirsi.ai.
  */
 async function getGmailClient() {
-    const auth = new google.auth.GoogleAuth({
-        scopes: ['https://www.googleapis.com/auth/gmail.send'],
+    if (_cachedGmailClient) return _cachedGmailClient;
+
+    // Load the service account key from Secret Manager
+    const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+    const smClient = new SecretManagerServiceClient();
+    const [version] = await smClient.accessSecretVersion({
+        name: 'projects/finalwishes-prod/secrets/gmail-sa-key/versions/latest',
     });
-    const client = await auth.getClient();
+    const keyData = JSON.parse(version.payload.data.toString('utf8'));
 
-    // Impersonate noreply@sirsi.ai via domain-wide delegation
-    if (client.subject !== SENDER_EMAIL) {
-        client.subject = SENDER_EMAIL;
-    }
+    // Create JWT client with domain-wide delegation
+    const jwtClient = new google.auth.JWT({
+        email: keyData.client_email,
+        key: keyData.private_key,
+        scopes: ['https://www.googleapis.com/auth/gmail.send'],
+        subject: IMPERSONATE_USER,
+    });
 
-    return google.gmail({ version: 'v1', auth: client });
+    _cachedGmailClient = google.gmail({ version: 'v1', auth: jwtClient });
+    return _cachedGmailClient;
 }
 
 /**

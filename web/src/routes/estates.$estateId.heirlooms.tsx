@@ -316,15 +316,15 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                   Everyone
                 </button>
                 {activeHeirs.map((heir) => {
-                  const selected = visibleTo.includes(heir.fullName)
+                  const selected = visibleTo.includes(heir.id)
                   return (
                     <button
                       key={heir.id}
                       onClick={(e) => {
                         e.stopPropagation()
                         const next = selected
-                          ? visibleTo.filter((n) => n !== heir.fullName)
-                          : [...visibleTo, heir.fullName]
+                          ? visibleTo.filter((n) => n !== heir.id)
+                          : [...visibleTo, heir.id]
                         setVisibleTo(next)
                         updateHeirloom(estateId, item.id, { visibleTo: next })
                       }}

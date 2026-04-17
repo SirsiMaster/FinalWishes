@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createLazyFileRoute, useParams } from '@tanstack/react-router'
+import { createLazyFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useState, useCallback, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useEstateDocuments, useEstateHeirs, type VaultDocument, type Heir, type DocumentAnalysis, type DocumentDiscrepancy } from '../lib/firestore'
@@ -389,6 +389,7 @@ function VaultPage() {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (tierUsage && !tierUsage.canUploadMedia) {
+        toast.error(tierUpgradeMessage(tierUsage, 'media') || 'Upload limit reached. Please upgrade your plan.')
         return
       }
       for (const file of acceptedFiles) {
@@ -673,6 +674,13 @@ function VaultPage() {
             <p className="text-xs text-[#64748B] mt-1">
               {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
             </p>
+            <Link
+              to="/estates/$estateId/pricing"
+              params={{ estateId }}
+              className="inline-block mt-2 text-sm font-bold text-[#C8A951] hover:text-[#B8952F] underline underline-offset-2"
+            >
+              View upgrade options
+            </Link>
           </div>
         </div>
       )}

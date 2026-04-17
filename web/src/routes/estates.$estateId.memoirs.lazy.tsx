@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createLazyFileRoute, useParams } from '@tanstack/react-router'
+import { createLazyFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 // YouTube embed via native iframe — zero bundle cost (no react-player)
@@ -109,7 +109,10 @@ function MemoirsPage() {
   const handleFileUpload = useCallback(
     async (title: string, type: string, visibility: string, file: File) => {
       try {
-        if (tierUsage && !tierUsage.canUploadMedia) return
+        if (tierUsage && !tierUsage.canUploadMedia) {
+          toast.error(tierUpgradeMessage(tierUsage, 'media') || 'Upload limit reached. Please upgrade your plan.')
+          return
+        }
         setUploading(true)
         const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
           estateId,
@@ -172,7 +175,10 @@ function MemoirsPage() {
   const handleYouTubeSave = useCallback(
     async (title: string, youtubeUrl: string, visibility: string) => {
       try {
-        if (tierUsage && !tierUsage.canUploadVideo) return
+        if (tierUsage && !tierUsage.canUploadVideo) {
+          toast.error(tierUpgradeMessage(tierUsage, 'video') || 'Video uploads require a plan upgrade.')
+          return
+        }
         setUploading(true)
 
         await addDoc(collection(db, `estates/${estateId}/memoirs`), {
@@ -336,6 +342,13 @@ function MemoirsPage() {
                 ? tierUpgradeMessage(tierUsage, 'media')
                 : tierUpgradeMessage(tierUsage, 'video')}
             </p>
+            <Link
+              to="/estates/$estateId/pricing"
+              params={{ estateId }}
+              className="inline-block mt-2 text-sm font-bold text-[#C8A951] hover:text-[#B8952F] underline underline-offset-2"
+            >
+              View upgrade options
+            </Link>
           </div>
         </div>
       )}

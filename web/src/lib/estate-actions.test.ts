@@ -36,6 +36,7 @@ import {
   archiveLockboxItem,
   cancelTimeCapsule,
   createDocumentRecord,
+  updateVaultDocument,
 } from './estate-actions'
 
 beforeEach(() => {
@@ -459,5 +460,27 @@ describe('createEstate extended', () => {
       primaryEstateName: 'My Estate',
       updatedAt: 'MOCK_TIMESTAMP',
     })
+  })
+})
+
+// ─── updateVaultDocument ────────────────────────────────────────────────────
+
+describe('updateVaultDocument', () => {
+  it('updates vault document fields with timestamp', async () => {
+    const result = await updateVaultDocument('estate-1', 'doc-1', { displayName: 'My Will' })
+
+    expect(result.success).toBe(true)
+    expect(mockUpdateDoc).toHaveBeenCalledWith('mock-doc-ref', {
+      displayName: 'My Will',
+      updatedAt: 'MOCK_TIMESTAMP',
+    })
+  })
+
+  it('returns error on failure', async () => {
+    mockUpdateDoc.mockRejectedValue(new Error('Not found'))
+    const result = await updateVaultDocument('estate-1', 'doc-1', { displayName: 'X' })
+
+    expect(result.success).toBe(false)
+    expect(result.error).toBe('Not found')
   })
 })

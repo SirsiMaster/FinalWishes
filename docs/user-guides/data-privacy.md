@@ -67,7 +67,7 @@ They **cannot**:
 
 ## Your Rights
 - You can download your data at any time
-- You can request account deletion (coming soon -- contact support@finalwishes.app in the meantime)
+- You can delete your account from **Settings → Delete Account**. This permanently removes your profile, all estates you own, and all associated data. Estates where you are an heir, executor, or advisor will not be affected — only your access will be removed.
 - You can revoke access for any team member at any time
 - You control who is part of your estate team
 

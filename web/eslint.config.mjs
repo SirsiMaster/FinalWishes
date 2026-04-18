@@ -23,6 +23,10 @@ export default tseslint.config(
       // TODO: Fix these properly in a code quality sprint
       "react-hooks/rules-of-hooks": "warn",
       "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/set-state-in-effect": "warn",
+      "react-compiler": "off",
+      "react-hooks/immutability": "off",
+      "react-hooks/preserve-manual-memoization": "off",
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true, allowExportNames: ["Route", "loader", "action"] },

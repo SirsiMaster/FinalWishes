@@ -20,6 +20,22 @@ async function demoLogin(page: Page) {
   await page.waitForURL(/estates/, { timeout: 15000 })
 }
 
+/** Expand a collapsible sidebar group by clicking its label */
+async function expandNavGroup(page: Page, groupLabel: string) {
+  const group = page.locator('nav button').filter({ hasText: groupLabel })
+  if (await group.isVisible()) {
+    await group.click()
+    // Wait for expand animation
+    await page.waitForTimeout(200)
+  }
+}
+
+/** Navigate to a nested sidebar item by expanding its parent group first */
+async function navigateToNestedItem(page: Page, parentGroup: string, childLabel: string) {
+  await expandNavGroup(page, parentGroup)
+  await page.locator('nav').getByText(childLabel, { exact: true }).click()
+}
+
 test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
   // Increase test timeout for authenticated flows (network + Firebase init)
   test.setTimeout(60000)
@@ -46,32 +62,55 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
   // ─── 2. Navigate to all major pages ─────────────────────────────────────
 
   test('navigate to all major pages from sidebar', async ({ page }) => {
-    const pages = [
-      { nav: 'Assets', heading: /My Assets/i },
-      { nav: 'Documents', heading: /Vault|Documents/i },
-      { nav: 'Beneficiaries', heading: /Family|Heirs|Beneficiaries/i },
-      { nav: 'Digital Lockbox', heading: /Digital Lockbox/i },
-      { nav: 'Final Directives', heading: /Final Directives/i },
-      { nav: 'Time Capsules', heading: /Time Capsule/i },
-      { nav: 'Heirlooms', heading: /Heirloom/i },
-      { nav: 'Photos & Videos', heading: /Memori|Life Stories/i },
-      { nav: 'Upgrade Plan', heading: /Choose Your Plan|Pricing/i },
-      { nav: 'Settings', heading: /Settings/i },
-      { nav: 'Notifications', heading: /Notification/i },
-      { nav: 'Final Record', heading: /Final Record|Obituary/i },
-    ]
+    // Direct nav items (no parent group)
+    await page.locator('nav').getByText('Soul Log', { exact: true }).click()
+    await expect(page.getByRole('heading', { name: /Soul Log/i }).first()).toBeVisible({ timeout: 10000 })
 
-    for (const p of pages) {
-      const navLink = page.locator('nav').getByText(p.nav, { exact: true })
-      await navLink.click()
-      await expect(page.getByText(p.heading).first()).toBeVisible({ timeout: 10000 })
-    }
+    await page.locator('nav').getByText('My People', { exact: true }).click()
+    await expect(page.getByText(/Family|Heirs|Beneficiaries/i).first()).toBeVisible({ timeout: 10000 })
+
+    // The Vault group → Assets, Documents, Lockbox
+    await navigateToNestedItem(page, 'The Vault', 'Assets')
+    await expect(page.getByText(/My Assets/i).first()).toBeVisible({ timeout: 10000 })
+
+    await navigateToNestedItem(page, 'The Vault', 'Documents')
+    await expect(page.getByText(/Vault|Documents/i).first()).toBeVisible({ timeout: 10000 })
+
+    await navigateToNestedItem(page, 'The Vault', 'Lockbox')
+    await expect(page.getByText(/Digital Lockbox|Lockbox/i).first()).toBeVisible({ timeout: 10000 })
+
+    // Letters group → Directives, Time Capsules, Final Record
+    await navigateToNestedItem(page, 'Letters', 'Directives')
+    await expect(page.getByText(/Final Directives|Directives/i).first()).toBeVisible({ timeout: 10000 })
+
+    await navigateToNestedItem(page, 'Letters', 'Time Capsules')
+    await expect(page.getByText(/Time Capsule/i).first()).toBeVisible({ timeout: 10000 })
+
+    await navigateToNestedItem(page, 'Letters', 'Final Record')
+    await expect(page.getByText(/Final Record|Obituary/i).first()).toBeVisible({ timeout: 10000 })
+
+    // Memories group → Photos & Videos, Heirlooms
+    await navigateToNestedItem(page, 'Memories', 'Photos & Videos')
+    await expect(page.getByText(/Memori|Life Stories/i).first()).toBeVisible({ timeout: 10000 })
+
+    await navigateToNestedItem(page, 'Memories', 'Heirlooms')
+    await expect(page.getByText(/Heirloom/i).first()).toBeVisible({ timeout: 10000 })
+
+    // Utility items
+    await page.locator('nav').getByText('Upgrade Plan', { exact: true }).click()
+    await expect(page.getByText(/Choose Your Plan|Pricing/i).first()).toBeVisible({ timeout: 10000 })
+
+    await page.locator('nav').getByText('Settings', { exact: true }).click()
+    await expect(page.getByText('Settings').first()).toBeVisible({ timeout: 10000 })
+
+    await page.locator('nav').getByText('Notifications', { exact: true }).click()
+    await expect(page.getByText(/Notification/i).first()).toBeVisible({ timeout: 10000 })
   })
 
   // ─── 3. Assets page: open Add Asset dialog ─────────────────────────────
 
   test('assets page: open Add Asset dialog', async ({ page }) => {
-    await page.locator('nav').getByText('Assets', { exact: true }).click()
+    await navigateToNestedItem(page, 'The Vault', 'Assets')
     await expect(page.getByText('My Assets')).toBeVisible({ timeout: 10000 })
 
     await page.getByRole('button', { name: /Add Asset/i }).click()
@@ -86,7 +125,7 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
   // ─── 4. Beneficiaries page: open Add Member dialog ──────────────────────
 
   test('beneficiaries page: open Add Family Member dialog', async ({ page }) => {
-    await page.locator('nav').getByText('Beneficiaries', { exact: true }).click()
+    await page.locator('nav').getByText('My People', { exact: true }).click()
     await expect(page.getByText(/Family|Heirs/i).first()).toBeVisible({ timeout: 10000 })
 
     await page.getByRole('button', { name: /Add Family Member/i }).click()
@@ -100,8 +139,8 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
   // ─── 5. Lockbox page: category filters work ────────────────────────────
 
   test('lockbox page: category filters work', async ({ page }) => {
-    await page.locator('nav').getByText('Digital Lockbox', { exact: true }).click()
-    await expect(page.getByText('Digital Lockbox').first()).toBeVisible({ timeout: 10000 })
+    await navigateToNestedItem(page, 'The Vault', 'Lockbox')
+    await expect(page.getByText(/Digital Lockbox|Lockbox/).first()).toBeVisible({ timeout: 10000 })
 
     // "All" filter button
     const allBtn = page.locator('button', { hasText: /^All$/i })
@@ -119,8 +158,8 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
   // ─── 6. Directives page: open Create Directive dialog ──────────────────
 
   test('directives page: open Create Directive dialog with 4 type options', async ({ page }) => {
-    await page.locator('nav').getByText('Final Directives', { exact: true }).click()
-    await expect(page.getByText('Final Directives').first()).toBeVisible({ timeout: 10000 })
+    await navigateToNestedItem(page, 'Letters', 'Directives')
+    await expect(page.getByText(/Final Directives|Directives/).first()).toBeVisible({ timeout: 10000 })
 
     await page.getByRole('button', { name: /Create Directive/i }).first().click()
 
@@ -184,18 +223,19 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
   // ─── 10. Sidebar navigation highlights active page ─────────────────────
 
   test('sidebar navigation highlights active page', async ({ page }) => {
-    // Dashboard link should be active (border-l-[#133378])
-    const dashboardLink = page.locator('nav a').filter({ hasText: 'Dashboard' })
-    await expect(dashboardLink).toBeVisible({ timeout: 10000 })
-    await expect(dashboardLink).toHaveCSS('border-left-color', 'rgb(19, 51, 120)')
+    // My Legacy group should be active on dashboard (it contains Legacy Timeline)
+    // The group button should have the active styles
+    const legacyGroup = page.locator('nav button').filter({ hasText: 'My Legacy' })
+    await expect(legacyGroup).toBeVisible({ timeout: 10000 })
+    await expect(legacyGroup).toHaveCSS('border-left-color', 'rgb(19, 51, 120)')
 
-    // Navigate to Assets
-    await page.locator('nav').getByText('Assets', { exact: true }).click()
+    // Navigate to Assets (nested under The Vault)
+    await navigateToNestedItem(page, 'The Vault', 'Assets')
     await expect(page.getByText('My Assets')).toBeVisible({ timeout: 10000 })
 
-    // Assets link should now be active
-    const assetsLink = page.locator('nav a').filter({ hasText: 'Assets' })
-    await expect(assetsLink).toHaveCSS('border-left-color', 'rgb(19, 51, 120)')
+    // The Vault group should now be active
+    const vaultGroup = page.locator('nav button').filter({ hasText: 'The Vault' })
+    await expect(vaultGroup).toHaveCSS('border-left-color', 'rgb(19, 51, 120)')
   })
 
   // ─── 11. Mobile hamburger menu ─────────────────────────────────────────
@@ -214,7 +254,7 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
 
     // Mobile sheet should show navigation items
     await expect(page.getByText('Dashboard').first()).toBeVisible({ timeout: 5000 })
-    await expect(page.getByText('Assets').first()).toBeVisible()
+    await expect(page.getByText('Soul Log').first()).toBeVisible()
   })
 
   // ─── 12. Skeleton loading states ───────────────────────────────────────
@@ -226,8 +266,8 @@ test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
       await route.continue()
     })
 
-    // Navigate to assets
-    await page.locator('nav').getByText('Assets', { exact: true }).click()
+    // Navigate to Assets (nested under The Vault)
+    await navigateToNestedItem(page, 'The Vault', 'Assets')
 
     // Check for skeleton/loading indicators (animate-pulse class)
     const skeleton = page.locator('[class*="animate-pulse"]')

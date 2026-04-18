@@ -118,33 +118,59 @@ function DirectivesPage() {
   const estateId = routeId
 
   const { data: directives, loading } = useDirectives(estateId)
+  const { user } = useAuth()
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  // ── Signing redirect detection ──
+  // ── Signing status polling ──
+  // When a directive has a signingEnvelopeId but no signedAt, poll the server
+  // for webhook-verified completion instead of trusting client-side redirects.
   useEffect(() => {
     if (loading || directives.length === 0) return
+
+    // Clean any legacy ?signed=true params from URL
     const params = new URLSearchParams(window.location.search)
-    if (params.get('signed') !== 'true') return
-
-    const envelopeId = params.get('envelopeId')
-    // Find the directive that matches the envelope, or the most recently initiated signing
-    const match = envelopeId
-      ? directives.find((d) => d.signingEnvelopeId === envelopeId && !d.signedAt)
-      : directives.find((d) => d.signingEnvelopeId && !d.signedAt)
-
-    if (match) {
-      updateDirective(estateId, match.id, { signedAt: new Date().toISOString() })
-        .then(() => toast.success('Document signed successfully'))
-        .catch(() => toast.error('Failed to record signing completion'))
+    if (params.has('signed') || params.has('envelopeId')) {
+      const url = new URL(window.location.href)
+      url.searchParams.delete('signed')
+      url.searchParams.delete('envelopeId')
+      window.history.replaceState({}, '', url.pathname)
     }
 
-    // Clean the URL params regardless
-    const url = new URL(window.location.href)
-    url.searchParams.delete('signed')
-    url.searchParams.delete('envelopeId')
-    window.history.replaceState({}, '', url.pathname)
-  }, [loading, directives, estateId])
+    // Find directives pending signing verification
+    const pending = directives.filter((d) => d.signingEnvelopeId && !d.signedAt)
+    if (pending.length === 0) return
+
+    let cancelled = false
+    const pollInterval = setInterval(async () => {
+      if (cancelled) return
+      for (const d of pending) {
+        try {
+          if (!user) continue
+          const token = await user.getIdToken()
+          const res = await fetch(
+            `${API_BASE}/api/v1/opensign/status?envelopeId=${d.signingEnvelopeId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          )
+          if (!res.ok) continue
+          const data = await res.json()
+          if (data.verified && data.status === 'completed') {
+            toast.success('Document signed and verified', {
+              description: 'Signature confirmed by the signing service.'
+            })
+            clearInterval(pollInterval)
+          }
+        } catch {
+          // Silent retry on next interval
+        }
+      }
+    }, 5000) // Poll every 5 seconds
+
+    return () => {
+      cancelled = true
+      clearInterval(pollInterval)
+    }
+  }, [loading, directives, user])
 
   // Shepherd inline nudge
   const noDirectivesNudge = useShepherdNudge(

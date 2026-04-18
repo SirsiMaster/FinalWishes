@@ -18,6 +18,21 @@ async function demoLogin(page: Page) {
   await page.waitForURL(/estates/, { timeout: 15000 })
 }
 
+/** Expand a collapsible sidebar group */
+async function expandNavGroup(page: Page, groupLabel: string) {
+  const group = page.locator('nav button').filter({ hasText: groupLabel })
+  if (await group.isVisible()) {
+    await group.click()
+    await page.waitForTimeout(200)
+  }
+}
+
+/** Navigate to a nested sidebar item */
+async function navigateToNestedItem(page: Page, parentGroup: string, childLabel: string) {
+  await expandNavGroup(page, parentGroup)
+  await page.locator('nav').getByText(childLabel, { exact: true }).click()
+}
+
 test.describe('Life-First Features — Soul Log', () => {
   test.setTimeout(60000)
 
@@ -70,9 +85,7 @@ test.describe('Life-First Features — Life Chapters', () => {
   })
 
   test('Life Chapters page loads via sidebar', async ({ page }) => {
-    // Expand My Legacy group
-    await page.locator('nav').getByText('My Legacy').click()
-    await page.locator('nav').getByText('Life Chapters').click()
+    await navigateToNestedItem(page, 'My Legacy', 'Life Chapters')
 
     // SectionHeader with purple theme
     await expect(page.getByRole('heading', { name: /Life Chapters/i })).toBeVisible({ timeout: 10000 })
@@ -80,8 +93,7 @@ test.describe('Life-First Features — Life Chapters', () => {
   })
 
   test('Life Chapters: open create dialog', async ({ page }) => {
-    await page.locator('nav').getByText('My Legacy').click()
-    await page.locator('nav').getByText('Life Chapters').click()
+    await navigateToNestedItem(page, 'My Legacy', 'Life Chapters')
     await expect(page.getByRole('heading', { name: /Life Chapters/i })).toBeVisible({ timeout: 10000 })
 
     await page.getByRole('button', { name: /New Chapter/i }).click()
@@ -95,8 +107,7 @@ test.describe('Life-First Features — Life Chapters', () => {
   })
 
   test('Life Chapters: create dialog validates title', async ({ page }) => {
-    await page.locator('nav').getByText('My Legacy').click()
-    await page.locator('nav').getByText('Life Chapters').click()
+    await navigateToNestedItem(page, 'My Legacy', 'Life Chapters')
     await expect(page.getByRole('heading', { name: /Life Chapters/i })).toBeVisible({ timeout: 10000 })
 
     await page.getByRole('button', { name: /New Chapter/i }).click()
@@ -120,32 +131,30 @@ test.describe('Life-First Features — Section Headers & Navigation', () => {
   })
 
   test('each section has its distinctive SectionHeader', async ({ page }) => {
+    // Sections under collapsible groups — expand parent, then click child
     const sections = [
-      { nav: 'Photos & Videos', heading: /Life Stories|Memories/i },
-      { nav: 'Heirlooms', heading: /Heirloom Registry/i },
-      { nav: 'Directives', heading: /Final Directives/i },
-      { nav: 'Time Capsules', heading: /Time Capsules/i },
-      { nav: 'Documents', heading: /Document Vault/i },
-      { nav: 'Assets', heading: /My Assets/i },
-      { nav: 'Lockbox', heading: /Digital Lockbox/i },
+      { parent: 'Memories', nav: 'Photos & Videos', heading: /Life Stories|Memories/i },
+      { parent: 'Memories', nav: 'Heirlooms', heading: /Heirloom Registry/i },
+      { parent: 'Letters', nav: 'Directives', heading: /Final Directives/i },
+      { parent: 'Letters', nav: 'Time Capsules', heading: /Time Capsules/i },
+      { parent: 'The Vault', nav: 'Documents', heading: /Document Vault/i },
+      { parent: 'The Vault', nav: 'Assets', heading: /My Assets/i },
+      { parent: 'The Vault', nav: 'Lockbox', heading: /Digital Lockbox/i },
     ]
 
     for (const s of sections) {
-      // Click nav (some are in expandable groups)
-      const navLink = page.locator('nav').getByText(s.nav, { exact: true })
-      await navLink.click()
-      // Verify SectionHeader renders with the correct title
+      await navigateToNestedItem(page, s.parent, s.nav)
       await expect(page.getByRole('heading', { name: s.heading }).first()).toBeVisible({ timeout: 10000 })
     }
   })
 
   test('page transitions animate between sections', async ({ page }) => {
-    // Navigate to Soul Log
+    // Navigate to Soul Log (direct item)
     await page.locator('nav').getByText('Soul Log').click()
     await expect(page.getByRole('heading', { name: /Soul Log/i })).toBeVisible({ timeout: 10000 })
 
-    // Navigate to a different section
-    await page.locator('nav').getByText('Documents', { exact: true }).click()
+    // Navigate to Documents (nested under The Vault)
+    await navigateToNestedItem(page, 'The Vault', 'Documents')
     await expect(page.getByRole('heading', { name: /Document Vault/i })).toBeVisible({ timeout: 10000 })
 
     // The motion.div wrapper should exist (Framer Motion adds data attributes)

@@ -283,8 +283,17 @@ func main() {
 		r.Use(authMiddleware)
 		r.Route("/opensign", func(r chi.Router) {
 			r.Post("/create-envelope", opensign.CreateEnvelopeHandler)
+			if fs != nil {
+				webhookHandler := opensign.NewWebhookHandler(fs)
+				r.Get("/status", webhookHandler.HandleCheckSigningStatus)
+			}
 		})
 	})
+	// OpenSign webhook — no auth, uses webhook signature verification
+	if fs != nil {
+		webhookHandler := opensign.NewWebhookHandler(fs)
+		r.Post("/api/v1/opensign/webhook", webhookHandler.HandleWebhook)
+	}
 
 	r.Group(func(r chi.Router) {
 		r.Use(authMiddleware)
@@ -322,10 +331,10 @@ func main() {
 		} else {
 			r.Route("/api/v1/memoirs", func(r chi.Router) {
 				r.Use(authMiddleware)
-				r.Post("/upload-video", youtubeHandler.HandleUploadVideo)
+				r.With(tiergate.EnforceVideoLimit(fs)).Post("/upload-video", youtubeHandler.HandleUploadVideo)
 				r.Get("/video-status", youtubeHandler.HandleGetVideoStatus)
 			})
-			log.Info().Msg("YouTube memoir API routes registered at /api/v1/memoirs/*")
+			log.Info().Msg("YouTube memoir API routes registered at /api/v1/memoirs/* (tier-gated)")
 		}
 	}
 

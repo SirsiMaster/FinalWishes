@@ -224,6 +224,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}'
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -238,8 +242,6 @@ jobs:
 
       - name: Deploy Firebase Functions
         run: firebase deploy --only functions --project finalwishes-prod
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
   # ===========================================
   # Deploy: Firestore Rules & Storage Rules
@@ -252,6 +254,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}'
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -262,10 +268,6 @@ jobs:
 
       - name: Deploy Firestore Rules
         run: firebase deploy --only firestore:rules --project finalwishes-prod
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Deploy Storage Rules
         run: firebase deploy --only storage --project finalwishes-prod
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

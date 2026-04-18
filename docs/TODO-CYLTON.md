@@ -1,4 +1,4 @@
-# Tomorrow's Checklist — Cylton Only
+# Remaining Checklist — Cylton Only
 
 These items require your credentials, accounts, or decisions. Claude cannot do them.
 
@@ -7,17 +7,12 @@ These items require your credentials, accounts, or decisions. Claude cannot do t
 ## 1. Custom Domain (finalwishes.app)
 **Why:** Still on `finalwishes-prod.web.app`. Custom domain is table stakes for credibility.
 
-```bash
-# In terminal:
-firebase hosting:sites:list
-firebase hosting:channel:deploy production
-
-# Then in Firebase Console → Hosting → Add custom domain:
-# 1. Enter: finalwishes.app
-# 2. Firebase gives you DNS records (A records + TXT verification)
-# 3. Add those records in your domain registrar (GoDaddy/Google Domains/etc.)
-# 4. Wait for DNS propagation (~1-4 hours)
-# 5. Firebase auto-provisions SSL certificate
+```
+1. Firebase Console → Hosting → Add custom domain → enter: finalwishes.app
+2. Firebase gives you DNS records (A records + TXT verification)
+3. Add those records in your domain registrar (GoDaddy/Google Domains/etc.)
+4. Wait for DNS propagation (~1-4 hours)
+5. Firebase auto-provisions SSL certificate
 ```
 
 ---
@@ -39,39 +34,7 @@ The code is already deployed — it calls `POST /api/v1/payments/portal` which c
 
 ---
 
-## 3. FIREBASE_TOKEN GitHub Secret
-**Why:** The CI/CD pipeline now deploys Functions + Firestore/Storage rules, but needs auth.
-
-```bash
-# Generate a CI token:
-firebase login:ci
-
-# Copy the token, then:
-# Go to https://github.com/SirsiMaster/FinalWishes/settings/secrets/actions
-# Add new secret: FIREBASE_TOKEN = (paste token)
-```
-
----
-
-## 4. Privacy Policy + Terms of Service
-**Why:** Current pages at `/privacy` and `/terms` are placeholder stubs. Real legal documents needed.
-
-Options:
-- Use Termly.io or iubenda.com to generate ($10-20/mo)
-- Have an attorney draft (recommended for estate planning product)
-- Files to update: `web/src/routes/privacy.tsx` and `web/src/routes/terms.tsx`
-
-Key sections needed:
-- Data retention policy
-- Third-party services (Firebase, Stripe, Google Cloud)
-- CCPA/state privacy rights
-- Cookie usage
-- Limitation of liability
-- Dispute resolution
-
----
-
-## 5. OpenSign Template Verification
+## 3. OpenSign Template Verification
 **Why:** The signing ceremony calls OpenSign with template IDs like `directive-ethical_will`. These templates need to exist in your OpenSign instance.
 
 ```
@@ -87,26 +50,12 @@ Key sections needed:
 
 ---
 
-## 6. npm Vulnerabilities
-**Why:** GitHub flagged 11 vulnerabilities (3 critical, 4 high).
+## Completed (by Claude)
 
-```bash
-cd /Users/thekryptodragon/Development/FinalWishes
-npm audit
-npm audit fix
-# If that doesn't resolve all: npm audit fix --force (review changes carefully)
-```
+- ~~Privacy Policy + Terms of Service~~ — Full legal documents deployed (commit 38f51f3)
+- ~~npm Vulnerabilities~~ — 0 remaining (protobufjs fixed)
+- ~~FIREBASE_TOKEN GitHub Secret~~ — Not needed. CI/CD updated to use existing `FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD` service account (the proper auth method)
 
 ---
 
-## What's Running Overnight (4 agents)
-
-These will auto-commit when you return:
-1. **Stripe subscription management** — "Manage Subscription" button + Go API portal endpoint
-2. **Account deletion flow** — Settings danger zone + confirmation + cleanup
-3. **Tier-gating enforcement** — Friendly upgrade prompts on gated features
-4. **Critical path tests** — ShepherdNudge, OwnerWelcome, HeirWelcome, invitation tests
-
----
-
-*Generated April 17, 2026 by Claude — FinalWishes Session 11*
+*Updated April 18, 2026 by Claude — FinalWishes Session 12*

@@ -159,6 +159,15 @@ func (h *Handler) HandleReportStatus(w http.ResponseWriter, r *http.Request) {
 		// Continue — estate status is already updated, capsule delivery is best-effort
 	}
 
+	// Step 2.5: Broadcast settlement notification to all heirs and executors
+	broadcastCount := h.broadcastSettlementNotice(ctx, req.EstateID, req.Status)
+	if broadcastCount > 0 {
+		log.Info().
+			Str("estate_id", req.EstateID).
+			Int("emails_queued", broadcastCount).
+			Msg("Settlement broadcast emails queued for heirs and executors")
+	}
+
 	// Step 3: Write notification
 	_, _, err = h.fs.Collection("estates").Doc(req.EstateID).Collection("notifications").Add(ctx, map[string]interface{}{
 		"type":      "settlement",
@@ -432,6 +441,89 @@ func composeSettlementEmail(senderName, recipientName, message string) string {
 </table>
 </body>
 </html>`, greeting, senderName, message)
+}
+
+// broadcastSettlementNotice emails all heirs and executors when an estate enters settlement.
+// It writes to the Firestore "mail" collection, which triggers the sendMail Cloud Function.
+func (h *Handler) broadcastSettlementNotice(ctx context.Context, estateID, settlementType string) int {
+	// Read estate name for the email
+	estateName := "your estate"
+	estateSnap, err := h.fs.Collection("estates").Doc(estateID).Get(ctx)
+	if err == nil {
+		if name, err := estateSnap.DataAt("name"); err == nil {
+			if s, ok := name.(string); ok && s != "" {
+				estateName = s
+			}
+		}
+	}
+
+	// Collect all heir and executor emails
+	var recipients []map[string]string
+	for _, subcoll := range []string{"heirs", "executors"} {
+		iter := h.fs.Collection("estates").Doc(estateID).Collection(subcoll).Documents(ctx)
+		defer iter.Stop()
+		for {
+			doc, err := iter.Next()
+			if err != nil {
+				break
+			}
+			data := doc.Data()
+			email, _ := data["email"].(string)
+			name, _ := data["fullName"].(string)
+			role, _ := data["role"].(string)
+			if email != "" {
+				recipients = append(recipients, map[string]string{
+					"email": email,
+					"name":  name,
+					"role":  role,
+				})
+			}
+		}
+	}
+
+	if len(recipients) == 0 {
+		return 0
+	}
+
+	eventLabel := "death"
+	if settlementType == "incapacity" {
+		eventLabel = "incapacity"
+	}
+
+	count := 0
+	for _, r := range recipients {
+		subject := fmt.Sprintf("FinalWishes — %s has entered settlement", estateName)
+		greeting := fmt.Sprintf("Dear %s", r["name"])
+		if r["name"] == "" {
+			greeting = "Dear family member"
+		}
+		body := fmt.Sprintf(
+			"We are writing to inform you that the estate \"%s\" has entered the settlement process due to a reported %s.\n\n"+
+				"As a designated %s of this estate, you now have access to the estate's documents, directives, and other materials as configured by the estate owner.\n\n"+
+				"Please log in to FinalWishes to review the estate and begin any necessary actions.\n\n"+
+				"If you have questions or need assistance, please contact us at support@sirsi.ai.",
+			estateName, eventLabel, r["role"],
+		)
+
+		_, _, err := h.fs.Collection("mail").Add(ctx, map[string]interface{}{
+			"to":        r["email"],
+			"createdAt": time.Now(),
+			"source":    "guardian-settlement-broadcast",
+			"estateId":  estateID,
+			"message": map[string]interface{}{
+				"subject": subject,
+				"html":    composeSettlementEmail("FinalWishes Guardian", r["name"], body),
+				"text":    fmt.Sprintf("%s,\n\n%s", greeting, body),
+			},
+		})
+		if err != nil {
+			log.Error().Err(err).Str("email", r["email"]).Msg("Failed to queue settlement broadcast email")
+			continue
+		}
+		count++
+	}
+
+	return count
 }
 
 // --- JSON helpers ---

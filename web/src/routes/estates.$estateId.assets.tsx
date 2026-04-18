@@ -207,6 +207,7 @@ function AssetsPage() {
                   <SelectItem value="Securities">Securities / Stocks</SelectItem>
                   <SelectItem value="Personal Property">Personal Property</SelectItem>
                   <SelectItem value="Digital Assets">Digital Assets</SelectItem>
+                  <SelectItem value="Debt">Debts &amp; Liabilities</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -284,6 +285,7 @@ function AssetsPage() {
                   <option value="Securities">Securities / Stocks</option>
                   <option value="Personal Property">Personal Property</option>
                   <option value="Digital Assets">Digital Assets</option>
+                  <option value="Debt">Debts &amp; Liabilities</option>
                 </select>
               </div>
               <div className="space-y-3">

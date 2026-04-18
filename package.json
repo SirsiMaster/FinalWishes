@@ -22,6 +22,13 @@
   },
   "author": "Sirsi Technologies",
   "license": "UNLICENSED",
+  "overrides": {
+    "protobufjs": "^7.5.5",
+    "flatted": "^3.4.2",
+    "picomatch": "^4.0.4",
+    "path-to-regexp": "^8.4.0",
+    "teeny-request": "^10.1.2"
+  },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "turbo": "^2"

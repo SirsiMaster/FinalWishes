@@ -34,6 +34,7 @@ import {
 import { cn } from '@/lib/utils'
 import { getShepherdPrompt, type ShepherdContext } from '../lib/shepherd-prompts'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem, PageTransition } from '@/lib/animations'
 
 export const Route = createLazyFileRoute('/estates/$estateId/dashboard')({
   component: DashboardIndex,
@@ -998,12 +999,12 @@ function DashboardIndex() {
       </div>
 
       {/* ── 4. Quick Stats Row ── */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <MiniStat label="Assets" value={assets.length.toString()} />
-        <MiniStat label="Documents" value={documents.length.toString()} />
-        <MiniStat label="Beneficiaries" value={heirs.length.toString()} />
-        <MiniStat label="Completion" value={scoreLoading ? '...' : `${percent}%`} />
-      </div>
+      <StaggerList className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StaggerItem><MiniStat label="Assets" value={assets.length.toString()} /></StaggerItem>
+        <StaggerItem><MiniStat label="Documents" value={documents.length.toString()} /></StaggerItem>
+        <StaggerItem><MiniStat label="Beneficiaries" value={heirs.length.toString()} /></StaggerItem>
+        <StaggerItem><MiniStat label="Completion" value={scoreLoading ? '...' : `${percent}%`} /></StaggerItem>
+      </StaggerList>
 
       {/* ── 5. Estate Health Check (Collapsible) ── */}
       <Collapsible open={checklistOpen} onOpenChange={setChecklistOpen}>
@@ -1117,10 +1118,12 @@ function DashboardIndex() {
 
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-[#F8FAFC] border border-slate-100">
-      <div className="text-2xl font-bold text-[#0F172A] tabular-nums">{value}</div>
-      <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</div>
-    </div>
+    <HoverCard glowColor="rgba(19,51,120,0.1)" tiltDeg={3}>
+      <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-[#F8FAFC] border border-slate-100 transition-all">
+        <div className="text-2xl font-bold text-[#0F172A] tabular-nums">{value}</div>
+        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</div>
+      </div>
+    </HoverCard>
   )
 }
 

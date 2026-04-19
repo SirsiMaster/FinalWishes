@@ -435,6 +435,12 @@ input::-webkit-contacts-auto-fill-button {
   to { transform: rotate(360deg); }
 }
 
+/* ── Gold Shimmer Loading ── */
+@keyframes goldShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* ── Dashboard Shell ── */
 .dashboard-shell {
   color: var(--text-primary);

@@ -67,7 +67,7 @@ export interface Estate {
 export interface Asset {
   id: string;
   estateId: string;
-  category: 'financial' | 'real_estate' | 'vehicle' | 'digital' | 'personal_property' | 'debt';
+  category: 'financial' | 'real_estate' | 'vehicle' | 'digital' | 'personal_property' | 'debt' | 'insurance' | 'charitable';
   name: string;
   description?: string;
   estimatedValue?: number;

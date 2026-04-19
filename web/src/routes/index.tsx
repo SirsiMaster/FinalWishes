@@ -1,10 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { ScrollVideoCanvas } from '@/components/landing/ScrollVideoCanvas'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -89,67 +90,8 @@ function Home() {
         </div>
       </nav>
 
-      {/* ═══════════════════ HERO ═══════════════════ */}
-      <header className="relative min-h-[65vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
-        {/* Hero background image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/assets/images/hero-family.jpg"
-            alt="Happy African American multi-generational family portrait"
-            className="w-full h-full object-cover"
-            fetchPriority="high"
-            style={{ objectPosition: "center 30%" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        </div>
-
-        {/* Art Deco corners */}
-        <div className="deco-corner top-left" />
-        <div className="deco-corner top-right" />
-        <div className="deco-corner bottom-left" />
-        <div className="deco-corner bottom-right" />
-
-        <div className="relative z-10 text-center max-w-5xl px-6">
-          {/* Decorative divider */}
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-20 h-px bg-gradient-to-r from-transparent to-gold" />
-            <div className="w-2 h-2 bg-gold rotate-45" />
-            <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
-          </div>
-
-          <p className="font-[family-name:var(--font-cinzel)] text-xl md:text-2xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold">
-            The Operating System for Your Life&apos;s Work
-          </p>
-
-          <h1 className="font-[family-name:var(--font-cinzel)] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 hero-text">
-            Preserve Your Story.
-            <br />
-            <span className="text-gold hero-text-gold">Protect Your People.</span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
-            The first platform that bridges <strong className="text-white">Life</strong> and{" "}
-            <strong className="text-white">Legacy</strong>. Secure your memoirs, guide your heirs,
-            and automate the chaos of estate settlement.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
-              <Link to="/login" search={{}}>Create Your Vault</Link>
-            </Button>
-            <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
-              <a href="#protocol">See How It Works</a>
-            </Button>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-          <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
-      </header>
+      {/* ═══════════════════ HERO — Scroll-Driven Video Animation ═══════════════════ */}
+      <HeroSection />
 
       <Separator className="bg-gold/20" />
 
@@ -636,8 +578,175 @@ function Home() {
   );
 }
 
-/* ─── Sub-components ─── */
+/* ─── Hero Section with Scroll Video or Static Fallback ─── */
 
+function HeroSection() {
+  const [frameCount, setFrameCount] = useState(0)
+
+  // Check if frames exist by trying to load the first frame
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => {
+      // First frame exists — try to detect total frame count
+      // Check powers of 2 to find approximate count, then binary search
+      detectFrameCount().then(setFrameCount)
+    }
+    img.onerror = () => {
+      // No frames — use static hero
+      setFrameCount(0)
+    }
+    img.src = '/frames/frame-0001.jpg'
+  }, [])
+
+  // Scroll-driven video hero (when frames are available)
+  if (frameCount > 0) {
+    return (
+      <div className="relative">
+        <ScrollVideoCanvas frameCount={frameCount} scrollHeight={400} />
+
+        {/* Overlay text — visible at the start of the scroll */}
+        <div className="fixed top-0 left-0 w-full h-screen z-20 pointer-events-none flex flex-col items-center justify-center">
+          <div className="text-center max-w-5xl px-6 pointer-events-auto">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-20 h-px bg-gradient-to-r from-transparent to-gold" />
+              <div className="w-2 h-2 bg-gold rotate-45" />
+              <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
+            </div>
+
+            <p className="font-[family-name:var(--font-cinzel)] text-xl md:text-2xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              The Operating System for Your Life&apos;s Work
+            </p>
+
+            <h1 className="font-[family-name:var(--font-cinzel)] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 hero-text drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+              Preserve Your Story.
+              <br />
+              <span className="text-gold hero-text-gold">Protect Your People.</span>
+            </h1>
+
+            <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+              The first platform that bridges <strong className="text-white">Life</strong> and{" "}
+              <strong className="text-white">Legacy</strong>.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+              <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
+                <Link to="/login" search={{}}>Create Your Vault</Link>
+              </Button>
+              <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
+                <a href="#protocol">See How It Works</a>
+              </Button>
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
+            <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Static hero fallback (no frames yet)
+  return (
+    <header className="relative min-h-[65vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/assets/images/hero-family.jpg"
+          alt="Happy African American multi-generational family portrait"
+          className="w-full h-full object-cover"
+          fetchPriority="high"
+          style={{ objectPosition: "center 30%" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+      </div>
+
+      <div className="deco-corner top-left" />
+      <div className="deco-corner top-right" />
+      <div className="deco-corner bottom-left" />
+      <div className="deco-corner bottom-right" />
+
+      <div className="relative z-10 text-center max-w-5xl px-6">
+        <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="w-20 h-px bg-gradient-to-r from-transparent to-gold" />
+          <div className="w-2 h-2 bg-gold rotate-45" />
+          <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
+        </div>
+
+        <p className="font-[family-name:var(--font-cinzel)] text-xl md:text-2xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold">
+          The Operating System for Your Life&apos;s Work
+        </p>
+
+        <h1 className="font-[family-name:var(--font-cinzel)] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 hero-text">
+          Preserve Your Story.
+          <br />
+          <span className="text-gold hero-text-gold">Protect Your People.</span>
+        </h1>
+
+        <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+          The first platform that bridges <strong className="text-white">Life</strong> and{" "}
+          <strong className="text-white">Legacy</strong>. Secure your memoirs, guide your heirs,
+          and automate the chaos of estate settlement.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+          <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
+            <Link to="/login" search={{}}>Create Your Vault</Link>
+          </Button>
+          <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
+            <a href="#protocol">See How It Works</a>
+          </Button>
+        </div>
+      </div>
+
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+        <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </div>
+    </header>
+  )
+}
+
+/** Detect how many frames exist in /frames/ by probing */
+async function detectFrameCount(): Promise<number> {
+  // Binary search for the last existing frame
+  let low = 1
+  let high = 1000 // max expected frames
+
+  // First find an upper bound
+  while (high <= 1000) {
+    const exists = await frameExists(high)
+    if (!exists) break
+    high *= 2
+  }
+
+  // Binary search between low and high
+  while (low < high) {
+    const mid = Math.floor((low + high + 1) / 2)
+    const exists = await frameExists(mid)
+    if (exists) {
+      low = mid
+    } else {
+      high = mid - 1
+    }
+  }
+
+  return low
+}
+
+function frameExists(index: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => resolve(true)
+    img.onerror = () => resolve(false)
+    img.src = `/frames/frame-${String(index).padStart(4, '0')}.jpg`
+  })
+}
+
+/* ─── Sub-components ─── */
 
 function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (

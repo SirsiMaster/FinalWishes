@@ -208,6 +208,8 @@ function AssetsPage() {
                   <SelectItem value="Personal Property">Personal Property</SelectItem>
                   <SelectItem value="Digital Assets">Digital Assets</SelectItem>
                   <SelectItem value="Debt">Debts &amp; Liabilities</SelectItem>
+                  <SelectItem value="Insurance">Insurance Policies</SelectItem>
+                  <SelectItem value="Charitable">Charitable Bequests</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -286,6 +288,8 @@ function AssetsPage() {
                   <option value="Personal Property">Personal Property</option>
                   <option value="Digital Assets">Digital Assets</option>
                   <option value="Debt">Debts &amp; Liabilities</option>
+                  <option value="Insurance">Insurance Policies</option>
+                  <option value="Charitable">Charitable Bequests</option>
                 </select>
               </div>
               <div className="space-y-3">

@@ -12,6 +12,7 @@
  */
 
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
+const { onSchedule } = require('firebase-functions/v2/scheduler');
 const admin = require('firebase-admin');
 const { google } = require('googleapis');
 
@@ -380,6 +381,55 @@ exports.sendSMS = onDocumentCreated(
                 'delivery.error': error.message || 'Unknown SMS processing error',
                 'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
             });
+        }
+    }
+);
+
+// ─── 4. Guardian Protocol — Daily Inactivity Check ──────────────────────
+// Runs every day at 6 AM EST. Calls the Go API's inactivity check endpoint
+// which escalates estates where the owner has gone silent.
+//
+// Escalation sequence:
+//   Day 90: Reminder email to owner
+//   Day 97: Notification email to executor
+//   Day 104+: Manual settlement only (executor must report via report-status)
+exports.guardianInactivityCheck = onSchedule(
+    {
+        schedule: '0 6 * * *',
+        timeZone: 'America/New_York',
+        region: 'us-central1',
+    },
+    async () => {
+        const apiUrl = process.env.FINALWISHES_API_URL ||
+            'https://finalwishes-api-860699311615.us-central1.run.app';
+
+        try {
+            const customToken = await admin.auth().createCustomToken('guardian-scheduler', {
+                role: 'admin',
+            });
+
+            const response = await fetch(`${apiUrl}/api/v1/guardian/run-inactivity-check`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${customToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                const body = await response.text();
+                console.error(`[guardianInactivityCheck] API returned ${response.status}: ${body}`);
+                return;
+            }
+
+            const result = await response.json();
+            console.log('[guardianInactivityCheck] Completed:', {
+                estatesChecked: result.estatesChecked || 0,
+                remindersSent: result.remindersSent || 0,
+                executorsNotified: result.executorsNotified || 0,
+            });
+        } catch (error) {
+            console.error('[guardianInactivityCheck] Failed:', error.message);
         }
     }
 );

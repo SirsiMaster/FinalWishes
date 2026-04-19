@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { ScrollVideoCanvas } from '@/components/landing/ScrollVideoCanvas'
+import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem } from '@/lib/animations'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -106,13 +107,13 @@ function Home() {
           />
           {/* Stat overlay */}
           <div className="absolute bottom-6 left-6 bg-black/70 backdrop-blur-md rounded-xl p-5 border border-white/10">
-            <div className="text-3xl font-bold text-danger font-[family-name:var(--font-cinzel)]">$72 Billion</div>
+            <div className="text-3xl font-bold text-danger font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={72} prefix="$" suffix=" Billion" /></div>
             <div className="text-sm text-white/60 uppercase tracking-[0.1em] mt-1">In Unclaimed Assets Nationwide</div>
           </div>
         </div>
 
         <div className="flex flex-col justify-center px-8 md:px-12 py-10 glass-panel">
-          <div className="max-w-lg mx-auto">
+          <ScrollReveal direction="right" className="max-w-lg mx-auto">
             <h2 className="text-3xl md:text-5xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
               Two Tragedies:<br />
               <span className="text-gold">Chaos &amp; Silence</span>
@@ -125,18 +126,18 @@ function Home() {
             <div className="grid grid-cols-2 gap-4">
               <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
                 <CardContent className="p-5">
-                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">$2B+</div>
+                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={2} prefix="$" suffix="B+" /></div>
                   <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Annual Probate Costs</div>
                 </CardContent>
               </Card>
               <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
                 <CardContent className="p-5">
-                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]">55%</div>
+                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={55} suffix="%" /></div>
                   <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Adults Without a Will</div>
                 </CardContent>
               </Card>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -176,12 +177,12 @@ function Home() {
       {/* ═══════════════════ PROTOCOL — 4 Steps ═══════════════════ */}
       <section id="protocol" className="py-12 relative z-10 overflow-hidden">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
-          <div className="text-center mb-12">
+          <ScrollReveal className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
               The <span className="text-gold">Living</span> Protocol
             </h2>
             <p className="text-white/60 max-w-xl mx-auto">A unified workflow for your life and your legacy.</p>
-          </div>
+          </ScrollReveal>
 
           <div className="space-y-0">
             {/* Step 1: BUILD LEGACY */}
@@ -379,41 +380,53 @@ function Home() {
             <p className="text-base text-white/60 max-w-xl mx-auto">Your family&apos;s most sensitive information deserves infrastructure you can trust.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
-            <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">Bank-Grade Encryption</h4>
-                <p className="text-sm text-white/60 leading-relaxed">AES-256 encryption with Cloud KMS envelope keys protects every document and record.</p>
-              </CardContent>
-            </Card>
-            <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
-                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">SOC 2 Architecture</h4>
-                <p className="text-sm text-white/60 leading-relaxed">Infrastructure built to SOC 2 standards — audit trails, access controls, and encryption at every layer.</p>
-              </CardContent>
-            </Card>
-            <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">24/7 Secure Access</h4>
-                <p className="text-sm text-white/60 leading-relaxed">Access your estate vault anytime with multi-factor authentication and audit logging.</p>
-              </CardContent>
-            </Card>
-          </div>
+          <StaggerList className="grid md:grid-cols-3 gap-5">
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0 h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">Bank-Grade Encryption</h4>
+                    <p className="text-sm text-white/60 leading-relaxed">AES-256 encryption with Cloud KMS envelope keys protects every document and record.</p>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0 h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">SOC 2 Architecture</h4>
+                    <p className="text-sm text-white/60 leading-relaxed">Infrastructure built to SOC 2 standards — audit trails, access controls, and encryption at every layer.</p>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0 h-full">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">24/7 Secure Access</h4>
+                    <p className="text-sm text-white/60 leading-relaxed">Access your estate vault anytime with multi-factor authentication and audit logging.</p>
+                  </CardContent>
+                </Card>
+              </HoverCard>
+            </StaggerItem>
+          </StaggerList>
         </div>
       </section>
 
@@ -428,9 +441,9 @@ function Home() {
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5 items-stretch">
+          <StaggerList className="grid md:grid-cols-3 gap-5 items-stretch">
             {/* Free */}
-            <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0">
+            <StaggerItem><HoverCard className="h-full"><Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
@@ -443,10 +456,10 @@ function Home() {
                   <Link to="/login" search={{}}>Start Free</Link>
                 </Button>
               </CardContent>
-            </Card>
+            </Card></HoverCard></StaggerItem>
 
             {/* Concierge (Gold) */}
-            <Card className="glass-card rounded-2xl ring-0 border-2 !border-gold/50 bg-transparent relative md:-mt-3 md:mb-3 py-0">
+            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="glass-card rounded-2xl ring-0 border-2 !border-gold/50 bg-transparent relative py-0 h-full">
               <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex justify-between items-center mb-3">
@@ -469,10 +482,10 @@ function Home() {
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
-            </Card>
+            </Card></HoverCard></StaggerItem>
 
             {/* White Glove */}
-            <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0">
+            <StaggerItem><HoverCard className="h-full"><Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
@@ -485,8 +498,8 @@ function Home() {
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
-            </Card>
-          </div>
+            </Card></HoverCard></StaggerItem>
+          </StaggerList>
         </div>
       </section>
 

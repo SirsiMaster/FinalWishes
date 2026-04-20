@@ -226,39 +226,27 @@ function Home() {
 
           {/* How It Works — 3 Steps */}
           <ScrollReveal>
-            <div className="rounded-2xl overflow-hidden relative">
-              {/* Background image with heavy overlay */}
-              <div className="absolute inset-0 z-0">
-                <img
-                  src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&h=400&fit=crop&auto=format"
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-black/85" />
-              </div>
-              <div className="relative z-10 p-8 md:p-12">
-                <h3 className="text-2xl text-white mb-8 font-[family-name:var(--font-cinzel)] text-center">
-                  Three Steps. <span className="text-gold">Fifteen Minutes.</span>
+            <div className="rounded-2xl border border-[#E5E1D8] bg-white shadow-[0_4px_30px_rgba(0,0,0,0.06)] p-8 md:p-12">
+                <h3 className="text-2xl text-[#1A1A1A] mb-8 font-[family-name:var(--font-cinzel)] text-center">
+                  Three Steps. <span className="text-[#C8A951]">Fifteen Minutes.</span>
                 </h3>
                 <div className="grid md:grid-cols-3 gap-8">
                   <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
-                    <h4 className="text-white font-bold mb-2">Create Your Vault</h4>
-                    <p className="text-white/60 text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
+                    <div className="w-12 h-12 rounded-full bg-[#C8A951]/10 flex items-center justify-center mx-auto mb-4 text-[#C8A951] font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
+                    <h4 className="text-[#1A1A1A] font-bold mb-2">Create Your Vault</h4>
+                    <p className="text-[#6B7280] text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
                   </div>
                   <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
-                    <h4 className="text-white font-bold mb-2">Invite Your Circle</h4>
-                    <p className="text-white/60 text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
+                    <div className="w-12 h-12 rounded-full bg-[#C8A951]/10 flex items-center justify-center mx-auto mb-4 text-[#C8A951] font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
+                    <h4 className="text-[#1A1A1A] font-bold mb-2">Invite Your Circle</h4>
+                    <p className="text-[#6B7280] text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
                   </div>
                   <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
-                    <h4 className="text-white font-bold mb-2">Live in Peace</h4>
-                    <p className="text-white/60 text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
+                    <div className="w-12 h-12 rounded-full bg-[#C8A951]/10 flex items-center justify-center mx-auto mb-4 text-[#C8A951] font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
+                    <h4 className="text-[#1A1A1A] font-bold mb-2">Live in Peace</h4>
+                    <p className="text-[#6B7280] text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
                   </div>
                 </div>
-              </div>
             </div>
           </ScrollReveal>
         </div>

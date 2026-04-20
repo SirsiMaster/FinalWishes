@@ -248,28 +248,20 @@ function createDemoUserShim(profile: UserProfile): User {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Initialize from localStorage synchronously so demo sessions survive navigation
+  const initialDemo = loadDemoSession();
+  const [user, setUser] = useState<User | null>(initialDemo ? createDemoUserShim(initialDemo) : null);
+  const [profile, setProfile] = useState<UserProfile | null>(initialDemo);
+  const [loading, setLoading] = useState(!initialDemo);
   // Ref tracks demo activation so the Firebase listener skips overrides
-  const demoActiveRef = useRef(false);
+  const demoActiveRef = useRef(!!initialDemo);
   // Ref holds unsubscribe so loginDemo can detach the Firebase listener
   const unsubRef = useRef<(() => void) | null>(null);
 
   // Listen for Firebase auth state changes
   useEffect(() => {
-    // Demo mode: check if a demo session exists in localStorage
-    const demoProfile = loadDemoSession();
-    if (demoProfile && !demoActiveRef.current) {
-      demoActiveRef.current = true;
-      // Schedule state updates outside the synchronous effect body
-      const id = requestAnimationFrame(() => {
-        setUser(createDemoUserShim(demoProfile));
-        setProfile(demoProfile);
-        setLoading(false);
-      });
-      return () => cancelAnimationFrame(id);
-    }
+    // Demo mode already active — skip Firebase listener entirely
+    if (demoActiveRef.current) return;
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       // Skip if demo mode was activated after mount (via loginDemo)

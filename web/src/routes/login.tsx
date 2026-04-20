@@ -92,6 +92,8 @@ function LoginPage() {
         profilePhotoUrl: '',
       };
       loginDemo(demoSession);
+      // Mark owner welcome as seen so demo goes straight to dashboard
+      localStorage.setItem('fw_owner_welcome_seen_estate_lockhart_user_tameeka', new Date().toISOString());
       setIsSubmitting(false);
       navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'estate_lockhart' } } as any);
       return;

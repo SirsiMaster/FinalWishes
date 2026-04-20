@@ -1,0 +1,14 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1280' height='800'>
+    <defs>
+      <linearGradient id='bg' x1='0' y1='0' x2='0' y2='1'>
+        <stop offset='0%' stop-color='#0F172A'/>
+        <stop offset='100%' stop-color='#1E3A5F'/>
+      </linearGradient>
+    </defs>
+    <rect width='1280' height='800' fill='url(#bg)'/>
+    <rect x='0' y='0' width='240' height='800' fill='#FFFFFF' opacity='0.97'/>
+    <rect x='240' y='0' width='1040' height='56' fill='#FFFFFF' opacity='0.95'/>
+    <text x='120' y='50' fill='#133378' font-family='sans-serif' font-size='18' font-weight='bold' text-anchor='middle'>FINALWISHES</text>
+    <text x='760' y='420' fill='#C8A951' font-family='serif' font-size='36' font-weight='bold' text-anchor='middle' opacity='0.6'>Dashboard</text>
+    <text x='760' y='460' fill='#FFFFFF' font-family='sans-serif' font-size='14' text-anchor='middle' opacity='0.3'>Screenshot will be captured from live app</text>
+  </svg>

@@ -96,7 +96,7 @@ function Home() {
                   title="I just lost someone"
                   description="Organize their estate, notify heirs, settle accounts, and distribute assets — guided step by step."
                   cta="Start settlement"
-                  image="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=250&fit=crop"
+                  image="https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&h=250&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -107,7 +107,7 @@ function Home() {
                   title="I'm planning ahead"
                   description="Secure your documents, record your wishes, designate beneficiaries, and give your family clarity."
                   cta="Create your vault"
-                  image="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=250&fit=crop"
+                  image="https://images.unsplash.com/photo-1590650153855-d9e808231d41?w=400&h=250&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -118,7 +118,7 @@ function Home() {
                   title="My parent is aging"
                   description="Help them organize while they can. Capture their voice, their values, and their instructions."
                   cta="Set up together"
-                  image="https://images.unsplash.com/photo-1476234251651-f353703a034d?w=400&h=250&fit=crop&crop=faces"
+                  image="https://images.unsplash.com/photo-1556745753-b2904692b3cd?w=400&h=250&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -129,7 +129,7 @@ function Home() {
                   title="Major life change"
                   description="Divorce, remarriage, new child — update beneficiaries, restructure assets, protect what matters."
                   cta="Update your plan"
-                  image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop"
+                  image="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400&h=250&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -137,16 +137,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ── Image band separator after scenarios ── */}
-      <div className="relative h-16 w-full overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&h=100&fit=crop"
-          alt=""
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628]/40 via-transparent to-[#0A1628]/40" />
-      </div>
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
       <section className="relative z-10 grid md:grid-cols-2">
@@ -462,16 +453,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ── Image band separator after testimonials ── */}
-      <div className="relative h-16 w-full overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1600&h=100&fit=crop"
-          alt=""
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#060E1F]/40 via-transparent to-[#060E1F]/40" />
-      </div>
+      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
       <section id="pricing" className="py-16 relative overflow-hidden z-10">

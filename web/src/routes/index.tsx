@@ -58,7 +58,7 @@ function Home() {
       <HeroSection />
 
       {/* ═══════════════════ SCENARIO CARDS — "I'm here because..." ═══════════════════ */}
-      <section id="scenarios" className="py-16 relative z-10 bg-[#102A56] text-white">
+      <section id="scenarios" className="py-16 relative z-10 bg-[#152B65] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-12">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
@@ -141,19 +141,19 @@ function Home() {
               When someone passes without a plan, families face frozen accounts, lost passwords, missing documents, and legal battles that can last years. FinalWishes eliminates that chaos — before it starts.
             </p>
             <div className="grid grid-cols-3 gap-3">
-              <Card className="bg-[#102A56] rounded-xl border-0 ring-0 py-0">
+              <Card className="bg-[#152B65] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={55} suffix="%" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">No Will</div>
                 </CardContent>
               </Card>
-              <Card className="bg-[#102A56] rounded-xl border-0 ring-0 py-0">
+              <Card className="bg-[#152B65] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={18} suffix=" mo" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Avg Probate</div>
                 </CardContent>
               </Card>
-              <Card className="bg-[#102A56] rounded-xl border-0 ring-0 py-0">
+              <Card className="bg-[#152B65] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={2} prefix="$" suffix="B+" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Court Costs</div>
@@ -165,14 +165,14 @@ function Home() {
       </section>
 
       {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
-      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[#102A56] text-white">
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[#152B65] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
             <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
               Here&apos;s What You Can Do <span className="text-gold">Today</span>
             </h2>
-            <p className="text-white/60 max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
+            <p className="text-white/60 text-lg max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-6 mb-12">
@@ -228,42 +228,56 @@ function Home() {
       </section>
 
       {/* ═══════════════════ THREE STEPS ═══════════════════ */}
-      <section className="py-16 relative z-10 section-light">
+      <section className="py-20 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
-          <ScrollReveal>
-            <h3 className="text-4xl md:text-5xl text-[#1A1A1A] mb-10 font-[family-name:var(--font-cinzel)] text-center">
+          <ScrollReveal className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl text-[#1A1A1A] mb-4 font-[family-name:var(--font-cinzel)]">
               Three Steps. <span className="text-[#C8A951]">Fifteen Minutes.</span>
-            </h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-[#102A56] flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
-                <h4 className="text-[#1A1A1A] font-bold mb-2">Create Your Vault</h4>
-                <p className="text-[#6B7280] text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-[#102A56] flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
-                <h4 className="text-[#1A1A1A] font-bold mb-2">Invite Your Circle</h4>
-                <p className="text-[#6B7280] text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-[#102A56] flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
-                <h4 className="text-[#1A1A1A] font-bold mb-2">Live in Peace</h4>
-                <p className="text-[#6B7280] text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
-              </div>
-            </div>
+            </h2>
+            <p className="text-[#6B7280] text-lg max-w-xl mx-auto">That&apos;s all it takes to protect everything you&apos;ve built.</p>
           </ScrollReveal>
+
+          <StaggerList className="grid md:grid-cols-3 gap-6">
+            <StaggerItem>
+              <Card className="rounded-2xl bg-[#152B65] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
+                <CardContent className="p-8 text-center">
+                  <div className="w-14 h-14 rounded-full bg-[#C8A951] flex items-center justify-center mx-auto mb-5 text-[#152B65] font-bold text-xl font-[family-name:var(--font-cinzel)]">1</div>
+                  <h4 className="text-white font-bold text-lg mb-3">Create Your Vault</h4>
+                  <p className="text-white/70 text-[15px] leading-relaxed">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
+                </CardContent>
+              </Card>
+            </StaggerItem>
+            <StaggerItem>
+              <Card className="rounded-2xl bg-[#152B65] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
+                <CardContent className="p-8 text-center">
+                  <div className="w-14 h-14 rounded-full bg-[#C8A951] flex items-center justify-center mx-auto mb-5 text-[#152B65] font-bold text-xl font-[family-name:var(--font-cinzel)]">2</div>
+                  <h4 className="text-white font-bold text-lg mb-3">Invite Your Circle</h4>
+                  <p className="text-white/70 text-[15px] leading-relaxed">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
+                </CardContent>
+              </Card>
+            </StaggerItem>
+            <StaggerItem>
+              <Card className="rounded-2xl bg-[#152B65] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
+                <CardContent className="p-8 text-center">
+                  <div className="w-14 h-14 rounded-full bg-[#C8A951] flex items-center justify-center mx-auto mb-5 text-[#152B65] font-bold text-xl font-[family-name:var(--font-cinzel)]">3</div>
+                  <h4 className="text-white font-bold text-lg mb-3">Live in Peace</h4>
+                  <p className="text-white/70 text-[15px] leading-relaxed">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
+                </CardContent>
+              </Card>
+            </StaggerItem>
+          </StaggerList>
         </div>
       </section>
 
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden bg-[#102A56] text-white">
+      <section className="py-16 relative z-10 overflow-hidden bg-[#152B65] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
             <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
               This Is <span className="text-gold">Your Dashboard</span>
             </h2>
-            <p className="text-white/60 max-w-lg mx-auto text-sm">Not a mockup. This is the actual product. Click through to see every feature.</p>
+            <p className="text-white/60 max-w-lg mx-auto text-base">Not a mockup. This is the actual product. Click through to see every feature.</p>
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
@@ -291,7 +305,7 @@ function Home() {
             </ul>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="bg-[#102A56] rounded-2xl p-6 border-0">
+            <div className="bg-[#152B65] rounded-2xl p-6 border-0">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
                   <span className="text-gold text-lg">🧭</span>
@@ -318,13 +332,13 @@ function Home() {
       </section>
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
-      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#102A56] text-white">
+      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#152B65] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
               Your Data. <span className="text-gold">Fort Knox Security.</span>
             </h2>
-            <p className="text-white/60 max-w-lg mx-auto text-sm">
+            <p className="text-white/60 max-w-lg mx-auto text-base">
               Estate documents are the most sensitive data a family owns. We encrypt everything with the same technology banks use.
             </p>
           </ScrollReveal>
@@ -336,11 +350,11 @@ function Home() {
               { label: 'MFA Required', desc: 'For all sensitive access' },
               { label: 'SOC 2 Architecture', desc: 'Enterprise audit trail' },
             ].map((item) => (
-              <Card key={item.label} className="bg-white/[0.08] rounded-xl border border-white/10 ring-0 py-0">
-                <CardContent className="p-4 text-center">
-                  <div className="status-dot mx-auto mb-2" />
-                  <div className="text-white font-bold text-[10px] uppercase tracking-widest mb-1">{item.label}</div>
-                  <div className="text-white/50 text-[10px]">{item.desc}</div>
+              <Card key={item.label} className="bg-white rounded-xl border-0 ring-0 py-0 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
+                <CardContent className="p-5 text-center">
+                  <div className="status-dot mx-auto mb-3" />
+                  <div className="text-[#1A1A1A] font-bold text-xs uppercase tracking-widest mb-1">{item.label}</div>
+                  <div className="text-[#6B7280] text-xs">{item.desc}</div>
                 </CardContent>
               </Card>
             ))}
@@ -393,7 +407,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#102A56] text-white">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#152B65] text-white">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
@@ -513,7 +527,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#102A56] text-white">
+      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#152B65] text-white">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
@@ -554,7 +568,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-[#102A56] border-t border-gold/20 py-6 relative z-10 text-white">
+      <footer className="bg-[#152B65] border-t border-gold/20 py-6 relative z-10 text-white">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid md:grid-cols-5 gap-6 mb-4">
             <div className="md:col-span-2">
@@ -624,7 +638,7 @@ function HeroSection() {
   }
 
   return (
-    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#102A56] text-white">
+    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#152B65] text-white">
       <div className="absolute inset-0 z-0">
         <img src="/assets/images/hero-family.jpg" alt="Multi-generational family" className="w-full h-full object-cover" fetchPriority="high" style={{ objectPosition: "center 30%" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -702,24 +716,18 @@ function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string
 
 function CapabilityCard({ icon, title, items, accent, image }: { icon: string; title: string; items: string[]; accent?: boolean; image: string }) {
   return (
-    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_4px_30px_rgba(0,0,0,0.1)] ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
-      {/* Photo header */}
-      <div className="relative h-[160px] overflow-hidden">
-        <img
-          src={image}
-          alt=""
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
+    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
+      <div className="relative h-[180px] overflow-hidden">
+        <img src={image} alt="" className="w-full h-full object-cover" loading="lazy" />
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
       </div>
-      <CardContent className="p-6 flex flex-col flex-grow">
+      <CardContent className="p-7 flex flex-col flex-grow">
         <div className="text-3xl mb-3">{icon}</div>
-        <h3 className={`font-bold text-lg mb-4 ${accent ? 'text-[#C8A951]' : 'text-[#1A1A1A]'}`}>{title}</h3>
-        <ul className="space-y-2.5 flex-grow">
+        <h3 className={`font-bold text-xl mb-4 ${accent ? 'text-[#C8A951]' : 'text-[#1A1A1A]'}`}>{title}</h3>
+        <ul className="space-y-3 flex-grow">
           {items.map((item) => (
-            <li key={item} className="flex gap-2 text-sm text-[#4B5563]">
-              <span className="text-[#C8A951] shrink-0">✓</span>
+            <li key={item} className="flex gap-2.5 text-[15px] text-[#374151] leading-snug">
+              <span className="text-[#C8A951] shrink-0 text-lg">✓</span>
               {item}
             </li>
           ))}
@@ -733,7 +741,7 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
 
 function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: string; role: string; avatar: string }) {
   return (
-    <Card className="rounded-2xl ring-0 bg-[#102A56] border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.2)] transition-shadow duration-300">
+    <Card className="rounded-2xl ring-0 bg-[#152B65] border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.2)] transition-shadow duration-300">
       <CardContent className="p-6 flex flex-col h-full">
         <p className="text-white/90 text-sm leading-relaxed mb-4 italic flex-grow">&ldquo;{quote}&rdquo;</p>
         <div className="border-t border-white/10 pt-3 flex items-center gap-3">

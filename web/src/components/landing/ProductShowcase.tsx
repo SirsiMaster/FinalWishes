@@ -113,8 +113,8 @@ export function ProductShowcase() {
             className={cn(
               'relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer overflow-hidden',
               activeIndex === i
-                ? 'bg-gold text-black shadow-[0_0_15px_rgba(200,169,81,0.3)]'
-                : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'
+                ? 'bg-[#C8A951] text-[#152B65] shadow-[0_0_15px_rgba(200,169,81,0.3)] font-black'
+                : 'bg-white text-[#374151] hover:bg-[#F3F4F6] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
             )}
           >
             {tab.label}

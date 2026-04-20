@@ -26,7 +26,7 @@ function Home() {
     <main className="min-h-screen relative bg-white">
 
       {/* ═══════════════════ NAVBAR ═══════════════════ */}
-      <nav className="fixed top-0 w-full z-50 h-16 backdrop-blur-md" style={{ background: "rgba(10,22,40,0.85)" }}>
+      <nav className="fixed top-0 w-full z-50 h-16 backdrop-blur-md" style={{ background: "rgba(11,29,58,0.9)" }}>
         <div className="max-w-7xl mx-auto px-5 h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <svg viewBox="0 0 100 100" className="w-7 h-7 fill-current text-gold">
@@ -118,7 +118,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
-      <section className="relative z-10 grid md:grid-cols-2 bg-[#0A1628] text-white">
+      <section className="relative z-10 grid md:grid-cols-2 bg-[#0B1D3A] text-white">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=800&fit=crop"
@@ -253,7 +253,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden bg-[#0A1628] text-white">
+      <section className="py-16 relative z-10 overflow-hidden bg-[#0B1D3A] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
@@ -288,7 +288,7 @@ function Home() {
             </ul>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="bg-[#0A1628] rounded-2xl p-6 border border-[#C8A951]/20">
+            <div className="bg-[#0B1D3A] rounded-2xl p-6 border border-[#C8A951]/20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
                   <span className="text-gold text-lg">🧭</span>
@@ -315,7 +315,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
-      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#0A1628] text-white">
+      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#0B1D3A] text-white">
         {/* Background security image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -324,7 +324,7 @@ function Home() {
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-[#060E1F]/80" />
+          <div className="absolute inset-0 bg-[#0B1D3A]/80" />
         </div>
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
@@ -400,7 +400,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#0A1628] text-white">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#0B1D3A] text-white">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
@@ -520,7 +520,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#0A1628] text-white">
+      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#0B1D3A] text-white">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
@@ -561,7 +561,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-[#060E1F] border-t border-gold/20 py-6 relative z-10 text-white">
+      <footer className="bg-[#0B1D3A] border-t border-gold/20 py-6 relative z-10 text-white">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid md:grid-cols-5 gap-6 mb-4">
             <div className="md:col-span-2">
@@ -631,7 +631,7 @@ function HeroSection() {
   }
 
   return (
-    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#0A1628] text-white">
+    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#0B1D3A] text-white">
       <div className="absolute inset-0 z-0">
         <img src="/assets/images/hero-family.jpg" alt="Multi-generational family" className="w-full h-full object-cover" fetchPriority="high" style={{ objectPosition: "center 30%" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />

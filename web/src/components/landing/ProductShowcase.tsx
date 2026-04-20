@@ -89,7 +89,7 @@ export function ProductShowcase() {
 
   useEffect(() => {
     if (paused) return
-    timerRef.current = setInterval(advance, 4000)
+    timerRef.current = setInterval(advance, 15000)
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
   }, [paused, advance])
 
@@ -122,7 +122,7 @@ export function ProductShowcase() {
               <div
                 key={`progress-${activeIndex}`}
                 className="absolute bottom-0 left-0 h-0.5 bg-gold/70 rounded-full"
-                style={{ animation: 'tabProgress 4s linear forwards' }}
+                style={{ animation: 'tabProgress 15s linear forwards' }}
               />
             )}
           </button>

@@ -88,6 +88,7 @@ function Home() {
             </h2>
           </ScrollReveal>
 
+
           <StaggerList className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             <StaggerItem>
               <HoverCard className="h-full">
@@ -189,14 +190,14 @@ function Home() {
       <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
-      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden">
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[#F8F6F1]">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
-            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
-            <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              Here&apos;s What You Can Do <span className="text-gold">Today</span>
+            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
+            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-4 font-[family-name:var(--font-cinzel)]">
+              Here&apos;s What You Can Do <span className="text-[#C8A951]">Today</span>
             </h2>
-            <p className="text-white/60 max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
+            <p className="text-[#6B7280] max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-6 mb-12">
@@ -410,11 +411,11 @@ function Home() {
       <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ SOCIAL PROOF ═══════════════════ */}
-      <section className="py-16 relative z-10">
+      <section className="py-16 relative z-10 bg-[#F8F6F1]">
         <div className="max-w-5xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
-              Built for <span className="text-gold">Real Families</span>
+            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
+              Built for <span className="text-[#C8A951]">Real Families</span>
             </h2>
           </ScrollReveal>
 
@@ -456,79 +457,79 @@ function Home() {
       <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#F8F6F1]">
         <div className="max-w-5xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
-              Start Free. <span className="text-gold">Upgrade When Ready.</span>
+            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
+              Start Free. <span className="text-[#C8A951]">Upgrade When Ready.</span>
             </h2>
-            <p className="text-white/60 text-sm max-w-lg mx-auto">No credit card required. Your vault is free forever. Upgrade for unlimited storage, video memoirs, and AI guidance.</p>
+            <p className="text-[#6B7280] text-sm max-w-lg mx-auto">No credit card required. Your vault is free forever. Upgrade for unlimited storage, video memoirs, and AI guidance.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-5 items-stretch">
-            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/5 border border-white/10 py-0 h-full">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.08)]">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">Guardian</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">Guardian</div>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Forever</div>
-                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-gold">✓</span> 1 estate plan</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> 5 document uploads</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Basic asset inventory</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Heir invitations</li>
+                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
+                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Forever</div>
+                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 1 estate plan</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 5 document uploads</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Basic asset inventory</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Heir invitations</li>
                 </ul>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Start Free</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-gold/50 bg-gold/5 relative py-0 h-full">
-              <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
+            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-[#C8A951]/40 bg-white relative py-0 h-full shadow-[0_12px_50px_rgba(200,169,81,0.15)]">
+              <div className="absolute top-0 left-0 w-full h-1 bg-[#C8A951] rounded-t-2xl" />
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex justify-between items-center mb-3">
                   <div className="flex items-center gap-2">
                     <div className="status-dot" />
-                    <div className="text-[0.6rem] tracking-[0.15em] text-gold uppercase font-bold">Concierge</div>
+                    <div className="text-[0.6rem] tracking-[0.15em] text-[#C8A951] uppercase font-bold">Concierge</div>
                   </div>
-                  <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
+                  <Badge className="bg-[#C8A951] text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-white/50">/mo</span></div>
-                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Unlimited documents</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> PII encryption vault</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Video &amp; audio memoirs</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Time capsules</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Digital lockbox</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Priority support</li>
+                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-[#9CA3AF]">/mo</span></div>
+                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Unlimited documents</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> PII encryption vault</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Video &amp; audio memoirs</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Time capsules</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Digital lockbox</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Priority support</li>
                 </ul>
-                <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
+                <Button asChild className="bg-[#C8A951] text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-[#D4AF37] hover:shadow-[0_0_20px_rgba(200,169,81,0.5)] transition-all border-none h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/5 border border-white/10 py-0 h-full">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.08)]">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">White Glove</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">White Glove</div>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-white/50">/mo</span></div>
-                <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Everything in Concierge</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> AI Shepherd guidance</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Legal document review</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Multi-executor coordination</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Probate preparation</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Phone support</li>
+                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-[#9CA3AF]">/mo</span></div>
+                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Everything in Concierge</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> AI Shepherd guidance</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Legal document review</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Multi-executor coordination</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Probate preparation</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Phone support</li>
                 </ul>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
@@ -769,24 +770,24 @@ function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string
 
 function CapabilityCard({ icon, title, items, accent, image }: { icon: string; title: string; items: string[]; accent?: boolean; image: string }) {
   return (
-    <Card className={`rounded-2xl overflow-hidden bg-gradient-to-b from-white/10 to-white/[0.03] border backdrop-blur-sm py-0 h-full ${accent ? 'border-gold/30' : 'border-white/15'}`}>
+    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.18)] transition-shadow duration-300 ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
       {/* Photo header */}
-      <div className="relative h-[140px] overflow-hidden">
+      <div className="relative h-[160px] overflow-hidden">
         <img
           src={image}
           alt=""
           className="w-full h-full object-cover"
           loading="lazy"
         />
-        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
       </div>
       <CardContent className="p-6 flex flex-col flex-grow">
-        <div className="text-3xl mb-4">{icon}</div>
-        <h3 className={`font-bold text-lg mb-4 ${accent ? 'text-gold' : 'text-white'}`}>{title}</h3>
+        <div className="text-3xl mb-3">{icon}</div>
+        <h3 className={`font-bold text-lg mb-4 ${accent ? 'text-[#C8A951]' : 'text-[#1A1A1A]'}`}>{title}</h3>
         <ul className="space-y-2.5 flex-grow">
           {items.map((item) => (
-            <li key={item} className="flex gap-2 text-sm text-white/70">
-              <span className="text-gold shrink-0">✓</span>
+            <li key={item} className="flex gap-2 text-sm text-[#4B5563]">
+              <span className="text-[#C8A951] shrink-0">✓</span>
               {item}
             </li>
           ))}
@@ -800,20 +801,20 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
 
 function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: string; role: string; avatar: string }) {
   return (
-    <Card className="rounded-2xl ring-0 bg-gradient-to-b from-white/10 to-white/[0.03] border border-white/15 py-0 h-full">
+    <Card className="rounded-2xl ring-0 bg-white border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.12)] transition-shadow duration-300">
       <CardContent className="p-6 flex flex-col h-full">
-        <div className="text-gold text-2xl mb-3 font-[family-name:var(--font-cinzel)]">&ldquo;</div>
-        <p className="text-white/80 text-sm leading-relaxed mb-4 italic flex-grow">{quote}</p>
-        <div className="border-t border-white/10 pt-3 flex items-center gap-3">
+        <div className="text-[#C8A951] text-2xl mb-3 font-[family-name:var(--font-cinzel)]">&ldquo;</div>
+        <p className="text-[#374151] text-sm leading-relaxed mb-4 italic flex-grow">{quote}</p>
+        <div className="border-t border-[#E5E7EB] pt-3 flex items-center gap-3">
           <img
             src={avatar}
             alt=""
-            className="w-12 h-12 rounded-full object-cover shrink-0"
+            className="w-12 h-12 rounded-full object-cover shrink-0 ring-2 ring-[#C8A951]/20"
             loading="lazy"
           />
           <div>
-            <div className="text-white font-bold text-sm">{name}</div>
-            <div className="text-gold text-xs">{role}</div>
+            <div className="text-[#1A1A1A] font-bold text-sm">{name}</div>
+            <div className="text-[#C8A951] text-xs">{role}</div>
           </div>
         </div>
       </CardContent>

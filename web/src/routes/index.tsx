@@ -96,6 +96,7 @@ function Home() {
                   title="I just lost someone"
                   description="Organize their estate, notify heirs, settle accounts, and distribute assets — guided step by step."
                   cta="Start settlement"
+                  image="https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&h=250&fit=crop"
                 />
               </HoverCard>
             </StaggerItem>
@@ -106,6 +107,7 @@ function Home() {
                   title="I'm planning ahead"
                   description="Secure your documents, record your wishes, designate beneficiaries, and give your family clarity."
                   cta="Create your vault"
+                  image="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=250&fit=crop"
                 />
               </HoverCard>
             </StaggerItem>
@@ -116,6 +118,7 @@ function Home() {
                   title="My parent is aging"
                   description="Help them organize while they can. Capture their voice, their values, and their instructions."
                   cta="Set up together"
+                  image="https://images.unsplash.com/photo-1581579438747-104c53e81e5c?w=400&h=250&fit=crop"
                 />
               </HoverCard>
             </StaggerItem>
@@ -126,6 +129,7 @@ function Home() {
                   title="Major life change"
                   description="Divorce, remarriage, new child — update beneficiaries, restructure assets, protect what matters."
                   cta="Update your plan"
+                  image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop"
                 />
               </HoverCard>
             </StaggerItem>
@@ -133,14 +137,23 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
+      {/* ── Image band separator after scenarios ── */}
+      <div className="relative h-8 w-full overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&h=100&fit=crop"
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-black/75" />
+      </div>
 
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
       <section className="relative z-10 grid md:grid-cols-2">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=1200&auto=format&fit=crop"
-            alt="Old photographs and letters"
+            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=800&fit=crop"
+            alt="Stressed person with paperwork"
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -207,6 +220,7 @@ function Home() {
                     'Store passwords and digital accounts',
                     'Record funeral and burial preferences',
                   ]}
+                  image="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=200&fit=crop"
                 />
               </HoverCard>
             </StaggerItem>
@@ -222,6 +236,7 @@ function Home() {
                     'Schedule time capsule deliveries',
                   ]}
                   accent
+                  image="https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=200&fit=crop"
                 />
               </HoverCard>
             </StaggerItem>
@@ -236,6 +251,7 @@ function Home() {
                     'Auto-notify when the time comes',
                     'Guide them through settlement',
                   ]}
+                  image="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=200&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -243,25 +259,37 @@ function Home() {
 
           {/* How It Works — 3 Steps */}
           <ScrollReveal>
-            <div className="glass-panel rounded-2xl p-8 md:p-12">
-              <h3 className="text-2xl text-white mb-8 font-[family-name:var(--font-cinzel)] text-center">
-                Three Steps. <span className="text-gold">Fifteen Minutes.</span>
-              </h3>
-              <div className="grid md:grid-cols-3 gap-8">
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
-                  <h4 className="text-white font-bold mb-2">Create Your Vault</h4>
-                  <p className="text-white/60 text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
-                  <h4 className="text-white font-bold mb-2">Invite Your Circle</h4>
-                  <p className="text-white/60 text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
-                  <h4 className="text-white font-bold mb-2">Live in Peace</h4>
-                  <p className="text-white/60 text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
+            <div className="rounded-2xl overflow-hidden relative">
+              {/* Background image with heavy overlay */}
+              <div className="absolute inset-0 z-0">
+                <img
+                  src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&h=400&fit=crop&auto=format"
+                  alt=""
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black/85" />
+              </div>
+              <div className="relative z-10 p-8 md:p-12">
+                <h3 className="text-2xl text-white mb-8 font-[family-name:var(--font-cinzel)] text-center">
+                  Three Steps. <span className="text-gold">Fifteen Minutes.</span>
+                </h3>
+                <div className="grid md:grid-cols-3 gap-8">
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
+                    <h4 className="text-white font-bold mb-2">Create Your Vault</h4>
+                    <p className="text-white/60 text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
+                    <h4 className="text-white font-bold mb-2">Invite Your Circle</h4>
+                    <p className="text-white/60 text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
+                    <h4 className="text-white font-bold mb-2">Live in Peace</h4>
+                    <p className="text-white/60 text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -292,7 +320,17 @@ function Home() {
 
       {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
       <section className="py-16 relative z-10 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center">
+        {/* Background human presence */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&h=600&fit=crop"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/90 to-black/80" />
+        </div>
+        <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
             <h2 className="text-3xl md:text-4xl text-white mb-6 font-[family-name:var(--font-cinzel)]">
@@ -339,7 +377,17 @@ function Home() {
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
       <section id="security" className="py-12 relative z-10 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-5">
+        {/* Background security image */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=400&fit=crop"
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-black/90" />
+        </div>
+        <div className="max-w-5xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
               Your Data. <span className="text-gold">Fort Knox Security.</span>
@@ -386,6 +434,7 @@ function Home() {
                   quote="After my father passed, we spent 14 months in probate. I set up FinalWishes so my children never have to go through that."
                   name="Margaret T."
                   role="Estate Owner, Maryland"
+                  avatar="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=96&h=96&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -395,6 +444,7 @@ function Home() {
                   quote="I uploaded every document, recorded messages for my kids, and designated my executor — all in one Saturday afternoon."
                   name="David K."
                   role="Estate Owner, Illinois"
+                  avatar="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -404,6 +454,7 @@ function Home() {
                   quote="When my client's spouse passed suddenly, their FinalWishes vault had everything we needed. It saved months of discovery."
                   name="Patricia M., Esq."
                   role="Estate Attorney, Minnesota"
+                  avatar="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=96&h=96&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>
@@ -411,7 +462,16 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
+      {/* ── Image band separator after testimonials ── */}
+      <div className="relative h-8 w-full overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1600&h=100&fit=crop"
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-black/75" />
+      </div>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
       <section id="pricing" className="py-16 relative overflow-hidden z-10">
@@ -424,7 +484,7 @@ function Home() {
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-5 items-stretch">
-            <StaggerItem><HoverCard className="h-full"><Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/5 border border-white/10 py-0 h-full">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
@@ -444,7 +504,7 @@ function Home() {
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="glass-card rounded-2xl ring-0 border-2 !border-gold/50 bg-transparent relative py-0 h-full">
+            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-gold/50 bg-gold/5 relative py-0 h-full">
               <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex justify-between items-center mb-3">
@@ -470,7 +530,7 @@ function Home() {
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard className="h-full"><Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/5 border border-white/10 py-0 h-full">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
@@ -696,11 +756,23 @@ function HeroContent() {
 
 /* ─── Scenario Card ─── */
 
-function ScenarioCard({ emoji, title, description, cta }: { emoji: string; title: string; description: string; cta: string }) {
+function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string; title: string; description: string; cta: string; image: string }) {
   return (
-    <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
-      <CardContent className="p-6 flex flex-col h-full">
-        <div className="text-3xl mb-4">{emoji}</div>
+    <Card className="rounded-2xl overflow-hidden bg-gradient-to-b from-white/10 to-white/[0.03] border border-white/15 backdrop-blur-sm py-0 h-full">
+      {/* Photo header with emoji badge */}
+      <div className="relative h-40 overflow-hidden">
+        <img
+          src={image}
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute bottom-2 left-3 w-10 h-10 rounded-full bg-black/60 flex items-center justify-center text-lg">
+          {emoji}
+        </div>
+      </div>
+      <CardContent className="p-6 flex flex-col flex-grow">
         <h3 className="text-white font-bold text-base mb-2">{title}</h3>
         <p className="text-white/60 text-sm leading-relaxed flex-grow mb-4">{description}</p>
         <Button asChild variant="ghost" className="text-gold text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-gold-bright hover:bg-transparent self-start">
@@ -713,10 +785,20 @@ function ScenarioCard({ emoji, title, description, cta }: { emoji: string; title
 
 /* ─── Capability Card ─── */
 
-function CapabilityCard({ icon, title, items, accent }: { icon: string; title: string; items: string[]; accent?: boolean }) {
+function CapabilityCard({ icon, title, items, accent, image }: { icon: string; title: string; items: string[]; accent?: boolean; image: string }) {
   return (
-    <Card className={`glass-card rounded-2xl ring-0 py-0 h-full ${accent ? 'border-2 !border-gold/30' : 'border-0'} bg-transparent`}>
-      <CardContent className="p-6 flex flex-col h-full">
+    <Card className={`rounded-2xl overflow-hidden bg-gradient-to-b from-white/10 to-white/[0.03] border backdrop-blur-sm py-0 h-full ${accent ? 'border-gold/30' : 'border-white/15'}`}>
+      {/* Photo header */}
+      <div className="relative h-[140px] overflow-hidden">
+        <img
+          src={image}
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/50 to-transparent" />
+      </div>
+      <CardContent className="p-6 flex flex-col flex-grow">
         <div className="text-3xl mb-4">{icon}</div>
         <h3 className={`font-bold text-lg mb-4 ${accent ? 'text-gold' : 'text-white'}`}>{title}</h3>
         <ul className="space-y-2.5 flex-grow">
@@ -734,15 +816,23 @@ function CapabilityCard({ icon, title, items, accent }: { icon: string; title: s
 
 /* ─── Testimonial Card ─── */
 
-function TestimonialCard({ quote, name, role }: { quote: string; name: string; role: string }) {
+function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: string; role: string; avatar: string }) {
   return (
-    <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
-      <CardContent className="p-6">
+    <Card className="rounded-2xl ring-0 bg-gradient-to-b from-white/10 to-white/[0.03] border border-white/15 py-0 h-full">
+      <CardContent className="p-6 flex flex-col h-full">
         <div className="text-gold text-2xl mb-3 font-[family-name:var(--font-cinzel)]">&ldquo;</div>
-        <p className="text-white/80 text-sm leading-relaxed mb-4 italic">{quote}</p>
-        <div className="border-t border-white/10 pt-3">
-          <div className="text-white font-bold text-sm">{name}</div>
-          <div className="text-gold text-xs">{role}</div>
+        <p className="text-white/80 text-sm leading-relaxed mb-4 italic flex-grow">{quote}</p>
+        <div className="border-t border-white/10 pt-3 flex items-center gap-3">
+          <img
+            src={avatar}
+            alt=""
+            className="w-12 h-12 rounded-full object-cover shrink-0"
+            loading="lazy"
+          />
+          <div>
+            <div className="text-white font-bold text-sm">{name}</div>
+            <div className="text-gold text-xs">{role}</div>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -757,7 +847,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
     <ScrollReveal delay={0}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left glass-panel rounded-xl px-6 py-5 transition-all hover:bg-white/5 cursor-pointer"
+        className="w-full text-left bg-white/5 border border-white/10 rounded-xl px-6 py-5 transition-all hover:bg-white/8 cursor-pointer"
       >
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-white font-bold text-sm">{q}</h3>

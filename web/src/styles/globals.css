@@ -132,6 +132,11 @@ body {
 }
 
 /* ── Identity Contexts ── */
+/* Prevent Chrome Auto Dark Mode from inverting our colors */
+:root {
+  color-scheme: only light;
+}
+
 .section-light {
   background: #FFFFFF !important;
   background-image: none !important;

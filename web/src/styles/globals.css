@@ -133,10 +133,7 @@ body {
 
 /* ── Identity Contexts ── */
 .royal-theme {
-  background-color: #0C1B3D;
-  background-image:
-    radial-gradient(ellipse 130% 80% at 50% 0%, #1A347A 0%, #0F2352 55%, #0A1628 100%);
-  background-attachment: fixed;
+  background-color: #0A1628;
   color: #FFFFFF;
 
   /* Text */

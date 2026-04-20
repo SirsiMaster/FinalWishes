@@ -118,7 +118,7 @@ function Home() {
                   title="My parent is aging"
                   description="Help them organize while they can. Capture their voice, their values, and their instructions."
                   cta="Set up together"
-                  image="https://images.unsplash.com/photo-1581579438747-104c53e81e5c?w=400&h=250&fit=crop"
+                  image="https://images.unsplash.com/photo-1476234251651-f353703a034d?w=400&h=250&fit=crop&crop=faces"
                 />
               </HoverCard>
             </StaggerItem>

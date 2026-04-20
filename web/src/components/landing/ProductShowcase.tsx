@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -71,24 +71,53 @@ const TABS: ShowcaseTab[] = [
 
 export function ProductShowcase() {
   const [activeTab, setActiveTab] = useState(TABS[0].id)
+  const [paused, setPaused] = useState(false)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const active = TABS.find(t => t.id === activeTab) || TABS[0]
 
+  const advance = useCallback(() => {
+    setActiveTab(prev => {
+      const idx = TABS.findIndex(t => t.id === prev)
+      return TABS[(idx + 1) % TABS.length].id
+    })
+  }, [])
+
+  // Auto-rotate every 4 seconds, pause on hover or manual click
+  useEffect(() => {
+    if (paused) return
+    timerRef.current = setInterval(advance, 4000)
+    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+  }, [paused, advance])
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId)
+    setPaused(true)
+    // Resume auto-rotation after 10 seconds of inactivity
+    setTimeout(() => setPaused(false), 10000)
+  }
+
   return (
-    <div>
+    <div
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       {/* Tab bar */}
       <div className="flex flex-wrap justify-center gap-2 mb-8">
         {TABS.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabClick(tab.id)}
             className={cn(
-              'px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer',
+              'relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer overflow-hidden',
               activeTab === tab.id
                 ? 'bg-gold text-black shadow-[0_0_15px_rgba(200,169,81,0.3)]'
                 : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'
             )}
           >
             {tab.label}
+            {activeTab === tab.id && !paused && (
+              <div className="absolute bottom-0 left-0 h-0.5 bg-gold rounded-full animate-[tabProgress_4s_linear]" style={{ width: '100%' }} />
+            )}
           </button>
         ))}
       </div>

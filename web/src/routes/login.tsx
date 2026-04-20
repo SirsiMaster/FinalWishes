@@ -104,7 +104,10 @@ function LoginPage() {
     setIsSubmitting(false);
 
     if (result.success) {
-      navigatePostLogin(navigate, profile, inviteId);
+      // Don't navigate here — the useEffect watching [user, profile] handles
+      // routing after profile loads from Firestore. Navigating here causes a
+      // race condition where profile is still null and user lands on /estates/create.
+      return;
     } else if (result.mfaRequired && result.mfaResolver) {
       // Switch to MFA challenge mode
       setMfaResolver(result.mfaResolver);

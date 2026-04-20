@@ -5,6 +5,7 @@ package docintell
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -211,12 +212,11 @@ func (h *Handler) analyzeWithAI(ctx context.Context, content []byte, fileName, m
 		// For plain text, include content directly in the prompt
 		userPrompt = fmt.Sprintf("Document: %s\n\nContent:\n%s\n\n%s", fileName, string(content), analysisPrompt)
 	} else {
-		// For PDFs, images, and other binary formats, describe and include as base64
-		// The sirsi-ai model can handle document analysis from text descriptions
-		// We extract what we can and let the model work with it
+		// For PDFs and binary formats, encode as base64 so the AI model can read the content
+		encoded := base64.StdEncoding.EncodeToString(content)
 		userPrompt = fmt.Sprintf(
-			"Document: %s (type: %s, size: %d bytes)\n\nPlease analyze the following document content.\n\n%s",
-			fileName, mimeType, len(content), analysisPrompt,
+			"Document: %s (type: %s)\n\nThe document is provided as base64-encoded data below. Decode and analyze it.\n\n<document_base64>\n%s\n</document_base64>\n\n%s",
+			fileName, mimeType, encoded, analysisPrompt,
 		)
 	}
 

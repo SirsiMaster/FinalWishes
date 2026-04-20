@@ -435,6 +435,12 @@ input::-webkit-contacts-auto-fill-button {
   to { transform: rotate(360deg); }
 }
 
+/* ── Tab Progress Animation ── */
+@keyframes tabProgress {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
 /* ── Gold Shimmer Loading ── */
 @keyframes goldShimmer {
   0% { background-position: 200% 0; }

@@ -113,7 +113,7 @@ export function ProductShowcase() {
             className={cn(
               'relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer overflow-hidden',
               activeIndex === i
-                ? 'bg-[#C8A951] text-[#152B65] shadow-[0_0_15px_rgba(200,169,81,0.3)] font-black'
+                ? 'bg-[#C8A951] text-[#1A3478] shadow-[0_0_15px_rgba(200,169,81,0.3)] font-black'
                 : 'bg-white text-[#374151] hover:bg-[#F3F4F6] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
             )}
           >

@@ -118,7 +118,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
-      <section className="relative z-10 grid md:grid-cols-2 bg-[#0B1D3A] text-white">
+      <section className="relative z-10 grid md:grid-cols-2 bg-[#102A56] text-white">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=800&fit=crop"
@@ -224,43 +224,46 @@ function Home() {
             </StaggerItem>
           </StaggerList>
 
-          {/* How It Works — 3 Steps */}
+        </div>
+      </section>
+
+      {/* ═══════════════════ THREE STEPS ═══════════════════ */}
+      <section className="py-16 relative z-10 bg-[#102A56] text-white">
+        <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal>
-            <div className="rounded-2xl border border-[#E5E1D8] bg-white shadow-[0_4px_30px_rgba(0,0,0,0.06)] p-8 md:p-12">
-                <h3 className="text-2xl text-[#1A1A1A] mb-8 font-[family-name:var(--font-cinzel)] text-center">
-                  Three Steps. <span className="text-[#C8A951]">Fifteen Minutes.</span>
-                </h3>
-                <div className="grid md:grid-cols-3 gap-8">
-                  <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-[#C8A951]/10 flex items-center justify-center mx-auto mb-4 text-[#C8A951] font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
-                    <h4 className="text-[#1A1A1A] font-bold mb-2">Create Your Vault</h4>
-                    <p className="text-[#6B7280] text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-[#C8A951]/10 flex items-center justify-center mx-auto mb-4 text-[#C8A951] font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
-                    <h4 className="text-[#1A1A1A] font-bold mb-2">Invite Your Circle</h4>
-                    <p className="text-[#6B7280] text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 rounded-full bg-[#C8A951]/10 flex items-center justify-center mx-auto mb-4 text-[#C8A951] font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
-                    <h4 className="text-[#1A1A1A] font-bold mb-2">Live in Peace</h4>
-                    <p className="text-[#6B7280] text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
-                  </div>
-                </div>
+            <h3 className="text-2xl text-white mb-10 font-[family-name:var(--font-cinzel)] text-center">
+              Three Steps. <span className="text-gold">Fifteen Minutes.</span>
+            </h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
+                <h4 className="text-white font-bold mb-2">Create Your Vault</h4>
+                <p className="text-white/60 text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
+                <h4 className="text-white font-bold mb-2">Invite Your Circle</h4>
+                <p className="text-white/60 text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
+                <h4 className="text-white font-bold mb-2">Live in Peace</h4>
+                <p className="text-white/60 text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
+              </div>
             </div>
           </ScrollReveal>
         </div>
       </section>
 
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden bg-[#0B1D3A] text-white">
+      <section className="py-16 relative z-10 overflow-hidden section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
-            <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              This Is <span className="text-gold">Your Dashboard</span>
+            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
+            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-4 font-[family-name:var(--font-cinzel)]">
+              This Is <span className="text-[#C8A951]">Your Dashboard</span>
             </h2>
-            <p className="text-white/60 max-w-lg mx-auto text-sm">Not a mockup. This is the actual product. Click through to see every feature.</p>
+            <p className="text-[#6B7280] max-w-lg mx-auto text-sm">Not a mockup. This is the actual product. Click through to see every feature.</p>
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
@@ -270,25 +273,25 @@ function Home() {
       </section>
 
       {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden section-light">
+      <section className="py-16 relative z-10 overflow-hidden bg-[#102A56] text-white">
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
-            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 font-[family-name:var(--font-cinzel)]">
-              The Shepherd <span className="text-[#C8A951]">Guides You</span>
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
+            <h2 className="text-3xl md:text-4xl text-white mb-6 font-[family-name:var(--font-cinzel)]">
+              The Shepherd <span className="text-gold">Guides You</span>
             </h2>
-            <p className="text-[#4B5563] text-base leading-relaxed mb-6">
+            <p className="text-white/80 text-base leading-relaxed mb-6">
               Not sure where to start? Our AI engine analyzes your estate and tells you exactly what&apos;s missing, what&apos;s urgent, and what to do next. It&apos;s like having a personal estate advisor — available 24/7.
             </p>
-            <ul className="space-y-3 text-[#4B5563] text-sm">
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Personalized completion checklist</li>
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Daily prompts to capture your story</li>
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Obituary drafting assistance</li>
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Smart suggestions based on your situation</li>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Personalized completion checklist</li>
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Daily prompts to capture your story</li>
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Obituary drafting assistance</li>
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Smart suggestions based on your situation</li>
             </ul>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="bg-[#0B1D3A] rounded-2xl p-6 border border-[#C8A951]/20">
+            <div className="bg-white/[0.08] backdrop-blur-sm rounded-2xl p-6 border border-white/15">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
                   <span className="text-gold text-lg">🧭</span>
@@ -315,23 +318,13 @@ function Home() {
       </section>
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
-      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#0B1D3A] text-white">
-        {/* Background security image */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=400&fit=crop"
-            alt=""
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-[#0B1D3A]/80" />
-        </div>
-        <div className="max-w-6xl mx-auto px-5 relative z-10">
+      <section id="security" className="py-12 relative z-10 overflow-hidden section-light">
+        <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
-              Your Data. <span className="text-gold">Fort Knox Security.</span>
+            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
+              Your Data. <span className="text-[#C8A951]">Fort Knox Security.</span>
             </h2>
-            <p className="text-white/60 max-w-lg mx-auto text-sm">
+            <p className="text-[#6B7280] max-w-lg mx-auto text-sm">
               Estate documents are the most sensitive data a family owns. We encrypt everything with the same technology banks use.
             </p>
           </ScrollReveal>
@@ -343,11 +336,11 @@ function Home() {
               { label: 'MFA Required', desc: 'For all sensitive access' },
               { label: 'SOC 2 Architecture', desc: 'Enterprise audit trail' },
             ].map((item) => (
-              <Card key={item.label} className="bg-black/20 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+              <Card key={item.label} className="bg-white rounded-xl border border-[#E5E7EB]/60 ring-0 py-0 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
                 <CardContent className="p-4 text-center">
                   <div className="status-dot mx-auto mb-2" />
-                  <div className="text-white font-bold text-[10px] uppercase tracking-widest mb-1">{item.label}</div>
-                  <div className="text-white/50 text-[10px]">{item.desc}</div>
+                  <div className="text-[#1A1A1A] font-bold text-[10px] uppercase tracking-widest mb-1">{item.label}</div>
+                  <div className="text-[#6B7280] text-[10px]">{item.desc}</div>
                 </CardContent>
               </Card>
             ))}
@@ -400,7 +393,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#0B1D3A] text-white">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#102A56] text-white">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
@@ -410,27 +403,27 @@ function Home() {
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-5 items-stretch">
-            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/[0.06] border border-white/10 py-0 h-full backdrop-blur-sm">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white py-0 h-full shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-white/50 uppercase">Guardian</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">Guardian</div>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-                <div className="text-sm text-white/40 uppercase tracking-widest mb-4">Forever</div>
-                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-gold">✓</span> 1 estate plan</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> 5 document uploads</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Basic asset inventory</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Heir invitations</li>
+                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
+                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Forever</div>
+                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 1 estate plan</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 5 document uploads</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Basic asset inventory</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Heir invitations</li>
                 </ul>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Start Free</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-gold/40 bg-white/10 relative py-0 h-full backdrop-blur-sm">
+            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-gold/40 bg-white relative py-0 h-full shadow-[0_8px_40px_rgba(200,169,81,0.15)]">
               <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex justify-between items-center mb-3">
@@ -440,15 +433,15 @@ function Home() {
                   </div>
                   <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-white/40">/mo</span></div>
-                <div className="text-sm text-white/40 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Unlimited documents</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> PII encryption vault</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Video &amp; audio memoirs</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Time capsules</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Digital lockbox</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Priority support</li>
+                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-[#9CA3AF]">/mo</span></div>
+                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Unlimited documents</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> PII encryption vault</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Video &amp; audio memoirs</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Time capsules</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Digital lockbox</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Priority support</li>
                 </ul>
                 <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(200,169,81,0.5)] transition-all border-none h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
@@ -456,23 +449,23 @@ function Home() {
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/[0.06] border border-white/10 py-0 h-full backdrop-blur-sm">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white py-0 h-full shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-white/50 uppercase">White Glove</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">White Glove</div>
                 </div>
-                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-white/40">/mo</span></div>
-                <div className="text-sm text-white/40 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Everything in Concierge</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> AI Shepherd guidance</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Legal document review</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Multi-executor coordination</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Probate preparation</li>
-                  <li className="flex gap-2"><span className="text-gold">✓</span> Phone support</li>
+                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-[#9CA3AF]">/mo</span></div>
+                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Everything in Concierge</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> AI Shepherd guidance</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Legal document review</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Multi-executor coordination</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Probate preparation</li>
+                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Phone support</li>
                 </ul>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
@@ -520,7 +513,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#0B1D3A] text-white">
+      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#102A56] text-white">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
@@ -561,7 +554,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-[#0B1D3A] border-t border-gold/20 py-6 relative z-10 text-white">
+      <footer className="bg-[#102A56] border-t border-gold/20 py-6 relative z-10 text-white">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid md:grid-cols-5 gap-6 mb-4">
             <div className="md:col-span-2">
@@ -631,7 +624,7 @@ function HeroSection() {
   }
 
   return (
-    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#0B1D3A] text-white">
+    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#102A56] text-white">
       <div className="absolute inset-0 z-0">
         <img src="/assets/images/hero-family.jpg" alt="Multi-generational family" className="w-full h-full object-cover" fetchPriority="high" style={{ objectPosition: "center 30%" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -740,20 +733,19 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
 
 function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: string; role: string; avatar: string }) {
   return (
-    <Card className="rounded-2xl ring-0 bg-white border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.12)] transition-shadow duration-300">
+    <Card className="rounded-2xl ring-0 bg-[#102A56] border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.2)] transition-shadow duration-300">
       <CardContent className="p-6 flex flex-col h-full">
-        <div className="text-[#C8A951] text-2xl mb-3 font-[family-name:var(--font-cinzel)]">&ldquo;</div>
-        <p className="text-[#374151] text-sm leading-relaxed mb-4 italic flex-grow">{quote}</p>
-        <div className="border-t border-[#E5E7EB] pt-3 flex items-center gap-3">
+        <p className="text-white/90 text-sm leading-relaxed mb-4 italic flex-grow">&ldquo;{quote}&rdquo;</p>
+        <div className="border-t border-white/10 pt-3 flex items-center gap-3">
           <img
             src={avatar}
             alt=""
-            className="w-12 h-12 rounded-full object-cover shrink-0 ring-2 ring-[#C8A951]/20"
+            className="w-12 h-12 rounded-full object-cover shrink-0 ring-2 ring-gold/30"
             loading="lazy"
           />
           <div>
-            <div className="text-[#1A1A1A] font-bold text-sm">{name}</div>
-            <div className="text-[#C8A951] text-xs">{role}</div>
+            <div className="text-white font-bold text-sm">{name}</div>
+            <div className="text-gold text-xs">{role}</div>
           </div>
         </div>
       </CardContent>

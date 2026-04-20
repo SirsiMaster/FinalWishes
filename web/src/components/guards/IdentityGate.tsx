@@ -41,11 +41,23 @@ interface UserFirestoreProfile {
 
 export function IdentityGate({ estateId, children }: IdentityGateProps) {
   const { user, profile, emailVerified, resendVerification } = useAuth();
+
+  // Demo mode bypass — synthetic users skip identity verification
+  const isDemoUser = user?.uid?.startsWith('user_') || user?.uid?.startsWith('demo_');
+  if (isDemoUser && profile) {
+    return <>{children}</>;
+  }
+
+  return <IdentityGateInner estateId={estateId} user={user} profile={profile} emailVerified={emailVerified} resendVerification={resendVerification}>{children}</IdentityGateInner>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function IdentityGateInner({ estateId, children, user, profile, emailVerified, resendVerification }: IdentityGateProps & { user: any; profile: any; emailVerified: boolean; resendVerification: any }) {
   const [attestationVerified, setAttestationVerified] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(true);
 
   const isFiduciary = profile?.role && (FIDUCIARY_ROLES as readonly string[]).includes(profile.role);
-  const mfaStatus = getMFAStatus(user);
+  const mfaStatus = getMFAStatus(user as any);
 
   // Fetch user's Firestore profile for createdAt and loginCount
   const { data: userFsProfile } = useDocument<UserFirestoreProfile>(

@@ -23,7 +23,7 @@ function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen text-white relative">
+    <main className="min-h-screen relative">
       {/* Floating orbs removed — they bled through white sections */}
 
       {/* ═══════════════════ NAVBAR ═══════════════════ */}

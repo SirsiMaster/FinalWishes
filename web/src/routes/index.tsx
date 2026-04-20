@@ -76,15 +76,13 @@ function Home() {
       {/* ═══════════════════ HERO ═══════════════════ */}
       <HeroSection />
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ SCENARIO CARDS — "I'm here because..." ═══════════════════ */}
-      <section id="scenarios" className="py-16 relative z-10">
+      <section id="scenarios" className="py-16 relative z-10 bg-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-12">
-            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
-            <h2 className="text-3xl md:text-4xl text-white font-[family-name:var(--font-cinzel)] mb-4">
-              Life Doesn&apos;t Wait. <span className="text-gold">Neither Should You.</span>
+            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
+            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] font-[family-name:var(--font-cinzel)] mb-4">
+              Life Doesn&apos;t Wait. <span className="text-[#C8A951]">Neither Should You.</span>
             </h2>
           </ScrollReveal>
 
@@ -138,8 +136,6 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
       <section className="relative z-10 grid md:grid-cols-2">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
@@ -187,10 +183,8 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
-      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[#F8F6F1]">
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
             <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
@@ -289,8 +283,6 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
       <section className="py-16 relative z-10 overflow-hidden">
         <div className="max-w-5xl mx-auto px-5">
@@ -308,38 +300,26 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden">
-        {/* Background human presence */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&h=600&fit=crop"
-            alt=""
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#060E1F]/90 via-[#060E1F]/75 to-[#060E1F]/65" />
-        </div>
+      <section className="py-16 relative z-10 overflow-hidden bg-white">
         <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
-            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
-            <h2 className="text-3xl md:text-4xl text-white mb-6 font-[family-name:var(--font-cinzel)]">
-              The Shepherd <span className="text-gold">Guides You</span>
+            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
+            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 font-[family-name:var(--font-cinzel)]">
+              The Shepherd <span className="text-[#C8A951]">Guides You</span>
             </h2>
-            <p className="text-white/80 text-base leading-relaxed mb-6">
+            <p className="text-[#4B5563] text-base leading-relaxed mb-6">
               Not sure where to start? Our AI engine analyzes your estate and tells you exactly what&apos;s missing, what&apos;s urgent, and what to do next. It&apos;s like having a personal estate advisor — available 24/7.
             </p>
-            <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Personalized completion checklist</li>
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Daily prompts to capture your story</li>
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Obituary drafting assistance</li>
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Smart suggestions based on your situation</li>
+            <ul className="space-y-3 text-[#4B5563] text-sm">
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Personalized completion checklist</li>
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Daily prompts to capture your story</li>
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Obituary drafting assistance</li>
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Smart suggestions based on your situation</li>
             </ul>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="glass-panel rounded-2xl p-6 border border-gold/20">
+            <div className="bg-[#0A1628] rounded-2xl p-6 border border-[#C8A951]/20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
                   <span className="text-gold text-lg">🧭</span>
@@ -364,8 +344,6 @@ function Home() {
           </ScrollReveal>
         </div>
       </section>
-
-      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
       <section id="security" className="py-12 relative z-10 overflow-hidden">
@@ -408,10 +386,8 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ SOCIAL PROOF ═══════════════════ */}
-      <section className="py-16 relative z-10 bg-[#F8F6F1]">
+      <section className="py-16 relative z-10 bg-white">
         <div className="max-w-5xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
@@ -454,82 +430,80 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#F8F6F1]">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10">
         <div className="max-w-5xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
-              Start Free. <span className="text-[#C8A951]">Upgrade When Ready.</span>
+            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
+              Start Free. <span className="text-gold">Upgrade When Ready.</span>
             </h2>
-            <p className="text-[#6B7280] text-sm max-w-lg mx-auto">No credit card required. Your vault is free forever. Upgrade for unlimited storage, video memoirs, and AI guidance.</p>
+            <p className="text-white/60 text-sm max-w-lg mx-auto">No credit card required. Your vault is free forever. Upgrade for unlimited storage, video memoirs, and AI guidance.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-5 items-stretch">
-            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.08)]">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/[0.06] border border-white/10 py-0 h-full backdrop-blur-sm">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">Guardian</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-white/50 uppercase">Guardian</div>
                 </div>
-                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Forever</div>
-                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 1 estate plan</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 5 document uploads</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Basic asset inventory</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Heir invitations</li>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
+                <div className="text-sm text-white/40 uppercase tracking-widest mb-4">Forever</div>
+                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-gold">✓</span> 1 estate plan</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> 5 document uploads</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Basic asset inventory</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Heir invitations</li>
                 </ul>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Start Free</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-[#C8A951]/40 bg-white relative py-0 h-full shadow-[0_12px_50px_rgba(200,169,81,0.15)]">
-              <div className="absolute top-0 left-0 w-full h-1 bg-[#C8A951] rounded-t-2xl" />
+            <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="rounded-2xl ring-0 border-2 !border-gold/40 bg-white/10 relative py-0 h-full backdrop-blur-sm">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex justify-between items-center mb-3">
                   <div className="flex items-center gap-2">
                     <div className="status-dot" />
-                    <div className="text-[0.6rem] tracking-[0.15em] text-[#C8A951] uppercase font-bold">Concierge</div>
+                    <div className="text-[0.6rem] tracking-[0.15em] text-gold uppercase font-bold">Concierge</div>
                   </div>
-                  <Badge className="bg-[#C8A951] text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
+                  <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-[#9CA3AF]">/mo</span></div>
-                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Unlimited documents</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> PII encryption vault</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Video &amp; audio memoirs</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Time capsules</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Digital lockbox</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Priority support</li>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-white/40">/mo</span></div>
+                <div className="text-sm text-white/40 uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Unlimited documents</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> PII encryption vault</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Video &amp; audio memoirs</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Time capsules</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Digital lockbox</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Priority support</li>
                 </ul>
-                <Button asChild className="bg-[#C8A951] text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-[#D4AF37] hover:shadow-[0_0_20px_rgba(200,169,81,0.5)] transition-all border-none h-auto">
+                <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(200,169,81,0.5)] transition-all border-none h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.08)]">
+            <StaggerItem><HoverCard className="h-full"><Card className="rounded-2xl ring-0 bg-white/[0.06] border border-white/10 py-0 h-full backdrop-blur-sm">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">White Glove</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-white/50 uppercase">White Glove</div>
                 </div>
-                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-[#9CA3AF]">/mo</span></div>
-                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Everything in Concierge</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> AI Shepherd guidance</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Legal document review</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Multi-executor coordination</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Probate preparation</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Phone support</li>
+                <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-white/40">/mo</span></div>
+                <div className="text-sm text-white/40 uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Everything in Concierge</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> AI Shepherd guidance</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Legal document review</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Multi-executor coordination</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Probate preparation</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Phone support</li>
                 </ul>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/20 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
@@ -538,14 +512,12 @@ function Home() {
         </div>
       </section>
 
-      <Separator className="bg-gold/20" />
-
       {/* ═══════════════════ FAQ ═══════════════════ */}
-      <section id="faq" className="py-16 relative z-10">
+      <section id="faq" className="py-16 relative z-10 bg-white">
         <div className="max-w-3xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
-              Common <span className="text-gold">Questions</span>
+            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
+              Common <span className="text-[#C8A951]">Questions</span>
             </h2>
           </ScrollReveal>
 
@@ -577,8 +549,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-      <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
       <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10">
@@ -741,7 +711,7 @@ function HeroContent() {
 
 function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string; title: string; description: string; cta: string; image: string }) {
   return (
-    <Card className="rounded-2xl overflow-hidden bg-gradient-to-b from-white/10 to-white/[0.03] border border-white/15 backdrop-blur-sm py-0 h-full">
+    <Card className="rounded-2xl overflow-hidden bg-white shadow-[0_4px_30px_rgba(0,0,0,0.08)] border border-[#E5E7EB]/60 py-0 h-full">
       {/* Photo header with emoji badge */}
       <div className="relative h-40 overflow-hidden">
         <img
@@ -756,9 +726,9 @@ function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string
         </div>
       </div>
       <CardContent className="p-6 flex flex-col flex-grow">
-        <h3 className="text-white font-bold text-base mb-2">{title}</h3>
-        <p className="text-white/60 text-sm leading-relaxed flex-grow mb-4">{description}</p>
-        <Button asChild variant="ghost" className="text-gold text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-gold-bright hover:bg-transparent self-start">
+        <h3 className="text-[#1A1A1A] font-bold text-base mb-2">{title}</h3>
+        <p className="text-[#4B5563] text-sm leading-relaxed flex-grow mb-4">{description}</p>
+        <Button asChild variant="ghost" className="text-[#C8A951] text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-[#B8993F] hover:bg-transparent self-start">
           <Link to="/login" search={{}}>{cta} &rarr;</Link>
         </Button>
       </CardContent>
@@ -830,14 +800,14 @@ function FaqItem({ q, a }: { q: string; a: string }) {
     <ScrollReveal delay={0}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left bg-white/5 border border-white/10 rounded-xl px-6 py-5 transition-all hover:bg-white/8 cursor-pointer"
+        className="w-full text-left bg-[#FAFAFA] border border-[#E5E7EB] rounded-xl px-6 py-5 transition-all hover:bg-[#F3F4F6] cursor-pointer"
       >
         <div className="flex items-center justify-between gap-4">
-          <h3 className="text-white font-bold text-sm">{q}</h3>
-          <span className={`text-gold text-lg transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
+          <h3 className="text-[#1A1A1A] font-bold text-sm">{q}</h3>
+          <span className={`text-[#C8A951] text-lg transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
         </div>
         {open && (
-          <p className="text-white/60 text-sm leading-relaxed mt-3 pr-8">{a}</p>
+          <p className="text-[#4B5563] text-sm leading-relaxed mt-3 pr-8">{a}</p>
         )}
       </button>
     </ScrollReveal>

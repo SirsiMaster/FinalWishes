@@ -132,6 +132,11 @@ body {
 }
 
 /* ── Identity Contexts ── */
+.section-light {
+  background: #FFFFFF !important;
+  background-image: none !important;
+}
+
 .royal-theme {
   background-color: #0A1628;
   color: #FFFFFF;

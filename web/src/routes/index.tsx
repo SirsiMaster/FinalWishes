@@ -77,7 +77,7 @@ function Home() {
       <HeroSection />
 
       {/* ═══════════════════ SCENARIO CARDS — "I'm here because..." ═══════════════════ */}
-      <section id="scenarios" className="py-16 relative z-10" style={{ background: '#FFFFFF' }}>
+      <section id="scenarios" className="py-16 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-12">
             <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
@@ -184,7 +184,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
-      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden" style={{ background: '#FFFFFF' }}>
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
             <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
@@ -301,7 +301,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden" style={{ background: '#FFFFFF' }}>
+      <section className="py-16 relative z-10 overflow-hidden section-light">
         <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
             <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
@@ -387,7 +387,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ SOCIAL PROOF ═══════════════════ */}
-      <section className="py-16 relative z-10" style={{ background: '#FFFFFF' }}>
+      <section className="py-16 relative z-10 section-light">
         <div className="max-w-5xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
@@ -513,7 +513,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FAQ ═══════════════════ */}
-      <section id="faq" className="py-16 relative z-10" style={{ background: '#FFFFFF' }}>
+      <section id="faq" className="py-16 relative z-10 section-light">
         <div className="max-w-3xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">

@@ -13,8 +13,9 @@ import { Separator } from '@/components/ui/separator'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
-  validateSearch: (search: Record<string, unknown>): { invite?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { invite?: string; demo?: string } => ({
     invite: (search.invite as string) ?? undefined,
+    demo: (search.demo as string) ?? undefined,
   }),
 })
 
@@ -39,7 +40,8 @@ function LoginPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
   const inviteId = search.invite;
-  const { signIn, signUp, resetPassword, user, profile } = useAuth();
+  const { signIn, signUp, resetPassword, loginDemo, user, profile } = useAuth();
+  const isDemo = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -75,6 +77,25 @@ function LoginPage() {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
+
+    // Demo mode — bypass Firebase Auth with synthetic session
+    if (isDemo) {
+      const demoSession = {
+        id: 'user_tameeka',
+        login: identifier || 'Tameeka116',
+        name: 'Tameeka Lockhart',
+        email: 'Tameekalockhart@gmail.com',
+        role: 'owner',
+        phone: '123-456-7890',
+        primaryEstateId: 'estate_lockhart',
+        primaryEstateName: 'Lockhart Estate',
+        profilePhotoUrl: '',
+      };
+      loginDemo(demoSession);
+      setIsSubmitting(false);
+      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'estate_lockhart' } } as any);
+      return;
+    }
 
     // Firebase Auth — supports email or username
     const result = await signIn(identifier, password);

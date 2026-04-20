@@ -260,7 +260,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // Demo mode: check if a demo session exists in localStorage
     const demoProfile = loadDemoSession();
-    if (demoProfile && isDemoMode() && !demoActiveRef.current) {
+    if (demoProfile && !demoActiveRef.current) {
       demoActiveRef.current = true;
       // Schedule state updates outside the synchronous effect body
       const id = requestAnimationFrame(() => {
@@ -453,6 +453,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       primaryEstateId: session.primaryEstateId,
       primaryEstateName: session.primaryEstateName,
     };
+    // Persist to localStorage so demo survives page navigations
+    try { localStorage.setItem('finalwishes_user', JSON.stringify(session)); } catch { /* localStorage unavailable */ }
     // Mark demo as active so Firebase listener stops overriding state
     demoActiveRef.current = true;
     // Detach Firebase listener if it was attached

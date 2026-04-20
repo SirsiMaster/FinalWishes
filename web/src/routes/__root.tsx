@@ -1,6 +1,7 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import { Toaster } from '@/components/ui/sonner'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { AuthProvider } from '@/lib/auth'
 
 function NotFound() {
   return (
@@ -36,11 +37,11 @@ function NotFound() {
 export const Route = createRootRoute({
   notFoundComponent: NotFound,
   component: () => (
-    <>
+    <AuthProvider>
       <ErrorBoundary>
         <Outlet />
       </ErrorBoundary>
       <Toaster position="bottom-right" richColors closeButton />
-    </>
+    </AuthProvider>
   ),
 })

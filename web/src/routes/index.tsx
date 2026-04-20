@@ -254,7 +254,7 @@ function Home() {
 
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
       <section className="py-16 relative z-10 overflow-hidden bg-[#0A1628] text-white">
-        <div className="max-w-5xl mx-auto px-5">
+        <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
             <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
@@ -271,7 +271,7 @@ function Home() {
 
       {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
       <section className="py-16 relative z-10 overflow-hidden section-light">
-        <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
+        <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
             <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
             <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 font-[family-name:var(--font-cinzel)]">
@@ -326,7 +326,7 @@ function Home() {
           />
           <div className="absolute inset-0 bg-[#060E1F]/80" />
         </div>
-        <div className="max-w-5xl mx-auto px-5 relative z-10">
+        <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
               Your Data. <span className="text-gold">Fort Knox Security.</span>
@@ -357,7 +357,7 @@ function Home() {
 
       {/* ═══════════════════ SOCIAL PROOF ═══════════════════ */}
       <section className="py-16 relative z-10 section-light">
-        <div className="max-w-5xl mx-auto px-5">
+        <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
               Built for <span className="text-[#C8A951]">Real Families</span>
@@ -401,7 +401,7 @@ function Home() {
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
       <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#0A1628] text-white">
-        <div className="max-w-5xl mx-auto px-5 relative z-10">
+        <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
               Start Free. <span className="text-gold">Upgrade When Ready.</span>
@@ -483,7 +483,7 @@ function Home() {
 
       {/* ═══════════════════ FAQ ═══════════════════ */}
       <section id="faq" className="py-16 relative z-10 section-light">
-        <div className="max-w-3xl mx-auto px-5">
+        <div className="max-w-4xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
               Common <span className="text-[#C8A951]">Questions</span>
@@ -531,7 +531,7 @@ function Home() {
         <div className="deco-corner bottom-left" />
         <div className="deco-corner bottom-right" />
 
-        <div className="relative z-10 text-center px-5 max-w-3xl mx-auto flex flex-col items-center justify-center py-10">
+        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center justify-center py-10">
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="w-16 h-px bg-gradient-to-r from-transparent to-gold" />
             <div className="w-2 h-2 bg-gold rotate-45" />
@@ -617,7 +617,7 @@ function HeroSection() {
       <div className="relative">
         <ScrollVideoCanvas frameCount={frameCount} scrollHeight={400} />
         <div className="fixed top-0 left-0 w-full h-screen z-20 pointer-events-none flex flex-col items-center justify-center">
-          <div className="text-center max-w-5xl px-6 pointer-events-auto">
+          <div className="text-center max-w-6xl px-6 pointer-events-auto">
             <HeroContent />
           </div>
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
@@ -637,7 +637,7 @@ function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
       </div>
       <div className="deco-corner top-left" /><div className="deco-corner top-right" /><div className="deco-corner bottom-left" /><div className="deco-corner bottom-right" />
-      <div className="relative z-10 text-center max-w-5xl px-6">
+      <div className="relative z-10 text-center max-w-6xl px-6">
         <HeroContent />
       </div>
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">

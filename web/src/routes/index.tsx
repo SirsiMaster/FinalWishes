@@ -138,14 +138,14 @@ function Home() {
       </section>
 
       {/* ── Image band separator after scenarios ── */}
-      <div className="relative h-8 w-full overflow-hidden">
+      <div className="relative h-16 w-full overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600&h=100&fit=crop"
           alt=""
           className="w-full h-full object-cover"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-black/75" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A1628]/40 via-transparent to-[#0A1628]/40" />
       </div>
 
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
@@ -328,7 +328,7 @@ function Home() {
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/90 to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060E1F]/90 via-[#060E1F]/75 to-[#060E1F]/65" />
         </div>
         <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
@@ -385,7 +385,7 @@ function Home() {
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-black/90" />
+          <div className="absolute inset-0 bg-[#060E1F]/80" />
         </div>
         <div className="max-w-5xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
@@ -463,14 +463,14 @@ function Home() {
       </section>
 
       {/* ── Image band separator after testimonials ── */}
-      <div className="relative h-8 w-full overflow-hidden">
+      <div className="relative h-16 w-full overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=1600&h=100&fit=crop"
           alt=""
           className="w-full h-full object-cover"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-black/75" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#060E1F]/40 via-transparent to-[#060E1F]/40" />
       </div>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
@@ -639,7 +639,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-[#152B65] border-t border-gold/20 py-6 relative z-10">
+      <footer className="bg-[#060E1F] border-t border-gold/20 py-6 relative z-10">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid md:grid-cols-5 gap-6 mb-4">
             <div className="md:col-span-2">

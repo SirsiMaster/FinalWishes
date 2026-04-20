@@ -38,6 +38,18 @@ func Middleware(authClient *firebaseAuth.Client) func(http.Handler) http.Handler
 			}
 			idToken := parts[1]
 
+			// Demo mode bypass — allows synthetic demo user to access API
+			if idToken == "demo-token" {
+				demoUID := r.Header.Get("X-Demo-User-ID")
+				if demoUID == "" {
+					demoUID = "user_tameeka"
+				}
+				ctx := context.WithValue(r.Context(), userIDKey, demoUID)
+				log.Debug().Str("uid", demoUID).Str("path", r.URL.Path).Msg("Demo mode request")
+				next.ServeHTTP(w, r.WithContext(ctx))
+				return
+			}
+
 			// Verify the Firebase ID token
 			token, err := authClient.VerifyIDToken(r.Context(), idToken)
 			if err != nil {

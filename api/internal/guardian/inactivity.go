@@ -115,7 +115,7 @@ func (h *Handler) runInactivityCheck(ctx context.Context) (*InactivityResults, e
 			} else {
 				results.ExecutorsNotified++
 			}
-		} else if daysSince >= threshold+reminderOffsetDays && currentLevel == "" || currentLevel == "none" {
+		} else if daysSince >= threshold+reminderOffsetDays && (currentLevel == "" || currentLevel == "none") {
 			// Send owner reminder
 			if err := h.escalateToReminderSent(ctx, estateID, data, daysSince); err != nil {
 				log.Error().Err(err).Str("estate_id", estateID).Msg("Failed to send owner reminder")

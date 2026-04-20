@@ -58,12 +58,12 @@ function Home() {
       <HeroSection />
 
       {/* ═══════════════════ SCENARIO CARDS — "I'm here because..." ═══════════════════ */}
-      <section id="scenarios" className="py-16 relative z-10 section-light">
+      <section id="scenarios" className="py-16 relative z-10 bg-[#102A56] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-12">
-            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] font-[family-name:var(--font-cinzel)] mb-4">
-              Life Doesn&apos;t Wait. <span className="text-[#C8A951]">Neither Should You.</span>
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
+            <h2 className="text-3xl md:text-4xl text-white font-[family-name:var(--font-cinzel)] mb-4">
+              Life Doesn&apos;t Wait. <span className="text-gold">Neither Should You.</span>
             </h2>
           </ScrollReveal>
 
@@ -118,7 +118,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
-      <section className="relative z-10 grid md:grid-cols-2 bg-[#102A56] text-white">
+      <section className="relative z-10 grid md:grid-cols-2 section-light">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=800&fit=crop"
@@ -132,28 +132,28 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-center px-8 md:px-12 py-10 glass-panel">
+        <div className="flex flex-col justify-center px-8 md:px-12 py-10">
           <ScrollReveal direction="right" className="max-w-lg mx-auto">
-            <h2 className="text-3xl md:text-4xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
-              The Cost of <span className="text-gold">Not Being Ready</span>
+            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
+              The Cost of <span className="text-[#C8A951]">Not Being Ready</span>
             </h2>
-            <p className="text-base md:text-lg text-white/80 leading-relaxed mb-6">
+            <p className="text-base md:text-lg text-[#4B5563] leading-relaxed mb-6">
               When someone passes without a plan, families face frozen accounts, lost passwords, missing documents, and legal battles that can last years. FinalWishes eliminates that chaos — before it starts.
             </p>
             <div className="grid grid-cols-3 gap-3">
-              <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+              <Card className="bg-[#102A56] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={55} suffix="%" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">No Will</div>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+              <Card className="bg-[#102A56] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={18} suffix=" mo" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Avg Probate</div>
                 </CardContent>
               </Card>
-              <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+              <Card className="bg-[#102A56] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={2} prefix="$" suffix="B+" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Court Costs</div>
@@ -165,14 +165,14 @@ function Home() {
       </section>
 
       {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
-      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden section-light">
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[#102A56] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
-            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-4 font-[family-name:var(--font-cinzel)]">
-              Here&apos;s What You Can Do <span className="text-[#C8A951]">Today</span>
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
+            <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
+              Here&apos;s What You Can Do <span className="text-gold">Today</span>
             </h2>
-            <p className="text-[#6B7280] max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
+            <p className="text-white/60 max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-6 mb-12">
@@ -228,27 +228,27 @@ function Home() {
       </section>
 
       {/* ═══════════════════ THREE STEPS ═══════════════════ */}
-      <section className="py-16 relative z-10 bg-[#102A56] text-white">
+      <section className="py-16 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal>
-            <h3 className="text-2xl text-white mb-10 font-[family-name:var(--font-cinzel)] text-center">
-              Three Steps. <span className="text-gold">Fifteen Minutes.</span>
+            <h3 className="text-4xl md:text-5xl text-[#1A1A1A] mb-10 font-[family-name:var(--font-cinzel)] text-center">
+              Three Steps. <span className="text-[#C8A951]">Fifteen Minutes.</span>
             </h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
-                <h4 className="text-white font-bold mb-2">Create Your Vault</h4>
-                <p className="text-white/60 text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
+                <div className="w-12 h-12 rounded-full bg-[#102A56] flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
+                <h4 className="text-[#1A1A1A] font-bold mb-2">Create Your Vault</h4>
+                <p className="text-[#6B7280] text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
-                <h4 className="text-white font-bold mb-2">Invite Your Circle</h4>
-                <p className="text-white/60 text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
+                <div className="w-12 h-12 rounded-full bg-[#102A56] flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
+                <h4 className="text-[#1A1A1A] font-bold mb-2">Invite Your Circle</h4>
+                <p className="text-[#6B7280] text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
-                <h4 className="text-white font-bold mb-2">Live in Peace</h4>
-                <p className="text-white/60 text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
+                <div className="w-12 h-12 rounded-full bg-[#102A56] flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
+                <h4 className="text-[#1A1A1A] font-bold mb-2">Live in Peace</h4>
+                <p className="text-[#6B7280] text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
               </div>
             </div>
           </ScrollReveal>
@@ -256,14 +256,14 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden section-light">
+      <section className="py-16 relative z-10 overflow-hidden bg-[#102A56] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-4 font-[family-name:var(--font-cinzel)]">
-              This Is <span className="text-[#C8A951]">Your Dashboard</span>
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
+            <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
+              This Is <span className="text-gold">Your Dashboard</span>
             </h2>
-            <p className="text-[#6B7280] max-w-lg mx-auto text-sm">Not a mockup. This is the actual product. Click through to see every feature.</p>
+            <p className="text-white/60 max-w-lg mx-auto text-sm">Not a mockup. This is the actual product. Click through to see every feature.</p>
           </ScrollReveal>
 
           <ScrollReveal delay={0.2}>
@@ -273,25 +273,25 @@ function Home() {
       </section>
 
       {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden bg-[#102A56] text-white">
+      <section className="py-16 relative z-10 overflow-hidden section-light">
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
-            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
-            <h2 className="text-3xl md:text-4xl text-white mb-6 font-[family-name:var(--font-cinzel)]">
-              The Shepherd <span className="text-gold">Guides You</span>
+            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
+            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 font-[family-name:var(--font-cinzel)]">
+              The Shepherd <span className="text-[#C8A951]">Guides You</span>
             </h2>
-            <p className="text-white/80 text-base leading-relaxed mb-6">
+            <p className="text-[#4B5563] text-base leading-relaxed mb-6">
               Not sure where to start? Our AI engine analyzes your estate and tells you exactly what&apos;s missing, what&apos;s urgent, and what to do next. It&apos;s like having a personal estate advisor — available 24/7.
             </p>
-            <ul className="space-y-3 text-white/70 text-sm">
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Personalized completion checklist</li>
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Daily prompts to capture your story</li>
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Obituary drafting assistance</li>
-              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Smart suggestions based on your situation</li>
+            <ul className="space-y-3 text-[#4B5563] text-sm">
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Personalized completion checklist</li>
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Daily prompts to capture your story</li>
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Obituary drafting assistance</li>
+              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Smart suggestions based on your situation</li>
             </ul>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="bg-white/[0.08] backdrop-blur-sm rounded-2xl p-6 border border-white/15">
+            <div className="bg-[#102A56] rounded-2xl p-6 border-0">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
                   <span className="text-gold text-lg">🧭</span>
@@ -318,13 +318,13 @@ function Home() {
       </section>
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
-      <section id="security" className="py-12 relative z-10 overflow-hidden section-light">
+      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#102A56] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
-              Your Data. <span className="text-[#C8A951]">Fort Knox Security.</span>
+            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
+              Your Data. <span className="text-gold">Fort Knox Security.</span>
             </h2>
-            <p className="text-[#6B7280] max-w-lg mx-auto text-sm">
+            <p className="text-white/60 max-w-lg mx-auto text-sm">
               Estate documents are the most sensitive data a family owns. We encrypt everything with the same technology banks use.
             </p>
           </ScrollReveal>
@@ -336,11 +336,11 @@ function Home() {
               { label: 'MFA Required', desc: 'For all sensitive access' },
               { label: 'SOC 2 Architecture', desc: 'Enterprise audit trail' },
             ].map((item) => (
-              <Card key={item.label} className="bg-white rounded-xl border border-[#E5E7EB]/60 ring-0 py-0 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+              <Card key={item.label} className="bg-white/[0.08] rounded-xl border border-white/10 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="status-dot mx-auto mb-2" />
-                  <div className="text-[#1A1A1A] font-bold text-[10px] uppercase tracking-widest mb-1">{item.label}</div>
-                  <div className="text-[#6B7280] text-[10px]">{item.desc}</div>
+                  <div className="text-white font-bold text-[10px] uppercase tracking-widest mb-1">{item.label}</div>
+                  <div className="text-white/50 text-[10px]">{item.desc}</div>
                 </CardContent>
               </Card>
             ))}
@@ -673,7 +673,7 @@ function HeroContent() {
 
 function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string; title: string; description: string; cta: string; image: string }) {
   return (
-    <Card className="rounded-2xl overflow-hidden bg-white shadow-[0_4px_30px_rgba(0,0,0,0.08)] border border-[#E5E7EB]/60 py-0 h-full">
+    <Card className="rounded-2xl overflow-hidden bg-white shadow-[0_4px_30px_rgba(0,0,0,0.1)] border-0 py-0 h-full">
       {/* Photo header with emoji badge */}
       <div className="relative h-40 overflow-hidden">
         <img
@@ -702,7 +702,7 @@ function ScenarioCard({ emoji, title, description, cta, image }: { emoji: string
 
 function CapabilityCard({ icon, title, items, accent, image }: { icon: string; title: string; items: string[]; accent?: boolean; image: string }) {
   return (
-    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.18)] transition-shadow duration-300 ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
+    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_4px_30px_rgba(0,0,0,0.1)] ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
       {/* Photo header */}
       <div className="relative h-[160px] overflow-hidden">
         <img

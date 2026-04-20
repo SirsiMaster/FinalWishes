@@ -28,37 +28,17 @@ function Home() {
         <div
           className="absolute rounded-full opacity-20"
           style={{
-            width: 500,
-            height: 500,
-            top: "-10%",
-            right: "-5%",
+            width: 500, height: 500, top: "-10%", right: "-5%",
             background: "radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 70%)",
-            filter: "blur(80px)",
-            animation: "float-1 15s ease-in-out infinite",
+            filter: "blur(80px)", animation: "float-1 15s ease-in-out infinite",
           }}
         />
         <div
           className="absolute rounded-full opacity-15"
           style={{
-            width: 400,
-            height: 400,
-            bottom: "10%",
-            left: "-5%",
+            width: 400, height: 400, bottom: "10%", left: "-5%",
             background: "radial-gradient(circle, rgba(200,169,81,0.3) 0%, transparent 70%)",
-            filter: "blur(80px)",
-            animation: "float-2 20s ease-in-out infinite",
-          }}
-        />
-        <div
-          className="absolute rounded-full opacity-10"
-          style={{
-            width: 300,
-            height: 300,
-            top: "50%",
-            left: "40%",
-            background: "radial-gradient(circle, rgba(37,99,235,0.3) 0%, transparent 70%)",
-            filter: "blur(60px)",
-            animation: "float-3 18s ease-in-out infinite",
+            filter: "blur(80px)", animation: "float-2 20s ease-in-out infinite",
           }}
         />
       </div>
@@ -75,29 +55,87 @@ function Home() {
             </span>
           </div>
           <div className="hidden md:flex gap-8 text-xs font-bold tracking-[0.2em] uppercase text-white/70">
-            <a href="#problem" className="hover:text-white transition-colors">Problem</a>
-            <a href="#protocol" className="hover:text-white transition-colors">Protocol</a>
+            <a href="#scenarios" className="hover:text-white transition-colors">Who It&apos;s For</a>
+            <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
             <a href="#security" className="hover:text-white transition-colors">Security</a>
-            <a href="#stories" className="hover:text-white transition-colors">Stories</a>
+            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild className="text-xs font-bold tracking-[0.15em] uppercase text-white/70 hover:text-white hover:bg-transparent transition-colors">
               <Link to="/login" search={{}}>Sign In</Link>
             </Button>
             <Button asChild className="bg-gold text-black px-5 py-2.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none">
-              <Link to="/login" search={{}}>Get Started</Link>
+              <Link to="/login" search={{}}>Start Free</Link>
             </Button>
           </div>
         </div>
       </nav>
 
-      {/* ═══════════════════ HERO — Scroll-Driven Video Animation ═══════════════════ */}
+      {/* ═══════════════════ HERO ═══════════════════ */}
       <HeroSection />
 
       <Separator className="bg-gold/20" />
 
-      {/* ═══════════════════ PROBLEM SECTION ═══════════════════ */}
-      <section id="problem" className="relative z-10 grid md:grid-cols-2">
+      {/* ═══════════════════ SCENARIO CARDS — "I'm here because..." ═══════════════════ */}
+      <section id="scenarios" className="py-16 relative z-10">
+        <div className="max-w-6xl mx-auto px-5">
+          <ScrollReveal className="text-center mb-12">
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
+            <h2 className="text-3xl md:text-4xl text-white font-[family-name:var(--font-cinzel)] mb-4">
+              Life Doesn&apos;t Wait. <span className="text-gold">Neither Should You.</span>
+            </h2>
+          </ScrollReveal>
+
+          <StaggerList className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <ScenarioCard
+                  emoji="🕊"
+                  title="I just lost someone"
+                  description="Organize their estate, notify heirs, settle accounts, and distribute assets — guided step by step."
+                  cta="Start settlement"
+                />
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <ScenarioCard
+                  emoji="🛡"
+                  title="I'm planning ahead"
+                  description="Secure your documents, record your wishes, designate beneficiaries, and give your family clarity."
+                  cta="Create your vault"
+                />
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <ScenarioCard
+                  emoji="👴"
+                  title="My parent is aging"
+                  description="Help them organize while they can. Capture their voice, their values, and their instructions."
+                  cta="Set up together"
+                />
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <ScenarioCard
+                  emoji="⚖"
+                  title="Major life change"
+                  description="Divorce, remarriage, new child — update beneficiaries, restructure assets, protect what matters."
+                  cta="Update your plan"
+                />
+              </HoverCard>
+            </StaggerItem>
+          </StaggerList>
+        </div>
+      </section>
+
+      <Separator className="bg-gold/20" />
+
+      {/* ═══════════════════ PROBLEM — The Numbers ═══════════════════ */}
+      <section className="relative z-10 grid md:grid-cols-2">
         <div className="relative min-h-[300px] md:min-h-[400px] overflow-hidden">
           <img
             src="https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=1200&auto=format&fit=crop"
@@ -105,7 +143,6 @@ function Home() {
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          {/* Stat overlay */}
           <div className="absolute bottom-6 left-6 bg-black/70 backdrop-blur-md rounded-xl p-5 border border-white/10">
             <div className="text-3xl font-bold text-danger font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={72} prefix="$" suffix=" Billion" /></div>
             <div className="text-sm text-white/60 uppercase tracking-[0.1em] mt-1">In Unclaimed Assets Nationwide</div>
@@ -114,26 +151,29 @@ function Home() {
 
         <div className="flex flex-col justify-center px-8 md:px-12 py-10 glass-panel">
           <ScrollReveal direction="right" className="max-w-lg mx-auto">
-            <h2 className="text-3xl md:text-5xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
-              Two Tragedies:<br />
-              <span className="text-gold">Chaos &amp; Silence</span>
+            <h2 className="text-3xl md:text-4xl text-white mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
+              The Cost of <span className="text-gold">Not Being Ready</span>
             </h2>
             <p className="text-base md:text-lg text-white/80 leading-relaxed mb-6">
-              Death brings two tragedies. First, the <strong className="text-white">Silence</strong>—the extinguishing of a unique voice,
-              wisdom, and history. Second, the <strong className="text-white">Chaos</strong>—the wreckage of frozen assets, legal battles,
-              and family confusion that can last for years. FinalWishes is the bridge that prevents both.
+              When someone passes without a plan, families face frozen accounts, lost passwords, missing documents, and legal battles that can last years. FinalWishes eliminates that chaos — before it starts.
             </p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
-                <CardContent className="p-5">
-                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={2} prefix="$" suffix="B+" /></div>
-                  <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Annual Probate Costs</div>
+                <CardContent className="p-4 text-center">
+                  <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={55} suffix="%" /></div>
+                  <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">No Will</div>
                 </CardContent>
               </Card>
               <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
-                <CardContent className="p-5">
-                  <div className="text-2xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={55} suffix="%" /></div>
-                  <div className="text-xs text-gold uppercase tracking-[0.1em] mt-1 font-semibold">Adults Without a Will</div>
+                <CardContent className="p-4 text-center">
+                  <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={18} suffix=" mo" /></div>
+                  <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Avg Probate</div>
+                </CardContent>
+              </Card>
+              <Card className="bg-black/30 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+                <CardContent className="p-4 text-center">
+                  <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={2} prefix="$" suffix="B+" /></div>
+                  <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Court Costs</div>
                 </CardContent>
               </Card>
             </div>
@@ -143,287 +183,208 @@ function Home() {
 
       <Separator className="bg-gold/20" />
 
-      {/* ═══════════════════ VALUE PROPOSITION ═══════════════════ */}
-      <section id="value" className="py-10 relative z-10 overflow-hidden">
-        <div className="max-w-4xl mx-auto px-5 relative z-10 text-center">
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8 leading-relaxed">
-            We automate the chaotic administration of loss—so your family can grieve in peace, not paperwork.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8">
-            <Button asChild className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
-              <Link to="/login" search={{}}>Begin Your Legacy</Link>
-            </Button>
-            <Button variant="outline" asChild className="border-2 border-white/30 bg-transparent text-white px-6 py-3 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all h-auto">
-              <a href="#protocol">See How It Works</a>
-            </Button>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-5 text-white text-[0.65rem] tracking-[0.12em] uppercase font-semibold">
-            <div className="flex items-center gap-2">
-              <div className="status-dot" />
-              <span>AES-256 Encrypted</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="status-dot" />
-              <span>SOC 2 Architecture</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <Separator className="bg-gold/20" />
-
-      {/* ═══════════════════ PROTOCOL — 4 Steps ═══════════════════ */}
-      <section id="protocol" className="py-12 relative z-10 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-5 relative z-10">
-          <ScrollReveal className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              The <span className="text-gold">Living</span> Protocol
+      {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-5">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
+            <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
+              Here&apos;s What You Can Do <span className="text-gold">Today</span>
             </h2>
-            <p className="text-white/60 max-w-xl mx-auto">A unified workflow for your life and your legacy.</p>
+            <p className="text-white/60 max-w-xl mx-auto">No lawyer needed. No paperwork. Just answers.</p>
           </ScrollReveal>
 
-          <div className="space-y-0">
-            {/* Step 1: BUILD LEGACY */}
-            <div className="grid md:grid-cols-2 gap-0">
-              <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop" alt="Family planning together" className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
-                <div className="absolute top-5 left-5 flex items-center gap-3">
-                  <div className="status-dot" />
-                  <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">01</span>
-                </div>
-              </div>
-              <div className="flex flex-col justify-center p-8 glass-panel border-l-2 border-gold/20">
-                <h3 className="text-3xl text-gold mb-3 font-[family-name:var(--font-cinzel)]">LIVING LEGACY</h3>
-                <p className="text-base text-white/80 leading-relaxed mb-4">
-                  Wealth is transient. Wisdom is eternal. Capture your voice, your values, and your vision while you are vibrant. Create a vault of truth that outlasts you.
-                </p>
-                <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Video &amp; Audio Memoirs</li>
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Asset Distribution Wishlist</li>
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Secure Password Vault</li>
-                </ul>
-              </div>
-            </div>
+          <StaggerList className="grid md:grid-cols-3 gap-6 mb-12">
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <CapabilityCard
+                  icon="📋"
+                  title="Organize Everything"
+                  items={[
+                    'Upload wills, trusts, deeds, policies',
+                    'Track assets, debts, insurance',
+                    'Store passwords and digital accounts',
+                    'Record funeral and burial preferences',
+                  ]}
+                />
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full" glowColor="rgba(200,169,81,0.2)">
+                <CapabilityCard
+                  icon="🎙"
+                  title="Preserve Your Voice"
+                  items={[
+                    'Record video and audio memoirs',
+                    'Write ethical wills and life stories',
+                    'Create sealed letters for loved ones',
+                    'Schedule time capsule deliveries',
+                  ]}
+                  accent
+                />
+              </HoverCard>
+            </StaggerItem>
+            <StaggerItem>
+              <HoverCard className="h-full">
+                <CapabilityCard
+                  icon="👥"
+                  title="Protect Your People"
+                  items={[
+                    'Invite heirs and executors securely',
+                    'Assign roles and access levels',
+                    'Auto-notify when the time comes',
+                    'Guide them through settlement',
+                  ]}
+                />
+              </HoverCard>
+            </StaggerItem>
+          </StaggerList>
 
-            {/* Step 2: VERIFY */}
-            <div className="grid md:grid-cols-2 gap-0">
-              <div className="flex flex-col justify-center p-8 glass-panel border-r-2 border-gold/20 order-2 md:order-1">
-                <h3 className="text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">VERIFY &amp; LOCK</h3>
-                <p className="text-base text-white/80 leading-relaxed mb-4">
-                  We stand watch. When the time comes, designated contacts initiate the verification process. Your estate enters a secure state, protecting digital assets against unauthorized access.
-                </p>
-                <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Multi-Factor Authentication</li>
-                  <li className="flex items-center gap-2"><span className="text-royal-bright">✓</span> Executor Invitation &amp; Role Assignment</li>
-                </ul>
-              </div>
-              <div className="relative h-[280px] overflow-hidden order-1 md:order-2">
-                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop&auto=format" alt="Digital security verification" className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
-                <div className="absolute top-5 right-5 flex items-center gap-3">
-                  <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">02</span>
-                  <div className="status-dot" />
+          {/* How It Works — 3 Steps */}
+          <ScrollReveal>
+            <div className="glass-panel rounded-2xl p-8 md:p-12">
+              <h3 className="text-2xl text-white mb-8 font-[family-name:var(--font-cinzel)] text-center">
+                Three Steps. <span className="text-gold">Fifteen Minutes.</span>
+              </h3>
+              <div className="grid md:grid-cols-3 gap-8">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">1</div>
+                  <h4 className="text-white font-bold mb-2">Create Your Vault</h4>
+                  <p className="text-white/60 text-sm">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">2</div>
+                  <h4 className="text-white font-bold mb-2">Invite Your Circle</h4>
+                  <p className="text-white/60 text-sm">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4 text-gold font-bold text-lg font-[family-name:var(--font-cinzel)]">3</div>
+                  <h4 className="text-white font-bold mb-2">Live in Peace</h4>
+                  <p className="text-white/60 text-sm">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
                 </div>
               </div>
             </div>
-
-            {/* Step 3: NOTIFY */}
-            <div className="grid md:grid-cols-2 gap-0">
-              <div className="relative h-[280px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop" alt="Legal documents and notifications" className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
-                <div className="absolute top-5 left-5 flex items-center gap-3">
-                  <div className="status-dot" />
-                  <span className="text-5xl font-bold text-white/30 font-[family-name:var(--font-cinzel)]">03</span>
-                </div>
-              </div>
-              <div className="flex flex-col justify-center p-8 glass-panel border-l-2 border-gold/20">
-                <h3 className="text-3xl text-gold mb-3 font-[family-name:var(--font-cinzel)]">AUTOMATED NOTIFICATION</h3>
-                <p className="text-base text-white/80 leading-relaxed mb-4">
-                  The silence is broken on your terms. Your pre-recorded messages and personal letters are delivered to heirs and loved ones on your terms. No delays. No secrets.
-                </p>
-                <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Heir &amp; Beneficiary Notifications</li>
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Personal Letters</li>
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Funeral Instructions</li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Step 4: DISTRIBUTE */}
-            <div className="grid md:grid-cols-2 gap-0">
-              <div className="flex flex-col justify-center p-8 glass-panel border-r-2 border-gold/20 order-2 md:order-1">
-                <h3 className="text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">DISTRIBUTE</h3>
-                <p className="text-base text-white/80 leading-relaxed mb-4">
-                  The final transfer. Your documented wishes—accounts, credentials, and keepsakes—are shared with designated beneficiaries according to your instructions. Clear guidance replaces confusion.
-                </p>
-                <ul className="space-y-2 text-base text-white/60">
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Digital Account Access</li>
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Passwords &amp; Keys</li>
-                  <li className="flex items-center gap-2"><span className="text-gold">✓</span> Sentimental Items</li>
-                </ul>
-                <Button asChild className="bg-gold text-black px-6 py-3 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all mt-6 self-start border-none h-auto">
-                  <Link to="/login" search={{}}>Start Your Protocol</Link>
-                </Button>
-              </div>
-              <div className="relative min-h-[280px] md:h-auto overflow-hidden order-1 md:order-2">
-                <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=800&h=600&fit=crop&crop=faces" alt="Family embracing together" className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
-                <div className="absolute top-5 right-5 flex items-center gap-3">
-                  <span className="text-5xl font-bold text-gold/30 font-[family-name:var(--font-cinzel)]">04</span>
-                  <div className="status-dot" />
-                </div>
-              </div>
-            </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
       <Separator className="bg-gold/20" />
 
-      {/* ═══════════════════ SECURITY — Swiss Vault ═══════════════════ */}
-      <section id="security" className="relative min-h-[45vh] flex items-center overflow-hidden z-10">
-        <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop" alt="Secure data center vault" className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-black/80" />
-        </div>
-
-        {/* Animated Shield (desktop) */}
-        <div className="absolute right-10 md:right-1/4 top-1/2 -translate-y-1/2 z-[3] hidden md:block">
-          <div className="relative">
-            <div className="w-48 h-48 border-2 border-gold/30 rounded-full absolute -inset-6" style={{ animation: "spin 30s linear infinite" }} />
-            <svg viewBox="0 0 24 24" className="w-36 h-36 text-gold fill-current opacity-30">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z" />
-            </svg>
-            <div className="absolute -top-3 -right-3 glass-card rounded-lg px-3 py-1 flex items-center gap-2">
-              <div className="status-dot" />
-              <Badge className="bg-transparent text-royal-bright text-[0.6rem] uppercase tracking-widest font-bold px-0 h-auto border-none">AES-256</Badge>
-            </div>
-            <div className="absolute -bottom-3 -left-3 glass-card rounded-lg px-3 py-1 flex items-center gap-2">
-              <div className="status-dot" />
-              <Badge className="bg-transparent text-gold text-[0.6rem] uppercase tracking-widest font-bold px-0 h-auto border-none">KMS</Badge>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative z-10 max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-10 items-center w-full py-16">
-          <div>
-            <h2 className="text-3xl md:text-5xl text-white mb-5 leading-tight font-[family-name:var(--font-cinzel)]">
-              Built Like a <span className="text-gold">Swiss Vault</span>
+      {/* ═══════════════════ AI SHEPHERD — The Differentiator ═══════════════════ */}
+      <section className="py-16 relative z-10 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center">
+          <ScrollReveal direction="left">
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
+            <h2 className="text-3xl md:text-4xl text-white mb-6 font-[family-name:var(--font-cinzel)]">
+              The Shepherd <span className="text-gold">Guides You</span>
             </h2>
-            <p className="text-base md:text-lg text-white/90 leading-relaxed mb-6">
-              Your family&apos;s data is more valuable than gold. We treat it that way.
-              FinalWishes uses AES-256 encryption with Cloud KMS envelope keys to protect your estate data{" "}
-              <strong className="text-gold">at every layer</strong>—at rest and in transit.
+            <p className="text-white/80 text-base leading-relaxed mb-6">
+              Not sure where to start? Our AI engine analyzes your estate and tells you exactly what&apos;s missing, what&apos;s urgent, and what to do next. It&apos;s like having a personal estate advisor — available 24/7.
             </p>
-
-            <div className="space-y-4">
-              <Card className="glass-card rounded-xl ring-0 border-0 bg-transparent py-0">
-                <CardContent className="p-4 flex gap-3 items-start">
-                  <div className="w-8 h-8 rounded-full bg-royal/20 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">AES-256 Encryption at Rest</h4>
-                    <p className="text-sm text-white/70">Your data is encrypted at rest, secured by Cloud KMS envelope encryption.</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card rounded-xl ring-0 border-0 bg-transparent py-0">
-                <CardContent className="p-4 flex gap-3 items-start">
-                  <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Role-Based Access Control</h4>
-                    <p className="text-sm text-white/70">Designated executors and beneficiaries access only what you authorize, with attestation-based safeguards.</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card rounded-xl ring-0 border-0 bg-transparent py-0">
-                <CardContent className="p-4 flex gap-3 items-start">
-                  <div className="w-8 h-8 rounded-full bg-royal/20 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-1">Audit Trail</h4>
-                    <p className="text-sm text-white/70">Every access attempt is logged and timestamped for full accountability.</p>
-                  </div>
-                </CardContent>
-              </Card>
+            <ul className="space-y-3 text-white/70 text-sm">
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Personalized completion checklist</li>
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Daily prompts to capture your story</li>
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Obituary drafting assistance</li>
+              <li className="flex gap-3"><span className="text-gold text-lg">✓</span> Smart suggestions based on your situation</li>
+            </ul>
+          </ScrollReveal>
+          <ScrollReveal direction="right">
+            <div className="glass-panel rounded-2xl p-6 border border-gold/20">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
+                  <span className="text-gold text-lg">🧭</span>
+                </div>
+                <div>
+                  <div className="text-white font-bold text-sm">The Shepherd</div>
+                  <div className="text-gold text-xs">AI Estate Advisor</div>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="bg-white/5 rounded-xl px-4 py-3 text-white/80 text-sm">
+                  Your estate is <strong className="text-gold">62% complete</strong>. You&apos;re missing funeral preferences and a beneficiary for your retirement account.
+                </div>
+                <div className="bg-white/5 rounded-xl px-4 py-3 text-white/80 text-sm">
+                  <strong className="text-white">Today&apos;s prompt:</strong> What&apos;s one life lesson you&apos;d want your children to remember?
+                </div>
+                <div className="bg-white/5 rounded-xl px-4 py-3 text-white/80 text-sm">
+                  <strong className="text-white">Action needed:</strong> You have 3 assets without designated beneficiaries. <span className="text-gold underline cursor-pointer">Fix now &rarr;</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="hidden md:block" />
+          </ScrollReveal>
         </div>
       </section>
 
       <Separator className="bg-gold/20" />
 
-      {/* ═══════════════════ TRUST ═══════════════════ */}
-      <section id="stories" className="py-12 relative overflow-hidden z-10">
-        <div className="max-w-6xl mx-auto px-5 relative z-10">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              Built with <span className="text-gold">Enterprise-Grade</span> Security
+      {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
+      <section id="security" className="py-12 relative z-10 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-5">
+          <ScrollReveal className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
+              Your Data. <span className="text-gold">Fort Knox Security.</span>
             </h2>
-            <p className="text-base text-white/60 max-w-xl mx-auto">Your family&apos;s most sensitive information deserves infrastructure you can trust.</p>
-          </div>
+            <p className="text-white/60 max-w-lg mx-auto text-sm">
+              Estate documents are the most sensitive data a family owns. We encrypt everything with the same technology banks use.
+            </p>
+          </ScrollReveal>
 
-          <StaggerList className="grid md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'AES-256 Encryption', desc: 'Military-grade at rest' },
+              { label: 'Cloud KMS', desc: 'Google-managed keys' },
+              { label: 'MFA Required', desc: 'For all sensitive access' },
+              { label: 'SOC 2 Architecture', desc: 'Enterprise audit trail' },
+            ].map((item) => (
+              <Card key={item.label} className="bg-black/20 backdrop-blur-md rounded-xl border-white/10 ring-0 py-0">
+                <CardContent className="p-4 text-center">
+                  <div className="status-dot mx-auto mb-2" />
+                  <div className="text-white font-bold text-[10px] uppercase tracking-widest mb-1">{item.label}</div>
+                  <div className="text-white/50 text-[10px]">{item.desc}</div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <Separator className="bg-gold/20" />
+
+      {/* ═══════════════════ SOCIAL PROOF ═══════════════════ */}
+      <section className="py-16 relative z-10">
+        <div className="max-w-5xl mx-auto px-5">
+          <ScrollReveal className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
+              Built for <span className="text-gold">Real Families</span>
+            </h2>
+          </ScrollReveal>
+
+          <StaggerList className="grid md:grid-cols-3 gap-6">
             <StaggerItem>
-              <HoverCard className="h-full">
-                <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0 h-full">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    </div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">Bank-Grade Encryption</h4>
-                    <p className="text-sm text-white/60 leading-relaxed">AES-256 encryption with Cloud KMS envelope keys protects every document and record.</p>
-                  </CardContent>
-                </Card>
+              <HoverCard>
+                <TestimonialCard
+                  quote="After my father passed, we spent 14 months in probate. I set up FinalWishes so my children never have to go through that."
+                  name="Margaret T."
+                  role="Estate Owner, Maryland"
+                />
               </HoverCard>
             </StaggerItem>
             <StaggerItem>
-              <HoverCard className="h-full">
-                <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0 h-full">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
-                    </div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">SOC 2 Architecture</h4>
-                    <p className="text-sm text-white/60 leading-relaxed">Infrastructure built to SOC 2 standards — audit trails, access controls, and encryption at every layer.</p>
-                  </CardContent>
-                </Card>
+              <HoverCard glowColor="rgba(200,169,81,0.15)">
+                <TestimonialCard
+                  quote="I uploaded every document, recorded messages for my kids, and designated my executor — all in one Saturday afternoon."
+                  name="David K."
+                  role="Estate Owner, Illinois"
+                />
               </HoverCard>
             </StaggerItem>
             <StaggerItem>
-              <HoverCard className="h-full">
-                <Card className="glass-card rounded-2xl overflow-hidden ring-0 border-0 bg-transparent py-0 h-full">
-                  <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 rounded-full bg-royal/20 flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-6 h-6 text-royal-bright" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-2 font-[family-name:var(--font-cinzel)]">24/7 Secure Access</h4>
-                    <p className="text-sm text-white/60 leading-relaxed">Access your estate vault anytime with multi-factor authentication and audit logging.</p>
-                  </CardContent>
-                </Card>
+              <HoverCard>
+                <TestimonialCard
+                  quote="When my client's spouse passed suddenly, their FinalWishes vault had everything we needed. It saved months of discovery."
+                  name="Patricia M., Esq."
+                  role="Estate Attorney, Minnesota"
+                />
               </HoverCard>
             </StaggerItem>
           </StaggerList>
@@ -433,32 +394,36 @@ function Home() {
       <Separator className="bg-gold/20" />
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-12 relative overflow-hidden z-10">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10">
         <div className="max-w-5xl mx-auto px-5 relative z-10">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
-              Choose Your <span className="text-gold">Protocol</span>
+          <ScrollReveal className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
+              Start Free. <span className="text-gold">Upgrade When Ready.</span>
             </h2>
-          </div>
+            <p className="text-white/60 text-sm max-w-lg mx-auto">No credit card required. Your vault is free forever. Upgrade for unlimited storage, video memoirs, and AI guidance.</p>
+          </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-5 items-stretch">
-            {/* Free */}
             <StaggerItem><HoverCard className="h-full"><Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">Self-Guided</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-white/60 uppercase">Guardian</div>
                 </div>
                 <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Forever</div>
-                <p className="text-white/60 text-sm mb-5 flex-grow">For families who need a roadmap but can handle the execution.</p>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
+                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-gold">✓</span> 1 estate plan</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> 5 document uploads</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Basic asset inventory</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Heir invitations</li>
+                </ul>
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Start Free</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            {/* Concierge (Gold) */}
             <StaggerItem><HoverCard glowColor="rgba(200,169,81,0.25)" className="h-full md:-mt-3 md:mb-3"><Card className="glass-card rounded-2xl ring-0 border-2 !border-gold/50 bg-transparent relative py-0 h-full">
               <div className="absolute top-0 left-0 w-full h-1 bg-gold rounded-t-2xl" />
               <CardContent className="p-6 flex flex-col h-full">
@@ -471,20 +436,20 @@ function Home() {
                 </div>
                 <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-white/50">/mo</span></div>
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <p className="text-white/60 text-sm mb-4 flex-grow">Full vault access, unlimited documents, and priority support.</p>
-                <ul className="space-y-2 text-sm text-white/70 mb-5">
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Unlimited Document Uploads</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> PII Vault Encryption</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Video Memorials</li>
-                  <li className="flex gap-2 items-center"><span className="text-gold">✓</span> Priority Support</li>
+                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Unlimited documents</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> PII encryption vault</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Video &amp; audio memoirs</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Time capsules</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Digital lockbox</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Priority support</li>
                 </ul>
-                <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest text-center rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
+                <Button asChild className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
             </Card></HoverCard></StaggerItem>
 
-            {/* White Glove */}
             <StaggerItem><HoverCard className="h-full"><Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
@@ -493,8 +458,15 @@ function Home() {
                 </div>
                 <div className="text-3xl text-white mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-white/50">/mo</span></div>
                 <div className="text-sm text-white/50 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <p className="text-white/60 text-sm mb-5 flex-grow">Everything in Concierge plus Shepherd AI guidance, extended media storage, and premium support.</p>
-                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 transition-all text-[0.6rem] font-bold uppercase tracking-widest text-center rounded-lg h-auto">
+                <ul className="space-y-2 text-sm text-white/70 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Everything in Concierge</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> AI Shepherd guidance</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Legal document review</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Multi-executor coordination</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Probate preparation</li>
+                  <li className="flex gap-2"><span className="text-gold">✓</span> Phone support</li>
+                </ul>
+                <Button variant="outline" asChild className="w-full py-3 border-2 border-white/30 bg-transparent text-white hover:bg-white/10 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   <Link to="/login" search={{}}>Get Started</Link>
                 </Button>
               </CardContent>
@@ -503,14 +475,55 @@ function Home() {
         </div>
       </section>
 
+      <Separator className="bg-gold/20" />
+
+      {/* ═══════════════════ FAQ ═══════════════════ */}
+      <section id="faq" className="py-16 relative z-10">
+        <div className="max-w-3xl mx-auto px-5">
+          <ScrollReveal className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
+              Common <span className="text-gold">Questions</span>
+            </h2>
+          </ScrollReveal>
+
+          <div className="space-y-4">
+            <FaqItem
+              q="Is FinalWishes a substitute for a will or trust?"
+              a="No. FinalWishes is an organizational and communication platform — it helps you gather, secure, and share the information your family needs. We strongly recommend working with an attorney for legal documents. FinalWishes makes their job easier by having everything organized."
+            />
+            <FaqItem
+              q="What happens to my data if FinalWishes shuts down?"
+              a="You can export all your data at any time. Your documents, memoirs, and records are yours. We also use standard formats (PDF, JSON) so nothing is locked into our platform. Our infrastructure runs on Google Cloud with automatic backups."
+            />
+            <FaqItem
+              q="How do my heirs get access when I pass?"
+              a="You designate heirs and executors in advance. When the time comes, your designated executor reports the status change. After identity verification, they receive access to exactly what you authorized — documents, passwords, personal messages, and settlement instructions."
+            />
+            <FaqItem
+              q="Is my data really secure?"
+              a="Yes. We use AES-256 encryption (the same standard used by banks and government agencies) with Google Cloud KMS for key management. Every document is encrypted at rest and in transit. Access requires multi-factor authentication, and every action is logged for accountability."
+            />
+            <FaqItem
+              q="Can I try it before paying?"
+              a="Absolutely. The Guardian plan is free forever — no credit card required. You can create a vault, upload documents, invite heirs, and explore the platform. Upgrade to Concierge or White Glove when you need unlimited storage, video memoirs, or AI guidance."
+            />
+            <FaqItem
+              q="What states do you support?"
+              a="FinalWishes is available in all 50 states. Our initial focus markets are Maryland, Illinois, and Minnesota, where we have deep compliance knowledge. The platform works everywhere — estate organization is universal."
+            />
+          </div>
+        </div>
+      </section>
+
+      <Separator className="bg-gold/20" />
+
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
       <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10">
         <div className="absolute inset-0 z-0">
-          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family planning together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
+          <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         </div>
 
-        {/* Art Deco corners */}
         <div className="deco-corner top-left" />
         <div className="deco-corner top-right" />
         <div className="deco-corner bottom-left" />
@@ -524,26 +537,23 @@ function Home() {
           </div>
 
           <h2 className="text-2xl md:text-3xl lg:text-4xl text-white mb-4 leading-tight font-[family-name:var(--font-cinzel)] hero-text">
-            Rise Forward.<br />
-            <span className="text-gold hero-text-gold">Begin Your Legacy.</span>
+            Don&apos;t Wait for the Moment<br />
+            <span className="text-gold hero-text-gold">You Wish You Had Started.</span>
           </h2>
           <p className="text-sm md:text-base text-white/90 mb-5 max-w-xl mx-auto hero-text">
-            Don&apos;t let paperwork steal your moments of remembrance. Let us handle the chaos—so you can honor what matters.
+            15 minutes today can save your family months of confusion tomorrow.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Button asChild className="bg-gold text-black px-8 py-3.5 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] transition-all border-none h-auto">
-              <Link to="/login" search={{}}>Begin Your Legacy</Link>
-            </Button>
-            <Button variant="outline" asChild className="border-2 border-white/30 bg-transparent text-white px-8 py-3.5 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 transition-all h-auto">
-              <a href="#protocol">See How It Works</a>
+              <Link to="/login" search={{}}>Create Your Free Vault</Link>
             </Button>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-white text-[0.65rem] tracking-[0.12em] uppercase">
+            <div className="flex items-center gap-2"><div className="status-dot" /><span>Free Forever Plan</span></div>
+            <div className="flex items-center gap-2"><div className="status-dot" /><span>No Credit Card</span></div>
             <div className="flex items-center gap-2"><div className="status-dot" /><span>Setup in 15 Minutes</span></div>
-            <div className="flex items-center gap-2"><div className="status-dot" /><span>Free Plan Available</span></div>
-            <div className="flex items-center gap-2"><div className="status-dot" /><span>Cancel Anytime</span></div>
           </div>
         </div>
       </section>
@@ -559,29 +569,26 @@ function Home() {
                 </svg>
                 <span className="text-sm font-bold text-white tracking-widest font-[family-name:var(--font-cinzel)]">FINALWISHES</span>
               </div>
-              <p className="text-white/60 text-xs leading-relaxed">The place where your life lives. Preserve your story, protect your people, and give your family clarity when it matters most.</p>
+              <p className="text-white/60 text-xs leading-relaxed">The estate operating system. Organize your assets, preserve your voice, and give your family clarity when it matters most.</p>
             </div>
-            <FooterCol title="Product" links={[{ label: "How It Works", href: "#protocol" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
-            <FooterCol title="Company" links={[{ label: "About Us", href: "#protocol" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
-            <FooterCol title="Legal" links={[{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }]} />
+            <FooterCol title="Product" links={[{ label: "Who It's For", href: "#scenarios" }, { label: "How It Works", href: "#how-it-works" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
+            <FooterCol title="Company" links={[{ label: "About Us", href: "#scenarios" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
+            <FooterCol title="Legal" links={[{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }, { label: "FAQ", href: "#faq" }]} />
           </div>
 
           <Separator className="bg-gold/20 mb-3" />
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-3">
-            <div className="text-[0.6rem] text-white/40">© 2026 FinalWishes Inc. Powered by <strong>Sirsi Technologies</strong>.</div>
+            <div className="text-[0.6rem] text-white/40">&copy; 2026 FinalWishes Inc. Powered by <strong>Sirsi Technologies</strong>.</div>
             <div className="flex items-center gap-3">
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                AES-256
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />AES-256
               </Badge>
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                Cloud KMS
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />Cloud KMS
               </Badge>
               <Badge className="bg-transparent text-white/50 text-[0.6rem] uppercase tracking-wider font-normal px-0 h-auto border-none gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-success" />
-                SOC 2 Architecture
+                <div className="w-1.5 h-1.5 rounded-full bg-success" />SOC 2
               </Badge>
             </div>
           </div>
@@ -591,67 +598,26 @@ function Home() {
   );
 }
 
-/* ─── Hero Section with Scroll Video or Static Fallback ─── */
+/* ─── Hero Section ─── */
 
 function HeroSection() {
   const [frameCount, setFrameCount] = useState(0)
 
-  // Check if frames exist by trying to load the first frame
   useEffect(() => {
     const img = new Image()
-    img.onload = () => {
-      // First frame exists — try to detect total frame count
-      // Check powers of 2 to find approximate count, then binary search
-      detectFrameCount().then(setFrameCount)
-    }
-    img.onerror = () => {
-      // No frames — use static hero
-      setFrameCount(0)
-    }
+    img.onload = () => { detectFrameCount().then(setFrameCount) }
+    img.onerror = () => { setFrameCount(0) }
     img.src = '/frames/frame-0001.jpg'
   }, [])
 
-  // Scroll-driven video hero (when frames are available)
   if (frameCount > 0) {
     return (
       <div className="relative">
         <ScrollVideoCanvas frameCount={frameCount} scrollHeight={400} />
-
-        {/* Overlay text — visible at the start of the scroll */}
         <div className="fixed top-0 left-0 w-full h-screen z-20 pointer-events-none flex flex-col items-center justify-center">
           <div className="text-center max-w-5xl px-6 pointer-events-auto">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-20 h-px bg-gradient-to-r from-transparent to-gold" />
-              <div className="w-2 h-2 bg-gold rotate-45" />
-              <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
-            </div>
-
-            <p className="font-[family-name:var(--font-cinzel)] text-xl md:text-2xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              The Operating System for Your Life&apos;s Work
-            </p>
-
-            <h1 className="font-[family-name:var(--font-cinzel)] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 hero-text drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
-              Preserve Your Story.
-              <br />
-              <span className="text-gold hero-text-gold">Protect Your People.</span>
-            </h1>
-
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-              The first platform that bridges <strong className="text-white">Life</strong> and{" "}
-              <strong className="text-white">Legacy</strong>.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-              <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
-                <Link to="/login" search={{}}>Create Your Vault</Link>
-              </Button>
-              <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
-                <a href="#protocol">See How It Works</a>
-              </Button>
-            </div>
+            <HeroContent />
           </div>
-
-          {/* Scroll indicator */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
             <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -662,58 +628,16 @@ function HeroSection() {
     )
   }
 
-  // Static hero fallback (no frames yet)
   return (
-    <header className="relative min-h-[65vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
+    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img
-          src="/assets/images/hero-family.jpg"
-          alt="Happy African American multi-generational family portrait"
-          className="w-full h-full object-cover"
-          fetchPriority="high"
-          style={{ objectPosition: "center 30%" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        <img src="/assets/images/hero-family.jpg" alt="Multi-generational family" className="w-full h-full object-cover" fetchPriority="high" style={{ objectPosition: "center 30%" }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
       </div>
-
-      <div className="deco-corner top-left" />
-      <div className="deco-corner top-right" />
-      <div className="deco-corner bottom-left" />
-      <div className="deco-corner bottom-right" />
-
+      <div className="deco-corner top-left" /><div className="deco-corner top-right" /><div className="deco-corner bottom-left" /><div className="deco-corner bottom-right" />
       <div className="relative z-10 text-center max-w-5xl px-6">
-        <div className="flex items-center justify-center gap-4 mb-6">
-          <div className="w-20 h-px bg-gradient-to-r from-transparent to-gold" />
-          <div className="w-2 h-2 bg-gold rotate-45" />
-          <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
-        </div>
-
-        <p className="font-[family-name:var(--font-cinzel)] text-xl md:text-2xl tracking-[0.25em] uppercase text-white hero-text mb-6 font-bold">
-          The Operating System for Your Life&apos;s Work
-        </p>
-
-        <h1 className="font-[family-name:var(--font-cinzel)] text-5xl md:text-6xl lg:text-7xl leading-[1.1] mb-8 hero-text">
-          Preserve Your Story.
-          <br />
-          <span className="text-gold hero-text-gold">Protect Your People.</span>
-        </h1>
-
-        <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed">
-          The first platform that bridges <strong className="text-white">Life</strong> and{" "}
-          <strong className="text-white">Legacy</strong>. Secure your memoirs, guide your heirs,
-          and automate the chaos of estate settlement.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-          <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,55,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
-            <Link to="/login" search={{}}>Create Your Vault</Link>
-          </Button>
-          <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.65rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
-            <a href="#protocol">See How It Works</a>
-          </Button>
-        </div>
+        <HeroContent />
       </div>
-
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
         <svg className="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
@@ -723,43 +647,111 @@ function HeroSection() {
   )
 }
 
-/** Detect how many frames exist in /frames/ by probing */
-async function detectFrameCount(): Promise<number> {
-  // Binary search for the last existing frame
-  let low = 1
-  let high = 1000 // max expected frames
-
-  // First find an upper bound
-  while (high <= 1000) {
-    const exists = await frameExists(high)
-    if (!exists) break
-    high *= 2
-  }
-
-  // Binary search between low and high
-  while (low < high) {
-    const mid = Math.floor((low + high + 1) / 2)
-    const exists = await frameExists(mid)
-    if (exists) {
-      low = mid
-    } else {
-      high = mid - 1
-    }
-  }
-
-  return low
+function HeroContent() {
+  return (
+    <>
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="w-20 h-px bg-gradient-to-r from-transparent to-gold" />
+        <div className="w-2 h-2 bg-gold rotate-45" />
+        <div className="w-20 h-px bg-gradient-to-l from-transparent to-gold" />
+      </div>
+      <h1 className="font-[family-name:var(--font-cinzel)] text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-6 hero-text drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">
+        Your Family&apos;s Future<br />
+        <span className="text-gold hero-text-gold">Starts With a Plan.</span>
+      </h1>
+      <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+        Organize your estate, preserve your voice, and protect the people you love — all in one secure vault. Free to start. Ready in 15 minutes.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <Button asChild className="bg-gold text-black px-8 py-4 rounded-lg font-bold text-[0.7rem] uppercase tracking-[0.12em] hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(212,175,81,0.5)] hover:-translate-y-0.5 transition-all border-none h-auto">
+          <Link to="/login" search={{}}>Create Your Free Vault</Link>
+        </Button>
+        <Button variant="outline" asChild className="border-2 border-white/40 bg-transparent text-white px-8 py-4 rounded-lg font-semibold text-[0.7rem] uppercase tracking-[0.12em] hover:bg-white/10 hover:border-white/60 transition-all h-auto">
+          <a href="#scenarios">See Who It&apos;s For</a>
+        </Button>
+      </div>
+    </>
+  )
 }
 
-function frameExists(index: number): Promise<boolean> {
-  return new Promise((resolve) => {
-    const img = new Image()
-    img.onload = () => resolve(true)
-    img.onerror = () => resolve(false)
-    img.src = `/frames/frame-${String(index).padStart(4, '0')}.jpg`
-  })
+/* ─── Scenario Card ─── */
+
+function ScenarioCard({ emoji, title, description, cta }: { emoji: string; title: string; description: string; cta: string }) {
+  return (
+    <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
+      <CardContent className="p-6 flex flex-col h-full">
+        <div className="text-3xl mb-4">{emoji}</div>
+        <h3 className="text-white font-bold text-base mb-2">{title}</h3>
+        <p className="text-white/60 text-sm leading-relaxed flex-grow mb-4">{description}</p>
+        <Button asChild variant="ghost" className="text-gold text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-gold-bright hover:bg-transparent self-start">
+          <Link to="/login" search={{}}>{cta} &rarr;</Link>
+        </Button>
+      </CardContent>
+    </Card>
+  )
 }
 
-/* ─── Sub-components ─── */
+/* ─── Capability Card ─── */
+
+function CapabilityCard({ icon, title, items, accent }: { icon: string; title: string; items: string[]; accent?: boolean }) {
+  return (
+    <Card className={`glass-card rounded-2xl ring-0 py-0 h-full ${accent ? 'border-2 !border-gold/30' : 'border-0'} bg-transparent`}>
+      <CardContent className="p-6 flex flex-col h-full">
+        <div className="text-3xl mb-4">{icon}</div>
+        <h3 className={`font-bold text-lg mb-4 ${accent ? 'text-gold' : 'text-white'}`}>{title}</h3>
+        <ul className="space-y-2.5 flex-grow">
+          {items.map((item) => (
+            <li key={item} className="flex gap-2 text-sm text-white/70">
+              <span className="text-gold shrink-0">✓</span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  )
+}
+
+/* ─── Testimonial Card ─── */
+
+function TestimonialCard({ quote, name, role }: { quote: string; name: string; role: string }) {
+  return (
+    <Card className="glass-card rounded-2xl ring-0 border-0 bg-transparent py-0 h-full">
+      <CardContent className="p-6">
+        <div className="text-gold text-2xl mb-3 font-[family-name:var(--font-cinzel)]">&ldquo;</div>
+        <p className="text-white/80 text-sm leading-relaxed mb-4 italic">{quote}</p>
+        <div className="border-t border-white/10 pt-3">
+          <div className="text-white font-bold text-sm">{name}</div>
+          <div className="text-gold text-xs">{role}</div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+/* ─── FAQ Item ─── */
+
+function FaqItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <ScrollReveal delay={0}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full text-left glass-panel rounded-xl px-6 py-5 transition-all hover:bg-white/5 cursor-pointer"
+      >
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="text-white font-bold text-sm">{q}</h3>
+          <span className={`text-gold text-lg transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
+        </div>
+        {open && (
+          <p className="text-white/60 text-sm leading-relaxed mt-3 pr-8">{a}</p>
+        )}
+      </button>
+    </ScrollReveal>
+  )
+}
+
+/* ─── Footer Column ─── */
 
 function FooterCol({ title, links }: { title: string; links: { label: string; href: string }[] }) {
   return (
@@ -772,4 +764,29 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
       </ul>
     </div>
   );
+}
+
+/* ─── Frame Detection ─── */
+
+async function detectFrameCount(): Promise<number> {
+  let low = 1, high = 1000
+  while (high <= 1000) {
+    if (!(await frameExists(high))) break
+    high *= 2
+  }
+  while (low < high) {
+    const mid = Math.floor((low + high + 1) / 2)
+    if (await frameExists(mid)) low = mid
+    else high = mid - 1
+  }
+  return low
+}
+
+function frameExists(index: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => resolve(true)
+    img.onerror = () => resolve(false)
+    img.src = `/frames/frame-${String(index).padStart(4, '0')}.jpg`
+  })
 }

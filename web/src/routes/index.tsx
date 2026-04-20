@@ -719,7 +719,6 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
     <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
       <div className="relative h-[180px] overflow-hidden">
         <img src={image} alt="" className="w-full h-full object-cover" loading="lazy" />
-        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
       </div>
       <CardContent className="p-7 flex flex-col flex-grow">
         <div className="text-3xl mb-3">{icon}</div>

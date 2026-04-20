@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { ScrollVideoCanvas } from '@/components/landing/ScrollVideoCanvas'
+import { ProductShowcase } from '@/components/landing/ProductShowcase'
 import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem } from '@/lib/animations'
 
 export const Route = createFileRoute('/')({
@@ -264,6 +265,25 @@ function Home() {
                 </div>
               </div>
             </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <Separator className="bg-gold/20" />
+
+      {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
+      <section className="py-16 relative z-10 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-5">
+          <ScrollReveal className="text-center mb-10">
+            <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
+            <h2 className="text-3xl md:text-4xl text-white mb-4 font-[family-name:var(--font-cinzel)]">
+              This Is <span className="text-gold">Your Dashboard</span>
+            </h2>
+            <p className="text-white/60 max-w-lg mx-auto text-sm">Not a mockup. This is the actual product. Click through to see every feature.</p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <ProductShowcase />
           </ScrollReveal>
         </div>
       </section>

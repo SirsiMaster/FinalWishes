@@ -24,25 +24,7 @@ function Home() {
 
   return (
     <main className="min-h-screen text-white relative">
-      {/* ── Floating Orbs (ambient depth) ── */}
-      <div className="fixed inset-0 z-[1] pointer-events-none overflow-hidden">
-        <div
-          className="absolute rounded-full opacity-20"
-          style={{
-            width: 500, height: 500, top: "-10%", right: "-5%",
-            background: "radial-gradient(circle, rgba(37,99,235,0.4) 0%, transparent 70%)",
-            filter: "blur(80px)", animation: "float-1 15s ease-in-out infinite",
-          }}
-        />
-        <div
-          className="absolute rounded-full opacity-15"
-          style={{
-            width: 400, height: 400, bottom: "10%", left: "-5%",
-            background: "radial-gradient(circle, rgba(200,169,81,0.3) 0%, transparent 70%)",
-            filter: "blur(80px)", animation: "float-2 20s ease-in-out infinite",
-          }}
-        />
-      </div>
+      {/* Floating orbs removed — they bled through white sections */}
 
       {/* ═══════════════════ NAVBAR ═══════════════════ */}
       <nav className="fixed top-0 w-full z-50 h-16 backdrop-blur-md" style={{ background: "rgba(0,0,0,0.2)" }}>

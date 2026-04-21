@@ -220,5 +220,10 @@ func isRetryableError(err error) bool {
 		strings.Contains(msg, "timeout") ||
 		strings.Contains(msg, "deadline") ||
 		strings.Contains(msg, "resource_exhausted") ||
-		strings.Contains(msg, "503")
+		strings.Contains(msg, "503") ||
+		strings.Contains(msg, "404") ||
+		strings.Contains(msg, "not found") ||
+		strings.Contains(msg, "not_found") ||
+		strings.Contains(msg, "permission") ||
+		strings.Contains(msg, "denied")
 }

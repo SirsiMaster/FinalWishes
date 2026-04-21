@@ -1,229 +1,96 @@
 # FinalWishes — Continuation Prompt
-**Version:** 19.4 — **Date:** April 15, 2026 — **Session:** Life-First Phase 3 Complete + Production Deploy
+**Version:** 20.0 — **Date:** April 21, 2026 — **Session:** Deep Audit + Landing Page Overhaul + Ship Readiness
+**Terminal Color: 🟢 GREEN**
 
 ---
 
-## Resume Key
+## Current State
 
-**Last commit:** `(pending)` (main) — Clean working tree, 0 lint warnings, 0 TS errors, 0 vulnerabilities, 129 tests passing
-**Repo:** `/Users/thekryptodragon/Development/FinalWishes`
-**Contract:** MSA-2025-111-FW | SOW-2025-001 | $95K Fixed Bid | 16 Weeks
-**Production:** `https://finalwishes-prod.web.app` | API rev 11 at Cloud Run
-**Deployed:** April 14, 2026 — CI/CD pipeline green, both frontend and API live
-**Security:** 0 npm vulnerabilities, 0 Go advisories
-**Tests:** 129 passing (8 files) — lint 0 warnings — tsc 0 errors
-**Product Phase:** Life-First Reframe (ADR-038) — SectionHeader + Life Chapters implemented
+FinalWishes is **demoable and deployed** at `https://finalwishes-prod.web.app`. Demo mode works end-to-end at `/login?demo=true` (any username/password). 14/14 page load checks pass against production. Go API is on Cloud Run rev 33. 168 unit tests pass, 0 TS errors, 0 Go errors.
 
 ---
 
-## Resume Prompt
+## What Was Done (April 20-21 Session)
 
-```
-Pick up FinalWishes from commit (HEAD). Read docs/CONTINUATION-PROMPT.md and
-ETHOS.md for full context. Sessions 5-7 shipped the Life-First Reframe: Soul Log,
-Legacy Timeline, Heir Welcome Screen, Guardian Protocol, Document Intelligence,
-Shepherd companion, Letters experience, security fixes, demo purge, emotional
-section headers, Life Chapters, page transitions, themed empty states, Shepherd
-section nudges, security rules, Soul Log upload progress + transcription retry,
-chapter cover images, Shepherd conversation memory, route-level code splitting
-(66% bundle reduction), E2E tests, Lighthouse audit + image optimization
-(69% transfer reduction), and RBAC enforcement for Life Chapters. All
-deployed to production. Next: Dependabot vulns (20), Soul Log collection
-name fix (soul-log vs soul-logs), further E2E coverage.
-```
+### Deep Audit — 35 Issues Found, All Resolved
+- **7 CRITICAL** (2 real, 5 inflated): Signing webhook + status polling, API tier enforcement middleware, E2E test selectors
+- **13 HIGH** (2 real, 11 inflated): Debts register, settlement broadcast notifications
+- **15 MEDIUM** (4 real, 11 inflated): Insurance/charitable categories, Guardian daily cron, pet guardianship + organ donation already in directive templates
 
----
+### Landing Page — Complete Rebuild
+- Conversion-first: scenarios → problem → capabilities → three steps → product showcase → shepherd → security → testimonials → pricing → FAQ → CTA
+- Dark/light alternating sections (`#1A3478` royal blue / `#FAF8F5` cream via `.section-light`)
+- Human faces in every section matching emotional tone
+- Auto-rotating ProductShowcase carousel (8 tabs, 15s rotation, crossfade)
+- ScrollVideoCanvas framework ready for brand video
+- Animation system: ScrollReveal, AnimatedCounter, HoverCard, StaggerList
 
-## Session Summary
+### Bug Fixes
+- AuthProvider missing from `__root.tsx` (app was crashing)
+- Demo mode: `loginDemo()` + localStorage persistence + IdentityGate bypass + OwnerWelcome auto-dismiss
+- Go API: demo-token auth bypass in middleware for all endpoints
+- Guardian inactivity: operator precedence bug (was spamming all estates)
+- DocIntell: PDFs now sent as base64 to AI (was only sending filename)
+- Vault: added General to CATEGORY_MAP (docs were disappearing)
+- Login: removed navigatePostLogin race condition
+- AI routing: 404/permission/not_found classified as retryable (enables Gemini fallback)
 
-### Session 7 (Apr 15): Emotional Section Design + Life Chapters
-
-Built the visual identity layer and narrative organization feature for the Life-First Reframe.
-
-**SectionHeader Component:**
-- Shared component with 7 distinct visual themes (amber, royal blue, rose, sage, teal, steel, purple)
-- Gradient backgrounds, section icons, taglines, action/children slots
-- Integrated into all 10 estate section pages, replacing bespoke headers
-- CTA buttons colored per-section for emotional cohesion
-
-**Life Chapters Feature:**
-- New route: `/estates/$estateId/life-chapters`
-- Firestore subcollection `life-chapters` with CRUD (add, update, archive)
-- Chapter creation: title, description, date range
-- Entry picker: add Soul Log and Memoir entries into chapters
-- Entry management: remove entries, reorder
-- Empty state with compelling onboarding CTA
-- Sidebar: My Legacy group expanded with "Legacy Timeline" + "Life Chapters" (New badge)
-- Role permissions: accessible to principal, admin, executor, heir
-
-**Documentation:**
-- User guide: `docs/user-guides/life-chapters.md`
-- Developer README: SectionHeader docs in `web/src/components/estate/README.md`
-- CHANGELOG v0.6.0
-
-### Session 6 (Apr 14): Life-First Reframe + Canonical Doc Update
-
-Completed the foundational product pivot documented in ETHOS.md. This session was about aligning every canonical document with the new vision: FinalWishes is not estate planning software, it is a living companion with estate planning built in.
-
-**ETHOS.md (Permanent):**
-- Written and committed as the soul of the application
-- Defines the emotional core: life-first, death-second
-- Soul Log concept, heir welcome screen, companion vision, design principles
-- Permanent document — does not version, does not archive
-
-**ADR-038: Life-First Reframe (Accepted):**
-- Documents the product pivot from estate-mechanics navigation to emotional-intent navigation
-- Six navigation groups: Soul Log, My Legacy, Memories, Letters, My People, The Vault
-- Soul Log as daily-use diary (video/audio/text, private/shared/sealed visibility)
-- Legacy Timeline replaces completion-percentage dashboard
-- Heir Welcome Screen as the product's defining moment
-- Shepherd AI reframed from estate-assistant to life-companion
-
-**Canonical Documents Updated:**
-- ADR-INDEX.md — ADR-038 added to registry and Consumer Experience category
-- CANONICAL_DEVELOPMENT_PLAN.md — Phase 5 (Life-First Reframe) with 8 sub-phases
-- CHANGELOG.md — v0.5.0 entry with full reframe changelog
-- CONTINUATION-PROMPT.md — Session 6 context, updated resume prompt, new priorities
-- VERSION_REGISTRY.md — Updated with current component versions and new canon docs
-
-**Security Hardening (Session 5, carried forward):**
-- IDOR protection, path traversal prevention, XFF spoofing blocked
-- Demo user purge, rate limiting on auth
-- 32 Dependabot vulns resolved to 0
-
-### Prior Sessions
-- Session 5 (Apr 14): Test suite (129 tests), ESLint 24→0, TypeScript 50→0, GA4 wired, CI gate
-- Session 4 (Apr 14): CI/CD fixes, tier-gating, responsive audit, security remediation (32 → 0 vulns)
-- Session 3 (Apr 14): Full product overhaul — 22 fixes across 4 waves
-- Session 2 (Apr 10): Email templates, skeletons, CSP, OpenAPI spec, accessibility, monitoring
-- Session 1 (Apr 8): shadcn refactor, Phases 2-4, 163 tests, infrastructure
+### Infrastructure
+- Firebase CLI: permanent service account auth (no more re-auth)
+- Gemini API: re-enabled with restricted key (server-only, `generativelanguage.googleapis.com` only)
+- AI models: Gemma 4 (`gemma-4-27b-it`) + Gemini 3.1 Flash Lite (`gemini-3.1-flash-lite-preview`)
+- Firestore seeded: Lockhart Estate — 6 assets, 4 docs, 3 heirs, 3 soul-logs, 2 directives, 2 capsules
+- Dependabot: 10 vulnerabilities resolved, 0 remaining
+- Legal: real Privacy Policy + Terms of Service
 
 ---
 
-## Contract Acceptance Criteria — 20/20 Complete
+## Architecture Decisions
 
-| # | Criteria | Status |
-|---|----------|--------|
-| 1-18 | All Phase 1-3 deliverables | DONE |
-| 19 | Custom domain | **N/A** — No domain purchased; runs on `finalwishes-prod.web.app` |
-| 20 | 99.9% uptime launch week | **MONITORING** — 3 alert policies active |
-
----
-
-## What's Next (Priority Order)
-
-### 1. Soul Log Implementation (Phase 5b — Next Feature)
-The Soul Log is the heartbeat of the Life-First Reframe. Implementation order:
-1. Recording UI — video (camera), audio (mic), text input components
-2. Storage pipeline — video → YouTube (unlisted), audio → Cloud Storage, text → Firestore
-3. Visibility modes — private/shared/sealed controls per entry
-4. Feed view — chronological diary with date grouping
-5. Transcription — Vertex AI Speech-to-Text on audio/video uploads
-
-### 2. Navigation Restructure (Phase 5a)
-Reorganize existing routes into 6 emotional groups:
-- Soul Log (new), My Legacy (directives/capsules), Memories (memoirs/heirlooms)
-- Letters (new, extracted from time capsules), My People (beneficiaries), The Vault (assets/docs/lockbox)
-
-### 3. Legacy Timeline Dashboard (Phase 5c)
-Replace completion-percentage dashboard with chronological life narrative.
-
-### 4. Heir Welcome Screen (Phase 5d)
-The sacred moment — heir's first login shows loved one's face, voice, message. Practical matters come after.
-
-### 5. Role Mapping Fix + Access Enforcement (Phase 5g)
-Correct Principal/Executor/Heir/Guardian role assignments. Enforce visibility modes per beneficiary.
-
-### 6. GA4 Property Setup (5 min manual)
-Firebase Console → Project Settings → Integrations → Google Analytics → Enable
-Then set `VITE_FIREBASE_MEASUREMENT_ID=G-XXXXXXX` in environment.
-Code instrumentation already wired (trackEstateCreated, trackDocumentUploaded, trackCheckoutStarted).
-
-### 7. Future Features (Tier 3, not purchased)
-- Estate Administration ($25K)
-- Probate Engine MD/IL/MN ($35K)
-- Advanced AI ($15K)
-- Guardian Protocol (Phase 5h — content staging for minor heirs)
-
-### Resolved Prior Sessions
-- ~~Domain acquisition~~ **PERMANENTLY OFF LIST**
-- ~~TypeScript strict errors~~ **0 errors** (`tsc --noEmit` + `typecheck` script)
-- ~~ESLint warnings~~ **0 warnings**
-- ~~Web test suite~~ **129 tests, CI gate active**
-- ~~Plaid~~ **PERMANENTLY OUT** — Stripe operational
-- ~~ETHOS.md~~ **WRITTEN** — Permanent soul document
-- ~~ADR-038~~ **ACCEPTED** — Life-First Reframe documented
-- ~~Canonical doc alignment~~ **COMPLETE** — All docs reflect new direction
-- ~~Emotional section headers~~ **COMPLETE** — SectionHeader component, 7 themes, 10 pages integrated
-- ~~Life Chapters~~ **COMPLETE** — Route, Firestore CRUD, entry picker, sidebar nav
-- ~~Page transitions~~ **COMPLETE** — Framer Motion AnimatePresence in estate layout
-- ~~Empty-state illustrations~~ **COMPLETE** — SectionEmptyState with 6 SVG illustrations
-- ~~Shepherd section nudges~~ **COMPLETE** — getSectionNudge() with per-section contextual hints
-- ~~Life-chapters security rules~~ **COMPLETE** — Firestore rule 3o added
-- ~~Soul Log upload progress~~ **COMPLETE** — XHR with percentage, step-by-step status, transcription retry
-- ~~Chapter cover images~~ **COMPLETE** — Upload via Cloud Storage, displayed on chapter cards
-- ~~Shepherd conversation memory~~ **COMPLETE** — Firestore persistence, loads last 10 messages, rule 3p
-- ~~Code splitting~~ **COMPLETE** — 6 lazy routes, main bundle 2,210→745 KB (66% reduction)
-- ~~E2E tests~~ **COMPLETE** — 8 Playwright tests for Life-First features
-- ~~Lighthouse audit~~ **COMPLETE** — Score 61 perf, 100 best practices; images optimized (4.9MB→1.5MB)
-- ~~Hero image optimization~~ **COMPLETE** — 675KB→282KB, preload hint, preconnect
-- ~~RBAC for Life Chapters~~ **COMPLETE** — Read-only for heirs/executors, edit for principal/admin
-- ~~Production deploy~~ **COMPLETE** — Hosting + Firestore rules live
+- **Demo mode**: Synthetic user in localStorage, Go API accepts `demo-token`, IdentityGate bypasses for `user_`/`demo_` UIDs
+- **AI routing**: sirsi-ai SDK: Claude Opus → Claude Sonnet → Gemini 3.1 Flash Lite. All 404/permission errors retryable.
+- **Gemini security**: API key restricted to `generativelanguage.googleapis.com` only, never in client code. See `docs/SECURITY_ADVISORY_GEMINI_API_KEYS.md`
+- **No navy**: `#1A3478` (saturated royal blue), never `#0A1628`. Stored in memory as feedback rule.
+- **Landing page rendering**: Body is white, dark sections get `bg-[#1A3478]`, light sections use `.section-light` with `!important`. `color-scheme: only light` prevents Chrome Auto Dark Mode.
 
 ---
 
-## AI Architecture (Session 3)
+## Remaining Items (Owner Action Only)
 
-| Task | Model | Route |
-|------|-------|-------|
-| Legal guidance / estate chat | Claude Opus 4.6 | POST /api/v1/guidance/chat |
-| Obituary drafting | Claude Sonnet 4.6 | POST /api/v1/guidance/assist-obituary |
-| Quick suggestions | Gemma 4 27B | GET /api/v1/guidance/suggestions |
-| Completion scoring | Gemma 4 27B | GET /api/v1/guidance/score |
-| Fallback | Gemini 3.1 Flash | Automatic on primary failure |
-
-All models via Vertex AI (Application Default Credentials). Package: sirsi-ai (shared with Assiduous).
+| # | Item | Where |
+|---|------|-------|
+| 1 | Custom domain `finalwishes.app` | DNS registrar → Firebase Hosting |
+| 2 | Gemini billing credits (depleted) | ai.studio/projects → add payment |
+| 3 | Enable Claude on Vertex AI | Cloud Console → Model Garden (next week) |
+| 4 | Stripe Customer Portal toggle | dashboard.stripe.com/settings/billing/portal |
+| 5 | OpenSign templates (4 directives) | sign.sirsi.ai web UI |
+| 6 | Brand video for scroll animation | Runway/Kling → `./scripts/extract-frames.sh` |
 
 ---
 
-## Production Infrastructure
-
-| Service | URL / Detail |
-|---------|-------------|
-| Frontend | https://finalwishes-prod.web.app |
-| API | Cloud Run rev 11 (deployed session 4) |
-| API URL | https://finalwishes-api-qyjuke2xea-uc.a.run.app |
-| Stripe | Webhook `we_1TKV5L...` registered |
-| Secrets | 8 in Secret Manager |
-| Monitoring | 3 alert policies -> sirsimaster@gmail.com |
-| Security | 0 npm vulns, 0 Go advisories (32 resolved session 4) |
-| CI/CD | GitHub Actions — 6 jobs (web-check, web-test, web-build, deploy-hosting, api-check, deploy-api) |
-| CI/CD SA | github-deployer@finalwishes-prod.iam.gserviceaccount.com |
-| sign.sirsi.ai | 3 CRITICALs fixed, contracts-grpc rev 8 deployed |
-
-## Key File Locations
+## Key Files
 
 | File | Purpose |
 |------|---------|
-| `ETHOS.md` | **NEW** — Soul of the application (permanent, non-versioned) |
-| `CLAUDE.md` | Operational directive |
-| `CHANGELOG.md` | **UPDATED** — Session 6 entry (v0.5.0, Life-First Reframe) |
-| `docs/ADR-038-LIFE-FIRST-REFRAME.md` | **NEW** — Life-First Reframe product pivot decision |
-| `docs/CANONICAL_DEVELOPMENT_PLAN.md` | **UPDATED** — Phase 5 (Life-First Reframe) added |
-| `docs/api-spec.yaml` | OpenAPI 3.0 (28+ endpoints) |
-| `web/vitest.config.ts` | Vitest config (jsdom, v8 coverage) |
-| `web/src/test/setup.ts` | Test setup (jest-dom, firebase mock, env stub) |
-| `web/src/lib/tier-gating.test.ts` | **NEW** — Tier-gating tests (15 tests) |
-| `web/src/lib/export.test.ts` | **NEW** — Export sanitization tests (14 tests) |
-| `web/eslint.config.mjs` | **UPDATED** — gen/ ignore, caught errors, route exports |
-| `web/tsconfig.json` | **UPDATED** — Removed Next.js remnants |
-| `web/package.json` | **UPDATED** — test/typecheck/test:watch/test:coverage scripts |
-| `web/src/vite-env.d.ts` | **NEW** — Vite + Vitest ambient type declarations |
-| `web/src/routes/estates.create.tsx` | **UPDATED** — GA4 trackEstateCreated wired |
-| `web/src/routes/estates.$estateId.vault.tsx` | **UPDATED** — GA4 trackDocumentUploaded wired |
-| `web/src/routes/estates.$estateId.pricing.tsx` | **UPDATED** — GA4 trackCheckoutStarted wired |
-| `.github/workflows/firebase-hosting-merge.yml` | **UPDATED** — web-test job enabled |
+| `web/src/routes/index.tsx` | Landing page (all sections) |
+| `web/src/lib/auth.tsx` | Auth provider + demo mode |
+| `web/src/lib/animations.tsx` | Animation system |
+| `web/src/components/landing/ProductShowcase.tsx` | Auto-rotating carousel |
+| `web/src/components/landing/ScrollVideoCanvas.tsx` | Scroll-driven video |
+| `web/src/components/guards/IdentityGate.tsx` | MFA + demo bypass |
+| `api/internal/auth/middleware.go` | Go auth + demo-token bypass |
+| `api/packages/sirsi-ai/config.go` | AI model configuration |
+| `api/packages/sirsi-ai/router.go` | AI fallback chain routing |
+| `api/packages/sirsi-ai/service.go` | Multi-model service + retryable errors |
+| `docs/SECURITY_ADVISORY_GEMINI_API_KEYS.md` | Gemini API key vulnerability briefing |
 
 ---
 
-**Updated:** April 14, 2026 (Claude Opus 4.6 — Session 6: Life-First Reframe)
+## Start Next Session
+
+```bash
+cd ~/Development/FinalWishes
+# Read .thoth/memory.yaml first
+# App: finalwishes-prod.web.app
+# Demo: /login?demo=true
+```

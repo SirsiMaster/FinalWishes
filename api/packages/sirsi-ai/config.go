@@ -31,7 +31,7 @@ func LoadConfig() Config {
 		ClaudeModel:     envOr("SIRSI_AI_CLAUDE_MODEL", "claude-opus-4-6"),
 		ClaudeRegion:    envOr("SIRSI_AI_CLAUDE_REGION", "us-east5"),
 		GemmaModel:      envOr("SIRSI_AI_GEMMA_MODEL", "gemma-4-27b-it"),
-		GeminiModel:     envOr("SIRSI_AI_GEMINI_MODEL", "gemini-2.5-flash"),
+		GeminiModel:     envOr("SIRSI_AI_GEMINI_MODEL", "gemini-2.5-flash-lite-preview-06-17"),
 		GeminiAPIKey:    os.Getenv("GEMINI_API_KEY"),
 		DefaultMode:     ModelID(envOr("SIRSI_AI_DEFAULT_MODE", string(ModelAuto))),
 		FallbackEnabled: envOr("SIRSI_AI_FALLBACK", "true") == "true",

@@ -11,12 +11,12 @@ type RoutingRule struct {
 // Creative writing (obituaries) -> Sonnet (creative, fast).
 // Scoring/suggestions/classification -> Gemma (cheapest).
 var DefaultRoutes = map[TaskType]RoutingRule{
-	TaskExplain:        {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
-	TaskChat:           {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
-	TaskAnalyzeComplex: {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet}},
-	TaskAnalyzeSimple:  {Primary: ModelGemma, Fallback: []ModelID{ModelSonnet}},
-	TaskGenerate:       {Primary: ModelSonnet, Fallback: []ModelID{ModelClaude}},
-	TaskClassify:       {Primary: ModelGemma, Fallback: []ModelID{ModelSonnet}},
+	TaskExplain:        {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet, ModelGemini}},
+	TaskChat:           {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet, ModelGemini}},
+	TaskAnalyzeComplex: {Primary: ModelClaude, Fallback: []ModelID{ModelSonnet, ModelGemini}},
+	TaskAnalyzeSimple:  {Primary: ModelGemma, Fallback: []ModelID{ModelSonnet, ModelGemini}},
+	TaskGenerate:       {Primary: ModelSonnet, Fallback: []ModelID{ModelClaude, ModelGemini}},
+	TaskClassify:       {Primary: ModelGemma, Fallback: []ModelID{ModelSonnet, ModelGemini}},
 }
 
 // Route returns the primary model and fallback chain for a task.

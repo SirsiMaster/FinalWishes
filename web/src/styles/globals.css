@@ -179,8 +179,12 @@ body {
   --icon-hover: #FFFFFF;
 
   /* Header Bar */
+  --header-bg: #1A3478;
   --header-text: #FFFFFF;
   --header-text-muted: rgba(255, 255, 255, 0.55);
+
+  /* Sidebar */
+  --sidebar-bg: #132855;
 }
 
 .dashboard-theme {
@@ -220,8 +224,12 @@ body {
   --icon-hover: #0F172A;
 
   /* Header Bar */
+  --header-bg: #F8FAFC;
   --header-text: #0F172A;
   --header-text-muted: #64748B;
+
+  /* Sidebar */
+  --sidebar-bg: #FFFFFF;
 }
 
 /* Light sidebar overrides for dashboard-theme */

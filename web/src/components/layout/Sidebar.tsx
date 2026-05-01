@@ -425,7 +425,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
         <Separator className="bg-[#133378]/10" />
 
         {/* Navigation */}
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 overflow-hidden">
           <SidebarNavContent
             groups={groups}
             utilityItems={utilityItems}
@@ -568,7 +568,7 @@ export function Sidebar() {
       <Separator className="bg-[#133378]/10" />
 
       {/* Navigation */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 overflow-hidden">
         <SidebarNavContent
           groups={groups}
           utilityItems={utilityItems}

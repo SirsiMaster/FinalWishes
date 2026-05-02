@@ -5,6 +5,14 @@ import { useParams, useNavigate } from '@tanstack/react-router'
 import { useEstateSearch, type SearchResult } from '@/lib/search'
 import { SearchResults } from '@/components/search/SearchResults'
 import { NotificationBell } from '@/components/layout/NotificationBell'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 export function AdminHeader({
   title,
@@ -16,7 +24,7 @@ export function AdminHeader({
   onMenuClick?: () => void;
 }) {
   const [mode, setMode] = useState<'Owner' | 'Incapacity' | 'Settlement'>('Owner');
-  const { profile } = useAuth();
+  const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const params = useParams({ strict: false }) as { estateId?: string };
   const estateId = params.estateId || '';
@@ -237,19 +245,44 @@ export function AdminHeader({
       <div className="flex items-center gap-2 md:gap-4 shrink-0">
         <NotificationBell estateId={estateId} />
 
-        {/* Avatar */}
-        {user?.profilePhotoUrl ? (
-          <img
-            src={user.profilePhotoUrl}
-            onClick={() => setShowPhotoModal(true)}
-            className="w-9 h-9 object-cover border border-royal/30 shadow-sm cursor-pointer hover:border-royal transition-all"
-            alt="Avatar"
-          />
-        ) : (
-          <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-[0.7rem] cursor-pointer hover:bg-sapphire transition-all shadow-sm">
-            {getInitials(user?.name || 'TL')}
-          </div>
-        )}
+        {/* Avatar Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            {user?.profilePhotoUrl ? (
+              <img
+                src={user.profilePhotoUrl}
+                className="w-9 h-9 object-cover border border-royal/30 shadow-sm cursor-pointer hover:border-royal transition-all"
+                alt="Avatar"
+              />
+            ) : (
+              <div className="w-9 h-9 bg-royal flex items-center justify-center text-white font-black text-[0.7rem] cursor-pointer hover:bg-sapphire transition-all shadow-sm">
+                {getInitials(user?.name || 'TL')}
+              </div>
+            )}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>
+              <div className="text-sm font-bold">{user?.name || 'User'}</div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {user?.profilePhotoUrl && (
+              <DropdownMenuItem onClick={() => setShowPhotoModal(true)}>
+                <svg viewBox="0 0 24 24" className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                View Photo
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem
+              onClick={async () => {
+                await signOut();
+                navigate({ to: '/login', search: {} });
+              }}
+              className="text-red-600 focus:text-red-600 focus:bg-red-50"
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       </div>
     </header>

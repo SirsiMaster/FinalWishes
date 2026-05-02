@@ -377,7 +377,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
   const { groups, utilityItems } = useFilteredNav(userRole);
 
   const getInitials = (name: string) => {
-    return name?.split(' ').map(n => n[0]).join('') || 'FW';
+    return name?.split(' ').map(n => n[0]?.toUpperCase()).join('') || 'FW';
   };
 
   const handleLogout = async () => {
@@ -489,7 +489,7 @@ export function Sidebar() {
   const { groups, utilityItems } = useFilteredNav(userRole);
 
   const getInitials = (name: string) => {
-    return name?.split(' ').map(n => n[0]).join('') || 'FW';
+    return name?.split(' ').map(n => n[0]?.toUpperCase()).join('') || 'FW';
   };
 
   const handleLogout = async () => {

@@ -35,7 +35,7 @@ export function AdminHeader({
   } : { name: 'Guest', profilePhotoUrl: undefined };
 
   const getInitials = (name: string) => {
-    return name?.split(' ').map(n => n[0]).join('') || '?';
+    return name?.split(' ').map(n => n[0]?.toUpperCase()).join('') || '?';
   };
 
   const [showPhotoModal, setShowPhotoModal] = useState(false);

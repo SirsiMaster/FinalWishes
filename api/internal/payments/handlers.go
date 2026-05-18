@@ -337,6 +337,14 @@ func (h *Handler) HandleCreatePortalSession(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// Verify the subscription is still active before creating a portal session.
+	// A cancelled subscription still has a stripeCustomerId but shouldn't get portal access.
+	paymentStatus, _ := estateSnap.DataAt("paymentStatus")
+	if paymentStatus == "cancelled" {
+		writeError(w, http.StatusBadRequest, "Your subscription has been cancelled. Please subscribe to a new plan to manage billing.")
+		return
+	}
+
 	// Build return URL — user returns here after managing subscription
 	returnURL := fmt.Sprintf("https://finalwishes-prod.web.app/estates/%s/settings", req.EstateID)
 	if os.Getenv("GOOGLE_CLOUD_PROJECT") == "" {
@@ -468,6 +476,7 @@ func (h *Handler) handleCheckoutCompleted(event stripe.Event) {
 func (h *Handler) handleCheckoutExpired(event stripe.Event) {
 	var sess stripe.CheckoutSession
 	if err := json.Unmarshal(event.Data.Raw, &sess); err != nil {
+		log.Error().Err(err).Str("event_id", event.ID).Msg("Failed to parse expired checkout session from webhook")
 		return
 	}
 	log.Info().Str("session_id", sess.ID).Str("estate_id", sess.Metadata["estate_id"]).Msg("Checkout session expired")
@@ -476,6 +485,7 @@ func (h *Handler) handleCheckoutExpired(event stripe.Event) {
 func (h *Handler) handleSubscriptionCancelled(event stripe.Event) {
 	var sub stripe.Subscription
 	if err := json.Unmarshal(event.Data.Raw, &sub); err != nil {
+		log.Error().Err(err).Str("event_id", event.ID).Msg("Failed to parse subscription cancellation from webhook")
 		return
 	}
 

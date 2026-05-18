@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
@@ -112,6 +113,85 @@ func mockAuthGuard(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), userIDKey, parts[1])
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func TestMiddleware_DemoToken_RejectedByDefault(t *testing.T) {
+	// With DEMO_MODE unset (default), demo-token should be treated as a regular
+	// token and fail Firebase verification — not bypass auth.
+	os.Unsetenv("DEMO_MODE")
+
+	handler := Middleware(nil)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest(http.MethodGet, "/protected", nil)
+	req.Header.Set("Authorization", "Bearer demo-token")
+	rr := httptest.NewRecorder()
+
+	// Middleware(nil) will panic or fail on VerifyIDToken with nil client.
+	// We recover to verify the demo bypass did NOT short-circuit.
+	defer func() {
+		if r := recover(); r != nil {
+			// Panic from nil authClient.VerifyIDToken means demo bypass was correctly skipped.
+			// The token reached Firebase verification (which panicked because client is nil).
+			// This is the expected behavior: demo-token is NOT special when DEMO_MODE is off.
+			return
+		}
+		// If no panic, check that the response is 401 (rejected).
+		if rr.Code == http.StatusOK {
+			t.Error("demo-token should NOT be accepted when DEMO_MODE is not set")
+		}
+	}()
+
+	handler.ServeHTTP(rr, req)
+}
+
+func TestMiddleware_DemoToken_AcceptedWhenEnabled(t *testing.T) {
+	os.Setenv("DEMO_MODE", "true")
+	defer os.Unsetenv("DEMO_MODE")
+
+	var capturedUID string
+	handler := Middleware(nil)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		capturedUID = UserIDFromContext(r.Context())
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest(http.MethodGet, "/protected", nil)
+	req.Header.Set("Authorization", "Bearer demo-token")
+	req.Header.Set("X-Demo-User-ID", "test_demo_user")
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("expected 200 with DEMO_MODE=true, got %d", rr.Code)
+	}
+	if capturedUID != "test_demo_user" {
+		t.Errorf("expected test_demo_user, got %q", capturedUID)
+	}
+}
+
+func TestMiddleware_DemoToken_DefaultUID(t *testing.T) {
+	os.Setenv("DEMO_MODE", "true")
+	defer os.Unsetenv("DEMO_MODE")
+
+	var capturedUID string
+	handler := Middleware(nil)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		capturedUID = UserIDFromContext(r.Context())
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest(http.MethodGet, "/protected", nil)
+	req.Header.Set("Authorization", "Bearer demo-token")
+	// No X-Demo-User-ID header — should fall back to "demo_user"
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("expected 200, got %d", rr.Code)
+	}
+	if capturedUID != "demo_user" {
+		t.Errorf("expected demo_user default, got %q", capturedUID)
+	}
 }
 
 func TestMiddleware_ValidToken_InjectsUID(t *testing.T) {

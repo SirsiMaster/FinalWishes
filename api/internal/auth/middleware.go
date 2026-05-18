@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	firebaseAuth "firebase.google.com/go/v4/auth"
@@ -38,14 +39,15 @@ func Middleware(authClient *firebaseAuth.Client) func(http.Handler) http.Handler
 			}
 			idToken := parts[1]
 
-			// Demo mode bypass — allows synthetic demo user to access API
-			if idToken == "demo-token" {
+			// Demo mode bypass — only active when DEMO_MODE=true (default: disabled).
+			// Must be explicitly enabled for controlled demos; never active in production.
+			if idToken == "demo-token" && os.Getenv("DEMO_MODE") == "true" {
 				demoUID := r.Header.Get("X-Demo-User-ID")
 				if demoUID == "" {
-					demoUID = "user_tameeka"
+					demoUID = "demo_user"
 				}
 				ctx := context.WithValue(r.Context(), userIDKey, demoUID)
-				log.Debug().Str("uid", demoUID).Str("path", r.URL.Path).Msg("Demo mode request")
+				log.Warn().Str("uid", demoUID).Str("path", r.URL.Path).Msg("Demo mode request — DEMO_MODE is enabled")
 				next.ServeHTTP(w, r.WithContext(ctx))
 				return
 			}

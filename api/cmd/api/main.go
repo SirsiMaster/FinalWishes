@@ -28,6 +28,7 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guardian"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guidance"
+	"github.com/sirsi-technologies/finalwishes-api/internal/probate"
 	"github.com/sirsi-technologies/finalwishes-api/internal/lockbox"
 	appmw "github.com/sirsi-technologies/finalwishes-api/internal/middleware"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
@@ -369,6 +370,20 @@ func main() {
 			r.Post("/run-inactivity-check", guardianHandler.HandleRunInactivityCheck)
 		})
 		log.Info().Msg("Guardian Protocol API routes registered at /api/v1/guardian/*")
+	}
+
+	// Probate Engine routes (Illinois state machine + checklist)
+	if fs != nil {
+		probateHandler := probate.NewHandler(fs, &probate.IllinoisEngine{})
+		r.Route("/api/v1/probate", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/transition", probateHandler.HandleTransition)
+			r.Get("/status", probateHandler.HandleGetStatus)
+			r.Get("/checklist", probateHandler.HandleGetChecklist)
+			r.Post("/checklist/update", probateHandler.HandleUpdateChecklistItem)
+			r.Post("/evaluate-small-estate", probateHandler.HandleEvaluateSmallEstate)
+		})
+		log.Info().Str("state", "IL").Msg("Probate Engine API routes registered at /api/v1/probate/*")
 	}
 
 	// Time Capsule routes (Cloud Tasks deferred delivery)

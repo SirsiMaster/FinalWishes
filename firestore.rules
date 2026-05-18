@@ -379,6 +379,23 @@ service cloud.firestore {
           && request.resource.data.role in ['user', 'shepherd'];
         allow delete: if isEstatePrincipal(estateId);
       }
+
+      // ── 3q. Probate (State Machine + Checklist Status) ──
+      // Stores probate checklist completion status and state-specific data.
+      // Only executors, admins, and principals can write. All estate members can read.
+      match /probate/{docId} {
+        allow read: if canAccessEstate(estateId);
+        allow write: if canWriteEstate(estateId);
+      }
+
+      // ── 3r. Probate Audit Trail (Immutable) ──
+      // Records all probate state transitions and checklist changes.
+      // Append-only: no updates or deletes permitted.
+      match /probate_audit/{auditId} {
+        allow read: if canAccessEstate(estateId);
+        allow create: if canWriteEstate(estateId)
+          && request.resource.data.keys().hasAll(['actor', 'timestamp']);
+      }
     }
     
     // =============================================

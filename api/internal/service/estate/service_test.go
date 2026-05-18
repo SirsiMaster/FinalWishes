@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 	estatev1 "github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1"
 )
 
@@ -16,13 +17,18 @@ func newTestServer() *Server {
 	return NewServer(nil, nil)
 }
 
+// testCtx returns a context with a test user ID injected, so checkEstateAccess passes.
+func testCtx() context.Context {
+	return auth.InjectUserIDForTest(context.Background(), "test-user")
+}
+
 // =========================================================
 // ListEstates
 // =========================================================
 
 func TestListEstates_DemoMode_KnownUser(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListEstates(context.Background(), connect.NewRequest(&estatev1.ListEstatesRequest{
+	resp, err := s.ListEstates(testCtx(), connect.NewRequest(&estatev1.ListEstatesRequest{
 		UserId: "user_tameeka",
 	}))
 	if err != nil {
@@ -41,7 +47,7 @@ func TestListEstates_DemoMode_KnownUser(t *testing.T) {
 
 func TestListEstates_DemoMode_UnknownUser(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListEstates(context.Background(), connect.NewRequest(&estatev1.ListEstatesRequest{
+	resp, err := s.ListEstates(testCtx(), connect.NewRequest(&estatev1.ListEstatesRequest{
 		UserId: "some_other_user",
 	}))
 	if err != nil {
@@ -61,7 +67,7 @@ func TestListEstates_DemoMode_UnknownUser(t *testing.T) {
 
 func TestGetEstateMetadata_DemoMode(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetEstateMetadata(context.Background(), connect.NewRequest(&estatev1.GetEstateMetadataRequest{
+	resp, err := s.GetEstateMetadata(testCtx(), connect.NewRequest(&estatev1.GetEstateMetadataRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -83,7 +89,7 @@ func TestGetEstateMetadata_DemoMode(t *testing.T) {
 
 func TestGetEstateMetadata_PreservesEstateID(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetEstateMetadata(context.Background(), connect.NewRequest(&estatev1.GetEstateMetadataRequest{
+	resp, err := s.GetEstateMetadata(testCtx(), connect.NewRequest(&estatev1.GetEstateMetadataRequest{
 		EstateId: "custom-id-123",
 	}))
 	if err != nil {
@@ -100,7 +106,7 @@ func TestGetEstateMetadata_PreservesEstateID(t *testing.T) {
 
 func TestListBeneficiaries_DemoMode(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListBeneficiaries(context.Background(), connect.NewRequest(&estatev1.ListBeneficiariesRequest{
+	resp, err := s.ListBeneficiaries(testCtx(), connect.NewRequest(&estatev1.ListBeneficiariesRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -124,7 +130,7 @@ func TestListBeneficiaries_DemoMode(t *testing.T) {
 
 func TestAddBeneficiary_DemoMode_FailsGracefully(t *testing.T) {
 	s := newTestServer()
-	_, err := s.AddBeneficiary(context.Background(), connect.NewRequest(&estatev1.AddBeneficiaryRequest{
+	_, err := s.AddBeneficiary(testCtx(), connect.NewRequest(&estatev1.AddBeneficiaryRequest{
 		EstateId: "estate_lockhart",
 		Name:     "New Heir",
 		Relation: "Child",
@@ -145,7 +151,7 @@ func TestAddBeneficiary_DemoMode_FailsGracefully(t *testing.T) {
 
 func TestListAssets_DemoMode_LockhartEstate(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListAssets(context.Background(), connect.NewRequest(&estatev1.ListAssetsRequest{
+	resp, err := s.ListAssets(testCtx(), connect.NewRequest(&estatev1.ListAssetsRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -165,7 +171,7 @@ func TestListAssets_DemoMode_LockhartEstate(t *testing.T) {
 
 func TestListAssets_DemoMode_OtherEstate(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListAssets(context.Background(), connect.NewRequest(&estatev1.ListAssetsRequest{
+	resp, err := s.ListAssets(testCtx(), connect.NewRequest(&estatev1.ListAssetsRequest{
 		EstateId: "other-estate",
 	}))
 	if err != nil {
@@ -182,7 +188,7 @@ func TestListAssets_DemoMode_OtherEstate(t *testing.T) {
 
 func TestAddAsset_DemoMode_FailsGracefully(t *testing.T) {
 	s := newTestServer()
-	_, err := s.AddAsset(context.Background(), connect.NewRequest(&estatev1.AddAssetRequest{
+	_, err := s.AddAsset(testCtx(), connect.NewRequest(&estatev1.AddAssetRequest{
 		EstateId: "estate_lockhart",
 		Name:     "New Car",
 		Type:     "Vehicle",
@@ -202,7 +208,7 @@ func TestAddAsset_DemoMode_FailsGracefully(t *testing.T) {
 
 func TestListVaultDocuments_DemoMode_Lockhart(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListVaultDocuments(context.Background(), connect.NewRequest(&estatev1.ListVaultDocumentsRequest{
+	resp, err := s.ListVaultDocuments(testCtx(), connect.NewRequest(&estatev1.ListVaultDocumentsRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -225,7 +231,7 @@ func TestListVaultDocuments_DemoMode_Lockhart(t *testing.T) {
 
 func TestListVaultDocuments_DemoMode_Other(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListVaultDocuments(context.Background(), connect.NewRequest(&estatev1.ListVaultDocumentsRequest{
+	resp, err := s.ListVaultDocuments(testCtx(), connect.NewRequest(&estatev1.ListVaultDocumentsRequest{
 		EstateId: "other-estate",
 	}))
 	if err != nil {
@@ -242,7 +248,7 @@ func TestListVaultDocuments_DemoMode_Other(t *testing.T) {
 
 func TestGenerateUploadUrl_DemoMode_FailsGracefully(t *testing.T) {
 	s := newTestServer()
-	_, err := s.GenerateUploadUrl(context.Background(), connect.NewRequest(&estatev1.GenerateUploadUrlRequest{
+	_, err := s.GenerateUploadUrl(testCtx(), connect.NewRequest(&estatev1.GenerateUploadUrlRequest{
 		EstateId:    "estate_lockhart",
 		FileName:    "test.pdf",
 		ContentType: "application/pdf",
@@ -261,7 +267,7 @@ func TestGenerateUploadUrl_DemoMode_FailsGracefully(t *testing.T) {
 
 func TestListMemoirs_DemoMode_Lockhart(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListMemoirs(context.Background(), connect.NewRequest(&estatev1.ListMemoirsRequest{
+	resp, err := s.ListMemoirs(testCtx(), connect.NewRequest(&estatev1.ListMemoirsRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -285,7 +291,7 @@ func TestListMemoirs_DemoMode_Lockhart(t *testing.T) {
 
 func TestListMemoirs_DemoMode_Other(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListMemoirs(context.Background(), connect.NewRequest(&estatev1.ListMemoirsRequest{
+	resp, err := s.ListMemoirs(testCtx(), connect.NewRequest(&estatev1.ListMemoirsRequest{
 		EstateId: "other",
 	}))
 	if err != nil {
@@ -302,7 +308,7 @@ func TestListMemoirs_DemoMode_Other(t *testing.T) {
 
 func TestUploadMemoir_DemoMode_FailsGracefully(t *testing.T) {
 	s := newTestServer()
-	_, err := s.UploadMemoir(context.Background(), connect.NewRequest(&estatev1.UploadMemoirRequest{
+	_, err := s.UploadMemoir(testCtx(), connect.NewRequest(&estatev1.UploadMemoirRequest{
 		EstateId: "estate_lockhart",
 		Title:    "Test Memoir",
 		Type:     "video",
@@ -322,7 +328,7 @@ func TestUploadMemoir_DemoMode_FailsGracefully(t *testing.T) {
 
 func TestGetObituary_DemoMode_Lockhart(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetObituary(context.Background(), connect.NewRequest(&estatev1.GetObituaryRequest{
+	resp, err := s.GetObituary(testCtx(), connect.NewRequest(&estatev1.GetObituaryRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -341,7 +347,7 @@ func TestGetObituary_DemoMode_Lockhart(t *testing.T) {
 
 func TestGetObituary_DemoMode_Other(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetObituary(context.Background(), connect.NewRequest(&estatev1.GetObituaryRequest{
+	resp, err := s.GetObituary(testCtx(), connect.NewRequest(&estatev1.GetObituaryRequest{
 		EstateId: "other",
 	}))
 	if err != nil {
@@ -358,7 +364,7 @@ func TestGetObituary_DemoMode_Other(t *testing.T) {
 
 func TestSaveObituary_DemoMode_FailsGracefully(t *testing.T) {
 	s := newTestServer()
-	_, err := s.SaveObituary(context.Background(), connect.NewRequest(&estatev1.SaveObituaryRequest{
+	_, err := s.SaveObituary(testCtx(), connect.NewRequest(&estatev1.SaveObituaryRequest{
 		EstateId: "estate_lockhart",
 		Content:  "Updated content",
 	}))
@@ -376,7 +382,7 @@ func TestSaveObituary_DemoMode_FailsGracefully(t *testing.T) {
 
 func TestGetAIInsight_LockhartEstate(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetAIInsight(context.Background(), connect.NewRequest(&estatev1.GetAIInsightRequest{
+	resp, err := s.GetAIInsight(testCtx(), connect.NewRequest(&estatev1.GetAIInsightRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -392,7 +398,7 @@ func TestGetAIInsight_LockhartEstate(t *testing.T) {
 
 func TestGetAIInsight_OtherEstate(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetAIInsight(context.Background(), connect.NewRequest(&estatev1.GetAIInsightRequest{
+	resp, err := s.GetAIInsight(testCtx(), connect.NewRequest(&estatev1.GetAIInsightRequest{
 		EstateId: "other",
 	}))
 	if err != nil {
@@ -409,7 +415,7 @@ func TestGetAIInsight_OtherEstate(t *testing.T) {
 
 func TestGetGovernanceSettings_DemoMode(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.GetGovernanceSettings(context.Background(), connect.NewRequest(&estatev1.GetGovernanceSettingsRequest{
+	resp, err := s.GetGovernanceSettings(testCtx(), connect.NewRequest(&estatev1.GetGovernanceSettingsRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {
@@ -436,7 +442,7 @@ func TestGetGovernanceSettings_DemoMode(t *testing.T) {
 
 func TestListNotifications_DemoMode(t *testing.T) {
 	s := newTestServer()
-	resp, err := s.ListNotifications(context.Background(), connect.NewRequest(&estatev1.ListNotificationsRequest{
+	resp, err := s.ListNotifications(testCtx(), connect.NewRequest(&estatev1.ListNotificationsRequest{
 		EstateId: "estate_lockhart",
 	}))
 	if err != nil {

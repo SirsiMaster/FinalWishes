@@ -278,7 +278,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
-## [Unreleased]
+## [0.9.0] — 2026-04-17 (cont.)
+### Pre-Session 9: Core Feature Completion (Sprints 3–6)
 
 ### Added
 - Complete shadcn refactor: 17 pages + 2 layouts using 20 shadcn components (833f065, a5b4f20)
@@ -727,11 +728,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 - Security badge text changed from `text-slate-400` to `text-[#133378]/40`
 
 ---
-
-## [Unreleased]
-### Planned
-- Phase 1, Week 2: Firestore security rules, real data wiring, Cloud SQL/KMS
-- Phase 2: Vault, YouTube Memorials, Google Photos, Lockbox, Capsules, Shepherd AI
 
 ## [0.1.2-alpha] — 2026-03-19
 ### Added (Phase 0.5b — Skill Arsenal)

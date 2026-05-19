@@ -14,11 +14,14 @@ import {
   getProbateStatus,
   getProbateChecklist,
   updateChecklistItem,
+  getDeathCertFacts,
+  confirmDeathCert,
   PHASE_LABELS,
   PHASE_COLORS,
   type ProbateStatus,
   type ChecklistResponse,
   type Deadline,
+  type DeathCertFacts,
 } from '@/lib/probate'
 
 export const Route = createFileRoute('/estates/$estateId/probate')({
@@ -29,18 +32,22 @@ function ProbatePage() {
   const { estateId } = useParams({ from: '/estates/$estateId/probate' })
   const [status, setStatus] = useState<ProbateStatus | null>(null)
   const [checklist, setChecklist] = useState<ChecklistResponse | null>(null)
+  const [deathCert, setDeathCert] = useState<DeathCertFacts | null>(null)
+  const [confirmingCert, setConfirmingCert] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true)
-      const [s, c] = await Promise.all([
+      const [s, c, dc] = await Promise.all([
         getProbateStatus(estateId),
         getProbateChecklist(estateId),
+        getDeathCertFacts(estateId),
       ])
       setStatus(s)
       setChecklist(c)
+      setDeathCert(dc)
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load probate data')
@@ -158,6 +165,70 @@ function ProbatePage() {
                   <span className="font-medium text-[#0F172A]">{progressPct}%</span>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Death Certificate Review ── */}
+      {deathCert && !deathCert.confirmed && (
+        <Card className="border-amber-300 bg-amber-50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold text-[#0F172A]">
+              Review Death Certificate Analysis
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-[#0F172A]/70 mb-4">
+              AI analysis has extracted the following facts from the uploaded death certificate.
+              Please review and confirm before proceeding.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm mb-4">
+              {deathCert.decedentName && (
+                <div><span className="text-[#0F172A]/50">Summary</span><p className="font-medium">{deathCert.decedentName}</p></div>
+              )}
+              {deathCert.dateOfDeath && (
+                <div><span className="text-[#0F172A]/50">Date of Death</span><p className="font-medium">{deathCert.dateOfDeath}</p></div>
+              )}
+              {deathCert.countyOfDeath && (
+                <div><span className="text-[#0F172A]/50">County/Jurisdiction</span><p className="font-medium">{deathCert.countyOfDeath}</p></div>
+              )}
+              {deathCert.certificateNumber && (
+                <div><span className="text-[#0F172A]/50">Certificate #</span><p className="font-medium">{deathCert.certificateNumber}</p></div>
+              )}
+            </div>
+            <p className="text-xs text-amber-700 mb-3">
+              This is analysis assistance only. Verify all facts against the original document before confirming.
+            </p>
+            <Button
+              onClick={async () => {
+                setConfirmingCert(true)
+                try {
+                  await confirmDeathCert(estateId)
+                  setDeathCert({ ...deathCert, confirmed: true })
+                  toast.success('Death certificate confirmed')
+                  fetchData()
+                } catch {
+                  toast.error('Failed to confirm death certificate')
+                } finally {
+                  setConfirmingCert(false)
+                }
+              }}
+              disabled={confirmingCert}
+              className="bg-[#7C2D12] hover:bg-[#7C2D12]/90 text-white"
+            >
+              {confirmingCert ? 'Confirming...' : 'Confirm Death Certificate Facts'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {deathCert?.confirmed && (
+        <Card className="border-green-200 bg-green-50/50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-green-100 text-green-700">Confirmed</Badge>
+              <span className="text-sm text-[#0F172A]/70">Death certificate verified by executor</span>
             </div>
           </CardContent>
         </Card>

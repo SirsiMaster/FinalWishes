@@ -382,6 +382,9 @@ func main() {
 			r.Get("/checklist", probateHandler.HandleGetChecklist)
 			r.Post("/checklist/update", probateHandler.HandleUpdateChecklistItem)
 			r.Post("/evaluate-small-estate", probateHandler.HandleEvaluateSmallEstate)
+			r.Post("/death-cert/submit", probateHandler.HandleSubmitDeathCertAnalysis)
+			r.Post("/death-cert/confirm", probateHandler.HandleConfirmDeathCert)
+			r.Get("/death-cert", probateHandler.HandleGetDeathCertFacts)
 		})
 		log.Info().Str("state", "IL").Msg("Probate Engine API routes registered at /api/v1/probate/*")
 	}

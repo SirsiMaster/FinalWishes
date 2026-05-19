@@ -190,6 +190,67 @@ export async function updateAdvanceDirectiveStatus(
   })
 }
 
+// ── Probate Avoidance Tools ──
+
+export interface ProbateAvoidanceTool {
+  id: string
+  name: string
+  assetType: string
+  description: string
+  formUrl?: string
+  formNumber?: string
+  requirements: string[]
+  limitations: string[]
+  legalBasis: string
+}
+
+export interface AssetAvoidanceStatus {
+  assetId: string
+  toolId: string
+  status: string
+  notes?: string
+  documentId?: string
+}
+
+export async function getAvoidanceTools(estateId: string): Promise<{
+  tools: ProbateAvoidanceTool[]
+  statuses: Record<string, AssetAvoidanceStatus>
+}> {
+  return apiFetch(`/api/v1/probate/avoidance-tools?estate_id=${encodeURIComponent(estateId)}`)
+}
+
+export async function updateAvoidanceStatus(
+  estateId: string,
+  assetId: string,
+  toolId: string,
+  status: string,
+  notes?: string,
+) {
+  return apiFetch('/api/v1/probate/avoidance-tools/update', {
+    method: 'POST',
+    body: JSON.stringify({ estateId, assetId, toolId, status, notes }),
+  })
+}
+
+// Map asset categories (from Firestore Asset.category) to avoidance tool IDs
+export const ASSET_TYPE_TO_TOOL: Record<string, string> = {
+  'real_estate': 'todi',
+  'vehicle': 'vsd773',
+  'financial': 'pod',
+  'digital': 'tod',
+  'insurance': 'beneficiary_insurance',
+  'personal_property': 'vsd773', // for named vehicles in personal property
+  // Name-based fallbacks for display labels
+  'Real Estate': 'todi',
+  'Vehicle': 'vsd773',
+  'Bank Account': 'pod',
+  'Brokerage': 'tod',
+  'Life Insurance': 'beneficiary_insurance',
+  'Retirement': 'beneficiary_retirement',
+  '401k': 'beneficiary_retirement',
+  'IRA': 'beneficiary_retirement',
+}
+
 // ── Executor Activation ──
 
 export interface ExecutorActivation {

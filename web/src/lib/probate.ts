@@ -108,6 +108,42 @@ export async function evaluateSmallEstate(totalPersonalProperty: number, hasReal
   })
 }
 
+// ── Death Certificate ──
+
+export interface DeathCertFacts {
+  decedentName: string
+  dateOfDeath?: string
+  placeOfDeath?: string
+  causeOfDeath?: string
+  certificateNumber?: string
+  countyOfDeath?: string
+  funeralHome?: string
+  confirmed: boolean
+  confirmedBy?: string
+  confirmedAt?: string
+  documentId: string
+  analyzedAt?: string
+}
+
+export async function getDeathCertFacts(estateId: string): Promise<DeathCertFacts | null> {
+  const res = await apiFetch<{ facts: DeathCertFacts | null }>(`/api/v1/probate/death-cert?estate_id=${encodeURIComponent(estateId)}`)
+  return res.facts
+}
+
+export async function submitDeathCertAnalysis(estateId: string, documentId: string) {
+  return apiFetch('/api/v1/probate/death-cert/submit', {
+    method: 'POST',
+    body: JSON.stringify({ estateId, documentId }),
+  })
+}
+
+export async function confirmDeathCert(estateId: string) {
+  return apiFetch('/api/v1/probate/death-cert/confirm', {
+    method: 'POST',
+    body: JSON.stringify({ estateId }),
+  })
+}
+
 // ── Phase Display Helpers ──
 
 export const PHASE_LABELS: Record<string, string> = {

@@ -148,6 +148,7 @@ const ILLUSTRATIONS: Record<SectionId, (props: { color: string }) => ReactNode> 
   'the-vault': VaultIllustration,
   'life-chapters': LegacyIllustration,
   'events': LettersIllustration,
+  'probate': VaultIllustration,
 }
 
 // ─── Empty State Content ────────────────────────────────────────────────────
@@ -198,6 +199,11 @@ const EMPTY_CONTENT: Record<SectionId, EmptyStateContent> = {
     heading: 'No events yet',
     message: 'Create funeral services, memorials, celebrations of life, or receptions to share with family and friends.',
     ctaLabel: 'Create your first event',
+  },
+  'probate': {
+    heading: 'Estate settlement begins here',
+    message: 'When the time comes, this section guides you through Illinois probate — deadlines, court forms, and checklist items.',
+    ctaLabel: 'View probate checklist',
   },
 }
 

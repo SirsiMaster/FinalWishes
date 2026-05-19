@@ -16,6 +16,7 @@ import {
   PenLine,
   Users,
   Shield,
+  Scale,
   ChevronRight,
   Bell,
   Star,
@@ -24,9 +25,9 @@ import {
 
 /* ─── Role-Based Permission Matrix ─── */
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-  principal: ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events'],
-  admin:     ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events'],
-  executor:  ['dashboard', 'life-chapters', 'assets', 'heirlooms', 'beneficiaries', 'obituary', 'vault', 'lockbox', 'directives', 'notifications', 'events'],
+  principal: ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events', 'probate'],
+  admin:     ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events', 'probate'],
+  executor:  ['dashboard', 'life-chapters', 'assets', 'heirlooms', 'beneficiaries', 'obituary', 'vault', 'lockbox', 'directives', 'notifications', 'events', 'probate'],
   heir:      ['dashboard', 'life-chapters', 'assets', 'memoirs', 'obituary', 'directives', 'notifications'],
   legal:     ['dashboard', 'assets', 'vault', 'directives', 'notifications'],
   cpa:       ['dashboard', 'assets', 'vault', 'notifications'],
@@ -131,6 +132,13 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Assets', id: 'assets', route: 'assets' },
       { label: 'Lockbox', id: 'lockbox', route: 'lockbox', badge: 'KMS' },
     ],
+  },
+  {
+    label: 'Estate Settlement',
+    icon: <Scale className="w-full h-full" />,
+    id: 'probate',
+    route: 'probate',
+    description: 'Illinois probate & deadlines',
   },
 ];
 

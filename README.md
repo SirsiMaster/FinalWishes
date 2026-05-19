@@ -11,12 +11,13 @@ FinalWishes transforms the chaotic 18-month estate settlement process into a str
 🔗 **[View Live Site](https://finalwishes-prod.web.app)**
 
 ## Technology Stack
-- **Backend:** Go on Cloud Run
-- **Frontend:** React 18 + Vite + TailwindCSS
-- **Mobile:** React Native + Expo
-- **Database:** Firestore + Cloud SQL
-- **Auth:** Firebase Authentication + MFA
-- **Infrastructure:** Google Cloud Platform
+- **Backend:** Go 1.26 + Chi + ConnectRPC on Cloud Run
+- **Frontend:** React 19 + Vite 8 + TailwindCSS v4 + TanStack Router
+- **Database:** Firestore + Cloud SQL PostgreSQL 15 (AES-256-GCM encrypted PII vault)
+- **Auth:** Firebase Authentication + MFA (TOTP)
+- **AI:** sirsi-ai SDK (Claude Opus → Sonnet → Gemini Flash Lite)
+- **Payments:** Stripe ($29 Concierge / $99 White Glove)
+- **Infrastructure:** Google Cloud Platform (Cloud Run, Cloud KMS, Cloud Storage)
 
 ## Design
 - **Palette**: Deep Royal Blue + Metallic Gold

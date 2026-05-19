@@ -144,6 +144,30 @@ export async function confirmDeathCert(estateId: string) {
   })
 }
 
+// ── Executor Activation ──
+
+export interface ExecutorActivation {
+  estateId: string
+  executorUid: string
+  executorName: string
+  executorEmail: string
+  status: string // "pending" | "confirmed" | "declined"
+  confirmedAt?: string
+  deathReportedAt?: string
+}
+
+export async function getExecutorStatus(estateId: string): Promise<ExecutorActivation | null> {
+  const res = await apiFetch<{ activation: ExecutorActivation | null }>(`/api/v1/probate/executor/status?estate_id=${encodeURIComponent(estateId)}`)
+  return res.activation
+}
+
+export async function confirmExecutorRole(estateId: string) {
+  return apiFetch<{ status: string; currentPhase: string; nextSteps: string[] }>('/api/v1/probate/executor/confirm', {
+    method: 'POST',
+    body: JSON.stringify({ estateId }),
+  })
+}
+
 // ── Form Templates ──
 
 export interface FormTemplate {

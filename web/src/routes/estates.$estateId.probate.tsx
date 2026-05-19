@@ -17,6 +17,8 @@ import {
   getDeathCertFacts,
   confirmDeathCert,
   getFormTemplates,
+  getExecutorStatus,
+  confirmExecutorRole,
   PHASE_LABELS,
   PHASE_COLORS,
   type ProbateStatus,
@@ -24,6 +26,7 @@ import {
   type Deadline,
   type DeathCertFacts,
   type FormTemplate,
+  type ExecutorActivation,
 } from '@/lib/probate'
 
 export const Route = createFileRoute('/estates/$estateId/probate')({
@@ -36,23 +39,27 @@ function ProbatePage() {
   const [checklist, setChecklist] = useState<ChecklistResponse | null>(null)
   const [deathCert, setDeathCert] = useState<DeathCertFacts | null>(null)
   const [forms, setForms] = useState<FormTemplate[]>([])
+  const [executorActivation, setExecutorActivation] = useState<ExecutorActivation | null>(null)
   const [confirmingCert, setConfirmingCert] = useState(false)
+  const [confirmingExecutor, setConfirmingExecutor] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true)
-      const [s, c, dc, f] = await Promise.all([
+      const [s, c, dc, f, ea] = await Promise.all([
         getProbateStatus(estateId),
         getProbateChecklist(estateId),
         getDeathCertFacts(estateId),
         getFormTemplates(estateId).catch(() => ({ templates: [], disclaimer: '' })),
+        getExecutorStatus(estateId),
       ])
       setStatus(s)
       setChecklist(c)
       setDeathCert(dc)
       setForms(f.templates)
+      setExecutorActivation(ea)
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load probate data')
@@ -234,6 +241,56 @@ function ProbatePage() {
             <div className="flex items-center gap-2">
               <Badge className="bg-green-100 text-green-700">Confirmed</Badge>
               <span className="text-sm text-[#0F172A]/70">Death certificate verified by executor</span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Executor Confirmation ── */}
+      {status?.currentPhase === 'death_reported' && !executorActivation?.status && (
+        <Card className="border-blue-300 bg-blue-50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold text-[#0F172A]">
+              Confirm Your Role as Executor
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-[#0F172A]/70 mb-4">
+              A death has been reported for this estate. As the designated executor, you must confirm your role
+              before probate proceedings can begin. By confirming, you accept responsibility for administering
+              the estate according to Illinois law.
+            </p>
+            <Button
+              onClick={async () => {
+                setConfirmingExecutor(true)
+                try {
+                  await confirmExecutorRole(estateId)
+                  toast.success('Executor role confirmed — you may now proceed with probate')
+                  fetchData()
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : 'Failed to confirm executor role')
+                } finally {
+                  setConfirmingExecutor(false)
+                }
+              }}
+              disabled={confirmingExecutor}
+              className="bg-[#133378] hover:bg-[#133378]/90 text-white"
+            >
+              {confirmingExecutor ? 'Confirming...' : 'I Confirm My Role as Executor'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {executorActivation?.status === 'confirmed' && (
+        <Card className="border-green-200 bg-green-50/50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-green-100 text-green-700">Executor Confirmed</Badge>
+              <span className="text-sm text-[#0F172A]/70">
+                {executorActivation.executorName || 'Executor'} confirmed their role
+                {executorActivation.confirmedAt && ` on ${new Date(executorActivation.confirmedAt).toLocaleDateString()}`}
+              </span>
             </div>
           </CardContent>
         </Card>

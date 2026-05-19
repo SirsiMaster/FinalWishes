@@ -389,6 +389,8 @@ func main() {
 			r.Get("/forms/data", probateHandler.HandleGetFormData)
 			r.Get("/executor/status", probateHandler.HandleGetExecutorStatus)
 			r.Post("/executor/confirm", probateHandler.HandleConfirmExecutorRole)
+			r.Get("/advance-directives", probateHandler.HandleGetAdvanceDirectives)
+			r.Post("/advance-directives/update", probateHandler.HandleUpdateAdvanceDirectiveStatus)
 		})
 		log.Info().Str("state", "IL").Msg("Probate Engine API routes registered at /api/v1/probate/*")
 	}

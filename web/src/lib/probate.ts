@@ -144,6 +144,52 @@ export async function confirmDeathCert(estateId: string) {
   })
 }
 
+// ── Advance Directives ──
+
+export interface AdvanceDirectiveType {
+  id: string
+  name: string
+  statute: string
+  description: string
+  formUrl: string
+  witnessRequired: number
+  notaryRequired: boolean
+  lawyerRequired: boolean
+  validityYears: number
+  overriddenBy?: string
+  revocationRules: string
+  keyPoints: string[]
+}
+
+export interface AdvanceDirectiveStatus {
+  directiveId: string
+  status: string // "not_started" | "in_progress" | "completed" | "expired"
+  completedAt?: string
+  expiresAt?: string
+  documentId?: string
+  notes?: string
+}
+
+export async function getAdvanceDirectives(estateId: string): Promise<{
+  directives: AdvanceDirectiveType[]
+  statuses: Record<string, AdvanceDirectiveStatus>
+}> {
+  return apiFetch(`/api/v1/probate/advance-directives?estate_id=${encodeURIComponent(estateId)}`)
+}
+
+export async function updateAdvanceDirectiveStatus(
+  estateId: string,
+  directiveId: string,
+  status: string,
+  documentId?: string,
+  notes?: string,
+) {
+  return apiFetch('/api/v1/probate/advance-directives/update', {
+    method: 'POST',
+    body: JSON.stringify({ estateId, directiveId, status, documentId, notes }),
+  })
+}
+
 // ── Executor Activation ──
 
 export interface ExecutorActivation {

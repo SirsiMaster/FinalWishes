@@ -13,15 +13,25 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
+// PhaseTransitionHook is called after a successful phase transition.
+// Used to trigger side effects like applying vault document holds.
+type PhaseTransitionHook func(ctx context.Context, estateID string, from, to EstatePhase) error
+
 // Handler manages probate API endpoints.
 type Handler struct {
-	fs     *firestore.Client
-	engine StateEngine
+	fs                *firestore.Client
+	engine            StateEngine
+	onPhaseTransition PhaseTransitionHook
 }
 
 // NewHandler creates a probate handler with the specified state engine.
 func NewHandler(fs *firestore.Client, engine StateEngine) *Handler {
 	return &Handler{fs: fs, engine: engine}
+}
+
+// SetPhaseTransitionHook registers a callback invoked after phase transitions.
+func (h *Handler) SetPhaseTransitionHook(hook PhaseTransitionHook) {
+	h.onPhaseTransition = hook
 }
 
 // --- Request / Response types ---
@@ -170,6 +180,13 @@ func (h *Handler) HandleTransition(w http.ResponseWriter, r *http.Request) {
 		Str("actor", userID).
 		Str("role", role).
 		Msg("Probate phase transition")
+
+	// Fire phase transition hook (e.g., apply vault document holds on death_reported)
+	if h.onPhaseTransition != nil {
+		if err := h.onPhaseTransition(ctx, req.EstateID, currentPhase, targetPhase); err != nil {
+			log.Warn().Err(err).Str("estate_id", req.EstateID).Msg("Phase transition hook failed (non-fatal)")
+		}
+	}
 
 	writeJSON(w, http.StatusOK, map[string]interface{}{
 		"previousPhase": string(currentPhase),

@@ -383,6 +383,29 @@ func main() {
 	// Probate Engine routes (Illinois state machine + checklist)
 	if fs != nil {
 		probateHandler := probate.NewHandler(fs, &probate.IllinoisEngine{})
+		// Wire vault document holds into phase transitions
+		if sc != nil {
+			estateServer := estate.NewServer(fs, sc)
+			probateHandler.SetPhaseTransitionHook(func(ctx context.Context, estateID string, from, to probate.EstatePhase) error {
+				switch to {
+				case probate.PhaseDeathReported:
+					// Lock all vault documents when death is reported
+					count, err := estateServer.ApplyEstateHolds(ctx, estateID)
+					if err != nil {
+						return err
+					}
+					log.Info().Str("estate_id", estateID).Int("held", count).Msg("Vault holds applied on death_reported")
+				case probate.PhaseClosed:
+					// Release holds when estate is formally closed
+					count, err := estateServer.ReleaseEstateHolds(ctx, estateID)
+					if err != nil {
+						return err
+					}
+					log.Info().Str("estate_id", estateID).Int("released", count).Msg("Vault holds released on estate close")
+				}
+				return nil
+			})
+		}
 		r.Route("/api/v1/probate", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Post("/transition", probateHandler.HandleTransition)

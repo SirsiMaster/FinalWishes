@@ -4,6 +4,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.10.1] — 2026-05-19
+### C3 — Documentation, Testing, Timeline, Quorum, GCP Evaluation
+
+### Added
+- **10 developer READMEs** — guards, landing, layout, search, skeletons, styles, gen, functions, shared, api (Rule 30 compliance — 25 total READMEs)
+- **3 user guides** — soul-log, estate-settlement, events-broadcasting (25 total guides in `docs/user-guides/`)
+- **24 Cloud Function unit tests** — Jest tests for `autoMatchInvitation`, `sendMail`, `sendSMS`, `guardianInactivityCheck` with mocked Firestore/Gmail
+- **SettlementGantt component** — Recharts horizontal bar chart showing probate deadlines as a visual timeline with "Today" marker and urgency color coding
+- **Multi-executor quorum (2-of-3)** — `quorum.go` with propose/vote/list/config endpoints, `QuorumPanel.tsx` approval UI, email notifications to co-executors
+- **4 new probate API routes** — `/api/v1/probate/quorum/{config,actions,propose,vote}`
+- **Vault retention & legal holds** — `retention.go` + `retention_handler.go`: apply/release event-based holds on vault documents during probate, 2 new routes at `/api/v1/vault/holds/{apply,release}`
+- **GCP Native Services Evaluation** — `docs/GCP-NATIVE-SERVICES-EVALUATION.md`: keep OpenSign (no GCP e-sign API), augment Cloud Storage with retention policies + legal holds, defer appointment booking
+
+### Changed
+- Probate page now includes Settlement Timeline (Gantt) and Quorum Panel sections
+- `lib/probate.ts` extended with quorum API client (4 new functions + 4 types)
+- Probate API endpoint count: 18 → 22
+
+---
+
 ## [0.10.0] — 2026-05-18
 ### Illinois Probate Engine — Full Estate Settlement Support
 

@@ -292,6 +292,63 @@ export async function getFormTemplates(estateId: string): Promise<{ templates: F
   return apiFetch(`/api/v1/probate/forms?estate_id=${encodeURIComponent(estateId)}`)
 }
 
+// ── Multi-Executor Quorum ──
+
+export interface QuorumConfig {
+  enabled: boolean
+  requiredVotes: number
+  totalExecutors: number
+  executorUids: string[]
+}
+
+export interface QuorumVote {
+  executorUid: string
+  executorName: string
+  decision: 'approve' | 'reject'
+  reason?: string
+  votedAt: string
+}
+
+export interface QuorumAction {
+  id: string
+  estateId: string
+  actionType: string
+  description: string
+  proposedBy: string
+  proposedByName: string
+  proposedAt: string
+  status: 'pending' | 'approved' | 'rejected'
+  votes: QuorumVote[]
+  requiredVotes: number
+  resolvedAt?: string
+}
+
+export async function getQuorumConfig(estateId: string): Promise<QuorumConfig | null> {
+  const res = await apiFetch<{ config: QuorumConfig | null }>(`/api/v1/probate/quorum/config?estate_id=${encodeURIComponent(estateId)}`)
+  return res.config
+}
+
+export async function listQuorumActions(estateId: string): Promise<QuorumAction[]> {
+  const res = await apiFetch<{ actions: QuorumAction[] }>(`/api/v1/probate/quorum/actions?estate_id=${encodeURIComponent(estateId)}`)
+  return res.actions
+}
+
+export async function proposeQuorumAction(estateId: string, actionType: string, description: string): Promise<QuorumAction> {
+  const res = await apiFetch<{ action: QuorumAction }>('/api/v1/probate/quorum/propose', {
+    method: 'POST',
+    body: JSON.stringify({ estateId, actionType, description }),
+  })
+  return res.action
+}
+
+export async function voteOnQuorumAction(estateId: string, actionId: string, decision: 'approve' | 'reject', reason?: string): Promise<QuorumAction> {
+  const res = await apiFetch<{ action: QuorumAction }>('/api/v1/probate/quorum/vote', {
+    method: 'POST',
+    body: JSON.stringify({ estateId, actionId, decision, reason }),
+  })
+  return res.action
+}
+
 // ── Phase Display Helpers ──
 
 export const PHASE_LABELS: Record<string, string> = {

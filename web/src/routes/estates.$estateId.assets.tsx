@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useEstateAssets, type Asset } from '../lib/firestore'
 import { addAsset as addAssetAction, updateAsset, archiveAsset } from '../lib/estate-actions'
 import { toast } from 'sonner'
@@ -11,6 +11,13 @@ import { Input } from '../components/ui/input'
 import { Textarea } from '../components/ui/textarea'
 import { Label } from '../components/ui/label'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import {
+  getAvoidanceTools,
+  updateAvoidanceStatus,
+  ASSET_TYPE_TO_TOOL,
+  type ProbateAvoidanceTool,
+  type AssetAvoidanceStatus,
+} from '@/lib/probate'
 import {
   Dialog,
   DialogContent,
@@ -166,6 +173,9 @@ function AssetsPage() {
           </TableBody>
         </Table>
       </div>
+
+      {/* -- Probate Avoidance Guidance -- */}
+      {assets.length > 0 && <ProbateAvoidanceSection estateId={estateId} assets={assets} />}
 
       {/* -- Add Asset Dialog -- */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -356,6 +366,137 @@ function AssetsPage() {
           )}
         </DialogContent>
       </Dialog>
+    </div>
+  )
+}
+
+// ─── Probate Avoidance Section ──────────────────────────────────────────────
+
+function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; assets: Asset[] }) {
+  const [tools, setTools] = useState<ProbateAvoidanceTool[]>([])
+  const [statuses, setStatuses] = useState<Record<string, AssetAvoidanceStatus>>({})
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getAvoidanceTools(estateId)
+      .then((res) => {
+        setTools(res.tools)
+        setStatuses(res.statuses)
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [estateId])
+
+  if (loading || tools.length === 0) return null
+
+  // Match each asset to its applicable avoidance tool
+  const assetRecommendations = assets.map((asset) => {
+    const toolId = ASSET_TYPE_TO_TOOL[asset.category] || ASSET_TYPE_TO_TOOL[asset.name] || null
+    const tool = toolId ? tools.find((t) => t.id === toolId) : null
+    const status = statuses[asset.id]
+    return { asset, tool, toolId, status }
+  }).filter((r) => r.tool)
+
+  if (assetRecommendations.length === 0) return null
+
+  const completedCount = assetRecommendations.filter((r) => r.status?.status === 'completed').length
+
+  return (
+    <div className="mt-8 space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-[#0F172A]">Probate Avoidance</h2>
+          <p className="text-sm text-[#0F172A]/60">
+            {completedCount} of {assetRecommendations.length} assets have beneficiary designations &middot; Assets with designations skip probate
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        {assetRecommendations.map(({ asset, tool, toolId, status }) => {
+          if (!tool || !toolId) return null
+          const isComplete = status?.status === 'completed'
+
+          return (
+            <div
+              key={asset.id}
+              className={`flex items-center justify-between p-4 rounded-xl border transition-colors ${
+                isComplete ? 'bg-green-50/50 border-green-200/50' : 'bg-white border-slate-100 hover:border-[#7C2D12]/20'
+              }`}
+            >
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <span className={`font-medium text-sm ${isComplete ? 'text-green-700' : 'text-[#0F172A]'}`}>
+                    {asset.name}
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#0F172A]/5 text-[#0F172A]/50">
+                    {asset.category}
+                  </span>
+                  {isComplete && (
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 text-green-700 font-medium">
+                      Designated
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-[#0F172A]/50 mt-0.5">
+                  Recommended: <span className="font-medium">{tool.name}</span>
+                  {tool.formNumber && ` (${tool.formNumber})`}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {tool.formUrl && (
+                  <a
+                    href={tool.formUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-[#133378] hover:underline"
+                  >
+                    Form
+                  </a>
+                )}
+                {!isComplete ? (
+                  <Button
+                    size="sm"
+                    onClick={async () => {
+                      setStatuses({ ...statuses, [asset.id]: { assetId: asset.id, toolId, status: 'completed' } })
+                      try {
+                        await updateAvoidanceStatus(estateId, asset.id, toolId, 'completed')
+                        toast.success(`${asset.name} — beneficiary designation recorded`)
+                      } catch {
+                        setStatuses({ ...statuses, [asset.id]: status || { assetId: asset.id, toolId, status: 'not_started' } })
+                        toast.error('Failed to update')
+                      }
+                    }}
+                    className="bg-[#7C2D12] hover:bg-[#7C2D12]/90 text-white text-xs h-7"
+                  >
+                    Mark Designated
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      setStatuses({ ...statuses, [asset.id]: { assetId: asset.id, toolId, status: 'not_started' } })
+                      try {
+                        await updateAvoidanceStatus(estateId, asset.id, toolId, 'not_started')
+                      } catch {
+                        setStatuses({ ...statuses, [asset.id]: status || { assetId: asset.id, toolId, status: 'completed' } })
+                      }
+                    }}
+                    className="text-xs h-7"
+                  >
+                    Undo
+                  </Button>
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <p className="text-[10px] text-[#0F172A]/40 text-center">
+        Assets with beneficiary designations transfer directly to named beneficiaries without probate.
+      </p>
     </div>
   )
 }

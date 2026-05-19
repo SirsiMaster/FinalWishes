@@ -17,6 +17,7 @@ import {
   Shield,
   BookOpen,
   Calendar,
+  Scale,
 } from 'lucide-react'
 
 // ─── Section Definitions ────────────────────────────────────────────────────
@@ -30,6 +31,7 @@ export type SectionId =
   | 'the-vault'
   | 'life-chapters'
   | 'events'
+  | 'probate'
 
 interface SectionTheme {
   label: string
@@ -131,6 +133,17 @@ const SECTION_THEMES: Record<SectionId, SectionTheme> = {
     gradientTo: '#E0E7FF',
     icon: <Calendar className="w-5 h-5" />,
     iconBg: 'rgba(19, 51, 120, 0.10)',
+  },
+  'probate': {
+    label: 'Probate',
+    tagline: 'Illinois probate guidance and deadlines.',
+    breadcrumb: 'Estate Settlement',
+    accentColor: '#7C2D12',
+    accentLight: 'rgba(124, 45, 18, 0.06)',
+    gradientFrom: '#FFF7ED',
+    gradientTo: '#FFEDD5',
+    icon: <Scale className="w-5 h-5" />,
+    iconBg: 'rgba(124, 45, 18, 0.10)',
   },
 }
 

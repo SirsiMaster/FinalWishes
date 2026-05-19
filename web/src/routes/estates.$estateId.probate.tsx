@@ -182,6 +182,19 @@ function ProbatePage() {
         </Card>
       )}
 
+      {/* ── Next Action (non-dead-end dashboard) ── */}
+      {status && (
+        <NextActionCard
+          phase={status.currentPhase}
+          deathCertConfirmed={deathCert?.confirmed || false}
+          executorConfirmed={executorActivation?.status === 'confirmed'}
+          completedCount={completedCount}
+          totalItems={totalItems}
+          hasDeadlines={(status.deadlines?.length || 0) > 0}
+          overdueCount={status.deadlines?.filter(d => d.overdue).length || 0}
+        />
+      )}
+
       {/* ── Death Certificate Review ── */}
       {deathCert && !deathCert.confirmed && (
         <Card className="border-amber-300 bg-amber-50">
@@ -441,6 +454,136 @@ function ProbatePage() {
       </p>
     </div>
   )
+}
+
+// ── Next Action Card (non-dead-end per Codex B7) ──
+
+function NextActionCard({ phase, deathCertConfirmed, executorConfirmed, completedCount, totalItems, hasDeadlines, overdueCount }: {
+  phase: string
+  deathCertConfirmed: boolean
+  executorConfirmed: boolean
+  completedCount: number
+  totalItems: number
+  hasDeadlines: boolean
+  overdueCount: number
+}) {
+  const action = getNextAction(phase, deathCertConfirmed, executorConfirmed, completedCount, totalItems, hasDeadlines, overdueCount)
+
+  return (
+    <Card className="border-[#133378]/20 bg-gradient-to-r from-[#EEF2FF] to-[#E0E7FF]">
+      <CardContent className="pt-6">
+        <div className="flex items-start gap-3">
+          <div className="w-8 h-8 rounded-full bg-[#133378]/10 flex items-center justify-center shrink-0">
+            <span className="text-lg">{action.icon}</span>
+          </div>
+          <div>
+            <h3 className="font-semibold text-[#133378] text-sm">{action.title}</h3>
+            <p className="text-sm text-[#0F172A]/70 mt-1">{action.description}</p>
+            {action.blockedReason && (
+              <p className="text-xs text-amber-700 mt-2 p-2 bg-amber-50 rounded">{action.blockedReason}</p>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function getNextAction(phase: string, deathCertConfirmed: boolean, executorConfirmed: boolean, completedCount: number, totalItems: number, hasDeadlines: boolean, overdueCount: number) {
+  if (phase === 'active') {
+    return {
+      icon: '🛡️',
+      title: 'Estate is Active',
+      description: 'No probate action needed. This section will guide you through the process when the time comes. For now, focus on completing your estate plan — advance directives, beneficiary designations, and asset inventory.',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'death_reported' && !deathCertConfirmed) {
+    return {
+      icon: '📋',
+      title: 'Upload and Confirm Death Certificate',
+      description: 'A death has been reported. Upload the certified death certificate to the document vault, then submit it for AI analysis. Review the extracted facts and confirm them to proceed.',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'death_reported' && deathCertConfirmed && !executorConfirmed) {
+    return {
+      icon: '✋',
+      title: 'Confirm Your Executor Role',
+      description: 'The death certificate has been verified. The designated executor must now confirm their role to begin probate proceedings. Scroll down to the executor confirmation section.',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'executor_confirmed') {
+    return {
+      icon: '⚖️',
+      title: 'File Petition for Probate',
+      description: 'You are confirmed as executor. The next step is to file the Petition for Probate (CCP0315) with the Cook County Circuit Court. Use the form preparation section below to pre-fill the petition with estate data. Once Letters of Office are received, transition the estate to "In Probate."',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'in_probate') {
+    if (overdueCount > 0) {
+      return {
+        icon: '🔴',
+        title: `${overdueCount} Overdue Deadline${overdueCount > 1 ? 's' : ''}`,
+        description: 'You have overdue items that need immediate attention. Check the deadlines section below and address overdue filings as soon as possible.',
+        blockedReason: null,
+      }
+    }
+    if (completedCount < totalItems) {
+      return {
+        icon: '📝',
+        title: `Complete Checklist (${completedCount}/${totalItems})`,
+        description: 'Work through the probate checklist items below. Mark each step as complete as you file documents, pay debts, and distribute assets. All items must be complete before closing the estate.',
+        blockedReason: null,
+      }
+    }
+    return {
+      icon: '✅',
+      title: 'Ready to Close',
+      description: 'All checklist items are complete. Prepare the final accounting, obtain Receipt and Release from all beneficiaries, and file to close the estate with the court.',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'probate_complete') {
+    return {
+      icon: '📊',
+      title: 'File Final Accounting and Close',
+      description: 'Probate proceedings are complete. File the final accounting with the court, distribute remaining assets to beneficiaries, and request discharge. Once the court approves, the estate can be formally closed.',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'closed') {
+    return {
+      icon: '🏛️',
+      title: 'Estate Closed',
+      description: 'This estate has been formally closed. All distributions are complete and the court has discharged the executor. This record will be preserved for your family\'s reference.',
+      blockedReason: null,
+    }
+  }
+
+  if (phase === 'small_estate') {
+    return {
+      icon: '📄',
+      title: 'Small Estate Affidavit Process',
+      description: 'This estate qualifies for the small estate affidavit ($150K threshold, vehicles excluded). Wait at least 30 days after death, then present the affidavit to institutions holding estate property. No formal probate is required.',
+      blockedReason: null,
+    }
+  }
+
+  return {
+    icon: 'ℹ️',
+    title: 'Estate Settlement',
+    description: 'View the checklist and deadlines below to track progress.',
+    blockedReason: null,
+  }
 }
 
 // ── Deadline Row Component ──

@@ -1,88 +1,116 @@
 # FinalWishes — Continuation Prompt
-**Version:** 20.0 — **Date:** April 21, 2026 — **Session:** Deep Audit + Landing Page Overhaul + Ship Readiness
-**Terminal Color: 🟢 GREEN**
+**Version:** 21.0 — **Date:** May 19, 2026 — **Session:** C3 Sprint (Documentation, Tests, Gantt, Quorum, GCP Eval)
 
 ---
 
 ## Current State
 
-FinalWishes is **demoable and deployed** at `https://finalwishes-prod.web.app`. Demo mode works end-to-end at `/login?demo=true` (any username/password). 14/14 page load checks pass against production. Go API is on Cloud Run rev 33. 168 unit tests pass, 0 TS errors, 0 Go errors.
+FinalWishes is **demoable and deployed** at `https://finalwishes-prod.web.app`. Demo mode works end-to-end at `/login?demo=true`. Go API on Cloud Run rev 33. 168 vitest + 19 Go probate + 24 Cloud Function tests pass. 0 TS errors.
 
 ---
 
-## What Was Done (April 20-21 Session)
+## What Was Done (May 19 Session — C3 Sprint)
 
-### Deep Audit — 35 Issues Found, All Resolved
-- **7 CRITICAL** (2 real, 5 inflated): Signing webhook + status polling, API tier enforcement middleware, E2E test selectors
-- **13 HIGH** (2 real, 11 inflated): Debts register, settlement broadcast notifications
-- **15 MEDIUM** (4 real, 11 inflated): Insurance/charitable categories, Guardian daily cron, pet guardianship + organ donation already in directive templates
+### 1. Developer READMEs (10 new, 25 total)
+Created per Rule 30 for: guards (AuthGuard, IdentityGate, OwnerWelcome, HeirWelcome), landing (ProductShowcase, ScrollVideoCanvas), layout (AdminHeader, Sidebar, NotificationBell), search (SearchResults), skeletons (5 lazy-route loading states), styles (Royal Neo-Deco design tokens), gen (protobuf types), functions (4 Cloud Functions), shared (TypeScript types), api (top-level Go API).
 
-### Landing Page — Complete Rebuild
-- Conversion-first: scenarios → problem → capabilities → three steps → product showcase → shepherd → security → testimonials → pricing → FAQ → CTA
-- Dark/light alternating sections (`#1A3478` royal blue / `#FAF8F5` cream via `.section-light`)
-- Human faces in every section matching emotional tone
-- Auto-rotating ProductShowcase carousel (8 tabs, 15s rotation, crossfade)
-- ScrollVideoCanvas framework ready for brand video
-- Animation system: ScrollReveal, AnimatedCounter, HoverCard, StaggerList
+### 2. User Guides (3 new, 25 total)
+- `soul-log.md` — video/audio/text recording, visibility, sealed delivery, Shepherd prompts
+- `estate-settlement.md` — IL probate phases, death cert review, executor activation, checklists, court forms
+- `events-broadcasting.md` — funeral/memorial/repast event creation, RSVP tracking, sharing
 
-### Bug Fixes
-- AuthProvider missing from `__root.tsx` (app was crashing)
-- Demo mode: `loginDemo()` + localStorage persistence + IdentityGate bypass + OwnerWelcome auto-dismiss
-- Go API: demo-token auth bypass in middleware for all endpoints
-- Guardian inactivity: operator precedence bug (was spamming all estates)
-- DocIntell: PDFs now sent as base64 to AI (was only sending filename)
-- Vault: added General to CATEGORY_MAP (docs were disappearing)
-- Login: removed navigatePostLogin race condition
-- AI routing: 404/permission/not_found classified as retryable (enables Gemini fallback)
+### 3. Cloud Function Tests (24 tests, Jest)
+`functions/index.test.js` — mocked Firestore, Gmail API, Secret Manager. Covers:
+- `autoMatchInvitation`: skip empty, skip no email, match + batch commit, email normalization
+- `sendMail`: skip processed, error on missing fields, send + mark SUCCESS, multiple recipients, template resolution, error handling
+- `sendSMS`: skip processed, validate E.164, validate body length, queue with PENDING_PROVIDER
+- `guardianInactivityCheck`: calls Go API, handles error/network failure gracefully
 
-### Infrastructure
-- Firebase CLI: permanent service account auth (no more re-auth)
-- Gemini API: re-enabled with restricted key (server-only, `generativelanguage.googleapis.com` only)
-- AI models: Gemma 4 (`gemma-4-27b-it`) + Gemini 3.1 Flash Lite (`gemini-3.1-flash-lite-preview`)
-- Firestore seeded: Lockhart Estate — 6 assets, 4 docs, 3 heirs, 3 soul-logs, 2 directives, 2 capsules
-- Dependabot: 10 vulnerabilities resolved, 0 remaining
-- Legal: real Privacy Policy + Terms of Service
+### 4. Settlement Gantt Timeline (recharts)
+`web/src/components/estate/SettlementGantt.tsx` — horizontal stacked bar chart using invisible start offset + visible duration bar. Color-coded: red (overdue), amber (≤14d), blue (≤60d), green (>60d). ReferenceLine at "Today." Integrated into probate page between deadlines and checklist.
+
+### 5. Multi-Executor Quorum (2-of-3)
+**Go API** (`api/internal/probate/quorum.go`):
+- `QuorumConfig`: enabled, requiredVotes, totalExecutors, executorUIDs
+- `QuorumAction`: propose → vote → resolve (early rejection when approval impossible)
+- 4 handlers: GetConfig, ListActions, ProposeAction, VoteAction
+- Email notification to co-executors on new proposals
+
+**Frontend** (`web/src/components/estate/QuorumPanel.tsx`):
+- Lists pending/resolved actions with vote indicators
+- Approve/reject buttons with optional rejection reason
+- Propose dialog for new actions (phase transition, asset distribution, document signing)
+- Integrated into probate page
+
+**TypeScript** (`web/src/lib/probate.ts`): 4 API client functions + QuorumConfig, QuorumAction, QuorumVote types
+
+### 6. Cloud Storage Retention & Legal Holds
+**Go API** (`api/internal/service/estate/retention.go` + `retention_handler.go`):
+- `ApplyEstateHolds(estateID)` — places event-based holds on all vault docs (prevents deletion during probate)
+- `ReleaseEstateHolds(estateID)` — releases holds when estate is closing
+- `SetDocumentHold(estateID, objectPath, hold)` — per-document hold control
+- `GetDocumentRetention(estateID, objectPath)` — retention metadata
+- 2 HTTP routes: `POST /api/v1/vault/holds/{apply,release}`
+
+### 7. GCP Native Services Evaluation
+`docs/GCP-NATIVE-SERVICES-EVALUATION.md`:
+- **E-Signatures**: Keep OpenSign (GCP has no e-sign API)
+- **Form Builders**: Keep current React + probate engine
+- **Vault Storage**: Augment with retention policies + legal holds (free, done)
+- **Appointment Booking**: Defer, embed Calendar booking pages later
 
 ---
 
 ## Architecture Decisions
 
-- **Demo mode**: Synthetic user in localStorage, Go API accepts `demo-token`, IdentityGate bypasses for `user_`/`demo_` UIDs
-- **AI routing**: sirsi-ai SDK: Claude Opus → Claude Sonnet → Gemini 3.1 Flash Lite. All 404/permission errors retryable.
-- **Gemini security**: API key restricted to `generativelanguage.googleapis.com` only, never in client code. See `docs/SECURITY_ADVISORY_GEMINI_API_KEYS.md`
-- **No navy**: `#1A3478` (saturated royal blue), never `#0A1628`. Stored in memory as feedback rule.
-- **Landing page rendering**: Body is white, dark sections get `bg-[#1A3478]`, light sections use `.section-light` with `!important`. `color-scheme: only light` prevents Chrome Auto Dark Mode.
+- **Quorum model**: Propose → Vote → Resolve (not consensus). Early rejection when approval is mathematically impossible (2 rejections in 2-of-3 = auto-reject). Decoupled from executor activation.
+- **Gantt chart**: Recharts stacked bar hack (invisible offset bar + visible duration bar). No dedicated Gantt library needed.
+- **Retention**: Event-based holds (not time-based retention). Applied per-estate on all vault objects. Released on estate close.
+- **Cloud Function tests**: Jest (not vitest) since functions are Node.js CommonJS. Tests run via `cd functions && npm test`.
 
 ---
 
-## Remaining Items (Owner Action Only)
+## Test Results
 
-| # | Item | Where |
-|---|------|-------|
-| 1 | Custom domain `finalwishes.app` | DNS registrar → Firebase Hosting |
-| 2 | Gemini billing credits (depleted) | ai.studio/projects → add payment |
-| 3 | Enable Claude on Vertex AI | Cloud Console → Model Garden (next week) |
-| 4 | Stripe Customer Portal toggle | dashboard.stripe.com/settings/billing/portal |
-| 5 | OpenSign templates (4 directives) | sign.sirsi.ai web UI |
-| 6 | Brand video for scroll animation | Runway/Kling → `./scripts/extract-frames.sh` |
+| Suite | Tests | Status |
+|-------|-------|--------|
+| Vitest (web) | 168 | All pass (run from `web/` directory) |
+| Go probate | 19 | All pass |
+| Cloud Functions (Jest) | 24 | All pass |
+| TypeScript | 0 errors | Clean |
+| Go build | 0 errors | Clean |
 
 ---
 
-## Key Files
+## Remaining Items
+
+### C4 TODO
+1. Deploy C3 changes to production (Cloud Run + Firebase Hosting)
+2. Enable bucket-level retention policy on `finalwishes-vault` (`gsutil retention set 7y gs://finalwishes-vault`)
+3. Wire `ApplyEstateHolds` call into probate phase transition (when death_reported)
+4. Vitest root-level config to exclude `functions/` (currently must run from `web/`)
+5. Update README.md badges / version
+
+### Owner-Only Items
+1. Custom domain `finalwishes.app` → Firebase Hosting DNS
+2. Gemini billing credits (depleted)
+3. Stripe Customer Portal toggle
+4. OpenSign templates (4 directives)
+5. Brand video (Runway/Kling)
+
+---
+
+## Key Files (C3 additions)
 
 | File | Purpose |
 |------|---------|
-| `web/src/routes/index.tsx` | Landing page (all sections) |
-| `web/src/lib/auth.tsx` | Auth provider + demo mode |
-| `web/src/lib/animations.tsx` | Animation system |
-| `web/src/components/landing/ProductShowcase.tsx` | Auto-rotating carousel |
-| `web/src/components/landing/ScrollVideoCanvas.tsx` | Scroll-driven video |
-| `web/src/components/guards/IdentityGate.tsx` | MFA + demo bypass |
-| `api/internal/auth/middleware.go` | Go auth + demo-token bypass |
-| `api/packages/sirsi-ai/config.go` | AI model configuration |
-| `api/packages/sirsi-ai/router.go` | AI fallback chain routing |
-| `api/packages/sirsi-ai/service.go` | Multi-model service + retryable errors |
-| `docs/SECURITY_ADVISORY_GEMINI_API_KEYS.md` | Gemini API key vulnerability briefing |
+| `web/src/components/estate/SettlementGantt.tsx` | Recharts Gantt timeline |
+| `web/src/components/estate/QuorumPanel.tsx` | Multi-executor approval UI |
+| `api/internal/probate/quorum.go` | Quorum API (propose/vote/list/config) |
+| `api/internal/service/estate/retention.go` | Cloud Storage holds |
+| `api/internal/service/estate/retention_handler.go` | Hold HTTP handlers |
+| `functions/index.test.js` | 24 Cloud Function unit tests |
+| `docs/GCP-NATIVE-SERVICES-EVALUATION.md` | GCP services evaluation |
 
 ---
 
@@ -90,7 +118,9 @@ FinalWishes is **demoable and deployed** at `https://finalwishes-prod.web.app`. 
 
 ```bash
 cd ~/Development/FinalWishes
-# Read .thoth/memory.yaml first
 # App: finalwishes-prod.web.app
 # Demo: /login?demo=true
+# Tests: cd web && npx vitest run
+# Go: cd api && go test ./...
+# CF: cd functions && npm test
 ```

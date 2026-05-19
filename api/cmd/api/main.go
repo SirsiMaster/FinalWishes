@@ -277,6 +277,14 @@ func main() {
 			}
 		})
 		log.Info().Msg("Document Vault API registered at /api/v1/documents/*")
+
+		// Vault retention and legal holds
+		r.Route("/api/v1/vault/holds", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/apply", estate.HandleApplyEstateHolds(sc))
+			r.Post("/release", estate.HandleReleaseEstateHolds(sc))
+		})
+		log.Info().Msg("Vault retention/holds API registered at /api/v1/vault/holds/*")
 	}
 
 	// API routes (OpenSign integration — protected by auth)

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
 
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { SettlementGantt } from '@/components/estate/SettlementGantt'
+import { QuorumPanel } from '@/components/estate/QuorumPanel'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -309,6 +311,9 @@ function ProbatePage() {
         </Card>
       )}
 
+      {/* ── Multi-Executor Quorum ── */}
+      <QuorumPanel estateId={estateId} />
+
       {/* ── Deadlines ── */}
       {status?.deadlines && status.deadlines.length > 0 && (
         <Card className="border-[#7C2D12]/20">
@@ -323,6 +328,23 @@ function ProbatePage() {
                 <DeadlineRow key={d.id} deadline={d} />
               ))}
             </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Settlement Timeline (Gantt) ── */}
+      {status?.deadlines && status.deadlines.length > 0 && (
+        <Card className="border-[#7C2D12]/20">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold text-[#0F172A]">
+              Settlement Timeline
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SettlementGantt
+              deadlines={status.deadlines}
+              dateOfDeath={deathCert?.dateOfDeath}
+            />
           </CardContent>
         </Card>
       )}

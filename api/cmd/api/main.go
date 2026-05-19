@@ -393,6 +393,11 @@ func main() {
 			r.Post("/advance-directives/update", probateHandler.HandleUpdateAdvanceDirectiveStatus)
 			r.Get("/avoidance-tools", probateHandler.HandleGetAvoidanceTools)
 			r.Post("/avoidance-tools/update", probateHandler.HandleUpdateAvoidanceStatus)
+			// Multi-executor quorum (2-of-3 approval)
+			r.Get("/quorum/config", probateHandler.HandleGetQuorumConfig)
+			r.Get("/quorum/actions", probateHandler.HandleListQuorumActions)
+			r.Post("/quorum/propose", probateHandler.HandleProposeQuorumAction)
+			r.Post("/quorum/vote", probateHandler.HandleVoteQuorumAction)
 		})
 		log.Info().Str("state", "IL").Msg("Probate Engine API routes registered at /api/v1/probate/*")
 	}

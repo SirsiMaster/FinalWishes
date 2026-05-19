@@ -14,8 +14,12 @@
     },
     "scripts": {
         "lint": "echo 'No lint configured'",
+        "test": "jest --verbose",
         "serve": "firebase emulators:start --only functions",
         "deploy": "firebase deploy --only functions"
     },
-    "private": true
+    "private": true,
+    "devDependencies": {
+        "jest": "^30.4.2"
+    }
 }

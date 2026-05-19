@@ -25,18 +25,18 @@ type QuorumConfig struct {
 // QuorumAction represents a proposed action requiring multi-executor approval.
 // Stored at estates/{estateID}/quorum_actions/{actionID}.
 type QuorumAction struct {
-	ID            string          `json:"id" firestore:"-"`
-	EstateID      string          `json:"estateId" firestore:"estateId"`
-	ActionType    string          `json:"actionType" firestore:"actionType"` // "phase_transition", "asset_distribution", "document_sign"
-	Description   string          `json:"description" firestore:"description"`
-	ProposedBy    string          `json:"proposedBy" firestore:"proposedBy"`
-	ProposedByName string         `json:"proposedByName" firestore:"proposedByName"`
-	ProposedAt    time.Time       `json:"proposedAt" firestore:"proposedAt"`
-	Status        string          `json:"status" firestore:"status"` // "pending", "approved", "rejected"
-	Votes         []QuorumVote    `json:"votes" firestore:"votes"`
-	RequiredVotes int             `json:"requiredVotes" firestore:"requiredVotes"`
-	Payload       json.RawMessage `json:"payload,omitempty" firestore:"payload,omitempty"`
-	ResolvedAt    *time.Time      `json:"resolvedAt,omitempty" firestore:"resolvedAt,omitempty"`
+	ID             string          `json:"id" firestore:"-"`
+	EstateID       string          `json:"estateId" firestore:"estateId"`
+	ActionType     string          `json:"actionType" firestore:"actionType"` // "phase_transition", "asset_distribution", "document_sign"
+	Description    string          `json:"description" firestore:"description"`
+	ProposedBy     string          `json:"proposedBy" firestore:"proposedBy"`
+	ProposedByName string          `json:"proposedByName" firestore:"proposedByName"`
+	ProposedAt     time.Time       `json:"proposedAt" firestore:"proposedAt"`
+	Status         string          `json:"status" firestore:"status"` // "pending", "approved", "rejected"
+	Votes          []QuorumVote    `json:"votes" firestore:"votes"`
+	RequiredVotes  int             `json:"requiredVotes" firestore:"requiredVotes"`
+	Payload        json.RawMessage `json:"payload,omitempty" firestore:"payload,omitempty"`
+	ResolvedAt     *time.Time      `json:"resolvedAt,omitempty" firestore:"resolvedAt,omitempty"`
 }
 
 // QuorumVote is a single executor's vote on a quorum action.

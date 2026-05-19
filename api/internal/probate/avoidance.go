@@ -16,7 +16,7 @@ import (
 type ProbateAvoidanceTool struct {
 	ID           string   `json:"id"`
 	Name         string   `json:"name"`
-	AssetType    string   `json:"assetType"`    // "real_estate", "vehicle", "bank_account", "securities", "insurance", "retirement"
+	AssetType    string   `json:"assetType"` // "real_estate", "vehicle", "bank_account", "securities", "insurance", "retirement"
 	Description  string   `json:"description"`
 	FormURL      string   `json:"formUrl,omitempty"`
 	FormNumber   string   `json:"formNumber,omitempty"`

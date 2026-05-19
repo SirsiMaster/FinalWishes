@@ -42,9 +42,9 @@ func HandleApplyEstateHolds(sc *storage.Client) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"estateId":      req.EstateID,
-			"objectsHeld":   count,
-			"status":        "holds_applied",
+			"estateId":    req.EstateID,
+			"objectsHeld": count,
+			"status":      "holds_applied",
 		})
 	}
 }

@@ -72,11 +72,11 @@ type ChecklistItem struct {
 
 // SmallEstateResult indicates whether an estate qualifies for the small estate path.
 type SmallEstateResult struct {
-	Qualifies       bool    `json:"qualifies"`
-	EstateValue     float64 `json:"estateValue"`
-	Threshold       float64 `json:"threshold"`
-	VehiclesExcluded bool   `json:"vehiclesExcluded"`
-	Reason          string  `json:"reason,omitempty"`
+	Qualifies        bool    `json:"qualifies"`
+	EstateValue      float64 `json:"estateValue"`
+	Threshold        float64 `json:"threshold"`
+	VehiclesExcluded bool    `json:"vehiclesExcluded"`
+	Reason           string  `json:"reason,omitempty"`
 }
 
 // StateEngine defines the interface that each jurisdiction must implement.

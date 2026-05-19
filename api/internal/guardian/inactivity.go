@@ -18,8 +18,8 @@ import (
 // Estates can override the base threshold via guardianThreshold field.
 const (
 	defaultThresholdDays     = 90
-	reminderOffsetDays       = 0  // reminder at threshold
-	executorNotifyOffsetDays = 7  // executor notified at threshold + 7
+	reminderOffsetDays       = 0 // reminder at threshold
+	executorNotifyOffsetDays = 7 // executor notified at threshold + 7
 	// Day threshold+14: manual only — executor must report via report-status
 )
 

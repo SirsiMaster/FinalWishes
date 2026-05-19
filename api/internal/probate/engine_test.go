@@ -31,8 +31,8 @@ func TestCanTransition_InvalidPaths(t *testing.T) {
 	invalid := []struct {
 		from, to EstatePhase
 	}{
-		{PhaseActive, PhaseInProbate},       // skip executor confirmation
-		{PhaseActive, PhaseClosed},          // skip everything
+		{PhaseActive, PhaseInProbate},        // skip executor confirmation
+		{PhaseActive, PhaseClosed},           // skip everything
 		{PhaseDeathReported, PhaseInProbate}, // must confirm executor first
 		{PhaseInProbate, PhaseClosed},        // must complete first
 		{PhaseClosed, PhaseActive},           // no resurrection

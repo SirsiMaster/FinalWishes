@@ -157,7 +157,7 @@ func (h *Handler) callSpeechToText(ctx context.Context, gsURI string, mimeType s
 		"config": map[string]interface{}{
 			"auto_decoding_config": map[string]interface{}{},
 			"language_codes":       []string{"en-US"},
-			"model":               "long",
+			"model":                "long",
 			"features": map[string]interface{}{
 				"enable_automatic_punctuation": true,
 			},

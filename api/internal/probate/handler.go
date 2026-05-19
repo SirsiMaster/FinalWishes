@@ -45,24 +45,24 @@ type TransitionRequest struct {
 
 // StatusResponse is the response for GET /api/v1/probate/status.
 type StatusResponse struct {
-	EstateID         string          `json:"estateId"`
-	CurrentPhase     string          `json:"currentPhase"`
-	StateCode        string          `json:"stateCode"`
-	StateName        string          `json:"stateName"`
-	ProbableTimeline string          `json:"probableTimeline"`
-	EFilingAvailable bool            `json:"eFilingAvailable"`
-	CourtSystem      string          `json:"courtSystem"`
-	Deadlines        []Deadline      `json:"deadlines,omitempty"`
+	EstateID         string             `json:"estateId"`
+	CurrentPhase     string             `json:"currentPhase"`
+	StateCode        string             `json:"stateCode"`
+	StateName        string             `json:"stateName"`
+	ProbableTimeline string             `json:"probableTimeline"`
+	EFilingAvailable bool               `json:"eFilingAvailable"`
+	CourtSystem      string             `json:"courtSystem"`
+	Deadlines        []Deadline         `json:"deadlines,omitempty"`
 	SmallEstate      *SmallEstateResult `json:"smallEstate,omitempty"`
-	ValidTransitions []string        `json:"validTransitions"`
+	ValidTransitions []string           `json:"validTransitions"`
 }
 
 // ChecklistResponse is the response for GET /api/v1/probate/checklist.
 type ChecklistResponse struct {
-	EstateID  string              `json:"estateId"`
-	StateCode string              `json:"stateCode"`
-	Items     []ChecklistItem     `json:"items"`
-	Completed map[string]bool     `json:"completed"`
+	EstateID  string          `json:"estateId"`
+	StateCode string          `json:"stateCode"`
+	Items     []ChecklistItem `json:"items"`
+	Completed map[string]bool `json:"completed"`
 }
 
 // --- Handlers ---
@@ -189,8 +189,8 @@ func (h *Handler) HandleTransition(w http.ResponseWriter, r *http.Request) {
 	}
 
 	writeJSON(w, http.StatusOK, map[string]interface{}{
-		"previousPhase": string(currentPhase),
-		"currentPhase":  string(targetPhase),
+		"previousPhase":  string(currentPhase),
+		"currentPhase":   string(targetPhase),
 		"transitionedAt": now,
 	})
 }

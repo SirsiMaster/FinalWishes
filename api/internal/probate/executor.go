@@ -15,12 +15,12 @@ import (
 
 // ExecutorActivation represents the state of executor confirmation for an estate.
 type ExecutorActivation struct {
-	EstateID       string     `json:"estateId" firestore:"estateId"`
-	ExecutorUID    string     `json:"executorUid" firestore:"executorUid"`
-	ExecutorName   string     `json:"executorName" firestore:"executorName"`
-	ExecutorEmail  string     `json:"executorEmail" firestore:"executorEmail"`
-	Status         string     `json:"status" firestore:"status"` // "pending", "confirmed", "declined"
-	ConfirmedAt    *time.Time `json:"confirmedAt,omitempty" firestore:"confirmedAt,omitempty"`
+	EstateID        string     `json:"estateId" firestore:"estateId"`
+	ExecutorUID     string     `json:"executorUid" firestore:"executorUid"`
+	ExecutorName    string     `json:"executorName" firestore:"executorName"`
+	ExecutorEmail   string     `json:"executorEmail" firestore:"executorEmail"`
+	Status          string     `json:"status" firestore:"status"` // "pending", "confirmed", "declined"
+	ConfirmedAt     *time.Time `json:"confirmedAt,omitempty" firestore:"confirmedAt,omitempty"`
 	DeathReportedAt *time.Time `json:"deathReportedAt,omitempty" firestore:"deathReportedAt,omitempty"`
 }
 

@@ -24,10 +24,10 @@ import (
 
 // Handler serves document analysis endpoints.
 type Handler struct {
-	fs      *firestore.Client
-	sc      *storage.Client
-	ai      sai.AIService
-	bucket  string
+	fs     *firestore.Client
+	sc     *storage.Client
+	ai     sai.AIService
+	bucket string
 }
 
 // NewHandler creates a document intelligence handler.
@@ -46,7 +46,7 @@ type AnalyzeRequest struct {
 
 // DocumentAnalysis is the structured analysis result written to Firestore.
 type DocumentAnalysis struct {
-	DocumentType      string   `json:"documentType" firestore:"documentType"`
+	DocumentType       string   `json:"documentType" firestore:"documentType"`
 	SigningDate        *string  `json:"signingDate" firestore:"signingDate"`
 	Notarized          *bool    `json:"notarized" firestore:"notarized"`
 	NamedBeneficiaries []string `json:"namedBeneficiaries" firestore:"namedBeneficiaries"`

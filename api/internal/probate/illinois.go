@@ -13,10 +13,12 @@ type IllinoisEngine struct{}
 
 var _ StateEngine = (*IllinoisEngine)(nil)
 
-func (e *IllinoisEngine) StateCode() string  { return "IL" }
-func (e *IllinoisEngine) StateName() string  { return "Illinois" }
-func (e *IllinoisEngine) CourtSystem() string { return "Circuit Court of Cook County, Probate Division" }
-func (e *IllinoisEngine) EFilingAvailable() bool { return true }
+func (e *IllinoisEngine) StateCode() string { return "IL" }
+func (e *IllinoisEngine) StateName() string { return "Illinois" }
+func (e *IllinoisEngine) CourtSystem() string {
+	return "Circuit Court of Cook County, Probate Division"
+}
+func (e *IllinoisEngine) EFilingAvailable() bool   { return true }
 func (e *IllinoisEngine) ProbableTimeline() string { return "12–24 months" }
 
 // SmallEstateThreshold returns $150,000 (effective 2026; vehicles excluded).

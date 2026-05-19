@@ -17,18 +17,18 @@ import (
 // trigger any state transitions. Per Codex directive: "requires user
 // confirmation before they change estate state."
 type DeathCertFacts struct {
-	DecedentName    string  `json:"decedentName" firestore:"decedentName"`
-	DateOfDeath     *string `json:"dateOfDeath" firestore:"dateOfDeath"`
-	PlaceOfDeath    *string `json:"placeOfDeath" firestore:"placeOfDeath"`
-	CauseOfDeath    *string `json:"causeOfDeath" firestore:"causeOfDeath"`
-	CertificateNum  *string `json:"certificateNumber" firestore:"certificateNumber"`
-	CountyOfDeath   *string `json:"countyOfDeath" firestore:"countyOfDeath"`
-	FuneralHome     *string `json:"funeralHome" firestore:"funeralHome"`
-	Confirmed       bool    `json:"confirmed" firestore:"confirmed"`
-	ConfirmedBy     string  `json:"confirmedBy,omitempty" firestore:"confirmedBy,omitempty"`
-	ConfirmedAt     *time.Time `json:"confirmedAt,omitempty" firestore:"confirmedAt,omitempty"`
-	DocumentID      string  `json:"documentId" firestore:"documentId"`
-	AnalyzedAt      *time.Time `json:"analyzedAt,omitempty" firestore:"analyzedAt,omitempty"`
+	DecedentName   string     `json:"decedentName" firestore:"decedentName"`
+	DateOfDeath    *string    `json:"dateOfDeath" firestore:"dateOfDeath"`
+	PlaceOfDeath   *string    `json:"placeOfDeath" firestore:"placeOfDeath"`
+	CauseOfDeath   *string    `json:"causeOfDeath" firestore:"causeOfDeath"`
+	CertificateNum *string    `json:"certificateNumber" firestore:"certificateNumber"`
+	CountyOfDeath  *string    `json:"countyOfDeath" firestore:"countyOfDeath"`
+	FuneralHome    *string    `json:"funeralHome" firestore:"funeralHome"`
+	Confirmed      bool       `json:"confirmed" firestore:"confirmed"`
+	ConfirmedBy    string     `json:"confirmedBy,omitempty" firestore:"confirmedBy,omitempty"`
+	ConfirmedAt    *time.Time `json:"confirmedAt,omitempty" firestore:"confirmedAt,omitempty"`
+	DocumentID     string     `json:"documentId" firestore:"documentId"`
+	AnalyzedAt     *time.Time `json:"analyzedAt,omitempty" firestore:"analyzedAt,omitempty"`
 }
 
 // HandleSubmitDeathCertAnalysis accepts the document ID of an already-analyzed
@@ -101,10 +101,10 @@ func (h *Handler) HandleSubmitDeathCertAnalysis(w http.ResponseWriter, r *http.R
 
 	now := time.Now()
 	facts := DeathCertFacts{
-		DecedentName:   getString(analysisMap, "summary"), // AI summary contains the name
-		DocumentID:     req.DocumentID,
-		Confirmed:      false,
-		AnalyzedAt:     &now,
+		DecedentName: getString(analysisMap, "summary"), // AI summary contains the name
+		DocumentID:   req.DocumentID,
+		Confirmed:    false,
+		AnalyzedAt:   &now,
 	}
 
 	// Extract specific fields from AI analysis

@@ -16,12 +16,14 @@ import {
   updateChecklistItem,
   getDeathCertFacts,
   confirmDeathCert,
+  getFormTemplates,
   PHASE_LABELS,
   PHASE_COLORS,
   type ProbateStatus,
   type ChecklistResponse,
   type Deadline,
   type DeathCertFacts,
+  type FormTemplate,
 } from '@/lib/probate'
 
 export const Route = createFileRoute('/estates/$estateId/probate')({
@@ -33,6 +35,7 @@ function ProbatePage() {
   const [status, setStatus] = useState<ProbateStatus | null>(null)
   const [checklist, setChecklist] = useState<ChecklistResponse | null>(null)
   const [deathCert, setDeathCert] = useState<DeathCertFacts | null>(null)
+  const [forms, setForms] = useState<FormTemplate[]>([])
   const [confirmingCert, setConfirmingCert] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -40,14 +43,16 @@ function ProbatePage() {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true)
-      const [s, c, dc] = await Promise.all([
+      const [s, c, dc, f] = await Promise.all([
         getProbateStatus(estateId),
         getProbateChecklist(estateId),
         getDeathCertFacts(estateId),
+        getFormTemplates(estateId).catch(() => ({ templates: [], disclaimer: '' })),
       ])
       setStatus(s)
       setChecklist(c)
       setDeathCert(dc)
+      setForms(f.templates)
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load probate data')
@@ -317,6 +322,56 @@ function ProbatePage() {
                   </div>
                 )
               })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Court Forms ── */}
+      {forms.length > 0 && (
+        <Card className="border-[#7C2D12]/20">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-semibold text-[#0F172A]">
+              Court Form Preparation
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-amber-700 mb-4 p-2 bg-amber-50 rounded border border-amber-200">
+              These are draft preparation packets only — not legal filings or legal advice. Review all information for accuracy before filing with the court.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {forms.map((form) => (
+                <div key={form.id} className="p-4 rounded-lg border border-[#0F172A]/10 hover:border-[#7C2D12]/30 transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium text-sm text-[#0F172A]">{form.name}</span>
+                        <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-[#133378]/30 text-[#133378]">
+                          {form.formNumber}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-[#0F172A]/60 mb-2">{form.description}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {Object.entries(form.fields).filter(([, v]) => v).slice(0, 3).map(([k, v]) => (
+                          <span key={k} className="text-[10px] px-1.5 py-0.5 rounded bg-[#0F172A]/5 text-[#0F172A]/50">
+                            {k.replace(/([A-Z])/g, ' $1').trim()}: {v}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 mt-3">
+                    <a
+                      href={form.courtUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-medium text-[#133378] hover:underline"
+                    >
+                      Official form &rarr;
+                    </a>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>

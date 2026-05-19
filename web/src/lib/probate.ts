@@ -144,6 +144,23 @@ export async function confirmDeathCert(estateId: string) {
   })
 }
 
+// ── Form Templates ──
+
+export interface FormTemplate {
+  id: string
+  name: string
+  formNumber: string
+  description: string
+  courtUrl: string
+  category: string
+  fields: Record<string, string>
+  disclaimer: string
+}
+
+export async function getFormTemplates(estateId: string): Promise<{ templates: FormTemplate[]; disclaimer: string }> {
+  return apiFetch(`/api/v1/probate/forms?estate_id=${encodeURIComponent(estateId)}`)
+}
+
 // ── Phase Display Helpers ──
 
 export const PHASE_LABELS: Record<string, string> = {

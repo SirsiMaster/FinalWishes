@@ -4,6 +4,34 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.10.0] — 2026-05-18
+### Illinois Probate Engine — Full Estate Settlement Support
+
+### Added
+- **Illinois probate engine** (`api/internal/probate/`) — pluggable `StateEngine` interface with Illinois as first implementation (ADR-043)
+- **Estate lifecycle state machine** — `active → death_reported → executor_confirmed → in_probate → probate_complete → closed` with transition guards and audit trail
+- **Illinois rules** — 60-day inventory deadline, 6-month creditor claims, $150K small estate threshold (SB83 2025, vehicles excluded)
+- **17-item Cook County probate checklist** with form references (CCP0315, CCP0312/0313, VSD 773/774, TODI)
+- **12 API endpoints** at `/api/v1/probate/*` — transitions, status, checklist, death cert analysis, executor activation, form templates
+- **Death certificate AI analysis** — integrates with existing docintell; extracted facts require executor confirmation before state changes
+- **Single-executor activation flow** — role confirmation, phase transition, email notification to heirs
+- **Cook County form preparation** — 4 templates (Petition, Inventory, Small Estate Affidavit, Oath/Bond) pre-filled from estate data
+- **Non-dead-end probate dashboard** — phase-aware `NextActionCard` with actionable guidance for every estate state
+- **Probate page** (`/estates/$estateId/probate`) — deadline tracking, completion toggles, form links
+- **19 Go unit tests** — state transitions, threshold evaluation, deadline computation, checklist
+- **Firestore rules** — `probate` + `probate_audit` subcollections
+- **Illinois estate planning user guide** (35+ forms, 4 advance directives, Cook County procedures)
+
+## [0.9.1] — 2026-05-18
+### Security Hardening
+- Demo mode auth bypass gated behind `DEMO_MODE=true` (default: disabled, 3 tests)
+- Stripe webhook silent failures fixed (error logging added)
+- Stripe portal validates active subscription
+- otel 1.39→1.43, protobufjs+uuid fixed, 0 high/critical npm vulns
+- `.env.example` created (17 env vars)
+
+---
+
 ## [0.9.0] — 2026-04-17
 ### Sessions 9–11: Infrastructure Hardening, Gap Remediation, Life Companion Features
 

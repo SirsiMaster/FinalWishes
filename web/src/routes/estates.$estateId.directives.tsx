@@ -42,6 +42,12 @@ import { Separator } from '@/components/ui/separator'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { SectionEmptyState } from '@/components/estate/SectionEmptyState'
 import { ShepherdNudge, useShepherdNudge } from '@/components/estate/ShepherdNudge'
+import {
+  getAdvanceDirectives,
+  updateAdvanceDirectiveStatus,
+  type AdvanceDirectiveType,
+  type AdvanceDirectiveStatus,
+} from '@/lib/probate'
 
 export const Route = createFileRoute('/estates/$estateId/directives')({
   component: DirectivesPage,
@@ -230,7 +236,10 @@ function DirectivesPage() {
         />
       )}
 
-      {/* ── Cards ── */}
+      {/* ── Illinois Legal Advance Directives ── */}
+      <IllinoisAdvanceDirectivesSection estateId={estateId} />
+
+      {/* ── Personal Directives Cards ── */}
       {directives.length === 0 ? (
         <SectionEmptyState
           section="letters"
@@ -753,6 +762,162 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
       <div className="rounded-3xl border border-slate-100 overflow-hidden bg-white min-h-[500px]">
         <EditorContent editor={editor} />
       </div>
+    </div>
+  )
+}
+
+// ─── Illinois Advance Directives Section ────────────────────────────────────
+
+function IllinoisAdvanceDirectivesSection({ estateId }: { estateId: string }) {
+  const [directives, setDirectives] = useState<AdvanceDirectiveType[]>([])
+  const [statuses, setStatuses] = useState<Record<string, AdvanceDirectiveStatus>>({})
+  const [loading, setLoading] = useState(true)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+
+  useEffect(() => {
+    getAdvanceDirectives(estateId)
+      .then((res) => {
+        setDirectives(res.directives)
+        setStatuses(res.statuses)
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [estateId])
+
+  const handleStatusChange = async (directiveId: string, newStatus: string) => {
+    const prev = statuses[directiveId]
+    setStatuses({ ...statuses, [directiveId]: { ...prev, directiveId, status: newStatus } })
+    try {
+      await updateAdvanceDirectiveStatus(estateId, directiveId, newStatus)
+      toast.success(newStatus === 'completed' ? 'Marked as completed' : 'Status updated')
+    } catch {
+      setStatuses({ ...statuses, [directiveId]: prev })
+      toast.error('Failed to update status')
+    }
+  }
+
+  if (loading) return null
+
+  const completedCount = Object.values(statuses).filter((s) => s.status === 'completed').length
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-[#0F172A]">Illinois Legal Advance Directives</h2>
+          <p className="text-sm text-[#0F172A]/60">
+            {completedCount} of {directives.length} completed &middot; No lawyer or notary required
+          </p>
+        </div>
+        <Badge
+          className="text-xs px-3 py-1"
+          style={{ backgroundColor: 'rgba(124, 45, 18, 0.1)', color: '#7C2D12' }}
+        >
+          Illinois Law
+        </Badge>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {directives.map((d) => {
+          const status = statuses[d.id]
+          const isComplete = status?.status === 'completed'
+          const isExpanded = expandedId === d.id
+
+          return (
+            <Card
+              key={d.id}
+              className={`rounded-2xl transition-all cursor-pointer ${
+                isComplete ? 'border-green-200 bg-green-50/30' : 'border-slate-100 hover:border-[#7C2D12]/20'
+              }`}
+              onClick={() => setExpandedId(isExpanded ? null : d.id)}
+            >
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className={`font-semibold text-sm ${isComplete ? 'text-green-700' : 'text-[#0F172A]'}`}>
+                        {d.name}
+                      </h3>
+                      {isComplete && <Badge className="bg-green-100 text-green-700 text-[10px]">Done</Badge>}
+                      {d.validityYears > 0 && (
+                        <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700">
+                          Expires in {d.validityYears}yr
+                        </Badge>
+                      )}
+                      {d.overriddenBy && (
+                        <Badge variant="outline" className="text-[10px] border-slate-300 text-slate-500">
+                          Overridden by HCPOA
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-[#0F172A]/60">{d.description}</p>
+                  </div>
+                </div>
+
+                {isExpanded && (
+                  <div className="mt-4 pt-3 border-t border-slate-100 space-y-3">
+                    <div className="text-xs space-y-1">
+                      <p className="text-[#0F172A]/50 font-medium">Requirements:</p>
+                      <p className="text-[#0F172A]/70">
+                        {d.witnessRequired > 0 ? `${d.witnessRequired} witness (18+)` : 'No witnesses'}
+                        {d.notaryRequired ? ' + Notary' : ''}
+                        {!d.lawyerRequired ? ' · No lawyer needed' : ''}
+                      </p>
+                    </div>
+                    <div className="text-xs space-y-1">
+                      <p className="text-[#0F172A]/50 font-medium">Key points:</p>
+                      <ul className="space-y-0.5">
+                        {d.keyPoints.map((kp, i) => (
+                          <li key={i} className="text-[#0F172A]/70 pl-3 relative before:content-['·'] before:absolute before:left-0 before:text-[#7C2D12]">
+                            {kp}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="text-xs text-[#0F172A]/50">
+                      <span className="font-medium">Statute:</span> {d.statute}
+                    </div>
+                    <Separator />
+                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                      <a
+                        href={d.formUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-medium text-[#133378] hover:underline"
+                      >
+                        Download form &rarr;
+                      </a>
+                      <div className="flex-1" />
+                      {!isComplete ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handleStatusChange(d.id, 'completed')}
+                          className="bg-[#7C2D12] hover:bg-[#7C2D12]/90 text-white text-xs h-7"
+                        >
+                          <Check className="w-3 h-3 mr-1" /> Mark Complete
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleStatusChange(d.id, 'not_started')}
+                          className="text-xs h-7"
+                        >
+                          Undo
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+
+      <p className="text-[10px] text-[#0F172A]/40 text-center">
+        Forms available from the Illinois Department of Public Health. No lawyer or notary required for most directives.
+      </p>
     </div>
   )
 }

@@ -23,6 +23,7 @@ import { Route as EstatesEstateIdVaultRouteImport } from './routes/estates.$esta
 import { Route as EstatesEstateIdTimecapsuleRouteImport } from './routes/estates.$estateId.timecapsule'
 import { Route as EstatesEstateIdSoulLogRouteImport } from './routes/estates.$estateId.soul-log'
 import { Route as EstatesEstateIdSettingsRouteImport } from './routes/estates.$estateId.settings'
+import { Route as EstatesEstateIdProbateRouteImport } from './routes/estates.$estateId.probate'
 import { Route as EstatesEstateIdPricingRouteImport } from './routes/estates.$estateId.pricing'
 import { Route as EstatesEstateIdObituaryRouteImport } from './routes/estates.$estateId.obituary'
 import { Route as EstatesEstateIdNotificationsRouteImport } from './routes/estates.$estateId.notifications'
@@ -113,6 +114,11 @@ const EstatesEstateIdSoulLogRoute = EstatesEstateIdSoulLogRouteImport.update({
 const EstatesEstateIdSettingsRoute = EstatesEstateIdSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => EstatesEstateIdRoute,
+} as any)
+const EstatesEstateIdProbateRoute = EstatesEstateIdProbateRouteImport.update({
+  id: '/probate',
+  path: '/probate',
   getParentRoute: () => EstatesEstateIdRoute,
 } as any)
 const EstatesEstateIdPricingRoute = EstatesEstateIdPricingRouteImport.update({
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
   '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/pricing': typeof EstatesEstateIdPricingRoute
+  '/estates/$estateId/probate': typeof EstatesEstateIdProbateRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/soul-log': typeof EstatesEstateIdSoulLogRoute
   '/estates/$estateId/timecapsule': typeof EstatesEstateIdTimecapsuleRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
   '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/pricing': typeof EstatesEstateIdPricingRoute
+  '/estates/$estateId/probate': typeof EstatesEstateIdProbateRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/soul-log': typeof EstatesEstateIdSoulLogRoute
   '/estates/$estateId/timecapsule': typeof EstatesEstateIdTimecapsuleRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
   '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/pricing': typeof EstatesEstateIdPricingRoute
+  '/estates/$estateId/probate': typeof EstatesEstateIdProbateRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/soul-log': typeof EstatesEstateIdSoulLogRoute
   '/estates/$estateId/timecapsule': typeof EstatesEstateIdTimecapsuleRoute
@@ -315,6 +324,7 @@ export interface FileRouteTypes {
     | '/estates/$estateId/notifications'
     | '/estates/$estateId/obituary'
     | '/estates/$estateId/pricing'
+    | '/estates/$estateId/probate'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/soul-log'
     | '/estates/$estateId/timecapsule'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/estates/$estateId/notifications'
     | '/estates/$estateId/obituary'
     | '/estates/$estateId/pricing'
+    | '/estates/$estateId/probate'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/soul-log'
     | '/estates/$estateId/timecapsule'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/estates/$estateId/notifications'
     | '/estates/$estateId/obituary'
     | '/estates/$estateId/pricing'
+    | '/estates/$estateId/probate'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/soul-log'
     | '/estates/$estateId/timecapsule'
@@ -493,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstatesEstateIdSettingsRouteImport
       parentRoute: typeof EstatesEstateIdRoute
     }
+    '/estates/$estateId/probate': {
+      id: '/estates/$estateId/probate'
+      path: '/probate'
+      fullPath: '/estates/$estateId/probate'
+      preLoaderRoute: typeof EstatesEstateIdProbateRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
     '/estates/$estateId/pricing': {
       id: '/estates/$estateId/pricing'
       path: '/pricing'
@@ -609,6 +628,7 @@ interface EstatesEstateIdRouteChildren {
   EstatesEstateIdNotificationsRoute: typeof EstatesEstateIdNotificationsRoute
   EstatesEstateIdObituaryRoute: typeof EstatesEstateIdObituaryRoute
   EstatesEstateIdPricingRoute: typeof EstatesEstateIdPricingRoute
+  EstatesEstateIdProbateRoute: typeof EstatesEstateIdProbateRoute
   EstatesEstateIdSettingsRoute: typeof EstatesEstateIdSettingsRoute
   EstatesEstateIdSoulLogRoute: typeof EstatesEstateIdSoulLogRoute
   EstatesEstateIdTimecapsuleRoute: typeof EstatesEstateIdTimecapsuleRoute
@@ -631,6 +651,7 @@ const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
   EstatesEstateIdNotificationsRoute: EstatesEstateIdNotificationsRoute,
   EstatesEstateIdObituaryRoute: EstatesEstateIdObituaryRoute,
   EstatesEstateIdPricingRoute: EstatesEstateIdPricingRoute,
+  EstatesEstateIdProbateRoute: EstatesEstateIdProbateRoute,
   EstatesEstateIdSettingsRoute: EstatesEstateIdSettingsRoute,
   EstatesEstateIdSoulLogRoute: EstatesEstateIdSoulLogRoute,
   EstatesEstateIdTimecapsuleRoute: EstatesEstateIdTimecapsuleRoute,

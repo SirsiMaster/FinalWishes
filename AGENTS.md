@@ -1,4 +1,19 @@
 # AGENTS.md
+
+## Development Workspace Router Law
+
+This repo inherits the workspace-wide agent law at `/Users/thekryptodragon/Development/AGENTS.md`.
+
+All AI agents, regardless of vendor or model family, must follow that Development-root law plus this repo's local rules. Before non-trivial work, read:
+
+1. `/Users/thekryptodragon/Development/AGENTS.md`
+2. this repo's `AGENTS.md`
+3. `/Users/thekryptodragon/Development/sirsi-pantheon/.agents/idea-router/state.json`
+4. `/Users/thekryptodragon/Development/sirsi-pantheon/.agents/idea-router/agents.json`
+5. any router item addressed to this repo's registered agent id
+
+Router etiquette is mandatory: use `/plan`, `/goal`, ETA fields, repo-segmented ownership, verification evidence, and router writeback. Agent type does not matter; Codex, Claude, Gemini, Gemma, Qwen, and future agents obey the same contract.
+
 **Operational Directive for Codex Agent (FinalWishes)**
 **Version:** 2.0.0 (Stack Consolidation)
 **Date:** April 7, 2026
@@ -18,6 +33,18 @@ Every AI agent working in this repository, including Codex, Claude, Gemini, Qwen
 7. Router targets must use registered agent ids such as `codex-finalwishes`, `claude-finalwishes`, `codex-pantheon`, or another entry in `agents.json`.
 
 User shorthand: `ctr` means check the router.
+
+## Net Goal-Weaving & Architecture Doctrine
+
+Net 𓁯, The Weaver, keeps this repo aligned to the portfolio product goals. Agents must work independently toward the full `/goal` where possible and must include `eta_for_review`, `next_check_at`, or `estimated_duration` in router handoffs.
+
+- Simplify vendor surface area: prefer GCP-native, Firebase-native, or open-source tools before paid third-party vendors.
+- Prefer PostgreSQL/Cloud SQL/AlloyDB for canonical business truth: estates, probate, executor authority, contracts, payments, subscriptions, ledgers, audit trails, and reporting.
+- Use Firestore for real-time UX state, notifications, collaboration, presence, and denormalized dashboards.
+- Use Cloud Storage for files, media, generated PDFs, evidence packets, and exports.
+- Do not add a paid vendor without an ADR explaining why GCP/open-source is insufficient, data exposure, cost risk, exit path, and replacement plan.
+- Do not reopen language choices without a measured blocker and ADR. FinalWishes remains TypeScript/React for web/mobile UX and Go for backend/domain engines. The probate engine belongs in Go.
+- Product surface target: web and mobile.
 
 ## 0. Identity
 This is the **FinalWishes** repository — "The Estate Operating System."

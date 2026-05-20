@@ -4,6 +4,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [0.10.2] — 2026-05-20
+### Fixed
+- Corrected Illinois small-estate guidance copy to match ADR-043 and the implemented $150K threshold with vehicles excluded.
+- Updated the estate settlement guide to describe implemented multi-executor quorum approval instead of marking it as future work.
+
+---
+
 ## [0.10.1] — 2026-05-19
 ### C3 — Documentation, Testing, Timeline, Quorum, GCP Evaluation
 

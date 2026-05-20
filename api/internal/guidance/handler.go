@@ -378,7 +378,7 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 	case "IL", "ILLINOIS":
 		steps = append(steps, Step{
 			ID: "state_il", Label: "Review Illinois Thresholds", Category: "Legal",
-			Description: "Review Illinois' small estate threshold ($100K)",
+			Description: "Review Illinois' small estate threshold ($150K, vehicles excluded)",
 			Complete:    false, Route: "vault", Priority: priority,
 		})
 		priority++

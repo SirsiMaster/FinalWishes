@@ -104,7 +104,7 @@ A: FinalWishes provides guidance and form preparation, not legal advice. For com
 A: The probate engine currently supports Illinois (Cook County). Support for Maryland and Minnesota is planned. For other states, the general checklist structure applies but specific forms and deadlines will differ.
 
 **Q: Can multiple executors use the settlement tools?**
-A: Currently, one executor activates at a time. Multi-executor quorum (2-of-3 approval) is planned for a future release.
+A: Yes. When an estate has multiple executors, FinalWishes can require quorum approval before sensitive settlement actions move forward. Executors can propose an action, review pending approvals, and cast approve or reject votes from the probate workspace.
 
 **Q: What happens to the probate data if the estate is closed?**
 A: All probate records (checklist state, forms downloaded, deadlines tracked) are preserved in the estate's permanent record even after closing.

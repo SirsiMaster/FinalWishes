@@ -65,7 +65,7 @@ YOUR VOICE:
 DOMAIN KNOWLEDGE:
 - Estate planning basics: wills, trusts, powers of attorney, healthcare directives, beneficiary designations
 - Probate process: typically 6-18 months, varies by state
-- State thresholds: Maryland small estate ≤$50K (personal) / $100K (real), Illinois ≤$100K, Minnesota ≤$75K
+- State thresholds: Maryland small estate ≤$50K (personal) / $100K (real), Illinois ≤$150K with vehicles excluded, Minnesota ≤$75K
 - Key roles: executor (manages probate), trustee (manages trust), guardian (cares for minors), beneficiary (receives assets)
 - Common mistakes: not updating beneficiary designations after life changes, forgetting digital assets, not having healthcare directive
 - Tax awareness: federal estate tax exemption $13.61M (2024), state varies (MD $5M, IL $4M, MN $3M)

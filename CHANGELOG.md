@@ -4,6 +4,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ---
 
+## [Unreleased]
+### Added
+- `docs/ga-evidence/README.md` — evidence artifact convention for `/goal: finalwishes-tier1-ga` per Codex review revision #5. Defines `docs/ga-evidence/ga-c{N}-{slug}-{YYYY-MM-DD}.md` naming, required contents per artifact, and the 8-criterion ownership index. Seeded as part of acknowledging the Tier 1 GA goal v2 proposal.
+
+---
+
 ## [0.10.2] — 2026-05-20
 ### Fixed
 - Corrected Illinois small-estate guidance copy to match ADR-043 and the implemented $150K threshold with vehicles excluded.

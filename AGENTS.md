@@ -266,4 +266,6 @@ These principles are derived from a multi-day collapse of overengineered router 
 
 10. **Atomicity at the filesystem boundary.** File creation is atomic; metadata in a separate sidecar JSON is not. When the design includes "write a file AND update a registry," collapse to "write a file with frontmatter that carries all the state." Two writes can race; one cannot.
 
+11. **Wake mechanisms should not own delivery semantics.** (codex-pantheon, 2026-05-21, validated independently.) The queue is the source of truth; wake (FSEvents, heartbeat, hook, webhook) is an observer over it. If wake fails, the work item still exists on disk and any agent can pull it later. Never make the wake mechanism the contract — if you do, every layer of wake (daemon health, launchd state, registry state, spawn binary presence, env var gates) becomes a place where delivery looks alive while it is dead.
+
 These principles are referenced as `AGENTS.md §Lean #<n>` in commit messages, ADRs, and router proposals. Cite, do not paraphrase.

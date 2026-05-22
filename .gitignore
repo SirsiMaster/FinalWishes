@@ -36,9 +36,13 @@ service-account*.json
 
 # === Playwright ===
 /test-results/
+web/test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# === Python tooling artifacts ===
+__pycache__/
 
 # === Misc ===
 *.log

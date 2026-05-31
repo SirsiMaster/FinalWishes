@@ -1,0 +1,32 @@
+[
+  {
+    "id": "il-probate-small-estate-threshold",
+    "jurisdiction": "IL",
+    "question": "When can an Illinois estate use a small estate affidavit?",
+    "expectedCitations": ["755 ILCS 5/Art. XXV"]
+  },
+  {
+    "id": "il-probate-creditor-claims",
+    "jurisdiction": "IL",
+    "question": "How long do creditors have to file claims in an Illinois probate estate?",
+    "expectedCitations": ["755 ILCS 5/18-3"]
+  },
+  {
+    "id": "md-advance-directive",
+    "jurisdiction": "MD",
+    "question": "What Maryland statute governs advance directives?",
+    "expectedCitations": ["Md. Code Health-General 5-601"]
+  },
+  {
+    "id": "mn-health-care-directive",
+    "jurisdiction": "MN",
+    "question": "Where are Minnesota health care directives defined?",
+    "expectedCitations": ["Minn. Stat. 145C"]
+  },
+  {
+    "id": "us-estate-tax",
+    "jurisdiction": "US",
+    "question": "Which federal code section imposes the estate tax?",
+    "expectedCitations": ["26 USC 2001"]
+  }
+]

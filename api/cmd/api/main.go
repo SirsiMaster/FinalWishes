@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,9 +27,11 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
 	"github.com/sirsi-technologies/finalwishes-api/internal/docintell"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
+	"github.com/sirsi-technologies/finalwishes-api/internal/googlephotos"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guardian"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guidance"
 	"github.com/sirsi-technologies/finalwishes-api/internal/lockbox"
+	certmail "github.com/sirsi-technologies/finalwishes-api/internal/mail"
 	appmw "github.com/sirsi-technologies/finalwishes-api/internal/middleware"
 	"github.com/sirsi-technologies/finalwishes-api/internal/opensign"
 	"github.com/sirsi-technologies/finalwishes-api/internal/payments"
@@ -218,6 +221,32 @@ func main() {
 		}
 	}
 
+	// --- Legal RAG Corpus Initialization (ADR-044 / CR-10) ---
+	var ragRetriever guidance.RAGRetriever
+	if projectID != "" && os.Getenv("RAG_DATABASE_URL") != "" {
+		ragDB, err := sql.Open("postgres", os.Getenv("RAG_DATABASE_URL"))
+		if err != nil {
+			log.Error().Err(err).Msg("Legal RAG database open failed — corpus guidance disabled")
+		} else if err := ragDB.PingContext(ctx); err != nil {
+			ragDB.Close()
+			log.Error().Err(err).Msg("Legal RAG database ping failed — corpus guidance disabled")
+		} else {
+			defer ragDB.Close()
+			embedder, err := guidance.NewVertexEmbedder(ctx, projectID, getEnvOrDefault("VERTEX_LOCATION", "us-central1"))
+			if err != nil {
+				log.Error().Err(err).Msg("Legal RAG embedder initialization failed — corpus guidance disabled")
+			} else {
+				ragRetriever = guidance.NewPostgresRAGRetriever(ragDB, embedder)
+				log.Info().
+					Str("embedding_model", guidance.DefaultEmbeddingModel).
+					Int("dimensions", guidance.DefaultEmbeddingDimensions).
+					Msg("Legal RAG corpus retriever initialized")
+			}
+		}
+	} else {
+		log.Info().Msg("Legal RAG corpus disabled (set RAG_DATABASE_URL with GOOGLE_CLOUD_PROJECT to enable)")
+	}
+
 	// ConnectRPC Services (protected by auth middleware)
 	estateService := estate.NewServer(fs, sc)
 	path, handler := estatev1connect.NewEstateServiceHandler(estateService)
@@ -317,7 +346,7 @@ func main() {
 		} else {
 			advisor = guidance.NewGenkitAdvisor(ctx) // Legacy fallback
 		}
-		guidanceHandler := guidance.NewHandler(fs, advisor)
+		guidanceHandler := guidance.NewHandler(fs, advisor).WithRAG(ragRetriever)
 		r.Route("/api/v1/guidance", func(r chi.Router) {
 			r.Use(authMiddleware)
 			r.Get("/score", guidanceHandler.HandleGetScore)
@@ -365,6 +394,18 @@ func main() {
 			r.Get("/media-usage", tierHandler.HandleMediaUsage)
 		})
 		log.Info().Msg("Tier-gating media usage endpoint registered")
+	}
+
+	// Google Photos Picker import for heirloom gallery.
+	if fs != nil && sc != nil {
+		photosHandler := googlephotos.NewHandler(fs, sc, googlephotos.NewPickerClient("", nil), getEnvOrDefault("VAULT_STORAGE_BUCKET", "finalwishes-vault"))
+		r.Route("/api/v1/heirlooms/{estateId}/google-photos", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Post("/session", photosHandler.HandleCreateSession)
+			r.Get("/session/{sessionId}", photosHandler.HandleGetSession)
+			r.Post("/import", photosHandler.HandleImport)
+		})
+		log.Info().Msg("Google Photos Picker import routes registered at /api/v1/heirlooms/{estateId}/google-photos/*")
 	}
 
 	// Guardian Protocol routes (inactivity detection + settlement)
@@ -431,6 +472,27 @@ func main() {
 			r.Post("/quorum/vote", probateHandler.HandleVoteQuorumAction)
 		})
 		log.Info().Str("state", "IL").Msg("Probate Engine API routes registered at /api/v1/probate/*")
+	}
+
+	// Certified mail routes (Lob). Enabled only when Storage and Firestore are active.
+	if fs != nil && sc != nil {
+		lobKey := os.Getenv("LOB_API_KEY")
+		if lobKey != "" {
+			mailHandler := certmail.NewHandler(
+				fs,
+				sc,
+				certmail.NewLobClient(lobKey, os.Getenv("LOB_API_BASE_URL"), nil),
+				getEnvOrDefault("VAULT_STORAGE_BUCKET", "finalwishes-vault"),
+				certmail.NewAddressFromEnv("LOB_FROM"),
+			)
+			r.Route("/api/v1/probate/{estateId}/mail", func(r chi.Router) {
+				r.Use(authMiddleware)
+				r.Post("/certified", mailHandler.HandleCreateCertifiedMail)
+			})
+			log.Info().Msg("Lob certified mail routes registered at /api/v1/probate/{estateId}/mail/*")
+		} else {
+			log.Warn().Msg("LOB_API_KEY not set — certified mail endpoints disabled")
+		}
 	}
 
 	// Time Capsule routes (Cloud Tasks deferred delivery)

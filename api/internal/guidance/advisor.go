@@ -19,8 +19,9 @@ type ChatMessage struct {
 
 // ChatResponse is the AI reply from a chat interaction.
 type ChatResponse struct {
-	Reply            string   `json:"reply"`
-	SuggestedActions []string `json:"suggestedActions"`
+	Reply            string           `json:"reply"`
+	SuggestedActions []string         `json:"suggestedActions"`
+	Citations        []CorpusCitation `json:"citations,omitempty"`
 }
 
 // EstateContext holds enriched estate metadata for prompt construction.

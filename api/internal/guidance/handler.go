@@ -21,6 +21,7 @@ import (
 type Handler struct {
 	fs      *firestore.Client
 	advisor Advisor
+	rag     RAGRetriever
 }
 
 // NewHandler creates a guidance handler with an AI advisor.
@@ -28,6 +29,12 @@ type Handler struct {
 // Accepts either *ShepherdAdvisor (Claude Opus) or *GenkitAdvisor (legacy Gemini).
 func NewHandler(fs *firestore.Client, advisor Advisor) *Handler {
 	return &Handler{fs: fs, advisor: advisor}
+}
+
+// WithRAG enables corpus-grounded legal guidance for chat requests.
+func (h *Handler) WithRAG(retriever RAGRetriever) *Handler {
+	h.rag = retriever
+	return h
 }
 
 // Score represents the estate completion assessment.
@@ -163,12 +170,32 @@ func (h *Handler) HandleChat(w http.ResponseWriter, r *http.Request) {
 
 	// Enrich the prompt with estate context
 	estateCtx := h.buildEstateContext(ctx, req.EstateID)
+	var citations []CorpusCitation
+	if h.rag != nil && IsLegalGuidanceTopic(req.Message) {
+		chunks, err := h.rag.Retrieve(ctx, req.Message, 5)
+		if err != nil {
+			log.Warn().Err(err).Str("estate_id", req.EstateID).Msg("Legal corpus retrieval failed")
+			writeError(w, http.StatusServiceUnavailable, "Legal guidance corpus is temporarily unavailable")
+			return
+		}
+		if len(chunks) == 0 {
+			writeJSON(w, http.StatusOK, &ChatResponse{
+				Reply: "I cannot answer that legal question from the approved FinalWishes legal corpus yet. This is informational guidance, not legal advice; please consult a licensed attorney in the relevant jurisdiction for a legal decision.",
+			})
+			return
+		}
+		estateCtx += formatCorpusContext(chunks)
+		citations = citationList(chunks)
+	}
 
 	resp, err := h.advisor.Chat(ctx, estateCtx, req.Message, req.ConversationHistory)
 	if err != nil {
 		log.Error().Err(err).Str("estate_id", req.EstateID).Msg("Chat generation failed")
 		writeError(w, http.StatusInternalServerError, "Failed to generate response")
 		return
+	}
+	if len(citations) > 0 {
+		resp.Citations = citations
 	}
 
 	writeJSON(w, http.StatusOK, resp)

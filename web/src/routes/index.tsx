@@ -349,7 +349,7 @@ function Home() {
                   <strong className="text-white">Today&apos;s prompt:</strong> What&apos;s one life lesson you&apos;d want your children to remember?
                 </div>
                 <div className="bg-white/5 rounded-xl px-4 py-3 text-white/80 text-sm">
-                  <strong className="text-white">Action needed:</strong> You have 3 assets without designated beneficiaries. <span className="text-gold underline cursor-pointer">Fix now &rarr;</span>
+                  <strong className="text-white">Action needed:</strong> You have 3 assets without designated beneficiaries. <button type="button" onClick={openLogin} className="text-gold underline cursor-pointer bg-transparent border-none p-0 font-inherit hover:text-gold-bright transition-colors">Fix now &rarr;</button>
                 </div>
               </div>
             </div>
@@ -607,7 +607,7 @@ function Home() {
               <p className="text-white/60 text-xs leading-relaxed">The estate operating system. Organize your assets, preserve your voice, and give your family clarity when it matters most.</p>
             </div>
             <FooterCol title="Product" links={[{ label: "Who It's For", href: "#scenarios" }, { label: "How It Works", href: "#how-it-works" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
-            <FooterCol title="Company" links={[{ label: "About Us", href: "#scenarios" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
+            <FooterCol title="Company" links={[{ label: "About Us", href: "/about" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
             <FooterCol title="Legal" links={[{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }, { label: "FAQ", href: "#faq" }]} />
           </div>
 

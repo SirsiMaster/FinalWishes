@@ -1,0 +1,408 @@
+{
+	"header": {
+		"source": "il_caringinfo_advance_directives.pdf",
+		"version": "pdfcpu v0.12.1 dev",
+		"creation": "2026-06-01 20:02:06 EDT",
+		"author": "Sharon Stevenson",
+		"creator": "Acrobat PDFMaker 23 for Word",
+		"producer": "Adobe PDF Library 23.3.20"
+	},
+	"forms": [
+		{
+			"textfield": [
+				{
+					"pages": [
+						11
+					],
+					"id": "152",
+					"name": "My name Print your full name",
+					"altname": "My name (Print your full name",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						11
+					],
+					"id": "153",
+					"name": "My address",
+					"altname": "My address",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						11
+					],
+					"id": "151",
+					"name": "Agent name",
+					"altname": "Agent name",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						11
+					],
+					"id": "160",
+					"name": "Agent address",
+					"altname": "Agent address",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						11
+					],
+					"id": "158",
+					"name": "Agent phone number",
+					"altname": "Agent phone number",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						12
+					],
+					"id": "161",
+					"name": "names",
+					"altname": "names",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						12
+					],
+					"id": "162",
+					"name": "undefined",
+					"altname": "undefined",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						13
+					],
+					"id": "166",
+					"name": "I AUTHORIZE MY AGENT TO please check any one box",
+					"altname": "I AUTHORIZE MY AGENT TO (please check any one box",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						13
+					],
+					"id": "167",
+					"name": "Make decisions for me starting now and continuing after I am no",
+					"altname": "Make decisions for me starting now and continuing after I am no",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						14
+					],
+					"id": "172",
+					"name": "The quality of my life is more important than the length of my life If I",
+					"altname": "The quality of my life is more important than the length of my life. If I",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						14
+					],
+					"id": "173",
+					"name": "Staying alive is more important to me no matter how sick I am how",
+					"altname": "Staying alive is more important to me, no matter how sick I am, how",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						15
+					],
+					"id": "178",
+					"name": "this form 2",
+					"altname": "this form [2]",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						15
+					],
+					"id": "179",
+					"name": "Todays date",
+					"altname": "Today's date",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						15
+					],
+					"id": "182",
+					"name": "this form 1",
+					"altname": "this form [1]",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "188",
+					"name": "Witness address",
+					"altname": "Witness address",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "183",
+					"name": "Witness printed name",
+					"altname": "Witness printed name",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "184",
+					"name": "Todays date_2",
+					"altname": "Today's date",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "187",
+					"name": "Signature94_es_:signer:signature",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "189",
+					"name": "I saw the principal sign this document or",
+					"altname": "I saw the principal sign this document, or",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "201",
+					"name": "City County and State of Residence 2",
+					"altname": "City, County and State of Residence [2]",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "196",
+					"name": "Witness",
+					"altname": "Witness",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "195",
+					"name": "Witness_2",
+					"altname": "Witness",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "200",
+					"name": "This declaration is made this",
+					"altname": "This declaration is made this",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "197",
+					"name": "day of",
+					"altname": "day of",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "198",
+					"name": "month year I",
+					"altname": "month, year). I",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						17
+					],
+					"id": "199",
+					"name": "City County and State of Residence 1",
+					"altname": "City, County and State of Residence [1]",
+					"value": "",
+					"multiline": false,
+					"locked": false
+				}
+			],
+			"checkbox": [
+				{
+					"pages": [
+						11
+					],
+					"id": "156",
+					"name": "Check Box96",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						13
+					],
+					"id": "165",
+					"name": "undefined_2",
+					"altname": "undefined",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						13
+					],
+					"id": "169",
+					"name": "Check Box97",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						13
+					],
+					"id": "171",
+					"name": "Check Box98",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						14
+					],
+					"id": "174",
+					"name": "undefined_3",
+					"altname": "undefined",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						14
+					],
+					"id": "175",
+					"name": "undefined_4",
+					"altname": "undefined",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "185",
+					"name": "undefined_5",
+					"altname": "undefined",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "191",
+					"name": "undefined_6",
+					"altname": "undefined",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "190",
+					"name": "Check Box99",
+					"default": false,
+					"value": false,
+					"locked": false
+				},
+				{
+					"pages": [
+						16
+					],
+					"id": "193",
+					"name": "Check Box100",
+					"default": false,
+					"value": false,
+					"locked": false
+				}
+			]
+		}
+	]
+}

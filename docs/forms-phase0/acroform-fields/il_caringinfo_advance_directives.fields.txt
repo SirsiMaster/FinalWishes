@@ -1,0 +1,47 @@
+
+/Users/thekryptodragon/Development/FinalWishes/docs/forms-phase0/blanks/il_caringinfo_advance_directives.pdf:
+
+Pg L Field     │ Id  │ Name                                                                     │ AltName                                                                   
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11   Textfield │ 152 │ My name Print your full name                                             │ My name (Print your full name                                             
+    Textfield │ 153 │ My address                                                               │ My address                                                                
+    Textfield │ 151 │ Agent name                                                               │ Agent name                                                                
+    Textfield │ 160 │ Agent address                                                            │ Agent address                                                             
+    Textfield │ 158 │ Agent phone number                                                       │ Agent phone number                                                        
+    CheckBox  │ 156 │ Check Box96                                                              │                                                                           
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12   Textfield │ 161 │ names                                                                    │ names                                                                     
+    Textfield │ 162 │ undefined                                                                │ undefined                                                                 
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+13   Textfield │ 166 │ I AUTHORIZE MY AGENT TO please check any one box                         │ I AUTHORIZE MY AGENT TO (please check any one box                         
+    Textfield │ 167 │ Make decisions for me starting now and continuing after I am no          │ Make decisions for me starting now and continuing after I am no           
+    CheckBox  │ 165 │ undefined_2                                                              │ undefined                                                                 
+    CheckBox  │ 169 │ Check Box97                                                              │                                                                           
+    CheckBox  │ 171 │ Check Box98                                                              │                                                                           
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+14   Textfield │ 172 │ The quality of my life is more important than the length of my life If I │ The quality of my life is more important than the length of my life. If I 
+    CheckBox  │ 174 │ undefined_3                                                              │ undefined                                                                 
+    Textfield │ 173 │ Staying alive is more important to me no matter how sick I am how        │ Staying alive is more important to me, no matter how sick I am, how       
+    CheckBox  │ 175 │ undefined_4                                                              │ undefined                                                                 
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+15   Textfield │ 182 │ this form 1                                                              │ this form [1]                                                             
+    Textfield │ 178 │ this form 2                                                              │ this form [2]                                                             
+    Textfield │ 179 │ Todays date                                                              │ Today's date                                                              
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+16   Textfield │ 189 │ I saw the principal sign this document or                                │ I saw the principal sign this document, or                                
+    CheckBox  │ 185 │ undefined_5                                                              │ undefined                                                                 
+    CheckBox  │ 191 │ undefined_6                                                              │ undefined                                                                 
+    Textfield │ 183 │ Witness printed name                                                     │ Witness printed name                                                      
+    Textfield │ 188 │ Witness address                                                          │ Witness address                                                           
+    Textfield │ 184 │ Todays date_2                                                            │ Today's date                                                              
+    Textfield │ 187 │ Signature94_es_:signer:signature                                         │                                                                           
+    CheckBox  │ 190 │ Check Box99                                                              │                                                                           
+    CheckBox  │ 193 │ Check Box100                                                             │                                                                           
+━━━━━━━━━━━━━━━┿━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+17   Textfield │ 200 │ This declaration is made this                                            │ This declaration is made this                                             
+    Textfield │ 197 │ day of                                                                   │ day of                                                                    
+    Textfield │ 198 │ month year I                                                             │ month, year). I                                                           
+    Textfield │ 199 │ City County and State of Residence 1                                     │ City, County and State of Residence [1]                                   
+    Textfield │ 201 │ City County and State of Residence 2                                     │ City, County and State of Residence [2]                                   
+    Textfield │ 196 │ Witness                                                                  │ Witness                                                                   
+    Textfield │ 195 │ Witness_2                                                                │ Witness                                                                   

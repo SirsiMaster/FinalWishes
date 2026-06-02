@@ -27,6 +27,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 - `docs/ga-evidence/README.md` — upgraded to v3/12-criteria convention per codex v3 review (R2). New naming: `docs/ga-evidence/cr-{NN}-{slug}-{YYYY-MM-DD}.md`. Index expanded from 8 to 12 criteria (engineering / operational / scope-expansion). Added `ADR required` column (R3) flagging CR-09 mobile, CR-11 Lob, CR-12 Google Photos (YES) and CR-10 RAG (conditional). Added pass/fail security clauses (R4) for CR-08 OpenSign wiring path, CR-11 PII-in-logs prohibition, CR-12 OAuth-scope disclosure. Governing canon now references v3 proposal + v3.1 patch. Router state (decision artifact and codex review migration) recorded locally under gitignored `.agents/idea-router/`.
 - `api/internal/payments/handlers.go` — added `APP_BASE_URL` support so Stripe checkout and Billing Portal return URLs can switch to `https://finalwishes.app` after CR-05 passes without another code change.
 - `api/internal/guidance/handler.go` and `api/internal/guidance/genkit.go` — legal-topic chat now injects retrieved corpus context when RAG is configured and instructs Shepherd to cite or abstain for legal claims.
+- `api/internal/formsapi/handler.go` + `api/cmd/api/main.go` — forms fill response now emits `X-Forms-Missing-Required` / `X-Forms-Skipped-Execution` as clean comma-joined lists (was Go's `[a b c]`) and exposes them via CORS `ExposedHeaders` so the browser client can read them.
+
+### Fixed
+- **(Security, Rule 26) Google Photos import leaked EXIF PII** — `api/internal/googlephotos/` no longer writes the raw JPEG EXIF APP1 segment into the client-readable Firestore heirloom document. EXIF carries GPS coordinates, device identifiers, and timestamps; the original photo bytes (EXIF intact) stay only in the vault storage object. (Codex review P1.)
+- **Google Photos duplicate-check masked failures** — `hasHash` now propagates unexpected Firestore errors instead of returning `false, nil`, so transient/permission failures abort the import rather than silently importing possible duplicates. (Codex review P2.)
 
 ---
 

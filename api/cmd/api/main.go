@@ -93,7 +93,7 @@ func main() {
 		AllowedOrigins:   allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-Request-ID", "Connect-Protocol-Version"},
-		ExposedHeaders:   []string{"Link", "Connect-Error-Code", "Connect-Error-Message"},
+		ExposedHeaders:   []string{"Link", "Connect-Error-Code", "Connect-Error-Message", "X-Forms-Missing-Required", "X-Forms-Skipped-Execution"},
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))

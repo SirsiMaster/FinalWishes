@@ -30,6 +30,7 @@ type Handler struct {
 	webhookSecret  string
 	successURL     string
 	cancelURL      string
+	appBaseURL     string
 	publishableKey string
 }
 
@@ -40,6 +41,7 @@ type Config struct {
 	PublishableKey string // STRIPE_PUBLISHABLE_KEY
 	SuccessURL     string // STRIPE_SUCCESS_URL (e.g., https://finalwishes-prod.web.app/estates/{ESTATE_ID}/settings?payment=success)
 	CancelURL      string // STRIPE_CANCEL_URL
+	AppBaseURL     string // APP_BASE_URL (e.g., https://finalwishes.app)
 }
 
 // Tier represents a pricing tier.
@@ -132,6 +134,7 @@ func NewHandler(fs *firestore.Client, cfg Config) *Handler {
 		webhookSecret:  cfg.WebhookSecret,
 		successURL:     cfg.SuccessURL,
 		cancelURL:      cfg.CancelURL,
+		appBaseURL:     cfg.AppBaseURL,
 		publishableKey: cfg.PublishableKey,
 	}
 }
@@ -211,10 +214,10 @@ func (h *Handler) HandleCreateCheckout(w http.ResponseWriter, r *http.Request) {
 	successURL := h.successURL
 	cancelURL := h.cancelURL
 	if successURL == "" {
-		successURL = fmt.Sprintf("https://finalwishes-prod.web.app/estates/%s/settings?payment=success&session_id={CHECKOUT_SESSION_ID}", req.EstateID)
+		successURL = fmt.Sprintf("%s/estates/%s/settings?payment=success&session_id={CHECKOUT_SESSION_ID}", h.webAppBaseURL(), req.EstateID)
 	}
 	if cancelURL == "" {
-		cancelURL = fmt.Sprintf("https://finalwishes-prod.web.app/estates/%s/pricing?payment=cancelled", req.EstateID)
+		cancelURL = fmt.Sprintf("%s/estates/%s/pricing?payment=cancelled", h.webAppBaseURL(), req.EstateID)
 	}
 
 	// Create Stripe Checkout Session
@@ -346,7 +349,7 @@ func (h *Handler) HandleCreatePortalSession(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Build return URL — user returns here after managing subscription
-	returnURL := fmt.Sprintf("https://finalwishes-prod.web.app/estates/%s/settings", req.EstateID)
+	returnURL := fmt.Sprintf("%s/estates/%s/settings", h.webAppBaseURL(), req.EstateID)
 	if os.Getenv("GOOGLE_CLOUD_PROJECT") == "" {
 		returnURL = fmt.Sprintf("http://localhost:5173/estates/%s/settings", req.EstateID)
 	}
@@ -557,5 +560,13 @@ func ConfigFromEnv() Config {
 		PublishableKey: os.Getenv("STRIPE_PUBLISHABLE_KEY"),
 		SuccessURL:     os.Getenv("STRIPE_SUCCESS_URL"),
 		CancelURL:      os.Getenv("STRIPE_CANCEL_URL"),
+		AppBaseURL:     os.Getenv("APP_BASE_URL"),
 	}
+}
+
+func (h *Handler) webAppBaseURL() string {
+	if h.appBaseURL != "" {
+		return h.appBaseURL
+	}
+	return "https://finalwishes-prod.web.app"
 }

@@ -156,6 +156,7 @@ func TestConfigFromEnv(t *testing.T) {
 	t.Setenv("STRIPE_PUBLISHABLE_KEY", "pk_test_123")
 	t.Setenv("STRIPE_SUCCESS_URL", "https://example.com/success")
 	t.Setenv("STRIPE_CANCEL_URL", "https://example.com/cancel")
+	t.Setenv("APP_BASE_URL", "https://finalwishes.app")
 
 	cfg := ConfigFromEnv()
 
@@ -173,6 +174,20 @@ func TestConfigFromEnv(t *testing.T) {
 	}
 	if cfg.CancelURL != "https://example.com/cancel" {
 		t.Errorf("expected CancelURL, got %q", cfg.CancelURL)
+	}
+	if cfg.AppBaseURL != "https://finalwishes.app" {
+		t.Errorf("expected AppBaseURL, got %q", cfg.AppBaseURL)
+	}
+}
+
+// TestWebAppBaseURL verifies the default web app base and custom-domain override.
+func TestWebAppBaseURL(t *testing.T) {
+	if got := (&Handler{}).webAppBaseURL(); got != "https://finalwishes-prod.web.app" {
+		t.Errorf("expected Firebase Hosting default, got %q", got)
+	}
+
+	if got := (&Handler{appBaseURL: "https://finalwishes.app"}).webAppBaseURL(); got != "https://finalwishes.app" {
+		t.Errorf("expected custom app base URL, got %q", got)
 	}
 }
 

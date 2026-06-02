@@ -66,6 +66,19 @@ func TestGenerateProof(t *testing.T) {
 	}
 	t.Logf("wrote %s (%d bytes)", hcPath, len(hcOut))
 	renderProofPages(t, proofDir, hcPath, "il_hcpoa_caringinfo", []string{"11", "15", "16"})
+
+	// Living Will (same flattened packet, page 17).
+	lwOut, lwRep, err := forms.Fill(livingWillBlank, maps.LivingWillCaringInfo(), livingWillValues())
+	if err != nil {
+		t.Fatalf("fill living will: %v", err)
+	}
+	t.Logf("living-will stamped=%v skippedExecution=%v missingRequired=%v", lwRep.Stamped, lwRep.SkippedExecution, lwRep.MissingRequired)
+	lwPath := filepath.Join(proofDir, "il_living_will_caringinfo_filled.pdf")
+	if err := os.WriteFile(lwPath, lwOut, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("wrote %s (%d bytes)", lwPath, len(lwOut))
+	renderProofPages(t, proofDir, lwPath, "il_living_will_caringinfo", []string{"17"})
 }
 
 // renderProofPages rasterizes the given pages of pdfPath to 150-DPI PNGs.

@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute, useParams, Link } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useDirectives, useEstateHeirs, type Directive } from '../lib/firestore'
 import { useAuth } from '../lib/auth'
@@ -238,6 +238,23 @@ function DirectivesPage() {
 
       {/* ── Illinois Legal Advance Directives ── */}
       <IllinoisAdvanceDirectivesSection estateId={estateId} />
+
+      {/* ── Statutory Form Generator ── */}
+      <Link to="/estates/$estateId/forms" params={{ estateId }} className="block no-underline">
+        <Card className="border-[#C8A951]/40 hover:shadow-md transition-shadow">
+          <CardContent className="p-6 flex items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-[#133378] text-lg">Generate statutory forms</h3>
+              <p className="text-sm text-[#133378]/70 mt-1">
+                Pre-fill official Illinois forms — Power of Attorney (Property &amp; Health Care),
+                Living Will, Small Estate Affidavit, Mental Health Declaration — print-ready for
+                hand-signing.
+              </p>
+            </div>
+            <FileText className="w-7 h-7 text-[#C8A951] shrink-0" />
+          </CardContent>
+        </Card>
+      </Link>
 
       {/* ── Personal Directives Cards ── */}
       {directives.length === 0 ? (

@@ -52,6 +52,7 @@ Each ADR follows this structure:
 | ADR-042 | Events & Broadcasting — Funeral/Memorial/Repast Pages | Accepted | 2026-04-17 | — |
 | [ADR-043](ADR-043-ILLINOIS-PROBATE-ENGINE.md) | Illinois Probate Engine — Pluggable State Machine | Accepted | 2026-05-18 | — |
 | [ADR-044](ADR-044-LEGAL-RAG-CORPUS.md) | Legal RAG Corpus for Shepherd Guidance | Accepted | 2026-05-20 | — |
+| [ADR-045](ADR-045-GOOGLE-PHOTOS-IMPORT.md) | Google Photos Import — Picker API, minimal scope, PII-clean | Accepted | 2026-06-02 | — |
 
 > **Note on scope:** ADRs 004, 005, 008, 010–016, 018 were created in the context of Sirsi Sign (sign.sirsi.ai), not FinalWishes. They remain in the index for portfolio-level traceability but do not apply to FinalWishes deployment.
 

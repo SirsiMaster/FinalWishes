@@ -3,7 +3,6 @@ package googlephotos
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/base64"
 	"encoding/hex"
 	"image"
 	_ "image/jpeg"
@@ -49,30 +48,8 @@ func averageDHash(data []byte) string {
 	})
 }
 
-func extractJPEGEXIF(data []byte) map[string]interface{} {
-	if len(data) < 4 || data[0] != 0xff || data[1] != 0xd8 {
-		return nil
-	}
-	for i := 2; i+4 < len(data); {
-		if data[i] != 0xff {
-			return nil
-		}
-		marker := data[i+1]
-		if marker == 0xda || marker == 0xd9 {
-			return nil
-		}
-		size := int(data[i+2])<<8 | int(data[i+3])
-		if size < 2 || i+2+size > len(data) {
-			return nil
-		}
-		segment := data[i+4 : i+2+size]
-		if marker == 0xe1 && len(segment) > 6 && string(segment[:6]) == "Exif\x00\x00" {
-			return map[string]interface{}{
-				"format": "jpeg-app1-exif",
-				"bytes":  base64.StdEncoding.EncodeToString(segment),
-			}
-		}
-		i += 2 + size
-	}
-	return nil
-}
+// NOTE: raw JPEG EXIF extraction was removed deliberately. EXIF APP1 segments
+// carry GPS coordinates, device identifiers, and timestamps; persisting them in
+// the client-readable Firestore heirloom document violated PII siloing
+// (CLAUDE.md Rule 26). The original photo bytes (with EXIF intact) remain in the
+// vault storage object; only sanitized fields are stored in Firestore.

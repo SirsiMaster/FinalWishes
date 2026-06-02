@@ -143,7 +143,6 @@ func (h *Handler) HandleImport(w http.ResponseWriter, r *http.Request) {
 			"originalGooglePhotosId": item.ID,
 			"sha256":                 sha,
 			"dHash":                  averageDHash(data),
-			"exif":                   extractJPEGEXIF(data),
 			"googlePhotosMetadata":   item.MediaFile.MediaMetadata,
 			"storageBucket":          h.bucket,
 			"storageKey":             objectPath,
@@ -216,7 +215,10 @@ func (h *Handler) hasHash(ctx context.Context, estateID, sha string) (bool, erro
 	if strings.Contains(err.Error(), "NotFound") || strings.Contains(err.Error(), "not found") {
 		return false, nil
 	}
-	return false, nil
+	// Any other error (transient, permission, config) is NOT "no duplicate" —
+	// propagate it so the caller aborts the import instead of silently
+	// importing a possible duplicate.
+	return false, err
 }
 
 func readAccessToken(r *http.Request) string {

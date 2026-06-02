@@ -39,18 +39,35 @@ func TestGenerateProof(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Logf("wrote %s (%d bytes)", pdfPath, len(out))
+	renderProofPages(t, proofDir, pdfPath, "il_poa_property_2011", []string{"3", "7"})
 
+	// Small Estate Affidavit (Form 3606): body page 1 + execution page 4.
+	seOut, seRep, err := forms.Fill(smallEstateBlank, maps.SmallEstateAffidavit3606(), seValues())
+	if err != nil {
+		t.Fatalf("fill small estate: %v", err)
+	}
+	t.Logf("small-estate stamped=%v skippedExecution=%v missingRequired=%v", seRep.Stamped, seRep.SkippedExecution, seRep.MissingRequired)
+	sePath := filepath.Join(proofDir, "il_small_estate_3606_filled.pdf")
+	if err := os.WriteFile(sePath, seOut, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("wrote %s (%d bytes)", sePath, len(seOut))
+	renderProofPages(t, proofDir, sePath, "il_small_estate_3606", []string{"1", "4"})
+}
+
+// renderProofPages rasterizes the given pages of pdfPath to 150-DPI PNGs.
+func renderProofPages(t *testing.T, proofDir, pdfPath, stem string, pages []string) {
+	t.Helper()
 	if _, err := exec.LookPath("pdftoppm"); err != nil {
-		t.Logf("pdftoppm absent; wrote PDF only")
+		t.Logf("pdftoppm absent; wrote PDF only for %s", stem)
 		return
 	}
-	// Render the body page (3) and the execution page (7) at 150 DPI.
-	for _, page := range []string{"3", "7"} {
-		prefix := filepath.Join(proofDir, "il_poa_property_2011_p"+page)
+	for _, page := range pages {
+		prefix := filepath.Join(proofDir, stem+"_p"+page)
 		cmd := exec.Command("pdftoppm", "-png", "-r", "150", "-f", page, "-l", page, pdfPath, prefix)
 		if b, err := cmd.CombinedOutput(); err != nil {
-			t.Fatalf("pdftoppm page %s: %v\n%s", page, err, b)
+			t.Fatalf("pdftoppm %s page %s: %v\n%s", stem, page, err, b)
 		}
-		t.Logf("rendered page %s -> %s-*.png", page, prefix)
+		t.Logf("rendered %s page %s -> %s-*.png", stem, page, prefix)
 	}
 }

@@ -65,7 +65,7 @@ Example: `docs/ga-evidence/cr-01-tier1-features-2026-06-15.md`.
 
 ## Rules
 
-- Do **not** pre-fill an artifact. Write it at the moment the criterion flips to MET, against a real, dated run.
+- Do **not** pre-fill a `MET` artifact. A `NOT MET / BLOCKED` or `NOT MET / OWNER-GATED` capture is allowed when it records a real dated preflight, failed access attempt, or external-account blocker; the later passing run must be a new dated artifact.
 - Do **not** edit an artifact after it is referenced by a codex `GOAL_MET` verdict. If the underlying state regresses, file a new dated artifact and let codex re-verdict.
 - The 7-day uptime window (CR-06) artifact links to a `docs/sla-evidence/<start>-to-<end>.md` companion file capturing hourly availability.
 - Release hygiene (CHANGELOG semver retro-note + `docs/CONTINUATION-PROMPT.md` v22) is **not** evidence-tracked here; it lives in CHANGELOG and the prompt doc respectively.

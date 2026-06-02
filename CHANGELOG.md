@@ -7,9 +7,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ## [Unreleased]
 ### Added
 - `docs/ga-evidence/README.md` — evidence artifact convention for `/goal: finalwishes-tier1-ga` per Codex review revision #5. Defines `docs/ga-evidence/ga-c{N}-{slug}-{YYYY-MM-DD}.md` naming, required contents per artifact, and the 8-criterion ownership index. Seeded as part of acknowledging the Tier 1 GA goal v2 proposal.
+- `docs/ga-evidence/cr-04-dependabot-2026-05-20.md` — blocked CR-04 Dependabot sweep evidence recording the GitHub API access failure and local verification commands.
+- `docs/ga-evidence/cr-05-domain-2026-05-20.md`, `docs/ga-evidence/cr-07-stripe-portal-2026-05-20.md`, and `docs/ga-evidence/cr-08-opensign-2026-05-20.md` — owner-gated GA evidence/checklists for DNS/TLS, Stripe Customer Portal, and OpenSign template readiness.
+- `docs/ADR-044-LEGAL-RAG-CORPUS.md`, `api/internal/guidance/rag.go`, `api/internal/guidance/schema.sql`, `api/cmd/rag-eval`, and `docs/legal-corpus/` — CR-10 legal RAG architecture foundation using PostgreSQL + pgvector, `gemini-embedding-001`, official-source provenance, citation return payloads, and citation-abstention behavior.
+- `docs/ga-evidence/cr-10-rag-2026-05-20.md` — CR-10 evidence artifact marking the architecture foundation ready while authoritative corpus ingestion and probe-set scoring remain before `MET`.
+- `api/internal/googlephotos/` — CR-12 Google Photos import package (Picker-flow handler + client + content hashing) wired into `api/cmd/api/main.go`. Imports selected photos into the encrypted vault bucket; completes wiring that `main.go` already referenced.
+- `api/internal/forms/` — statutory-form coordinate-overlay engine (Phase 1a). Generic Go-native `Fill()` over a per-form `CoordinateMap`, stamping official FLAT government PDFs via pdfcpu (library import). Proven on the IL Statutory Short Form Power of Attorney for Property (755 ILCS 45): SHA256 source fail-closed, execution fields never stamped (wet-sign default), true-flatten output assertion. Human-review proof under `docs/forms-phase0/proof/`.
 
 ### Changed
 - `docs/ga-evidence/README.md` — upgraded to v3/12-criteria convention per codex v3 review (R2). New naming: `docs/ga-evidence/cr-{NN}-{slug}-{YYYY-MM-DD}.md`. Index expanded from 8 to 12 criteria (engineering / operational / scope-expansion). Added `ADR required` column (R3) flagging CR-09 mobile, CR-11 Lob, CR-12 Google Photos (YES) and CR-10 RAG (conditional). Added pass/fail security clauses (R4) for CR-08 OpenSign wiring path, CR-11 PII-in-logs prohibition, CR-12 OAuth-scope disclosure. Governing canon now references v3 proposal + v3.1 patch. Router state (decision artifact and codex review migration) recorded locally under gitignored `.agents/idea-router/`.
+- `api/internal/payments/handlers.go` — added `APP_BASE_URL` support so Stripe checkout and Billing Portal return URLs can switch to `https://finalwishes.app` after CR-05 passes without another code change.
+- `api/internal/guidance/handler.go` and `api/internal/guidance/genkit.go` — legal-topic chat now injects retrieved corpus context when RAG is configured and instructs Shepherd to cite or abstain for legal claims.
 
 ---
 

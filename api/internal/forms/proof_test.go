@@ -53,6 +53,19 @@ func TestGenerateProof(t *testing.T) {
 	}
 	t.Logf("wrote %s (%d bytes)", sePath, len(seOut))
 	renderProofPages(t, proofDir, sePath, "il_small_estate_3606", []string{"1", "4"})
+
+	// Health Care POA (flattened CaringInfo): principal/agent page 11 + execution pages 15, 16.
+	hcOut, hcRep, err := forms.Fill(hcpoaBlank, maps.HCPOACaringInfo(), hcpoaValues())
+	if err != nil {
+		t.Fatalf("fill hcpoa: %v", err)
+	}
+	t.Logf("hcpoa stamped=%v skippedExecution=%v missingRequired=%v", hcRep.Stamped, hcRep.SkippedExecution, hcRep.MissingRequired)
+	hcPath := filepath.Join(proofDir, "il_hcpoa_caringinfo_filled.pdf")
+	if err := os.WriteFile(hcPath, hcOut, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	t.Logf("wrote %s (%d bytes)", hcPath, len(hcOut))
+	renderProofPages(t, proofDir, hcPath, "il_hcpoa_caringinfo", []string{"11", "15", "16"})
 }
 
 // renderProofPages rasterizes the given pages of pdfPath to 150-DPI PNGs.

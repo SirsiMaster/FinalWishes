@@ -51,6 +51,7 @@ Each ADR follows this structure:
 | ADR-041 | Public Memorials + QR Sharing — Unauthenticated Access | Accepted | 2026-04-17 | — |
 | ADR-042 | Events & Broadcasting — Funeral/Memorial/Repast Pages | Accepted | 2026-04-17 | — |
 | [ADR-043](ADR-043-ILLINOIS-PROBATE-ENGINE.md) | Illinois Probate Engine — Pluggable State Machine | Accepted | 2026-05-18 | — |
+| [ADR-044](ADR-044-LEGAL-RAG-CORPUS.md) | Legal RAG Corpus for Shepherd Guidance | Accepted | 2026-05-20 | — |
 
 > **Note on scope:** ADRs 004, 005, 008, 010–016, 018 were created in the context of Sirsi Sign (sign.sirsi.ai), not FinalWishes. They remain in the index for portfolio-level traceability but do not apply to FinalWishes deployment.
 
@@ -108,6 +109,7 @@ Each ADR follows this structure:
 ### Scope & Feasibility
 - ADR-002 §7: Scope Assessment ($95K/5mo achievable with boundaries)
 - ADR-002 §8: MVP Decision (guidance platform, NOT integration platform)
+- ADR-044: CR-10 Legal RAG Corpus (PostgreSQL + pgvector, official-source citations, citation abstention)
 
 ## Creating a New ADR
 

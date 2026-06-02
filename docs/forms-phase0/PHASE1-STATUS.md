@@ -8,6 +8,7 @@ _Engine: `api/internal/forms/` — generic Go-native coordinate-overlay over off
 |------|----------|--------|--------|
 | **Property POA** (`il_poa_property_2011`) | 755 ILCS 45/3-3 | official flat blank, SHA-pinned | ✅ Phase 1a — proven, deployed (`9a3ca0a`) |
 | **Small Estate Affidavit** (`il_small_estate_3606`) | 755 ILCS 5/25-1 | official flat blank, SHA-pinned | ✅ Phase 1b — core fields, deployed (`c32a0ed`) |
+| **Health Care POA** (`il_hcpoa_caringinfo`) | 755 ILCS 45/4-10 | CaringInfo AcroForm → flattened + SHA-pinned | ✅ **priority 1** — core fields via flatten route, proof-verified |
 
 Proof rasters for both under `docs/forms-phase0/proof/` (body page = values land on the rules; execution page = blank).
 
@@ -19,8 +20,7 @@ Proof rasters for both under `docs/forms-phase0/proof/` (body page = values land
 
 | Form | Source in-house | Notes |
 |------|-----------------|-------|
-| **Health Care POA** (priority 1) | CaringInfo packet (AcroForm, pp.11–16) | Flatten via `FlattenAcroForm` → pin → author core map. Fields have real names (`My name`, `My address`, `Agent name`, `Agent address`, `Agent phone`). Execution block (signature + witness) must be located and flagged `Execution=true` before build. |
-| **Living Will** (priority 4) | CaringInfo packet (AcroForm, p.17) | Same flatten route; fewer fields. |
+| **Living Will** (priority 4) | flattened CaringInfo blank (`il_hcpoa_caringinfo_flat.pdf`, p.17) | Same pinned flat blank already committed for HCPOA; author the Living Will declaration fields (initials + signature/witness execution) as one more `CoordinateMap`. |
 
 ## Blocked — need owner action (manual download / fetch)
 

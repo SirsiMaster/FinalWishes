@@ -57,13 +57,19 @@ type Report struct {
 //
 // values maps Field.Key -> string. Checkbox fields treat the value as truthy.
 func Fill(blankPath string, m *CoordinateMap, values map[string]string) ([]byte, *Report, error) {
-	if m == nil {
-		return nil, nil, errors.New("forms: nil coordinate map")
-	}
-
 	blank, err := os.ReadFile(blankPath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("forms: read blank %q: %w", blankPath, err)
+	}
+	return FillBytes(blank, m, values)
+}
+
+// FillBytes fills an in-memory blank PDF (e.g. one embedded in the binary via
+// go:embed) instead of reading from disk. It carries exactly the same
+// guarantees as Fill — see Fill's doc comment.
+func FillBytes(blank []byte, m *CoordinateMap, values map[string]string) ([]byte, *Report, error) {
+	if m == nil {
+		return nil, nil, errors.New("forms: nil coordinate map")
 	}
 
 	// Fail closed on source-integrity mismatch BEFORE any stamping.

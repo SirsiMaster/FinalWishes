@@ -26,6 +26,7 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/capsules"
 	"github.com/sirsi-technologies/finalwishes-api/internal/crypto"
 	"github.com/sirsi-technologies/finalwishes-api/internal/docintell"
+	"github.com/sirsi-technologies/finalwishes-api/internal/formsapi"
 	"github.com/sirsi-technologies/finalwishes-api/internal/gen/estate/v1/estatev1connect"
 	"github.com/sirsi-technologies/finalwishes-api/internal/googlephotos"
 	"github.com/sirsi-technologies/finalwishes-api/internal/guardian"
@@ -282,6 +283,19 @@ func main() {
 		log.Info().Msg("Digital Lockbox API routes registered at /api/v1/lockbox/*")
 	} else if fs != nil && vaultCrypto == nil {
 		log.Warn().Msg("Cloud KMS unavailable — lockbox credential encryption endpoints disabled")
+	}
+
+	// Statutory Form generation (coordinate-overlay engine, embedded blanks).
+	// No external dependencies — engine + blanks are compiled in.
+	{
+		formsHandler := formsapi.NewHandler()
+		r.Route("/api/v1/forms", func(r chi.Router) {
+			r.Use(authMiddleware)
+			r.Get("/", formsHandler.HandleListForms)
+			r.Get("/{formId}", formsHandler.HandleGetForm)
+			r.Post("/{formId}/fill", formsHandler.HandleFillForm)
+		})
+		log.Info().Msg("Statutory Form API routes registered at /api/v1/forms/*")
 	}
 
 	// Document Vault REST endpoints (download URLs + Document Intelligence)

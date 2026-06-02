@@ -44,7 +44,7 @@ func TestFillByID_UnknownForm(t *testing.T) {
 
 func TestSupportedFormIDs_Stable(t *testing.T) {
 	ids := maps.SupportedFormIDs()
-	if len(ids) != 4 {
-		t.Fatalf("expected 4 supported forms, got %d: %v", len(ids), ids)
+	if len(ids) != 5 {
+		t.Fatalf("expected 5 supported forms, got %d: %v", len(ids), ids)
 	}
 }

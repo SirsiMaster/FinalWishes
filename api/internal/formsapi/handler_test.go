@@ -41,8 +41,8 @@ func TestListForms(t *testing.T) {
 	if err := json.Unmarshal(rr.Body.Bytes(), &body); err != nil {
 		t.Fatalf("decode: %v", err)
 	}
-	if len(body.Forms) != 4 {
-		t.Fatalf("expected 4 forms, got %d", len(body.Forms))
+	if len(body.Forms) != 5 {
+		t.Fatalf("expected 5 forms, got %d", len(body.Forms))
 	}
 }
 

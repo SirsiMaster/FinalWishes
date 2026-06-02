@@ -79,6 +79,23 @@ func TestGenerateProof(t *testing.T) {
 	}
 	t.Logf("wrote %s (%d bytes)", lwPath, len(lwOut))
 	renderProofPages(t, proofDir, lwPath, "il_living_will_caringinfo", []string{"17"})
+
+	// Mental Health Treatment Preference Declaration (pages 1-3).
+	mhOut, mhRep, err := maps.FillByID("il_mhtpd_2016", map[string]string{
+		"declarant_name": "Cylton A. Collymore", "declarant_dob": "1973-04-12",
+		"aif_name": "Jane Q. Agent", "aif_address": "456 Proxy Ave, Evanston, IL 60201", "aif_phone": "(312) 555-0142",
+		"successor_aif_name": "Sam Backup", "successor_aif_address": "789 Reserve Rd, Oak Park, IL 60302", "successor_aif_phone": "(312) 555-0199",
+		"principal_signature": "ZZ-MH-SIG-ZZ", "witness1_signature": "ZZ-MH-W1-ZZ", "witness2_signature": "ZZ-MH-W2-ZZ",
+	})
+	if err != nil {
+		t.Fatalf("fill mhtpd: %v", err)
+	}
+	t.Logf("mhtpd stamped=%v skippedExecution=%v", mhRep.Stamped, mhRep.SkippedExecution)
+	mhPath := filepath.Join(proofDir, "il_mhtpd_2016_filled.pdf")
+	if err := os.WriteFile(mhPath, mhOut, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	renderProofPages(t, proofDir, mhPath, "il_mhtpd_2016", []string{"1", "2", "3"})
 }
 
 // renderProofPages rasterizes the given pages of pdfPath to 150-DPI PNGs.

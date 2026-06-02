@@ -28,6 +28,7 @@ var registry = map[string]builder{
 	"il_small_estate_3606":      SmallEstateAffidavit3606,
 	"il_hcpoa_caringinfo":       HCPOACaringInfo,
 	"il_living_will_caringinfo": LivingWillCaringInfo,
+	"il_mhtpd_2016":             MentalHealthDeclaration2016,
 }
 
 // SupportedFormIDs returns the sorted list of fillable form IDs.

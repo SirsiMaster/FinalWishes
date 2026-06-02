@@ -10,6 +10,7 @@ _Engine: `api/internal/forms/` — generic Go-native coordinate-overlay over off
 | **Small Estate Affidavit** (`il_small_estate_3606`) | 755 ILCS 5/25-1 | official flat blank, SHA-pinned | ✅ Phase 1b — core fields, deployed (`c32a0ed`) |
 | **Health Care POA** (`il_hcpoa_caringinfo`) | 755 ILCS 45/4-10 | CaringInfo AcroForm → flattened + SHA-pinned | ✅ **priority 1** — core fields via flatten route, proof-verified (`894d3d6`) |
 | **Living Will** (`il_living_will_caringinfo`) | 755 ILCS 35 | flattened CaringInfo blank, page 17 | ✅ priority 4 — declarant identity, proof-verified |
+| **Mental Health Treatment Pref. Declaration** (`il_mhtpd_2016`) | 755 ILCS 43 | official IDPH flat blank (dph.illinois.gov), SHA-pinned | ✅ priority 5 — declarant + attorney-in-fact, proof-verified |
 
 Proof rasters for both under `docs/forms-phase0/proof/` (body page = values land on the rules; execution page = blank).
 
@@ -29,12 +30,13 @@ repeating-row schedules for the Small Estate Affidavit.
 
 The official blanks are not in-house and could not be fetched programmatically:
 
-| Form | Blocker |
-|------|---------|
-| **HIPAA Authorization** (priority 2) | No single official IL statutory PDF; federal 45 CFR 164.508. Decide whether to author a FinalWishes HIPAA form (React-PDF) or bundle into HCPOA agent authority. |
-| **Mental Health Treatment Preference Declaration** (priority 5) | Official blank not downloaded. |
-| **Disposition of Remains** (priority 6) | Official blank not downloaded (755 ILCS 65). |
-| **VSD 773** (vehicle beneficiary affidavit) | ilsos.gov resets bot downloads — needs manual pull + SHA pin (also noted in Phase-0 findings). |
+| Form | Blocker | What to do |
+|------|---------|-----------|
+| **HIPAA Authorization** (priority 2) | No single official IL statutory PDF — HIPAA is federal (45 CFR 164.508). | Author a FinalWishes HIPAA form (React-PDF, our own template) OR rely on the HCPOA agent's medical-records authority. Product/legal decision, not a download. |
+| **Disposition of Remains** (priority 6) | No official fillable PDF exists; the form is **statutory text** in 755 ILCS 65/10. | Author a FinalWishes template from the statutory form text (React-PDF or a generated flat blank), then overlay-map it. Not an external download. |
+| **VSD 773** (vehicle beneficiary affidavit) | ilsos.gov bot-resets automated downloads. | Manually download from ilsos.gov in a browser, drop into `docs/forms-phase0/blanks/`, then it's a normal overlay map (flat form). |
+
+_Resolved this phase:_ the **Mental Health Treatment Preference Declaration** was previously listed here as "not downloaded" — the official IDPH blank was found at `dph.illinois.gov` (not the bot-blocking gac.illinois.gov), downloaded, SHA-pinned, and shipped (above).
 
 ## Known limitation — repeating rows
 

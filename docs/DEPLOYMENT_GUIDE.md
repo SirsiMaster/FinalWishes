@@ -90,6 +90,7 @@ firebase deploy --only storage
 | `GEMINI_API_KEY` | Secret Manager | Fallback AI (Genkit) |
 | `STRIPE_SUCCESS_URL` | Environment | `https://finalwishes-prod.web.app/estates/{estate_id}/pricing?success=true` |
 | `STRIPE_CANCEL_URL` | Environment | `https://finalwishes-prod.web.app/estates/{estate_id}/pricing?cancelled=true` |
+| `APP_BASE_URL` | Environment | Canonical web origin for generated Stripe checkout and portal return URLs. Leave unset before DNS cutover; set to `https://finalwishes.app` after CR-05 passes DNS + TLS verification. |
 
 ---
 

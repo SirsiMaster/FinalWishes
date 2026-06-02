@@ -30,6 +30,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 - `api/internal/formsapi/handler.go` + `api/cmd/api/main.go` — forms fill response now emits `X-Forms-Missing-Required` / `X-Forms-Skipped-Execution` as clean comma-joined lists (was Go's `[a b c]`) and exposes them via CORS `ExposedHeaders` so the browser client can read them.
 
 ### Fixed
+- **(Security, CR-04) Dependency vulnerability sweep** — remediated all 22 open Dependabot advisories (6 high, 15 moderate, 1 low) via npm `overrides` in `web/` (fast-uri, protobufjs, hono, postcss, qs, ip-address, brace-expansion, @protobufjs/utf8) and `functions/` (qs, uuid). Lockfiles regenerated to patched versions; `npm ci` + web build verified clean. Evidence: `docs/ga-evidence/cr-04-dependabot-2026-06-02.md`. Root cause: CI installs from the workspace-member `web/package-lock.json`, which had drifted from the already-fixed root lockfile.
 - **(Security, Rule 26) Google Photos import leaked EXIF PII** — `api/internal/googlephotos/` no longer writes the raw JPEG EXIF APP1 segment into the client-readable Firestore heirloom document. EXIF carries GPS coordinates, device identifiers, and timestamps; the original photo bytes (EXIF intact) stay only in the vault storage object. (Codex review P1.)
 - **Google Photos duplicate-check masked failures** — `hasHash` now propagates unexpected Firestore errors instead of returning `false, nil`, so transient/permission failures abort the import rather than silently importing possible duplicates. (Codex review P2.)
 

@@ -1,0 +1,20 @@
+{
+  "forms": [
+    {
+      "textfield": [
+        { "id": "152", "name": "My name Print your full name", "value": "Cylton Collymore" },
+        { "id": "153", "name": "My address", "value": "123 Test Lane, Chicago, IL 60601" },
+        { "id": "151", "name": "Agent name", "value": "Jane Q. Agent" },
+        { "id": "160", "name": "Agent address", "value": "456 Proxy Ave, Evanston, IL 60201" },
+        { "id": "158", "name": "Agent phone number", "value": "(312) 555-0142" },
+        { "id": "179", "name": "Todays date", "value": "2026-06-01" },
+        { "id": "183", "name": "Witness printed name", "value": "Walter Witness" },
+        { "id": "188", "name": "Witness address", "value": "789 Observer Rd, Oak Park, IL 60302" }
+      ],
+      "checkbox": [
+        { "id": "156", "name": "Check Box96", "value": true },
+        { "id": "169", "name": "Check Box97", "value": true }
+      ]
+    }
+  ]
+}

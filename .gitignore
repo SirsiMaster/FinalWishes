@@ -11,6 +11,9 @@ out/
 build/
 *.tsbuildinfo
 
+# === Phase 0 throwaway spike outputs (dummy-data filled PDFs) ===
+docs/forms-phase0/spike_*.pdf
+
 # === Environment ===
 .env
 .env.*

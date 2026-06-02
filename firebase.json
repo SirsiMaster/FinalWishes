@@ -24,6 +24,7 @@
     "indexes": "firestore.indexes.json"
   },
   "storage": {
+    "bucket": "finalwishes-prod.firebasestorage.app",
     "rules": "storage.rules"
   },
   "extensions": {

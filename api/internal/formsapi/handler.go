@@ -12,6 +12,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"
@@ -130,10 +131,10 @@ func (h *Handler) HandleFillForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(report.MissingRequired) > 0 {
-		w.Header().Set("X-Forms-Missing-Required", fmt.Sprintf("%v", report.MissingRequired))
+		w.Header().Set("X-Forms-Missing-Required", strings.Join(report.MissingRequired, ","))
 	}
 	if len(report.SkippedExecution) > 0 {
-		w.Header().Set("X-Forms-Skipped-Execution", fmt.Sprintf("%v", report.SkippedExecution))
+		w.Header().Set("X-Forms-Skipped-Execution", strings.Join(report.SkippedExecution, ","))
 	}
 	w.Header().Set("Content-Type", "application/pdf")
 	w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s.pdf"`, formID))

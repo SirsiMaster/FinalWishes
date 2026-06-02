@@ -8,7 +8,8 @@ _Engine: `api/internal/forms/` — generic Go-native coordinate-overlay over off
 |------|----------|--------|--------|
 | **Property POA** (`il_poa_property_2011`) | 755 ILCS 45/3-3 | official flat blank, SHA-pinned | ✅ Phase 1a — proven, deployed (`9a3ca0a`) |
 | **Small Estate Affidavit** (`il_small_estate_3606`) | 755 ILCS 5/25-1 | official flat blank, SHA-pinned | ✅ Phase 1b — core fields, deployed (`c32a0ed`) |
-| **Health Care POA** (`il_hcpoa_caringinfo`) | 755 ILCS 45/4-10 | CaringInfo AcroForm → flattened + SHA-pinned | ✅ **priority 1** — core fields via flatten route, proof-verified |
+| **Health Care POA** (`il_hcpoa_caringinfo`) | 755 ILCS 45/4-10 | CaringInfo AcroForm → flattened + SHA-pinned | ✅ **priority 1** — core fields via flatten route, proof-verified (`894d3d6`) |
+| **Living Will** (`il_living_will_caringinfo`) | 755 ILCS 35 | flattened CaringInfo blank, page 17 | ✅ priority 4 — declarant identity, proof-verified |
 
 Proof rasters for both under `docs/forms-phase0/proof/` (body page = values land on the rules; execution page = blank).
 
@@ -16,11 +17,13 @@ Proof rasters for both under `docs/forms-phase0/proof/` (body page = values land
 
 - **AcroForm → flat route** (`forms.FlattenAcroForm`, tested on the real CaringInfo packet, 36 fields → 0): removes empty AcroForm widgets, keeps printed labels, yields a true-flat PDF. This unblocks forms distributed as fillable AcroForms — flatten once offline, pin the SHA, then overlay-stamp. Kept **out of** the `Fill` hot path so fills stay deterministic over pinned blanks.
 
-## Buildable next (in-house, no blockers) — straightforward map authoring
+## Buildable next (in-house, no blockers)
 
-| Form | Source in-house | Notes |
-|------|-----------------|-------|
-| **Living Will** (priority 4) | flattened CaringInfo blank (`il_hcpoa_caringinfo_flat.pdf`, p.17) | Same pinned flat blank already committed for HCPOA; author the Living Will declaration fields (initials + signature/witness execution) as one more `CoordinateMap`. |
+**None remaining** — every in-house official blank now has a proof-verified map
+(Property POA, Small Estate, Health Care POA, Living Will). Further forms require
+owner-gated downloads (below). The remaining work on shipped forms is coordinate
+fine-tuning (all `ConfidenceLow` fields → `High` after a tuning pass) and the
+repeating-row schedules for the Small Estate Affidavit.
 
 ## Blocked — need owner action (manual download / fetch)
 

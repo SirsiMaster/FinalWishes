@@ -166,7 +166,28 @@ function BeneficiariesPage() {
             onEdit={() => { setEditingHeir(h); setEditModalOpen(true); }}
           />
         ))}
-        {heirs.length === 0 && (
+        {/* Executors are added from the same "Add Family Member" modal but live
+            in a separate collection — render them here too, else they'd be added
+            and never appear in the People grid. */}
+        {executors.map((ex) => (
+          <BeneficiaryCard
+            key={ex.id}
+            heir={{
+              id: ex.id,
+              estateId: ex.estateId,
+              fullName: ex.fullName,
+              email: ex.email,
+              relationship: ex.relationship ? `Executor · ${ex.relationship}` : 'Executor',
+              isMinor: false,
+              isResiduary: false,
+              status: (ex.status === 'active' || ex.status === 'accepted') ? 'active' : 'removed',
+              createdAt: ex.createdAt,
+              updatedAt: ex.updatedAt,
+            } as Heir}
+            onEdit={() => {}}
+          />
+        ))}
+        {heirs.length === 0 && executors.length === 0 && (
           <div className="col-span-2">
             <SectionEmptyState
               section="my-people"

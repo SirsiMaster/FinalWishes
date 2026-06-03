@@ -536,7 +536,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
 
     const photoUrls = [...uploadedUrls, ...manualUrls]
 
-    await addHeirloom({
+    const result = await addHeirloom({
       estateId,
       name: form.name.trim(),
       category: form.category,
@@ -548,6 +548,10 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
       provenance: form.provenance.trim() || undefined,
     })
     setSaving(false)
+    if (!result?.success) {
+      toast.error(result?.error || 'Could not save heirloom. Please try again.')
+      return
+    }
     toast.success(`${form.name} added to heirlooms`)
     resetForm()
     onOpenChange(false)

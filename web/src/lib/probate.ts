@@ -2,8 +2,11 @@
  * Probate API client — communicates with /api/v1/probate/* endpoints.
  */
 import { getAuth } from 'firebase/auth'
+import { API_BASE } from './client'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://finalwishes-api-{hash}.run.app'
+// API_BASE comes from ./client (resolves to VITE_API_URL in prod). The previous
+// local fallback here was a broken literal 'https://finalwishes-api-{hash}.run.app'
+// that made every probate/directives call fail whenever VITE_API_URL was unset.
 
 async function authHeaders(): Promise<HeadersInit> {
   const user = getAuth().currentUser

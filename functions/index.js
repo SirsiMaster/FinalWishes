@@ -152,6 +152,20 @@ exports.autoMatchInvitation = onDocumentCreated(
                     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 });
 
+                // Flip the heir/executor subcollection doc (the doc the estate's
+                // Family/People section actually reads) from 'pending'/'invited'
+                // to 'active'. Without this the added member stays pending forever
+                // and never shows up as accepted — even after email verification.
+                const roleCol = role === 'executor' ? 'executors' : 'heirs';
+                const roleSnap = await db.collection(`estates/${estateId}/${roleCol}`)
+                    .where('invitationId', '==', invDoc.id).get();
+                roleSnap.forEach((rd) => batch.update(rd.ref, {
+                    status: 'active',
+                    userId: uid,
+                    acceptedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                }));
+
                 const auditRef = db.collection('audit_logs').doc();
                 batch.set(auditRef, {
                     action: 'invitation_auto_matched',
@@ -230,6 +244,21 @@ exports.autoMatchOnInvitation = onDocumentCreated(
                 invitationAcceptedAt: admin.firestore.FieldValue.serverTimestamp(),
                 updatedAt: admin.firestore.FieldValue.serverTimestamp(),
             });
+
+            // Flip the heir/executor subcollection doc to 'active' (the doc the
+            // Family/People UI reads). The heir doc is written by the client
+            // immediately after this invitation; if not yet present, the
+            // autoMatchInvitation (on signup) path and the UI's pending filter
+            // still cover it.
+            const roleColOnInv = role === 'executor' ? 'executors' : 'heirs';
+            const roleSnapOnInv = await db.collection(`estates/${estateId}/${roleColOnInv}`)
+                .where('invitationId', '==', snapshot.id).get();
+            roleSnapOnInv.forEach((rd) => batch.update(rd.ref, {
+                status: 'active',
+                userId: uid,
+                acceptedAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            }));
 
             batch.set(db.collection('audit_logs').doc(), {
                 action: 'invitation_auto_matched_on_create',

@@ -224,10 +224,12 @@ describe('useEstateAssets', () => {
 })
 
 describe('useEstateHeirs', () => {
-  it('subscribes with active filter and orderBy', () => {
+  it('subscribes including pending/invited heirs and orderBy', () => {
     renderHook(() => useEstateHeirs('estate-1'))
     expect(mockCollection).toHaveBeenCalledWith(expect.anything(), 'estates/estate-1/heirs')
-    expect(mockWhere).toHaveBeenCalledWith('status', '==', 'active')
+    // Must include pending/invited so newly-added family members appear before
+    // they accept their invitation (was '==','active', which hid them).
+    expect(mockWhere).toHaveBeenCalledWith('status', 'in', ['active', 'pending', 'invited'])
     expect(mockOrderBy).toHaveBeenCalledWith('createdAt', 'asc')
   })
 })

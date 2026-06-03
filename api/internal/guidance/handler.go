@@ -196,8 +196,21 @@ func (h *Handler) HandleChat(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := h.advisor.Chat(ctx, estateCtx, req.Message, req.ConversationHistory)
 	if err != nil {
-		log.Error().Err(err).Str("estate_id", req.EstateID).Msg("Chat generation failed")
-		writeError(w, http.StatusInternalServerError, "Failed to generate response")
+		// Fail LOUD in telemetry (ops must see a misconfigured/unavailable AI
+		// provider — e.g. no SIRSI_AI/GEMINI key on the service), but fail SOFT
+		// in UX: a 500 makes the Shepherd feel broken and blocks the user. The
+		// deterministic /guidance/score endpoint drives the checklist + next
+		// action independently of this conversational path, so degrade to a warm,
+		// honest fallback instead of erroring out.
+		log.Error().Err(err).Str("estate_id", req.EstateID).Msg("Chat generation failed — serving graceful fallback")
+		writeJSON(w, http.StatusOK, &ChatResponse{
+			Reply: "I'm having trouble reaching my guidance engine right now, so I can't give a full conversational answer this moment — but nothing is lost and everything in your estate is safe. Your dashboard checklist still shows the next best step, and you can keep adding to any section at your own pace. Please try me again in a little while.",
+			SuggestedActions: []string{
+				"View my estate checklist",
+				"Add a beneficiary",
+				"Record a Soul Log entry",
+			},
+		})
 		return
 	}
 	if len(citations) > 0 {

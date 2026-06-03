@@ -211,7 +211,14 @@ jobs:
             --timeout 300s \
             --concurrency 80 \
             --port 8080 \
+            --update-env-vars GOOGLE_CLOUD_PROJECT=finalwishes-prod \
             --quiet
+          # GOOGLE_CLOUD_PROJECT is REQUIRED: main.go only initializes the
+          # Firestore + Cloud Storage clients when it is set. Without it the API
+          # silently runs in local-dev mode (nil clients) and every upload fails
+          # with "storage client not initialized". Cloud Run does NOT set this
+          # automatically. The runtime compute SA also needs
+          # roles/iam.serviceAccountTokenCreator on itself to sign V4 upload URLs.
 
   # ===========================================
   # Deploy: Firebase Functions

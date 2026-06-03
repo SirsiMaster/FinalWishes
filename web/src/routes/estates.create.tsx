@@ -11,12 +11,13 @@
  */
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { createEstate } from '../lib/estate-actions'
+import { loadWizardDraft, saveWizardDraft, clearWizardDraft } from '../lib/wizardDraft'
 import { US_STATES } from '../lib/us-states'
 import { trackEstateCreated } from '../lib/analytics'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
@@ -69,12 +70,41 @@ const STEP_LABELS = ['Situation', 'About You', 'Family', 'Assets', 'Name']
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
+const EMPTY_WIZARD_DATA: WizardData = {
+  situation: null,
+  fullName: '',
+  stateOfResidence: '',
+  maritalStatus: '',
+  hasSpouse: false,
+  hasChildren: false,
+  numberOfChildren: 0,
+  hasMinorChildren: false,
+  assets: [],
+  estateName: '',
+}
+
 function CreateEstatePage() {
   const { user, profile, profileResolved } = useAuth()
   const navigate = useNavigate()
-  const [step, setStep] = useState(0)
+  const uid = user?.uid ?? null
+
+  // Hydrate from a device-local draft, but ONLY for genuinely-new users (no
+  // primaryEstateId). Returning users with an estate are bounced by the guard
+  // effect below and must never see resurrected draft state. We read the draft
+  // lazily during state init (no setState-in-effect cascade) and stash it so the
+  // "Resume / Start over" affordance can be shown.
+  const initialDraft = (() => {
+    if (!uid || profile?.primaryEstateId) return null
+    return loadWizardDraft(uid)
+  })()
+
+  const [step, setStep] = useState(() => initialDraft?.step ?? 0)
+  const [hasDraft, setHasDraft] = useState(() => initialDraft !== null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Guards against persisting before the first user-driven change (avoids
+  // re-writing an identical draft on mount) and after a successful create.
+  const persistEnabled = useRef(false)
 
   // GUARD: never show the intake wizard to someone who already has an estate.
   // The post-login redirect can land here transiently before the profile

@@ -104,11 +104,11 @@ interface TimelineEntry {
 function ShepherdTypingIndicator() {
   return (
     <div className="flex items-start gap-2 mb-3">
-      <div className="bg-[#F8FAFC] rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
+      <div className="bg-slate-50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
         <div className="flex gap-1.5 items-center h-5">
-          <span className="w-2 h-2 bg-[#C8A951] rounded-full animate-bounce [animation-delay:0ms]" />
-          <span className="w-2 h-2 bg-[#C8A951] rounded-full animate-bounce [animation-delay:150ms]" />
-          <span className="w-2 h-2 bg-[#C8A951] rounded-full animate-bounce [animation-delay:300ms]" />
+          <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:0ms]" />
+          <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:150ms]" />
+          <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:300ms]" />
         </div>
       </div>
     </div>
@@ -276,11 +276,11 @@ function ShepherdChat({
         className="w-full sm:w-[400px] sm:max-w-[400px] p-0 flex flex-col gap-0 bg-white"
       >
         {/* Header */}
-        <SheetHeader className="px-6 py-4 bg-[#133378] gap-0 flex-shrink-0">
+        <SheetHeader className="px-6 py-4 bg-[var(--royal)] gap-0 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#C8A951]/20 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <div className="w-8 h-8 rounded-full bg-[var(--gold)]/20 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" className="w-4.5 h-4.5 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="10" />
                   <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
                 </svg>

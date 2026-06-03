@@ -131,6 +131,83 @@ describe('AuthProvider', () => {
   })
 })
 
+describe('profileResolved (returning-user routing gate)', () => {
+  it('resolves true with the profile for a returning user (has primaryEstateId)', async () => {
+    // This is the exact regression: an existing user with an estate must end up
+    // with profile populated AND profileResolved true, so routing sends them to
+    // their dashboard — never to /estates/create.
+    const mockUser = { uid: 'user-1', email: 'returning@example.com', emailVerified: true }
+    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (u: unknown) => void) => {
+      setTimeout(() => callback(mockUser), 0)
+      return vi.fn()
+    })
+    mockGetDoc.mockResolvedValue({
+      exists: () => true,
+      data: () => ({
+        email: 'returning@example.com',
+        firstName: 'Reta',
+        lastName: 'Turning',
+        role: 'principal',
+        status: 'active',
+        primaryEstateId: 'estate-123',
+      }),
+    })
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthWrapper })
+
+    await waitFor(() => expect(result.current.profileResolved).toBe(true))
+    expect(result.current.user).toEqual(mockUser)
+    expect(result.current.profile?.primaryEstateId).toBe('estate-123')
+  })
+
+  it('stays false when the profile read FAILS (not misclassified as new)', async () => {
+    // A failed read must NOT look like "user has no profile" — leaving
+    // profileResolved false defers routing instead of dumping the user on
+    // /estates/create on a transient error.
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const mockUser = { uid: 'user-1', email: 'flaky@example.com', emailVerified: true }
+    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (u: unknown) => void) => {
+      setTimeout(() => callback(mockUser), 0)
+      return vi.fn()
+    })
+    mockGetDoc.mockRejectedValue(new Error('network down'))
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthWrapper })
+
+    // Auth init still settles (loading clears) even though the profile read failed.
+    await waitFor(() => expect(result.current.loading).toBe(false))
+    expect(result.current.user).toEqual(mockUser) // user IS authenticated
+    expect(result.current.profileResolved).toBe(false) // but the profile is unresolved
+    expect(consoleSpy).toHaveBeenCalled() // failure surfaced, not swallowed
+    consoleSpy.mockRestore()
+  })
+
+  it('resolves true with null profile when the doc is confirmed absent', async () => {
+    // New user: read succeeds but no doc. The edge-case create path also yields
+    // no doc here (mock returns absent throughout). Resolved-but-null is the
+    // legitimate "route to /estates/create" signal.
+    const mockUser = { uid: 'new-1', email: 'fresh@example.com', emailVerified: false }
+    mockOnAuthStateChanged.mockImplementation((_auth: unknown, callback: (u: unknown) => void) => {
+      setTimeout(() => callback(mockUser), 0)
+      return vi.fn()
+    })
+    mockGetDoc.mockResolvedValue({ exists: () => false, data: () => null })
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthWrapper })
+
+    await waitFor(() => expect(result.current.profileResolved).toBe(true))
+    expect(result.current.profile).toBeNull()
+  })
+
+  it('resolves true when there is no user (signed out)', async () => {
+    // Default mock fires callback(null) — no user, nothing to fetch.
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthWrapper })
+
+    await waitFor(() => expect(result.current.profileResolved).toBe(true))
+    expect(result.current.user).toBeNull()
+  })
+})
+
 describe('useAuth hook', () => {
   it('throws when used outside AuthProvider', () => {
     // Suppress console.error for this test

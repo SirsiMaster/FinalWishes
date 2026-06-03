@@ -28,6 +28,7 @@ import {
   Redo2,
   Check,
   Loader2,
+  AlertCircle,
   PenTool,
   Users,
   Globe,
@@ -471,7 +472,14 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     setAutoSaveStatus('saving')
     const result = await updateDirective(estateId, directive.id, { content: html })
     if (!result.success) {
-      setAutoSaveStatus('error')
+      // Only toast on the transition into error so a sustained outage doesn't
+      // fire a toast on every debounced auto-save tick.
+      setAutoSaveStatus((prev) => {
+        if (prev !== 'error') {
+          toast.error('Auto-save failed', { description: result.error || 'Your latest edits are not saved yet.' })
+        }
+        return 'error'
+      })
       return
     }
     setAutoSaveStatus('saved')
@@ -623,9 +631,10 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
         <div className="flex items-center gap-3">
           {/* Auto-save indicator */}
           {directive.status !== 'finalized' && autoSaveStatus !== 'idle' && (
-            <span className="flex items-center gap-1.5 text-[11px] text-[#64748B] font-medium mr-1">
+            <span className={`flex items-center gap-1.5 text-[11px] font-medium mr-1 ${autoSaveStatus === 'error' ? 'text-[#DC2626]' : 'text-[#64748B]'}`}>
               {autoSaveStatus === 'saving' && <Loader2 className="w-3 h-3 animate-spin" />}
               {autoSaveStatus === 'saved' && <Check className="w-3 h-3 text-[#059669]" />}
+              {autoSaveStatus === 'error' && <AlertCircle className="w-3 h-3 text-[#DC2626]" />}
               {autoSaveStatus === 'saving' ? 'Saving...' : autoSaveStatus === 'error' ? 'Not saved' : 'Saved'}
             </span>
           )}

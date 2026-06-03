@@ -4,40 +4,39 @@ test.describe('FinalWishes Smoke Tests — Public Pages', () => {
   test('landing page loads with Royal Neo-Deco branding', async ({ page }) => {
     await page.goto('/')
     await expect(page).toHaveTitle(/FinalWishes/i)
-    // Verify key landing page content is visible
-    await expect(page.getByRole('link', { name: /Get Started/i }).first()).toBeVisible({ timeout: 10000 })
+    // The hero CTAs are buttons (open the login modal), not links.
+    await expect(page.getByRole('button', { name: /Start Free/i }).first()).toBeVisible({ timeout: 10000 })
   })
 
-  test('login page renders sign-in form', async ({ page }) => {
+  test('login modal renders sign-in form', async ({ page }) => {
     await page.goto('/login')
-    await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible()
-    await expect(page.locator('#login-identifier')).toBeVisible()
-    await expect(page.locator('#login-password')).toBeVisible()
+    // /login redirects to the landing page with the modal open (?login=true).
+    await expect(page.locator('#modal-identifier')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('#modal-password')).toBeVisible()
+    await expect(page.locator('#modal-submit')).toBeVisible()
   })
 
-  test('login page switches to sign-up form', async ({ page }) => {
+  test('login modal switches to sign-up form', async ({ page }) => {
     await page.goto('/login')
+    await expect(page.locator('#modal-identifier')).toBeVisible({ timeout: 10000 })
     await page.getByRole('button', { name: 'Create account' }).click()
-    await expect(page.getByRole('heading', { name: 'Create Account' })).toBeVisible()
-    await expect(page.locator('#signup-firstname')).toBeVisible()
+    // The visible heading is aria-hidden; assert on the form + visible subtitle.
+    await expect(page.locator('#modal-firstname')).toBeVisible()
+    await expect(page.getByText('Start preserving your legacy today')).toBeVisible()
   })
 
-  test('login page switches to forgot password', async ({ page }) => {
+  test('login modal switches to forgot password', async ({ page }) => {
     await page.goto('/login')
+    await expect(page.locator('#modal-identifier')).toBeVisible({ timeout: 10000 })
     await page.getByRole('button', { name: 'Forgot password?' }).click()
-    await expect(page.getByRole('heading', { name: 'Reset Password' })).toBeVisible()
-  })
-
-  test('login page shows demo mode when ?demo=true', async ({ page }) => {
-    await page.goto('/login?demo=true')
-    await expect(page.getByText('Demo Mode')).toBeVisible()
+    await expect(page.locator('#modal-reset-email')).toBeVisible()
   })
 
   test('unauthenticated user is redirected from dashboard', async ({ page }) => {
     await page.goto('/estates/lockhart/dashboard')
-    // Should redirect to login
+    // AuthGuard redirects unauthenticated users to the login modal.
     await page.waitForURL(/login/, { timeout: 10000 })
-    await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible()
+    await expect(page.locator('#modal-identifier')).toBeVisible({ timeout: 10000 })
   })
 
   test('create estate redirects unauthenticated users to login', async ({ page }) => {

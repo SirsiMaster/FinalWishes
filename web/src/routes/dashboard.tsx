@@ -17,18 +17,8 @@ function DashboardRedirect() {
     // before their profile resolves.
     if (loading) return;
 
-    // Prefer the authoritative auth context (covers BOTH real Firebase users
-    // and demo sessions, since loadDemoSession() seeds the context too). Fall
-    // back to the raw demo-session key only if the context hasn't populated.
-    let estateSlug = profile?.primaryEstateId;
-    if (!estateSlug) {
-      try {
-        const raw = localStorage.getItem('finalwishes_user');
-        if (raw) estateSlug = JSON.parse(raw).primaryEstateId;
-      } catch { /* ignore malformed session */ }
-    }
-
     if (user || profile) {
+      const estateSlug = profile?.primaryEstateId;
       if (estateSlug) {
         navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
       } else {

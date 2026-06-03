@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
 import { useDocument, useEstateHeirs, useCollection } from '../lib/firestore'
 import { doc, setDoc, addDoc, collection, serverTimestamp, type Timestamp } from 'firebase/firestore'
@@ -19,7 +19,7 @@ import StarterKit from '@tiptap/starter-kit'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-export const Route = createFileRoute('/estates/$estateId/obituary')({
+export const Route = createLazyFileRoute('/estates/$estateId/obituary')({
   component: ObituaryPage,
 })
 

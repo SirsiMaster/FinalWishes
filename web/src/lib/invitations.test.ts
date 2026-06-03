@@ -63,13 +63,10 @@ describe('sendEstateInvitation', () => {
     expect(mockAddDoc).toHaveBeenCalledTimes(3)
   })
 
-  it('auto-links existing user and sets accepted status', async () => {
-    // Existing user found
-    mockGetDocs.mockResolvedValue({
-      empty: false,
-      docs: [{ id: 'existing-uid', data: () => ({ email: 'existing@example.com' }) }],
-    })
-
+  it('does NOT look up or link the invitee from the client (server-side now)', async () => {
+    // The client no longer queries the `users` collection by email (the read
+    // rule forbids it — PII siloing) nor auto-links via estate_users. Linking an
+    // existing-account invitee is handled by the autoMatchOnInvitation trigger.
     const result = await sendEstateInvitation({
       estateId: 'estate-1',
       email: 'Existing@Example.com',
@@ -79,12 +76,11 @@ describe('sendEstateInvitation', () => {
     })
 
     expect(result.success).toBe(true)
-    expect(result.autoLinked).toBe(true)
-    // invitation + heir subcollection
-    expect(mockAddDoc).toHaveBeenCalledTimes(2)
-    // estate_users junction + update invitation status
-    expect(mockSetDoc).toHaveBeenCalledTimes(1)
-    expect(mockUpdateDoc).toHaveBeenCalledTimes(1)
+    // No client-side cross-user reads/writes:
+    expect(mockSetDoc).not.toHaveBeenCalled()
+    expect(mockUpdateDoc).not.toHaveBeenCalled()
+    // invitation + heir subcollection are still written.
+    expect(mockAddDoc.mock.calls[0][1].status).toBe('pending')
   })
 
   it('normalizes email to lowercase', async () => {
@@ -139,7 +135,8 @@ describe('sendEstateInvitation', () => {
   })
 
   it('returns error on failure', async () => {
-    mockGetDocs.mockRejectedValue(new Error('Network error'))
+    // The invitation write is the first Firestore call now (no users query).
+    mockAddDoc.mockRejectedValue(new Error('Network error'))
 
     const result = await sendEstateInvitation({
       estateId: 'estate-1',

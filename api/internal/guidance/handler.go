@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 
@@ -58,6 +59,11 @@ type Step struct {
 	Complete    bool   `json:"complete"`
 	Route       string `json:"route"` // Frontend route to complete this step
 	Priority    int    `json:"priority"`
+	// Optional marks situational/informational steps that have no auto-complete
+	// signal (e.g. "Designate Guardian", state threshold reviews). They are shown
+	// in the journey but EXCLUDED from completion% and never chosen as nextAction,
+	// so the Shepherd cannot get stuck pointing at a step that can never complete.
+	Optional bool `json:"optional"`
 }
 
 // intakeData holds the onboarding wizard answers from estates/{id}/metadata/intake.
@@ -418,6 +424,15 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		priority++
 	}
 
+	// Situational + state-specific steps (priority >= 12) have no auto-complete
+	// signal, so mark them Optional: they stay visible in the journey but must
+	// not trap nextAction or block 100% completion.
+	for i := range steps {
+		if steps[i].Priority >= 12 {
+			steps[i].Optional = true
+		}
+	}
+
 	// Adjust language for after-loss mode
 	if intake.PlanningMode == "after_loss" {
 		for i := range steps {
@@ -438,9 +453,19 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 		}
 	}
 
-	completed := 0
+	// Deterministic ordering: sort by Priority so nextAction never depends on
+	// append order. nextAction = lowest-priority INCOMPLETE, non-optional step.
+	// Completion% is computed over completable (non-optional) steps only, so a
+	// finished plan can actually reach 100%.
+	sort.SliceStable(steps, func(i, j int) bool { return steps[i].Priority < steps[j].Priority })
+
+	completed, coreTotal := 0, 0
 	var nextAction *Step
 	for i := range steps {
+		if steps[i].Optional {
+			continue
+		}
+		coreTotal++
 		if steps[i].Complete {
 			completed++
 		} else if nextAction == nil {
@@ -449,17 +474,17 @@ func (h *Handler) computeScore(ctx context.Context, estateID string) (*Score, er
 	}
 
 	percent := 0
-	if len(steps) > 0 {
-		percent = (completed * 100) / len(steps)
+	if coreTotal > 0 {
+		percent = (completed * 100) / coreTotal
 	}
 
-	insight := generateInsight(percent, completed, len(steps), counts, nextAction)
+	insight := generateInsight(percent, completed, coreTotal, counts, nextAction)
 
 	return &Score{
 		EstateID:          estateID,
 		CompletionPercent: percent,
 		CompletedSteps:    completed,
-		TotalSteps:        len(steps),
+		TotalSteps:        coreTotal,
 		Steps:             steps,
 		NextAction:        nextAction,
 		Insight:           insight,

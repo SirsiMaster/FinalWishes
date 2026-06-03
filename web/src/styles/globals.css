@@ -80,7 +80,10 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --color-sapphire: #1E3A5F;
-  --font-heading: var(--font-sans);
+  /* Headings are the Cinzel serif (the brand display face). This previously
+     mapped to --font-sans (Geist), so any element using --font-heading rendered
+     in a sans face — a key source of the inconsistent typography. */
+  --font-heading: var(--font-cinzel);
   --font-body: var(--font-inter);
   --font-sans: 'Geist Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);

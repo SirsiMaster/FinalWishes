@@ -34,6 +34,7 @@ import {
 import { cn } from '@/lib/utils'
 import { getShepherdPrompt, type ShepherdContext } from '../lib/shepherd-prompts'
 import { SectionHeader } from '@/components/estate/SectionHeader'
+import { ShepherdWelcome } from '@/components/estate/ShepherdWelcome'
 import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem, PageTransition } from '@/lib/animations'
 
 export const Route = createLazyFileRoute('/estates/$estateId/dashboard')({
@@ -790,6 +791,9 @@ function DashboardIndex() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 py-6 md:p-8 lg:p-12 space-y-8 bg-white min-h-screen font-[family-name:var(--font-inter)]">
+      {/* Shepherd — the voice and heart of FinalWishes — greets and listens first. */}
+      <ShepherdWelcome estateId={estateId} firstName={userName} />
+
       <SectionHeader
         section="my-legacy"
         title={`Welcome back, ${userName || 'there'}.`}

@@ -16,7 +16,6 @@ import {
   doc,
   collection,
   addDoc,
-  setDoc,
   getDocs,
   updateDoc,
   query,
@@ -65,13 +64,16 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
   const normalizedEmail = email.toLowerCase().trim();
 
   try {
-    // 1. Check if invitee already has an account
-    const existingUserSnap = await getDocs(
-      query(collection(db, 'users'), where('email', '==', normalizedEmail))
-    );
-    const existingUser = existingUserSnap.empty ? null : existingUserSnap.docs[0];
+    // We deliberately do NOT look up the invitee's account from the client.
+    // The `users` read rule only permits reading your OWN doc (PII siloing,
+    // Rule 26), so a query by another person's email is denied with
+    // "Missing or insufficient permissions" — which previously broke this whole
+    // flow. Granting access to an invitee who ALREADY has an account is handled
+    // SERVER-SIDE: the autoMatchOnInvitation trigger fires on invitation create,
+    // and autoMatchInvitation fires on signup. The client only writes the
+    // invitation (and the subcollection placeholder) as 'pending'.
 
-    // 2. Write invitation record (always 'pending' per Firestore rules, then update if auto-linking)
+    // 1. Write invitation record (always 'pending' per Firestore rules)
     const invRef = await addDoc(collection(db, 'estate_invitations'), {
       estateId,
       email: normalizedEmail,
@@ -87,7 +89,7 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
       updatedAt: serverTimestamp(),
     });
 
-    // 3. Write to estate subcollection
+    // 2. Write to estate subcollection (server trigger flips status on link)
     if (role === 'executor') {
       await addDoc(collection(db, `estates/${estateId}/executors`), {
         estateId,
@@ -95,7 +97,7 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
         email: normalizedEmail,
         relationship: relationship || '',
         priority: priority || 1,
-        status: existingUser ? 'accepted' : 'invited',
+        status: 'invited',
         confirmedDeath: false,
         invitationId: invRef.id,
         createdAt: serverTimestamp(),
@@ -110,41 +112,14 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
         relationship: relationship || '',
         isMinor: false,
         isResiduary: false,
-        status: existingUser ? 'active' : 'pending',
+        status: 'pending',
         invitationId: invRef.id,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
     }
 
-    // 4. If user exists, auto-link immediately
-    if (existingUser) {
-      const uid = existingUser.id;
-      const euDocId = `${uid}_${estateId}`;
-      await setDoc(doc(db, 'estate_users', euDocId), {
-        estateId,
-        userId: uid,
-        role,
-        accessGranted: true,
-        accessGrantedAt: serverTimestamp(),
-        invitationId: invRef.id,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-
-      // Update invitation status to accepted (principal has update permission)
-      await updateDoc(invRef, {
-        status: 'accepted',
-        userId: uid,
-        invitationAcceptedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-
-      return { success: true, invitationId: invRef.id, autoLinked: true };
-    }
-
-    // 5. User doesn't exist — Cloud Function will handle on signup
-    // Send invitation email via Firestore mail collection → SendGrid
+    // 3. Notify the invitee via the mail collection (Gmail Cloud Function).
     try {
       const acceptUrl = `https://finalwishes-prod.web.app/accept-invite?id=${invRef.id}`;
       const emailContent = estateInvitationEmail({

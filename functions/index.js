@@ -172,6 +172,83 @@ exports.autoMatchInvitation = onDocumentCreated(
     }
 );
 
+// ─── 1b. Auto-Match on Invitation (invitee already has an account) ────────
+//
+// When an invitation is created for an email that ALREADY has an account,
+// grant estate access immediately. (autoMatchInvitation above covers the
+// invitee who signs up AFTER being invited.) Together these replace the old
+// client-side user lookup, which the Firestore `users` read rule correctly
+// forbids (PII siloing, Rule 26) — that lookup was failing with
+// "Missing or insufficient permissions" and blocking the whole add-member flow.
+
+exports.autoMatchOnInvitation = onDocumentCreated(
+    {
+        document: 'estate_invitations/{invId}',
+        memory: '256MiB',
+        timeoutSeconds: 30,
+    },
+    async (event) => {
+        const snapshot = event.data;
+        if (!snapshot) return;
+
+        const inv = snapshot.data();
+        if (!inv || inv.status !== 'pending') return;
+
+        const email = (inv.email || '').toLowerCase().trim();
+        const estateId = inv.estateId;
+        const role = inv.role || 'heir';
+        if (!email || !estateId) return;
+
+        // Does the invitee already have an account? If not, autoMatchInvitation
+        // will link them when they sign up.
+        let userRecord;
+        try {
+            userRecord = await admin.auth().getUserByEmail(email);
+        } catch {
+            return;
+        }
+        const uid = userRecord.uid;
+        console.log(`[autoMatchOnInvitation] Linking existing user ${email} (uid: ${uid}) to estate ${estateId}`);
+
+        try {
+            const batch = db.batch();
+
+            batch.set(db.collection('estate_users').doc(`${uid}_${estateId}`), {
+                estateId,
+                userId: uid,
+                role,
+                accessGranted: true,
+                accessGrantedAt: admin.firestore.FieldValue.serverTimestamp(),
+                invitationId: snapshot.id,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+            batch.update(snapshot.ref, {
+                status: 'accepted',
+                userId: uid,
+                invitationAcceptedAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+            batch.set(db.collection('audit_logs').doc(), {
+                action: 'invitation_auto_matched_on_create',
+                entityType: 'estate_invitation',
+                entityId: snapshot.id,
+                userId: uid,
+                estateId,
+                details: { email, role, invitedBy: inv.invitedBy || 'unknown' },
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+            });
+
+            await batch.commit();
+            console.log(`[autoMatchOnInvitation] Linked ${email} to ${estateId}`);
+        } catch (error) {
+            console.error(`[autoMatchOnInvitation] Error:`, error);
+        }
+    }
+);
+
 // ─── 2. Send Mail — Gmail API (Google-native) ────────────────────────────
 //
 // Watches the 'mail' Firestore collection. When a document is created with

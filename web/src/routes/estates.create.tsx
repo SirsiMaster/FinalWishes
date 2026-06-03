@@ -17,6 +17,7 @@ import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { createEstate } from '../lib/estate-actions'
+import { US_STATES } from '../lib/us-states'
 import { trackEstateCreated } from '../lib/analytics'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -430,11 +431,10 @@ function CreateEstatePage() {
                         <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] font-semibold text-base text-[#0F172A] [&>span]:text-slate-300 data-[state=open]:border-[#133378] data-[state=open]:ring-8 data-[state=open]:ring-[#133378]/5">
                           <SelectValue placeholder="Select your state" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="maryland">Maryland</SelectItem>
-                          <SelectItem value="illinois">Illinois</SelectItem>
-                          <SelectItem value="minnesota">Minnesota</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
+                        <SelectContent className="rounded-xl max-h-72">
+                          {US_STATES.map((s) => (
+                            <SelectItem key={s} value={s}>{s}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>

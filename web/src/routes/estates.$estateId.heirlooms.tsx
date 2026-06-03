@@ -31,6 +31,7 @@ import {
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { CameraCaptureButton } from '@/components/ui/camera-capture-button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -710,6 +711,12 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                 </div>
               </div>
             </div>
+
+            {photoUploads.length < MAX_IMAGES && (
+              <div className="mt-3 flex items-center justify-center">
+                <CameraCaptureButton onFile={(f) => onDrop([f])} accept="image/*" label="Take a photo" />
+              </div>
+            )}
 
             {/* Upload Thumbnails & Progress */}
             {photoUploads.length > 0 && (

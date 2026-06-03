@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 import { Button } from '@/components/ui/button'
+import { CameraCaptureButton } from '@/components/ui/camera-capture-button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Dialog,
@@ -745,6 +746,9 @@ function UploadModal({
                   <span className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.2em] group-hover:text-[#133378]">
                     {isDragActive ? 'Drop file here' : selectedFileName || 'Drag & drop or click to select'}
                   </span>
+                </div>
+                <div className="mt-3 flex items-center justify-center">
+                  <CameraCaptureButton onFile={(f) => onDrop([f])} />
                 </div>
               </div>
 

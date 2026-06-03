@@ -17,6 +17,13 @@ const KEY_PREFIX = 'fw_wizard_draft_'
 const DRAFT_VERSION = 1
 
 /**
+ * Time-to-live for a saved draft. It holds intake PII (name, state, marital/
+ * family structure), so it must not linger on the device indefinitely — an
+ * abandoned draft older than this is treated as absent and purged on next load.
+ */
+const DRAFT_TTL_MS = 14 * 24 * 60 * 60 * 1000
+
+/**
  * Shape of the wizard payload we persist. Kept structurally compatible with the
  * `WizardData` interface in estates.create.tsx (which is the canonical source).
  * Declared independently here so this module has no import-time coupling to the
@@ -67,6 +74,12 @@ export function loadWizardDraft(uid: string): WizardDraft | null {
       !parsed.data ||
       typeof parsed.data !== 'object'
     ) {
+      return null
+    }
+
+    // Expire stale drafts so intake PII doesn't linger indefinitely on-device.
+    if (typeof parsed.savedAt === 'number' && Date.now() - parsed.savedAt > DRAFT_TTL_MS) {
+      clearWizardDraft(uid)
       return null
     }
 

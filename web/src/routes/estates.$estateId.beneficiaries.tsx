@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { SelectWithOther } from '@/components/ui/select-with-other'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -30,7 +31,8 @@ export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
 const ROLE_DESCRIPTIONS: Record<string, string> = {
   heir: 'A person who will receive assets from your estate. You can specify their share percentage.',
   executor: 'The person legally responsible for carrying out your will. They handle probate, pay debts, and distribute assets to heirs.',
-  trustee: 'A person who manages assets held in a trust on behalf of beneficiaries. They have a fiduciary duty to act in beneficiaries\u2019 best interests.',
+  legal: 'Legal counsel with read-only advisory access to help administer the estate.',
+  cpa: 'A CPA or tax advisor with read-only advisory access for tax and financial matters.',
 }
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
@@ -71,7 +73,7 @@ function BeneficiariesPage() {
       estateId,
       fullName: vars.name,
       email: vars.email,
-      role: roleValue as 'executor' | 'heir',
+      role: roleValue as 'executor' | 'heir' | 'legal' | 'cpa',
       relationship: vars.relation,
       invitedBy: user.uid,
       ...(vars.phone ? { phone: vars.phone } : {}),
@@ -247,7 +249,12 @@ function AddBeneficiaryDialog({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <Label htmlFor="relation" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Relationship</Label>
-              <Input name="relation" id="relation" required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" placeholder="Spouse" />
+              <SelectWithOther
+                name="relation"
+                required
+                placeholder="Select relationship"
+                options={['Spouse', 'Partner', 'Son', 'Daughter', 'Mother', 'Father', 'Brother', 'Sister', 'Grandson', 'Granddaughter', 'Grandmother', 'Grandfather', 'Aunt', 'Uncle', 'Niece', 'Nephew', 'Cousin', 'Friend']}
+              />
             </div>
             <div className="space-y-2">
               <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Their Role</Label>
@@ -258,7 +265,8 @@ function AddBeneficiaryDialog({
                 <SelectContent>
                   <SelectItem value="heir">Primary Heir</SelectItem>
                   <SelectItem value="executor">Legal Executor</SelectItem>
-                  <SelectItem value="trustee">Trustee</SelectItem>
+                  <SelectItem value="legal">Legal Counsel</SelectItem>
+                  <SelectItem value="cpa">CPA / Tax Advisor</SelectItem>
                 </SelectContent>
               </Select>
               {/* Role description */}

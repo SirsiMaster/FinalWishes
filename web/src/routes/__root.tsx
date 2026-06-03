@@ -5,10 +5,10 @@ import { AuthProvider } from '@/lib/auth'
 
 function NotFound() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#0B1D3A] to-[#133378]">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[var(--royal)] to-[var(--royal)]">
       <div className="max-w-lg text-center space-y-8 p-12">
         <h1
-          className="text-6xl font-bold text-[#C8A951]"
+          className="text-6xl font-bold text-[var(--gold)]"
           style={{ fontFamily: 'Cinzel, serif' }}
         >
           404
@@ -19,12 +19,12 @@ function NotFound() {
         >
           Page Not Found
         </h2>
-        <p className="text-[#B0BEC5] text-[15px] leading-relaxed">
+        <p className="text-slate-400 text-[15px] leading-relaxed">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <Link
           to="/"
-          className="inline-block bg-[#C8A951] hover:bg-[#B8993F] text-[#0B1D3A] px-10 py-3 rounded-xl font-bold text-[14px] tracking-wider transition-all"
+          className="inline-block bg-[var(--gold)] hover:bg-[var(--gold)] text-[var(--royal)] px-10 py-3 rounded-xl font-bold text-[14px] tracking-wider transition-all"
           style={{ fontFamily: 'Cinzel, serif' }}
         >
           Go Home

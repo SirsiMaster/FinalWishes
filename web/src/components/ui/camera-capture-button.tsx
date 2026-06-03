@@ -32,7 +32,7 @@ export function CameraCaptureButton({
         onClick={() => inputRef.current?.click()}
         className={
           className ??
-          'inline-flex items-center gap-2 rounded-full border border-[#133378]/20 bg-white px-4 py-2 text-xs font-semibold text-[#133378] transition-colors hover:bg-[#133378]/5'
+          'inline-flex items-center gap-2 rounded-full border border-[var(--royal)]/20 bg-white px-4 py-2 text-xs font-semibold text-[var(--royal)] transition-colors hover:bg-[var(--royal)]/5'
         }
       >
         <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">

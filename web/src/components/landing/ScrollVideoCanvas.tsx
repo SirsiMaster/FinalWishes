@@ -164,10 +164,10 @@ export function ScrollVideoCanvas({
 
         {/* Loading indicator */}
         {!loaded && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0B1D3A]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-[var(--royal)]">
             <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden mb-4">
               <div
-                className="h-full bg-[#C8A951] rounded-full transition-all duration-300"
+                className="h-full bg-[var(--gold)] rounded-full transition-all duration-300"
                 style={{ width: `${loadProgress}%` }}
               />
             </div>

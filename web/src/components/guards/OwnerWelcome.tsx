@@ -34,29 +34,29 @@ export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: Ow
   const firstName = profile?.firstName || profile?.displayName?.split(' ')[0] || 'there'
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-[#F8FAFC] to-[#EEF2FF] flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-50 flex items-center justify-center">
       <div className="max-w-xl mx-auto px-6 py-16 text-center">
 
         {/* Compass icon — The Shepherd's symbol */}
-        <div className="w-20 h-20 mx-auto rounded-full bg-[#133378]/5 flex items-center justify-center mb-10">
-          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#133378]/60" fill="none" stroke="currentColor" strokeWidth="1">
+        <div className="w-20 h-20 mx-auto rounded-full bg-[var(--royal)]/5 flex items-center justify-center mb-10">
+          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[var(--royal)]/60" fill="none" stroke="currentColor" strokeWidth="1">
             <circle cx="12" cy="12" r="10" />
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
           </svg>
         </div>
 
         {/* Welcome headline */}
-        <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight mb-4 leading-tight">
+        <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 tracking-tight mb-4 leading-tight">
           Welcome, {firstName}.
         </h1>
 
         {/* The emotional hook — this is NOT a legal tool */}
-        <p className="text-lg text-[#334155] leading-relaxed mb-4 max-w-md mx-auto">
-          You&rsquo;ve just created <span className="font-semibold text-[#0F172A]">{estateName}</span> &mdash;
+        <p className="text-lg text-slate-700 leading-relaxed mb-4 max-w-md mx-auto">
+          You&rsquo;ve just created <span className="font-semibold text-slate-900">{estateName}</span> &mdash;
           a living record of your life, your wishes, and the people who matter most.
         </p>
 
-        <p className="text-[#64748B] leading-relaxed mb-12 max-w-md mx-auto">
+        <p className="text-slate-500 leading-relaxed mb-12 max-w-md mx-auto">
           This isn&rsquo;t a legal form. It&rsquo;s a companion &mdash; a place to
           record your voice, preserve your memories, and organize everything
           the people you love will need someday. At your pace, on your terms.
@@ -104,7 +104,7 @@ export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: Ow
         <Button
           onClick={onContinue}
           className={cn(
-            'bg-[#133378] hover:bg-[#1E3A5F] text-white',
+            'bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white',
             'px-12 py-5 h-auto rounded-2xl',
             'font-semibold text-[15px] tracking-wide',
             'shadow-lg hover:shadow-xl transition-all',
@@ -113,7 +113,7 @@ export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: Ow
           Start Building Your Legacy
         </Button>
 
-        <p className="text-xs text-[#94A3B8] mt-6">
+        <p className="text-xs text-slate-400 mt-6">
           The Shepherd is here whenever you need guidance.
         </p>
       </div>
@@ -134,12 +134,12 @@ function WelcomeStep({
 }) {
   return (
     <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/60 border border-slate-100">
-      <div className="w-10 h-10 rounded-xl bg-[#133378]/5 flex items-center justify-center flex-shrink-0 text-[#133378]/50">
+      <div className="w-10 h-10 rounded-xl bg-[var(--royal)]/5 flex items-center justify-center flex-shrink-0 text-[var(--royal)]/50">
         {icon}
       </div>
       <div>
-        <p className="text-sm font-semibold text-[#0F172A]">{title}</p>
-        <p className="text-xs text-[#64748B] mt-0.5">{description}</p>
+        <p className="text-sm font-semibold text-slate-900">{title}</p>
+        <p className="text-xs text-slate-500 mt-0.5">{description}</p>
       </div>
     </div>
   )

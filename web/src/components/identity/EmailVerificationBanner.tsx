@@ -32,22 +32,22 @@ export function EmailVerificationBanner() {
 
   return (
     <div className="relative overflow-hidden">
-      <div className="bg-gradient-to-r from-[#C8A951]/10 via-[#C8A951]/[0.07] to-[#C8A951]/10 border-b border-[#C8A951]/20 px-8 py-3.5">
+      <div className="bg-gradient-to-r from-[var(--gold)]/10 via-[var(--gold)]/[0.07] to-[var(--gold)]/10 border-b border-[var(--gold)]/20 px-8 py-3.5">
         <div className="flex items-center justify-between max-w-[1400px] mx-auto">
           <div className="flex items-center gap-4">
             {/* Mail icon */}
-            <div className="w-8 h-8 rounded-xl bg-[#C8A951]/15 flex items-center justify-center shrink-0">
-              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="w-8 h-8 rounded-xl bg-[var(--gold)]/15 flex items-center justify-center shrink-0">
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="2" y="4" width="20" height="16" rx="2" />
                 <path d="M22 7l-10 7L2 7" />
               </svg>
             </div>
             <div>
-              <p className="text-[#8B7332] font-bold text-[13px] leading-tight">
+              <p className="text-[var(--gold)] font-bold text-[13px] leading-tight">
                 Please verify your email address
               </p>
-              <p className="text-[#C8A951]/70 text-[11px] font-medium mt-0.5">
-                Check <span className="font-bold text-[#8B7332]">{user.email}</span> for a verification link{sent ? ' — just sent!' : '.'}
+              <p className="text-[var(--gold)]/70 text-[11px] font-medium mt-0.5">
+                Check <span className="font-bold text-[var(--gold)]">{user.email}</span> for a verification link{sent ? ' — just sent!' : '.'}
               </p>
             </div>
           </div>
@@ -56,7 +56,7 @@ export function EmailVerificationBanner() {
             <button
               onClick={handleResend}
               disabled={sending || sent}
-              className="px-5 py-2 rounded-xl bg-[#C8A951] hover:bg-[#B89941] text-white font-bold text-[11px] uppercase tracking-wider shadow-sm transition-all active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-5 py-2 rounded-xl bg-[var(--gold)] hover:bg-[var(--gold)] text-white font-bold text-[11px] uppercase tracking-wider shadow-sm transition-all active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {sending ? (
                 <span className="flex items-center gap-2">
@@ -72,10 +72,10 @@ export function EmailVerificationBanner() {
             </button>
             <button
               onClick={() => setDismissed(true)}
-              className="p-1.5 rounded-lg hover:bg-[#C8A951]/10 transition-colors group"
+              className="p-1.5 rounded-lg hover:bg-[var(--gold)]/10 transition-colors group"
               aria-label="Dismiss verification banner"
             >
-              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#C8A951]/40 group-hover:text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--gold)]/40 group-hover:text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>

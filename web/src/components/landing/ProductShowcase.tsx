@@ -113,8 +113,8 @@ export function ProductShowcase() {
             className={cn(
               'relative px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all cursor-pointer overflow-hidden',
               activeIndex === i
-                ? 'bg-[#C8A951] text-[#1A3478] shadow-[0_0_15px_rgba(200,169,81,0.3)] font-black'
-                : 'bg-white text-[#374151] hover:bg-[#F3F4F6] shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+                ? 'bg-[var(--gold)] text-[var(--royal)] shadow-[0_0_15px_rgba(200,169,81,0.3)] font-black'
+                : 'bg-white text-slate-700 hover:bg-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
             )}
           >
             {tab.label}
@@ -134,14 +134,14 @@ export function ProductShowcase() {
         {/* Browser chrome frame */}
         <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-black/40">
           {/* Title bar */}
-          <div className="bg-[#1E293B] flex items-center gap-2 px-4 py-2.5">
+          <div className="bg-slate-800 flex items-center gap-2 px-4 py-2.5">
             <div className="flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-[#EF4444]/80" />
               <div className="w-3 h-3 rounded-full bg-[#F59E0B]/80" />
               <div className="w-3 h-3 rounded-full bg-[#22C55E]/80" />
             </div>
             <div className="flex-1 ml-4">
-              <div className="bg-[#0F172A] rounded-md px-3 py-1 text-[10px] text-white/40 font-mono text-center max-w-xs mx-auto">
+              <div className="bg-slate-900 rounded-md px-3 py-1 text-[10px] text-white/40 font-mono text-center max-w-xs mx-auto">
                 finalwishes.app/estates/{active.id === 'beneficiaries' ? 'people' : active.id}
               </div>
             </div>

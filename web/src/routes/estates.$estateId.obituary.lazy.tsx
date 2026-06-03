@@ -70,7 +70,7 @@ function ObituaryPage() {
     editable: editing && !isSigned,
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none min-h-[400px] focus:outline-none p-8 text-[#0F172A] font-[family-name:var(--font-inter)] leading-relaxed',
+        class: 'prose prose-lg max-w-none min-h-[400px] focus:outline-none p-8 text-slate-900 font-[family-name:var(--font-inter)] leading-relaxed',
       },
     },
   });
@@ -205,13 +205,13 @@ function ObituaryPage() {
           subject: `Obituary: ${userName || 'Estate Record'}`,
           html: `
             <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
-              <h1 style="font-family: 'Cinzel', serif; color: #0F172A; font-size: 28px; margin-bottom: 8px;">Final Record</h1>
-              <p style="color: #64748B; font-size: 14px; margin-bottom: 24px;">Official obituary for the ${userName || 'estate'} record.</p>
-              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 24px; white-space: pre-wrap; color: #0F172A; font-size: 16px; line-height: 1.7;">
+              <h1 style="font-family: 'Cinzel', serif; color: var(--color-slate-900); font-size: 28px; margin-bottom: 8px;">Final Record</h1>
+              <p style="color: var(--color-slate-500); font-size: 14px; margin-bottom: 24px;">Official obituary for the ${userName || 'estate'} record.</p>
+              <div style="background: var(--color-slate-50); border: 1px solid var(--color-slate-200); border-radius: 12px; padding: 24px; white-space: pre-wrap; color: var(--color-slate-900); font-size: 16px; line-height: 1.7;">
                 ${obit.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}
               </div>
               ${isSigned ? `<p style="margin-top: 24px; color: #16a34a; font-weight: bold;">Signed by: ${obit.signature}</p>` : ''}
-              <p style="margin-top: 32px; color: #94A3B8; font-size: 11px;">Sent from FinalWishes Estate Platform</p>
+              <p style="margin-top: 32px; color: var(--color-slate-400); font-size: 11px;">Sent from FinalWishes Estate Platform</p>
             </div>
           `,
         },
@@ -287,8 +287,8 @@ function ObituaryPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading record...</span>
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading record...</span>
         </div>
       </div>
     );
@@ -315,14 +315,14 @@ function ObituaryPage() {
               alt="Heritage Portrait"
             />
           ) : (
-            <div className="flex items-center justify-center h-[50vh] bg-[#133378]/5">
-              <span className="text-8xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378]/30">{initials}</span>
+            <div className="flex items-center justify-center h-[50vh] bg-[var(--royal)]/5">
+              <span className="text-8xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]/30">{initials}</span>
             </div>
           )}
           <div className="w-full p-6 bg-white border-t border-slate-100 flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-bold text-[#0F172A]">Heritage Portrait</h3>
-              <p className="text-[13px] text-[#64748B] font-medium">{userName || 'Estate Principal'}</p>
+              <h3 className="text-lg font-bold text-slate-900 font-[family-name:var(--font-cinzel)]">Heritage Portrait</h3>
+              <p className="text-[13px] text-slate-500 font-medium">{userName || 'Estate Principal'}</p>
             </div>
             <Button
               variant="outline"
@@ -337,14 +337,14 @@ function ObituaryPage() {
 
       <div className="flex justify-between items-end pb-8">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Final Record</h2>
-          <p className="text-lg text-[#64748B] font-medium">Draft, manage, and distribute the official life story for your estate.</p>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Final Record</h2>
+          <p className="text-lg text-slate-500 font-medium">Draft, manage, and distribute the official life story for your estate.</p>
         </div>
         <div className="flex gap-3">
           <Button
             onClick={handleAIDraft}
             disabled={aiLoading || isSigned}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
           >
             {aiLoading ? (
               <>
@@ -360,7 +360,7 @@ function ObituaryPage() {
           </Button>
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></svg>
             Review & Sign
@@ -368,7 +368,7 @@ function ObituaryPage() {
           {obit?.content && (
             <Button
               onClick={handleExportPDF}
-              className="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#334155] px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-sm active:scale-95"
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-sm active:scale-95"
             >
               <Download className="w-4 h-4" />
               Export PDF
@@ -385,7 +385,7 @@ function ObituaryPage() {
           <Button
             onClick={handleShare}
             disabled={shareLoading || !obit?.content}
-            className="bg-[#C8A951] hover:bg-[#b8993f] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
+            className="bg-[var(--gold)] hover:bg-[var(--gold)] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
           >
             {shareLoading ? (
               <>
@@ -414,12 +414,12 @@ function ObituaryPage() {
              {profilePhoto ? (
                <img src={profilePhoto} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Portrait" />
              ) : (
-               <div className="absolute inset-0 flex items-center justify-center bg-[#133378]/5">
-                 <span className="text-6xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378]/20">{initials}</span>
+               <div className="absolute inset-0 flex items-center justify-center bg-[var(--royal)]/5">
+                 <span className="text-6xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]/20">{initials}</span>
                </div>
              )}
              <Button
-               className="absolute bottom-4 left-4 right-4 w-[calc(100%-2rem)] py-2.5 bg-white/90 backdrop-blur-md rounded-xl text-[#0F172A] font-bold text-[12px] translate-y-12 group-hover:translate-y-0 transition-transform shadow-md hover:bg-white/95 h-auto border-none"
+               className="absolute bottom-4 left-4 right-4 w-[calc(100%-2rem)] py-2.5 bg-white/90 backdrop-blur-md rounded-xl text-slate-900 font-bold text-[12px] translate-y-12 group-hover:translate-y-0 transition-transform shadow-md hover:bg-white/95 h-auto border-none"
                onClick={(e) => {
                  e.stopPropagation();
                  fileInputRef.current?.click();
@@ -448,10 +448,10 @@ function ObituaryPage() {
 
         {/* Editor */}
         <Card className="rounded-[2rem] border-slate-100 shadow-sm flex flex-col min-h-[500px] p-0">
-          <CardHeader className="bg-[#F8FAFC] px-6 py-4 flex-row justify-between items-center border-b border-slate-100 rounded-t-[2rem]">
+          <CardHeader className="bg-slate-50 px-6 py-4 flex-row justify-between items-center border-b border-slate-100 rounded-t-[2rem]">
              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Obituary Draft</span>
              {!editing && !isSigned && (
-               <Button variant="link" onClick={() => setEditing(true)} className="text-[#133378] font-bold text-[12px] p-0 h-auto">Edit</Button>
+               <Button variant="link" onClick={() => setEditing(true)} className="text-[var(--royal)] font-bold text-[12px] p-0 h-auto">Edit</Button>
              )}
              {editing && (
                <Button variant="link" onClick={handleSave} className="text-green-600 font-bold text-[12px] p-0 h-auto">{saving ? 'Saving...' : 'Save Draft'}</Button>
@@ -465,16 +465,16 @@ function ObituaryPage() {
           </CardHeader>
           {/* Toolbar — only visible when editing */}
           {editing && !isSigned && editor && (
-            <div className="flex items-center gap-1 mx-6 mt-4 p-3 bg-[#F8FAFC] rounded-2xl border border-slate-100">
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBold().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bold') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><Bold className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleItalic().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('italic') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><Italic className="w-4 h-4" /></Button>
+            <div className="flex items-center gap-1 mx-6 mt-4 p-3 bg-slate-50 rounded-2xl border border-slate-100">
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBold().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Bold className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleItalic().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Italic className="w-4 h-4" /></Button>
               <Separator orientation="vertical" className="h-5 mx-1" />
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`w-9 h-9 rounded-xl ${editor.isActive('heading', { level: 2 }) ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><Heading2 className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bulletList') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><List className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('orderedList') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}><ListOrdered className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`w-9 h-9 rounded-xl ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Heading2 className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><List className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('orderedList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><ListOrdered className="w-4 h-4" /></Button>
               <Separator orientation="vertical" className="h-5 mx-1" />
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().undo().run()} className="w-9 h-9 rounded-xl text-[#64748B] hover:bg-[#E2E8F0]"><Undo2 className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().redo().run()} className="w-9 h-9 rounded-xl text-[#64748B] hover:bg-[#E2E8F0]"><Redo2 className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().undo().run()} className="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-200"><Undo2 className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().redo().run()} className="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-200"><Redo2 className="w-4 h-4" /></Button>
             </div>
           )}
           <CardContent className="flex-1 p-0">
@@ -487,21 +487,21 @@ function ObituaryPage() {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="sm:max-w-2xl rounded-[3rem] p-12 border-slate-100 shadow-2xl" showCloseButton={false}>
           <DialogHeader className="text-center items-center">
-            <div className="w-16 h-16 bg-[#133378] text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <div className="w-16 h-16 bg-[var(--royal)] text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
-            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Review & Sign</DialogTitle>
-            <DialogDescription className="text-[#64748B] font-medium max-w-md mx-auto">By signing this document, you are establishing the official record for your estate.</DialogDescription>
+            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Review & Sign</DialogTitle>
+            <DialogDescription className="text-slate-500 font-medium max-w-md mx-auto">By signing this document, you are establishing the official record for your estate.</DialogDescription>
           </DialogHeader>
 
-          <div className="bg-[#F8FAFC] p-6 rounded-2xl mb-4 border border-slate-100 max-h-[200px] overflow-y-auto">
-             <p className="text-[#64748B] text-sm italic leading-relaxed">"{obit?.content || 'No content drafted yet...'}"</p>
+          <div className="bg-slate-50 p-6 rounded-2xl mb-4 border border-slate-100 max-h-[200px] overflow-y-auto">
+             <p className="text-slate-500 text-sm italic leading-relaxed">"{obit?.content || 'No content drafted yet...'}"</p>
           </div>
 
-          <div className="bg-[#F8FAFC] p-6 rounded-2xl border border-slate-200 mb-4 text-center">
+          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-4 text-center">
              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Signature</label>
-             <div className="h-20 border-b-2 border-[#0F172A]/30 flex items-center justify-center text-slate-300 font-serif italic text-3xl select-none">
-                {isSigned ? <span className="text-[#0F172A] font-[family-name:var(--font-cinzel)]">{obit?.signature || userName || 'Legal Guardian'}</span> : 'Sign here'}
+             <div className="h-20 border-b-2 border-slate-900/30 flex items-center justify-center text-slate-300 font-serif italic text-3xl select-none">
+                {isSigned ? <span className="text-slate-900 font-[family-name:var(--font-cinzel)]">{obit?.signature || userName || 'Legal Guardian'}</span> : 'Sign here'}
              </div>
           </div>
 
@@ -509,14 +509,14 @@ function ObituaryPage() {
             <Button
               variant="outline"
               onClick={() => setModalOpen(false)}
-              className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-[#64748B] text-sm hover:bg-slate-50 active:scale-95"
+              className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 text-sm hover:bg-slate-50 active:scale-95"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSign}
               disabled={isSigned}
-              className="flex-1 py-4 h-auto rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white font-bold text-sm shadow-lg active:scale-95 disabled:opacity-50"
+              className="flex-1 py-4 h-auto rounded-2xl bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white font-bold text-sm shadow-lg active:scale-95 disabled:opacity-50"
             >
               {isSigned ? 'Signed & Sealed' : 'Sign Document'}
             </Button>
@@ -541,7 +541,7 @@ function ObituaryPage() {
 
 function StatRow({ label, value, color }: { label: string; value?: string; color?: string }) {
   const colorMap: Record<string, string> = {
-    blue: 'bg-[#133378]/5 text-[#133378] border-[#133378]/10',
+    blue: 'bg-[var(--royal)]/5 text-[var(--royal)] border-[var(--royal)]/10',
     green: 'bg-green-50 text-green-600 border-green-200',
     amber: 'bg-amber-50 text-amber-600 border-amber-200',
   };
@@ -549,11 +549,11 @@ function StatRow({ label, value, color }: { label: string; value?: string; color
 
   return (
     <div className="flex justify-between items-center py-2.5 border-b border-slate-100 last:border-b-0">
-      <span className="text-[13px] text-[#64748B] font-medium">{label}</span>
+      <span className="text-[13px] text-slate-500 font-medium">{label}</span>
       {color ? (
         <Badge variant="outline" className={`text-[11px] font-bold px-2.5 py-1 rounded-lg h-auto ${badgeStyle}`}>{value}</Badge>
       ) : (
-        <span className="text-[13px] font-bold text-[#0F172A]">{value}</span>
+        <span className="text-[13px] font-bold text-slate-900">{value}</span>
       )}
     </div>
   );

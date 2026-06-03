@@ -116,7 +116,7 @@ export const Route = createLazyFileRoute('/estates/$estateId/lockbox')({
 const CATEGORIES = [
   { value: 'banking' as const, label: 'Banking', icon: Landmark, color: '#133378' },
   { value: 'investment' as const, label: 'Investment', icon: TrendingUp, color: '#059669' },
-  { value: 'insurance' as const, label: 'Insurance', icon: Shield, color: '#7C3AED' },
+  { value: 'insurance' as const, label: 'Insurance', icon: Shield, color: '#C8A951' },
   { value: 'digital_account' as const, label: 'Digital Account', icon: Globe, color: '#2563EB' },
   { value: 'crypto' as const, label: 'Cryptocurrency', icon: Bitcoin, color: '#F59E0B' },
   { value: 'physical_safe' as const, label: 'Physical Safe', icon: Key, color: '#DC2626' },
@@ -167,7 +167,7 @@ function LockboxPage() {
         action={
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-[#334155] hover:bg-[#1E293B] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
+            className="bg-slate-700 hover:bg-slate-800 text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Add Credential
@@ -182,15 +182,15 @@ function LockboxPage() {
           { label: 'Secured', value: stats.secure, icon: ShieldCheck },
           { label: 'Categories', value: stats.categories, icon: CreditCard },
         ].map((s) => (
-          <Card key={s.label} className="bg-[#F8FAFC] rounded-3xl border-slate-100 py-0">
+          <Card key={s.label} className="bg-slate-50 rounded-3xl border-slate-100 py-0">
             <CardContent className="p-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#133378]/5 rounded-2xl flex items-center justify-center">
-                  <s.icon className="w-5 h-5 text-[#133378]" />
+                <div className="w-12 h-12 bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
+                  <s.icon className="w-5 h-5 text-[var(--royal)]" />
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-[#0F172A]">{s.value}</p>
-                  <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">{s.label}</p>
+                  <p className="text-3xl font-bold text-slate-900">{s.value}</p>
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
                 </div>
               </div>
             </CardContent>
@@ -203,7 +203,7 @@ function LockboxPage() {
         <Button
           variant={filterCategory === 'all' ? 'default' : 'secondary'}
           onClick={() => setFilterCategory('all')}
-          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[#133378] text-white hover:bg-[#1E3A5F]' : 'bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]'}`}
+          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
         >
           All
         </Button>
@@ -212,7 +212,7 @@ function LockboxPage() {
             key={c.value}
             variant={filterCategory === c.value ? 'default' : 'secondary'}
             onClick={() => setFilterCategory(c.value)}
-            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[#133378] text-white hover:bg-[#1E3A5F]' : 'bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]'}`}
+            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
           >
             <c.icon className="w-3.5 h-3.5" />
             {c.label}
@@ -305,7 +305,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
   }, [estateId, item.id])
 
   return (
-    <Card className="rounded-3xl border-slate-100 hover:border-[#133378]/10 transition-all group py-0">
+    <Card className="rounded-3xl border-slate-100 hover:border-[var(--royal)]/10 transition-all group py-0">
       <CardContent className="p-8">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
@@ -313,13 +313,13 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
               <Icon className="w-5 h-5" style={{ color: cat.color }} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-[#0F172A]">{item.accountName}</h3>
-              {item.institution && <p className="text-[13px] text-[#64748B] font-medium">{item.institution}</p>}
+              <h3 className="text-lg font-bold text-slate-900">{item.accountName}</h3>
+              {item.institution && <p className="text-[13px] text-slate-500 font-medium">{item.institution}</p>}
             </div>
           </div>
           <div className="flex items-center gap-2">
             {item.hasSecureCredentials && (
-              <Badge className="px-3 py-1.5 h-auto bg-[#C8A951]/10 text-[#C8A951] text-[10px] font-bold uppercase tracking-widest rounded-lg border-transparent hover:bg-[#C8A951]/15">
+              <Badge className="px-3 py-1.5 h-auto bg-[var(--gold)]/10 text-[var(--gold)] text-[10px] font-bold uppercase tracking-widest rounded-lg border-transparent hover:bg-[var(--gold)]/15">
                 <ShieldCheck className="w-3 h-3" /> Secured
               </Badge>
             )}
@@ -333,20 +333,20 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
         </div>
 
         {item.accountIdentifier && (
-          <p className="text-[13px] text-[#334155] mb-3">
-            <span className="text-[#64748B]">Identifier:</span> {item.accountIdentifier}
+          <p className="text-[13px] text-slate-700 mb-3">
+            <span className="text-slate-500">Identifier:</span> {item.accountIdentifier}
           </p>
         )}
 
         {item.transitionInstructions && (
-          <div className="bg-[#F8FAFC] rounded-2xl p-5 mb-4">
-            <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest mb-2">Transition Instructions</p>
-            <p className="text-[13px] text-[#334155] line-clamp-3">{item.transitionInstructions}</p>
+          <div className="bg-slate-50 rounded-2xl p-5 mb-4">
+            <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest mb-2">Transition Instructions</p>
+            <p className="text-[13px] text-slate-700 line-clamp-3">{item.transitionInstructions}</p>
           </div>
         )}
 
         {item.notes && (
-          <p className="text-[13px] text-[#64748B] line-clamp-2 mb-4">{item.notes}</p>
+          <p className="text-[13px] text-slate-500 line-clamp-2 mb-4">{item.notes}</p>
         )}
 
         {/* Reveal Credentials Button */}
@@ -355,10 +355,10 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
             <Button
               onClick={handleReveal}
               disabled={revealing}
-              className="w-full bg-[#C8A951]/10 hover:bg-[#C8A951]/20 text-[#C8A951] border border-[#C8A951]/20 px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-none"
+              className="w-full bg-[var(--gold)]/10 hover:bg-[var(--gold)]/20 text-[var(--gold)] border border-[var(--gold)]/20 px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-none"
             >
               {revealing ? (
-                <div className="w-4 h-4 border-2 border-[#C8A951]/30 border-t-[#C8A951] rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
               ) : (
                 <ShieldAlert className="w-4 h-4" />
               )}
@@ -372,20 +372,20 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
         {/* Decrypted Credentials Panel */}
         {credentials && (
-          <div className="bg-[#C8A951]/5 border border-[#C8A951]/20 rounded-2xl p-5 mb-4 space-y-3">
+          <div className="bg-[var(--gold)]/5 border border-[var(--gold)]/20 rounded-2xl p-5 mb-4 space-y-3">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-[11px] font-bold text-[#C8A951] uppercase tracking-widest flex items-center gap-2">
+              <p className="text-[11px] font-bold text-[var(--gold)] uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck className="w-3.5 h-3.5" /> Decrypted Credentials
               </p>
               <div className="flex items-center gap-2">
-                <Badge className="px-2 py-1 h-auto bg-[#C8A951]/15 text-[#C8A951] text-[10px] font-bold rounded-md border-transparent tabular-nums">
+                <Badge className="px-2 py-1 h-auto bg-[var(--gold)]/15 text-[var(--gold)] text-[10px] font-bold rounded-md border-transparent tabular-nums">
                   {countdown}s
                 </Badge>
                 <Button
                   variant="ghost"
                   size="xs"
                   onClick={handleHideCredentials}
-                  className="text-[11px] text-[#64748B] hover:text-[#DC2626] font-bold"
+                  className="text-[11px] text-slate-500 hover:text-[#DC2626] font-bold"
                 >
                   Hide
                 </Button>
@@ -394,27 +394,27 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
             {credentials.username && (
               <div className="flex items-center gap-3">
-                <User className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
+                <User className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 <div>
-                  <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">Username</p>
-                  <p className="text-[13px] text-[#0F172A] font-mono">{credentials.username}</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Username</p>
+                  <p className="text-[13px] text-slate-900 font-mono">{credentials.username}</p>
                 </div>
               </div>
             )}
 
             {credentials.password && (
               <div className="flex items-center gap-3">
-                <KeyRound className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
+                <KeyRound className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">Password</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Password</p>
                   <div className="flex items-center gap-2">
-                    <p className="text-[13px] text-[#0F172A] font-mono truncate">
+                    <p className="text-[13px] text-slate-900 font-mono truncate">
                       {showPassword ? credentials.password : '\u2022'.repeat(Math.min(credentials.password.length, 20))}
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowPassword((v) => !v)}
-                      className="text-[#64748B] hover:text-[#133378] transition-colors shrink-0"
+                      className="text-slate-500 hover:text-[var(--royal)] transition-colors shrink-0"
                     >
                       {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -425,17 +425,17 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
             {credentials.pin && (
               <div className="flex items-center gap-3">
-                <Lock className="w-3.5 h-3.5 text-[#64748B] shrink-0" />
+                <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">PIN</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">PIN</p>
                   <div className="flex items-center gap-2">
-                    <p className="text-[13px] text-[#0F172A] font-mono">
+                    <p className="text-[13px] text-slate-900 font-mono">
                       {showPin ? credentials.pin : '\u2022'.repeat(credentials.pin.length)}
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowPin((v) => !v)}
-                      className="text-[#64748B] hover:text-[#133378] transition-colors shrink-0"
+                      className="text-slate-500 hover:text-[var(--royal)] transition-colors shrink-0"
                     >
                       {showPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -446,10 +446,10 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
             {credentials.notes && (
               <div className="flex items-start gap-3">
-                <FileText className="w-3.5 h-3.5 text-[#64748B] shrink-0 mt-0.5" />
+                <FileText className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">Secure Notes</p>
-                  <p className="text-[13px] text-[#0F172A] font-mono whitespace-pre-wrap">{credentials.notes}</p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Secure Notes</p>
+                  <p className="text-[13px] text-slate-900 font-mono whitespace-pre-wrap">{credentials.notes}</p>
                 </div>
               </div>
             )}
@@ -463,7 +463,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
               <Button variant="destructive" size="xs" onClick={handleArchive} className="text-[12px] font-bold">
                 Yes
               </Button>
-              <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[#64748B]">
+              <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-slate-500">
                 No
               </Button>
             </div>
@@ -474,7 +474,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
               onClick={() => setConfirming(true)}
               className="opacity-0 group-hover:opacity-100 transition-opacity"
             >
-              <Trash2 className="w-4 h-4 text-[#94A3B8] hover:text-[#DC2626]" />
+              <Trash2 className="w-4 h-4 text-slate-400 hover:text-[#DC2626]" />
             </Button>
           )}
         </div>
@@ -587,7 +587,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
         className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10"
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
             Add Credential
           </DialogTitle>
           <DialogDescription>
@@ -598,24 +598,24 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
         <div className="space-y-6 py-4">
           {/* Account Name */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Account Name *
             </Label>
             <Input
               value={form.accountName}
               onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
               placeholder="e.g., Chase Checking, Gmail, Bitcoin Wallet"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
             />
           </div>
 
           {/* Category */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Category
             </Label>
             <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
-              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]">
+              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -630,33 +630,33 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
 
           {/* Institution */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Institution
             </Label>
             <Input
               value={form.institution}
               onChange={(e) => setForm((f) => ({ ...f, institution: e.target.value }))}
               placeholder="e.g., JPMorgan Chase, Google, Coinbase"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
             />
           </div>
 
           {/* Account Identifier */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Account Identifier
             </Label>
             <Input
               value={form.accountIdentifier}
               onChange={(e) => setForm((f) => ({ ...f, accountIdentifier: e.target.value }))}
               placeholder="Last 4 digits, username, or account number hint"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
             />
           </div>
 
           {/* Transition Instructions */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Transition Instructions
             </Label>
             <Textarea
@@ -664,13 +664,13 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               onChange={(e) => setForm((f) => ({ ...f, transitionInstructions: e.target.value }))}
               placeholder="What should your heir do with this account? Close it? Transfer it? Keep it active?"
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[#0F172A] resize-none"
+              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
             />
           </div>
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Notes
             </Label>
             <Textarea
@@ -678,47 +678,47 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
               placeholder="Any additional details..."
               rows={2}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[#0F172A] resize-none"
+              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
             />
           </div>
 
           {/* Secure Credentials Toggle */}
-          <div className="flex items-center gap-4 bg-[#C8A951]/5 rounded-2xl p-5 border border-[#C8A951]/20">
+          <div className="flex items-center gap-4 bg-[var(--gold)]/5 rounded-2xl p-5 border border-[var(--gold)]/20">
             <Switch
               checked={form.hasSecureCredentials}
               onCheckedChange={(v) => setForm((f) => ({ ...f, hasSecureCredentials: v }))}
-              className="data-checked:bg-[#C8A951]"
+              className="data-checked:bg-[var(--gold)]"
             />
             <div>
-              <p className="text-[14px] font-bold text-[#0F172A]">Store Secure Credentials</p>
-              <p className="text-[12px] text-[#64748B]">Passwords and PINs will be encrypted via the PII Vault (Cloud KMS)</p>
+              <p className="text-[14px] font-bold text-slate-900">Store Secure Credentials</p>
+              <p className="text-[12px] text-slate-500">Passwords and PINs will be encrypted via the PII Vault (Cloud KMS)</p>
             </div>
           </div>
 
           {/* Secure Credential Entry Fields */}
           {form.hasSecureCredentials && (
-            <div className="space-y-4 bg-[#C8A951]/5 rounded-2xl p-6 border border-[#C8A951]/20">
+            <div className="space-y-4 bg-[var(--gold)]/5 rounded-2xl p-6 border border-[var(--gold)]/20">
               <div className="flex items-center gap-2 mb-2">
-                <ShieldCheck className="w-4 h-4 text-[#C8A951]" />
-                <p className="text-[12px] font-bold text-[#C8A951] uppercase tracking-widest">Encrypted Credentials</p>
+                <ShieldCheck className="w-4 h-4 text-[var(--gold)]" />
+                <p className="text-[12px] font-bold text-[var(--gold)] uppercase tracking-widest">Encrypted Credentials</p>
               </div>
 
               {/* Username */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest flex items-center gap-2">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest flex items-center gap-2">
                   <User className="w-3 h-3" /> Username
                 </Label>
                 <Input
                   value={form.credUsername}
                   onChange={(e) => setForm((f) => ({ ...f, credUsername: e.target.value }))}
                   placeholder="Account username or email"
-                  className="px-5 py-4 h-auto rounded-2xl border-[#C8A951]/20 bg-white text-[14px] text-[#0F172A]"
+                  className="px-5 py-4 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900"
                 />
               </div>
 
               {/* Password */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest flex items-center gap-2">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest flex items-center gap-2">
                   <KeyRound className="w-3 h-3" /> Password
                 </Label>
                 <div className="relative">
@@ -727,12 +727,12 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                     value={form.credPassword}
                     onChange={(e) => setForm((f) => ({ ...f, credPassword: e.target.value }))}
                     placeholder="Account password"
-                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[#C8A951]/20 bg-white text-[14px] text-[#0F172A] font-mono"
+                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900 font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#133378] transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[var(--royal)] transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -741,7 +741,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
 
               {/* PIN */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest flex items-center gap-2">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest flex items-center gap-2">
                   <Lock className="w-3 h-3" /> PIN
                 </Label>
                 <div className="relative">
@@ -752,12 +752,12 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                     value={form.credPin}
                     onChange={(e) => setForm((f) => ({ ...f, credPin: e.target.value.replace(/[^0-9]/g, '') }))}
                     placeholder="Numeric PIN (up to 10 digits)"
-                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[#C8A951]/20 bg-white text-[14px] text-[#0F172A] font-mono"
+                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900 font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPin((v) => !v)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#133378] transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[var(--royal)] transition-colors"
                   >
                     {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -766,7 +766,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
 
               {/* Secure Notes */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest flex items-center gap-2">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest flex items-center gap-2">
                   <FileText className="w-3 h-3" /> Secure Notes
                 </Label>
                 <Textarea
@@ -774,11 +774,11 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                   onChange={(e) => setForm((f) => ({ ...f, credNotes: e.target.value }))}
                   placeholder="Security questions, recovery codes, or other sensitive information..."
                   rows={3}
-                  className="px-5 py-4 rounded-2xl border-[#C8A951]/20 bg-white text-[14px] text-[#0F172A] resize-none font-mono"
+                  className="px-5 py-4 rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900 resize-none font-mono"
                 />
               </div>
 
-              <p className="text-[11px] text-[#C8A951]/70 flex items-center gap-1.5">
+              <p className="text-[11px] text-[var(--gold)]/70 flex items-center gap-1.5">
                 <Lock className="w-3 h-3" />
                 All fields above are encrypted with AES-256-GCM via Cloud KMS before storage.
               </p>
@@ -798,14 +798,14 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
           <Button
             variant="ghost"
             onClick={() => handleOpenChange(false)}
-            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]"
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={saving || !form.accountName.trim()}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
           >
             {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Lock className="w-4 h-4" />}
             {saving ? 'Encrypting & Saving...' : 'Save Credential'}

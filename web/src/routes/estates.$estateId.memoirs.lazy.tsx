@@ -287,8 +287,8 @@ function MemoirsPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#133378]/50 uppercase tracking-[0.2em]">
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[var(--royal)]/50 uppercase tracking-[0.2em]">
             Loading memories...
           </span>
         </div>
@@ -319,7 +319,7 @@ function MemoirsPage() {
               setModalOpen(true)
             }}
             disabled={tierUsage ? !tierUsage.canUploadMedia : false}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 5v14M5 12h14" />
@@ -331,14 +331,14 @@ function MemoirsPage() {
 
       {/* Tier Limit Banner */}
       {tierUsage && (!tierUsage.canUploadMedia || !tierUsage.canUploadVideo) && (
-        <div className="bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-2xl p-6 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C8A951]/20 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+        <div className="bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-2xl p-6 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-[#0F172A]">
+            <p className="text-sm font-bold text-slate-900">
               {!tierUsage.canUploadMedia
                 ? tierUpgradeMessage(tierUsage, 'media')
                 : tierUpgradeMessage(tierUsage, 'video')}
@@ -346,7 +346,7 @@ function MemoirsPage() {
             <Link
               to="/estates/$estateId/pricing"
               params={{ estateId }}
-              className="inline-block mt-2 text-sm font-bold text-[#C8A951] hover:text-[#B8952F] underline underline-offset-2"
+              className="inline-block mt-2 text-sm font-bold text-[var(--gold)] hover:text-[var(--gold)] underline underline-offset-2"
             >
               View upgrade options
             </Link>
@@ -357,8 +357,8 @@ function MemoirsPage() {
       {/* Video Gallery */}
       <section className="space-y-10">
         <div className="flex items-center gap-4">
-          <h3 className="text-sm font-bold text-[#133378]/40 uppercase tracking-[0.3em]">Video Memorials</h3>
-          <div className="flex-1 h-px bg-[#133378]/5" />
+          <h3 className="text-sm font-bold text-[var(--royal)]/40 uppercase tracking-[0.3em]">Video Memorials</h3>
+          <div className="flex-1 h-px bg-[var(--royal)]/5" />
           <Button
             variant="ghost"
             onClick={() => {
@@ -366,7 +366,7 @@ function MemoirsPage() {
               setModalOpen(true)
             }}
             disabled={tierUsage ? !tierUsage.canUploadVideo : false}
-            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378] uppercase tracking-wider h-auto px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-[11px] font-bold text-[var(--gold)] hover:text-[var(--royal)] uppercase tracking-wider h-auto px-3 py-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
               <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
@@ -393,8 +393,8 @@ function MemoirsPage() {
       {/* Photo Gallery */}
       <section className="space-y-10">
         <div className="flex items-center gap-4">
-          <h3 className="text-sm font-bold text-[#133378]/40 uppercase tracking-[0.3em]">Photo Archives</h3>
-          <div className="flex-1 h-px bg-[#133378]/5" />
+          <h3 className="text-sm font-bold text-[var(--royal)]/40 uppercase tracking-[0.3em]">Photo Archives</h3>
+          <div className="flex-1 h-px bg-[var(--royal)]/5" />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {photos.map((p) => (
@@ -435,17 +435,17 @@ function MemoirsPage() {
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               </svg>
             </AlertDialogMedia>
-            <AlertDialogTitle className="text-xl font-bold text-[#0F172A] text-center">
+            <AlertDialogTitle className="text-xl font-bold text-slate-900 text-center">
               Delete Memory
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-[14px] text-[#133378]/50 text-center">
-              <strong className="text-[#0F172A]">{deleteTarget?.title}</strong> will be permanently removed.
+            <AlertDialogDescription className="text-[14px] text-[var(--royal)]/50 text-center">
+              <strong className="text-slate-900">{deleteTarget?.title}</strong> will be permanently removed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3 sm:flex-row">
             <AlertDialogCancel
               variant="outline"
-              className="flex-1 py-3 rounded-xl border-[#133378]/10 text-[#0F172A] font-bold text-[13px]"
+              className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px]"
             >
               Cancel
             </AlertDialogCancel>
@@ -495,7 +495,7 @@ function CinemaViewer({
               <Button
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
-                className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[#0F172A]"
+                className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" />
@@ -504,12 +504,12 @@ function CinemaViewer({
             </div>
             <div className="p-12 bg-white flex justify-between items-center">
               <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-[#0F172A] tracking-tight">{memoir.title}</h3>
-                <div className="flex items-center gap-4 text-[#133378]/40 font-medium">
-                  <Badge className="text-[11px] font-bold uppercase tracking-widest bg-[#133378]/10 text-[#133378] border-none">
+                <h3 className="text-3xl font-bold text-slate-900 tracking-tight">{memoir.title}</h3>
+                <div className="flex items-center gap-4 text-[var(--royal)]/40 font-medium">
+                  <Badge className="text-[11px] font-bold uppercase tracking-widest bg-[var(--royal)]/10 text-[var(--royal)] border-none">
                     {memoir.type === 'youtube' ? 'YouTube' : memoir.type}
                   </Badge>
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#133378]/10" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--royal)]/10" />
                   <span className="text-sm">{memoir.dateAdded}</span>
                 </div>
               </div>
@@ -524,7 +524,7 @@ function CinemaViewer({
                 <Button
                   variant="outline"
                   onClick={() => onOpenChange(false)}
-                  className="px-8 py-3 bg-[#F8FAFC] hover:bg-[#133378]/5 rounded-xl text-[#0F172A] font-bold text-[13px] border-[#133378]/10 h-auto"
+                  className="px-8 py-3 bg-slate-50 hover:bg-[var(--royal)]/5 rounded-xl text-slate-900 font-bold text-[13px] border-[var(--royal)]/10 h-auto"
                 >
                   Close
                 </Button>
@@ -596,12 +596,12 @@ function UploadModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl sm:max-w-xl rounded-[3rem] p-12 border-[#133378]/10">
+      <DialogContent className="max-w-xl sm:max-w-xl rounded-[3rem] p-12 border-[var(--royal)]/10">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-bold text-[#0F172A] tracking-tight">
+          <DialogTitle className="text-3xl font-bold text-slate-900 tracking-tight">
             Add New Memory
           </DialogTitle>
-          <DialogDescription className="text-[#133378]/40 font-medium text-sm">
+          <DialogDescription className="text-[var(--royal)]/40 font-medium text-sm">
             Upload a file or paste a YouTube link to preserve a memory.
           </DialogDescription>
         </DialogHeader>
@@ -612,16 +612,16 @@ function UploadModal({
           onValueChange={(val) => onModeChange(val as 'file' | 'youtube')}
           className="mt-2"
         >
-          <TabsList className="w-full bg-[#F8FAFC] p-1.5 rounded-2xl h-auto">
+          <TabsList className="w-full bg-slate-50 p-1.5 rounded-2xl h-auto">
             <TabsTrigger
               value="file"
-              className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[#133378] data-active:text-white data-active:shadow-md text-[#133378]/50 hover:text-[#133378]"
+              className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[var(--royal)] data-active:text-white data-active:shadow-md text-[var(--royal)]/50 hover:text-[var(--royal)]"
             >
               Upload File
             </TabsTrigger>
             <TabsTrigger
               value="youtube"
-              className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[#133378] data-active:text-white data-active:shadow-md text-[#133378]/50 hover:text-[#133378]"
+              className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[var(--royal)] data-active:text-white data-active:shadow-md text-[var(--royal)]/50 hover:text-[var(--royal)]"
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
@@ -664,29 +664,29 @@ function UploadModal({
           >
             {/* Title */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                 Title
               </Label>
               <Input
                 name="title"
                 required
-                className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                 placeholder="e.g. Family Reunion 2025"
               />
             </div>
 
             <TabsContent value="youtube" className="mt-0 space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                 YouTube URL
               </Label>
               <Input
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
-                className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                 placeholder="https://www.youtube.com/watch?v=..."
               />
               {youtubeUrl && extractYouTubeId(youtubeUrl) && (
-                <div className="mt-4 rounded-2xl overflow-hidden border border-[#133378]/10">
+                <div className="mt-4 rounded-2xl overflow-hidden border border-[var(--royal)]/10">
                   <img
                     src={`https://img.youtube.com/vi/${extractYouTubeId(youtubeUrl)}/hqdefault.jpg`}
                     alt="YouTube preview"
@@ -698,11 +698,11 @@ function UploadModal({
 
             <TabsContent value="file" className="mt-0 space-y-8">
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                   Media Type
                 </Label>
                 <Select value={mediaType} onValueChange={setMediaType}>
-                  <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] font-bold text-[#0F172A]">
+                  <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 font-bold text-slate-900">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -712,15 +712,15 @@ function UploadModal({
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                   File
                 </Label>
                 <div
                   {...getRootProps()}
                   className={`w-full h-36 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center transition-all cursor-pointer group ${
                     isDragActive
-                      ? 'border-[#133378] bg-[#133378]/5'
-                      : 'border-[#133378]/15 bg-[#F8FAFC] hover:bg-white hover:border-[#133378]/30'
+                      ? 'border-[var(--royal)] bg-[var(--royal)]/5'
+                      : 'border-[var(--royal)]/15 bg-slate-50 hover:bg-white hover:border-[var(--royal)]/30'
                   }`}
                 >
                   <input {...getInputProps()} />
@@ -736,14 +736,14 @@ function UploadModal({
                       else if (f?.type.startsWith('image/')) setMediaType('photo')
                     }}
                   />
-                  <div className="w-12 h-12 rounded-full bg-white border border-[#133378]/10 flex items-center justify-center mb-3 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 text-[#133378]/30">
+                  <div className="w-12 h-12 rounded-full bg-white border border-[var(--royal)]/10 flex items-center justify-center mb-3 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 text-[var(--royal)]/30">
                     <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                       <polyline points="17 8 12 3 7 8" />
                       <line x1="12" y1="3" x2="12" y2="15" />
                     </svg>
                   </div>
-                  <span className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.2em] group-hover:text-[#133378]">
+                  <span className="text-[11px] font-bold text-[var(--royal)]/30 uppercase tracking-[0.2em] group-hover:text-[var(--royal)]">
                     {isDragActive ? 'Drop file here' : selectedFileName || 'Drag & drop or click to select'}
                   </span>
                 </div>
@@ -755,7 +755,7 @@ function UploadModal({
               {/* Upload Destination — only shown for video files */}
               {isVideoFile && selectedFileName && (
                 <div className="space-y-2">
-                  <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                  <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                     Upload Destination
                   </Label>
                   <div className="grid grid-cols-2 gap-3">
@@ -764,15 +764,15 @@ function UploadModal({
                       onClick={() => setUploadDest('cloud')}
                       className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                         uploadDest === 'cloud'
-                          ? 'border-[#133378] bg-[#133378]/5'
-                          : 'border-[#133378]/10 bg-[#F8FAFC] hover:border-[#133378]/20'
+                          ? 'border-[var(--royal)] bg-[var(--royal)]/5'
+                          : 'border-[var(--royal)]/10 bg-slate-50 hover:border-[var(--royal)]/20'
                       }`}
                     >
-                      <svg viewBox="0 0 24 24" className="w-6 h-6 text-[#133378]/60" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg viewBox="0 0 24 24" className="w-6 h-6 text-[var(--royal)]/60" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
                       </svg>
-                      <span className="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider">Cloud Storage</span>
-                      <span className="text-[10px] text-[#133378]/40 font-medium">Max 50MB</span>
+                      <span className="text-[11px] font-bold text-slate-900 uppercase tracking-wider">Cloud Storage</span>
+                      <span className="text-[10px] text-[var(--royal)]/40 font-medium">Max 50MB</span>
                     </button>
                     <button
                       type="button"
@@ -780,15 +780,15 @@ function UploadModal({
                       className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                         uploadDest === 'youtube'
                           ? 'border-red-500 bg-red-50'
-                          : 'border-[#133378]/10 bg-[#F8FAFC] hover:border-red-300'
+                          : 'border-[var(--royal)]/10 bg-slate-50 hover:border-red-300'
                       }`}
                     >
                       <svg viewBox="0 0 24 24" className="w-6 h-6 text-red-500" fill="currentColor">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
                         <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
                       </svg>
-                      <span className="text-[11px] font-bold text-[#0F172A] uppercase tracking-wider">YouTube</span>
-                      <span className="text-[10px] text-[#133378]/40 font-medium">Max 256MB &middot; Unlisted</span>
+                      <span className="text-[11px] font-bold text-slate-900 uppercase tracking-wider">YouTube</span>
+                      <span className="text-[10px] text-[var(--royal)]/40 font-medium">Max 256MB &middot; Unlisted</span>
                     </button>
                   </div>
                 </div>
@@ -797,13 +797,13 @@ function UploadModal({
               {/* Description — shown when YouTube destination is selected */}
               {uploadDest === 'youtube' && isVideoFile && selectedFileName && (
                 <div className="space-y-2">
-                  <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                  <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                     Description <span className="normal-case tracking-normal font-medium">(optional)</span>
                   </Label>
                   <Input
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] focus:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                    className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                     placeholder="A brief description for this video"
                   />
                 </div>
@@ -811,7 +811,7 @@ function UploadModal({
 
               {/* File size limit hint */}
               {selectedFileName && (
-                <p className="text-[10px] font-medium text-[#133378]/30 text-center">
+                <p className="text-[10px] font-medium text-[var(--royal)]/30 text-center">
                   Maximum file size: {maxSizeMB}MB
                   {uploadDest === 'youtube' && isVideoFile && ' — Video will be uploaded as unlisted on YouTube'}
                 </p>
@@ -820,11 +820,11 @@ function UploadModal({
 
             {/* Visibility */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                 Visibility
               </Label>
               <Select value={visibility} onValueChange={setVisibility}>
-                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[#133378]/10 bg-[#F8FAFC] font-bold text-[#0F172A]">
+                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 font-bold text-slate-900">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -837,18 +837,18 @@ function UploadModal({
             {/* Upload Progress */}
             {uploading && uploadProgress > 0 && (
               <div className="space-y-2">
-                <div className="flex justify-between text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                <div className="flex justify-between text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                   <span>Uploading</span>
                   <span>{uploadProgress}%</span>
                 </div>
-                <div className="w-full h-2 bg-[#133378]/10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-[var(--royal)]/10 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-[#133378] rounded-full transition-all duration-300 ease-out"
+                    className="h-full bg-[var(--royal)] rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
                 {uploadProgress === 100 && (
-                  <p className="text-[10px] font-medium text-[#133378]/40 text-center">
+                  <p className="text-[10px] font-medium text-[var(--royal)]/40 text-center">
                     Processing...
                   </p>
                 )}
@@ -862,7 +862,7 @@ function UploadModal({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
                 disabled={uploading}
-                className="flex-1 py-4 h-auto rounded-2xl border-[#133378]/10 font-bold text-[#133378]/40 text-sm"
+                className="flex-1 py-4 h-auto rounded-2xl border-[var(--royal)]/10 font-bold text-[var(--royal)]/40 text-sm"
               >
                 Cancel
               </Button>
@@ -872,7 +872,7 @@ function UploadModal({
                 className={`flex-1 py-4 h-auto rounded-2xl text-white font-bold text-sm shadow-lg disabled:opacity-50 ${
                   mode === 'file' && uploadDest === 'youtube' && isVideoFile && selectedFileName
                     ? 'bg-red-600 hover:bg-red-700'
-                    : 'bg-[#133378] hover:bg-[#1E3A5F]'
+                    : 'bg-[var(--royal)] hover:bg-[var(--royal-blue)]'
                 }`}
               >
                 {uploading
@@ -907,8 +907,8 @@ function VideoCard({
   const isYouTube = memoir.type === 'youtube' && memoir.youtubeUrl
 
   return (
-    <Card className="rounded-[2.5rem] border-[#133378]/10 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-xl transition-all relative p-0 gap-0">
-      <div className="aspect-video bg-[#0F172A] relative overflow-hidden cursor-pointer" onClick={onClick}>
+    <Card className="rounded-[2.5rem] border-[var(--royal)]/10 overflow-hidden shadow-sm group hover:border-[var(--royal)]/20 hover:shadow-xl transition-all relative p-0 gap-0">
+      <div className="aspect-video bg-slate-900 relative overflow-hidden cursor-pointer" onClick={onClick}>
         {isYouTube && memoir.youtubeUrl ? (
           <YouTubeThumbnail url={memoir.youtubeUrl} />
         ) : memoir.url ? (
@@ -921,7 +921,7 @@ function VideoCard({
               preload="metadata"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-[#133378] transition-all duration-500">
+              <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-[var(--royal)] transition-all duration-500">
                 <svg viewBox="0 0 24 24" className="w-8 h-8 fill-current ml-1">
                   <polygon points="5 3 19 12 5 21" />
                 </svg>
@@ -942,16 +942,16 @@ function VideoCard({
         )}
       </div>
       <CardContent className="p-8 space-y-3">
-        <h4 className="font-bold text-[#0F172A] text-lg tracking-tight group-hover:text-[#133378] transition-colors cursor-pointer" onClick={onClick}>
+        <h4 className="font-bold text-slate-900 text-lg tracking-tight group-hover:text-[var(--royal)] transition-colors cursor-pointer" onClick={onClick}>
           {memoir.title}
         </h4>
         <div className="flex justify-between items-center">
-          <span className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-widest">{memoir.dateAdded}</span>
+          <span className="text-[11px] font-bold text-[var(--royal)]/30 uppercase tracking-widest">{memoir.dateAdded}</span>
           <Button
             variant="ghost"
             size="icon-sm"
             onClick={(e) => { e.stopPropagation(); onDelete() }}
-            className="text-[#133378]/15 hover:text-red-500 hover:bg-red-50"
+            className="text-[var(--royal)]/15 hover:text-red-500 hover:bg-red-50"
             title="Delete"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -977,8 +977,8 @@ function PhotoCard({
   onDelete: () => void
 }) {
   return (
-    <Card className="rounded-[2rem] border-[#133378]/10 overflow-hidden shadow-sm group hover:border-[#133378]/20 hover:shadow-xl transition-all relative p-0 gap-0">
-      <div className="aspect-square bg-[#F8FAFC] relative overflow-hidden cursor-pointer" onClick={onClick}>
+    <Card className="rounded-[2rem] border-[var(--royal)]/10 overflow-hidden shadow-sm group hover:border-[var(--royal)]/20 hover:shadow-xl transition-all relative p-0 gap-0">
+      <div className="aspect-square bg-slate-50 relative overflow-hidden cursor-pointer" onClick={onClick}>
         {memoir.url ? (
           <img
             src={memoir.url}
@@ -986,7 +986,7 @@ function PhotoCard({
             alt={memoir.title}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-[#133378]/10">
+          <div className="w-full h-full flex items-center justify-center text-[var(--royal)]/10">
             <svg viewBox="0 0 24 24" className="w-16 h-16" fill="none" stroke="currentColor" strokeWidth="1">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
@@ -995,18 +995,18 @@ function PhotoCard({
           </div>
         )}
       </div>
-      <CardContent className="p-6 border-t border-[#133378]/5 flex items-center justify-between">
+      <CardContent className="p-6 border-t border-[var(--royal)]/5 flex items-center justify-between">
         <div className="min-w-0">
-          <h4 className="font-bold text-[#0F172A] text-sm truncate group-hover:text-[#133378] transition-colors cursor-pointer" onClick={onClick}>
+          <h4 className="font-bold text-slate-900 text-sm truncate group-hover:text-[var(--royal)] transition-colors cursor-pointer" onClick={onClick}>
             {memoir.title}
           </h4>
-          <p className="text-[10px] font-bold text-[#133378]/20 uppercase tracking-widest mt-0.5">{memoir.dateAdded}</p>
+          <p className="text-[10px] font-bold text-[var(--royal)]/20 uppercase tracking-widest mt-0.5">{memoir.dateAdded}</p>
         </div>
         <Button
           variant="ghost"
           size="icon-xs"
           onClick={(e) => { e.stopPropagation(); onDelete() }}
-          className="text-[#133378]/15 hover:text-red-500 hover:bg-red-50 flex-shrink-0"
+          className="text-[var(--royal)]/15 hover:text-red-500 hover:bg-red-50 flex-shrink-0"
           title="Delete"
         >
           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1025,11 +1025,11 @@ function UploadPlaceholder({ type, onClick }: { type: string; onClick: () => voi
   return (
     <Card
       onClick={onClick}
-      className={`rounded-[2.5rem] border-2 border-dashed border-[#133378]/10 flex flex-col items-center justify-center gap-5 text-[#133378]/20 hover:border-[#133378]/30 hover:bg-[#133378]/[0.02] hover:text-[#133378] transition-all ${
+      className={`rounded-[2.5rem] border-2 border-dashed border-[var(--royal)]/10 flex flex-col items-center justify-center gap-5 text-[var(--royal)]/20 hover:border-[var(--royal)]/30 hover:bg-[var(--royal)]/[0.02] hover:text-[var(--royal)] transition-all ${
         type === 'video' ? 'aspect-video' : 'aspect-square'
       } group shadow-sm cursor-pointer p-0 bg-transparent ring-0`}
     >
-      <div className="w-14 h-14 rounded-full border border-[#133378]/10 flex items-center justify-center group-hover:bg-[#133378] group-hover:text-white transition-all duration-500">
+      <div className="w-14 h-14 rounded-full border border-[var(--royal)]/10 flex items-center justify-center group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500">
         <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 5v14M5 12h14" />
         </svg>

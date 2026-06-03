@@ -8,7 +8,7 @@ export const Route = createFileRoute('/terms')({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-10">
-      <h2 className="text-xl font-semibold text-[#0F172A] mb-4 font-[family-name:var(--font-cinzel)]">{title}</h2>
+      <h2 className="text-xl font-semibold text-slate-900 mb-4 font-[family-name:var(--font-cinzel)]">{title}</h2>
       {children}
     </section>
   )
@@ -17,7 +17,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function TermsPage() {
   return (
     <div className="min-h-screen bg-white px-6 py-20 max-w-3xl mx-auto font-[family-name:var(--font-inter)]">
-      <h1 className="text-3xl font-bold text-[#0F172A] mb-4 font-[family-name:var(--font-cinzel)]">Terms of Service</h1>
+      <h1 className="text-3xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-cinzel)]">Terms of Service</h1>
       <p className="text-sm text-slate-500 mb-10">Effective Date: April 17, 2026 &middot; Last Updated: April 17, 2026</p>
 
       <p className="text-slate-700 leading-relaxed mb-8">
@@ -58,7 +58,7 @@ function TermsPage() {
           <li>You must be at least 18 years of age to create an account.</li>
           <li>You must provide accurate and complete information during registration.</li>
           <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
-          <li>You must notify us immediately at <a href="mailto:security@sirsi.ai" className="text-[#133378] underline">security@sirsi.ai</a> if you suspect unauthorized access to your account.</li>
+          <li>You must notify us immediately at <a href="mailto:security@sirsi.ai" className="text-[var(--royal)] underline">security@sirsi.ai</a> if you suspect unauthorized access to your account.</li>
           <li>We strongly recommend enabling multi-factor authentication (MFA) for your account.</li>
           <li>You may not share your account or allow others to access your account on your behalf, except through the platform&rsquo;s designated heir and executor invitation features.</li>
         </ul>
@@ -67,10 +67,10 @@ function TermsPage() {
       <Section title="4. Subscription &amp; Payments">
         <ul className="list-disc pl-6 space-y-2 text-slate-700 leading-relaxed">
           <li>FinalWishes offers tiered subscription plans. Features and storage limits vary by tier.</li>
-          <li>Payments are processed by Stripe, Inc. By subscribing, you also agree to <a href="https://stripe.com/legal" className="text-[#133378] underline" target="_blank" rel="noopener noreferrer">Stripe&rsquo;s Terms of Service</a>.</li>
+          <li>Payments are processed by Stripe, Inc. By subscribing, you also agree to <a href="https://stripe.com/legal" className="text-[var(--royal)] underline" target="_blank" rel="noopener noreferrer">Stripe&rsquo;s Terms of Service</a>.</li>
           <li>Subscriptions renew automatically unless canceled before the renewal date.</li>
           <li>You may manage your subscription, including cancellation and plan changes, through your account settings.</li>
-          <li>Refunds are handled on a case-by-case basis. Contact <a href="mailto:billing@sirsi.ai" className="text-[#133378] underline">billing@sirsi.ai</a> for refund requests.</li>
+          <li>Refunds are handled on a case-by-case basis. Contact <a href="mailto:billing@sirsi.ai" className="text-[var(--royal)] underline">billing@sirsi.ai</a> for refund requests.</li>
           <li>We reserve the right to change pricing with 30 days&rsquo; notice. Price changes do not affect the current billing period.</li>
         </ul>
       </Section>
@@ -104,7 +104,7 @@ function TermsPage() {
         </p>
         <ul className="list-disc pl-6 space-y-2 text-slate-700 leading-relaxed">
           <li>AI-generated suggestions are informational only and do not constitute professional advice.</li>
-          <li>AI features may use your estate data to provide personalized guidance. This data is processed in accordance with our <a href="/privacy" className="text-[#133378] underline">Privacy Policy</a>.</li>
+          <li>AI features may use your estate data to provide personalized guidance. This data is processed in accordance with our <a href="/privacy" className="text-[var(--royal)] underline">Privacy Policy</a>.</li>
           <li>AI outputs should be reviewed for accuracy before relying on them for estate planning decisions.</li>
           <li>We do not guarantee the accuracy, completeness, or legal sufficiency of AI-generated content.</li>
         </ul>
@@ -152,7 +152,7 @@ function TermsPage() {
         <ul className="list-disc pl-6 space-y-2 text-slate-700 leading-relaxed">
           <li>You may terminate your account at any time through your account settings or by contacting support.</li>
           <li>We may suspend or terminate your account if you violate these Terms or engage in conduct that we reasonably believe is harmful to the Service or other users.</li>
-          <li>Upon termination, your data will be handled in accordance with our <a href="/privacy" className="text-[#133378] underline">Privacy Policy</a> (30-day deletion window).</li>
+          <li>Upon termination, your data will be handled in accordance with our <a href="/privacy" className="text-[var(--royal)] underline">Privacy Policy</a> (30-day deletion window).</li>
           <li>Sections 2, 9, 10, and 13 survive termination of these Terms.</li>
         </ul>
       </Section>
@@ -166,7 +166,7 @@ function TermsPage() {
       <Section title="13. Dispute Resolution">
         <ul className="list-disc pl-6 space-y-2 text-slate-700 leading-relaxed">
           <li><strong>Governing Law:</strong> These Terms are governed by the laws of the State of Delaware, without regard to conflict-of-law principles.</li>
-          <li><strong>Informal Resolution:</strong> Before filing any formal proceeding, you agree to attempt to resolve disputes informally by contacting <a href="mailto:legal@sirsi.ai" className="text-[#133378] underline">legal@sirsi.ai</a>. We will attempt to resolve the dispute within 30 days.</li>
+          <li><strong>Informal Resolution:</strong> Before filing any formal proceeding, you agree to attempt to resolve disputes informally by contacting <a href="mailto:legal@sirsi.ai" className="text-[var(--royal)] underline">legal@sirsi.ai</a>. We will attempt to resolve the dispute within 30 days.</li>
           <li><strong>Arbitration:</strong> If informal resolution fails, disputes shall be resolved by binding arbitration under the rules of the American Arbitration Association (AAA). Arbitration shall take place in the State of Delaware.</li>
           <li><strong>Class Action Waiver:</strong> You agree to resolve disputes individually and waive the right to participate in a class action or class-wide arbitration.</li>
           <li><strong>Exceptions:</strong> Either party may seek injunctive relief in a court of competent jurisdiction for intellectual property infringement or unauthorized access to the Service.</li>
@@ -188,8 +188,8 @@ function TermsPage() {
         </p>
         <div className="mt-4 p-4 bg-slate-50 rounded-lg text-slate-700 leading-relaxed">
           <p className="font-semibold">Sirsi Technologies, Inc.</p>
-          <p>Email: <a href="mailto:legal@sirsi.ai" className="text-[#133378] underline">legal@sirsi.ai</a></p>
-          <p>Web: <a href="https://finalwishes.app" className="text-[#133378] underline">finalwishes.app</a></p>
+          <p>Email: <a href="mailto:legal@sirsi.ai" className="text-[var(--royal)] underline">legal@sirsi.ai</a></p>
+          <p>Web: <a href="https://finalwishes.app" className="text-[var(--royal)] underline">finalwishes.app</a></p>
         </div>
       </Section>
     </div>

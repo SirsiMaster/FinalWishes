@@ -16,7 +16,7 @@ export function TableSkeleton() {
       {/* Table */}
       <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden">
         {/* Table header */}
-        <div className="bg-[#F8FAFC] px-10 py-6 flex gap-10 border-b border-slate-100">
+        <div className="bg-slate-50 px-10 py-6 flex gap-10 border-b border-slate-100">
           <Skeleton className="h-3 w-28" />
           <Skeleton className="h-3 w-24" />
           <Skeleton className="h-3 w-32" />

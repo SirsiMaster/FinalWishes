@@ -122,25 +122,25 @@ function AudioMessage({ url, title }: { url: string; title: string }) {
       <audio ref={audioRef} src={url} preload="metadata" />
       <button
         onClick={toggle}
-        className="w-14 h-14 rounded-full bg-[#C8A951]/10 hover:bg-[#C8A951]/20 flex items-center justify-center transition-colors flex-shrink-0"
+        className="w-14 h-14 rounded-full bg-[var(--gold)]/10 hover:bg-[var(--gold)]/20 flex items-center justify-center transition-colors flex-shrink-0"
         aria-label={playing ? `Pause ${title}` : `Play ${title}`}
       >
         {playing ? (
-          <Pause className="w-6 h-6 text-[#C8A951]" />
+          <Pause className="w-6 h-6 text-[var(--gold)]" />
         ) : (
-          <Volume2 className="w-6 h-6 text-[#C8A951]" />
+          <Volume2 className="w-6 h-6 text-[var(--gold)]" />
         )}
       </button>
       <div className="flex-1 min-w-0">
-        <div className="h-2 bg-[#C8A951]/10 rounded-full overflow-hidden">
+        <div className="h-2 bg-[var(--gold)]/10 rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#C8A951]/60 rounded-full transition-all duration-300"
+            className="h-full bg-[var(--gold)]/60 rounded-full transition-all duration-300"
             style={{ width: `${pct}%` }}
           />
         </div>
         <div className="flex justify-between mt-1.5">
-          <span className="text-xs text-[#8B7A5E]/60">{formatTime(progress)}</span>
-          <span className="text-xs text-[#8B7A5E]/60">{duration > 0 ? formatTime(duration) : '--:--'}</span>
+          <span className="text-xs text-[var(--gold)]/60">{formatTime(progress)}</span>
+          <span className="text-xs text-[var(--gold)]/60">{duration > 0 ? formatTime(duration) : '--:--'}</span>
         </div>
       </div>
     </div>
@@ -190,7 +190,7 @@ function VideoMessage({ url, title }: { url: string; title: string }) {
             className="w-20 h-20 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all hover:scale-105"
             aria-label={`Play ${title}`}
           >
-            <Play className="w-8 h-8 text-[#C8A951] ml-1" />
+            <Play className="w-8 h-8 text-[var(--gold)] ml-1" />
           </button>
         </div>
       )}
@@ -316,17 +316,17 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FDF8F0] via-[#FEFCF9] to-white">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[var(--gold-dim)] via-[var(--gold-dim)] to-white">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#C8A951]/30 border-t-[#C8A951] rounded-full animate-spin" />
-          <p className="text-sm text-[#8B7A5E]/60 font-medium">Preparing...</p>
+          <div className="w-10 h-10 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
+          <p className="text-sm text-[var(--gold)]/60 font-medium">Preparing...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FDF8F0] via-[#FEFCF9] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[var(--gold-dim)] via-[var(--gold-dim)] to-white">
       <div className="max-w-2xl mx-auto px-5 py-12 md:py-20">
 
         {/* Section 1: The Owner's Portrait */}
@@ -342,8 +342,8 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
                 />
               </div>
             ) : (
-              <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[#C8A951]/20 to-[#C8A951]/5 border-4 border-white shadow-[0_8px_40px_rgba(200,169,81,0.12)] flex items-center justify-center">
-                <span className="text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[#C8A951]/70">
+              <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-[var(--gold)]/20 to-[var(--gold)]/5 border-4 border-white shadow-[0_8px_40px_rgba(200,169,81,0.12)] flex items-center justify-center">
+                <span className="text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--gold)]/70">
                   {ownerInitials}
                 </span>
               </div>
@@ -351,22 +351,22 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
           </div>
 
           {/* Name */}
-          <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[#2C1810] tracking-tight mb-3 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--gold)] tracking-tight mb-3 leading-tight">
             {ownerName}
           </h1>
 
           {/* Date span */}
           {dateSpan && (
-            <p className="text-lg text-[#8B7A5E]/70 font-light tracking-wide">
+            <p className="text-lg text-[var(--gold)]/70 font-light tracking-wide">
               {dateSpan}
             </p>
           )}
 
           {/* Subtle heart divider */}
           <div className="flex items-center justify-center gap-3 mt-8">
-            <div className="w-12 h-px bg-[#C8A951]/20" />
-            <Heart className="w-4 h-4 text-[#C8A951]/30" />
-            <div className="w-12 h-px bg-[#C8A951]/20" />
+            <div className="w-12 h-px bg-[var(--gold)]/20" />
+            <Heart className="w-4 h-4 text-[var(--gold)]/30" />
+            <div className="w-12 h-px bg-[var(--gold)]/20" />
           </div>
         </section>
 
@@ -400,7 +400,7 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
           ) : (
             <Card className="rounded-3xl border-0 shadow-[0_4px_24px_rgba(200,169,81,0.08)] bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8 md:p-12 text-center">
-                <p className="text-[#5C4A3A] text-lg leading-relaxed font-light">
+                <p className="text-[var(--gold)] text-lg leading-relaxed font-light">
                   No personal messages were left for you, but{' '}
                   <span className="font-medium">{ownerName}</span>&rsquo;s estate
                   is organized and ready for you below.
@@ -414,8 +414,8 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
         {designatedHeirlooms.length > 0 && (
           <section className="mb-16 md:mb-24">
             <div className="flex items-center gap-3 mb-8">
-              <Gift className="w-5 h-5 text-[#C8A951]/50" />
-              <h2 className="text-sm font-bold text-[#8B7A5E]/50 uppercase tracking-[0.15em]">
+              <Gift className="w-5 h-5 text-[var(--gold)]/50" />
+              <h2 className="text-sm font-bold text-[var(--gold)]/50 uppercase tracking-[0.15em]">
                 Meant for You
               </h2>
             </div>
@@ -437,23 +437,23 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
                       </div>
                     )}
                     <div className="p-8 md:p-10">
-                      <p className="text-xs font-bold text-[#C8A951]/60 uppercase tracking-[0.15em] mb-3">
+                      <p className="text-xs font-bold text-[var(--gold)]/60 uppercase tracking-[0.15em] mb-3">
                         This was meant for you
                       </p>
-                      <h3 className="text-xl font-bold text-[#2C1810] mb-3">
+                      <h3 className="text-xl font-bold text-[var(--gold)] mb-3">
                         {heirloom.name}
                       </h3>
                       {heirloom.description && (
-                        <p className="text-[#5C4A3A]/80 leading-relaxed mb-4">
+                        <p className="text-[var(--gold)]/80 leading-relaxed mb-4">
                           {heirloom.description}
                         </p>
                       )}
                       {heirloom.provenance && (
-                        <div className="bg-[#FDF8F0] rounded-2xl p-5 mt-4">
-                          <p className="text-xs font-bold text-[#8B7A5E]/40 uppercase tracking-[0.15em] mb-2">
+                        <div className="bg-[var(--gold-dim)] rounded-2xl p-5 mt-4">
+                          <p className="text-xs font-bold text-[var(--gold)]/40 uppercase tracking-[0.15em] mb-2">
                             Its Story
                           </p>
-                          <p className="text-sm text-[#5C4A3A]/70 leading-relaxed italic">
+                          <p className="text-sm text-[var(--gold)]/70 leading-relaxed italic">
                             {heirloom.provenance}
                           </p>
                         </div>
@@ -468,9 +468,9 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
 
         {/* Section 4: The Transition */}
         <section className="text-center pt-8 pb-16">
-          <Separator className="bg-[#C8A951]/10 mb-12" />
+          <Separator className="bg-[var(--gold)]/10 mb-12" />
 
-          <p className="text-[#8B7A5E]/60 text-sm mb-8 leading-relaxed max-w-md mx-auto">
+          <p className="text-[var(--gold)]/60 text-sm mb-8 leading-relaxed max-w-md mx-auto">
             When you&rsquo;re ready, you can view the full estate &mdash;
             documents, assets, and everything {ownerName} organized for you.
           </p>
@@ -478,7 +478,7 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
           <Button
             onClick={onContinue}
             className={cn(
-              'bg-[#2C1810] hover:bg-[#3D2920] text-white',
+              'bg-[var(--gold)] hover:bg-[var(--gold)] text-white',
               'px-10 py-5 h-auto rounded-2xl',
               'font-medium text-[15px] tracking-wide',
               'shadow-[0_8px_30px_rgba(44,24,16,0.12)]',
@@ -513,17 +513,17 @@ function MessageCard({
     <Card className="rounded-3xl border-0 shadow-[0_4px_24px_rgba(200,169,81,0.08)] bg-white/80 backdrop-blur-sm">
       <CardContent className="p-8 md:p-10">
         {/* Header */}
-        <p className="text-xs font-bold text-[#C8A951]/60 uppercase tracking-[0.15em] mb-2">
+        <p className="text-xs font-bold text-[var(--gold)]/60 uppercase tracking-[0.15em] mb-2">
           A message from {ownerName}
         </p>
-        <h3 className="text-xl font-bold text-[#2C1810] mb-6">
+        <h3 className="text-xl font-bold text-[var(--gold)] mb-6">
           {title}
         </h3>
 
         {/* Content by type */}
         {type === 'text' && content && (
           <div
-            className="text-[#5C4A3A] text-[16px] leading-[1.85] font-light prose prose-sm max-w-none"
+            className="text-[var(--gold)] text-[16px] leading-[1.85] font-light prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
           />
         )}
@@ -538,12 +538,12 @@ function MessageCard({
 
         {/* Fallback: audio/video without URL */}
         {type === 'audio' && !mediaUrl && (
-          <p className="text-[#8B7A5E]/50 text-sm italic">
+          <p className="text-[var(--gold)]/50 text-sm italic">
             Audio message is being prepared...
           </p>
         )}
         {type === 'video' && !mediaUrl && (
-          <p className="text-[#8B7A5E]/50 text-sm italic">
+          <p className="text-[var(--gold)]/50 text-sm italic">
             Video message is being prepared...
           </p>
         )}
@@ -551,7 +551,7 @@ function MessageCard({
         {/* Show text content alongside audio/video if present */}
         {type !== 'text' && content && (
           <div
-            className="mt-6 pt-6 border-t border-[#C8A951]/10 text-[#5C4A3A]/70 text-sm leading-relaxed"
+            className="mt-6 pt-6 border-t border-[var(--gold)]/10 text-[var(--gold)]/70 text-sm leading-relaxed"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
           />
         )}

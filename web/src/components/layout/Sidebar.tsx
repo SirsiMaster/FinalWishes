@@ -224,13 +224,13 @@ function SidebarNavContent({
                   onClick={() => toggleGroup(group.id)}
                   className={`w-full flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] ${
                     groupActive
-                      ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
-                      : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
+                      ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
+                      : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
                   <span
                     className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
-                      groupActive ? "opacity-100 text-[#133378]" : "opacity-40"
+                      groupActive ? "opacity-100 text-[var(--royal)]" : "opacity-40"
                     }`}
                   >
                     {group.icon}
@@ -239,7 +239,7 @@ function SidebarNavContent({
                   <ChevronRight
                     className={`w-3.5 h-3.5 transition-transform duration-200 ${
                       isExpanded ? "rotate-90" : ""
-                    } ${groupActive ? "text-[#133378]" : "text-slate-300"}`}
+                    } ${groupActive ? "text-[var(--royal)]" : "text-slate-300"}`}
                   />
                 </button>
                 {isExpanded && (
@@ -254,8 +254,8 @@ function SidebarNavContent({
                           onClick={onNavClick}
                           className={`flex items-center gap-3 pl-7 pr-5 py-2 text-[0.73rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                             childActive
-                              ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
-                              : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
+                              ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
+                              : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
                           }`}
                         >
                           <span className="text-[0.73rem] font-medium">{child.label}</span>
@@ -289,13 +289,13 @@ function SidebarNavContent({
               onClick={onNavClick}
               className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                 isActive
-                  ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
-                  : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
+                  ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
+                  : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
               }`}
             >
               <span
                 className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
-                  isActive ? "opacity-100 text-[#133378]" : "opacity-40"
+                  isActive ? "opacity-100 text-[var(--royal)]" : "opacity-40"
                 }`}
               >
                 {group.icon}
@@ -330,13 +330,13 @@ function SidebarNavContent({
                 onClick={onNavClick}
                 className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                   isActive
-                    ? "text-[#133378] bg-[#133378]/5 border-l-[#133378] font-bold"
-                    : "text-slate-400 border-l-transparent hover:text-[#0F172A] hover:bg-slate-50"
+                    ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
+                    : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
                 }`}
               >
                 <span
                   className={`w-[16px] h-[16px] shrink-0 transition-opacity ${
-                    isActive ? "opacity-100 text-[#133378]" : "opacity-40"
+                    isActive ? "opacity-100 text-[var(--royal)]" : "opacity-40"
                   }`}
                 >
                   {item.icon}
@@ -411,26 +411,26 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
           onClick={() => onOpenChange(false)}
           className="flex items-center gap-3 px-5 py-6 no-underline"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6 text-[#133378] drop-shadow-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-6 h-6 text-[var(--royal)] drop-shadow-sm">
             <path d="M12 2L2 7l10 5 10-5-10-5z" />
             <path d="M2 17l10 5 10-5" />
             <path d="M2 12l10 5 10-5" />
           </svg>
-          <span className="text-[#133378] text-[1rem] font-bold uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
+          <span className="text-[var(--royal)] text-[1rem] font-bold uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
             FinalWishes
           </span>
         </Link>
 
-        <Separator className="bg-[#133378]/10" />
+        <Separator className="bg-[var(--royal)]/10" />
 
         {/* Estate Name */}
         <div className="px-4 py-4">
           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Active Estate</label>
-          <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.primaryEstateName || "My Estate"}</div>
+          <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.primaryEstateName || "My Estate"}</div>
           <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
         </div>
 
-        <Separator className="bg-[#133378]/10" />
+        <Separator className="bg-[var(--royal)]/10" />
 
         {/* Navigation */}
         <ScrollArea className="flex-1 overflow-hidden">
@@ -449,12 +449,12 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
           <div className="flex items-center gap-3 mb-3">
             <Avatar className="w-9 h-9 rounded-xl">
               <AvatarImage src={user?.profilePhotoUrl || undefined} alt="Profile" className="rounded-xl object-cover" />
-              <AvatarFallback className="rounded-xl bg-[#133378] text-white font-bold text-xs">
+              <AvatarFallback className="rounded-xl bg-[var(--royal)] text-white font-bold text-xs">
                 {getInitials(user?.name || 'FW')}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
+              <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
               <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
             </div>
           </div>
@@ -518,7 +518,7 @@ export function Sidebar() {
       <Dialog open={showPhotoModal} onOpenChange={setShowPhotoModal}>
         <DialogContent
           showCloseButton={true}
-          className="max-w-[90vw] max-h-[90vh] sm:max-w-[90vw] p-0 bg-white border border-[#133378]/20 shadow-2xl overflow-hidden"
+          className="max-w-[90vw] max-h-[90vh] sm:max-w-[90vw] p-0 bg-white border border-[var(--royal)]/20 shadow-2xl overflow-hidden"
         >
           <VisuallyHidden.Root>
             <DialogTitle>Profile Photo</DialogTitle>
@@ -543,37 +543,37 @@ export function Sidebar() {
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5"
-          className="w-6 h-6 text-[#133378] drop-shadow-sm"
+          className="w-6 h-6 text-[var(--royal)] drop-shadow-sm"
         >
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
           <path d="M2 17l10 5 10-5" />
           <path d="M2 12l10 5 10-5" />
         </svg>
-        <span className="text-[#133378] text-[1rem] font-bold uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
+        <span className="text-[var(--royal)] text-[1rem] font-bold uppercase tracking-[0.15em] font-[family-name:var(--font-cinzel)]">
           FinalWishes
         </span>
       </Link>
 
-      <Separator className="bg-[#133378]/10" />
+      <Separator className="bg-[var(--royal)]/10" />
 
       {/* Estate Switcher */}
-      <div className="px-4 py-5 bg-[#133378]/[0.01]">
+      <div className="px-4 py-5 bg-[var(--royal)]/[0.01]">
         <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Active Estate</label>
         <div className="relative">
           <Button
             variant="outline"
-            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 h-auto bg-white border-slate-200 hover:border-[#133378]/30 rounded-xl text-left overflow-hidden group"
+            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 h-auto bg-white border-slate-200 hover:border-[var(--royal)]/30 rounded-xl text-left overflow-hidden group"
           >
             <div className="flex-1 truncate text-left">
-              <div className="text-[#0F172A] text-[0.8rem] font-bold truncate group-hover/button:text-[#133378] transition-colors">{user?.primaryEstateName || "My Estate"}</div>
+              <div className="text-slate-900 text-[0.8rem] font-bold truncate group-hover/button:text-[var(--royal)] transition-colors">{user?.primaryEstateName || "My Estate"}</div>
               <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
             </div>
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[#133378] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[var(--royal)] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
           </Button>
         </div>
       </div>
 
-      <Separator className="bg-[#133378]/10" />
+      <Separator className="bg-[var(--royal)]/10" />
 
       {/* Navigation */}
       <ScrollArea className="flex-1 overflow-hidden">
@@ -590,7 +590,7 @@ export function Sidebar() {
       <div className="p-4 mt-auto bg-slate-50/50">
         <div className="flex items-center gap-3 mb-3">
           <Avatar
-            className="w-9 h-9 rounded-xl cursor-pointer hover:ring-2 hover:ring-[#133378] transition-all"
+            className="w-9 h-9 rounded-xl cursor-pointer hover:ring-2 hover:ring-[var(--royal)] transition-all"
             onClick={() => user?.profilePhotoUrl && setShowPhotoModal(true)}
           >
             <AvatarImage
@@ -598,12 +598,12 @@ export function Sidebar() {
               alt="Profile"
               className="rounded-xl object-cover"
             />
-            <AvatarFallback className="rounded-xl bg-[#133378] text-white font-bold text-xs">
+            <AvatarFallback className="rounded-xl bg-[var(--royal)] text-white font-bold text-xs">
               {getInitials(user?.name || 'User')}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <div className="text-[#0F172A] text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
+            <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
             <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
           </div>
         </div>

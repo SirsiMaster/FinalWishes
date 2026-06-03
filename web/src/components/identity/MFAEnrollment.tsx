@@ -76,7 +76,7 @@ export function MFAEnrollment({ user, mfaStatus, isFiduciary }: MFAEnrollmentPro
 
   return (
     <section className="bg-white rounded-[3rem] border border-royal/10 overflow-hidden shadow-[0_2px_20px_rgba(19,51,120,0.03)] relative">
-      <div className="absolute top-0 left-0 w-1.5 h-full bg-[#C8A951]/30" />
+      <div className="absolute top-0 left-0 w-1.5 h-full bg-[var(--gold)]/30" />
       <div className="bg-royal/[0.03] px-10 py-6 border-b border-royal/5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-royal/10 flex items-center justify-center">
@@ -93,7 +93,7 @@ export function MFAEnrollment({ user, mfaStatus, isFiduciary }: MFAEnrollmentPro
             Active
           </span>
         ) : isFiduciary ? (
-          <span className="text-[9px] font-black text-[#C8A951] uppercase tracking-[0.2em] px-4 py-1.5 bg-[#C8A951]/10 border border-[#C8A951]/20 rounded-xl shadow-sm">
+          <span className="text-[9px] font-black text-[var(--gold)] uppercase tracking-[0.2em] px-4 py-1.5 bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-xl shadow-sm">
             Required for your role
           </span>
         ) : (

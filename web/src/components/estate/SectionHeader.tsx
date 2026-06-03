@@ -221,7 +221,7 @@ export function SectionHeader({
             <div className="space-y-1.5">
               <h1
                 className="text-[2rem] md:text-[2.5rem] font-[family-name:var(--font-cinzel)] font-bold leading-tight tracking-tight"
-                style={{ color: '#0F172A' }}
+                style={{ color: 'var(--color-slate-900)' }}
               >
                 {title || theme.label}
               </h1>

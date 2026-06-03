@@ -132,24 +132,24 @@ function AcceptInvitePage() {
     return (
       <InviteCard>
         <div className="text-center space-y-6">
-          <div className="w-16 h-16 mx-auto bg-[#133378]/5 rounded-2xl flex items-center justify-center">
-            <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+          <div className="w-16 h-16 mx-auto bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
+            <svg viewBox="0 0 24 24" className="w-8 h-8 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="11" width="18" height="11" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
               Estate Invitation
             </h2>
-            <p className="text-[#64748B] text-sm font-medium">
+            <p className="text-slate-500 text-sm font-medium">
               You've been invited to join an estate. Sign in or create an account to continue.
             </p>
           </div>
           <div className="flex flex-col gap-3">
             <Button
               onClick={() => navigate({ to: '/login', search: { invite: invitationId } } as any)}
-              className="w-full bg-[#133378] hover:bg-[#1E3A5F] text-white py-4 h-auto rounded-2xl font-bold"
+              className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white py-4 h-auto rounded-2xl font-bold"
             >
               Sign In
             </Button>
@@ -178,10 +178,10 @@ function AcceptInvitePage() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
               Invitation Error
             </h2>
-            <p className="text-[#64748B] text-sm font-medium">{errorMsg}</p>
+            <p className="text-slate-500 text-sm font-medium">{errorMsg}</p>
           </div>
           <Button
             onClick={() => navigate({ to: '/' })}
@@ -205,10 +205,10 @@ function AcceptInvitePage() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
               Welcome to the Estate
             </h2>
-            <p className="text-[#64748B] text-sm font-medium">
+            <p className="text-slate-500 text-sm font-medium">
               Your invitation has been accepted. Redirecting to your dashboard...
             </p>
           </div>
@@ -221,8 +221,8 @@ function AcceptInvitePage() {
   return (
     <InviteCard>
       <div className="text-center space-y-6">
-        <div className="w-10 h-10 mx-auto border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-        <p className="text-[#64748B] text-sm font-medium">
+        <div className="w-10 h-10 mx-auto border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+        <p className="text-slate-500 text-sm font-medium">
           {status === 'accepting' ? 'Accepting your invitation...' : 'Loading invitation...'}
         </p>
       </div>
@@ -232,12 +232,12 @@ function AcceptInvitePage() {
 
 function InviteCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#F8FAFC]">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-[#133378]/[0.03] blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#133378]/[0.05] blur-[120px] rounded-full" />
+        <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-[var(--royal)]/[0.03] blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[var(--royal)]/[0.05] blur-[120px] rounded-full" />
       </div>
-      <Card className="bg-white/80 backdrop-blur-2xl w-full max-w-md rounded-[2.5rem] relative z-10 border-[#133378]/10 shadow-[0_20px_50px_rgba(19,51,120,0.08)]">
+      <Card className="bg-white/80 backdrop-blur-2xl w-full max-w-md rounded-[2.5rem] relative z-10 border-[var(--royal)]/10 shadow-[0_20px_50px_rgba(19,51,120,0.08)]">
         <CardContent className="p-10">
           {children}
         </CardContent>

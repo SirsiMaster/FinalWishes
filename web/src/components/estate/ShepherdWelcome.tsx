@@ -51,18 +51,18 @@ export function ShepherdWelcome({ estateId, firstName }: ShepherdWelcomeProps) {
   return (
     <section
       aria-label="Shepherd"
-      className="relative overflow-hidden rounded-3xl border border-[#C8A951]/30 bg-gradient-to-br from-[#0f285f] via-[#133378] to-[#1E3A5F] text-white shadow-xl"
+      className="relative overflow-hidden rounded-3xl border border-[var(--gold)]/30 bg-gradient-to-br from-[var(--royal)] via-[var(--royal)] to-[var(--royal-blue)] text-white shadow-xl"
     >
       {/* soft gold wash */}
-      <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[#C8A951]/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[var(--gold)]/20 blur-3xl" />
 
       <div className="relative p-6 sm:p-8">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-[#C8A951]/20 ring-1 ring-[#C8A951]/40">
-            <Sparkles className="h-5 w-5 text-[#C8A951]" />
+          <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--gold)]/20 ring-1 ring-[var(--gold)]/40">
+            <Sparkles className="h-5 w-5 text-[var(--gold)]" />
           </span>
           <div>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-[#C8A951]">Shepherd</p>
+            <p className="text-[11px] uppercase tracking-[0.3em] text-[var(--gold)]">Shepherd</p>
             <h2 className="font-[Cinzel] text-xl sm:text-2xl leading-tight">{shepherdGreeting(firstName)}</h2>
           </div>
         </div>
@@ -84,14 +84,14 @@ export function ShepherdWelcome({ estateId, firstName }: ShepherdWelcomeProps) {
                 className={
                   m.role === 'user'
                     ? 'ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-white/15 px-4 py-2.5 text-sm'
-                    : 'mr-auto max-w-[90%] rounded-2xl rounded-bl-sm bg-white/95 px-4 py-2.5 text-sm text-[#133378]'
+                    : 'mr-auto max-w-[90%] rounded-2xl rounded-bl-sm bg-white/95 px-4 py-2.5 text-sm text-[var(--royal)]'
                 }
               >
                 {m.content}
               </div>
             ))}
             {thinking && (
-              <div className="mr-auto flex items-center gap-2 rounded-2xl bg-white/95 px-4 py-2.5 text-sm text-[#133378]/70">
+              <div className="mr-auto flex items-center gap-2 rounded-2xl bg-white/95 px-4 py-2.5 text-sm text-[var(--royal)]/70">
                 <Loader2 className="h-4 w-4 animate-spin" /> Shepherd is thinking…
               </div>
             )}
@@ -106,7 +106,7 @@ export function ShepherdWelcome({ estateId, firstName }: ShepherdWelcomeProps) {
                 key={o.label}
                 onClick={() => send(o.prompt)}
                 disabled={thinking}
-                className="rounded-full border border-[#C8A951]/40 bg-white/5 px-4 py-2 text-xs text-white/90 transition-colors hover:bg-[#C8A951]/20 disabled:opacity-50"
+                className="rounded-full border border-[var(--gold)]/40 bg-white/5 px-4 py-2 text-xs text-white/90 transition-colors hover:bg-[var(--gold)]/20 disabled:opacity-50"
               >
                 {o.label}
               </button>
@@ -129,13 +129,13 @@ export function ShepherdWelcome({ estateId, firstName }: ShepherdWelcomeProps) {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Talk to Shepherd…"
             aria-label="Message Shepherd"
-            className="flex-1 rounded-full bg-white/95 px-5 py-3 text-sm text-[#133378] placeholder:text-[#133378]/45 outline-none ring-1 ring-white/20 focus:ring-2 focus:ring-[#C8A951]"
+            className="flex-1 rounded-full bg-white/95 px-5 py-3 text-sm text-[var(--royal)] placeholder:text-[var(--royal)]/45 outline-none ring-1 ring-white/20 focus:ring-2 focus:ring-[var(--gold)]"
           />
           <button
             type="submit"
             disabled={thinking || !input.trim()}
             aria-label="Send"
-            className="grid h-11 w-11 place-items-center rounded-full bg-[#C8A951] text-[#133378] transition-transform hover:scale-105 disabled:opacity-40"
+            className="grid h-11 w-11 place-items-center rounded-full bg-[var(--gold)] text-[var(--royal)] transition-transform hover:scale-105 disabled:opacity-40"
           >
             {thinking ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
           </button>

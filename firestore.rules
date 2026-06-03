@@ -301,6 +301,19 @@ service cloud.firestore {
           && resource.data.status != 'finalized';
       }
 
+      // ── 3n-pre. Wizard intake metadata (onboarding personalization) ──
+      // The create-estate wizard writes estates/{id}/metadata/intake (situation,
+      // marital/children profile, selected asset categories) right after the
+      // estate is created. Without this rule the write hit default-deny and the
+      // intake personalization was silently lost on every estate creation
+      // (caught as "non-blocking" in estates.create.tsx). Owner/writer may write;
+      // any estate accessor may read.
+      match /metadata/{docId} {
+        allow read: if canAccessEstate(estateId);
+        allow create, update: if canWriteEstate(estateId);
+        allow delete: if isEstatePrincipal(estateId);
+      }
+
       // ── 3n. Heirloom Registry (Physical Asset Inventory) ──
       match /heirlooms/{heirloomId} {
         allow read: if canAccessEstate(estateId);

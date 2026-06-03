@@ -42,7 +42,12 @@ export async function login(
   const email = opts.email ?? TEST_EMAIL
   const password = opts.password ?? TEST_PASSWORD
 
-  await page.goto('/?login=true')
+  // Use the canonical `/login` route (which the app redirects to `?login="true"`,
+  // the JSON-serialized form TanStack Router actually emits). A bare
+  // `/?login=true` is parsed as a boolean and does NOT open the modal — that is
+  // not a path any real user flow generates, so the smoke + auth specs both
+  // drive `/login`, matching real "Sign in" button behaviour.
+  await page.goto('/login')
   await expect(page.locator('#modal-identifier')).toBeVisible({ timeout: 15000 })
   await page.locator('#modal-identifier').fill(email)
   await page.locator('#modal-password').fill(password)
@@ -51,4 +56,15 @@ export async function login(
   // A returning user is routed to their own estate; a brand-new user to
   // /estates/create. Either way the URL leaves the landing page for /estates/*.
   await page.waitForURL(/\/estates\//, { timeout: 20000 })
+
+  // First-run gate: a principal/admin sees the OwnerWelcome takeover ("Welcome,
+  // <name>." → "Start Building Your Legacy") once per (estate,user), persisted in
+  // localStorage. A real owner clicks through it to reach the dashboard; a fresh
+  // browser context (every E2E run) has empty localStorage, so dismiss it here —
+  // otherwise the welcome screen masks the dashboard chrome the specs assert on.
+  const welcomeCta = page.getByRole('button', { name: /Start Building Your Legacy/i })
+  if (await welcomeCta.isVisible({ timeout: 3000 }).catch(() => false)) {
+    await welcomeCta.click()
+    await page.waitForTimeout(500)
+  }
 }

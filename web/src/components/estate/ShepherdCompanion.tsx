@@ -46,16 +46,19 @@ export function ShepherdCompanion({
 
   return (
     <>
-      {/* Launcher tab — always present so the guide is one tap away. */}
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-label={open ? 'Hide Shepherd' : 'Open Shepherd'}
-        className={`fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[var(--royal)] px-5 py-3 text-white shadow-lg shadow-[var(--royal)]/20 transition-transform hover:scale-[1.03] active:scale-95 ${open ? 'lg:hidden' : ''}`}
-      >
-        <Compass className="h-5 w-5" strokeWidth={1.75} />
-        <span className="text-[13px] font-semibold">Shepherd</span>
-      </button>
+      {/* Launcher — shown only when the panel is closed, on every screen size,
+          so reopening is always one obvious tap away. Closing is the header ✕. */}
+      {!open && (
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label="Open Shepherd"
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full bg-[var(--royal)] px-5 py-3 text-white shadow-lg shadow-[var(--royal)]/20 transition-transform hover:scale-[1.03] active:scale-95"
+        >
+          <Compass className="h-5 w-5" strokeWidth={1.75} />
+          <span className="text-[13px] font-semibold">Shepherd</span>
+        </button>
+      )}
 
       <AnimatePresence>
         {open && (

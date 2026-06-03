@@ -29,6 +29,8 @@ var registry = map[string]builder{
 	"il_hcpoa_caringinfo":       HCPOACaringInfo,
 	"il_living_will_caringinfo": LivingWillCaringInfo,
 	"il_mhtpd_2016":             MentalHealthDeclaration2016,
+	"mn_poa_523_23":             MNStatutoryPOA,
+	"md_poa_17_202":             MDStatutoryPOA,
 }
 
 // SupportedFormIDs returns the sorted list of fillable form IDs.

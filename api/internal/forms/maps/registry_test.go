@@ -43,8 +43,22 @@ func TestFillByID_UnknownForm(t *testing.T) {
 }
 
 func TestSupportedFormIDs_Stable(t *testing.T) {
-	ids := maps.SupportedFormIDs()
-	if len(ids) != 5 {
-		t.Fatalf("expected 5 supported forms, got %d: %v", len(ids), ids)
+	want := []string{
+		"il_hcpoa_caringinfo",
+		"il_living_will_caringinfo",
+		"il_mhtpd_2016",
+		"il_poa_property_2011",
+		"il_small_estate_3606",
+		"md_poa_17_202",
+		"mn_poa_523_23",
+	}
+	ids := maps.SupportedFormIDs() // returns sorted
+	if len(ids) != len(want) {
+		t.Fatalf("expected %d supported forms, got %d: %v", len(want), len(ids), ids)
+	}
+	for i, id := range want {
+		if ids[i] != id {
+			t.Fatalf("supported form IDs drifted: got %v, want %v", ids, want)
+		}
 	}
 }

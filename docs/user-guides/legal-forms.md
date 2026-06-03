@@ -1,10 +1,12 @@
 # Generating Statutory Forms
 
-FinalWishes can pre-fill official Illinois legal forms with your information so
+FinalWishes can pre-fill official state legal forms with your information so
 you have a clean, print-ready document to sign. You stay in control: the app
 fills in the names, addresses, and dates — but it **never** signs for you.
 
 ## What forms are available
+
+**Illinois**
 
 | Form | What it's for |
 |------|---------------|
@@ -13,6 +15,18 @@ fills in the names, addresses, and dates — but it **never** signs for you.
 | **Living Will Declaration** | States your wishes about life-prolonging treatment. |
 | **Small Estate Affidavit** | Settles a modest estate without full probate. |
 | **Declaration for Mental Health Treatment** | Records your mental-health treatment preferences and names an agent. |
+
+**Maryland**
+
+| Form | What it's for |
+|------|---------------|
+| **Statutory Personal Financial Power of Attorney** (Est. & Trusts § 17-202) | Names an agent to handle your finances and property. Must be signed before a notary and two witnesses. |
+
+**Minnesota**
+
+| Form | What it's for |
+|------|---------------|
+| **Statutory Short Form Power of Attorney** (Minn. Stat. § 523.23) | Names an attorney-in-fact to handle your property/financial matters; you check which powers to grant. Must be acknowledged before a notary. |
 
 ## How to use it
 

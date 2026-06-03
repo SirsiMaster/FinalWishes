@@ -1,24 +1,14 @@
 import { test, expect, type Page } from '@playwright/test'
+import { login, requireTestAccount } from './helpers/auth'
 
 /**
- * Authenticated E2E Tests — Demo Mode
+ * Authenticated E2E Tests
  *
- * These tests log in via the demo account (Tameeka116 / ML6824!)
- * and exercise the authenticated estate dashboard pages.
- *
- * Requires the auth provider demo mode support (loginDemo in auth.tsx).
- * Run against local dev server or production with `E2E_BASE_URL`.
+ * These log in via the real login modal (see e2e/helpers/auth.ts) against a
+ * real Firebase test account and exercise the authenticated estate dashboard
+ * pages. Demo mode was removed; set E2E_TEST_PASSWORD to run these, otherwise
+ * they skip. Run against production or a local dev server with `E2E_BASE_URL`.
  */
-
-async function demoLogin(page: Page) {
-  await page.goto('/login?demo=true')
-  await expect(page.locator('#login-identifier')).toBeVisible({ timeout: 15000 })
-  await page.locator('#login-identifier').fill('Tameeka116')
-  await page.locator('#login-password').fill('ML6824!')
-  await page.locator('#login-submit').click()
-  // Wait for navigation to estate dashboard
-  await page.waitForURL(/estates/, { timeout: 15000 })
-}
 
 /** Expand a collapsible sidebar group by clicking its label */
 async function expandNavGroup(page: Page, groupLabel: string) {
@@ -36,12 +26,13 @@ async function navigateToNestedItem(page: Page, parentGroup: string, childLabel:
   await page.locator('nav').getByText(childLabel, { exact: true }).click()
 }
 
-test.describe('FinalWishes Authenticated Flows — Demo Mode', () => {
+test.describe('FinalWishes Authenticated Flows', () => {
   // Increase test timeout for authenticated flows (network + Firebase init)
   test.setTimeout(60000)
 
   test.beforeEach(async ({ page }) => {
-    await demoLogin(page)
+    requireTestAccount()
+    await login(page)
   })
 
   // ─── 1. Dashboard loads with Shepherd data ──────────────────────────────

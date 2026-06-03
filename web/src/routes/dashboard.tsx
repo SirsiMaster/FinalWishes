@@ -10,14 +10,16 @@ export const Route = createFileRoute('/dashboard')({
 /** Legacy /dashboard route — redirects to scoped /estates/{id}/dashboard */
 function DashboardRedirect() {
   const navigate = useNavigate();
-  const { user, profile, loading } = useAuth();
+  const { user, profile, profileResolved } = useAuth();
 
   useEffect(() => {
-    // Wait for auth to settle so a real Firebase user isn't bounced to /login
-    // before their profile resolves.
-    if (loading) return;
+    // Wait for a definitive profile answer before routing. Gating on
+    // profileResolved (not `!loading`) ensures a returning user with an estate
+    // isn't bounced to /estates/create while their profile read is still in
+    // flight — `loading` only tracks Firebase auth init, not the profile fetch.
+    if (!profileResolved) return;
 
-    if (user || profile) {
+    if (user) {
       const estateSlug = profile?.primaryEstateId;
       if (estateSlug) {
         navigate({ to: '/estates/$estateId/dashboard', params: { estateId: estateSlug }, replace: true });
@@ -27,7 +29,7 @@ function DashboardRedirect() {
     } else {
       navigate({ to: '/login', search: {}, replace: true });
     }
-  }, [navigate, user, profile, loading]);
+  }, [navigate, user, profile, profileResolved]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#F8FAFC]">

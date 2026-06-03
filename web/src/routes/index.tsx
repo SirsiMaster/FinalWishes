@@ -654,7 +654,7 @@ function navigatePostLogin(
 
 function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChange: (v: boolean) => void; invite?: string }) {
   const navigate = useNavigate();
-  const { signIn, signUp, resetPassword, user, profile, loading } = useAuth();
+  const { signIn, signUp, resetPassword, user, profile, profileResolved } = useAuth();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -671,15 +671,18 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
 
-  // If already authenticated, redirect — but ONLY once the profile has resolved.
-  // Routing while `profile` is still null sent existing users to /estates/create
-  // (the "redo your estate" bug), then closed the modal so it never corrected.
+  // If already authenticated, redirect — but ONLY once the profile has a
+  // definitive answer (profileResolved). Gating on `!loading` was the bug:
+  // `loading` tracks Firebase auth init, not the Firestore profile read, so
+  // existing users could be routed while `profile` was still null and dumped on
+  // /estates/create (the "redo your estate" bug), then the modal closed so it
+  // never corrected.
   useEffect(() => {
-    if (user && !loading && open) {
+    if (user && profileResolved && open) {
       onOpenChange(false);
       navigatePostLogin(navigate, profile, invite);
     }
-  }, [user, profile, loading, navigate, invite, open, onOpenChange]);
+  }, [user, profile, profileResolved, navigate, invite, open, onOpenChange]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -710,7 +713,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
     setIsSubmitting(false);
 
     if (result.success) {
-      // Let the gated redirect effect (user && !loading && open) handle
+      // Let the gated redirect effect (user && profileResolved && open) handle
       // navigation once the profile resolves — navigating inline here with a
       // still-null `profile` was the same race that dumped users on /estates/create.
       setError('');

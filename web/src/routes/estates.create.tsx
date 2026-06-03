@@ -93,18 +93,19 @@ function CreateEstatePage() {
   // effect below and must never see resurrected draft state. We read the draft
   // lazily during state init (no setState-in-effect cascade) and stash it so the
   // "Resume / Start over" affordance can be shown.
-  const initialDraft = (() => {
-    if (!uid || profile?.primaryEstateId) return null
-    return loadWizardDraft(uid)
-  })()
-
-  const [step, setStep] = useState(() => initialDraft?.step ?? 0)
-  const [hasDraft, setHasDraft] = useState(() => initialDraft !== null)
+  // Start empty. We do NOT hydrate the draft during render/lazy-init, because at
+  // mount the profile is usually unresolved — hydrating then could resurrect a
+  // RETURNING user (whose primaryEstateId simply hadn't loaded) into the wizard.
+  // Hydration happens in a profileResolved-gated effect below, once we KNOW the
+  // user is genuinely new.
+  const [step, setStep] = useState(0)
+  const [hasDraft, setHasDraft] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   // Guards against persisting before the first user-driven change (avoids
   // re-writing an identical draft on mount) and after a successful create.
   const persistEnabled = useRef(false)
+  const hydratedRef = useRef(false)
 
   // GUARD: never show the intake wizard to someone who already has an estate.
   // The post-login redirect can land here transiently before the profile
@@ -128,11 +129,24 @@ function CreateEstatePage() {
     ? `${profile.firstName} ${profile.lastName}`.trim()
     : user?.displayName || ''
 
-  const [wizardData, setWizardData] = useState<WizardData>(() =>
-    initialDraft
-      ? { ...EMPTY_WIZARD_DATA, ...initialDraft.data }
-      : { ...EMPTY_WIZARD_DATA, fullName: fullNameDefault },
-  )
+  const [wizardData, setWizardData] = useState<WizardData>(() => ({ ...EMPTY_WIZARD_DATA }))
+
+  // Hydrate ONCE, and ONLY after the profile has a definitive answer confirming
+  // the user is genuinely new (resolved + no estate). A returning user is
+  // redirected by the guard above before this runs; a failed profile read keeps
+  // profileResolved false, so we simply never resurrect a draft.
+  useEffect(() => {
+    if (hydratedRef.current || !uid || !profileResolved || profile?.primaryEstateId) return
+    hydratedRef.current = true
+    const draft = loadWizardDraft(uid)
+    if (draft) {
+      setWizardData({ ...EMPTY_WIZARD_DATA, ...draft.data })
+      setStep(draft.step)
+      setHasDraft(true)
+    } else {
+      setWizardData((prev) => (prev.fullName ? prev : { ...prev, fullName: fullNameDefault }))
+    }
+  }, [uid, profileResolved, profile?.primaryEstateId, fullNameDefault])
 
   // Persist wizardData/step on every change (debounced), but never before the
   // user has actually interacted — see persistEnabled. Mark draft-present once
@@ -235,9 +249,22 @@ function CreateEstatePage() {
     }
   }
 
+  // Until the profile resolves, don't render the wizard at all — a returning
+  // user with an estate must be redirected (by the guard effect), never shown a
+  // re-personalize flow. Showing a neutral loader avoids that flash.
+  if (!profileResolved || profile?.primaryEstateId) {
+    return (
+      <AuthGuard>
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+        </div>
+      </AuthGuard>
+    )
+  }
+
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-white to-[#EEF2FF] flex items-center justify-center p-6 font-[family-name:var(--font-inter)]">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center p-6 font-[family-name:var(--font-inter)]">
         {/* Background decoration */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full bg-[#133378]/[0.03] blur-3xl" />

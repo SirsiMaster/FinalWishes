@@ -7,27 +7,25 @@
  * It reuses the existing real-time Firestore hooks (no new firebase client) and
  * the device-local wizard-draft helper.
  *
- * Sources:
+ * Sources (all scoped to the CURRENT estate — this hook runs inside the estate
+ * Shepherd companion, so estate-level drafts are the only relevant work):
  *   1. Draft directives  — estates/{estateId}/directives where status == 'draft'.
  *   2. Draft obituary     — estates/{estateId}/governance/obituary, status Draft.
- *   3. Wizard draft       — device-local localStorage (per-uid), routes to
- *                           /estates/create to finish initial setup.
+ *
+ * NOTE: the device-local estate-CREATION wizard draft is deliberately NOT
+ * surfaced here — Shepherd only renders inside an existing estate, so "finish
+ * creating your estate" would be nonsensical on a real estate dashboard.
  */
 import { useMemo } from 'react'
-import { useAuth } from './auth'
 import { useDirectives, useDocument } from './firestore'
-import { loadWizardDraft } from './wizardDraft'
 
 /** A single piece of unfinished work the user can jump back into. */
 export interface Resumable {
   id: string
   label: string
   /** Coarse origin, for iconography/grouping if a consumer wants it. */
-  kind: 'directive' | 'obituary' | 'wizard'
-  /**
-   * Where to send the user. Sub-routes are relative to /estates/{estateId}
-   * (matching ShepherdCompanion's goTo helper); the wizard is an absolute path.
-   */
+  kind: 'directive' | 'obituary'
+  /** Where to send the user — sub-routes relative to /estates/{estateId}. */
   route: string
   /** Epoch milliseconds of last edit, when known — newest first. */
   updatedAt?: number
@@ -49,16 +47,12 @@ function tsToMillis(ts: { toDate?: () => Date } | null | undefined): number | un
 }
 
 export function useResumables(estateId: string | null): Resumable[] {
-  const { user } = useAuth()
-
   // Real-time draft directives (the hook already orders by createdAt desc).
   const { data: directives } = useDirectives(estateId)
 
   // The single obituary governance doc — null path short-circuits the snapshot.
   const obitPath = estateId ? `estates/${estateId}/governance/obituary` : null
   const { data: obit } = useDocument<ObitDoc>(obitPath)
-
-  const uid = user?.uid ?? null
 
   return useMemo<Resumable[]>(() => {
     const items: Resumable[] = []
@@ -87,21 +81,7 @@ export function useResumables(estateId: string | null): Resumable[] {
       })
     }
 
-    // 3. Device-local estate-creation wizard draft.
-    if (uid) {
-      const draft = loadWizardDraft(uid)
-      if (draft) {
-        items.push({
-          id: 'wizard',
-          label: 'Finish setting up your estate',
-          kind: 'wizard',
-          route: '/estates/create',
-          updatedAt: draft.savedAt || undefined,
-        })
-      }
-    }
-
     // Newest work first; items without a timestamp sink to the bottom.
     return items.sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
-  }, [directives, obit, uid])
+  }, [directives, obit])
 }

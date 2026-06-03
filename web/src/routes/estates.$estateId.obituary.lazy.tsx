@@ -82,6 +82,15 @@ function ObituaryPage() {
     }
   }, [editor, editing, isSigned]);
 
+  // Sync loaded content into the editor once the obituary loads from Firestore.
+  // TipTap only consumes `content` at creation, so a saved obituary that arrives
+  // after mount would otherwise render blank. Don't clobber an in-progress edit.
+  useEffect(() => {
+    if (editor && initialContent && !editing && editor.getHTML() !== initialContent) {
+      editor.commands.setContent(initialContent);
+    }
+  }, [editor, initialContent, editing]);
+
   // Format the last_updated timestamp for display
   const lastUpdateDisplay = useMemo(() => {
     if (!obit?.last_updated) return 'Never';

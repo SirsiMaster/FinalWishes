@@ -9,7 +9,7 @@
  * @version 1.0.0
  */
 import { createFileRoute, useParams, Link } from '@tanstack/react-router'
-import React, { useState, useMemo, useCallback, useRef } from 'react'
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useLifeChapters, type LifeChapter, type ChapterEntryRef, useCollection } from '../lib/firestore'
 import { addLifeChapter, updateLifeChapter, archiveLifeChapter } from '../lib/estate-actions'
 import { useAuth } from '../lib/auth'
@@ -527,9 +527,11 @@ function ChapterFormDialog({
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Reset form when chapter changes
+  // Reset form when the chapter being edited changes. This MUST be useEffect:
+  // useState(initializer) only ran ONCE at mount, so opening the dialog for a
+  // different chapter (or switching create<->edit) showed stale fields.
   const resetKey = chapter?.id || 'new'
-  useState(() => {
+  useEffect(() => {
     if (chapter) {
       setTitle(chapter.title)
       setDescription(chapter.description)
@@ -544,7 +546,8 @@ function ChapterFormDialog({
       setCoverPreview('')
     }
     setCoverFile(null)
-  })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetKey])
 
   const handleCoverSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

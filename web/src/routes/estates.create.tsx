@@ -11,7 +11,7 @@
  */
 
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
@@ -70,11 +70,27 @@ const STEP_LABELS = ['Situation', 'About You', 'Family', 'Assets', 'Name']
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 function CreateEstatePage() {
-  const { user, profile } = useAuth()
+  const { user, profile, loading } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // GUARD: never show the intake wizard to someone who already has an estate.
+  // The post-login redirect can land here transiently before the profile
+  // resolves; without this, returning users were forced to "re-personalize"
+  // their estate on every login. Once auth has settled, bounce them to their
+  // existing estate dashboard.
+  useEffect(() => {
+    if (!loading && profile?.primaryEstateId) {
+      navigate({
+        to: '/estates/$estateId/dashboard',
+        params: { estateId: profile.primaryEstateId },
+        replace: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any)
+    }
+  }, [loading, profile?.primaryEstateId, navigate])
 
   const firstName = profile?.firstName || user?.displayName?.split(' ')[0] || ''
   const fullNameDefault = profile

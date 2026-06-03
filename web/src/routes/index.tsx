@@ -654,7 +654,7 @@ function navigatePostLogin(
 
 function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChange: (v: boolean) => void; invite?: string }) {
   const navigate = useNavigate();
-  const { signIn, signUp, resetPassword, user, profile } = useAuth();
+  const { signIn, signUp, resetPassword, user, profile, loading } = useAuth();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -671,13 +671,15 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
 
-  // If already authenticated, redirect
+  // If already authenticated, redirect — but ONLY once the profile has resolved.
+  // Routing while `profile` is still null sent existing users to /estates/create
+  // (the "redo your estate" bug), then closed the modal so it never corrected.
   useEffect(() => {
-    if (user && open) {
+    if (user && !loading && open) {
       onOpenChange(false);
       navigatePostLogin(navigate, profile, invite);
     }
-  }, [user, profile, navigate, invite, open, onOpenChange]);
+  }, [user, profile, loading, navigate, invite, open, onOpenChange]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -708,8 +710,10 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
     setIsSubmitting(false);
 
     if (result.success) {
-      onOpenChange(false);
-      navigatePostLogin(navigate, profile, invite);
+      // Let the gated redirect effect (user && !loading && open) handle
+      // navigation once the profile resolves — navigating inline here with a
+      // still-null `profile` was the same race that dumped users on /estates/create.
+      setError('');
     } else {
       setError(result.error || 'MFA verification failed.');
     }

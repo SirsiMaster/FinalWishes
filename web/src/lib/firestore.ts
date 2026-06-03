@@ -377,8 +377,11 @@ export function useEstateAssets(estateId: string | null): FirestoreListResult<As
  */
 export function useEstateHeirs(estateId: string | null): FirestoreListResult<Heir> {
   const path = estateId ? `estates/${estateId}/heirs` : null;
+  // Show ALL non-removed heirs. Added family members are created with
+  // status:'pending'; filtering to =='active' hid every newly-added family
+  // member until they accepted an invite, so "add family member" looked broken.
   const constraints = useMemo(
-    () => [where('status', '==', 'active'), orderBy('createdAt', 'asc')],
+    () => [where('status', 'in', ['active', 'pending', 'invited']), orderBy('createdAt', 'asc')],
     []
   );
   return useCollection<Heir>(path, constraints);

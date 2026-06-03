@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Compass, ChevronRight, X, Check } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import { useGuidanceScore, type ShepherdStep } from '../../lib/useGuidanceScore'
+import { useResumables } from '../../lib/useResumables'
 
 /** Controlled: the estate layout owns open state so content can reserve space. */
 export function ShepherdCompanion({
@@ -30,11 +31,15 @@ export function ShepherdCompanion({
   const { profile } = useAuth()
   const navigate = useNavigate()
   const { score, loading } = useGuidanceScore(estateId)
+  const resumables = useResumables(estateId)
 
   const goTo = useCallback(
     (route: string) => {
+      // Absolute routes (e.g. the estate-creation wizard) navigate as-is;
+      // everything else is a sub-route of the current estate.
+      const to = route.startsWith('/') ? route : `/estates/${estateId}/${route}`
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      navigate({ to: `/estates/${estateId}/${route}` } as any)
+      navigate({ to } as any)
     },
     [estateId, navigate],
   )
@@ -191,6 +196,32 @@ export function ShepherdCompanion({
                 <p className="text-[13px] leading-relaxed text-slate-500">
                   Your guide will appear here as you build your estate plan.
                 </p>
+              )}
+
+              {/* Continue where you left off — in-progress work the user can resume.
+                  Rendered only when something is genuinely unfinished. */}
+              {!loading && resumables.length > 0 && (
+                <div className="mt-7 border-t border-slate-100 pt-6">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    Continue where you left off
+                  </p>
+                  <ul className="space-y-1">
+                    {resumables.map((r) => (
+                      <li key={r.id}>
+                        <button
+                          type="button"
+                          onClick={() => goTo(r.route)}
+                          className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[13px] text-slate-600 transition-colors hover:bg-slate-50"
+                        >
+                          <span className="truncate font-[family-name:var(--font-cinzel)] text-slate-700">
+                            {r.label}
+                          </span>
+                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           </motion.aside>

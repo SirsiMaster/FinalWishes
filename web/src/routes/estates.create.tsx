@@ -128,29 +128,45 @@ function CreateEstatePage() {
     ? `${profile.firstName} ${profile.lastName}`.trim()
     : user?.displayName || ''
 
-  const [wizardData, setWizardData] = useState<WizardData>({
-    situation: null,
-    fullName: fullNameDefault,
-    stateOfResidence: '',
-    maritalStatus: '',
-    hasSpouse: false,
-    hasChildren: false,
-    numberOfChildren: 0,
-    hasMinorChildren: false,
-    assets: [],
-    estateName: '',
-  })
+  const [wizardData, setWizardData] = useState<WizardData>(() =>
+    initialDraft
+      ? { ...EMPTY_WIZARD_DATA, ...initialDraft.data }
+      : { ...EMPTY_WIZARD_DATA, fullName: fullNameDefault },
+  )
 
-  const update = (patch: Partial<WizardData>) =>
+  // Persist wizardData/step on every change (debounced), but never before the
+  // user has actually interacted — see persistEnabled. Mark draft-present once
+  // a save happens so the resume affordance appears on the next visit.
+  useEffect(() => {
+    if (!uid || profile?.primaryEstateId || !persistEnabled.current) return
+    const handle = window.setTimeout(() => {
+      saveWizardDraft(uid, { data: wizardData, step })
+      setHasDraft(true)
+    }, 400)
+    return () => window.clearTimeout(handle)
+  }, [uid, profile?.primaryEstateId, wizardData, step])
+
+  const update = (patch: Partial<WizardData>) => {
+    persistEnabled.current = true
     setWizardData((prev) => ({ ...prev, ...patch }))
+  }
 
   const toggleAsset = (id: string) => {
+    persistEnabled.current = true
     setWizardData((prev) => ({
       ...prev,
       assets: prev.assets.includes(id)
         ? prev.assets.filter((a) => a !== id)
         : [...prev.assets, id],
     }))
+  }
+
+  const handleStartOver = () => {
+    if (uid) clearWizardDraft(uid)
+    persistEnabled.current = false
+    setWizardData({ ...EMPTY_WIZARD_DATA, fullName: fullNameDefault })
+    setStep(0)
+    setHasDraft(false)
   }
 
   // Derive default estate name suggestion
@@ -188,6 +204,11 @@ function CreateEstatePage() {
     })
 
     if (result.success && result.id) {
+      // Estate is now persisted server-side — drop the device-local draft so a
+      // future visit doesn't offer to "resume" an already-created estate.
+      persistEnabled.current = false
+      if (uid) clearWizardDraft(uid)
+
       // Write wizard intake metadata
       try {
         await setDoc(doc(db, `estates/${result.id}/metadata`, 'intake'), {
@@ -224,6 +245,29 @@ function CreateEstatePage() {
         </div>
 
         <div className="relative w-full max-w-2xl">
+          {/* ─── Resume affordance (non-blocking) ─── */}
+          {hasDraft && (
+            <div className="mb-6 flex items-center justify-between gap-4 rounded-2xl border border-[#C8A951]/30 bg-[#C8A951]/[0.06] px-5 py-3.5 animate-in fade-in slide-in-from-top-2 duration-500">
+              <div className="flex items-center gap-3 min-w-0">
+                <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 3v5h5" />
+                  <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+                  <path d="M12 7v5l3 3" />
+                </svg>
+                <p className="text-sm font-semibold text-[#0F172A] truncate">
+                  We saved your progress on this device. Resume where you left off.
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                onClick={handleStartOver}
+                className="flex-shrink-0 h-auto px-3 py-1.5 text-sm font-bold text-[#64748B] hover:text-[#133378] hover:bg-transparent"
+              >
+                Start over
+              </Button>
+            </div>
+          )}
+
           {/* ─── Step 0: Welcome ─── */}
           {step === 0 && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -261,7 +305,10 @@ function CreateEstatePage() {
               </div>
 
               <Button
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  persistEnabled.current = true
+                  setStep(1)
+                }}
                 className="w-full py-6 h-auto bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-2xl font-bold text-lg transition-all shadow-[0_20px_60px_rgba(19,51,120,0.15)] hover:shadow-[0_25px_70px_rgba(19,51,120,0.25)] hover:-translate-y-0.5 active:scale-[0.99]"
               >
                 Create My Estate Plan

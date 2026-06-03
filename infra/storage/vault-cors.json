@@ -1,0 +1,20 @@
+[
+  {
+    "origin": [
+      "https://finalwishes-prod.web.app",
+      "https://finalwishes-prod.firebaseapp.com",
+      "https://finalwishes.app",
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ],
+    "method": ["GET", "PUT", "HEAD", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "Content-Length",
+      "Content-Range",
+      "x-goog-resumable",
+      "Access-Control-Allow-Origin"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

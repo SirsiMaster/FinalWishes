@@ -105,8 +105,8 @@ export function SettlementPanel({
         <CardContent className="px-10 py-8 space-y-6">
           <div className="flex items-start justify-between">
             <div className="space-y-2">
-              <p className="text-[#0F172A] font-bold text-lg">This estate is currently in settlement.</p>
-              <p className="text-[#64748B] text-[14px] leading-relaxed max-w-lg">
+              <p className="text-slate-900 font-bold text-lg">This estate is currently in settlement.</p>
+              <p className="text-slate-500 text-[14px] leading-relaxed max-w-lg">
                 {settlementType === 'death'
                   ? `The passing of ${ownerName || 'the estate owner'} has been reported. Time capsules and final messages are being delivered to their intended recipients.`
                   : `${ownerName || 'The estate owner'} has been reported as incapacitated. Settlement procedures are in progress.`}
@@ -121,7 +121,7 @@ export function SettlementPanel({
           </div>
 
           {settlementReportedAt && (
-            <p className="text-[12px] text-[#94A3B8] font-medium">
+            <p className="text-[12px] text-slate-400 font-medium">
               Reported on {new Date(settlementReportedAt).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -131,7 +131,7 @@ export function SettlementPanel({
           )}
 
           <div className="border-t border-amber-200/50 pt-6 space-y-3">
-            <h4 className="text-[11px] font-bold text-[#94A3B8] uppercase tracking-widest">Settlement Checklist</h4>
+            <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Settlement Checklist</h4>
             <div className="space-y-2">
               {[
                 'Time capsules with settlement triggers delivered',
@@ -142,7 +142,7 @@ export function SettlementPanel({
               ].map((item, i) => (
                 <label key={i} className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-amber-50 transition-colors cursor-pointer">
                   <input type="checkbox" className="w-4 h-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500" />
-                  <span className="text-[14px] text-[#334155] font-medium">{item}</span>
+                  <span className="text-[14px] text-slate-700 font-medium">{item}</span>
                 </label>
               ))}
             </div>
@@ -155,20 +155,20 @@ export function SettlementPanel({
   // --- Estate is NOT in settlement — show report option ---
   return (
     <Card className="rounded-[2.5rem] border-slate-100 shadow-sm py-0 gap-0">
-      <div className="bg-gradient-to-r from-[#133378]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-xl bg-[#133378]/10 flex items-center justify-center">
-          <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <div className="bg-gradient-to-r from-[var(--royal)]/[0.04] to-transparent px-4 py-4 md:px-10 md:py-6 border-b border-slate-100 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-xl bg-[var(--royal)]/10 flex items-center justify-center">
+          <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
         </div>
-        <h3 className="text-[11px] font-black text-[#133378]/60 uppercase tracking-[0.3em]">Guardian Protocol</h3>
+        <h3 className="text-[11px] font-black text-[var(--royal)]/60 uppercase tracking-[0.3em]">Guardian Protocol</h3>
       </div>
       <CardContent className="px-10 py-8 space-y-6">
         <div className="space-y-2">
-          <p className="text-[#0F172A] font-bold text-[15px] leading-tight">
+          <p className="text-slate-900 font-bold text-[15px] leading-tight">
             Report a Status Change
           </p>
-          <p className="text-[13px] text-[#64748B] font-medium leading-relaxed max-w-lg">
+          <p className="text-[13px] text-slate-500 font-medium leading-relaxed max-w-lg">
             If {ownerName || 'the estate owner'} is no longer able to manage their estate,
             you can begin the settlement process. This will deliver all time capsules with
             settlement triggers and notify beneficiaries.
@@ -186,10 +186,10 @@ export function SettlementPanel({
           </AlertDialogTrigger>
           <AlertDialogContent className="max-w-md">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-lg font-bold text-[#0F172A]">
+              <AlertDialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
                 Begin Settlement Process
               </AlertDialogTitle>
-              <AlertDialogDescription className="text-[14px] text-[#64748B] leading-relaxed space-y-3">
+              <AlertDialogDescription className="text-[14px] text-slate-500 leading-relaxed space-y-3">
                 <span className="block">
                   This action will transition the estate into settlement. The following will happen:
                 </span>
@@ -202,7 +202,7 @@ export function SettlementPanel({
 
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <label className="text-[12px] font-bold text-[#64748B] uppercase tracking-wider">
+                <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
                   Status Type
                 </label>
                 <Select
@@ -220,7 +220,7 @@ export function SettlementPanel({
               </div>
 
               <div className="space-y-2">
-                <label className="text-[12px] font-bold text-[#64748B] uppercase tracking-wider">
+                <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider">
                   Notes (optional)
                 </label>
                 <Textarea

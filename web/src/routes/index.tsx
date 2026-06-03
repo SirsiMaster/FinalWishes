@@ -79,7 +79,7 @@ function Home() {
       <HeroSection openLogin={openLogin} />
 
       {/* ═══════════════════ SCENARIO CARDS — "I'm here because..." ═══════════════════ */}
-      <section id="scenarios" className="py-16 relative z-10 bg-[#1A3478] text-white">
+      <section id="scenarios" className="py-16 relative z-10 bg-[var(--royal)] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-12">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Whatever brought you here, we can help</p>
@@ -159,26 +159,26 @@ function Home() {
 
         <div className="flex flex-col justify-center px-8 md:px-12 py-10">
           <ScrollReveal direction="right" className="max-w-lg mx-auto">
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
-              The Cost of <span className="text-[#C8A951]">Not Being Ready</span>
+            <h2 className="text-3xl md:text-4xl text-slate-900 mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
+              The Cost of <span className="text-[var(--gold)]">Not Being Ready</span>
             </h2>
-            <p className="text-base md:text-lg text-[#4B5563] leading-relaxed mb-6">
+            <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-6">
               When someone passes without a plan, families face frozen accounts, lost passwords, missing documents, and legal battles that can last years. FinalWishes eliminates that chaos — before it starts.
             </p>
             <div className="grid grid-cols-3 gap-3">
-              <Card className="bg-[#1A3478] rounded-xl border-0 ring-0 py-0">
+              <Card className="bg-[var(--royal)] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={55} suffix="%" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">No Will</div>
                 </CardContent>
               </Card>
-              <Card className="bg-[#1A3478] rounded-xl border-0 ring-0 py-0">
+              <Card className="bg-[var(--royal)] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={18} suffix=" mo" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Avg Probate</div>
                 </CardContent>
               </Card>
-              <Card className="bg-[#1A3478] rounded-xl border-0 ring-0 py-0">
+              <Card className="bg-[var(--royal)] rounded-xl border-0 ring-0 py-0">
                 <CardContent className="p-4 text-center">
                   <div className="text-xl font-bold text-white font-[family-name:var(--font-cinzel)]"><AnimatedCounter value={2} prefix="$" suffix="B+" /></div>
                   <div className="text-[10px] text-gold uppercase tracking-wider mt-1 font-semibold">Court Costs</div>
@@ -190,7 +190,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ WHAT YOU CAN DO — Product Capabilities ═══════════════════ */}
-      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[#1A3478] text-white">
+      <section id="how-it-works" className="py-16 relative z-10 overflow-hidden bg-[var(--royal)] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">Everything in one place</p>
@@ -256,35 +256,35 @@ function Home() {
       <section className="py-20 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl text-[#1A1A1A] mb-4 font-[family-name:var(--font-cinzel)]">
-              Three Steps. <span className="text-[#C8A951]">Fifteen Minutes.</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl text-slate-900 mb-4 font-[family-name:var(--font-cinzel)]">
+              Three Steps. <span className="text-[var(--gold)]">Fifteen Minutes.</span>
             </h2>
-            <p className="text-[#6B7280] text-lg max-w-xl mx-auto">That&apos;s all it takes to protect everything you&apos;ve built.</p>
+            <p className="text-slate-500 text-lg max-w-xl mx-auto">That&apos;s all it takes to protect everything you&apos;ve built.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-6">
             <StaggerItem>
-              <Card className="rounded-2xl bg-[#1A3478] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
+              <Card className="rounded-2xl bg-[var(--royal)] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
                 <CardContent className="p-8 text-center">
-                  <div className="w-14 h-14 rounded-full bg-[#C8A951] flex items-center justify-center mx-auto mb-5 text-[#1A3478] font-bold text-xl font-[family-name:var(--font-cinzel)]">1</div>
+                  <div className="w-14 h-14 rounded-full bg-[var(--gold)] flex items-center justify-center mx-auto mb-5 text-[var(--royal)] font-bold text-xl font-[family-name:var(--font-cinzel)]">1</div>
                   <h4 className="text-white font-bold text-lg mb-3">Create Your Vault</h4>
                   <p className="text-white/70 text-[15px] leading-relaxed">Sign up free. Add your first document, asset, or memoir. Takes 2 minutes.</p>
                 </CardContent>
               </Card>
             </StaggerItem>
             <StaggerItem>
-              <Card className="rounded-2xl bg-[#1A3478] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
+              <Card className="rounded-2xl bg-[var(--royal)] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
                 <CardContent className="p-8 text-center">
-                  <div className="w-14 h-14 rounded-full bg-[#C8A951] flex items-center justify-center mx-auto mb-5 text-[#1A3478] font-bold text-xl font-[family-name:var(--font-cinzel)]">2</div>
+                  <div className="w-14 h-14 rounded-full bg-[var(--gold)] flex items-center justify-center mx-auto mb-5 text-[var(--royal)] font-bold text-xl font-[family-name:var(--font-cinzel)]">2</div>
                   <h4 className="text-white font-bold text-lg mb-3">Invite Your Circle</h4>
                   <p className="text-white/70 text-[15px] leading-relaxed">Add heirs, executors, or your attorney. They get access only to what you allow.</p>
                 </CardContent>
               </Card>
             </StaggerItem>
             <StaggerItem>
-              <Card className="rounded-2xl bg-[#1A3478] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
+              <Card className="rounded-2xl bg-[var(--royal)] border-0 py-0 h-full shadow-[0_8px_30px_rgba(16,42,86,0.3)]">
                 <CardContent className="p-8 text-center">
-                  <div className="w-14 h-14 rounded-full bg-[#C8A951] flex items-center justify-center mx-auto mb-5 text-[#1A3478] font-bold text-xl font-[family-name:var(--font-cinzel)]">3</div>
+                  <div className="w-14 h-14 rounded-full bg-[var(--gold)] flex items-center justify-center mx-auto mb-5 text-[var(--royal)] font-bold text-xl font-[family-name:var(--font-cinzel)]">3</div>
                   <h4 className="text-white font-bold text-lg mb-3">Live in Peace</h4>
                   <p className="text-white/70 text-[15px] leading-relaxed">We stand watch. When the time comes, your people receive everything they need — automatically.</p>
                 </CardContent>
@@ -295,7 +295,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRODUCT SHOWCASE — See the Real App ═══════════════════ */}
-      <section className="py-16 relative z-10 overflow-hidden bg-[#1A3478] text-white">
+      <section className="py-16 relative z-10 overflow-hidden bg-[var(--royal)] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <p className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-3">See it in action</p>
@@ -315,22 +315,22 @@ function Home() {
       <section className="py-16 relative z-10 overflow-hidden section-light">
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
-            <p className="text-[#C8A951] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
-            <h2 className="text-3xl md:text-4xl text-[#1A1A1A] mb-6 font-[family-name:var(--font-cinzel)]">
-              The Shepherd <span className="text-[#C8A951]">Guides You</span>
+            <p className="text-[var(--gold)] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
+            <h2 className="text-3xl md:text-4xl text-slate-900 mb-6 font-[family-name:var(--font-cinzel)]">
+              The Shepherd <span className="text-[var(--gold)]">Guides You</span>
             </h2>
-            <p className="text-[#4B5563] text-base leading-relaxed mb-6">
+            <p className="text-slate-600 text-base leading-relaxed mb-6">
               Not sure where to start? Our AI engine analyzes your estate and tells you exactly what&apos;s missing, what&apos;s urgent, and what to do next. It&apos;s like having a personal estate advisor — available 24/7.
             </p>
-            <ul className="space-y-3 text-[#4B5563] text-sm">
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Personalized completion checklist</li>
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Daily prompts to capture your story</li>
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Obituary drafting assistance</li>
-              <li className="flex gap-3"><span className="text-[#C8A951] text-lg">✓</span> Smart suggestions based on your situation</li>
+            <ul className="space-y-3 text-slate-600 text-sm">
+              <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Personalized completion checklist</li>
+              <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Daily prompts to capture your story</li>
+              <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Obituary drafting assistance</li>
+              <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Smart suggestions based on your situation</li>
             </ul>
           </ScrollReveal>
           <ScrollReveal direction="right">
-            <div className="bg-[#1A3478] rounded-2xl p-6 border-0">
+            <div className="bg-[var(--royal)] rounded-2xl p-6 border-0">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
                   <span className="text-gold text-lg">🧭</span>
@@ -357,7 +357,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ SECURITY — Condensed ═══════════════════ */}
-      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[#1A3478] text-white">
+      <section id="security" className="py-12 relative z-10 overflow-hidden bg-[var(--royal)] text-white">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
@@ -378,8 +378,8 @@ function Home() {
               <Card key={item.label} className="bg-white rounded-xl border-0 ring-0 py-0 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
                 <CardContent className="p-5 text-center">
                   <div className="status-dot mx-auto mb-3" />
-                  <div className="text-[#1A1A1A] font-bold text-xs uppercase tracking-widest mb-1">{item.label}</div>
-                  <div className="text-[#6B7280] text-xs">{item.desc}</div>
+                  <div className="text-slate-900 font-bold text-xs uppercase tracking-widest mb-1">{item.label}</div>
+                  <div className="text-slate-500 text-xs">{item.desc}</div>
                 </CardContent>
               </Card>
             ))}
@@ -391,8 +391,8 @@ function Home() {
       <section className="py-16 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
-              Built for <span className="text-[#C8A951]">Real Families</span>
+            <h2 className="text-2xl md:text-3xl text-slate-900 mb-3 font-[family-name:var(--font-cinzel)]">
+              Built for <span className="text-[var(--gold)]">Real Families</span>
             </h2>
           </ScrollReveal>
 
@@ -432,7 +432,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
-      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[#1A3478] text-white">
+      <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[var(--royal)] text-white">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl text-white mb-3 font-[family-name:var(--font-cinzel)]">
@@ -446,17 +446,17 @@ function Home() {
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">Guardian</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-slate-400 uppercase">Guardian</div>
                 </div>
-                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Forever</div>
-                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 1 estate plan</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> 5 document uploads</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Basic asset inventory</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Heir invitations</li>
+                <div className="text-3xl text-slate-900 mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
+                <div className="text-sm text-slate-400 uppercase tracking-widest mb-4">Forever</div>
+                <ul className="space-y-2 text-sm text-slate-600 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> 1 estate plan</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> 5 document uploads</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Basic asset inventory</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Heir invitations</li>
                 </ul>
-                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-slate-300 bg-transparent text-slate-700 hover:bg-slate-100 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   Start Free
                 </Button>
               </CardContent>
@@ -472,15 +472,15 @@ function Home() {
                   </div>
                   <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-[#9CA3AF]">/mo</span></div>
-                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Unlimited documents</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> PII encryption vault</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Video &amp; audio memoirs</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Time capsules</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Digital lockbox</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Priority support</li>
+                <div className="text-3xl text-slate-900 mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-slate-400">/mo</span></div>
+                <div className="text-sm text-slate-400 uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-slate-600 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Unlimited documents</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> PII encryption vault</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Video &amp; audio memoirs</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Time capsules</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Digital lockbox</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Priority support</li>
                 </ul>
                 <Button onClick={openLogin} className="bg-gold text-black w-full py-3 font-bold text-[0.65rem] uppercase tracking-widest rounded-lg hover:bg-gold-bright hover:shadow-[0_0_20px_rgba(200,169,81,0.5)] transition-all border-none h-auto">
                   Get Started
@@ -492,19 +492,19 @@ function Home() {
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-[#9CA3AF] uppercase">White Glove</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-slate-400 uppercase">White Glove</div>
                 </div>
-                <div className="text-3xl text-[#1A1A1A] mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-[#9CA3AF]">/mo</span></div>
-                <div className="text-sm text-[#9CA3AF] uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-[#4B5563] mb-5 flex-grow">
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Everything in Concierge</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> AI Shepherd guidance</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Legal document review</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Multi-executor coordination</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Probate preparation</li>
-                  <li className="flex gap-2"><span className="text-[#C8A951]">✓</span> Phone support</li>
+                <div className="text-3xl text-slate-900 mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-slate-400">/mo</span></div>
+                <div className="text-sm text-slate-400 uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-slate-600 mb-5 flex-grow">
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Everything in Concierge</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> AI Shepherd guidance</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Legal document review</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Multi-executor coordination</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Probate preparation</li>
+                  <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Phone support</li>
                 </ul>
-                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-[#D1D5DB] bg-transparent text-[#374151] hover:bg-[#F3F4F6] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-slate-300 bg-transparent text-slate-700 hover:bg-slate-100 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   Get Started
                 </Button>
               </CardContent>
@@ -517,8 +517,8 @@ function Home() {
       <section id="faq" className="py-16 relative z-10 section-light">
         <div className="max-w-4xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-[#1A1A1A] mb-3 font-[family-name:var(--font-cinzel)]">
-              Common <span className="text-[#C8A951]">Questions</span>
+            <h2 className="text-2xl md:text-3xl text-slate-900 mb-3 font-[family-name:var(--font-cinzel)]">
+              Common <span className="text-[var(--gold)]">Questions</span>
             </h2>
           </ScrollReveal>
 
@@ -552,7 +552,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[#1A3478] text-white">
+      <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden z-10 bg-[var(--royal)] text-white">
         <div className="absolute inset-0 z-0">
           <img src="https://images.unsplash.com/photo-1609220136736-443140cffec6?q=80&w=1200&auto=format&fit=crop" alt="Family together" className="w-full h-full object-cover" loading="lazy" style={{ objectPosition: "center 20%" }} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
@@ -593,7 +593,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ FOOTER ═══════════════════ */}
-      <footer className="bg-[#1A3478] border-t border-gold/20 py-6 relative z-10 text-white">
+      <footer className="bg-[var(--royal)] border-t border-gold/20 py-6 relative z-10 text-white">
         <div className="max-w-6xl mx-auto px-5">
           <div className="grid md:grid-cols-5 gap-6 mb-4">
             <div className="md:col-span-2">
@@ -778,28 +778,28 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={true}
-        className="max-w-md rounded-[2.5rem] p-0 border-[#133378]/10 shadow-[0_20px_50px_rgba(19,51,120,0.15)] bg-white/95 backdrop-blur-2xl gap-0"
+        className="max-w-md rounded-[2.5rem] p-0 border-[var(--royal)]/10 shadow-[0_20px_50px_rgba(19,51,120,0.15)] bg-white/95 backdrop-blur-2xl gap-0"
       >
         <VisuallyHidden.Root><DialogTitle>Sign In</DialogTitle></VisuallyHidden.Root>
 
         {/* Header */}
         <div className="text-center pt-10 px-10 pb-0">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-white border border-[#133378]/10 rounded-2xl flex items-center justify-center shadow-sm">
-              <svg viewBox="0 0 24 24" className="w-7 h-7 text-[#133378]">
+            <div className="w-12 h-12 bg-white border border-[var(--royal)]/10 rounded-2xl flex items-center justify-center shadow-sm">
+              <svg viewBox="0 0 24 24" className="w-7 h-7 text-[var(--royal)]">
                 <path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="currentColor" strokeWidth="2.5" />
                 <path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" strokeWidth="2.5" />
                 <path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" strokeWidth="2.5" />
               </svg>
             </div>
-            <span className="font-[family-name:var(--font-cinzel)] text-2xl tracking-[0.15em] font-bold text-[#133378]">
+            <span className="font-[family-name:var(--font-cinzel)] text-2xl tracking-[0.15em] font-bold text-[var(--royal)]">
               FINALWISHES
             </span>
           </div>
-          <h2 aria-hidden="true" className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378] mb-2">
+          <h2 aria-hidden="true" className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)] mb-2">
             {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : mode === 'forgot' ? 'Reset Password' : 'Verification Required'}
           </h2>
-          <p className="text-[#64748B] text-sm font-medium max-w-[260px] mx-auto leading-relaxed">
+          <p className="text-slate-500 text-sm font-medium max-w-[260px] mx-auto leading-relaxed">
             {mode === 'signin'
               ? 'Secure access to the Estate Operating System'
               : mode === 'signup'
@@ -815,14 +815,14 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
           {mode === 'signin' ? (
             <form className="space-y-6" onSubmit={handleSignIn}>
               <div className="space-y-2">
-                <Label htmlFor="modal-identifier" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Email or Username</Label>
-                <Input id="modal-identifier" type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="username" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
+                <Label htmlFor="modal-identifier" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email or Username</Label>
+                <Input id="modal-identifier" type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="username" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="modal-password" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Password</Label>
+                <Label htmlFor="modal-password" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Password</Label>
                 <div className="relative">
-                  <Input id="modal-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="current-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 pr-14 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[#133378] z-10 h-8 w-8">
+                  <Input id="modal-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="current-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 pr-14 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
                     {showPassword ? (
                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (
@@ -832,40 +832,40 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 </div>
               </div>
               {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
-              <Button id="modal-submit" type="submit" disabled={isSubmitting} className="w-full bg-[#133378] hover:bg-[#1E3A5F] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8">
+              <Button id="modal-submit" type="submit" disabled={isSubmitting} className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8">
                 {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Signing in...</span> : 'Sign In'}
               </Button>
               <div className="flex items-center justify-between text-xs px-1 pt-2">
-                <Button type="button" variant="link" onClick={() => { setMode('forgot'); setError(''); setResetSent(false); setResetEmail(identifier.includes('@') ? identifier : ''); }} className="text-[#64748B] hover:text-[#133378] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Forgot password?</Button>
-                <Button type="button" variant="link" onClick={() => { setMode('signup'); setError(''); }} className="text-[#64748B] hover:text-[#133378] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Create account</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('forgot'); setError(''); setResetSent(false); setResetEmail(identifier.includes('@') ? identifier : ''); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Forgot password?</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('signup'); setError(''); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Create account</Button>
               </div>
             </form>
           ) : mode === 'signup' ? (
             <form className="space-y-4" onSubmit={handleSignUp}>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="modal-firstname" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">First Name</Label>
-                  <Input id="modal-firstname" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jane" autoComplete="given-name" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Label htmlFor="modal-firstname" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">First Name</Label>
+                  <Input id="modal-firstname" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jane" autoComplete="given-name" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="modal-lastname" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Last Name</Label>
-                  <Input id="modal-lastname" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Doe" autoComplete="family-name" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Label htmlFor="modal-lastname" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Last Name</Label>
+                  <Input id="modal-lastname" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Doe" autoComplete="family-name" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="modal-username" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Username</Label>
-                <Input id="modal-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. janedoe" autoComplete="username" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
+                <Label htmlFor="modal-username" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Username</Label>
+                <Input id="modal-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. janedoe" autoComplete="username" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                 <p className="text-[10px] text-slate-400 pl-1">Letters, numbers, underscores only. Min 3 characters.</p>
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="modal-email" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Email</Label>
-                <Input id="modal-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="email" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
+                <Label htmlFor="modal-email" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email</Label>
+                <Input id="modal-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="email" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="modal-signup-pw" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Password</Label>
+                <Label htmlFor="modal-signup-pw" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Password</Label>
                 <div className="relative">
-                  <Input id="modal-signup-pw" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-3.5 pr-14 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[#133378] z-10 h-8 w-8">
+                  <Input id="modal-signup-pw" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 pr-14 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
                     {showPassword ? (
                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (
@@ -875,19 +875,19 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 </div>
               </div>
               {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
-              <Button type="submit" disabled={isSubmitting} className="w-full bg-[#133378] hover:bg-[#1E3A5F] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-6">
+              <Button type="submit" disabled={isSubmitting} className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-6">
                 {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Creating account...</span> : 'Create Account'}
               </Button>
-              <div className="text-center text-xs text-[#64748B] pt-2">
+              <div className="text-center text-xs text-slate-500 pt-2">
                 <span>Already have an account? </span>
-                <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-[#133378] hover:text-[#133378] font-bold text-xs p-0 h-auto">Sign in</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-[var(--royal)] hover:text-[var(--royal)] font-bold text-xs p-0 h-auto">Sign in</Button>
               </div>
             </form>
           ) : mode === 'forgot' ? (
             <div className="space-y-6">
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-[#C8A951]/10 rounded-2xl flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 7l-10 7L2 7" /></svg>
+                <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-2xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M22 7l-10 7L2 7" /></svg>
                 </div>
               </div>
               {resetSent ? (
@@ -899,7 +899,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                     </div>
                     <p className="text-green-600/70 text-[13px] font-medium">If an account exists for that email, we've sent password reset instructions.</p>
                   </div>
-                  <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); setResetSent(false); }} className="text-[#133378] font-bold text-sm p-0 h-auto">&larr; Back to sign in</Button>
+                  <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); setResetSent(false); }} className="text-[var(--royal)] font-bold text-sm p-0 h-auto">&larr; Back to sign in</Button>
                 </div>
               ) : (
                 <form className="space-y-6" onSubmit={async (e) => {
@@ -911,15 +911,15 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                   setResetSent(true);
                 }}>
                   <div className="space-y-2">
-                    <Label htmlFor="modal-reset-email" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Email Address</Label>
-                    <Input id="modal-reset-email" type="email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" autoFocus required className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-[#0F172A] placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm" />
+                    <Label htmlFor="modal-reset-email" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email Address</Label>
+                    <Input id="modal-reset-email" type="email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" autoFocus required className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                   </div>
                   {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
-                  <Button type="submit" disabled={isSubmitting || !resetEmail.includes('@')} className="w-full bg-[#C8A951] hover:bg-[#B89941] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(200,169,81,0.2)] hover:shadow-[0_12px_32px_rgba(200,169,81,0.3)] transition-all active:scale-95">
+                  <Button type="submit" disabled={isSubmitting || !resetEmail.includes('@')} className="w-full bg-[var(--gold)] hover:bg-[var(--gold)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(200,169,81,0.2)] hover:shadow-[0_12px_32px_rgba(200,169,81,0.3)] transition-all active:scale-95">
                     {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending...</span> : 'Send Reset Link'}
                   </Button>
                   <div className="text-center text-xs pt-2">
-                    <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-[#64748B] hover:text-[#133378] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
+                    <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
                   </div>
                 </form>
               )}
@@ -927,20 +927,20 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
           ) : mode === 'mfa' ? (
             <form className="space-y-6" onSubmit={handleMfaVerify}>
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-[#133378]/5 rounded-2xl flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                <div className="w-16 h-16 bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-8 h-8 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="modal-mfa" className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest pl-1">Authenticator Code</Label>
-                <Input id="modal-mfa" type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={totpCode} onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" autoComplete="one-time-code" autoFocus className="h-auto bg-slate-50 border-slate-200 hover:border-[#133378]/30 rounded-2xl px-6 py-4 font-mono font-bold text-[24px] text-center text-[#0F172A] placeholder:text-slate-200 focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-0 focus-visible:shadow-sm tracking-[0.5em]" />
+                <Label htmlFor="modal-mfa" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Authenticator Code</Label>
+                <Input id="modal-mfa" type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={totpCode} onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" autoComplete="one-time-code" autoFocus className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-mono font-bold text-[24px] text-center text-slate-900 placeholder:text-slate-200 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm tracking-[0.5em]" />
               </div>
               {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
-              <Button type="submit" disabled={isSubmitting || totpCode.length !== 6} className="w-full bg-[#133378] hover:bg-[#1E3A5F] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8">
+              <Button type="submit" disabled={isSubmitting || totpCode.length !== 6} className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8">
                 {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Verifying...</span> : 'Verify'}
               </Button>
               <div className="text-center text-xs pt-2">
-                <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); setTotpCode(''); setMfaResolver(null); }} className="text-[#64748B] hover:text-[#133378] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); setTotpCode(''); setMfaResolver(null); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
               </div>
             </form>
           ) : null}
@@ -952,11 +952,11 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
           <div className="flex items-center justify-center gap-6 w-full">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <span className="text-[11px] text-[#133378]/40 font-bold uppercase tracking-widest">AES-256</span>
+              <span className="text-[11px] text-[var(--royal)]/40 font-bold uppercase tracking-widest">AES-256</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
-              <span className="text-[11px] text-[#133378]/40 font-bold uppercase tracking-widest">SOC 2 Architecture</span>
+              <span className="text-[11px] text-[var(--royal)]/40 font-bold uppercase tracking-widest">SOC 2 Architecture</span>
             </div>
           </div>
         </div>
@@ -996,7 +996,7 @@ function HeroSection({ openLogin }: { openLogin: () => void }) {
   }
 
   return (
-    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[#1A3478] text-white">
+    <header className="relative min-h-[70vh] flex flex-col items-center justify-center pt-16 overflow-hidden bg-[var(--royal)] text-white">
       <div className="absolute inset-0 z-0">
         <img src="/assets/images/hero-family.jpg" alt="Multi-generational family" className="w-full h-full object-cover" fetchPriority="high" style={{ objectPosition: "center 30%" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -1060,9 +1060,9 @@ function ScenarioCard({ emoji, title, description, cta, image, openLogin }: { em
         </div>
       </div>
       <CardContent className="p-6 flex flex-col flex-grow">
-        <h3 className="text-[#1A1A1A] font-bold text-base mb-2">{title}</h3>
-        <p className="text-[#4B5563] text-sm leading-relaxed flex-grow mb-4">{description}</p>
-        <Button variant="ghost" onClick={openLogin} className="text-[#C8A951] text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-[#B8993F] hover:bg-transparent self-start">
+        <h3 className="text-slate-900 font-bold text-base mb-2">{title}</h3>
+        <p className="text-slate-600 text-sm leading-relaxed flex-grow mb-4">{description}</p>
+        <Button variant="ghost" onClick={openLogin} className="text-[var(--gold)] text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-[var(--gold)] hover:bg-transparent self-start">
           {cta} &rarr;
         </Button>
       </CardContent>
@@ -1074,17 +1074,17 @@ function ScenarioCard({ emoji, title, description, cta, image, openLogin }: { em
 
 function CapabilityCard({ icon, title, items, accent, image }: { icon: string; title: string; items: string[]; accent?: boolean; image: string }) {
   return (
-    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${accent ? 'ring-2 ring-[#C8A951]/40' : 'ring-0'} border-0`}>
+    <Card className={`rounded-2xl overflow-hidden bg-white py-0 h-full shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${accent ? 'ring-2 ring-[var(--gold)]/40' : 'ring-0'} border-0`}>
       <div className="relative h-[180px] overflow-hidden">
         <img src={image} alt="" className="w-full h-full object-cover" loading="lazy" />
       </div>
       <CardContent className="p-7 flex flex-col flex-grow">
         <div className="text-3xl mb-3">{icon}</div>
-        <h3 className={`font-bold text-xl mb-4 ${accent ? 'text-[#C8A951]' : 'text-[#1A1A1A]'}`}>{title}</h3>
+        <h3 className={`font-bold text-xl mb-4 ${accent ? 'text-[var(--gold)]' : 'text-slate-900'}`}>{title}</h3>
         <ul className="space-y-3 flex-grow">
           {items.map((item) => (
-            <li key={item} className="flex gap-2.5 text-[15px] text-[#374151] leading-snug">
-              <span className="text-[#C8A951] shrink-0 text-lg">✓</span>
+            <li key={item} className="flex gap-2.5 text-[15px] text-slate-700 leading-snug">
+              <span className="text-[var(--gold)] shrink-0 text-lg">✓</span>
               {item}
             </li>
           ))}
@@ -1098,7 +1098,7 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
 
 function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: string; role: string; avatar: string }) {
   return (
-    <Card className="rounded-2xl ring-0 bg-[#1A3478] border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.2)] transition-shadow duration-300">
+    <Card className="rounded-2xl ring-0 bg-[var(--royal)] border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.2)] transition-shadow duration-300">
       <CardContent className="p-6 flex flex-col h-full">
         <p className="text-white/90 text-sm leading-relaxed mb-4 italic flex-grow">&ldquo;{quote}&rdquo;</p>
         <div className="border-t border-white/10 pt-3 flex items-center gap-3">
@@ -1126,14 +1126,14 @@ function FaqItem({ q, a }: { q: string; a: string }) {
     <ScrollReveal delay={0}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left bg-[#FAFAFA] border border-[#E5E7EB] rounded-xl px-6 py-5 transition-all hover:bg-[#F3F4F6] cursor-pointer"
+        className="w-full text-left bg-slate-50 border border-slate-200 rounded-xl px-6 py-5 transition-all hover:bg-slate-100 cursor-pointer"
       >
         <div className="flex items-center justify-between gap-4">
-          <h3 className="text-[#1A1A1A] font-bold text-sm">{q}</h3>
-          <span className={`text-[#C8A951] text-lg transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
+          <h3 className="text-slate-900 font-bold text-sm">{q}</h3>
+          <span className={`text-[var(--gold)] text-lg transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
         </div>
         {open && (
-          <p className="text-[#4B5563] text-sm leading-relaxed mt-3 pr-8">{a}</p>
+          <p className="text-slate-600 text-sm leading-relaxed mt-3 pr-8">{a}</p>
         )}
       </button>
     </ScrollReveal>

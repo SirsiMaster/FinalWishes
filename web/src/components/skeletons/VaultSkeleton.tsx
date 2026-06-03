@@ -4,7 +4,7 @@ export function VaultSkeleton() {
   return (
     <div role="status" aria-label="Loading vault" className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
       {/* Header */}
-      <div className="flex justify-between items-end border-b border-[#133378]/10 pb-10">
+      <div className="flex justify-between items-end border-b border-[var(--royal)]/10 pb-10">
         <div className="space-y-2">
           <Skeleton className="h-12 w-72 rounded-2xl" />
           <Skeleton className="h-5 w-[400px]" />

@@ -26,7 +26,7 @@ const ROLE_OPTIONS = [
 ];
 
 const STATUS_BADGES: Record<string, { label: string; color: string; bg: string; border: string }> = {
-  pending: { label: 'Pending', color: 'text-[#C8A951]', bg: 'bg-[#C8A951]/10', border: 'border-[#C8A951]/20' },
+  pending: { label: 'Pending', color: 'text-[var(--gold)]', bg: 'bg-[var(--gold)]/10', border: 'border-[var(--gold)]/20' },
   accepted: { label: 'Active', color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-100' },
   declined: { label: 'Declined', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-100' },
   revoked: { label: 'Revoked', color: 'text-slate-400', bg: 'bg-slate-50', border: 'border-slate-100' },

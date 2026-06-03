@@ -187,15 +187,15 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
 
       {/* Legal Declaration */}
       <div className="bg-white rounded-[2.5rem] border border-royal/10 p-10 mb-8 shadow-[0_2px_20px_rgba(19,51,120,0.03)] relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-1.5 h-full bg-[#C8A951]/30" />
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-[var(--gold)]/30" />
         <div className="bg-royal/[0.02] px-8 py-5 rounded-2xl border border-royal/5 mb-6">
           <h3 className="text-royal font-black text-[10px] uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#C8A951]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
             Declaration of Identity
           </h3>
           <p className="text-royal/80 text-[15px] leading-[1.8] font-medium font-[family-name:var(--font-inter)]">
             I, <strong className="text-royal font-black">{fullName}</strong>, hereby attest under penalty of perjury 
-            that I am the individual designated as <strong className="text-[#C8A951] font-black">{roleLabel}</strong> for 
+            that I am the individual designated as <strong className="text-[var(--gold)] font-black">{roleLabel}</strong> for
             the <strong className="text-royal font-black">{estateName || '[Estate Name]'}</strong> estate managed 
             through the FinalWishes platform.
           </p>
@@ -204,19 +204,19 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
           </p>
           <ul className="text-royal/70 text-[14px] leading-[1.8] font-medium space-y-2 mt-2 pl-4">
             <li className="flex items-start gap-3">
-              <span className="text-[#C8A951] mt-1">•</span>
+              <span className="text-[var(--gold)] mt-1">•</span>
               Providing false information may result in civil and criminal penalties.
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#C8A951] mt-1">•</span>
+              <span className="text-[var(--gold)] mt-1">•</span>
               My access to this estate's documents is contingent upon the accuracy of this attestation.
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#C8A951] mt-1">•</span>
+              <span className="text-[var(--gold)] mt-1">•</span>
               This attestation will be stored as a permanent record and may be used in legal proceedings.
             </li>
             <li className="flex items-start gap-3">
-              <span className="text-[#C8A951] mt-1">•</span>
+              <span className="text-[var(--gold)] mt-1">•</span>
               The estate principal may revoke my access at any time.
             </li>
           </ul>
@@ -263,7 +263,7 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
             type="checkbox"
             checked={acknowledged}
             onChange={(e) => setAcknowledged(e.target.checked)}
-            className="mt-1 w-5 h-5 rounded border-royal/20 text-royal focus:ring-royal/30 accent-[#133378]"
+            className="mt-1 w-5 h-5 rounded border-royal/20 text-royal focus:ring-royal/30 accent-[var(--royal)]"
           />
           <span className="text-[13px] text-royal/60 font-bold leading-relaxed group-hover:text-royal transition-colors">
             I understand that this is a legally binding digital signature and that I am confirming my identity as stated above.

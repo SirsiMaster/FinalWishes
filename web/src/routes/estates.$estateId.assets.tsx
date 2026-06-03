@@ -113,7 +113,7 @@ function AssetsPage() {
         action={
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-[#334155] hover:bg-[#1E293B] text-white px-10 py-5 rounded-2xl font-bold text-[14px] shadow-lg h-auto gap-3"
+            className="bg-slate-700 hover:bg-slate-800 text-white px-10 py-5 rounded-2xl font-bold text-[14px] shadow-lg h-auto gap-3"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
             Add Asset
@@ -125,7 +125,7 @@ function AssetsPage() {
       <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden overflow-x-auto shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-[#F8FAFC] border-b border-slate-100 hover:bg-[#F8FAFC]">
+            <TableRow className="bg-slate-50 border-b border-slate-100 hover:bg-slate-50">
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-slate-400">Asset Name</TableHead>
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-slate-400">Category</TableHead>
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-slate-400">Estimated Value</TableHead>
@@ -133,33 +133,33 @@ function AssetsPage() {
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-slate-400 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="text-[14px] font-medium text-[#334155]">
+          <TableBody className="text-[14px] font-medium text-slate-700">
             {assets.map((a) => (
-              <TableRow key={a.id} className="border-b border-slate-50 hover:bg-[#F8FAFC] transition-all group">
-                <TableCell className="px-10 py-7 font-bold text-[#0F172A] text-[15px]">{a.name}</TableCell>
+              <TableRow key={a.id} className="border-b border-slate-50 hover:bg-slate-50 transition-all group">
+                <TableCell className="px-10 py-7 font-bold text-slate-900 text-[15px]">{a.name}</TableCell>
                 <TableCell className="px-10 py-7">
-                  <Badge variant="secondary" className="px-4 py-1.5 bg-[#F1F5F9] text-[#334155] font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">
+                  <Badge variant="secondary" className="px-4 py-1.5 bg-slate-100 text-slate-700 font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">
                     {a.category}
                   </Badge>
                 </TableCell>
-                <TableCell className="px-10 py-7 font-bold text-[#0F172A] text-lg tabular-nums">{a.estimatedValue ? `$${a.estimatedValue.toLocaleString()}` : '---'}</TableCell>
+                <TableCell className="px-10 py-7 font-bold text-slate-900 text-lg tabular-nums">{a.estimatedValue ? `$${a.estimatedValue.toLocaleString()}` : '---'}</TableCell>
                 <TableCell className="px-10 py-7 text-center">
                   <Badge
                     variant={a.status === 'active' ? 'default' : 'secondary'}
                     className={`gap-2 px-3 py-1 h-auto ${
                       a.status === 'active'
                         ? 'bg-green-50 text-green-600 border-green-200'
-                        : 'bg-[#133378]/5 text-[#133378] border-[#133378]/20'
+                        : 'bg-[var(--royal)]/5 text-[var(--royal)] border-[var(--royal)]/20'
                     }`}
                   >
-                    <div className={`w-2 h-2 rounded-full ${a.status === 'active' ? 'bg-green-500' : 'bg-[#133378] animate-pulse'}`} />
+                    <div className={`w-2 h-2 rounded-full ${a.status === 'active' ? 'bg-green-500' : 'bg-[var(--royal)] animate-pulse'}`} />
                     <span className="text-[11px] uppercase font-bold tracking-widest">
                       {a.status}
                     </span>
                   </Badge>
                 </TableCell>
                 <TableCell className="px-10 py-7 text-right">
-                  <Button variant="outline" onClick={() => setEditingAsset(a)} className="text-[#133378] font-bold text-[12px] bg-[#F8FAFC] hover:bg-[#133378] hover:text-white px-5 py-2.5 rounded-xl border border-slate-100 h-auto">
+                  <Button variant="outline" onClick={() => setEditingAsset(a)} className="text-[var(--royal)] font-bold text-[12px] bg-slate-50 hover:bg-[var(--royal)] hover:text-white px-5 py-2.5 rounded-xl border border-slate-100 h-auto">
                     View Details
                   </Button>
                 </TableCell>
@@ -181,7 +181,7 @@ function AssetsPage() {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-slate-100 shadow-2xl">
           <DialogHeader className="space-y-3 mb-12">
-            <DialogTitle className="text-3xl font-bold text-[#0F172A] tracking-tight">Add New Asset</DialogTitle>
+            <DialogTitle className="text-3xl font-bold text-slate-900 tracking-tight">Add New Asset</DialogTitle>
             <DialogDescription className="text-slate-500 font-medium text-sm">
               Enter the details for a new asset entry in your estate ledger.
             </DialogDescription>
@@ -201,14 +201,14 @@ function AssetsPage() {
                 id="asset-name"
                 name="name"
                 required
-                className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-lg h-auto"
+                className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-slate-900 placeholder:text-slate-300 text-lg h-auto"
                 placeholder="e.g. Chase Savings Account"
               />
             </div>
             <div className="space-y-3">
               <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-1">Asset Category</Label>
               <Select value={assetCategory} onValueChange={setAssetCategory}>
-                <SelectTrigger className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] font-bold text-[#0F172A] text-lg h-auto">
+                <SelectTrigger className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] font-bold text-slate-900 text-lg h-auto">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -229,7 +229,7 @@ function AssetsPage() {
                 id="asset-value"
                 name="value"
                 required
-                className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-lg h-auto"
+                className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-slate-900 placeholder:text-slate-300 text-lg h-auto"
                 placeholder="e.g. $125,000"
               />
             </div>
@@ -245,7 +245,7 @@ function AssetsPage() {
               <Button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm hover:bg-[#1E3A5F] shadow-xl h-auto"
+                className="flex-1 py-5 rounded-2xl bg-[var(--royal)] text-white font-bold text-sm hover:bg-[var(--royal-blue)] shadow-xl h-auto"
               >
                 {saving ? 'Saving...' : 'Add to Ledger'}
               </Button>
@@ -258,7 +258,7 @@ function AssetsPage() {
       <Dialog open={editingAsset !== null} onOpenChange={(open) => { if (!open) { setEditingAsset(null); setConfirmArchive(false); } }}>
         <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-slate-100 shadow-2xl">
           <DialogHeader className="space-y-3 mb-12">
-            <DialogTitle className="text-3xl font-bold text-[#0F172A] tracking-tight font-[family-name:var(--font-cinzel)]">Edit Asset</DialogTitle>
+            <DialogTitle className="text-3xl font-bold text-slate-900 tracking-tight font-[family-name:var(--font-cinzel)]">Edit Asset</DialogTitle>
             <DialogDescription className="text-slate-500 font-medium text-sm">
               Update the details for this asset or archive it from your estate ledger.
             </DialogDescription>
@@ -281,7 +281,7 @@ function AssetsPage() {
                   name="edit-name"
                   required
                   defaultValue={editingAsset.name}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-lg h-auto"
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-slate-900 placeholder:text-slate-300 text-lg h-auto"
                 />
               </div>
               <div className="space-y-3">
@@ -290,7 +290,7 @@ function AssetsPage() {
                   id="edit-asset-category"
                   name="edit-category"
                   defaultValue={editingAsset.category}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] font-bold text-[#0F172A] text-lg h-auto appearance-none"
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] font-bold text-slate-900 text-lg h-auto appearance-none"
                 >
                   <option value="Real Estate">Real Estate</option>
                   <option value="Cash">Cash / Savings</option>
@@ -309,7 +309,7 @@ function AssetsPage() {
                   name="edit-value"
                   required
                   defaultValue={editingAsset.estimatedValue ? `$${editingAsset.estimatedValue.toLocaleString()}` : ''}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-lg h-auto"
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-slate-900 placeholder:text-slate-300 text-lg h-auto"
                   placeholder="e.g. $125,000"
                 />
               </div>
@@ -320,7 +320,7 @@ function AssetsPage() {
                   name="edit-description"
                   defaultValue={editingAsset.description || ''}
                   rows={3}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#133378] focus:ring-8 focus:ring-[#133378]/5 outline-none font-bold text-[#0F172A] placeholder:text-slate-300 text-base resize-none"
+                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-slate-900 placeholder:text-slate-300 text-base resize-none"
                   placeholder="Optional notes about this asset"
                 />
               </div>
@@ -357,7 +357,7 @@ function AssetsPage() {
                 <Button
                   type="submit"
                   disabled={editSaving}
-                  className="py-5 rounded-2xl bg-[#133378] text-white font-bold text-sm hover:bg-[#1E3A5F] shadow-xl h-auto px-10"
+                  className="py-5 rounded-2xl bg-[var(--royal)] text-white font-bold text-sm hover:bg-[var(--royal-blue)] shadow-xl h-auto px-10"
                 >
                   {editSaving ? 'Saving...' : 'Save Changes'}
                 </Button>
@@ -405,8 +405,8 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
     <div className="mt-8 space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-[#0F172A]">Probate Avoidance</h2>
-          <p className="text-sm text-[#0F172A]/60">
+          <h2 className="text-lg font-bold text-slate-900">Probate Avoidance</h2>
+          <p className="text-sm text-slate-900/60">
             {completedCount} of {assetRecommendations.length} assets have beneficiary designations &middot; Assets with designations skip probate
           </p>
         </div>
@@ -421,15 +421,15 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
             <div
               key={asset.id}
               className={`flex items-center justify-between p-4 rounded-xl border transition-colors ${
-                isComplete ? 'bg-green-50/50 border-green-200/50' : 'bg-white border-slate-100 hover:border-[#7C2D12]/20'
+                isComplete ? 'bg-green-50/50 border-green-200/50' : 'bg-white border-slate-100 hover:border-[var(--gold)]/20'
               }`}
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <span className={`font-medium text-sm ${isComplete ? 'text-green-700' : 'text-[#0F172A]'}`}>
+                  <span className={`font-medium text-sm ${isComplete ? 'text-green-700' : 'text-slate-900'}`}>
                     {asset.name}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#0F172A]/5 text-[#0F172A]/50">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-900/5 text-slate-900/50">
                     {asset.category}
                   </span>
                   {isComplete && (
@@ -438,7 +438,7 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-[#0F172A]/50 mt-0.5">
+                <p className="text-xs text-slate-900/50 mt-0.5">
                   Recommended: <span className="font-medium">{tool.name}</span>
                   {tool.formNumber && ` (${tool.formNumber})`}
                 </p>
@@ -449,7 +449,7 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
                     href={tool.formUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-[#133378] hover:underline"
+                    className="text-xs text-[var(--royal)] hover:underline"
                   >
                     Form
                   </a>
@@ -467,7 +467,7 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
                         toast.error('Failed to update')
                       }
                     }}
-                    className="bg-[#7C2D12] hover:bg-[#7C2D12]/90 text-white text-xs h-7"
+                    className="bg-[var(--gold)] hover:bg-[var(--gold)]/90 text-white text-xs h-7"
                   >
                     Mark Designated
                   </Button>
@@ -494,7 +494,7 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
         })}
       </div>
 
-      <p className="text-[10px] text-[#0F172A]/40 text-center">
+      <p className="text-[10px] text-slate-900/40 text-center">
         Assets with beneficiary designations transfer directly to named beneficiaries without probate.
       </p>
     </div>

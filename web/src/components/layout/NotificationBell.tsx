@@ -36,7 +36,7 @@ interface NotificationBellProps {
 }
 
 const typeColors: Record<string, string> = {
-  security: 'bg-[#133378]/10 text-[#133378]',
+  security: 'bg-[var(--royal)]/10 text-[var(--royal)]',
   activity: 'bg-blue-50 text-blue-600',
   success: 'bg-green-50 text-green-600',
   warning: 'bg-amber-50 text-amber-600',
@@ -71,14 +71,14 @@ function NotificationRow({
       onSelect={handleClick}
     >
       <div className="flex items-center gap-2 w-full">
-        <span className="text-[13px] font-bold text-[#0F172A] truncate flex-1">
+        <span className="text-[13px] font-bold text-slate-900 truncate flex-1">
           {notification.title || 'Activity'}
         </span>
         <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${colors}`}>
           {notification.type || 'activity'}
         </span>
       </div>
-      <span className="text-[11px] text-[#64748B] font-medium">
+      <span className="text-[11px] text-slate-500 font-medium">
         {timeAgo(createdDate)}
       </span>
     </DropdownMenuItem>
@@ -135,13 +135,13 @@ export function NotificationBell({ estateId }: NotificationBellProps) {
 
       <DropdownMenuContent align="end" className="w-80">
         <DropdownMenuLabel className="flex items-center justify-between px-3 py-2">
-          <span className="text-xs font-black uppercase tracking-widest text-[#133378]">
+          <span className="text-xs font-black uppercase tracking-widest text-[var(--royal)]">
             Notifications
           </span>
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAllRead}
-              className="text-[10px] font-bold text-[#133378] hover:underline uppercase tracking-wider"
+              className="text-[10px] font-bold text-[var(--royal)] hover:underline uppercase tracking-wider"
             >
               Mark all read
             </button>
@@ -152,13 +152,13 @@ export function NotificationBell({ estateId }: NotificationBellProps) {
 
         {loading && (
           <div className="px-3 py-6 text-center">
-            <span className="text-[12px] text-[#64748B] font-medium">Loading...</span>
+            <span className="text-[12px] text-slate-500 font-medium">Loading...</span>
           </div>
         )}
 
         {!loading && unreadCount === 0 && (
           <div className="px-3 py-6 text-center">
-            <span className="text-[12px] text-[#64748B] font-medium">No unread notifications</span>
+            <span className="text-[12px] text-slate-500 font-medium">No unread notifications</span>
           </div>
         )}
 
@@ -177,7 +177,7 @@ export function NotificationBell({ estateId }: NotificationBellProps) {
           className="justify-center py-2.5 cursor-pointer"
           onSelect={handleViewAll}
         >
-          <span className="text-[11px] font-bold text-[#133378] uppercase tracking-widest">
+          <span className="text-[11px] font-bold text-[var(--royal)] uppercase tracking-widest">
             View All Activity
           </span>
         </DropdownMenuItem>

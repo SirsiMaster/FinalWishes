@@ -49,11 +49,11 @@ interface ShepherdNudgeProps {
 
 export function ShepherdNudge({ message, ctaLabel, ctaRoute, onDismiss }: ShepherdNudgeProps) {
   return (
-    <Card className="rounded-2xl border-[#C8A951]/25 bg-gradient-to-r from-[#FFFBEB] to-[#FEF9E7] shadow-sm overflow-hidden">
+    <Card className="rounded-2xl border-[var(--gold)]/25 bg-gradient-to-r from-[var(--gold-dim)] to-[var(--gold-dim)] shadow-sm overflow-hidden">
       <CardContent className="px-5 py-4 flex items-start gap-3">
         {/* Shepherd compass icon */}
-        <div className="w-8 h-8 rounded-xl bg-[#C8A951]/12 flex items-center justify-center flex-shrink-0 mt-0.5">
-          <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <div className="w-8 h-8 rounded-xl bg-[var(--gold)]/12 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="1.5">
             <circle cx="12" cy="12" r="10" />
             <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
           </svg>
@@ -61,11 +61,11 @@ export function ShepherdNudge({ message, ctaLabel, ctaRoute, onDismiss }: Shephe
 
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
-          <p className="text-[13px] text-[#0F172A]/80 leading-relaxed font-medium">
+          <p className="text-[13px] text-slate-900/80 leading-relaxed font-medium">
             {message}
           </p>
           {ctaLabel && ctaRoute && (
-            <Button asChild variant="ghost" size="sm" className="text-[#C8A951] hover:text-[#B8952F] hover:bg-[#C8A951]/10 -ml-3 font-semibold text-xs h-7 px-3">
+            <Button asChild variant="ghost" size="sm" className="text-[var(--gold)] hover:text-[var(--gold)] hover:bg-[var(--gold)]/10 -ml-3 font-semibold text-xs h-7 px-3">
               <Link to={ctaRoute as '/'}>
                 {ctaLabel}
               </Link>
@@ -76,7 +76,7 @@ export function ShepherdNudge({ message, ctaLabel, ctaRoute, onDismiss }: Shephe
         {/* Dismiss button */}
         <button
           onClick={onDismiss}
-          className="w-6 h-6 rounded-lg flex items-center justify-center text-[#C8A951]/40 hover:text-[#C8A951] hover:bg-[#C8A951]/10 transition-colors flex-shrink-0"
+          className="w-6 h-6 rounded-lg flex items-center justify-center text-[var(--gold)]/40 hover:text-[var(--gold)] hover:bg-[var(--gold)]/10 transition-colors flex-shrink-0"
           aria-label="Dismiss nudge"
         >
           <X className="w-3.5 h-3.5" />

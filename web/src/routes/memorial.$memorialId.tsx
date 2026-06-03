@@ -69,10 +69,10 @@ function PublicMemorialPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FDF8F0] via-[#FEFCF9] to-white">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[var(--gold-dim)] via-[var(--gold-dim)] to-white">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#C8A951]/30 border-t-[#C8A951] rounded-full animate-spin" />
-          <p className="text-sm text-[#8B7A5E]/60 font-medium">Loading memorial...</p>
+          <div className="w-10 h-10 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
+          <p className="text-sm text-slate-500/60 font-medium">Loading memorial...</p>
         </div>
       </div>
     )
@@ -80,15 +80,15 @@ function PublicMemorialPage() {
 
   if (notFound || !memorial) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FDF8F0] via-[#FEFCF9] to-white">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[var(--gold-dim)] via-[var(--gold-dim)] to-white">
         <div className="text-center max-w-md px-6">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#C8A951]/10 flex items-center justify-center mb-6">
-            <Heart className="w-7 h-7 text-[#C8A951]/40" />
+          <div className="w-16 h-16 mx-auto rounded-full bg-[var(--gold)]/10 flex items-center justify-center mb-6">
+            <Heart className="w-7 h-7 text-[var(--gold)]/40" />
           </div>
-          <h1 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#2C1810] mb-3">
+          <h1 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3">
             Memorial Not Found
           </h1>
-          <p className="text-[#8B7A5E]/60 leading-relaxed">
+          <p className="text-slate-500/60 leading-relaxed">
             This memorial page may have been removed or the link is no longer valid.
           </p>
         </div>
@@ -107,7 +107,7 @@ function PublicMemorialPage() {
   const dateSpan = [memorial.birthDate, memorial.deathDate].filter(Boolean).join(' \u2014 ')
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FDF8F0] via-[#FEFCF9] to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[var(--gold-dim)] via-[var(--gold-dim)] to-white">
       <div className="max-w-2xl mx-auto px-5 py-12 md:py-20">
 
         {/* Portrait */}
@@ -122,28 +122,28 @@ function PublicMemorialPage() {
                 />
               </div>
             ) : (
-              <div className="w-36 h-36 mx-auto rounded-full bg-gradient-to-br from-[#C8A951]/20 to-[#C8A951]/5 border-4 border-white shadow-[0_8px_40px_rgba(200,169,81,0.12)] flex items-center justify-center">
-                <span className="text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[#C8A951]/70">
+              <div className="w-36 h-36 mx-auto rounded-full bg-gradient-to-br from-[var(--gold)]/20 to-[var(--gold)]/5 border-4 border-white shadow-[0_8px_40px_rgba(200,169,81,0.12)] flex items-center justify-center">
+                <span className="text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--gold)]/70">
                   {initials}
                 </span>
               </div>
             )}
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-[#2C1810] tracking-tight mb-3">
+          <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 tracking-tight mb-3">
             {memorial.personName}
           </h1>
 
           {dateSpan && (
-            <p className="text-lg text-[#8B7A5E]/70 font-light tracking-wide">
+            <p className="text-lg text-slate-500/70 font-light tracking-wide">
               {dateSpan}
             </p>
           )}
 
           <div className="flex items-center justify-center gap-3 mt-8">
-            <div className="w-12 h-px bg-[#C8A951]/20" />
-            <Heart className="w-4 h-4 text-[#C8A951]/30" />
-            <div className="w-12 h-px bg-[#C8A951]/20" />
+            <div className="w-12 h-px bg-[var(--gold)]/20" />
+            <Heart className="w-4 h-4 text-[var(--gold)]/30" />
+            <div className="w-12 h-px bg-[var(--gold)]/20" />
           </div>
         </section>
 
@@ -153,7 +153,7 @@ function PublicMemorialPage() {
             <Card className="rounded-3xl border-0 shadow-[0_4px_24px_rgba(200,169,81,0.08)] bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8 md:p-12">
                 <div
-                  className="text-[#5C4A3A] text-[16px] leading-[1.85] font-light prose prose-sm max-w-none"
+                  className="text-slate-700 text-[16px] leading-[1.85] font-light prose prose-sm max-w-none"
                   dangerouslySetInnerHTML={{ __html: sanitizedObituary }}
                 />
               </CardContent>
@@ -165,8 +165,8 @@ function PublicMemorialPage() {
         {memorial.serviceDetails && (memorial.serviceDetails.date || memorial.serviceDetails.location) && (
           <section className="mb-16">
             <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-4 h-4 text-[#C8A951]/50" />
-              <h2 className="text-sm font-bold text-[#8B7A5E]/50 uppercase tracking-[0.15em]">
+              <Calendar className="w-4 h-4 text-[var(--gold)]/50" />
+              <h2 className="text-sm font-bold text-slate-500/50 uppercase tracking-[0.15em]">
                 Service Information
               </h2>
             </div>
@@ -174,37 +174,37 @@ function PublicMemorialPage() {
             <Card className="rounded-3xl border-0 shadow-[0_4px_24px_rgba(200,169,81,0.08)] bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8 md:p-10 space-y-4">
                 {memorial.serviceDetails.type && (
-                  <p className="text-sm font-semibold text-[#2C1810] uppercase tracking-wide">
+                  <p className="text-sm font-semibold text-slate-900 uppercase tracking-wide">
                     {memorial.serviceDetails.type}
                   </p>
                 )}
                 {memorial.serviceDetails.date && (
-                  <div className="flex items-center gap-3 text-[#5C4A3A]">
-                    <Calendar className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-slate-700">
+                    <Calendar className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
                     <span className="text-[15px]">{memorial.serviceDetails.date}</span>
                   </div>
                 )}
                 {memorial.serviceDetails.time && (
-                  <div className="flex items-center gap-3 text-[#5C4A3A]">
-                    <Clock className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-slate-700">
+                    <Clock className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
                     <span className="text-[15px]">{memorial.serviceDetails.time}</span>
                   </div>
                 )}
                 {memorial.serviceDetails.location && (
-                  <div className="flex items-center gap-3 text-[#5C4A3A]">
-                    <MapPin className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-slate-700">
+                    <MapPin className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
                     <div>
                       <span className="text-[15px]">{memorial.serviceDetails.location}</span>
                       {memorial.serviceDetails.address && (
-                        <p className="text-sm text-[#8B7A5E]/60 mt-0.5">{memorial.serviceDetails.address}</p>
+                        <p className="text-sm text-slate-500/60 mt-0.5">{memorial.serviceDetails.address}</p>
                       )}
                     </div>
                   </div>
                 )}
                 {memorial.serviceDetails.notes && (
                   <>
-                    <Separator className="bg-[#C8A951]/10" />
-                    <p className="text-sm text-[#5C4A3A]/70 leading-relaxed italic">
+                    <Separator className="bg-[var(--gold)]/10" />
+                    <p className="text-sm text-slate-700/70 leading-relaxed italic">
                       {memorial.serviceDetails.notes}
                     </p>
                   </>
@@ -216,14 +216,14 @@ function PublicMemorialPage() {
 
         {/* Footer */}
         <section className="text-center pt-8 pb-16">
-          <Separator className="bg-[#C8A951]/10 mb-10" />
-          <p className="text-xs text-[#8B7A5E]/40 mb-4">
+          <Separator className="bg-[var(--gold)]/10 mb-10" />
+          <p className="text-xs text-slate-500/40 mb-4">
             This memorial was created with love using FinalWishes.
           </p>
           <Button
             asChild
             variant="ghost"
-            className="text-xs text-[#C8A951]/60 hover:text-[#C8A951] hover:bg-[#C8A951]/5 rounded-xl"
+            className="text-xs text-[var(--gold)]/60 hover:text-[var(--gold)] hover:bg-[var(--gold)]/5 rounded-xl"
           >
             <a href="/" target="_blank" rel="noopener noreferrer">
               <ExternalLink className="w-3 h-3" />

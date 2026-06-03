@@ -38,7 +38,7 @@ function FormsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-24 text-[#133378]">
+      <div className="flex items-center justify-center py-24 text-[var(--royal)]">
         <Loader2 className="w-6 h-6 animate-spin" />
       </div>
     );
@@ -63,10 +63,10 @@ function FormsPage() {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       <header className="space-y-2">
-        <h1 className="font-[Cinzel] text-2xl tracking-wide text-[#133378] uppercase flex items-center gap-2">
-          <FileText className="w-6 h-6 text-[#C8A951]" /> Statutory Forms
+        <h1 className="font-[Cinzel] text-2xl tracking-wide text-[var(--royal)] uppercase flex items-center gap-2">
+          <FileText className="w-6 h-6 text-[var(--gold)]" /> Statutory Forms
         </h1>
-        <p className="text-sm text-[#133378]/80">
+        <p className="text-sm text-[var(--royal)]/80">
           Generate print-ready Illinois statutory documents pre-filled with your information.
           Signature, witness, and notary lines are intentionally left blank — these documents
           are signed by hand (and notarized where required).
@@ -77,17 +77,17 @@ function FormsPage() {
         {forms.map((form) => (
           <Card
             key={form.formId}
-            className="cursor-pointer transition-shadow hover:shadow-md border-[#C8A951]/30"
+            className="cursor-pointer transition-shadow hover:shadow-md border-[var(--gold)]/30"
             onClick={() => setSelected(form)}
           >
             <CardContent className="p-5 space-y-2">
               <div className="flex items-start justify-between gap-2">
-                <h2 className="font-medium text-[#133378] leading-snug">{form.title}</h2>
-                <Badge variant="outline" className="shrink-0 border-[#133378]/30 text-[#133378]">
+                <h2 className="font-medium text-[var(--royal)] leading-snug">{form.title}</h2>
+                <Badge variant="outline" className="shrink-0 border-[var(--royal)]/30 text-[var(--royal)]">
                   {form.jurisdiction}
                 </Badge>
               </div>
-              <p className="text-xs text-[#133378]/60">{form.citation}</p>
+              <p className="text-xs text-[var(--royal)]/60">{form.citation}</p>
             </CardContent>
           </Card>
         ))}
@@ -130,23 +130,23 @@ function FillForm({ form, onBack }: { form: FormSchema; onBack: () => void }) {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <button
         onClick={onBack}
-        className="inline-flex items-center gap-1 text-sm text-[#133378]/70 hover:text-[#133378]"
+        className="inline-flex items-center gap-1 text-sm text-[var(--royal)]/70 hover:text-[var(--royal)]"
       >
         <ArrowLeft className="w-4 h-4" /> All forms
       </button>
 
       <header className="space-y-1">
-        <h1 className="font-[Cinzel] text-xl tracking-wide text-[#133378]">{form.title}</h1>
-        <p className="text-xs text-[#133378]/60">{form.citation}</p>
+        <h1 className="font-[Cinzel] text-xl tracking-wide text-[var(--royal)]">{form.title}</h1>
+        <p className="text-xs text-[var(--royal)]/60">{form.citation}</p>
       </header>
 
-      <Card className="border-[#C8A951]/30">
+      <Card className="border-[var(--gold)]/30">
         <CardContent className="p-5 space-y-4">
           {fields.map((field) => (
             <div key={field.key} className="space-y-1.5">
-              <Label htmlFor={field.key} className="text-[#133378]">
+              <Label htmlFor={field.key} className="text-[var(--royal)]">
                 {field.label || field.key}
-                {field.required && <span className="text-[#C8A951] ml-1">*</span>}
+                {field.required && <span className="text-[var(--gold)] ml-1">*</span>}
               </Label>
               <Input
                 id={field.key}
@@ -159,15 +159,15 @@ function FillForm({ form, onBack }: { form: FormSchema; onBack: () => void }) {
         </CardContent>
       </Card>
 
-      <div className="flex items-center gap-2 text-xs text-[#133378]/70">
-        <ShieldCheck className="w-4 h-4 text-[#C8A951]" />
+      <div className="flex items-center gap-2 text-xs text-[var(--royal)]/70">
+        <ShieldCheck className="w-4 h-4 text-[var(--gold)]" />
         Signature, witness, and notary lines are never auto-filled — sign the printed form by hand.
       </div>
 
       <Button
         onClick={generate}
         disabled={generating}
-        className="w-full bg-[#133378] hover:bg-[#0f285f] text-white"
+        className="w-full bg-[var(--royal)] hover:bg-[var(--royal)] text-white"
       >
         {generating ? (
           <Loader2 className="w-4 h-4 animate-spin" />

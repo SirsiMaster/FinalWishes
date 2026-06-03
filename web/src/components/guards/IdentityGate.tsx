@@ -150,8 +150,8 @@ function IdentityGateInner({ estateId, children, user, profile, emailVerified, r
     return (
       <div className="max-w-2xl mx-auto py-12 px-6">
         <div className="text-center mb-12">
-          <div className="w-20 h-20 bg-[#C8A951]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[#C8A951]/20">
-            <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <div className="w-20 h-20 bg-[var(--gold)]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[var(--gold)]/20">
+            <svg viewBox="0 0 24 24" className="w-10 h-10 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               <path d="M9 12l2 2 4-4" />
             </svg>
@@ -197,8 +197,8 @@ function IdentityGateInner({ estateId, children, user, profile, emailVerified, r
   return (
     <div className="max-w-2xl mx-auto py-12 px-6">
       <div className="text-center mb-12">
-        <div className="w-20 h-20 bg-[#C8A951]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[#C8A951]/20">
-          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <div className="w-20 h-20 bg-[var(--gold)]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[var(--gold)]/20">
+          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             <path d="M9 12l2 2 4-4" />
           </svg>
@@ -207,7 +207,7 @@ function IdentityGateInner({ estateId, children, user, profile, emailVerified, r
           Identity Verification Required
         </h2>
         <p className="text-royal/40 font-bold text-[13px] uppercase tracking-widest max-w-md mx-auto leading-relaxed">
-          As a designated <span className="text-[#C8A951]">{profile?.role}</span> for this estate, you must complete identity verification before accessing estate documents.
+          As a designated <span className="text-[var(--gold)]">{profile?.role}</span> for this estate, you must complete identity verification before accessing estate documents.
         </p>
       </div>
 
@@ -250,20 +250,20 @@ function IdentityGateInner({ estateId, children, user, profile, emailVerified, r
 function MFAGraceBanner() {
   return (
     <div className="mb-6 mx-auto max-w-4xl">
-      <div className="flex items-center justify-between gap-4 px-6 py-4 bg-[#C8A951]/10 border border-[#C8A951]/20 rounded-2xl">
+      <div className="flex items-center justify-between gap-4 px-6 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-2xl">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#C8A951]/20 rounded-lg flex items-center justify-center shrink-0">
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+          <div className="w-8 h-8 bg-[var(--gold)]/20 rounded-lg flex items-center justify-center shrink-0">
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
-          <p className="text-[13px] font-bold text-[#0F172A]">
+          <p className="text-[13px] font-bold text-slate-900">
             Secure your account with two-factor authentication
           </p>
         </div>
         <a
           href="/dashboard/settings"
-          className="px-5 py-2 rounded-xl bg-[#C8A951] hover:bg-[#b8993f] text-white font-bold text-[11px] uppercase tracking-widest shadow-sm transition-all active:scale-[0.98] inline-block no-underline shrink-0"
+          className="px-5 py-2 rounded-xl bg-[var(--gold)] hover:bg-[var(--gold)] text-white font-bold text-[11px] uppercase tracking-widest shadow-sm transition-all active:scale-[0.98] inline-block no-underline shrink-0"
         >
           Enroll Now
         </a>
@@ -393,24 +393,24 @@ function EmailVerificationGate({
   return (
     <div className="max-w-2xl mx-auto py-12 px-6">
       <div className="text-center mb-12">
-        <div className="w-20 h-20 bg-[#C8A951]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[#C8A951]/20">
-          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <div className="w-20 h-20 bg-[var(--gold)]/10 rounded-[2rem] flex items-center justify-center mx-auto mb-6 border border-[var(--gold)]/20">
+          <svg viewBox="0 0 24 24" className="w-10 h-10 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="1.5">
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="M22 7l-10 7L2 7" />
           </svg>
         </div>
-        <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-[#133378] uppercase tracking-tight mb-3">
+        <h2 className="text-3xl font-[family-name:var(--font-cinzel)] font-black text-[var(--royal)] uppercase tracking-tight mb-3">
           Verify Your Email
         </h2>
-        <p className="text-[#133378]/40 font-bold text-[13px] uppercase tracking-widest max-w-md mx-auto leading-relaxed">
+        <p className="text-[var(--royal)]/40 font-bold text-[13px] uppercase tracking-widest max-w-md mx-auto leading-relaxed">
           We sent a verification link to{' '}
-          <span className="text-[#C8A951]">{user.email}</span>.
+          <span className="text-[var(--gold)]">{user.email}</span>.
           Please check your inbox and click the link to continue.
         </p>
       </div>
 
-      <div className="bg-white rounded-[2.5rem] border border-[#133378]/10 p-8 text-center space-y-6">
-        <p className="text-[#64748B] text-sm leading-relaxed">
+      <div className="bg-white rounded-[2.5rem] border border-[var(--royal)]/10 p-8 text-center space-y-6">
+        <p className="text-slate-500 text-sm leading-relaxed">
           Email verification protects your estate by ensuring only you can access your account.
           Check your spam folder if you don't see the email.
         </p>
@@ -419,7 +419,7 @@ function EmailVerificationGate({
           <Button
             onClick={handleResend}
             disabled={sending || sent}
-            className="bg-[#C8A951] hover:bg-[#B89941] text-white px-6 py-3 h-auto rounded-2xl font-bold text-sm"
+            className="bg-[var(--gold)] hover:bg-[var(--gold)] text-white px-6 py-3 h-auto rounded-2xl font-bold text-sm"
           >
             {sending ? (
               <span className="flex items-center gap-2">
@@ -438,15 +438,15 @@ function EmailVerificationGate({
             onClick={handleCheckAgain}
             disabled={checking}
             variant="outline"
-            className="border-[#133378]/20 text-[#133378] px-6 py-3 h-auto rounded-2xl font-bold text-sm hover:bg-[#133378]/5"
+            className="border-[var(--royal)]/20 text-[var(--royal)] px-6 py-3 h-auto rounded-2xl font-bold text-sm hover:bg-[var(--royal)]/5"
           >
             {checking ? 'Checking...' : 'I\'ve Verified — Continue'}
           </Button>
         </div>
       </div>
 
-      <div className="mt-12 p-8 bg-[#133378]/[0.02] rounded-[2.5rem] border border-[#133378]/5 text-center">
-        <p className="text-[10px] font-black text-[#133378]/20 uppercase tracking-[0.3em] leading-relaxed">
+      <div className="mt-12 p-8 bg-[var(--royal)]/[0.02] rounded-[2.5rem] border border-[var(--royal)]/5 text-center">
+        <p className="text-[10px] font-black text-[var(--royal)]/20 uppercase tracking-[0.3em] leading-relaxed">
           Your data is protected with AES-256 encryption<br />
           and enterprise-grade security infrastructure.
         </p>

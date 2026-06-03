@@ -88,7 +88,7 @@ const DELIVERY_TYPES = [
     label: 'Scheduled Date',
     description: 'Deliver on a specific future date',
     icon: Calendar,
-    color: '#133378',
+    color: 'var(--royal)',
     previewTemplate: (name: string, date?: string) =>
       `This letter will be delivered to ${name} on ${date}`,
   },
@@ -97,7 +97,7 @@ const DELIVERY_TYPES = [
     label: 'Upon Passing',
     description: 'Deliver when estate reports a death event',
     icon: Heart,
-    color: '#7C3AED',
+    color: 'var(--gold)',
     previewTemplate: (name: string) =>
       `This letter will be delivered to ${name} when the time comes`,
   },
@@ -106,7 +106,7 @@ const DELIVERY_TYPES = [
     label: 'Upon Settlement',
     description: 'Deliver when the estate is fully settled',
     icon: FileText,
-    color: '#C8A951',
+    color: 'var(--gold)',
     previewTemplate: (name: string) =>
       `This letter will be delivered to ${name} when the estate enters settlement`,
   },
@@ -129,9 +129,9 @@ function SealedBadge() {
   return (
     <Badge
       variant="outline"
-      className="gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg h-auto border-[#C8A951]/40 bg-[#C8A951]/10 text-[#C8A951]"
+      className="gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg h-auto border-[var(--gold)]/40 bg-[var(--gold)]/10 text-[var(--gold)]"
     >
-      <div className="w-3 h-3 rounded-full bg-[#C8A951] flex items-center justify-center">
+      <div className="w-3 h-3 rounded-full bg-[var(--gold)] flex items-center justify-center">
         <span className="text-[6px] font-black text-white leading-none">FW</span>
       </div>
       Sealed
@@ -145,7 +145,7 @@ function StatusBadge({ status }: { status: TimeCapsule['status'] }) {
   if (status === 'pending') return <SealedBadge />
 
   const config = {
-    pending: { label: 'Pending', className: 'bg-[#133378]/5 text-[#133378] border-[#133378]/10', Icon: Hourglass },
+    pending: { label: 'Pending', className: 'bg-[var(--royal)]/5 text-[var(--royal)] border-[var(--royal)]/10', Icon: Hourglass },
     delivered: { label: 'Delivered', className: 'bg-green-50 text-green-600 border-green-200', Icon: CheckCircle2 },
     cancelled: { label: 'Cancelled', className: 'bg-slate-50 text-slate-400 border-slate-200', Icon: XCircle },
   }
@@ -183,7 +183,7 @@ function DeliveryPreview({ capsule }: { capsule: TimeCapsule }) {
   const previewText = cfg.previewTemplate(capsule.recipientName, dateLabel)
 
   return (
-    <div className="flex items-center gap-2.5 text-[12px] text-[#64748B] leading-snug">
+    <div className="flex items-center gap-2.5 text-[12px] text-slate-500 leading-snug">
       <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: cfg.color }} />
       <span className="italic">{previewText}</span>
     </div>
@@ -207,18 +207,18 @@ function VoiceMemoCard({ url }: { url: string }) {
   }, [playing])
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-xl bg-[#FFFDF8] border border-[#C8A951]/20">
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--gold-dim)] border border-[var(--gold)]/20">
       <audio ref={audioRef} src={url} onEnded={() => setPlaying(false)} />
       <Button
         type="button"
         variant="ghost"
         size="icon"
         onClick={toggle}
-        className="w-8 h-8 rounded-full bg-[#C8A951]/10 text-[#C8A951] hover:bg-[#C8A951]/20 hover:text-[#C8A951]"
+        className="w-8 h-8 rounded-full bg-[var(--gold)]/10 text-[var(--gold)] hover:bg-[var(--gold)]/20 hover:text-[var(--gold)]"
       >
         {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
       </Button>
-      <span className="text-[12px] font-medium text-[#64748B]">Voice message attached</span>
+      <span className="text-[12px] font-medium text-slate-500">Voice message attached</span>
     </div>
   )
 }
@@ -239,7 +239,7 @@ function CapsuleCard({
     <Card
       className="rounded-[2rem] shadow-sm hover:shadow-xl transition-all group py-0"
       style={{
-        background: '#FFFDF8',
+        background: 'var(--gold-dim)',
         borderColor: isSealed ? 'rgba(200, 169, 81, 0.3)' : 'rgba(19, 51, 120, 0.1)',
         borderWidth: '1px',
       }}
@@ -247,9 +247,9 @@ function CapsuleCard({
       {/* Card Header */}
       <CardHeader className="p-8 pb-0">
         <CardTitle className="text-lg tracking-tight leading-snug">
-          <span className="text-[13px] font-medium text-[#64748B]">For</span>
+          <span className="text-[13px] font-medium text-slate-500">For</span>
           <br />
-          <span className="font-bold text-[#0F172A] group-hover:text-[#133378] transition-colors">
+          <span className="font-bold text-slate-900 group-hover:text-[var(--royal)] transition-colors">
             {capsule.recipientName}
           </span>
         </CardTitle>
@@ -260,10 +260,10 @@ function CapsuleCard({
 
       <CardContent className="px-8 space-y-4">
         {/* Title */}
-        <p className="text-[15px] font-semibold text-[#0F172A]">{capsule.title}</p>
+        <p className="text-[15px] font-semibold text-slate-900">{capsule.title}</p>
 
         {/* Message preview */}
-        <p className="text-[13px] text-[#64748B] leading-relaxed line-clamp-3">
+        <p className="text-[13px] text-slate-500 leading-relaxed line-clamp-3">
           {messagePreview}
         </p>
 
@@ -274,7 +274,7 @@ function CapsuleCard({
         {capsule.photoUrls && capsule.photoUrls.length > 0 && (
           <div className="flex gap-2 flex-wrap">
             {capsule.photoUrls.map((url, i) => (
-              <div key={i} className="w-16 h-16 rounded-xl overflow-hidden border border-[#C8A951]/20">
+              <div key={i} className="w-16 h-16 rounded-xl overflow-hidden border border-[var(--gold)]/20">
                 <img src={url} alt={`Attachment ${i + 1}`} className="w-full h-full object-cover" />
               </div>
             ))}
@@ -286,7 +286,7 @@ function CapsuleCard({
       </CardContent>
 
       {/* Card Footer */}
-      <CardFooter className="px-8 py-4 border-t border-[#C8A951]/10 bg-[#FFFDF8]/80 flex items-center justify-end rounded-b-[2rem]">
+      <CardFooter className="px-8 py-4 border-t border-[var(--gold)]/10 bg-[var(--gold-dim)]/80 flex items-center justify-end rounded-b-[2rem]">
         {capsule.status === 'pending' && (
           <Button
             variant="ghost"
@@ -308,17 +308,17 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
   return (
     <Card className="border-none shadow-none bg-transparent">
       <CardContent className="flex flex-col items-center justify-center py-32 text-center">
-        <div className="w-20 h-20 rounded-full bg-[#C8A951]/10 flex items-center justify-center mb-6">
-          <Send className="w-10 h-10 text-[#C8A951]/40" />
+        <div className="w-20 h-20 rounded-full bg-[var(--gold)]/10 flex items-center justify-center mb-6">
+          <Send className="w-10 h-10 text-[var(--gold)]/40" />
         </div>
-        <h3 className="text-2xl font-bold text-[#0F172A] mb-3 tracking-tight">No letters yet</h3>
-        <p className="text-[#64748B] font-medium max-w-lg mb-8 leading-relaxed">
+        <h3 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">No letters yet</h3>
+        <p className="text-slate-500 font-medium max-w-lg mb-8 leading-relaxed">
           A time capsule is a gift — a message sealed today, delivered when it matters most.
           Who would you like to write to?
         </p>
         <Button
           onClick={onAdd}
-          className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg gap-3 active:scale-95"
+          className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg gap-3 active:scale-95"
         >
           <Plus className="w-5 h-5" />
           Write Your First Letter
@@ -457,18 +457,18 @@ function VoiceRecorderPanel({
   // Has a recording (either just recorded or existing)
   if (recordedUrl && !recording) {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-xl bg-[#FFFDF8] border border-[#C8A951]/20">
+      <div className="flex items-center gap-3 p-4 rounded-xl bg-[var(--gold-dim)] border border-[var(--gold)]/20">
         <audio ref={audioRef} src={recordedUrl} onEnded={() => setPlaying(false)} />
         <Button
           type="button"
           variant="ghost"
           size="icon"
           onClick={togglePlayback}
-          className="w-9 h-9 rounded-full bg-[#C8A951]/10 text-[#C8A951] hover:bg-[#C8A951]/20 hover:text-[#C8A951]"
+          className="w-9 h-9 rounded-full bg-[var(--gold)]/10 text-[var(--gold)] hover:bg-[var(--gold)]/20 hover:text-[var(--gold)]"
         >
           {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </Button>
-        <span className="text-[13px] font-medium text-[#64748B] flex-1">
+        <span className="text-[13px] font-medium text-slate-500 flex-1">
           Voice message {recordedBlob ? 'recorded' : 'attached'}
         </span>
         <Button
@@ -510,9 +510,9 @@ function VoiceRecorderPanel({
       type="button"
       variant="outline"
       onClick={startRecording}
-      className="gap-2 rounded-xl border-[#C8A951]/20 text-[#64748B] hover:border-[#C8A951]/40 hover:bg-[#FFFDF8] h-auto py-3"
+      className="gap-2 rounded-xl border-[var(--gold)]/20 text-slate-500 hover:border-[var(--gold)]/40 hover:bg-[var(--gold-dim)] h-auto py-3"
     >
-      <Mic className="w-4 h-4 text-[#C8A951]" />
+      <Mic className="w-4 h-4 text-[var(--gold)]" />
       <span className="text-[13px] font-medium">Attach Voice Memo</span>
     </Button>
   )
@@ -555,7 +555,7 @@ function PhotoAttachments({
       {photos.length > 0 && (
         <div className="flex gap-2 flex-wrap">
           {photos.map((p, i) => (
-            <div key={i} className="relative group/photo w-20 h-20 rounded-xl overflow-hidden border border-[#C8A951]/20">
+            <div key={i} className="relative group/photo w-20 h-20 rounded-xl overflow-hidden border border-[var(--gold)]/20">
               <img src={p.previewUrl} alt={`Photo ${i + 1}`} className="w-full h-full object-cover" />
               <button
                 type="button"
@@ -573,9 +573,9 @@ function PhotoAttachments({
         type="button"
         variant="outline"
         onClick={() => inputRef.current?.click()}
-        className="gap-2 rounded-xl border-[#C8A951]/20 text-[#64748B] hover:border-[#C8A951]/40 hover:bg-[#FFFDF8] h-auto py-3"
+        className="gap-2 rounded-xl border-[var(--gold)]/20 text-slate-500 hover:border-[var(--gold)]/40 hover:bg-[var(--gold-dim)] h-auto py-3"
       >
-        <ImagePlus className="w-4 h-4 text-[#C8A951]" />
+        <ImagePlus className="w-4 h-4 text-[var(--gold)]" />
         <span className="text-[13px] font-medium">Attach Photo</span>
       </Button>
     </div>
@@ -630,8 +630,8 @@ function WaxSealOverlay({
                 delay: 0.2,
               }}
             >
-              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-[#C8A951] to-[#A07D3A] flex items-center justify-center shadow-[0_8px_32px_rgba(200,169,81,0.5)]">
-                <div className="w-22 h-22 rounded-full border-2 border-[#E8D48B]/40 flex items-center justify-center">
+              <div className="w-28 h-28 rounded-full bg-gradient-to-br from-[var(--gold)] to-[var(--gold)] flex items-center justify-center shadow-[0_8px_32px_rgba(200,169,81,0.5)]">
+                <div className="w-22 h-22 rounded-full border-2 border-[var(--gold)]/40 flex items-center justify-center">
                   <span className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-white tracking-wider">
                     FW
                   </span>
@@ -671,13 +671,13 @@ function WaxSealOverlay({
 function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
   if (!editor) return null
   return (
-    <div className="flex items-center gap-1 p-2 bg-[#FFFDF8] rounded-xl border border-[#C8A951]/10">
+    <div className="flex items-center gap-1 p-2 bg-[var(--gold-dim)] rounded-xl border border-[var(--gold)]/10">
       <Button
         type="button"
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('bold') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
       >
         <Bold className="w-4 h-4" />
       </Button>
@@ -686,7 +686,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('italic') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
       >
         <Italic className="w-4 h-4" />
       </Button>
@@ -696,7 +696,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('heading', { level: 2 }) ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
       >
         <Heading2 className="w-4 h-4" />
       </Button>
@@ -705,7 +705,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('bulletList') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
       >
         <List className="w-4 h-4" />
       </Button>
@@ -774,7 +774,7 @@ function CreateModal({
     content: '',
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none min-h-[200px] focus:outline-none px-6 py-5 text-[#0F172A] leading-[1.8]',
+        class: 'prose prose-lg max-w-none min-h-[200px] focus:outline-none px-6 py-5 text-slate-900 leading-[1.8]',
       },
     },
   })
@@ -903,15 +903,15 @@ function CreateModal({
       <WaxSealOverlay visible={showSeal} onComplete={() => setShowSeal(false)} />
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
-          className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-[3rem] p-12 border-[#C8A951]/15"
+          className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-[3rem] p-12 border-[var(--gold)]/15"
           showCloseButton={true}
-          style={{ background: '#FFFDF8' }}
+          style={{ background: 'var(--gold-dim)' }}
         >
           <DialogHeader>
-            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A] tracking-tight">
+            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 tracking-tight">
               Write a Letter
             </DialogTitle>
-            <DialogDescription className="text-[#64748B] font-medium text-sm">
+            <DialogDescription className="text-slate-500 font-medium text-sm">
               A message sealed today, delivered when it matters most.
             </DialogDescription>
           </DialogHeader>
@@ -926,11 +926,11 @@ function CreateModal({
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Title *</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Title *</Label>
               <Input
                 name="title"
                 required
-                className="h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white focus-visible:bg-white focus-visible:border-[#C8A951] focus-visible:ring-[#C8A951]/10 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                 placeholder="e.g. A Letter for Your Wedding Day"
               />
             </div>
@@ -938,25 +938,25 @@ function CreateModal({
             {/* Recipient Row */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                   <User className="w-3 h-3" />Recipient Name *
                 </Label>
                 <Input
                   name="recipientName"
                   required
-                  className="h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white focus-visible:bg-white focus-visible:border-[#C8A951] focus-visible:ring-[#C8A951]/10 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                   placeholder="Full name"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+                <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                   <Mail className="w-3 h-3" />Recipient Email *
                 </Label>
                 <Input
                   name="recipientEmail"
                   type="email"
                   required
-                  className="h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white focus-visible:bg-white focus-visible:border-[#C8A951] focus-visible:ring-[#C8A951]/10 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                   placeholder="email@example.com"
                 />
               </div>
@@ -964,20 +964,20 @@ function CreateModal({
 
             {/* Relationship */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Relationship (optional)</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Relationship (optional)</Label>
               <Input
                 name="recipientRelationship"
-                className="h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white focus-visible:bg-white focus-visible:border-[#C8A951] focus-visible:ring-[#C8A951]/10 font-bold text-[#0F172A] placeholder:text-[#133378]/20"
+                className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
                 placeholder="e.g. Daughter, Best Friend, Spouse"
               />
             </div>
 
             {/* Letter Editor */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Your Letter *</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Your Letter *</Label>
               <LetterToolbar editor={editor} />
               <div
-                className="rounded-2xl border border-[#C8A951]/15 overflow-hidden bg-white"
+                className="rounded-2xl border border-[var(--gold)]/15 overflow-hidden bg-white"
                 style={{ minHeight: 240 }}
               >
                 <EditorContent editor={editor} />
@@ -986,7 +986,7 @@ function CreateModal({
 
             {/* Voice Memo */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Voice Memo (optional)</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Voice Memo (optional)</Label>
               <VoiceRecorderPanel
                 onRecorded={setVoiceBlob}
                 onRemove={() => setVoiceBlob(null)}
@@ -996,7 +996,7 @@ function CreateModal({
 
             {/* Photos */}
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Photos (optional)</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Photos (optional)</Label>
               <PhotoAttachments
                 photos={photos}
                 onAdd={addPhotos}
@@ -1006,7 +1006,7 @@ function CreateModal({
 
             {/* Delivery Type Selector */}
             <div className="space-y-3">
-              <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Delivery Trigger *</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Delivery Trigger *</Label>
               <div className="grid grid-cols-2 gap-3">
                 {DELIVERY_TYPES.map((dt) => {
                   const Icon = dt.icon
@@ -1016,19 +1016,19 @@ function CreateModal({
                       key={dt.value}
                       className={`cursor-pointer p-4 rounded-2xl border-2 text-left transition-all py-0 ${
                         selected
-                          ? 'border-[#C8A951] bg-[#C8A951]/5 shadow-md'
-                          : 'border-[#C8A951]/10 bg-white hover:border-[#C8A951]/20'
+                          ? 'border-[var(--gold)] bg-[var(--gold)]/5 shadow-md'
+                          : 'border-[var(--gold)]/10 bg-white hover:border-[var(--gold)]/20'
                       }`}
                       onClick={() => setDeliveryType(dt.value)}
                     >
                       <CardContent className="p-4 px-0">
                         <div className="flex items-center gap-3 mb-1.5">
-                          <Icon className="w-4 h-4" style={{ color: selected ? '#C8A951' : '#94A3B8' }} />
-                          <span className={`text-[12px] font-bold ${selected ? 'text-[#C8A951]' : 'text-[#0F172A]'}`}>
+                          <Icon className="w-4 h-4" style={{ color: selected ? 'var(--gold)' : 'var(--color-slate-400)' }} />
+                          <span className={`text-[12px] font-bold ${selected ? 'text-[var(--gold)]' : 'text-slate-900'}`}>
                             {dt.label}
                           </span>
                         </div>
-                        <p className="text-[11px] text-[#64748B] leading-snug">{dt.description}</p>
+                        <p className="text-[11px] text-slate-500 leading-snug">{dt.description}</p>
                       </CardContent>
                     </Card>
                   )
@@ -1039,12 +1039,12 @@ function CreateModal({
             {/* Conditional: Date Picker */}
             {deliveryType === 'scheduled_date' && (
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Delivery Date *</Label>
+                <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Delivery Date *</Label>
                 <Input
                   name="scheduledDate"
                   type="date"
                   min={new Date().toISOString().split('T')[0]}
-                  className="h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white focus-visible:bg-white focus-visible:border-[#C8A951] focus-visible:ring-[#C8A951]/10 font-bold text-[#0F172A]"
+                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900"
                 />
               </div>
             )}
@@ -1053,9 +1053,9 @@ function CreateModal({
             {deliveryType === 'anniversary' && (
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Month *</Label>
+                  <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Month *</Label>
                   <Select value={anniversaryMonth} onValueChange={setAnniversaryMonth}>
-                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white font-bold text-[#0F172A]">
+                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white font-bold text-slate-900">
                       <SelectValue placeholder="Select month" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1066,9 +1066,9 @@ function CreateModal({
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">Day *</Label>
+                  <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Day *</Label>
                   <Select value={anniversaryDay} onValueChange={setAnniversaryDay}>
-                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[#C8A951]/15 bg-white font-bold text-[#0F172A]">
+                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white font-bold text-slate-900">
                       <SelectValue placeholder="Select day" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1087,14 +1087,14 @@ function CreateModal({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="flex-1 py-4 h-auto rounded-2xl border-[#C8A951]/15 font-bold text-[#64748B] text-sm hover:bg-white"
+                className="flex-1 py-4 h-auto rounded-2xl border-[var(--gold)]/15 font-bold text-slate-500 text-sm hover:bg-white"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-4 h-auto rounded-2xl bg-[#C8A951] text-white font-bold text-sm hover:bg-[#A07D3A] shadow-lg gap-2"
+                className="flex-1 py-4 h-auto rounded-2xl bg-[var(--gold)] text-white font-bold text-sm hover:bg-[var(--gold)] shadow-lg gap-2"
               >
                 {saving ? (
                   <>
@@ -1136,8 +1136,8 @@ function TimeCapsulePage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#C8A951]/20 border-t-[#C8A951] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#C8A951]/60 uppercase tracking-[0.2em]">
+          <div className="w-10 h-10 border-2 border-[var(--gold)]/20 border-t-[var(--gold)] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[var(--gold)]/60 uppercase tracking-[0.2em]">
             Loading letters...
           </span>
         </div>
@@ -1156,7 +1156,7 @@ function TimeCapsulePage() {
         action={
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-[#4D7C4D] hover:bg-[#3D6B3D] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg gap-3 active:scale-95"
+            className="bg-[var(--gold)] hover:bg-[var(--gold)] text-white px-10 py-5 rounded-2xl font-bold text-[14px] h-auto shadow-lg gap-3 active:scale-95"
           >
             <Plus className="w-5 h-5" />
             Write a Letter
@@ -1166,20 +1166,20 @@ function TimeCapsulePage() {
         {/* Stats */}
         {capsules.length > 0 && (
           <div className="flex items-center gap-6">
-            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[#4D7C4D]/10 text-[#0F172A] border-none">
-              <Hourglass className="w-4 h-4 text-[#4D7C4D]" />
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[var(--gold)]/10 text-slate-900 border-none">
+              <Hourglass className="w-4 h-4 text-[var(--gold)]" />
               <span className="text-[13px] font-bold">{pendingCount}</span>
-              <span className="text-[13px] text-[#64748B] font-normal">sealed</span>
+              <span className="text-[13px] text-slate-500 font-normal">sealed</span>
             </Badge>
-            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-green-50 text-[#0F172A] border-none">
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-green-50 text-slate-900 border-none">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
               <span className="text-[13px] font-bold">{deliveredCount}</span>
-              <span className="text-[13px] text-[#64748B] font-normal">delivered</span>
+              <span className="text-[13px] text-slate-500 font-normal">delivered</span>
             </Badge>
-            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[#4D7C4D]/5 text-[#0F172A] border-none">
-              <Send className="w-4 h-4 text-[#4D7C4D]/60" />
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[var(--gold)]/5 text-slate-900 border-none">
+              <Send className="w-4 h-4 text-[var(--gold)]/60" />
               <span className="text-[13px] font-bold">{capsules.length}</span>
-              <span className="text-[13px] text-[#64748B] font-normal">total</span>
+              <span className="text-[13px] text-slate-500 font-normal">total</span>
             </Badge>
           </div>
         )}
@@ -1210,17 +1210,17 @@ function TimeCapsulePage() {
             <AlertDialogMedia className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 mx-auto">
               <XCircle className="w-7 h-7" />
             </AlertDialogMedia>
-            <AlertDialogTitle className="text-xl font-bold text-[#0F172A] text-center">
+            <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 text-center">
               Cancel This Letter
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-[14px] text-[#64748B] text-center">
-              <strong className="text-[#0F172A]">{cancelTarget?.title}</strong> will be cancelled and the letter will never be delivered to {cancelTarget?.recipientName}.
+            <AlertDialogDescription className="text-[14px] text-slate-500 text-center">
+              <strong className="text-slate-900">{cancelTarget?.title}</strong> will be cancelled and the letter will never be delivered to {cancelTarget?.recipientName}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3 sm:flex-row">
             <AlertDialogCancel
               variant="outline"
-              className="flex-1 py-3 h-auto rounded-xl border-[#C8A951]/15 text-[#0F172A] font-bold text-[13px] hover:bg-[#FFFDF8]"
+              className="flex-1 py-3 h-auto rounded-xl border-[var(--gold)]/15 text-slate-900 font-bold text-[13px] hover:bg-[var(--gold-dim)]"
             >
               Keep It
             </AlertDialogCancel>

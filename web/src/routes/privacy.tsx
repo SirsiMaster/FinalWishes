@@ -8,7 +8,7 @@ export const Route = createFileRoute('/privacy')({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="mb-10">
-      <h2 className="text-xl font-semibold text-[#0F172A] mb-4 font-[family-name:var(--font-cinzel)]">{title}</h2>
+      <h2 className="text-xl font-semibold text-slate-900 mb-4 font-[family-name:var(--font-cinzel)]">{title}</h2>
       {children}
     </section>
   )
@@ -17,7 +17,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white px-6 py-20 max-w-3xl mx-auto font-[family-name:var(--font-inter)]">
-      <h1 className="text-3xl font-bold text-[#0F172A] mb-4 font-[family-name:var(--font-cinzel)]">Privacy Policy</h1>
+      <h1 className="text-3xl font-bold text-slate-900 mb-4 font-[family-name:var(--font-cinzel)]">Privacy Policy</h1>
       <p className="text-sm text-slate-500 mb-10">Effective Date: April 17, 2026 &middot; Last Updated: April 17, 2026</p>
 
       <p className="text-slate-700 leading-relaxed mb-8">
@@ -136,7 +136,7 @@ function PrivacyPage() {
           <li><strong>Opt-Out:</strong> Opt out of non-essential communications at any time via your account settings.</li>
         </ul>
 
-        <h3 className="text-lg font-semibold text-[#0F172A] mt-6 mb-3">California Residents (CCPA/CPRA)</h3>
+        <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-3">California Residents (CCPA/CPRA)</h3>
         <p className="text-slate-700 leading-relaxed mb-3">
           If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA) and the California Privacy Rights Act (CPRA):
         </p>
@@ -147,7 +147,7 @@ function PrivacyPage() {
           <li>Right to non-discrimination for exercising your privacy rights.</li>
         </ul>
 
-        <h3 className="text-lg font-semibold text-[#0F172A] mt-6 mb-3">Maryland, Illinois &amp; Minnesota Residents</h3>
+        <h3 className="text-lg font-semibold text-slate-900 mt-6 mb-3">Maryland, Illinois &amp; Minnesota Residents</h3>
         <p className="text-slate-700 leading-relaxed">
           FinalWishes operates in compliance with applicable state privacy laws in Maryland, Illinois, and Minnesota. Illinois residents should be aware that we do not collect biometric information. If you have questions about your state-specific rights, contact us at the address below.
         </p>
@@ -177,8 +177,8 @@ function PrivacyPage() {
         </p>
         <div className="mt-4 p-4 bg-slate-50 rounded-lg text-slate-700 leading-relaxed">
           <p className="font-semibold">Sirsi Technologies, Inc.</p>
-          <p>Email: <a href="mailto:privacy@sirsi.ai" className="text-[#133378] underline">privacy@sirsi.ai</a></p>
-          <p>Web: <a href="https://finalwishes.app" className="text-[#133378] underline">finalwishes.app</a></p>
+          <p>Email: <a href="mailto:privacy@sirsi.ai" className="text-[var(--royal)] underline">privacy@sirsi.ai</a></p>
+          <p>Web: <a href="https://finalwishes.app" className="text-[var(--royal)] underline">finalwishes.app</a></p>
         </div>
       </Section>
     </div>

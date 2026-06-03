@@ -124,10 +124,10 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
             {submitted ? 'RSVP Confirmed' : 'RSVP'}
           </DialogTitle>
-          <DialogDescription className="text-sm text-[#64748B] mt-1">
+          <DialogDescription className="text-sm text-slate-500 mt-1">
             {submitted ? `Your response has been recorded for ${eventTitle}.` : `Respond to ${eventTitle}`}
           </DialogDescription>
         </DialogHeader>
@@ -138,14 +138,14 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
             <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto">
               <Check className="w-8 h-8 text-emerald-600" />
             </div>
-            <p className="text-[#334155] text-sm">
+            <p className="text-slate-700 text-sm">
               {form.response === 'attending' && `You're attending with ${form.guests} guest${form.guests !== 1 ? 's' : ''}.`}
               {form.response === 'maybe' && 'You responded as maybe.'}
               {form.response === 'not_attending' && 'You responded as not attending.'}
             </p>
             <Button
               onClick={() => handleClose(false)}
-              className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px] mt-4"
+              className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px] mt-4"
             >
               Done
             </Button>
@@ -156,7 +156,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
             <div className="space-y-6">
               {/* Response pills */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Your Response *</Label>
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Your Response *</Label>
                 <div className="flex gap-2">
                   {RESPONSE_OPTIONS.map((opt) => {
                     const Icon = opt.icon
@@ -168,7 +168,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                         onClick={() => update('response', opt.value)}
                         className={`
                           flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-[13px] font-bold transition-all
-                          ${isActive ? opt.activeClass : 'border-slate-200 text-[#64748B] hover:border-slate-300'}
+                          ${isActive ? opt.activeClass : 'border-slate-200 text-slate-500 hover:border-slate-300'}
                         `}
                       >
                         <Icon className="w-4 h-4" />
@@ -181,7 +181,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
 
               {/* Name */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Your Name *</Label>
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Your Name *</Label>
                 <Input
                   value={form.name}
                   onChange={(e) => update('name', e.target.value)}
@@ -192,7 +192,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
 
               {/* Email */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Email</Label>
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Email</Label>
                 <Input
                   type="email"
                   value={form.email}
@@ -205,7 +205,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
               {/* Guest count (only for attending/maybe) */}
               {form.response !== 'not_attending' && (
                 <div className="space-y-2">
-                  <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Number of Guests</Label>
+                  <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Number of Guests</Label>
                   <Input
                     type="number"
                     min={1}
@@ -214,13 +214,13 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                     onChange={(e) => update('guests', Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))}
                     className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px] w-24"
                   />
-                  <p className="text-[11px] text-[#94A3B8]">Including yourself</p>
+                  <p className="text-[11px] text-slate-400">Including yourself</p>
                 </div>
               )}
 
               {/* Message */}
               <div className="space-y-2">
-                <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Message (Optional)</Label>
+                <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Message (Optional)</Label>
                 <Textarea
                   value={form.message}
                   onChange={(e) => update('message', e.target.value)}
@@ -235,14 +235,14 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
               <Button
                 variant="ghost"
                 onClick={() => handleClose(false)}
-                className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]"
+                className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSubmit}
                 disabled={submitting || !form.name.trim()}
-                className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
+                className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
               >
                 {submitting ? 'Submitting...' : 'Submit RSVP'}
               </Button>

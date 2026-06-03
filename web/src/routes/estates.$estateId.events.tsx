@@ -121,7 +121,7 @@ function EventsPage() {
         action={
           <Button
             onClick={() => setCreateOpen(true)}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Create Event
@@ -142,7 +142,7 @@ function EventsPage() {
           {/* Upcoming */}
           {upcoming.length > 0 && (
             <div className="space-y-4">
-              <div className="text-[11px] font-bold text-[#133378]/30 uppercase tracking-[0.3em]">Upcoming</div>
+              <div className="text-[11px] font-bold text-[var(--royal)]/30 uppercase tracking-[0.3em]">Upcoming</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {upcoming.map((event) => (
                   <EventCard key={event.id} event={event} estateId={estateId} onEdit={setEditingEvent} />
@@ -154,7 +154,7 @@ function EventsPage() {
           {/* Past */}
           {past.length > 0 && (
             <div className="space-y-4">
-              <div className="text-[11px] font-bold text-[#64748B]/40 uppercase tracking-[0.3em]">Past</div>
+              <div className="text-[11px] font-bold text-slate-500/40 uppercase tracking-[0.3em]">Past</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {past.map((event) => (
                   <EventCard key={event.id} event={event} estateId={estateId} onEdit={setEditingEvent} />
@@ -221,17 +221,17 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
   }, [event])
 
   return (
-    <Card className="rounded-3xl border-slate-100 p-0 hover:border-[#133378]/20 hover:shadow-lg transition-all">
+    <Card className="rounded-3xl border-slate-100 p-0 hover:border-[var(--royal)]/20 hover:shadow-lg transition-all">
       <CardContent className="p-8">
         <div className="flex items-start justify-between mb-5">
           <div>
             <Badge
               variant="secondary"
-              className="px-2.5 py-1 h-auto text-[10px] font-bold uppercase tracking-widest rounded-lg bg-[#133378]/5 text-[#133378] mb-3"
+              className="px-2.5 py-1 h-auto text-[10px] font-bold uppercase tracking-widest rounded-lg bg-[var(--royal)]/5 text-[var(--royal)] mb-3"
             >
               {typeLabel}
             </Badge>
-            <h3 className="text-lg font-bold text-[#0F172A]">{event.title}</h3>
+            <h3 className="text-lg font-bold text-slate-900">{event.title}</h3>
           </div>
           {event.status === 'cancelled' && (
             <Badge variant="secondary" className="bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-lg">
@@ -241,30 +241,30 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
         </div>
 
         <div className="space-y-3 mb-6">
-          <div className="flex items-center gap-3 text-[#334155] text-sm">
-            <Calendar className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+          <div className="flex items-center gap-3 text-slate-700 text-sm">
+            <Calendar className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
             <span>{event.date}</span>
           </div>
           {event.time && (
-            <div className="flex items-center gap-3 text-[#334155] text-sm">
-              <Clock className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+            <div className="flex items-center gap-3 text-slate-700 text-sm">
+              <Clock className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
               <span>{event.time}{event.endTime ? ` — ${event.endTime}` : ''}</span>
             </div>
           )}
-          <div className="flex items-center gap-3 text-[#334155] text-sm">
-            <MapPin className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+          <div className="flex items-center gap-3 text-slate-700 text-sm">
+            <MapPin className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
             <span>{event.location}</span>
           </div>
           {event.rsvpEnabled && event.rsvpCount !== undefined && (
-            <div className="flex items-center gap-3 text-[#334155] text-sm">
-              <Users className="w-4 h-4 text-[#C8A951]/60 flex-shrink-0" />
+            <div className="flex items-center gap-3 text-slate-700 text-sm">
+              <Users className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
               <span>{event.rsvpCount} attending</span>
             </div>
           )}
         </div>
 
         {event.description && (
-          <p className="text-sm text-[#64748B] mb-6 line-clamp-3">{event.description}</p>
+          <p className="text-sm text-slate-500 mb-6 line-clamp-3">{event.description}</p>
         )}
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -272,7 +272,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
           {event.status === 'upcoming' && event.rsvpEnabled && (
             <Button
               onClick={() => setRsvpOpen(true)}
-              className="bg-[#133378] hover:bg-[#1E3A5F] text-white text-[12px] font-bold rounded-xl px-4 py-2 h-auto"
+              className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white text-[12px] font-bold rounded-xl px-4 py-2 h-auto"
             >
               <Send className="w-3.5 h-3.5" /> RSVP
             </Button>
@@ -280,7 +280,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
           <Button
             variant="ghost"
             onClick={copyDetails}
-            className="text-[12px] font-bold text-[#64748B] hover:text-[#133378] rounded-xl"
+            className="text-[12px] font-bold text-slate-500 hover:text-[var(--royal)] rounded-xl"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[#059669]" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? 'Copied' : 'Copy Details'}
@@ -289,7 +289,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             <Button
               variant="ghost"
               onClick={() => onEdit(event)}
-              className="text-[12px] font-bold text-[#64748B] hover:text-[#133378] rounded-xl"
+              className="text-[12px] font-bold text-slate-500 hover:text-[var(--royal)] rounded-xl"
             >
               <Pencil className="w-3.5 h-3.5" /> Edit
             </Button>
@@ -320,7 +320,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             <button
               type="button"
               onClick={() => setRsvpListOpen(!rsvpListOpen)}
-              className="flex items-center gap-2 text-[12px] font-bold text-[#133378]/60 hover:text-[#133378] uppercase tracking-widest transition-colors"
+              className="flex items-center gap-2 text-[12px] font-bold text-[var(--royal)]/60 hover:text-[var(--royal)] uppercase tracking-widest transition-colors"
             >
               {rsvpListOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               View RSVPs {event.rsvpCount ? `(${event.rsvpCount})` : ''}
@@ -329,7 +329,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             {rsvpListOpen && (
               <div className="mt-3 space-y-2">
                 {rsvps.length === 0 ? (
-                  <p className="text-[13px] text-[#94A3B8] italic">No RSVPs yet.</p>
+                  <p className="text-[13px] text-slate-400 italic">No RSVPs yet.</p>
                 ) : (
                   rsvps.map((rsvp) => (
                     <RSVPRow key={rsvp.id} rsvp={rsvp} />
@@ -414,7 +414,7 @@ function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
   return (
     <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
       <div className="flex items-center gap-3 min-w-0">
-        <span className="text-[13px] font-semibold text-[#0F172A] truncate">{rsvp.name}</span>
+        <span className="text-[13px] font-semibold text-slate-900 truncate">{rsvp.name}</span>
         <Badge
           variant="secondary"
           className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${badge.className}`}
@@ -424,12 +424,12 @@ function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
         {rsvp.response !== 'not_attending' && rsvp.guests > 0 && (
-          <span className="text-[12px] text-[#64748B]">
+          <span className="text-[12px] text-slate-500">
             <Users className="w-3 h-3 inline mr-1" />{rsvp.guests}
           </span>
         )}
         {rsvp.message && (
-          <span className="text-[11px] text-[#94A3B8] italic max-w-[120px] truncate" title={rsvp.message}>
+          <span className="text-[11px] text-slate-400 italic max-w-[120px] truncate" title={rsvp.message}>
             "{rsvp.message}"
           </span>
         )}
@@ -510,7 +510,7 @@ function CreateEventModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
             Create Event
           </DialogTitle>
           <DialogDescription className="sr-only">
@@ -521,7 +521,7 @@ function CreateEventModal({
         <div className="space-y-6">
           {/* Type */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Event Type</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Event Type</Label>
             <Select value={form.type} onValueChange={(v) => update('type', v)}>
               <SelectTrigger className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]">
                 <SelectValue />
@@ -536,7 +536,7 @@ function CreateEventModal({
 
           {/* Title */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Title *</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Title *</Label>
             <Input
               value={form.title}
               onChange={(e) => update('title', e.target.value)}
@@ -548,7 +548,7 @@ function CreateEventModal({
           {/* Date & Time */}
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Date *</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Date *</Label>
               <Input
                 type="date"
                 value={form.date}
@@ -557,7 +557,7 @@ function CreateEventModal({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Start Time</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Start Time</Label>
               <Input
                 type="time"
                 value={form.time}
@@ -566,7 +566,7 @@ function CreateEventModal({
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">End Time</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">End Time</Label>
               <Input
                 type="time"
                 value={form.endTime}
@@ -578,7 +578,7 @@ function CreateEventModal({
 
           {/* Location */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Location *</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Location *</Label>
             <Input
               value={form.location}
               onChange={(e) => update('location', e.target.value)}
@@ -588,7 +588,7 @@ function CreateEventModal({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Address</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Address</Label>
             <Input
               value={form.address}
               onChange={(e) => update('address', e.target.value)}
@@ -599,7 +599,7 @@ function CreateEventModal({
 
           {/* Description */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Description</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Description</Label>
             <Textarea
               value={form.description}
               onChange={(e) => update('description', e.target.value)}
@@ -611,7 +611,7 @@ function CreateEventModal({
 
           {/* Dress Code */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Dress Code</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Dress Code</Label>
             <Input
               value={form.dressCode}
               onChange={(e) => update('dressCode', e.target.value)}
@@ -625,14 +625,14 @@ function CreateEventModal({
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]"
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
           >
             Cancel
           </Button>
           <Button
             onClick={handleCreate}
             disabled={saving || !form.title.trim() || !form.date || !form.location.trim()}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
           >
             {saving ? 'Creating...' : 'Create Event'}
           </Button>
@@ -720,7 +720,7 @@ function EditEventModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
             Edit Event
           </DialogTitle>
           <DialogDescription className="sr-only">Edit event details</DialogDescription>
@@ -728,36 +728,36 @@ function EditEventModal({
 
         <div className="space-y-6">
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Title *</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Title *</Label>
             <Input value={form.title} onChange={(e) => update('title', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Date *</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Date *</Label>
               <Input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
             </div>
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Start Time</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Start Time</Label>
               <Input type="time" value={form.time} onChange={(e) => update('time', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
             </div>
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">End Time</Label>
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">End Time</Label>
               <Input type="time" value={form.endTime} onChange={(e) => update('endTime', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
             </div>
           </div>
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Location *</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Location *</Label>
             <Input value={form.location} onChange={(e) => update('location', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
           </div>
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">Description</Label>
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Description</Label>
             <Textarea value={form.description} onChange={(e) => update('description', e.target.value)} rows={3} className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] resize-none" />
           </div>
         </div>
 
         <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-slate-100">
-          <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]">Cancel</Button>
-          <Button onClick={handleSave} disabled={saving || !form.title.trim() || !form.date || !form.location.trim()} className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]">
+          <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500">Cancel</Button>
+          <Button onClick={handleSave} disabled={saving || !form.title.trim() || !form.date || !form.location.trim()} className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]">
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>
         </DialogFooter>

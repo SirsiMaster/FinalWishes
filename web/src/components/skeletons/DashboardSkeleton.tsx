@@ -11,7 +11,7 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Primary Action Card (hero progress area) */}
-      <div className="bg-[#F8FAFC] rounded-[3rem] p-16 flex items-center justify-between border border-slate-100">
+      <div className="bg-slate-50 rounded-[3rem] p-16 flex items-center justify-between border border-slate-100">
         <div className="flex-1 space-y-10">
           <div className="space-y-3">
             <Skeleton className="h-3 w-32" />
@@ -45,7 +45,7 @@ export function DashboardSkeleton() {
             <Skeleton className="h-6 w-28 rounded-full" />
           </div>
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 px-5 py-4 rounded-2xl bg-[#F8FAFC]">
+            <div key={i} className="flex items-center gap-4 px-5 py-4 rounded-2xl bg-slate-50">
               <Skeleton className="h-6 w-6 rounded-full" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />

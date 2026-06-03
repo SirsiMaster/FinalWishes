@@ -284,9 +284,9 @@ function VaultPage() {
   const scrollToUpload = useCallback(() => {
     dropzoneRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     // Briefly flash the dropzone
-    dropzoneRef.current?.classList.add('ring-2', 'ring-[#C8A951]')
+    dropzoneRef.current?.classList.add('ring-2', 'ring-[var(--gold)]')
     setTimeout(() => {
-      dropzoneRef.current?.classList.remove('ring-2', 'ring-[#C8A951]')
+      dropzoneRef.current?.classList.remove('ring-2', 'ring-[var(--gold)]')
     }, 2000)
   }, [])
 
@@ -485,8 +485,8 @@ function VaultPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#133378]/50 uppercase tracking-[0.2em]">
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-[var(--royal)]/50 uppercase tracking-[0.2em]">
             Loading documents...
           </span>
         </div>
@@ -520,25 +520,25 @@ function VaultPage() {
       )}
 
       {/* Document Checklist Panel */}
-      <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm overflow-hidden">
+      <Card className="rounded-[2.5rem] border-[var(--royal)]/10 p-0 shadow-sm overflow-hidden">
         {/* Checklist Header — always visible */}
         <button
           type="button"
           onClick={() => setChecklistOpen((o) => !o)}
-          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-[#F8FAFC]/50 transition-colors"
+          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-slate-50/50 transition-colors"
         >
           <div className="flex items-center gap-4 min-w-0">
-            <div className="w-12 h-12 rounded-2xl bg-[#133378] flex items-center justify-center text-white flex-shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--royal)] flex items-center justify-center text-white flex-shrink-0">
               <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 11l3 3L22 4" />
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
                 Documents Your Estate Needs
               </h3>
-              <p className="text-[13px] text-[#133378]/50 font-medium mt-0.5">
+              <p className="text-[13px] text-[var(--royal)]/50 font-medium mt-0.5">
                 {checklistProgress.uploaded} of {checklistProgress.total} essential documents uploaded
               </p>
             </div>
@@ -547,15 +547,15 @@ function VaultPage() {
             <div className="hidden sm:flex items-center gap-3 mr-2">
               <Progress
                 value={checklistProgress.percent}
-                className="w-32 h-2 [&>*]:bg-[#C8A951] bg-[#133378]/10"
+                className="w-32 h-2 [&>*]:bg-[var(--gold)] bg-[var(--royal)]/10"
               />
-              <span className="text-[13px] font-bold text-[#C8A951] min-w-[3ch]">
+              <span className="text-[13px] font-bold text-[var(--gold)] min-w-[3ch]">
                 {checklistProgress.percent}%
               </span>
             </div>
             <svg
               viewBox="0 0 24 24"
-              className={`w-5 h-5 text-[#133378]/30 transition-transform duration-300 ${checklistOpen ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 text-[var(--royal)]/30 transition-transform duration-300 ${checklistOpen ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -572,9 +572,9 @@ function VaultPage() {
             <div className="sm:hidden flex items-center gap-3 mb-6">
               <Progress
                 value={checklistProgress.percent}
-                className="flex-1 h-2 [&>*]:bg-[#C8A951] bg-[#133378]/10"
+                className="flex-1 h-2 [&>*]:bg-[var(--gold)] bg-[var(--royal)]/10"
               />
-              <span className="text-[13px] font-bold text-[#C8A951]">
+              <span className="text-[13px] font-bold text-[var(--gold)]">
                 {checklistProgress.percent}%
               </span>
             </div>
@@ -589,13 +589,13 @@ function VaultPage() {
                   <div key={catKey}>
                     {/* Category sub-heading */}
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 rounded-xl bg-[#F8FAFC] border border-[#133378]/10 flex items-center justify-center text-[#133378]/60">
+                      <div className="w-8 h-8 rounded-xl bg-slate-50 border border-[var(--royal)]/10 flex items-center justify-center text-[var(--royal)]/60">
                         {catInfo.icon}
                       </div>
-                      <span className="text-[12px] font-bold text-[#133378]/50 uppercase tracking-widest">
+                      <span className="text-[12px] font-bold text-[var(--royal)]/50 uppercase tracking-widest">
                         {catInfo.label}
                       </span>
-                      <Badge className="bg-[#F8FAFC] text-[#133378]/40 border border-[#133378]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
+                      <Badge className="bg-slate-50 text-[var(--royal)]/40 border border-[var(--royal)]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
                         {catUploaded}/{items.length}
                       </Badge>
                     </div>
@@ -613,16 +613,16 @@ function VaultPage() {
                             }}
                             className={`flex items-start gap-3 p-4 rounded-2xl border text-left transition-all ${
                               isUploaded
-                                ? 'bg-[#C8A951]/5 border-[#C8A951]/30'
-                                : 'bg-white border-[#133378]/10 hover:border-[#133378]/25 hover:bg-[#F8FAFC] cursor-pointer'
+                                ? 'bg-[var(--gold)]/5 border-[var(--gold)]/30'
+                                : 'bg-white border-[var(--royal)]/10 hover:border-[var(--royal)]/25 hover:bg-slate-50 cursor-pointer'
                             }`}
                           >
                             {/* Status indicator */}
                             <div
                               className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
                                 isUploaded
-                                  ? 'bg-[#C8A951] text-white'
-                                  : 'border-2 border-[#133378]/15 text-transparent'
+                                  ? 'bg-[var(--gold)] text-white'
+                                  : 'border-2 border-[var(--royal)]/15 text-transparent'
                               }`}
                             >
                               {isUploaded && (
@@ -634,21 +634,21 @@ function VaultPage() {
                             <div className="min-w-0">
                               <span
                                 className={`text-[14px] font-bold block ${
-                                  isUploaded ? 'text-[#C8A951]' : 'text-[#0F172A]'
+                                  isUploaded ? 'text-[var(--gold)]' : 'text-slate-900'
                                 }`}
                               >
                                 {item.name}
                               </span>
-                              <span className="text-[12px] text-[#133378]/40 font-medium leading-snug block mt-0.5">
+                              <span className="text-[12px] text-[var(--royal)]/40 font-medium leading-snug block mt-0.5">
                                 {item.description}
                               </span>
                               {isUploaded ? (
-                                <Badge className="mt-2 bg-[#C8A951]/10 text-[#C8A951] border-[#C8A951]/20 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#C8A951]" />
+                                <Badge className="mt-2 bg-[var(--gold)]/10 text-[var(--gold)] border-[var(--gold)]/20 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
                                   Uploaded
                                 </Badge>
                               ) : (
-                                <span className="text-[11px] text-[#133378]/30 font-semibold mt-2 block">
+                                <span className="text-[11px] text-[var(--royal)]/30 font-semibold mt-2 block">
                                   Click to upload
                                 </span>
                               )}
@@ -667,21 +667,21 @@ function VaultPage() {
 
       {/* Tier Limit Banner */}
       {tierUsage && !tierUsage.canUploadMedia && (
-        <div className="bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-2xl p-6 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C8A951]/20 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+        <div className="bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-2xl p-6 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-[#0F172A]">{tierUpgradeMessage(tierUsage, 'media')}</p>
-            <p className="text-xs text-[#64748B] mt-1">
+            <p className="text-sm font-bold text-slate-900">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-slate-500 mt-1">
               {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
             </p>
             <Link
               to="/estates/$estateId/pricing"
               params={{ estateId }}
-              className="inline-block mt-2 text-sm font-bold text-[#C8A951] hover:text-[#B8952F] underline underline-offset-2"
+              className="inline-block mt-2 text-sm font-bold text-[var(--gold)] hover:text-[var(--gold)] underline underline-offset-2"
             >
               View upgrade options
             </Link>
@@ -696,10 +696,10 @@ function VaultPage() {
         className={`
           border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all
           ${tierUsage && !tierUsage.canUploadMedia
-            ? 'border-[#64748B]/20 opacity-50 pointer-events-none'
+            ? 'border-slate-500/20 opacity-50 pointer-events-none'
             : isDragActive
-              ? 'border-[#133378] bg-[#133378]/5 scale-[1.01]'
-              : 'border-[#133378]/20 hover:border-[#133378]/40 hover:bg-[#133378]/[0.02]'
+              ? 'border-[var(--royal)] bg-[var(--royal)]/5 scale-[1.01]'
+              : 'border-[var(--royal)]/20 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/[0.02]'
           }
         `}
       >
@@ -707,7 +707,7 @@ function VaultPage() {
         <div className="flex flex-col items-center gap-4">
           <div
             className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${
-              isDragActive ? 'bg-[#133378] text-white' : 'bg-[#F8FAFC] text-[#133378] border border-[#133378]/10'
+              isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-slate-50 text-[var(--royal)] border border-[var(--royal)]/10'
             }`}
           >
             <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2">
@@ -717,14 +717,14 @@ function VaultPage() {
             </svg>
           </div>
           <div>
-            <p className="text-[#0F172A] font-bold text-lg">
+            <p className="text-slate-900 font-bold text-lg">
               {isDragActive ? 'Drop files here' : 'Drag & drop files, or click to browse'}
             </p>
-            <p className="text-[13px] text-[#133378]/40 mt-1">
+            <p className="text-[13px] text-[var(--royal)]/40 mt-1">
               PDF, JPEG, PNG, HEIC, DOC, DOCX, TXT — Max 50 MB per file
             </p>
             {tierUsage && tierUsage.limits.maxMedia > 0 && (
-              <p className="text-[11px] text-[#C8A951] font-bold mt-2">
+              <p className="text-[11px] text-[var(--gold)] font-bold mt-2">
                 {tierUsage.mediaCount} / {tierUsage.limits.maxMedia} uploads used
               </p>
             )}
@@ -758,14 +758,14 @@ function VaultPage() {
       {/* Active Filter Indicator */}
       {activeCategory && (
         <div className="flex items-center gap-3">
-          <span className="text-[12px] font-bold text-[#133378]/60 uppercase tracking-wider">
+          <span className="text-[12px] font-bold text-[var(--royal)]/60 uppercase tracking-wider">
             Filtered: {CATEGORY_MAP[activeCategory]?.label || activeCategory}
           </span>
           <Button
             variant="ghost"
             size="xs"
             onClick={() => setActiveCategory(null)}
-            className="text-[11px] font-bold text-[#C8A951] hover:text-[#133378]"
+            className="text-[11px] font-bold text-[var(--gold)] hover:text-[var(--royal)]"
           >
             Show All
           </Button>
@@ -773,11 +773,11 @@ function VaultPage() {
       )}
 
       {/* All Files */}
-      <Card className="rounded-[2.5rem] border-[#133378]/10 p-0 shadow-sm">
+      <Card className="rounded-[2.5rem] border-[var(--royal)]/10 p-0 shadow-sm">
         <CardContent className="p-10">
           <div className="flex items-center gap-3 mb-8 px-2">
             <div className="w-2 h-2 rounded-full bg-green-400" />
-            <h3 className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+            <h3 className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
               {activeCategory ? `${CATEGORY_MAP[activeCategory]?.label}` : 'All Files'} · {documents.length} file
               {documents.length !== 1 ? 's' : ''} · Encrypted
             </h3>
@@ -795,13 +795,13 @@ function VaultPage() {
               />
             ))}
             {documents.length === 0 && (
-              <div className="text-center py-24 bg-[#F8FAFC] rounded-2xl border border-[#133378]/10">
-                <p className="text-[#133378]/50 font-medium">
+              <div className="text-center py-24 bg-slate-50 rounded-2xl border border-[var(--royal)]/10">
+                <p className="text-[var(--royal)]/50 font-medium">
                   {activeCategory
                     ? `No ${CATEGORY_MAP[activeCategory]?.label.toLowerCase() || 'files'} yet.`
                     : 'No files have been added to this estate yet.'}
                 </p>
-                <p className="text-sm text-[#133378]/30 mt-2">
+                <p className="text-sm text-[var(--royal)]/30 mt-2">
                   Drag & drop files above or click to browse.
                 </p>
               </div>
@@ -854,10 +854,10 @@ function UploadProgress({ upload }: { upload: UploadState }) {
           ? 'bg-red-50 border-red-200'
           : isDone
             ? 'bg-green-50 border-green-200'
-            : 'bg-[#F8FAFC] border-[#133378]/10'
+            : 'bg-slate-50 border-[var(--royal)]/10'
       }`}
     >
-      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[#133378]/10">
+      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[var(--royal)]/10">
         {isDone ? (
           <svg viewBox="0 0 24 24" className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="20 6 9 17 4 12" />
@@ -868,15 +868,15 @@ function UploadProgress({ upload }: { upload: UploadState }) {
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         ) : (
-          <div className="w-5 h-5 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
         )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[13px] font-bold text-[#0F172A] truncate">{upload.file.name}</span>
+          <span className="text-[13px] font-bold text-slate-900 truncate">{upload.file.name}</span>
           <span
             className={`text-[11px] font-semibold ${
-              isError ? 'text-red-600' : isDone ? 'text-green-600' : 'text-[#133378]'
+              isError ? 'text-red-600' : isDone ? 'text-green-600' : 'text-[var(--royal)]'
             }`}
           >
             {statusLabel}
@@ -885,8 +885,8 @@ function UploadProgress({ upload }: { upload: UploadState }) {
         <Progress
           value={upload.progress}
           className={`h-1.5 ${
-            isError ? '[&>*]:bg-red-400' : isDone ? '[&>*]:bg-green-400' : '[&>*]:bg-[#133378]'
-          } bg-[#133378]/10`}
+            isError ? '[&>*]:bg-red-400' : isDone ? '[&>*]:bg-green-400' : '[&>*]:bg-[var(--royal)]'
+          } bg-[var(--royal)]/10`}
         />
       </div>
     </div>
@@ -913,8 +913,8 @@ function VaultFolder({
       onClick={onClick}
       className={`text-left w-full p-8 rounded-[2.5rem] border shadow-sm transition-all cursor-pointer group active:scale-[0.98] ${
         active
-          ? 'bg-[#133378] border-[#133378] text-white'
-          : 'bg-white border-[#133378]/10 hover:border-[#133378]/20 hover:shadow-md'
+          ? 'bg-[var(--royal)] border-[var(--royal)] text-white'
+          : 'bg-white border-[var(--royal)]/10 hover:border-[var(--royal)]/20 hover:shadow-md'
       }`}
     >
       <CardContent className="p-0">
@@ -922,7 +922,7 @@ function VaultFolder({
           className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
             active
               ? 'bg-white/20 text-white'
-              : 'bg-[#F8FAFC] border border-[#133378]/10 text-[#133378] group-hover:bg-[#133378] group-hover:text-white'
+              : 'bg-slate-50 border border-[var(--royal)]/10 text-[var(--royal)] group-hover:bg-[var(--royal)] group-hover:text-white'
           }`}
         >
           <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
@@ -930,8 +930,8 @@ function VaultFolder({
           </svg>
         </div>
         <h4
-          className={`font-bold text-lg mb-2 transition-colors ${
-            active ? 'text-white' : 'text-[#0F172A] group-hover:text-[#133378]'
+          className={`font-[family-name:var(--font-cinzel)] font-bold text-lg mb-2 transition-colors ${
+            active ? 'text-white' : 'text-slate-900 group-hover:text-[var(--royal)]'
           }`}
         >
           {name}
@@ -940,7 +940,7 @@ function VaultFolder({
           <Badge
             variant="secondary"
             className={`text-[13px] font-medium h-auto py-0 px-0 bg-transparent border-none ${
-              active ? 'text-white/70' : 'text-[#133378]/50'
+              active ? 'text-white/70' : 'text-[var(--royal)]/50'
             }`}
           >
             {count} file{count !== 1 ? 's' : ''}
@@ -990,40 +990,40 @@ function DocItem({
   const isAnalyzing = doc.analysisStatus === 'processing'
 
   return (
-    <div className="rounded-2xl border border-[#133378]/10 overflow-hidden transition-all group">
-      <div className="flex items-center justify-between p-5 bg-white hover:bg-[#F8FAFC] transition-all">
+    <div className="rounded-2xl border border-[var(--royal)]/10 overflow-hidden transition-all group">
+      <div className="flex items-center justify-between p-5 bg-white hover:bg-slate-50 transition-all">
         <div className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer" onClick={isPreviewable ? onPreview : onDownload}>
-          <div className="w-11 h-11 rounded-xl bg-[#F8FAFC] flex items-center justify-center text-[#133378]/30 group-hover:bg-[#133378] group-hover:text-white transition-all duration-500 border border-[#133378]/10 flex-shrink-0">
+          <div className="w-11 h-11 rounded-xl bg-slate-50 flex items-center justify-center text-[var(--royal)]/30 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 border border-[var(--royal)]/10 flex-shrink-0">
             <FileIcon mimeType={doc.mimeType} />
           </div>
           <div className="min-w-0">
-            <div className="text-[#0F172A] font-bold text-[15px] mb-0.5 group-hover:text-[#133378] transition-colors truncate">
+            <div className="text-slate-900 font-bold text-[15px] mb-0.5 group-hover:text-[var(--royal)] transition-colors truncate">
               {doc.displayName || doc.originalName}
             </div>
-            <div className="flex items-center gap-3 text-[12px] font-medium text-[#133378]/40 flex-wrap">
+            <div className="flex items-center gap-3 text-[12px] font-medium text-[var(--royal)]/40 flex-wrap">
               {dateStr && <span>{dateStr}</span>}
-              {dateStr && sizeStr && <div className="w-1 h-1 rounded-full bg-[#133378]/20" />}
+              {dateStr && sizeStr && <div className="w-1 h-1 rounded-full bg-[var(--royal)]/20" />}
               {sizeStr && <span>{sizeStr}</span>}
               {doc.version > 1 && (
                 <>
-                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
-                  <Badge variant="secondary" className="bg-[#7C3AED]/10 text-[#7C3AED] text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg">
+                  <div className="w-1 h-1 rounded-full bg-[var(--royal)]/20" />
+                  <Badge variant="secondary" className="bg-[var(--gold)]/10 text-[var(--gold)] text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg">
                     v{doc.version}
                   </Badge>
                 </>
               )}
               {doc.folderId && (
                 <>
-                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
-                  <Badge variant="ghost" className="text-[#C8A951] font-semibold text-[12px] h-auto py-0 px-0">
+                  <div className="w-1 h-1 rounded-full bg-[var(--royal)]/20" />
+                  <Badge variant="ghost" className="text-[var(--gold)] font-semibold text-[12px] h-auto py-0 px-0">
                     {doc.folderId}
                   </Badge>
                 </>
               )}
               {visibleTo.length > 0 && (
                 <>
-                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
-                  <Badge className="bg-[#C8A951]/10 text-[#C8A951] border border-[#C8A951]/20 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-[var(--royal)]/20" />
+                  <Badge className="bg-[var(--gold)]/10 text-[var(--gold)] border border-[var(--gold)]/20 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
                     <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                       <circle cx="12" cy="12" r="3" />
@@ -1034,7 +1034,7 @@ function DocItem({
               )}
               {isAnalyzing && (
                 <>
-                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
+                  <div className="w-1 h-1 rounded-full bg-[var(--royal)]/20" />
                   <Badge className="bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5 animate-pulse">
                     <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
                     Analyzing...
@@ -1043,8 +1043,8 @@ function DocItem({
               )}
               {hasAnalysis && (
                 <>
-                  <div className="w-1 h-1 rounded-full bg-[#133378]/20" />
-                  <Badge className="bg-[#133378]/5 text-[#133378] border border-[#133378]/10 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
+                  <div className="w-1 h-1 rounded-full bg-[var(--royal)]/20" />
+                  <Badge className="bg-[var(--royal)]/5 text-[var(--royal)] border border-[var(--royal)]/10 text-[10px] font-bold h-auto py-0.5 px-2 rounded-lg gap-1.5">
                     <DocTypeBadgeLabel type={doc.analysis!.documentType} />
                   </Badge>
                 </>
@@ -1060,8 +1060,8 @@ function DocItem({
               onClick={() => setVisibilityOpen(!visibilityOpen)}
               className={`gap-1.5 text-[11px] font-bold ${
                 visibilityOpen || visibleTo.length > 0
-                  ? 'text-[#C8A951] hover:text-[#C8A951] hover:bg-[#C8A951]/5'
-                  : 'text-[#133378]/40 hover:text-[#133378] hover:bg-[#133378]/5'
+                  ? 'text-[var(--gold)] hover:text-[var(--gold)] hover:bg-[var(--gold)]/5'
+                  : 'text-[var(--royal)]/40 hover:text-[var(--royal)] hover:bg-[var(--royal)]/5'
               }`}
               title="Set visibility"
             >
@@ -1077,7 +1077,7 @@ function DocItem({
               variant="ghost"
               size="sm"
               onClick={() => setInsightsOpen(!insightsOpen)}
-              className="text-[#133378]/40 hover:text-[#133378] hover:bg-[#133378]/5 gap-1.5 text-[11px] font-bold"
+              className="text-[var(--royal)]/40 hover:text-[var(--royal)] hover:bg-[var(--royal)]/5 gap-1.5 text-[11px] font-bold"
               title="AI Insights"
             >
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1091,7 +1091,7 @@ function DocItem({
               variant="ghost"
               size="icon"
               onClick={onPreview}
-              className="text-[#133378]/30 hover:text-[#133378] hover:bg-[#133378]/5"
+              className="text-[var(--royal)]/30 hover:text-[var(--royal)] hover:bg-[var(--royal)]/5"
               title="Preview"
             >
               <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1102,7 +1102,7 @@ function DocItem({
           )}
           <Button
             onClick={onDownload}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[11px] font-bold shadow-sm"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white rounded-xl text-[11px] font-bold shadow-sm"
             size="sm"
           >
             Download
@@ -1111,7 +1111,7 @@ function DocItem({
             variant="ghost"
             size="icon"
             onClick={onDelete}
-            className="text-[#133378]/20 hover:text-red-500 hover:bg-red-50"
+            className="text-[var(--royal)]/20 hover:text-red-500 hover:bg-red-50"
             title="Delete"
           >
             <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1124,23 +1124,23 @@ function DocItem({
 
       {/* Visibility Picker — collapsible */}
       {visibilityOpen && heirs.length > 0 && (
-        <div className="border-t border-[#133378]/10 bg-[#FAFBFD] px-6 py-4">
+        <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
             {visibleTo.length === 0 ? (
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[#64748B]" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="2" y1="12" x2="22" y2="12" />
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
               </svg>
             ) : (
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             )}
-            <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
               {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
             </span>
           </div>
@@ -1152,8 +1152,8 @@ function DocItem({
               }}
               className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                 visibleTo.length === 0
-                  ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
-                  : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                  ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
+                  : 'border-slate-200 text-slate-500 hover:border-slate-300'
               }`}
             >
               Everyone
@@ -1172,8 +1172,8 @@ function DocItem({
                   }}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     selected
-                      ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
-                      : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                      ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
+                      : 'border-slate-200 text-slate-500 hover:border-slate-300'
                   }`}
                 >
                   {heir.fullName}
@@ -1239,19 +1239,19 @@ function PreviewModalContent({
       showCloseButton
       className="max-w-4xl w-full rounded-[2rem] p-0 overflow-hidden shadow-2xl sm:max-w-4xl"
     >
-      <DialogHeader className="p-6 border-b border-[#133378]/10">
+      <DialogHeader className="p-6 border-b border-[var(--royal)]/10">
         <div className="flex items-center justify-between">
           <div className="min-w-0 flex-1">
-            <DialogTitle className="text-lg font-bold text-[#0F172A] truncate">
+            <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-bold text-slate-900 truncate">
               {doc.displayName || doc.originalName}
             </DialogTitle>
-            <DialogDescription className="text-[12px] text-[#133378]/40 font-medium mt-0.5">
+            <DialogDescription className="text-[12px] text-[var(--royal)]/40 font-medium mt-0.5">
               {doc.mimeType} · {formatFileSize(doc.fileSize)}
             </DialogDescription>
           </div>
           <Button
             onClick={onDownload}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl text-[12px] font-bold ml-4"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white rounded-xl text-[12px] font-bold ml-4"
             size="sm"
           >
             Download
@@ -1260,19 +1260,19 @@ function PreviewModalContent({
       </DialogHeader>
 
       {/* Content */}
-      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-[#F8FAFC]">
+      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-slate-50">
         {loading ? (
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
         ) : previewUrl ? (
           doc.mimeType?.startsWith('image/') ? (
             <img src={previewUrl} alt={doc.originalName} className="max-w-full max-h-[60vh] rounded-xl object-contain" />
           ) : doc.mimeType === 'application/pdf' ? (
-            <iframe src={previewUrl} className="w-full h-[60vh] rounded-xl border border-[#133378]/10" title={doc.originalName} />
+            <iframe src={previewUrl} className="w-full h-[60vh] rounded-xl border border-[var(--royal)]/10" title={doc.originalName} />
           ) : (
-            <p className="text-[#133378]/50">Preview not available for this file type.</p>
+            <p className="text-[var(--royal)]/50">Preview not available for this file type.</p>
           )
         ) : (
-          <p className="text-[#133378]/50">Unable to load preview. Try downloading instead.</p>
+          <p className="text-[var(--royal)]/50">Unable to load preview. Try downloading instead.</p>
         )}
       </div>
     </DialogContent>
@@ -1297,16 +1297,16 @@ function DeleteModalContent({
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
         </AlertDialogMedia>
-        <AlertDialogTitle className="text-xl font-bold text-[#0F172A] text-center">
+        <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 text-center">
           Archive Document
         </AlertDialogTitle>
-        <AlertDialogDescription className="text-[14px] text-[#133378]/50 text-center">
-          <strong className="text-[#0F172A]">{doc.displayName || doc.originalName}</strong> will be archived.
+        <AlertDialogDescription className="text-[14px] text-[var(--royal)]/50 text-center">
+          <strong className="text-slate-900">{doc.displayName || doc.originalName}</strong> will be archived.
           It can be restored later if needed.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter className="flex gap-3 mt-4 sm:flex-row border-t-0 bg-transparent mx-0 mb-0 p-0 rounded-none">
-        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[#133378]/10 text-[#0F172A] font-bold text-[13px] hover:bg-[#F8FAFC] h-auto">
+        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px] hover:bg-slate-50 h-auto">
           Cancel
         </AlertDialogCancel>
         <AlertDialogAction
@@ -1353,19 +1353,19 @@ function AIInsightsPanel({
   )
 
   return (
-    <div className="border-t border-[#133378]/10 bg-[#F0F5FF] px-6 py-5 space-y-4">
+    <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-5 space-y-4">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
         </svg>
-        <span className="text-[12px] font-bold text-[#133378] uppercase tracking-widest">
+        <span className="text-[12px] font-bold text-[var(--royal)] uppercase tracking-widest">
           AI Insights
         </span>
       </div>
 
       {/* Summary */}
-      <p className="text-[14px] text-[#0F172A]/80 leading-relaxed">
+      <p className="text-[14px] text-slate-900/80 leading-relaxed">
         {analysis.summary}
       </p>
 
@@ -1373,19 +1373,19 @@ function AIInsightsPanel({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {analysis.signingDate && (
           <div className="flex items-center gap-2 text-[13px]">
-            <span className="text-[#133378]/40 font-medium">Signed:</span>
-            <span className="text-[#0F172A] font-semibold">{analysis.signingDate}</span>
+            <span className="text-[var(--royal)]/40 font-medium">Signed:</span>
+            <span className="text-slate-900 font-semibold">{analysis.signingDate}</span>
           </div>
         )}
         {analysis.jurisdiction && (
           <div className="flex items-center gap-2 text-[13px]">
-            <span className="text-[#133378]/40 font-medium">Jurisdiction:</span>
-            <span className="text-[#0F172A] font-semibold">{analysis.jurisdiction}</span>
+            <span className="text-[var(--royal)]/40 font-medium">Jurisdiction:</span>
+            <span className="text-slate-900 font-semibold">{analysis.jurisdiction}</span>
           </div>
         )}
         {analysis.notarized !== null && (
           <div className="flex items-center gap-2 text-[13px]">
-            <span className="text-[#133378]/40 font-medium">Notarized:</span>
+            <span className="text-[var(--royal)]/40 font-medium">Notarized:</span>
             <span className={`font-semibold ${analysis.notarized ? 'text-green-600' : 'text-amber-600'}`}>
               {analysis.notarized ? 'Yes' : 'No'}
             </span>
@@ -1393,8 +1393,8 @@ function AIInsightsPanel({
         )}
         {analysis.namedExecutor && (
           <div className="flex items-center gap-2 text-[13px]">
-            <span className="text-[#133378]/40 font-medium">Executor:</span>
-            <span className="text-[#0F172A] font-semibold">{analysis.namedExecutor}</span>
+            <span className="text-[var(--royal)]/40 font-medium">Executor:</span>
+            <span className="text-slate-900 font-semibold">{analysis.namedExecutor}</span>
             {heirNames.has(analysis.namedExecutor.toLowerCase().trim()) ? (
               <svg viewBox="0 0 24 24" className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polyline points="20 6 9 17 4 12" />
@@ -1408,8 +1408,8 @@ function AIInsightsPanel({
         )}
         {analysis.namedTrustee && (
           <div className="flex items-center gap-2 text-[13px]">
-            <span className="text-[#133378]/40 font-medium">Trustee:</span>
-            <span className="text-[#0F172A] font-semibold">{analysis.namedTrustee}</span>
+            <span className="text-[var(--royal)]/40 font-medium">Trustee:</span>
+            <span className="text-slate-900 font-semibold">{analysis.namedTrustee}</span>
           </div>
         )}
       </div>
@@ -1417,7 +1417,7 @@ function AIInsightsPanel({
       {/* Named Beneficiaries */}
       {analysis.namedBeneficiaries.length > 0 && (
         <div className="space-y-2">
-          <span className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+          <span className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
             Named Beneficiaries
           </span>
           <div className="flex flex-wrap gap-2">
@@ -1452,14 +1452,14 @@ function AIInsightsPanel({
       {/* Assets Mentioned */}
       {analysis.assetsMentioned.length > 0 && (
         <div className="space-y-2">
-          <span className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+          <span className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
             Assets Referenced
           </span>
           <div className="flex flex-wrap gap-2">
             {analysis.assetsMentioned.map((asset, i) => (
               <Badge
                 key={i}
-                className="bg-[#F8FAFC] text-[#133378]/60 border border-[#133378]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
+                className="bg-slate-50 text-[var(--royal)]/60 border border-[var(--royal)]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
               >
                 {asset}
               </Badge>

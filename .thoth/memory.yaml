@@ -1,6 +1,6 @@
 # 𓁟 Thoth — Project Memory for FinalWishes
 # Read this FIRST before any source files.
-# Last updated: 2026-06-01T22:38:03-04:00
+# Last updated: 2026-06-02T20:44:58-04:00
 
 ## Identity
 project: finalwishes
@@ -101,6 +101,7 @@ route_line_count: 22164
 # .thoth/journal.md    — Decision history
 
 ## Session Decisions
+# 2026-06-02: {"session_id":"c082fae1-2eb9-4491-a0b3-a24656fe472b","transcript_path":"/Users/thekryptodragon/.claude/projects/-Users-thekryptodragon/c082fae1-2eb9-4491-a0b3-a24656fe472b.jsonl","cwd":"/Users/thekryptodragon/Development/FinalWishes/web/src","hook_event_name":"PreCompact","trigger":"auto","custom_instructions":null}
 # 2026-06-01: Statutory-form coordinate-overlay engine Phase 1a (api/internal/forms/). Generic Go-native Fill() over per-form CoordinateMap, pdfcpu v0.12.1 library import. Proven on official IL Property POA (flat, SHA256-pinned): source fail-closed, execution fields never stamped (wet-sign default), true-flatten assertion. 6 tests green; human-review proof at docs/forms-phase0/proof/ (committed 9a3ca0a, not pushed pending review). Also folded in prior uncommitted GA-program work: CR-12 googlephotos package (fixed broken HEAD — main.go imported an uncommitted pkg), CR-05 payments APP_BASE_URL, GA evidence artifacts (cr-04/05/07/08/10), ADR-044 index entry, go.work go1.26.3. Full api suite: 15 pkgs green.
 # 2026-05-20: C3+C4 complete. 10 READMEs, 3 user guides, 24 CF tests, SettlementGantt, multi-executor quorum, GCP eval, vault retention+holds, phase transition hooks, root vitest config, gofmt CI fix. v0.10.1 deployed to prod (Cloud Run rev 35 + Firebase Hosting). Router handoff written. 211 tests passing.
 # 2026-05-19: -

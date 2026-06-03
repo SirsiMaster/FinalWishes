@@ -527,11 +527,13 @@ function ChapterFormDialog({
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Reset form when the chapter being edited changes. This MUST be useEffect:
-  // useState(initializer) only ran ONCE at mount, so opening the dialog for a
-  // different chapter (or switching create<->edit) showed stale fields.
+  // Reset form when the chapter being edited changes OR the dialog (re)opens.
+  // This MUST be useEffect: useState(initializer) only ran ONCE at mount, so
+  // opening the dialog for a different chapter (or switching create<->edit, or
+  // reopening the same chapter after a partial edit) showed stale fields.
   const resetKey = chapter?.id || 'new'
   useEffect(() => {
+    if (!open) return
     if (chapter) {
       setTitle(chapter.title)
       setDescription(chapter.description)
@@ -547,7 +549,7 @@ function ChapterFormDialog({
     }
     setCoverFile(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resetKey])
+  }, [chapter?.id, open])
 
   const handleCoverSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

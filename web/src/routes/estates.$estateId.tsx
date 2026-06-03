@@ -8,6 +8,7 @@ import { AuthGuard } from '../components/guards/AuthGuard'
 import { IdentityGate } from '../components/guards/IdentityGate'
 import { HeirWelcome, shouldShowHeirWelcome, markWelcomeSeen } from '../components/guards/HeirWelcome'
 import { OwnerWelcome, shouldShowOwnerWelcome, markOwnerWelcomeSeen } from '../components/guards/OwnerWelcome'
+import { ShepherdCompanion } from '../components/estate/ShepherdCompanion'
 import { EmailVerificationBanner } from '../components/identity/EmailVerificationBanner'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
@@ -44,6 +45,14 @@ function EstateLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const [ownerWelcomeDismissed, setOwnerWelcomeDismissed] = useState(false);
+  // Shepherd companion open state (device preference; not PII). Lifted here so
+  // the content column can reserve space for the docked panel on desktop.
+  const [shepherdOpen, setShepherdOpen] = useState<boolean>(() => {
+    try { return localStorage.getItem('fw_shepherd_collapsed') !== 'true'; } catch { return true; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem('fw_shepherd_collapsed', shepherdOpen ? 'false' : 'true'); } catch { /* ignore */ }
+  }, [shepherdOpen]);
 
   useEffect(() => {
     document.body.classList.add('dashboard-theme');
@@ -132,7 +141,7 @@ function EstateLayout() {
         <Sidebar />
         <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} />
         <div
-          className="transition-all duration-300 min-h-screen flex flex-col md:ml-[var(--sidebar-width)]"
+          className={`transition-all duration-300 min-h-screen flex flex-col md:ml-[var(--sidebar-width)] ${shepherdOpen ? 'lg:pr-[360px]' : ''}`}
         >
           <AdminHeader
             title={displayEstateName}
@@ -158,6 +167,11 @@ function EstateLayout() {
             </ErrorBoundary>
           </main>
         </div>
+        <ShepherdCompanion
+          estateId={estateId}
+          open={shepherdOpen}
+          onToggle={() => setShepherdOpen((v) => !v)}
+        />
       </div>
     </AuthGuard>
   )

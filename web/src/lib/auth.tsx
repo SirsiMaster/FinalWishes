@@ -327,9 +327,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const credential = await signInWithEmailAndPassword(auth, email, password);
 
-      // Fetch and set profile
+      // Clear any stale demo/guest shim so this real account isn't shadowed by
+      // a leftover localStorage session (which would skip the Firebase listener).
+      try { localStorage.removeItem('finalwishes_user'); } catch { /* ignore */ }
+      demoActiveRef.current = false;
+
+      // Fetch the profile BEFORE exposing `user`. The login modal redirects the
+      // moment `user` is truthy (index.tsx LoginModal effect); if `user` flipped
+      // true while `profile` was still null, navigatePostLogin would route to
+      // /estates/create instead of the user's estate dashboard — a visible bounce.
       const userProfile = await fetchUserProfile(credential.user.uid);
       setProfile(userProfile);
+
+      // Now set user directly from the credential, in case the Firebase listener
+      // was detached while demo mode was active (it only attaches once, at mount).
+      setUser(credential.user);
 
       return { success: true, profile: userProfile };
     } catch (error: unknown) {
@@ -402,8 +414,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Sign out
   const handleSignOut = useCallback(async () => {
-    await firebaseSignOut(auth);
+    // Tear down any demo/guest session shim FIRST so it cannot auto-restore.
+    // loadDemoSession() reads this key synchronously on every mount; if it
+    // survives sign-out the user is silently logged straight back in.
+    try { localStorage.removeItem('finalwishes_user'); } catch { /* ignore */ }
+    demoActiveRef.current = false;
+    try {
+      await firebaseSignOut(auth);
+    } catch (err) {
+      // Do NOT swallow silently: a failed Firebase sign-out leaves the user
+      // persisted in IndexedDB, so the next mount's onAuthStateChanged can
+      // restore them. Surface it; the hard reload + cleared state below is a
+      // best-effort fallback, not a guarantee Firebase actually signed out.
+      console.error('[auth] firebaseSignOut failed; session may persist:', err);
+    }
+    setUser(null);
     setProfile(null);
+    // Hard navigation guarantees a clean re-init: it re-attaches the Firebase
+    // listener that demo mode may have detached and discards all stale
+    // in-memory auth state, so nothing can re-authenticate the user.
+    window.location.assign('/login');
   }, []);
 
   // Reset password

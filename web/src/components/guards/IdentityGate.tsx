@@ -42,12 +42,6 @@ interface UserFirestoreProfile {
 export function IdentityGate({ estateId, children }: IdentityGateProps) {
   const { user, profile, emailVerified, resendVerification } = useAuth();
 
-  // Demo mode bypass — synthetic users skip identity verification
-  const isDemoUser = user?.uid?.startsWith('user_') || user?.uid?.startsWith('demo_');
-  if (isDemoUser && profile) {
-    return <>{children}</>;
-  }
-
   return <IdentityGateInner estateId={estateId} user={user} profile={profile} emailVerified={emailVerified} resendVerification={resendVerification}>{children}</IdentityGateInner>;
 }
 

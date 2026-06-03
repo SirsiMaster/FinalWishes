@@ -18,10 +18,9 @@ import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem } fr
 
 export const Route = createFileRoute('/')({
   component: Home,
-  validateSearch: (search: Record<string, unknown>): { login?: string; invite?: string; demo?: string } => ({
+  validateSearch: (search: Record<string, unknown>): { login?: string; invite?: string } => ({
     login: (search.login as string) ?? undefined,
     invite: (search.invite as string) ?? undefined,
-    demo: (search.demo as string) ?? undefined,
   }),
 })
 
@@ -631,7 +630,7 @@ function Home() {
       </footer>
 
       {/* ═══════════════════ LOGIN MODAL ═══════════════════ */}
-      <LoginModal open={loginOpen} onOpenChange={setLoginOpen} invite={search.invite} demo={search.demo} />
+      <LoginModal open={loginOpen} onOpenChange={setLoginOpen} invite={search.invite} />
     </main>
   );
 }
@@ -653,10 +652,9 @@ function navigatePostLogin(
   }
 }
 
-function LoginModal({ open, onOpenChange, invite, demo }: { open: boolean; onOpenChange: (v: boolean) => void; invite?: string; demo?: string }) {
+function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChange: (v: boolean) => void; invite?: string }) {
   const navigate = useNavigate();
-  const { signIn, signUp, resetPassword, loginDemo, user, profile } = useAuth();
-  const isDemo = demo === 'true';
+  const { signIn, signUp, resetPassword, user, profile } = useAuth();
 
   const [mode, setMode] = useState<'signin' | 'signup' | 'mfa' | 'forgot'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -685,26 +683,6 @@ function LoginModal({ open, onOpenChange, invite, demo }: { open: boolean; onOpe
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
-
-    if (isDemo) {
-      const demoSession = {
-        id: 'user_tameeka',
-        login: identifier || 'Tameeka116',
-        name: 'Tameeka Lockhart',
-        email: 'Tameekalockhart@gmail.com',
-        role: 'owner',
-        phone: '123-456-7890',
-        primaryEstateId: 'estate_lockhart',
-        primaryEstateName: 'Lockhart Estate',
-        profilePhotoUrl: '',
-      };
-      loginDemo(demoSession);
-      localStorage.setItem('fw_owner_welcome_seen_estate_lockhart_user_tameeka', new Date().toISOString());
-      setIsSubmitting(false);
-      onOpenChange(false);
-      navigate({ to: '/estates/$estateId/dashboard', params: { estateId: 'estate_lockhart' } } as any);
-      return;
-    }
 
     const result = await signIn(identifier, password);
     setIsSubmitting(false);
@@ -811,7 +789,7 @@ function LoginModal({ open, onOpenChange, invite, demo }: { open: boolean; onOpe
               FINALWISHES
             </span>
           </div>
-          <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378] mb-2">
+          <h2 aria-hidden="true" className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#133378] mb-2">
             {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : mode === 'forgot' ? 'Reset Password' : 'Verification Required'}
           </h2>
           <p className="text-[#64748B] text-sm font-medium max-w-[260px] mx-auto leading-relaxed">

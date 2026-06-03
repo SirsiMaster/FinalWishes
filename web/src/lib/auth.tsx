@@ -17,7 +17,6 @@ import {
   useEffect,
   useState,
   useCallback,
-  useRef,
   type ReactNode,
 } from 'react';
 import {
@@ -83,8 +82,6 @@ export interface AuthContextValue {
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   /** Resend email verification */
   resendVerification: () => Promise<{ success: boolean; error?: string }>;
-  /** Activate demo session (sets synthetic user + profile without Firebase Auth) */
-  loginDemo: (session: Record<string, string | undefined>) => void;
 }
 
 export interface SignUpParams {
@@ -195,80 +192,18 @@ export async function isUsernameAvailable(username: string): Promise<boolean> {
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
-/**
- * Check if demo mode is active via URL param.
- */
-function isDemoMode(): boolean {
-  return typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('demo') === 'true';
-}
-
-/**
- * Load demo session from localStorage (set by login.tsx in demo mode).
- * Returns a synthetic UserProfile or null if no demo session exists.
- */
-function loadDemoSession(): UserProfile | null {
-  try {
-    const raw = localStorage.getItem('finalwishes_user');
-    if (!raw) return null;
-    const session = JSON.parse(raw);
-    return {
-      uid: session.id || 'demo_user',
-      email: session.email || '',
-      username: session.login,
-      firstName: session.name?.split(' ')[0] || '',
-      lastName: session.name?.split(' ').slice(1).join(' ') || '',
-      displayName: session.name || 'Demo User',
-      role: (session.role === 'owner' ? 'principal' : session.role) || 'principal',
-      phone: session.phone,
-      status: 'active',
-      profilePhotoUrl: session.profilePhotoUrl,
-      primaryEstateId: session.primaryEstateId,
-      primaryEstateName: session.primaryEstateName,
-    };
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Create a minimal User-like shim for demo mode.
- * AuthGuard only checks truthiness and emailVerified, so a partial shim works.
- */
-function createDemoUserShim(profile: UserProfile): User {
-  return {
-    uid: profile.uid,
-    email: profile.email,
-    emailVerified: true,
-    displayName: profile.displayName,
-    isAnonymous: false,
-    // Stub methods required by consumer code
-    getIdToken: async () => 'demo-token',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any as User;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Initialize from localStorage synchronously so demo sessions survive navigation
-  const initialDemo = loadDemoSession();
-  const [user, setUser] = useState<User | null>(initialDemo ? createDemoUserShim(initialDemo) : null);
-  const [profile, setProfile] = useState<UserProfile | null>(initialDemo);
-  const [loading, setLoading] = useState(!initialDemo);
-  // Ref tracks demo activation so the Firebase listener skips overrides
-  const demoActiveRef = useRef(!!initialDemo);
-  // Ref holds unsubscribe so loginDemo can detach the Firebase listener
-  const unsubRef = useRef<(() => void) | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Listen for Firebase auth state changes
   useEffect(() => {
-    // Demo mode already active — skip Firebase listener entirely
-    if (demoActiveRef.current) return;
+    // Purge any legacy demo/guest session left in localStorage by older builds
+    // so it can never be mistaken for a real account.
+    try { localStorage.removeItem('finalwishes_user'); } catch { /* ignore */ }
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      // Skip if demo mode was activated after mount (via loginDemo)
-      if (demoActiveRef.current) return;
-
-      setUser(firebaseUser);
-
       if (firebaseUser) {
         // Fetch user profile from Firestore
         let userProfile = await fetchUserProfile(firebaseUser.uid);
@@ -299,15 +234,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
 
+        // Set profile BEFORE user: the login modal redirects the instant `user`
+        // is truthy (index.tsx LoginModal effect). If `user` flipped true with a
+        // null profile, navigatePostLogin would route to /estates/create instead
+        // of the user's own estate dashboard — a visible post-login bounce.
         setProfile(userProfile);
+        setUser(firebaseUser);
       } else {
+        setUser(null);
         setProfile(null);
       }
 
       setLoading(false);
     });
 
-    unsubRef.current = unsubscribe;
     return unsubscribe;
   }, []);
 
@@ -327,20 +267,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const credential = await signInWithEmailAndPassword(auth, email, password);
 
-      // Clear any stale demo/guest shim so this real account isn't shadowed by
-      // a leftover localStorage session (which would skip the Firebase listener).
-      try { localStorage.removeItem('finalwishes_user'); } catch { /* ignore */ }
-      demoActiveRef.current = false;
-
       // Fetch the profile BEFORE exposing `user`. The login modal redirects the
       // moment `user` is truthy (index.tsx LoginModal effect); if `user` flipped
       // true while `profile` was still null, navigatePostLogin would route to
       // /estates/create instead of the user's estate dashboard — a visible bounce.
       const userProfile = await fetchUserProfile(credential.user.uid);
       setProfile(userProfile);
-
-      // Now set user directly from the credential, in case the Firebase listener
-      // was detached while demo mode was active (it only attaches once, at mount).
       setUser(credential.user);
 
       return { success: true, profile: userProfile };
@@ -414,11 +346,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Sign out
   const handleSignOut = useCallback(async () => {
-    // Tear down any demo/guest session shim FIRST so it cannot auto-restore.
-    // loadDemoSession() reads this key synchronously on every mount; if it
-    // survives sign-out the user is silently logged straight back in.
+    // Purge any legacy demo key that an older build may have left behind.
     try { localStorage.removeItem('finalwishes_user'); } catch { /* ignore */ }
-    demoActiveRef.current = false;
     try {
       await firebaseSignOut(auth);
     } catch (err) {
@@ -431,8 +360,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setProfile(null);
     // Hard navigation guarantees a clean re-init: it re-attaches the Firebase
-    // listener that demo mode may have detached and discards all stale
-    // in-memory auth state, so nothing can re-authenticate the user.
+    // listener and discards all stale in-memory auth state.
     window.location.assign('/login');
   }, []);
 
@@ -459,36 +387,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Activate demo session — sets synthetic user + profile in state
-  const loginDemo = useCallback((session: Record<string, string | undefined>) => {
-    const demoProfile: UserProfile = {
-      uid: session.id || 'demo_user',
-      email: session.email || '',
-      username: session.login,
-      firstName: session.name?.split(' ')[0] || '',
-      lastName: session.name?.split(' ').slice(1).join(' ') || '',
-      displayName: session.name || 'Demo User',
-      role: (session.role === 'owner' ? 'principal' : (session.role as UserProfile['role'])) || 'principal',
-      phone: session.phone,
-      status: 'active',
-      profilePhotoUrl: session.profilePhotoUrl,
-      primaryEstateId: session.primaryEstateId,
-      primaryEstateName: session.primaryEstateName,
-    };
-    // Persist to localStorage so demo survives page navigations
-    try { localStorage.setItem('finalwishes_user', JSON.stringify(session)); } catch { /* localStorage unavailable */ }
-    // Mark demo as active so Firebase listener stops overriding state
-    demoActiveRef.current = true;
-    // Detach Firebase listener if it was attached
-    if (unsubRef.current) {
-      unsubRef.current();
-      unsubRef.current = null;
-    }
-    setUser(createDemoUserShim(demoProfile));
-    setProfile(demoProfile);
-    setLoading(false);
-  }, []);
-
   const value: AuthContextValue = {
     user,
     profile,
@@ -499,7 +397,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut: handleSignOut,
     resetPassword,
     resendVerification,
-    loginDemo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

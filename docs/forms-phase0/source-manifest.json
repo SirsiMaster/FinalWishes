@@ -117,6 +117,40 @@
       "sha256": null,
       "has_acroform": "UNVERIFIED (download blocked; likely true per ilsos.gov forms convention)",
       "jurisdiction": "IL"
+    },
+    {
+      "form": "Minnesota Statutory Short Form Power of Attorney",
+      "form_id": "mn_poa_523_23",
+      "phase1_priority": 1,
+      "source_url": "https://www.ag.state.mn.us/consumer/handbooks/probate/PowerOfAtty.pdf",
+      "source_note": "Official Minnesota Attorney General consumer publication of the Minn. Stat. 523.23 statutory short form. PDF author metadata is 'Attorney General'. Clean consumer form (not a statute-text wrapper) — principal/attorney-in-fact/successor identity rules, opt-in powers checkboxes (A)-(N), expiration date, and a wet-sign/notarize execution block. Coordinate-overlay (flat).",
+      "local_file": "blanks/mn_poa_523_23.pdf",
+      "downloaded_timestamp": "2026-06-03T00:00:00Z",
+      "sha256": "bd49b1a608ef6c13b4d068649ca0a64375e234e207a8e5682478755b9e4669b3",
+      "byte_size": 37940,
+      "pdf_version": "1.5",
+      "page_count": 5,
+      "detected_revision": "creation date D:20140708 (2014-07-08); author 'Attorney General'",
+      "has_acroform": false,
+      "acroform_note": "FLAT — Form: No. Coordinate-overlay strategy (matches il_poa_property_2011).",
+      "jurisdiction": "MN"
+    },
+    {
+      "form": "Maryland Statutory Form Personal Financial Power of Attorney",
+      "form_id": "md_poa_17_202",
+      "phase1_priority": 1,
+      "source_url": "https://mgaleg.maryland.gov/2022RS/Statute_Web/get/17-202.pdf",
+      "source_note": "Official General Assembly of Maryland publication of the Md. Code, Est. & Trusts 17-202 statutory form (grants all enumerated powers by statutory text; no per-power checkboxes). KNOWN-COSMETIC: page 1 and the trailing page carry the statute-web publication wrapper ('[Previous][Next]', '17-202.') — part of the authoritative artifact, intentionally left intact. The fillable underscore rules are the real statutory blanks. Maryland publishes no separate clean government blank; peoples-law.org reproduces this same statutory text.",
+      "local_file": "blanks/md_poa_17_202.pdf",
+      "downloaded_timestamp": "2026-06-03T00:00:00Z",
+      "sha256": "31509bd76317cb39d74311ccdc6c8317af804a0a3e054852e9d6d3343c5043a6",
+      "byte_size": 285767,
+      "pdf_version": "1.5",
+      "page_count": 10,
+      "detected_revision": "Title 'Article - Estates and Trusts, Section 17-202'; author 'General Assembly of Maryland'; creation date D:20211221 (2021-12-21)",
+      "has_acroform": false,
+      "acroform_note": "FLAT — Form: No. Coordinate-overlay strategy.",
+      "jurisdiction": "MD"
     }
   ],
   "additional_blank_fetched": {

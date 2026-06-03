@@ -4,6 +4,7 @@ _Engine: `api/internal/forms/` — generic Go-native coordinate-overlay over off
 
 ## Shipped (in production)
 
+### Illinois
 | Form | Citation | Source | Status |
 |------|----------|--------|--------|
 | **Property POA** (`il_poa_property_2011`) | 755 ILCS 45/3-3 | official flat blank, SHA-pinned | ✅ Phase 1a — proven, deployed (`9a3ca0a`) |
@@ -12,7 +13,23 @@ _Engine: `api/internal/forms/` — generic Go-native coordinate-overlay over off
 | **Living Will** (`il_living_will_caringinfo`) | 755 ILCS 35 | flattened CaringInfo blank, page 17 | ✅ priority 4 — declarant identity, proof-verified |
 | **Mental Health Treatment Pref. Declaration** (`il_mhtpd_2016`) | 755 ILCS 43 | official IDPH flat blank (dph.illinois.gov), SHA-pinned | ✅ priority 5 — declarant + attorney-in-fact, proof-verified |
 
-Proof rasters for both under `docs/forms-phase0/proof/` (body page = values land on the rules; execution page = blank).
+### Multi-state POA (C5 — launch-priority states MD / IL / MN)
+| Form | Citation | Source | Status |
+|------|----------|--------|--------|
+| **Minnesota Statutory Short Form POA** (`mn_poa_523_23`) | Minn. Stat. § 523.23 | official MN Attorney General flat blank, SHA-pinned | ✅ C5 — identity + powers (A)–(N) + expiration, proof-verified · _awaiting legal/owner sign-off on proof raster_ |
+| **Maryland Statutory Personal Financial POA** (`md_poa_17_202`) | Md. Code, Est. & Trusts § 17-202 | official MD General Assembly flat blank, SHA-pinned | ✅ C5 — principal/agent/coagent/successor + termination date, proof-verified · _awaiting legal/owner sign-off on proof raster_ |
+
+> Illinois already carried a Property POA + Health Care POA, so MN + MD complete the
+> launch-priority multi-state POA set (MD/IL/MN per CLAUDE.md §2 Launch Scope). Both new
+> forms are flat coordinate-overlay maps built on the proven `il_poa_property_2011` spine:
+> SHA-pinned official blanks, execution fields never stamped (wet-sign/notarize/witness),
+> true-flatten output. **Production gate: a human/legal visual sign-off on the proof
+> rasters** (`docs/forms-phase0/proof/{mn_poa_523_23,md_poa_17_202}_*.png`) per the
+> coordinate-confidence discipline — the engine guarantees are unit-tested and the body
+> values sit on the rules, but legal review of the filled artifact is the final gate before
+> these are surfaced to end users.
+
+Proof rasters for every form under `docs/forms-phase0/proof/` (body page = values land on the rules; execution page = blank).
 
 ## Engine capability proven this phase
 

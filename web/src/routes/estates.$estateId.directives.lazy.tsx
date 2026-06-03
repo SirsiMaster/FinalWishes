@@ -461,7 +461,7 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
   const [mode, setMode] = useState<'edit' | 'view'>(directive.status === 'finalized' ? 'view' : 'edit')
   const [saving, setSaving] = useState(false)
   const [visibleTo, setVisibleTo] = useState<string[]>(directive.visibleTo || [])
-  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedIndicatorTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -469,7 +469,11 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
   const doAutoSave = useCallback(async (html: string) => {
     if (directive.status === 'finalized') return
     setAutoSaveStatus('saving')
-    await updateDirective(estateId, directive.id, { content: html })
+    const result = await updateDirective(estateId, directive.id, { content: html })
+    if (!result.success) {
+      setAutoSaveStatus('error')
+      return
+    }
     setAutoSaveStatus('saved')
     if (savedIndicatorTimer.current) clearTimeout(savedIndicatorTimer.current)
     savedIndicatorTimer.current = setTimeout(() => setAutoSaveStatus('idle'), 2000)
@@ -506,8 +510,13 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     if (!editor) return
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     setSaving(true)
-    await updateDirective(estateId, directive.id, { content: editor.getHTML() })
+    const result = await updateDirective(estateId, directive.id, { content: editor.getHTML() })
     setSaving(false)
+    if (!result.success) {
+      setAutoSaveStatus('error')
+      toast.error('Could not save draft', { description: result.error || 'Please try again.' })
+      return
+    }
     setAutoSaveStatus('saved')
     if (savedIndicatorTimer.current) clearTimeout(savedIndicatorTimer.current)
     savedIndicatorTimer.current = setTimeout(() => setAutoSaveStatus('idle'), 2000)
@@ -518,8 +527,12 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
     if (!editor) return
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current)
     setSaving(true)
-    await updateDirective(estateId, directive.id, { content: editor.getHTML(), status: 'finalized' })
+    const result = await updateDirective(estateId, directive.id, { content: editor.getHTML(), status: 'finalized' })
     setSaving(false)
+    if (!result.success) {
+      toast.error('Could not finalize directive', { description: result.error || 'Please try again.' })
+      return
+    }
     setMode('view')
     toast.success('Directive finalized', { description: 'This document is now locked and ready for signing.' })
   }, [editor, estateId, directive.id])
@@ -613,7 +626,7 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
             <span className="flex items-center gap-1.5 text-[11px] text-[#64748B] font-medium mr-1">
               {autoSaveStatus === 'saving' && <Loader2 className="w-3 h-3 animate-spin" />}
               {autoSaveStatus === 'saved' && <Check className="w-3 h-3 text-[#059669]" />}
-              {autoSaveStatus === 'saving' ? 'Saving...' : 'Saved'}
+              {autoSaveStatus === 'saving' ? 'Saving...' : autoSaveStatus === 'error' ? 'Not saved' : 'Saved'}
             </span>
           )}
           {directive.status !== 'finalized' && (
@@ -797,7 +810,12 @@ function IllinoisAdvanceDirectivesSection({ estateId }: { estateId: string }) {
         setDirectives(res.directives)
         setStatuses(res.statuses)
       })
-      .catch(() => {})
+      .catch((err: unknown) => {
+        console.error('[AdvanceDirectives] load failed:', err)
+        toast.error('Could not load advance directives', {
+          description: err instanceof Error ? err.message : 'Please refresh to try again.',
+        })
+      })
       .finally(() => setLoading(false))
   }, [estateId])
 

@@ -51,14 +51,17 @@ export const Route = createFileRoute('/estates/$estateId/heirlooms')({
 
 // ─── Category Config ──────────────────────────────────────────────────────
 
+// Category accent collapsed to a single restrained gold (#C8A951 = var(--gold)).
+// Kept as a hex literal because consumers build alpha tints via `${color}20`.
+const CATEGORY_ACCENT = '#C8A951'
 const CATEGORIES = [
-  { value: 'jewelry' as const, label: 'Jewelry', icon: Gem, color: '#C8A951' },
-  { value: 'artwork' as const, label: 'Artwork', icon: Palette, color: '#7C3AED' },
-  { value: 'furniture' as const, label: 'Furniture', icon: Armchair, color: '#059669' },
-  { value: 'vehicle' as const, label: 'Vehicle', icon: Car, color: '#2563EB' },
-  { value: 'collectible' as const, label: 'Collectible', icon: Trophy, color: '#F59E0B' },
-  { value: 'family_artifact' as const, label: 'Family Artifact', icon: ScrollText, color: '#DC2626' },
-  { value: 'other' as const, label: 'Other', icon: Package, color: '#64748B' },
+  { value: 'jewelry' as const, label: 'Jewelry', icon: Gem, color: CATEGORY_ACCENT },
+  { value: 'artwork' as const, label: 'Artwork', icon: Palette, color: CATEGORY_ACCENT },
+  { value: 'furniture' as const, label: 'Furniture', icon: Armchair, color: CATEGORY_ACCENT },
+  { value: 'vehicle' as const, label: 'Vehicle', icon: Car, color: CATEGORY_ACCENT },
+  { value: 'collectible' as const, label: 'Collectible', icon: Trophy, color: CATEGORY_ACCENT },
+  { value: 'family_artifact' as const, label: 'Family Artifact', icon: ScrollText, color: CATEGORY_ACCENT },
+  { value: 'other' as const, label: 'Other', icon: Package, color: CATEGORY_ACCENT },
 ] as const
 
 type CategoryValue = (typeof CATEGORIES)[number]['value']
@@ -111,7 +114,7 @@ function HeirloomsPage() {
           <Button
             onClick={() => setModalOpen(true)}
             disabled={tierUsage ? !tierUsage.canUploadMedia : false}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-lg w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-6 py-3 md:px-10 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] shadow-lg w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-5 h-5" />
             Add Heirloom
@@ -121,15 +124,15 @@ function HeirloomsPage() {
 
       {/* Tier Limit Banner */}
       {tierUsage && !tierUsage.canUploadMedia && (
-        <div className="bg-[#C8A951]/10 border border-[#C8A951]/30 rounded-2xl p-6 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#C8A951]/20 flex items-center justify-center flex-shrink-0">
-            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+        <div className="bg-[var(--gold)]/10 border border-[var(--gold)]/30 rounded-2xl p-6 flex items-center gap-4">
+          <div className="w-10 h-10 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center flex-shrink-0">
+            <svg viewBox="0 0 24 24" className="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-[#0F172A]">{tierUpgradeMessage(tierUsage, 'media')}</p>
-            <p className="text-xs text-[#64748B] mt-1">
+            <p className="text-sm font-bold text-slate-900">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-slate-500 mt-1">
               {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
             </p>
           </div>
@@ -143,15 +146,15 @@ function HeirloomsPage() {
           { label: 'Estimated Value', value: formatCurrency(stats.totalValue), icon: DollarSign },
           { label: 'Categories', value: String(stats.categories), icon: Archive },
         ].map((s) => (
-          <Card key={s.label} className="bg-[#F8FAFC] rounded-3xl border-slate-100 py-0">
+          <Card key={s.label} className="bg-slate-50 rounded-3xl border-slate-100 py-0">
             <CardContent className="p-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-[#133378]/5 rounded-2xl flex items-center justify-center">
-                  <s.icon className="w-5 h-5 text-[#133378]" />
+                <div className="w-12 h-12 bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
+                  <s.icon className="w-5 h-5 text-[var(--royal)]" />
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-[#0F172A]">{s.value}</p>
-                  <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">{s.label}</p>
+                  <p className="text-3xl font-bold text-slate-900">{s.value}</p>
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
                 </div>
               </div>
             </CardContent>
@@ -164,7 +167,7 @@ function HeirloomsPage() {
         <Button
           variant={filterCategory === 'all' ? 'default' : 'secondary'}
           onClick={() => setFilterCategory('all')}
-          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[#133378] text-white hover:bg-[#1E3A5F]' : 'bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]'}`}
+          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
         >
           All
         </Button>
@@ -173,7 +176,7 @@ function HeirloomsPage() {
             key={c.value}
             variant={filterCategory === c.value ? 'default' : 'secondary'}
             onClick={() => setFilterCategory(c.value)}
-            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[#133378] text-white hover:bg-[#1E3A5F]' : 'bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]'}`}
+            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
           >
             <c.icon className="w-3.5 h-3.5" />
             {c.label}
@@ -221,10 +224,10 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
   }, [estateId, item.id])
 
   return (
-    <Card className="rounded-3xl border-slate-100 hover:border-[#133378]/10 transition-all group py-0 overflow-hidden">
+    <Card className="rounded-3xl border-slate-100 hover:border-[var(--royal)]/10 transition-all group py-0 overflow-hidden">
       <CardContent className="p-0">
         {/* Photo / Placeholder */}
-        <div className="relative h-48 bg-[#F8FAFC] flex items-center justify-center overflow-hidden">
+        <div className="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden">
           {hasPhoto ? (
             <img
               src={item.photoUrls[0]}
@@ -233,8 +236,8 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
             />
           ) : (
             <div className="flex flex-col items-center gap-2">
-              <Image className="w-10 h-10 text-[#133378]/15" />
-              <span className="text-[11px] font-bold text-[#133378]/20 uppercase tracking-widest">No Photo</span>
+              <Image className="w-10 h-10 text-[var(--royal)]/15" />
+              <span className="text-[11px] font-bold text-[var(--royal)]/20 uppercase tracking-widest">No Photo</span>
             </div>
           )}
           {/* Category badge overlay */}
@@ -250,9 +253,9 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
         <div className="p-8">
           {/* Name & Value */}
           <div className="flex items-start justify-between mb-4">
-            <h3 className="text-lg font-bold text-[#0F172A]">{item.name}</h3>
+            <h3 className="text-lg font-bold text-slate-900">{item.name}</h3>
             {item.estimatedValue != null && item.estimatedValue > 0 && (
-              <Badge className="px-3 py-1.5 h-auto bg-[#C8A951]/10 text-[#C8A951] text-[11px] font-bold rounded-lg border-transparent">
+              <Badge className="px-3 py-1.5 h-auto bg-[var(--gold)]/10 text-[var(--gold)] text-[11px] font-bold rounded-lg border-transparent">
                 <DollarSign className="w-3 h-3" />
                 {formatCurrency(item.estimatedValue)}
               </Badge>
@@ -261,20 +264,20 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
 
           {/* Description */}
           {item.description && (
-            <p className="text-[13px] text-[#64748B] line-clamp-2 mb-4">{item.description}</p>
+            <p className="text-[13px] text-slate-500 line-clamp-2 mb-4">{item.description}</p>
           )}
 
           {/* Meta row */}
           <div className="flex flex-wrap gap-4 mb-4">
             {item.designatedHeir && (
-              <div className="flex items-center gap-1.5 text-[12px] text-[#334155]">
-                <User className="w-3.5 h-3.5 text-[#133378]/40" />
+              <div className="flex items-center gap-1.5 text-[12px] text-slate-700">
+                <User className="w-3.5 h-3.5 text-[var(--royal)]/40" />
                 <span className="font-medium">{item.designatedHeir}</span>
               </div>
             )}
             {item.location && (
-              <div className="flex items-center gap-1.5 text-[12px] text-[#334155]">
-                <MapPin className="w-3.5 h-3.5 text-[#133378]/40" />
+              <div className="flex items-center gap-1.5 text-[12px] text-slate-700">
+                <MapPin className="w-3.5 h-3.5 text-[var(--royal)]/40" />
                 <span className="font-medium">{item.location}</span>
               </div>
             )}
@@ -282,9 +285,9 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
 
           {/* Provenance */}
           {item.provenance && (
-            <div className="bg-[#F8FAFC] rounded-2xl p-5 mb-4">
-              <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest mb-2">Provenance</p>
-              <p className="text-[13px] text-[#334155] line-clamp-3">{item.provenance}</p>
+            <div className="bg-slate-50 rounded-2xl p-5 mb-4">
+              <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest mb-2">Provenance</p>
+              <p className="text-[13px] text-slate-700 line-clamp-3">{item.provenance}</p>
             </div>
           )}
 
@@ -293,11 +296,11 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
             <div className="mb-4 pt-3">
               <div className="flex items-center gap-2 mb-2.5">
                 {visibleTo.length === 0 ? (
-                  <Globe className="w-3.5 h-3.5 text-[#64748B]" />
+                  <Globe className="w-3.5 h-3.5 text-slate-500" />
                 ) : (
-                  <Users className="w-3.5 h-3.5 text-[#133378]" />
+                  <Users className="w-3.5 h-3.5 text-[var(--royal)]" />
                 )}
-                <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-widest">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
                   {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
                 </span>
               </div>
@@ -310,8 +313,8 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                   }}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     visibleTo.length === 0
-                      ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
-                      : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                      ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
+                      : 'border-slate-200 text-slate-500 hover:border-slate-300'
                   }`}
                 >
                   Everyone
@@ -331,8 +334,8 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                       }}
                       className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                         selected
-                          ? 'border-[#133378] bg-[#133378]/5 text-[#133378]'
-                          : 'border-slate-200 text-[#64748B] hover:border-slate-300'
+                          ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
+                          : 'border-slate-200 text-slate-500 hover:border-slate-300'
                       }`}
                     >
                       {heir.fullName}
@@ -353,7 +356,7 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                 <Button variant="destructive" size="xs" onClick={handleArchive} className="text-[12px] font-bold">
                   Yes
                 </Button>
-                <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[#64748B]">
+                <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-slate-500">
                   No
                 </Button>
               </div>
@@ -364,7 +367,7 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                 onClick={() => setConfirming(true)}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Archive className="w-4 h-4 text-[#94A3B8] hover:text-[#DC2626]" />
+                <Archive className="w-4 h-4 text-slate-400 hover:text-[#DC2626]" />
               </Button>
             )}
           </div>
@@ -564,7 +567,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
         className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10"
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
             Add Heirloom
           </DialogTitle>
           <DialogDescription>
@@ -575,24 +578,24 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
         <div className="space-y-6 py-4">
           {/* Name */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Item Name *
             </Label>
             <Input
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="e.g., Grandmother's Diamond Ring, Steinway Grand Piano"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
             />
           </div>
 
           {/* Category */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Category
             </Label>
             <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
-              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]">
+              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -607,7 +610,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
 
           {/* Description */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Description *
             </Label>
             <Textarea
@@ -615,14 +618,14 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
               placeholder="Describe the item — materials, condition, distinguishing features..."
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[#0F172A] resize-none"
+              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
             />
           </div>
 
           {/* Two-column row: Value + Heir */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
                 Estimated Value
               </Label>
               <Input
@@ -630,38 +633,38 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                 value={form.estimatedValue}
                 onChange={(e) => setForm((f) => ({ ...f, estimatedValue: e.target.value }))}
                 placeholder="$0"
-                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+              <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
                 Designated Heir
               </Label>
               <Input
                 value={form.designatedHeir}
                 onChange={(e) => setForm((f) => ({ ...f, designatedHeir: e.target.value }))}
                 placeholder="Name of the intended recipient"
-                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
               />
             </div>
           </div>
 
           {/* Location */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Location
             </Label>
             <Input
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
               placeholder="Where is the item kept? e.g., Master bedroom safe, Storage unit #42"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[#0F172A]"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
             />
           </div>
 
           {/* Provenance */}
           <div className="space-y-2">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Provenance / Story
             </Label>
             <Textarea
@@ -669,13 +672,13 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               onChange={(e) => setForm((f) => ({ ...f, provenance: e.target.value }))}
               placeholder="The history and story behind this item — where it came from, who owned it, why it matters..."
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[#0F172A] resize-none"
+              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
             />
           </div>
 
           {/* ── Photo Upload ── */}
           <div className="space-y-3">
-            <Label className="text-[11px] font-bold text-[#133378]/60 uppercase tracking-widest">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               Photos
             </Label>
 
@@ -687,8 +690,8 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                 ${photoUploads.length >= MAX_IMAGES
                   ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
                   : isDragActive
-                    ? 'border-[#133378] bg-[#133378]/5 scale-[1.01]'
-                    : 'border-[#133378]/20 hover:border-[#133378]/40 hover:bg-[#133378]/[0.02]'
+                    ? 'border-[var(--royal)] bg-[var(--royal)]/5 scale-[1.01]'
+                    : 'border-[var(--royal)]/20 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/[0.02]'
                 }
               `}
             >
@@ -696,20 +699,20 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               <div className="flex flex-col items-center gap-3">
                 <div
                   className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
-                    isDragActive ? 'bg-[#133378] text-white' : 'bg-[#F8FAFC] text-[#133378] border border-[#133378]/10'
+                    isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-slate-50 text-[var(--royal)] border border-[var(--royal)]/10'
                   }`}
                 >
                   <Upload className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-[#0F172A] font-bold text-[14px]">
+                  <p className="text-slate-900 font-bold text-[14px]">
                     {photoUploads.length >= MAX_IMAGES
                       ? 'Maximum photos reached'
                       : isDragActive
                         ? 'Drop images here'
                         : 'Drag & drop images, or click to browse'}
                   </p>
-                  <p className="text-[12px] text-[#133378]/40 mt-1">
+                  <p className="text-[12px] text-[var(--royal)]/40 mt-1">
                     JPEG, PNG, WebP, HEIC — Max 10 MB per image, up to {MAX_IMAGES} images
                   </p>
                 </div>
@@ -727,7 +730,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
                 {photoUploads.map((upload, i) => (
                   <div key={`${upload.file.name}-${i}`} className="relative group">
-                    <div className="aspect-square rounded-xl overflow-hidden border border-[#133378]/10 bg-[#F8FAFC]">
+                    <div className="aspect-square rounded-xl overflow-hidden border border-[var(--royal)]/10 bg-slate-50">
                       <img
                         src={upload.previewUrl}
                         alt={upload.file.name}
@@ -765,7 +768,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                     <button
                       type="button"
                       onClick={() => removePhoto(upload.file)}
-                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[#0F172A] text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-slate-900 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -777,16 +780,16 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
             {/* Manual URL fallback */}
             <Separator className="bg-slate-100" />
             <div className="space-y-2">
-              <p className="text-[11px] font-bold text-[#133378]/40 uppercase tracking-widest">
+              <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                 Or paste image URLs directly
               </p>
               <Input
                 value={form.manualUrls}
                 onChange={(e) => setForm((f) => ({ ...f, manualUrls: e.target.value }))}
                 placeholder="https://example.com/photo1.jpg, https://example.com/photo2.jpg"
-                className="px-5 py-3 h-auto rounded-2xl border-slate-200 text-[13px] text-[#0F172A]"
+                className="px-5 py-3 h-auto rounded-2xl border-slate-200 text-[13px] text-slate-900"
               />
-              <p className="text-[11px] text-[#94A3B8]">Separate multiple URLs with commas.</p>
+              <p className="text-[11px] text-slate-400">Separate multiple URLs with commas.</p>
             </div>
           </div>
         </div>
@@ -796,14 +799,14 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[#64748B]"
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={saving || isUploading || !form.name.trim() || !form.description.trim()}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]"
           >
             {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Gem className="w-4 h-4" />}
             {saving ? 'Saving...' : isUploading ? 'Uploading...' : 'Save Heirloom'}

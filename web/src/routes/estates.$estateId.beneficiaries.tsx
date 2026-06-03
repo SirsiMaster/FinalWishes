@@ -100,8 +100,8 @@ function BeneficiariesPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading family members...</span>
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading family members...</span>
         </div>
       </div>
     );
@@ -121,7 +121,7 @@ function BeneficiariesPage() {
         action={
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
+            className="bg-[var(--royal)] hover:bg-[var(--sapphire)] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg hover:-translate-y-0.5 active:scale-95 flex items-center gap-3"
           >
             <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14"/></svg>
             Add Family Member
@@ -246,10 +246,10 @@ function AddBeneficiaryDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="rounded-[3rem] p-16 max-w-xl sm:max-w-xl border border-slate-100 shadow-2xl overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-[#133378]" />
+        <div className="absolute top-0 left-0 w-full h-1.5 bg-[var(--royal)]" />
         <DialogHeader className="gap-3 mb-4">
-          <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Add family member</DialogTitle>
-          <DialogDescription className="text-lg text-[#64748B] font-medium">Enter the details for the person you want to add to your estate plan.</DialogDescription>
+          <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Add family member</DialogTitle>
+          <DialogDescription className="text-lg text-slate-500 font-medium">Enter the details for the person you want to add to your estate plan.</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={(e) => {
@@ -265,7 +265,7 @@ function AddBeneficiaryDialog({
         }} className="space-y-8">
           <div className="space-y-2">
             <Label htmlFor="name" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Full Name</Label>
-            <Input name="name" id="name" required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-semibold text-[#0F172A] text-base" placeholder="Jane Doe" />
+            <Input name="name" id="name" required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-semibold text-slate-900 text-base" placeholder="Jane Doe" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
@@ -280,7 +280,7 @@ function AddBeneficiaryDialog({
             <div className="space-y-2">
               <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Their Role</Label>
               <Select value={roleValue} onValueChange={onRoleChange}>
-                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base">
+                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -292,10 +292,10 @@ function AddBeneficiaryDialog({
               </Select>
               {/* Role description */}
               <div className="flex items-start gap-2 pt-1 pl-2">
-                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[#64748B] shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
                 </svg>
-                <p className="text-[12px] italic text-[#64748B] leading-relaxed">
+                <p className="text-[12px] italic text-slate-500 leading-relaxed">
                   {ROLE_DESCRIPTIONS[roleValue]}
                 </p>
               </div>
@@ -303,11 +303,11 @@ function AddBeneficiaryDialog({
           </div>
           <div className="space-y-2">
             <Label htmlFor="email" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Email Address</Label>
-            <Input name="email" id="email" required type="email" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" placeholder="jane@example.com" />
+            <Input name="email" id="email" required type="email" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base" placeholder="jane@example.com" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Phone (optional — for SMS notification)</Label>
-            <Input name="phone" id="phone" type="tel" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" placeholder="+1 (555) 123-4567" />
+            <Input name="phone" id="phone" type="tel" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base" placeholder="+1 (555) 123-4567" />
           </div>
 
           {feedback && (
@@ -317,10 +317,10 @@ function AddBeneficiaryDialog({
           )}
 
           <DialogFooter className="flex gap-4 pt-4 mx-0 mb-0 border-0 bg-transparent p-0 flex-row">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-[#64748B] hover:bg-slate-50 active:scale-95">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 hover:bg-slate-50 active:scale-95">
               Cancel
             </Button>
-            <Button type="submit" disabled={saving} className="flex-1 py-4 h-auto rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white font-bold shadow-lg active:scale-95">
+            <Button type="submit" disabled={saving} className="flex-1 py-4 h-auto rounded-2xl bg-[var(--royal)] hover:bg-[var(--sapphire)] text-white font-bold shadow-lg active:scale-95">
               {saving ? 'Saving...' : 'Add to Estate'}
             </Button>
           </DialogFooter>
@@ -397,21 +397,21 @@ function EditBeneficiaryDialog({
   return (
     <Dialog open={open} onOpenChange={(v) => { onOpenChange(v); if (!v) { setConfirmRemove(false); setFeedback(null); } }}>
       <DialogContent className="rounded-[3rem] p-16 max-w-xl sm:max-w-xl border border-slate-100 shadow-2xl overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-[#C8A951]" />
+        <div className="absolute top-0 left-0 w-full h-1.5 bg-[var(--gold)]" />
         <DialogHeader className="gap-3 mb-4">
-          <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[#0F172A]">Edit Beneficiary</DialogTitle>
-          <DialogDescription className="text-lg text-[#64748B] font-medium">Update details and share allocation for {heir.fullName}.</DialogDescription>
+          <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Edit Beneficiary</DialogTitle>
+          <DialogDescription className="text-lg text-slate-500 font-medium">Update details and share allocation for {heir.fullName}.</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSave} className="space-y-8">
           <div className="space-y-2">
             <Label htmlFor="edit-fullName" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Full Name</Label>
-            <Input name="fullName" id="edit-fullName" defaultValue={heir.fullName} required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] focus-visible:ring-[#133378]/5 font-semibold text-[#0F172A] text-base" />
+            <Input name="fullName" id="edit-fullName" defaultValue={heir.fullName} required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-semibold text-slate-900 text-base" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <Label htmlFor="edit-relationship" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Relationship</Label>
-              <Input name="relationship" id="edit-relationship" defaultValue={heir.relationship ?? ''} required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" />
+              <Input name="relationship" id="edit-relationship" defaultValue={heir.relationship ?? ''} required className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-share" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Share Percentage</Label>
@@ -424,16 +424,16 @@ function EditBeneficiaryDialog({
                   step="1"
                   value={shareValue}
                   onChange={(e) => setShareValue(e.target.value)}
-                  className="px-6 py-4 pr-12 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base"
+                  className="px-6 py-4 pr-12 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base"
                   placeholder="0"
                 />
-                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[#64748B] font-bold text-base">%</span>
+                <span className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-base">%</span>
               </div>
             </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-email" className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">Email Address</Label>
-            <Input name="email" id="edit-email" defaultValue={heir.email ?? ''} type="email" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-[#F8FAFC] focus-visible:bg-white focus-visible:border-[#133378] font-semibold text-[#0F172A] text-base" />
+            <Input name="email" id="edit-email" defaultValue={heir.email ?? ''} type="email" className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base" />
           </div>
 
           {feedback && (
@@ -444,10 +444,10 @@ function EditBeneficiaryDialog({
 
           <DialogFooter className="flex flex-col gap-4 pt-4 mx-0 mb-0 border-0 bg-transparent p-0">
             <div className="flex gap-4 w-full">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-[#64748B] hover:bg-slate-50 active:scale-95">
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 hover:bg-slate-50 active:scale-95">
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving} className="flex-1 py-4 h-auto rounded-2xl bg-[#133378] hover:bg-[#1E3A5F] text-white font-bold shadow-lg active:scale-95">
+              <Button type="submit" disabled={saving} className="flex-1 py-4 h-auto rounded-2xl bg-[var(--royal)] hover:bg-[var(--sapphire)] text-white font-bold shadow-lg active:scale-95">
                 {saving ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
@@ -472,7 +472,7 @@ function EditBeneficiaryDialog({
                   Are you sure? This will remove {heir.fullName} from your estate plan.
                 </p>
                 <div className="flex gap-3">
-                  <Button type="button" variant="outline" onClick={() => setConfirmRemove(false)} className="px-6 py-2 h-auto rounded-xl border-slate-200 font-bold text-[#64748B] text-sm">
+                  <Button type="button" variant="outline" onClick={() => setConfirmRemove(false)} className="px-6 py-2 h-auto rounded-xl border-slate-200 font-bold text-slate-500 text-sm">
                     Keep
                   </Button>
                   <Button type="button" onClick={handleRemove} disabled={removing} className="px-6 py-2 h-auto rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm">
@@ -503,23 +503,23 @@ function BeneficiaryCard({ heir, onEdit }: { heir: Heir; onEdit: () => void }) {
         <button
           type="button"
           onClick={onEdit}
-          className="absolute top-6 right-6 w-9 h-9 rounded-xl bg-white border border-slate-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#F8FAFC] hover:border-[#133378]/20 cursor-pointer"
+          className="absolute top-6 right-6 w-9 h-9 rounded-xl bg-white border border-slate-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-slate-50 hover:border-[var(--royal)]/20 cursor-pointer"
           title="Edit beneficiary"
         >
-          <svg viewBox="0 0 24 24" className="w-4 h-4 text-[#133378]" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
           </svg>
         </button>
 
-        <Avatar className="w-16 h-16 rounded-2xl shrink-0 transition-all duration-500 group-hover:bg-[#133378]">
-          <AvatarFallback className="rounded-2xl bg-[#F8FAFC] border border-slate-100 text-[#133378] font-bold text-xl group-hover:bg-[#133378] group-hover:text-white transition-all duration-500">
+        <Avatar className="w-16 h-16 rounded-2xl shrink-0 transition-all duration-500 group-hover:bg-[var(--royal)]">
+          <AvatarFallback className="rounded-2xl bg-slate-50 border border-slate-100 text-[var(--royal)] font-bold text-xl group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500">
             {initials}
           </AvatarFallback>
         </Avatar>
         <div className="flex-1 min-w-0 space-y-3">
           <div className="flex justify-between items-start">
-            <h4 className="text-[#0F172A] font-bold text-xl truncate leading-tight transition-colors group-hover:text-[#133378]">{name}</h4>
+            <h4 className="text-slate-900 font-bold text-xl truncate leading-tight transition-colors group-hover:text-[var(--royal)]">{name}</h4>
           </div>
           <div className="flex items-center gap-3">
             <Badge
@@ -533,12 +533,12 @@ function BeneficiaryCard({ heir, onEdit }: { heir: Heir; onEdit: () => void }) {
               <div className={`w-1.5 h-1.5 rounded-full ${status === 'Verified' ? 'bg-green-500' : 'bg-amber-400 animate-pulse'}`} />
               {status}
             </Badge>
-            <span className="text-[13px] font-medium text-[#64748B] truncate">{email || 'No email provided'}</span>
+            <span className="text-[13px] font-medium text-slate-500 truncate">{email || 'No email provided'}</span>
           </div>
           <div className="flex items-center justify-between border-t border-slate-50 pt-4">
             <div className="flex flex-col">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Relationship</span>
-              <span className="text-[14px] font-semibold text-[#0F172A]">{relation || '\u2014'}</span>
+              <span className="text-[14px] font-semibold text-slate-900">{relation || '\u2014'}</span>
             </div>
             <div className="flex flex-col items-end gap-1.5">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Their Share</span>
@@ -550,17 +550,17 @@ function BeneficiaryCard({ heir, onEdit }: { heir: Heir; onEdit: () => void }) {
                       className="h-full rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min(share, 100)}%`,
-                        backgroundColor: share > 100 ? '#EF4444' : '#133378',
+                        backgroundColor: share > 100 ? 'var(--danger)' : 'var(--royal)',
                       }}
                     />
                   </div>
-                  <span className="text-[14px] font-bold text-[#133378]">{share}%</span>
+                  <span className="text-[14px] font-bold text-[var(--royal)]">{share}%</span>
                 </div>
               ) : (
                 <button
                   type="button"
                   onClick={onEdit}
-                  className="text-[13px] font-medium text-[#C8A951] hover:text-[#133378] transition-colors cursor-pointer flex items-center gap-1"
+                  className="text-[13px] font-medium text-[var(--gold)] hover:text-[var(--royal)] transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>

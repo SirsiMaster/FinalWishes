@@ -233,8 +233,8 @@ function LifeChaptersPage() {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-2 border-[#133378]/20 border-t-[#133378] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-[0.2em]">Loading chapters...</span>
+          <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading chapters...</span>
         </div>
       </div>
     )
@@ -253,7 +253,7 @@ function LifeChaptersPage() {
         action={canEdit ? (
           <Button
             onClick={() => setCreateOpen(true)}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg gap-3"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-8 py-4 h-auto rounded-2xl font-bold text-[13px] shadow-lg gap-3"
           >
             <Plus className="w-5 h-5" />
             New Chapter
@@ -303,20 +303,20 @@ function LifeChaptersPage() {
       {chapters.length === 0 ? (
         <Card className="border-0 shadow-none bg-transparent text-center py-24">
           <CardContent className="flex flex-col items-center">
-            <div className="w-24 h-24 bg-[#7C3AED]/5 rounded-3xl flex items-center justify-center mx-auto mb-8">
-              <BookOpen className="w-12 h-12 text-[#7C3AED]/30" />
+            <div className="w-24 h-24 bg-[var(--gold)]/5 rounded-3xl flex items-center justify-center mx-auto mb-8">
+              <BookOpen className="w-12 h-12 text-[var(--gold)]/30" />
             </div>
-            <h3 className="text-xl font-bold text-[#0F172A] mb-3 font-[family-name:var(--font-cinzel)]">
+            <h3 className="text-xl font-bold text-slate-900 mb-3 font-[family-name:var(--font-cinzel)]">
               Your Story Begins Here
             </h3>
-            <p className="text-[#64748B] max-w-md mx-auto mb-8 leading-relaxed">
+            <p className="text-slate-500 max-w-md mx-auto mb-8 leading-relaxed">
               Organize your life into meaningful chapters — childhood memories, career milestones, parenthood, adventures.
               Each chapter becomes a curated story for the people you love.
             </p>
             {canEdit && (
               <Button
                 onClick={() => setCreateOpen(true)}
-                className="bg-[#133378] hover:bg-[#1E3A5F] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg gap-3"
+                className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg gap-3"
               >
                 <Plus className="w-5 h-5" />
                 Create Your First Chapter
@@ -351,31 +351,31 @@ function LifeChaptersPage() {
                 <button
                   type="button"
                   onClick={() => setExpandedId(isExpanded ? null : chapter.id)}
-                  className="w-full text-left p-6 md:p-8 hover:bg-[#FAF5FF]/50 transition-colors cursor-pointer"
+                  className="w-full text-left p-6 md:p-8 hover:bg-slate-50/50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-start gap-5">
                     {/* Chapter number */}
-                    <div className="w-12 h-12 rounded-2xl bg-[#7C3AED]/8 flex items-center justify-center flex-shrink-0">
-                      <span className="text-[#7C3AED] font-bold text-lg font-[family-name:var(--font-cinzel)]">
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--gold)]/8 flex items-center justify-center flex-shrink-0">
+                      <span className="text-[var(--gold)] font-bold text-lg font-[family-name:var(--font-cinzel)]">
                         {index + 1}
                       </span>
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1.5">
-                        <h3 className="text-xl font-bold text-[#0F172A] font-[family-name:var(--font-cinzel)] tracking-tight">
+                        <h3 className="text-xl font-bold text-slate-900 font-[family-name:var(--font-cinzel)] tracking-tight">
                           {chapter.title}
                         </h3>
                         {dateRange && (
-                          <Badge variant="secondary" className="gap-1.5 h-auto py-1 px-2.5 rounded-lg bg-[#7C3AED]/5 text-[#7C3AED] border-none text-[11px] font-semibold">
+                          <Badge variant="secondary" className="gap-1.5 h-auto py-1 px-2.5 rounded-lg bg-[var(--gold)]/5 text-[var(--gold)] border-none text-[11px] font-semibold">
                             <Calendar className="w-3 h-3" />
                             {dateRange}
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-[#64748B] line-clamp-2">{chapter.description}</p>
+                      <p className="text-sm text-slate-500 line-clamp-2">{chapter.description}</p>
                       <div className="flex items-center gap-4 mt-3">
-                        <span className="text-[11px] font-semibold text-[#64748B] uppercase tracking-wider">
+                        <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                           {entryCount} {entryCount === 1 ? 'entry' : 'entries'}
                         </span>
                       </div>
@@ -388,7 +388,7 @@ function LifeChaptersPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-[#64748B] hover:text-[#133378] hover:bg-[#133378]/5 rounded-xl"
+                            className="h-8 w-8 text-slate-500 hover:text-[var(--royal)] hover:bg-[var(--royal)]/5 rounded-xl"
                             onClick={(e) => { e.stopPropagation(); setEditingChapter(chapter) }}
                           >
                             <Pencil className="w-4 h-4" />
@@ -396,21 +396,21 @@ function LifeChaptersPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-[#64748B] hover:text-red-500 hover:bg-red-50 rounded-xl"
+                            className="h-8 w-8 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-xl"
                             onClick={(e) => { e.stopPropagation(); setDeleteTarget(chapter) }}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </>
                       )}
-                      <ChevronRight className={`w-5 h-5 text-[#64748B]/40 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      <ChevronRight className={`w-5 h-5 text-slate-500/40 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                     </div>
                   </div>
                 </button>
 
                 {/* Expanded: entries + add */}
                 {isExpanded && (
-                  <div className="border-t border-slate-50 bg-[#FAFAFA]/50">
+                  <div className="border-t border-slate-50 bg-slate-50/50">
                     {/* Existing entries */}
                     {entryCount > 0 && (
                       <div className="px-6 md:px-8 py-4 space-y-2">
@@ -422,11 +422,11 @@ function LifeChaptersPage() {
                               className="flex items-center gap-3 py-2.5 px-4 rounded-xl hover:bg-white transition-colors group"
                             >
                               <GripVertical className="w-4 h-4 text-slate-200 group-hover:text-slate-400" />
-                              <div className="w-8 h-8 rounded-lg bg-[#7C3AED]/5 flex items-center justify-center">
-                                <Icon className="w-4 h-4 text-[#7C3AED]/60" />
+                              <div className="w-8 h-8 rounded-lg bg-[var(--gold)]/5 flex items-center justify-center">
+                                <Icon className="w-4 h-4 text-[var(--gold)]/60" />
                               </div>
-                              <span className="flex-1 text-sm text-[#0F172A] font-medium truncate">{ref.title}</span>
-                              <Badge variant="outline" className="text-[10px] text-[#64748B] border-slate-200 rounded-md">
+                              <span className="flex-1 text-sm text-slate-900 font-medium truncate">{ref.title}</span>
+                              <Badge variant="outline" className="text-[10px] text-slate-500 border-slate-200 rounded-md">
                                 {ref.collection.replace('-', ' ')}
                               </Badge>
                               {canEdit && (
@@ -447,11 +447,11 @@ function LifeChaptersPage() {
 
                     {/* Add entries section — only for editors */}
                     {canEdit && <div className="px-6 md:px-8 py-4 border-t border-slate-50">
-                      <p className="text-[11px] font-bold text-[#64748B] uppercase tracking-[0.15em] mb-3">
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] mb-3">
                         Add entries to this chapter
                       </p>
                       {availableEntries.length === 0 ? (
-                        <p className="text-sm text-[#94A3B8] py-2">
+                        <p className="text-sm text-slate-400 py-2">
                           No unassigned entries available. Create new entries in Soul Log or Memories first.
                         </p>
                       ) : (
@@ -468,11 +468,11 @@ function LifeChaptersPage() {
                                   title: entry.title,
                                   addedAt: entry.addedAt,
                                 })}
-                                className="flex items-center gap-3 py-2.5 px-3 rounded-xl border border-dashed border-[#133378]/15 hover:border-[#133378]/40 hover:bg-[#133378]/5 transition-all text-left cursor-pointer"
+                                className="flex items-center gap-3 py-2.5 px-3 rounded-xl border border-dashed border-[var(--royal)]/15 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/5 transition-all text-left cursor-pointer"
                               >
-                                <Icon className="w-4 h-4 text-[#7C3AED]/40" />
-                                <span className="flex-1 text-sm text-[#64748B] truncate">{entry.label}</span>
-                                <Plus className="w-4 h-4 text-[#7C3AED]/30" />
+                                <Icon className="w-4 h-4 text-[var(--gold)]/40" />
+                                <span className="flex-1 text-sm text-slate-500 truncate">{entry.label}</span>
+                                <Plus className="w-4 h-4 text-[var(--gold)]/30" />
                               </button>
                             )
                           })}
@@ -493,7 +493,7 @@ function LifeChaptersPage() {
           <Link
             to="/estates/$estateId/dashboard"
             params={{ estateId }}
-            className="text-sm font-medium text-[#133378] hover:text-[#1E3A5F] no-underline"
+            className="text-sm font-medium text-[var(--royal)] hover:text-[var(--royal-blue)] no-underline"
           >
             View Legacy Timeline <ChevronRight className="inline w-4 h-4" />
           </Link>
@@ -621,7 +621,7 @@ function ChapterFormDialog({
         <div className="space-y-5 py-2">
           {/* Cover Image */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-[#0F172A]">
+            <Label className="text-sm font-semibold text-slate-900">
               Cover Image (optional)
             </Label>
             <input
@@ -647,7 +647,7 @@ function ChapterFormDialog({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full h-24 rounded-xl border-2 border-dashed border-[#133378]/15 hover:border-[#133378]/30 bg-[#F8FAFC]/50 flex items-center justify-center gap-2 text-sm text-[#133378]/50 hover:text-[#133378]/80 transition-colors cursor-pointer"
+                className="w-full h-24 rounded-xl border-2 border-dashed border-[var(--royal)]/15 hover:border-[var(--royal)]/30 bg-slate-50/50 flex items-center justify-center gap-2 text-sm text-[var(--royal)]/50 hover:text-[var(--royal)]/80 transition-colors cursor-pointer"
               >
                 <ImagePlus className="w-5 h-5" />
                 Choose a cover photo
@@ -656,7 +656,7 @@ function ChapterFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="chapter-title" className="text-sm font-semibold text-[#0F172A]">
+            <Label htmlFor="chapter-title" className="text-sm font-semibold text-slate-900">
               Chapter Title
             </Label>
             <Input
@@ -669,7 +669,7 @@ function ChapterFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="chapter-desc" className="text-sm font-semibold text-[#0F172A]">
+            <Label htmlFor="chapter-desc" className="text-sm font-semibold text-slate-900">
               Description
             </Label>
             <Textarea
@@ -683,7 +683,7 @@ function ChapterFormDialog({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="date-from" className="text-sm font-semibold text-[#0F172A]">
+              <Label htmlFor="date-from" className="text-sm font-semibold text-slate-900">
                 From
               </Label>
               <Input
@@ -695,7 +695,7 @@ function ChapterFormDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="date-to" className="text-sm font-semibold text-[#0F172A]">
+              <Label htmlFor="date-to" className="text-sm font-semibold text-slate-900">
                 To
               </Label>
               <Input
@@ -716,7 +716,7 @@ function ChapterFormDialog({
           <Button
             onClick={handleSubmit}
             disabled={!title.trim() || uploading}
-            className="bg-[#133378] hover:bg-[#1E3A5F] text-white rounded-xl px-8 gap-2"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white rounded-xl px-8 gap-2"
           >
             {uploading ? (
               <>

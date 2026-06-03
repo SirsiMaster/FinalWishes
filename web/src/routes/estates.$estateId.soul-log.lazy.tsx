@@ -169,11 +169,11 @@ function getVisibilityConfig(v: Visibility) {
 function getTypeConfig(t: EntryType) {
   switch (t) {
     case 'video':
-      return { icon: Video, label: 'Video', color: 'text-[#133378]', bg: 'bg-[#133378]/8' }
+      return { icon: Video, label: 'Video', color: 'text-[var(--royal)]', bg: 'bg-[var(--royal)]/8' }
     case 'audio':
-      return { icon: Mic, label: 'Audio', color: 'text-[#7C3AED]', bg: 'bg-[#7C3AED]/8' }
+      return { icon: Mic, label: 'Audio', color: 'text-[var(--royal)]', bg: 'bg-[var(--royal)]/8' }
     case 'text':
-      return { icon: PenLine, label: 'Written', color: 'text-[#C8A951]', bg: 'bg-[#C8A951]/8' }
+      return { icon: PenLine, label: 'Written', color: 'text-[var(--gold)]', bg: 'bg-[var(--gold)]/8' }
   }
 }
 
@@ -308,7 +308,7 @@ function SoulLogPage() {
       <div className="max-w-3xl mx-auto px-4 py-12">
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 rounded-3xl bg-[#FBF9F6] animate-pulse" />
+            <div key={i} className="h-32 rounded-3xl bg-slate-50 animate-pulse" />
           ))}
         </div>
       </div>
@@ -323,12 +323,12 @@ function SoulLogPage() {
         action={
           entries.length > 0 ? (
             <div className="relative w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#0F172A]/30" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-900/30" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search entries, transcripts..."
-                className="pl-9 rounded-full border-[#B8860B]/15 text-sm bg-white/80"
+                className="pl-9 rounded-full border-[var(--gold)]/15 text-sm bg-white/80"
               />
             </div>
           ) : undefined
@@ -362,7 +362,7 @@ function SoulLogPage() {
       <div className="flex justify-center">
         <Button
           onClick={() => setComposerOpen(true)}
-          className="h-16 px-10 rounded-full bg-[#133378] hover:bg-[#0F2860] text-white text-base font-semibold shadow-lg shadow-[#133378]/20 hover:shadow-xl hover:shadow-[#133378]/30 transition-all duration-300 gap-3"
+          className="h-16 px-10 rounded-full bg-[var(--royal)] hover:bg-[var(--royal)] text-white text-base font-semibold shadow-lg shadow-[var(--royal)]/20 hover:shadow-xl hover:shadow-[var(--royal)]/30 transition-all duration-300 gap-3"
         >
           <Circle className="w-5 h-5 fill-red-400 text-red-400 animate-pulse" />
           New Entry
@@ -374,8 +374,8 @@ function SoulLogPage() {
         <EmptyState onRecord={() => setComposerOpen(true)} />
       ) : filteredEntries.length === 0 ? (
         <div className="text-center py-12">
-          <Search className="w-8 h-8 text-[#0F172A]/20 mx-auto mb-3" />
-          <p className="text-sm text-[#0F172A]/40">No entries match your search.</p>
+          <Search className="w-8 h-8 text-slate-900/20 mx-auto mb-3" />
+          <p className="text-sm text-slate-900/40">No entries match your search.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -423,29 +423,29 @@ function ShepherdCard({
   onRecord: () => void
 }) {
   return (
-    <Card className="rounded-3xl border-[#C8A951]/20 bg-gradient-to-br from-[#FFFBEB] to-[#FEF3C7]/50 shadow-sm overflow-hidden">
+    <Card className="rounded-3xl border-[var(--gold)]/20 bg-gradient-to-br from-[var(--gold)]/5 to-[var(--gold)]/10 shadow-sm overflow-hidden">
       <CardContent className="p-6 md:p-8">
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 rounded-2xl bg-[#C8A951]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Sparkles className="w-5 h-5 text-[#C8A951]" />
+          <div className="w-10 h-10 rounded-2xl bg-[var(--gold)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <Sparkles className="w-5 h-5 text-[var(--gold)]" />
           </div>
           <div className="flex-1 space-y-2">
             {!hasEntries ? (
               <>
-                <p className="text-[#0F172A] text-sm leading-relaxed font-medium">
+                <p className="text-slate-900 text-sm leading-relaxed font-medium">
                   What&apos;s on your mind today?
                 </p>
-                <p className="text-[#0F172A]/60 text-sm leading-relaxed">
+                <p className="text-slate-900/60 text-sm leading-relaxed">
                   You can record a video, leave a voice memo, or write a reflection.
                   Everything you capture here becomes part of your legacy.
                 </p>
               </>
             ) : (
               <>
-                <p className="text-[#0F172A]/50 text-xs font-semibold uppercase tracking-wider mb-1">
+                <p className="text-slate-900/50 text-xs font-semibold uppercase tracking-wider mb-1">
                   Today&apos;s prompt
                 </p>
-                <p className="text-[#0F172A] text-sm leading-relaxed italic">
+                <p className="text-slate-900 text-sm leading-relaxed italic">
                   &ldquo;{prompt}&rdquo;
                 </p>
               </>
@@ -454,7 +454,7 @@ function ShepherdCard({
               variant="ghost"
               size="sm"
               onClick={onRecord}
-              className="text-[#C8A951] hover:text-[#B8952F] hover:bg-[#C8A951]/10 mt-1 -ml-3 font-semibold text-xs"
+              className="text-[var(--gold)] hover:text-[var(--gold)] hover:bg-[var(--gold)]/10 mt-1 -ml-3 font-semibold text-xs"
             >
               Start recording
             </Button>
@@ -471,19 +471,19 @@ function EmptyState({ onRecord }: { onRecord: () => void }) {
   return (
     <div className="text-center py-16 space-y-6">
       <div className="flex items-center justify-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-2xl bg-[#133378]/5 flex items-center justify-center">
-          <Video className="w-6 h-6 text-[#133378]/40" />
+        <div className="w-12 h-12 rounded-2xl bg-[var(--royal)]/5 flex items-center justify-center">
+          <Video className="w-6 h-6 text-[var(--royal)]/40" />
         </div>
-        <div className="w-14 h-14 rounded-2xl bg-[#133378]/10 flex items-center justify-center ring-2 ring-[#C8A951]/30">
-          <Mic className="w-7 h-7 text-[#133378]/60" />
+        <div className="w-14 h-14 rounded-2xl bg-[var(--royal)]/10 flex items-center justify-center ring-2 ring-[var(--gold)]/30">
+          <Mic className="w-7 h-7 text-[var(--royal)]/60" />
         </div>
-        <div className="w-12 h-12 rounded-2xl bg-[#133378]/5 flex items-center justify-center">
-          <PenLine className="w-6 h-6 text-[#133378]/40" />
+        <div className="w-12 h-12 rounded-2xl bg-[var(--royal)]/5 flex items-center justify-center">
+          <PenLine className="w-6 h-6 text-[var(--royal)]/40" />
         </div>
       </div>
       <div className="space-y-2 max-w-sm mx-auto">
-        <h3 className="text-lg font-semibold text-[#0F172A]">Your story starts here</h3>
-        <p className="text-sm text-[#0F172A]/50 leading-relaxed">
+        <h3 className="text-lg font-semibold text-slate-900 font-[family-name:var(--font-cinzel)]">Your story starts here</h3>
+        <p className="text-sm text-slate-900/50 leading-relaxed">
           Record a thought, share a memory, or write a reflection. Everything you capture
           becomes part of your legacy.
         </p>
@@ -491,7 +491,7 @@ function EmptyState({ onRecord }: { onRecord: () => void }) {
       <Button
         onClick={onRecord}
         variant="outline"
-        className="rounded-full px-6 border-[#133378]/20 text-[#133378] hover:bg-[#133378]/5"
+        className="rounded-full px-6 border-[var(--royal)]/20 text-[var(--royal)] hover:bg-[var(--royal)]/5"
       >
         Create your first entry
       </Button>
@@ -518,12 +518,12 @@ function EntryCard({
   const VisIcon = visConfig.icon
 
   return (
-    <Card className="rounded-3xl border-[#133378]/5 bg-[#FFFDF8] hover:border-[#133378]/10 hover:shadow-md transition-all duration-300 overflow-hidden">
+    <Card className="rounded-3xl border-[var(--royal)]/5 bg-slate-50 hover:border-[var(--royal)]/10 hover:shadow-md transition-all duration-300 overflow-hidden">
       <CardContent className="p-0">
         {/* Video Thumbnail */}
         {entry.type === 'video' && entry.mediaUrl && (
           <div
-            className="aspect-video bg-[#0F172A] relative overflow-hidden cursor-pointer group"
+            className="aspect-video bg-slate-900 relative overflow-hidden cursor-pointer group"
             onClick={onViewVideo}
           >
             <video
@@ -534,7 +534,7 @@ function EntryCard({
               preload="metadata"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-[#133378] transition-all duration-500">
+              <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-[var(--royal)] transition-all duration-500">
                 <Play className="w-7 h-7 fill-current ml-1" />
               </div>
             </div>
@@ -555,13 +555,13 @@ function EntryCard({
                 <TypeIcon className={`w-4 h-4 ${typeConfig.color}`} />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-[#0F172A] truncate">
+                <h3 className="text-sm font-semibold text-slate-900 truncate">
                   {entry.title || 'Untitled Entry'}
                 </h3>
-                <div className="flex items-center gap-2 text-xs text-[#0F172A]/40 mt-0.5">
+                <div className="flex items-center gap-2 text-xs text-slate-900/40 mt-0.5">
                   <Calendar className="w-3 h-3" />
                   <span>{formatTimestamp(entry.createdAt)}</span>
-                  <span className="text-[#0F172A]/20">|</span>
+                  <span className="text-slate-900/20">|</span>
                   <Clock className="w-3 h-3" />
                   <span>{formatTime(entry.createdAt)}</span>
                 </div>
@@ -576,9 +576,9 @@ function EntryCard({
                 {visConfig.label}
               </Badge>
               {expanded ? (
-                <ChevronUp className="w-4 h-4 text-[#0F172A]/30" />
+                <ChevronUp className="w-4 h-4 text-slate-900/30" />
               ) : (
-                <ChevronDown className="w-4 h-4 text-[#0F172A]/30" />
+                <ChevronDown className="w-4 h-4 text-slate-900/30" />
               )}
             </div>
           </div>
@@ -606,21 +606,21 @@ function EntryCard({
           {/* Transcription badge */}
           {(entry.type === 'audio' || entry.type === 'video') && entry.transcriptStatus === 'processing' && (
             <div className="flex items-center gap-1.5">
-              <Loader2 className="w-3 h-3 text-[#7C3AED] animate-spin" />
-              <span className="text-[10px] text-[#7C3AED] italic">Transcribing...</span>
+              <Loader2 className="w-3 h-3 text-[var(--royal)] animate-spin" />
+              <span className="text-[10px] text-[var(--royal)] italic">Transcribing...</span>
             </div>
           )}
 
           {/* Preview */}
           {!expanded && entry.type === 'text' && entry.content && (
-            <p className="text-sm text-[#0F172A]/50 line-clamp-2 leading-relaxed">
+            <p className="text-sm text-slate-900/50 line-clamp-2 leading-relaxed">
               {stripHtml(entry.content).slice(0, 120)}
               {stripHtml(entry.content).length > 120 ? '...' : ''}
             </p>
           )}
 
           {!expanded && entry.type === 'audio' && (
-            <div className="flex items-center gap-3 text-sm text-[#0F172A]/40">
+            <div className="flex items-center gap-3 text-sm text-slate-900/40">
               <Mic className="w-4 h-4" />
               <span>Voice memo</span>
               {entry.duration != null && entry.duration > 0 && (
@@ -632,8 +632,8 @@ function EntryCard({
           {/* Transcript preview (when not expanded) */}
           {!expanded && entry.transcript && entry.transcriptStatus === 'complete' && (
             <div className="flex items-start gap-2 mt-1">
-              <FileText className="w-3.5 h-3.5 text-[#0F172A]/25 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-[#0F172A]/40 line-clamp-2 leading-relaxed italic">
+              <FileText className="w-3.5 h-3.5 text-slate-900/25 mt-0.5 flex-shrink-0" />
+              <p className="text-xs text-slate-900/40 line-clamp-2 leading-relaxed italic">
                 {entry.transcript.slice(0, 150)}
                 {entry.transcript.length > 150 ? '...' : ''}
               </p>
@@ -666,7 +666,7 @@ function ExpandedContent({
     editable: false,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none text-[#0F172A]/70 leading-relaxed focus:outline-none',
+        class: 'prose prose-sm max-w-none text-slate-900/70 leading-relaxed focus:outline-none',
       },
     },
   })
@@ -688,7 +688,7 @@ function ExpandedContent({
           variant="outline"
           size="sm"
           onClick={(e) => { e.stopPropagation(); onViewVideo() }}
-          className="rounded-xl border-[#133378]/10 text-[#133378] text-xs"
+          className="rounded-xl border-[var(--royal)]/10 text-[var(--royal)] text-xs"
         >
           <Play className="w-3.5 h-3.5 mr-1.5" />
           Watch video
@@ -697,7 +697,7 @@ function ExpandedContent({
 
       {entry.taggedPeople.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap">
-          <Users className="w-3.5 h-3.5 text-[#0F172A]/30" />
+          <Users className="w-3.5 h-3.5 text-slate-900/30" />
           {entry.taggedPeople.map((person, i) => (
             <Badge key={i} variant="outline" className="text-[10px] bg-blue-50/50 border-blue-100 text-blue-600">
               {person}
@@ -709,19 +709,19 @@ function ExpandedContent({
       {/* Transcript (full, in expanded view) */}
       {entry.transcript && entry.transcriptStatus === 'complete' && (
         <div className="rounded-2xl bg-slate-50/80 p-4 border border-slate-100 space-y-1.5">
-          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-[#0F172A]/40 uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-900/40 uppercase tracking-wider">
             <FileText className="w-3 h-3" />
             Transcript
           </div>
-          <p className="text-sm text-[#0F172A]/60 leading-relaxed whitespace-pre-wrap">
+          <p className="text-sm text-slate-900/60 leading-relaxed whitespace-pre-wrap">
             {entry.transcript}
           </p>
         </div>
       )}
       {entry.transcriptStatus === 'processing' && (
-        <div className="flex items-center gap-2 p-3 rounded-2xl bg-[#7C3AED]/5 border border-[#7C3AED]/10">
-          <Loader2 className="w-4 h-4 text-[#7C3AED] animate-spin" />
-          <span className="text-sm text-[#7C3AED]/70 italic">Transcribing audio...</span>
+        <div className="flex items-center gap-2 p-3 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10">
+          <Loader2 className="w-4 h-4 text-[var(--royal)] animate-spin" />
+          <span className="text-sm text-[var(--royal)]/70 italic">Transcribing audio...</span>
         </div>
       )}
       {entry.transcriptStatus === 'failed' && (
@@ -823,8 +823,8 @@ function AudioPlayer({ url }: { url: string }) {
       for (let i = 0; i < bufferLength; i++) {
         const barHeight = (dataArray[i] / 255) * canvas.height * 0.8
         const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - barHeight)
-        gradient.addColorStop(0, 'rgba(124, 58, 237, 0.3)')
-        gradient.addColorStop(1, 'rgba(124, 58, 237, 0.8)')
+        gradient.addColorStop(0, 'rgba(19, 51, 120, 0.3)')
+        gradient.addColorStop(1, 'rgba(19, 51, 120, 0.8)')
         ctx.fillStyle = gradient
         ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight)
         x += barWidth + 1
@@ -856,7 +856,7 @@ function AudioPlayer({ url }: { url: string }) {
   }, [])
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl bg-[#7C3AED]/5 border border-[#7C3AED]/10" onClick={(e) => e.stopPropagation()}>
+    <div className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10" onClick={(e) => e.stopPropagation()}>
       <audio
         ref={audioRef}
         src={url}
@@ -869,7 +869,7 @@ function AudioPlayer({ url }: { url: string }) {
         variant="ghost"
         size="icon"
         onClick={togglePlay}
-        className="w-10 h-10 rounded-xl bg-[#133378] text-white hover:bg-[#1E3A5F] hover:text-white flex-shrink-0"
+        className="w-10 h-10 rounded-xl bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)] hover:text-white flex-shrink-0"
       >
         {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
       </Button>
@@ -879,7 +879,7 @@ function AudioPlayer({ url }: { url: string }) {
         height={40}
         className="flex-1 h-10 rounded-lg"
       />
-      <span className="text-xs font-mono text-[#7C3AED]/60 flex-shrink-0 tabular-nums">
+      <span className="text-xs font-mono text-[var(--royal)]/60 flex-shrink-0 tabular-nums">
         {formatDuration(currentTime)} / {formatDuration(duration || 0)}
       </span>
     </div>
@@ -915,17 +915,17 @@ function VideoViewer({
               <Button
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
-                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[#0F172A]"
+                className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900"
               >
                 <X className="w-4 h-4" />
               </Button>
             </div>
             <div className="p-6 space-y-2">
               <DialogHeader>
-                <DialogTitle className="text-lg font-semibold text-[#0F172A]">
+                <DialogTitle className="text-lg font-semibold text-slate-900">
                   {entry.title || 'Untitled Entry'}
                 </DialogTitle>
-                <DialogDescription className="text-sm text-[#0F172A]/50">
+                <DialogDescription className="text-sm text-slate-900/50">
                   {formatTimestamp(entry.createdAt)} at {formatTime(entry.createdAt)}
                 </DialogDescription>
               </DialogHeader>
@@ -1225,13 +1225,13 @@ function ComposerDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl sm:max-w-2xl rounded-[2.5rem] p-0 overflow-hidden border-[#133378]/10 bg-white max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl sm:max-w-2xl rounded-[2.5rem] p-0 overflow-hidden border-[var(--royal)]/10 bg-white max-h-[90vh] overflow-y-auto">
         <div className="p-6 md:p-8 space-y-6">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-[#133378] font-[family-name:var(--font-cinzel)] uppercase tracking-wide">
+            <DialogTitle className="text-xl font-bold text-[var(--royal)] font-[family-name:var(--font-cinzel)] uppercase tracking-wide">
               New Soul Log Entry
             </DialogTitle>
-            <DialogDescription className="text-sm text-[#0F172A]/50">
+            <DialogDescription className="text-sm text-slate-900/50">
               Record a thought, share a memory, or write a reflection.
             </DialogDescription>
           </DialogHeader>
@@ -1244,7 +1244,7 @@ function ComposerDialog({
               setEntryType(v as EntryType)
             }}
           >
-            <TabsList className="w-full rounded-2xl bg-[#F8FAFC] p-1 h-auto">
+            <TabsList className="w-full rounded-2xl bg-slate-50 p-1 h-auto">
               <TabsTrigger value="video" className="flex-1 rounded-xl py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm gap-2">
                 <Video className="w-4 h-4" />
                 Video
@@ -1307,31 +1307,31 @@ function ComposerDialog({
             </TabsContent>
           </Tabs>
 
-          <Separator className="bg-[#133378]/5" />
+          <Separator className="bg-[var(--royal)]/5" />
 
           {/* Metadata */}
           <div className="space-y-4">
             {/* Title */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-[#0F172A]/60 uppercase tracking-wider">
+              <Label className="text-xs font-semibold text-slate-900/60 uppercase tracking-wider">
                 Title (optional)
               </Label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder={generateTitle()}
-                className="rounded-xl border-[#133378]/10 focus:border-[#133378]/30 text-sm"
+                className="rounded-xl border-[var(--royal)]/10 focus:border-[var(--royal)]/30 text-sm"
               />
             </div>
 
             {/* Visibility + Mood Row */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-[#0F172A]/60 uppercase tracking-wider">
+                <Label className="text-xs font-semibold text-slate-900/60 uppercase tracking-wider">
                   Visibility
                 </Label>
                 <Select value={visibility} onValueChange={(v) => setVisibility(v as Visibility)}>
-                  <SelectTrigger className="rounded-xl border-[#133378]/10 text-sm">
+                  <SelectTrigger className="rounded-xl border-[var(--royal)]/10 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
@@ -1355,7 +1355,7 @@ function ComposerDialog({
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-[#0F172A]/60 uppercase tracking-wider">
+                <Label className="text-xs font-semibold text-slate-900/60 uppercase tracking-wider">
                   Mood
                 </Label>
                 <div className="flex flex-wrap gap-1.5">
@@ -1365,7 +1365,7 @@ function ComposerDialog({
                       onClick={() => setMood(mood === emoji ? '' : emoji)}
                       className={`w-8 h-8 rounded-lg text-lg flex items-center justify-center transition-all ${
                         mood === emoji
-                          ? 'bg-[#133378]/10 ring-2 ring-[#133378]/30 scale-110'
+                          ? 'bg-[var(--royal)]/10 ring-2 ring-[var(--royal)]/30 scale-110'
                           : 'hover:bg-slate-100'
                       }`}
                       title={label}
@@ -1407,7 +1407,7 @@ function ComposerDialog({
             {/* Tagged People */}
             {(visibility === 'shared' || visibility === 'sealed') && heirs.length > 0 && (
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-[#0F172A]/60 uppercase tracking-wider">
+                <Label className="text-xs font-semibold text-slate-900/60 uppercase tracking-wider">
                   Tag People
                 </Label>
                 <div className="flex flex-wrap gap-2">
@@ -1425,8 +1425,8 @@ function ComposerDialog({
                         }}
                         className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                           tagged
-                            ? 'bg-[#133378] text-white'
-                            : 'bg-slate-100 text-[#0F172A]/60 hover:bg-slate-200'
+                            ? 'bg-[var(--royal)] text-white'
+                            : 'bg-slate-100 text-slate-900/60 hover:bg-slate-200'
                         }`}
                         type="button"
                       >
@@ -1444,14 +1444,14 @@ function ComposerDialog({
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="flex-1 rounded-xl border-[#133378]/10 text-[#0F172A] font-semibold"
+              className="flex-1 rounded-xl border-[var(--royal)]/10 text-slate-900 font-semibold"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSave}
               disabled={!canSave || saving}
-              className="flex-1 rounded-xl bg-[#133378] hover:bg-[#0F2860] text-white font-semibold gap-2"
+              className="flex-1 rounded-xl bg-[var(--royal)] hover:bg-[var(--royal)] text-white font-semibold gap-2"
             >
               {saving ? (
                 <>
@@ -1484,24 +1484,24 @@ function TierGatePrompt({
   const message = tierUpgradeMessage(tierUsage, mediaType)
 
   return (
-    <div className="rounded-2xl bg-[#C8A951]/10 border border-[#C8A951]/30 p-8 text-center space-y-4">
-      <div className="w-14 h-14 rounded-2xl bg-[#C8A951]/20 flex items-center justify-center mx-auto">
-        <svg viewBox="0 0 24 24" className="w-7 h-7 text-[#C8A951]" fill="none" stroke="currentColor" strokeWidth="2">
+    <div className="rounded-2xl bg-[var(--gold)]/10 border border-[var(--gold)]/30 p-8 text-center space-y-4">
+      <div className="w-14 h-14 rounded-2xl bg-[var(--gold)]/20 flex items-center justify-center mx-auto">
+        <svg viewBox="0 0 24 24" className="w-7 h-7 text-[var(--gold)]" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
         </svg>
       </div>
       <div className="space-y-1">
-        <p className="text-sm font-bold text-[#0F172A]">
+        <p className="text-sm font-bold text-slate-900">
           {message || 'You have reached your upload limit for this plan.'}
         </p>
-        <p className="text-xs text-[#64748B]">
+        <p className="text-xs text-slate-500">
           Written reflections are always free. Upgrade your plan for video and audio recording.
         </p>
       </div>
       <Link
         to="/estates/$estateId/pricing"
         params={{ estateId }}
-        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#C8A951] hover:bg-[#B8952F] text-white font-bold text-sm transition-colors"
+        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--gold)] hover:bg-[var(--gold)] text-white font-bold text-sm transition-colors"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
@@ -1538,8 +1538,8 @@ function VideoRecorder({
       <div className="aspect-video rounded-2xl bg-slate-50 border border-dashed border-slate-200 flex items-center justify-center">
         <div className="text-center p-6 space-y-2">
           <Video className="w-8 h-8 text-slate-300 mx-auto" />
-          <p className="text-sm text-[#0F172A]/50">Camera access denied</p>
-          <p className="text-xs text-[#0F172A]/30">Check your browser settings and try again.</p>
+          <p className="text-sm text-slate-900/50">Camera access denied</p>
+          <p className="text-xs text-slate-900/30">Check your browser settings and try again.</p>
           <Button variant="outline" size="sm" onClick={onStart} className="rounded-xl mt-2 text-xs">
             Try again
           </Button>
@@ -1555,10 +1555,10 @@ function VideoRecorder({
           <video src={recordedUrl} controls className="w-full h-full object-contain" />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs text-[#0F172A]/40 font-mono">
+          <span className="text-xs text-slate-900/40 font-mono">
             Duration: {formatDuration(recordDuration)}
           </span>
-          <Button variant="outline" size="sm" onClick={onRetake} className="rounded-xl text-xs border-[#133378]/10">
+          <Button variant="outline" size="sm" onClick={onRetake} className="rounded-xl text-xs border-[var(--royal)]/10">
             Record again
           </Button>
         </div>
@@ -1568,7 +1568,7 @@ function VideoRecorder({
 
   return (
     <div className="space-y-4">
-      <div className="aspect-video rounded-2xl overflow-hidden bg-[#0F172A] relative">
+      <div className="aspect-video rounded-2xl overflow-hidden bg-slate-900 relative">
         <video
           ref={videoPreviewRef}
           muted
@@ -1691,8 +1691,8 @@ function AudioRecorder({
           for (let i = 0; i < bufferLength; i++) {
             const barHeight = (dataArray[i] / 255) * canvas.height * 0.8
             const gradient = ctx.createLinearGradient(0, canvas.height, 0, canvas.height - barHeight)
-            gradient.addColorStop(0, 'rgba(124, 58, 237, 0.2)')
-            gradient.addColorStop(1, 'rgba(124, 58, 237, 0.7)')
+            gradient.addColorStop(0, 'rgba(19, 51, 120, 0.2)')
+            gradient.addColorStop(1, 'rgba(19, 51, 120, 0.7)')
             ctx.fillStyle = gradient
             ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight)
             x += barWidth + 1
@@ -1721,8 +1721,8 @@ function AudioRecorder({
       <div className="rounded-2xl bg-slate-50 border border-dashed border-slate-200 p-8 flex items-center justify-center">
         <div className="text-center space-y-2">
           <Mic className="w-8 h-8 text-slate-300 mx-auto" />
-          <p className="text-sm text-[#0F172A]/50">Microphone access denied</p>
-          <p className="text-xs text-[#0F172A]/30">Check your browser settings and try again.</p>
+          <p className="text-sm text-slate-900/50">Microphone access denied</p>
+          <p className="text-xs text-slate-900/30">Check your browser settings and try again.</p>
           <Button variant="outline" size="sm" onClick={onStart} className="rounded-xl mt-2 text-xs">
             Try again
           </Button>
@@ -1734,14 +1734,14 @@ function AudioRecorder({
   if (recordedUrl) {
     return (
       <div className="space-y-3">
-        <div className="p-4 rounded-2xl bg-[#7C3AED]/5 border border-[#7C3AED]/10">
+        <div className="p-4 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10">
           <audio src={recordedUrl} controls className="w-full" />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs text-[#0F172A]/40 font-mono">
+          <span className="text-xs text-slate-900/40 font-mono">
             Duration: {formatDuration(recordDuration)}
           </span>
-          <Button variant="outline" size="sm" onClick={onRetake} className="rounded-xl text-xs border-[#133378]/20 text-[#133378]">
+          <Button variant="outline" size="sm" onClick={onRetake} className="rounded-xl text-xs border-[var(--royal)]/20 text-[var(--royal)]">
             Record again
           </Button>
         </div>
@@ -1751,7 +1751,7 @@ function AudioRecorder({
 
   return (
     <div className="space-y-4">
-      <div className="h-24 rounded-2xl bg-[#7C3AED]/5 border border-[#7C3AED]/10 flex items-center justify-center relative overflow-hidden">
+      <div className="h-24 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10 flex items-center justify-center relative overflow-hidden">
         {recording ? (
           <>
             <canvas
@@ -1762,13 +1762,13 @@ function AudioRecorder({
             />
             <div className="absolute top-3 right-3 flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-3 py-1">
               <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-xs font-mono text-[#0F172A]/70">{formatDuration(recordDuration)}</span>
+              <span className="text-xs font-mono text-slate-900/70">{formatDuration(recordDuration)}</span>
             </div>
           </>
         ) : (
           <div className="text-center space-y-1">
-            <Mic className="w-6 h-6 text-[#7C3AED]/30 mx-auto" />
-            <p className="text-xs text-[#7C3AED]/40">Press record to begin</p>
+            <Mic className="w-6 h-6 text-[var(--royal)]/30 mx-auto" />
+            <p className="text-xs text-[var(--royal)]/40">Press record to begin</p>
           </div>
         )}
       </div>
@@ -1777,7 +1777,7 @@ function AudioRecorder({
         {!recording ? (
           <button
             onClick={onStart}
-            className="w-16 h-16 rounded-full bg-[#133378] hover:bg-[#1E3A5F] transition-colors flex items-center justify-center shadow-lg shadow-[#133378]/20 hover:shadow-xl"
+            className="w-16 h-16 rounded-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] transition-colors flex items-center justify-center shadow-lg shadow-[var(--royal)]/20 hover:shadow-xl"
             type="button"
             aria-label="Start recording"
           >
@@ -1786,7 +1786,7 @@ function AudioRecorder({
         ) : (
           <button
             onClick={onStop}
-            className="w-16 h-16 rounded-full bg-[#133378] hover:bg-[#1E3A5F] transition-colors flex items-center justify-center shadow-lg shadow-[#133378]/20 animate-pulse"
+            className="w-16 h-16 rounded-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] transition-colors flex items-center justify-center shadow-lg shadow-[var(--royal)]/20 animate-pulse"
             type="button"
             aria-label="Stop recording"
           >
@@ -1812,7 +1812,7 @@ function WrittenEditor({
     content: content || '',
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none min-h-[200px] px-5 py-4 focus:outline-none text-[#0F172A]/80 leading-relaxed',
+        class: 'prose prose-sm max-w-none min-h-[200px] px-5 py-4 focus:outline-none text-slate-900/80 leading-relaxed',
       },
     },
     onUpdate: ({ editor: e }) => {
@@ -1824,13 +1824,13 @@ function WrittenEditor({
     <div className="space-y-2">
       {/* Toolbar */}
       {editor && (
-        <div className="flex items-center gap-1 p-2 bg-[#F8FAFC] rounded-xl border border-slate-100">
+        <div className="flex items-center gap-1 p-2 bg-slate-50 rounded-xl border border-slate-100">
           <Button
             variant="ghost"
             size="icon"
             type="button"
             onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`w-8 h-8 rounded-lg ${editor.isActive('bold') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+            className={`w-8 h-8 rounded-lg ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
           >
             <Bold className="w-3.5 h-3.5" />
           </Button>
@@ -1839,7 +1839,7 @@ function WrittenEditor({
             size="icon"
             type="button"
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`w-8 h-8 rounded-lg ${editor.isActive('italic') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+            className={`w-8 h-8 rounded-lg ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
           >
             <Italic className="w-3.5 h-3.5" />
           </Button>
@@ -1849,7 +1849,7 @@ function WrittenEditor({
             size="icon"
             type="button"
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={`w-8 h-8 rounded-lg ${editor.isActive('heading', { level: 2 }) ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+            className={`w-8 h-8 rounded-lg ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
           >
             <Heading2 className="w-3.5 h-3.5" />
           </Button>
@@ -1858,7 +1858,7 @@ function WrittenEditor({
             size="icon"
             type="button"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`w-8 h-8 rounded-lg ${editor.isActive('bulletList') ? 'bg-[#133378] text-white hover:bg-[#133378]/90 hover:text-white' : 'text-[#64748B] hover:bg-[#E2E8F0]'}`}
+            className={`w-8 h-8 rounded-lg ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
           >
             <List className="w-3.5 h-3.5" />
           </Button>
@@ -1868,7 +1868,7 @@ function WrittenEditor({
             size="icon"
             type="button"
             onClick={() => editor.chain().focus().undo().run()}
-            className="w-8 h-8 rounded-lg text-[#64748B] hover:bg-[#E2E8F0]"
+            className="w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-200"
           >
             <Undo2 className="w-3.5 h-3.5" />
           </Button>
@@ -1877,7 +1877,7 @@ function WrittenEditor({
             size="icon"
             type="button"
             onClick={() => editor.chain().focus().redo().run()}
-            className="w-8 h-8 rounded-lg text-[#64748B] hover:bg-[#E2E8F0]"
+            className="w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-200"
           >
             <Redo2 className="w-3.5 h-3.5" />
           </Button>

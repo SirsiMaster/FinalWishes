@@ -70,7 +70,7 @@ const STEP_LABELS = ['Situation', 'About You', 'Family', 'Assets', 'Name']
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 function CreateEstatePage() {
-  const { user, profile, loading } = useAuth()
+  const { user, profile, profileResolved } = useAuth()
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
@@ -79,10 +79,11 @@ function CreateEstatePage() {
   // GUARD: never show the intake wizard to someone who already has an estate.
   // The post-login redirect can land here transiently before the profile
   // resolves; without this, returning users were forced to "re-personalize"
-  // their estate on every login. Once auth has settled, bounce them to their
-  // existing estate dashboard.
+  // their estate on every login. Gate on profileResolved (not `!loading`) so we
+  // only bounce once the profile read has a definitive answer — `loading`
+  // tracks Firebase auth init, not the Firestore profile fetch.
   useEffect(() => {
-    if (!loading && profile?.primaryEstateId) {
+    if (profileResolved && profile?.primaryEstateId) {
       navigate({
         to: '/estates/$estateId/dashboard',
         params: { estateId: profile.primaryEstateId },
@@ -90,7 +91,7 @@ function CreateEstatePage() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
     }
-  }, [loading, profile?.primaryEstateId, navigate])
+  }, [profileResolved, profile?.primaryEstateId, navigate])
 
   const firstName = profile?.firstName || user?.displayName?.split(' ')[0] || ''
   const fullNameDefault = profile

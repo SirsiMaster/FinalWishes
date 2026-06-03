@@ -61,10 +61,22 @@ export interface UserProfile {
 export interface AuthContextValue {
   /** Firebase user object (null if not authenticated) */
   user: User | null;
-  /** User profile from Firestore (null if not loaded) */
+  /** User profile from Firestore (null if not loaded, not yet fetched, or fetch failed) */
   profile: UserProfile | null;
-  /** True while Firebase is determining auth state */
+  /** True while Firebase is determining auth state (auth init only — NOT the profile read) */
   loading: boolean;
+  /**
+   * True once the profile question has a *definitive* answer for the current
+   * auth state: the profile was fetched (success), confirmed absent, or there
+   * is no user. It stays false while a fetch is in flight AND while a fetch is
+   * failing — because `profile === null` alone conflates "not loaded yet",
+   * "user has no profile doc", and "fetch failed".
+   *
+   * Gate new-vs-returning routing on this (NOT on `!loading`): a returning user
+   * with a `primaryEstateId` must never be classified as new and dumped on
+   * /estates/create just because their profile read hadn't settled.
+   */
+  profileResolved: boolean;
   /** Whether the user's email has been verified */
   emailVerified: boolean;
   /** Sign in with email or username + password */
@@ -134,33 +146,35 @@ function isEmail(identifier: string): boolean {
 
 /**
  * Fetch user profile from Firestore.
+ *
+ * Returns the profile when the doc exists, or `null` when it is *confirmed
+ * absent* (the read succeeded but no doc exists). Crucially it does NOT catch —
+ * a failed read (network/permissions) propagates so callers can tell "this user
+ * has no profile" apart from "we couldn't find out". Swallowing both into `null`
+ * is exactly what let a returning user be misrouted to /estates/create.
  */
 async function fetchUserProfile(uid: string): Promise<UserProfile | null> {
-  try {
-    const userDoc = await getDoc(doc(db, 'users', uid));
-    if (userDoc.exists()) {
-      const data = userDoc.data();
-      return {
-        uid,
-        email: data.email || '',
-        username: data.username,
-        firstName: data.firstName || '',
-        lastName: data.lastName || '',
-        displayName: data.displayName || data.firstName || '',
-        role: data.role || 'principal',
-        phone: data.phone,
-        status: data.status || 'active',
-        profilePhotoUrl: data.profilePhotoUrl,
-        birthDate: data.birthDate,
-        deathDate: data.deathDate,
-        primaryEstateId: data.primaryEstateId,
-        primaryEstateName: data.primaryEstateName,
-      };
-    }
-    return null;
-  } catch {
-    return null;
+  const userDoc = await getDoc(doc(db, 'users', uid));
+  if (userDoc.exists()) {
+    const data = userDoc.data();
+    return {
+      uid,
+      email: data.email || '',
+      username: data.username,
+      firstName: data.firstName || '',
+      lastName: data.lastName || '',
+      displayName: data.displayName || data.firstName || '',
+      role: data.role || 'principal',
+      phone: data.phone,
+      status: data.status || 'active',
+      profilePhotoUrl: data.profilePhotoUrl,
+      birthDate: data.birthDate,
+      deathDate: data.deathDate,
+      primaryEstateId: data.primaryEstateId,
+      primaryEstateName: data.primaryEstateName,
+    };
   }
+  return null;
 }
 
 /**
@@ -196,6 +210,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profileResolved, setProfileResolved] = useState(false);
 
   // Listen for Firebase auth state changes
   useEffect(() => {
@@ -205,44 +220,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Fetch user profile from Firestore
-        let userProfile = await fetchUserProfile(firebaseUser.uid);
+        // A profile fetch is now in flight for this auth state — the answer is
+        // not yet definitive. (No-op on first run since it starts false, but
+        // correct on re-fires such as token refresh.)
+        setProfileResolved(false);
+        try {
+          // Fetch user profile from Firestore
+          let userProfile = await fetchUserProfile(firebaseUser.uid);
 
-        // Handle edge case: Firebase Auth account exists but Firestore profile doesn't
-        // (e.g., previous registration failed mid-write due to permissions)
-        if (!userProfile && firebaseUser.email) {
-          try {
-            const displayName = firebaseUser.displayName || firebaseUser.email.split('@')[0];
-            const nameParts = displayName.split(' ');
-            await setDoc(doc(db, 'users', firebaseUser.uid), {
-              id: firebaseUser.uid,
-              email: firebaseUser.email,
-              emailVerified: firebaseUser.emailVerified,
-              firstName: nameParts[0] || '',
-              lastName: nameParts.slice(1).join(' ') || '',
-              displayName,
-              role: 'principal',
-              tier: 'free',
-              status: 'active',
-              idVerified: false,
-              createdAt: serverTimestamp(),
-              updatedAt: serverTimestamp(),
-            });
-            userProfile = await fetchUserProfile(firebaseUser.uid);
-          } catch {
-            // If this also fails, user will see limited UI — they can try again
+          // Handle edge case: Firebase Auth account exists but Firestore profile doesn't
+          // (e.g., previous registration failed mid-write due to permissions)
+          if (!userProfile && firebaseUser.email) {
+            try {
+              const displayName = firebaseUser.displayName || firebaseUser.email.split('@')[0];
+              const nameParts = displayName.split(' ');
+              await setDoc(doc(db, 'users', firebaseUser.uid), {
+                id: firebaseUser.uid,
+                email: firebaseUser.email,
+                emailVerified: firebaseUser.emailVerified,
+                firstName: nameParts[0] || '',
+                lastName: nameParts.slice(1).join(' ') || '',
+                displayName,
+                role: 'principal',
+                tier: 'free',
+                status: 'active',
+                idVerified: false,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+              });
+              userProfile = await fetchUserProfile(firebaseUser.uid);
+            } catch {
+              // If this also fails, user will see limited UI — they can try again
+            }
           }
-        }
 
-        // Set profile BEFORE user: the login modal redirects the instant `user`
-        // is truthy (index.tsx LoginModal effect). If `user` flipped true with a
-        // null profile, navigatePostLogin would route to /estates/create instead
-        // of the user's own estate dashboard — a visible post-login bounce.
-        setProfile(userProfile);
-        setUser(firebaseUser);
+          // Set profile BEFORE user: the login modal redirects the instant `user`
+          // is truthy (index.tsx LoginModal effect). If `user` flipped true with a
+          // null profile, navigatePostLogin would route to /estates/create instead
+          // of the user's own estate dashboard — a visible post-login bounce.
+          setProfile(userProfile);
+          setUser(firebaseUser);
+          // Definitive answer reached (found OR confirmed-absent): routing may run.
+          setProfileResolved(true);
+        } catch (err) {
+          // The profile READ failed (network/permissions) — this is NOT the same
+          // as "user has no profile". Leave profileResolved false so the
+          // new-vs-returning routing waits instead of misclassifying a returning
+          // user as new and dumping them on /estates/create. The user is still
+          // authenticated; surface the failure rather than swallowing it.
+          console.error('[auth] profile fetch failed; routing deferred:', err);
+          setUser(firebaseUser);
+        }
       } else {
         setUser(null);
         setProfile(null);
+        // No user → nothing to fetch → the profile question is resolved.
+        setProfileResolved(true);
       }
 
       setLoading(false);
@@ -274,6 +307,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userProfile = await fetchUserProfile(credential.user.uid);
       setProfile(userProfile);
       setUser(credential.user);
+      setProfileResolved(true);
 
       return { success: true, profile: userProfile };
     } catch (error: unknown) {
@@ -337,6 +371,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Set profile in state
       const userProfile = await fetchUserProfile(uid);
       setProfile(userProfile);
+      setProfileResolved(true);
 
       return { success: true, profile: userProfile };
     } catch (error: unknown) {
@@ -359,6 +394,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     setUser(null);
     setProfile(null);
+    setProfileResolved(true); // resolved: signed out → no profile
     // Hard navigation guarantees a clean re-init: it re-attaches the Firebase
     // listener and discards all stale in-memory auth state.
     window.location.assign('/login');
@@ -391,6 +427,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     profile,
     loading,
+    profileResolved,
     emailVerified: user?.emailVerified ?? false,
     signIn,
     signUp,

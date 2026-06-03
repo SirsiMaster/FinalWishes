@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { login, requireTestAccount } from './helpers/auth'
 
 /**
  * E2E Tests — Life-First Reframe Features (Session 7)
@@ -6,17 +7,9 @@ import { test, expect, type Page } from '@playwright/test'
  * Tests for: Soul Log, Life Chapters, SectionHeader, page transitions,
  * Shepherd nudges, and emotional section navigation.
  *
- * Uses demo login for authenticated flows.
+ * Logs in via the real login modal (see e2e/helpers/auth.ts). Set
+ * E2E_TEST_PASSWORD to run these; otherwise they skip.
  */
-
-async function demoLogin(page: Page) {
-  await page.goto('/login?demo=true')
-  await expect(page.locator('#login-identifier')).toBeVisible({ timeout: 15000 })
-  await page.locator('#login-identifier').fill('Tameeka116')
-  await page.locator('#login-password').fill('ML6824!')
-  await page.locator('#login-submit').click()
-  await page.waitForURL(/estates/, { timeout: 15000 })
-}
 
 /** Expand a collapsible sidebar group */
 async function expandNavGroup(page: Page, groupLabel: string) {
@@ -37,7 +30,8 @@ test.describe('Life-First Features — Soul Log', () => {
   test.setTimeout(60000)
 
   test.beforeEach(async ({ page }) => {
-    await demoLogin(page)
+    requireTestAccount()
+    await login(page)
   })
 
   test('Soul Log page loads with SectionHeader', async ({ page }) => {
@@ -81,7 +75,8 @@ test.describe('Life-First Features — Life Chapters', () => {
   test.setTimeout(60000)
 
   test.beforeEach(async ({ page }) => {
-    await demoLogin(page)
+    requireTestAccount()
+    await login(page)
   })
 
   test('Life Chapters page loads via sidebar', async ({ page }) => {
@@ -127,7 +122,8 @@ test.describe('Life-First Features — Section Headers & Navigation', () => {
   test.setTimeout(60000)
 
   test.beforeEach(async ({ page }) => {
-    await demoLogin(page)
+    requireTestAccount()
+    await login(page)
   })
 
   test('each section has its distinctive SectionHeader', async ({ page }) => {
@@ -166,7 +162,8 @@ test.describe('Life-First Features — Shepherd Integration', () => {
   test.setTimeout(60000)
 
   test.beforeEach(async ({ page }) => {
-    await demoLogin(page)
+    requireTestAccount()
+    await login(page)
   })
 
   test('dashboard Shepherd FAB opens chat panel', async ({ page }) => {

@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, useParams, Link } from '@tanstack/react-router'
+import { createLazyFileRoute, useParams, Link } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useDirectives, useEstateHeirs, type Directive } from '../lib/firestore'
 import { useAuth } from '../lib/auth'
@@ -49,7 +49,7 @@ import {
   type AdvanceDirectiveStatus,
 } from '@/lib/probate'
 
-export const Route = createFileRoute('/estates/$estateId/directives')({
+export const Route = createLazyFileRoute('/estates/$estateId/directives')({
   component: DirectivesPage,
 })
 

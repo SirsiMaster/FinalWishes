@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -26,7 +28,6 @@ import { Route as EstatesEstateIdSoulLogRouteImport } from './routes/estates.$es
 import { Route as EstatesEstateIdSettingsRouteImport } from './routes/estates.$estateId.settings'
 import { Route as EstatesEstateIdProbateRouteImport } from './routes/estates.$estateId.probate'
 import { Route as EstatesEstateIdPricingRouteImport } from './routes/estates.$estateId.pricing'
-import { Route as EstatesEstateIdObituaryRouteImport } from './routes/estates.$estateId.obituary'
 import { Route as EstatesEstateIdNotificationsRouteImport } from './routes/estates.$estateId.notifications'
 import { Route as EstatesEstateIdMemoirsRouteImport } from './routes/estates.$estateId.memoirs'
 import { Route as EstatesEstateIdLockboxRouteImport } from './routes/estates.$estateId.lockbox'
@@ -35,11 +36,17 @@ import { Route as EstatesEstateIdHeirloomsRouteImport } from './routes/estates.$
 import { Route as EstatesEstateIdFormsRouteImport } from './routes/estates.$estateId.forms'
 import { Route as EstatesEstateIdEventsRouteImport } from './routes/estates.$estateId.events'
 import { Route as EstatesEstateIdEstatesRouteImport } from './routes/estates.$estateId.estates'
-import { Route as EstatesEstateIdDirectivesRouteImport } from './routes/estates.$estateId.directives'
 import { Route as EstatesEstateIdDashboardRouteImport } from './routes/estates.$estateId.dashboard'
 import { Route as EstatesEstateIdBeneficiariesRouteImport } from './routes/estates.$estateId.beneficiaries'
 import { Route as EstatesEstateIdAttestationRouteImport } from './routes/estates.$estateId.attestation'
 import { Route as EstatesEstateIdAssetsRouteImport } from './routes/estates.$estateId.assets'
+
+const EstatesEstateIdObituaryLazyRouteImport = createFileRoute(
+  '/estates/$estateId/obituary',
+)()
+const EstatesEstateIdDirectivesLazyRouteImport = createFileRoute(
+  '/estates/$estateId/directives',
+)()
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -96,6 +103,22 @@ const EstatesEstateIdIndexRoute = EstatesEstateIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => EstatesEstateIdRoute,
 } as any)
+const EstatesEstateIdObituaryLazyRoute =
+  EstatesEstateIdObituaryLazyRouteImport.update({
+    id: '/obituary',
+    path: '/obituary',
+    getParentRoute: () => EstatesEstateIdRoute,
+  } as any).lazy(() =>
+    import('./routes/estates.$estateId.obituary.lazy').then((d) => d.Route),
+  )
+const EstatesEstateIdDirectivesLazyRoute =
+  EstatesEstateIdDirectivesLazyRouteImport.update({
+    id: '/directives',
+    path: '/directives',
+    getParentRoute: () => EstatesEstateIdRoute,
+  } as any).lazy(() =>
+    import('./routes/estates.$estateId.directives.lazy').then((d) => d.Route),
+  )
 const EstatesEstateIdVaultRoute = EstatesEstateIdVaultRouteImport.update({
   id: '/vault',
   path: '/vault',
@@ -131,11 +154,6 @@ const EstatesEstateIdProbateRoute = EstatesEstateIdProbateRouteImport.update({
 const EstatesEstateIdPricingRoute = EstatesEstateIdPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
-  getParentRoute: () => EstatesEstateIdRoute,
-} as any)
-const EstatesEstateIdObituaryRoute = EstatesEstateIdObituaryRouteImport.update({
-  id: '/obituary',
-  path: '/obituary',
   getParentRoute: () => EstatesEstateIdRoute,
 } as any)
 const EstatesEstateIdNotificationsRoute =
@@ -185,12 +203,6 @@ const EstatesEstateIdEstatesRoute = EstatesEstateIdEstatesRouteImport.update({
   path: '/estates',
   getParentRoute: () => EstatesEstateIdRoute,
 } as any)
-const EstatesEstateIdDirectivesRoute =
-  EstatesEstateIdDirectivesRouteImport.update({
-    id: '/directives',
-    path: '/directives',
-    getParentRoute: () => EstatesEstateIdRoute,
-  } as any)
 const EstatesEstateIdDashboardRoute =
   EstatesEstateIdDashboardRouteImport.update({
     id: '/dashboard',
@@ -232,7 +244,6 @@ export interface FileRoutesByFullPath {
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
   '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
-  '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesRoute
   '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
   '/estates/$estateId/events': typeof EstatesEstateIdEventsRoute
   '/estates/$estateId/forms': typeof EstatesEstateIdFormsRoute
@@ -241,13 +252,14 @@ export interface FileRoutesByFullPath {
   '/estates/$estateId/lockbox': typeof EstatesEstateIdLockboxRoute
   '/estates/$estateId/memoirs': typeof EstatesEstateIdMemoirsRoute
   '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
-  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/pricing': typeof EstatesEstateIdPricingRoute
   '/estates/$estateId/probate': typeof EstatesEstateIdProbateRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/soul-log': typeof EstatesEstateIdSoulLogRoute
   '/estates/$estateId/timecapsule': typeof EstatesEstateIdTimecapsuleRoute
   '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
+  '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesLazyRoute
+  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryLazyRoute
   '/estates/$estateId/': typeof EstatesEstateIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -264,7 +276,6 @@ export interface FileRoutesByTo {
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
   '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
-  '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesRoute
   '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
   '/estates/$estateId/events': typeof EstatesEstateIdEventsRoute
   '/estates/$estateId/forms': typeof EstatesEstateIdFormsRoute
@@ -273,13 +284,14 @@ export interface FileRoutesByTo {
   '/estates/$estateId/lockbox': typeof EstatesEstateIdLockboxRoute
   '/estates/$estateId/memoirs': typeof EstatesEstateIdMemoirsRoute
   '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
-  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/pricing': typeof EstatesEstateIdPricingRoute
   '/estates/$estateId/probate': typeof EstatesEstateIdProbateRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/soul-log': typeof EstatesEstateIdSoulLogRoute
   '/estates/$estateId/timecapsule': typeof EstatesEstateIdTimecapsuleRoute
   '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
+  '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesLazyRoute
+  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryLazyRoute
   '/estates/$estateId': typeof EstatesEstateIdIndexRoute
 }
 export interface FileRoutesById {
@@ -298,7 +310,6 @@ export interface FileRoutesById {
   '/estates/$estateId/attestation': typeof EstatesEstateIdAttestationRoute
   '/estates/$estateId/beneficiaries': typeof EstatesEstateIdBeneficiariesRoute
   '/estates/$estateId/dashboard': typeof EstatesEstateIdDashboardRoute
-  '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesRoute
   '/estates/$estateId/estates': typeof EstatesEstateIdEstatesRoute
   '/estates/$estateId/events': typeof EstatesEstateIdEventsRoute
   '/estates/$estateId/forms': typeof EstatesEstateIdFormsRoute
@@ -307,13 +318,14 @@ export interface FileRoutesById {
   '/estates/$estateId/lockbox': typeof EstatesEstateIdLockboxRoute
   '/estates/$estateId/memoirs': typeof EstatesEstateIdMemoirsRoute
   '/estates/$estateId/notifications': typeof EstatesEstateIdNotificationsRoute
-  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryRoute
   '/estates/$estateId/pricing': typeof EstatesEstateIdPricingRoute
   '/estates/$estateId/probate': typeof EstatesEstateIdProbateRoute
   '/estates/$estateId/settings': typeof EstatesEstateIdSettingsRoute
   '/estates/$estateId/soul-log': typeof EstatesEstateIdSoulLogRoute
   '/estates/$estateId/timecapsule': typeof EstatesEstateIdTimecapsuleRoute
   '/estates/$estateId/vault': typeof EstatesEstateIdVaultRoute
+  '/estates/$estateId/directives': typeof EstatesEstateIdDirectivesLazyRoute
+  '/estates/$estateId/obituary': typeof EstatesEstateIdObituaryLazyRoute
   '/estates/$estateId/': typeof EstatesEstateIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -333,7 +345,6 @@ export interface FileRouteTypes {
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
     | '/estates/$estateId/dashboard'
-    | '/estates/$estateId/directives'
     | '/estates/$estateId/estates'
     | '/estates/$estateId/events'
     | '/estates/$estateId/forms'
@@ -342,13 +353,14 @@ export interface FileRouteTypes {
     | '/estates/$estateId/lockbox'
     | '/estates/$estateId/memoirs'
     | '/estates/$estateId/notifications'
-    | '/estates/$estateId/obituary'
     | '/estates/$estateId/pricing'
     | '/estates/$estateId/probate'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/soul-log'
     | '/estates/$estateId/timecapsule'
     | '/estates/$estateId/vault'
+    | '/estates/$estateId/directives'
+    | '/estates/$estateId/obituary'
     | '/estates/$estateId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -365,7 +377,6 @@ export interface FileRouteTypes {
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
     | '/estates/$estateId/dashboard'
-    | '/estates/$estateId/directives'
     | '/estates/$estateId/estates'
     | '/estates/$estateId/events'
     | '/estates/$estateId/forms'
@@ -374,13 +385,14 @@ export interface FileRouteTypes {
     | '/estates/$estateId/lockbox'
     | '/estates/$estateId/memoirs'
     | '/estates/$estateId/notifications'
-    | '/estates/$estateId/obituary'
     | '/estates/$estateId/pricing'
     | '/estates/$estateId/probate'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/soul-log'
     | '/estates/$estateId/timecapsule'
     | '/estates/$estateId/vault'
+    | '/estates/$estateId/directives'
+    | '/estates/$estateId/obituary'
     | '/estates/$estateId'
   id:
     | '__root__'
@@ -398,7 +410,6 @@ export interface FileRouteTypes {
     | '/estates/$estateId/attestation'
     | '/estates/$estateId/beneficiaries'
     | '/estates/$estateId/dashboard'
-    | '/estates/$estateId/directives'
     | '/estates/$estateId/estates'
     | '/estates/$estateId/events'
     | '/estates/$estateId/forms'
@@ -407,13 +418,14 @@ export interface FileRouteTypes {
     | '/estates/$estateId/lockbox'
     | '/estates/$estateId/memoirs'
     | '/estates/$estateId/notifications'
-    | '/estates/$estateId/obituary'
     | '/estates/$estateId/pricing'
     | '/estates/$estateId/probate'
     | '/estates/$estateId/settings'
     | '/estates/$estateId/soul-log'
     | '/estates/$estateId/timecapsule'
     | '/estates/$estateId/vault'
+    | '/estates/$estateId/directives'
+    | '/estates/$estateId/obituary'
     | '/estates/$estateId/'
   fileRoutesById: FileRoutesById
 }
@@ -509,6 +521,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstatesEstateIdIndexRouteImport
       parentRoute: typeof EstatesEstateIdRoute
     }
+    '/estates/$estateId/obituary': {
+      id: '/estates/$estateId/obituary'
+      path: '/obituary'
+      fullPath: '/estates/$estateId/obituary'
+      preLoaderRoute: typeof EstatesEstateIdObituaryLazyRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
+    '/estates/$estateId/directives': {
+      id: '/estates/$estateId/directives'
+      path: '/directives'
+      fullPath: '/estates/$estateId/directives'
+      preLoaderRoute: typeof EstatesEstateIdDirectivesLazyRouteImport
+      parentRoute: typeof EstatesEstateIdRoute
+    }
     '/estates/$estateId/vault': {
       id: '/estates/$estateId/vault'
       path: '/vault'
@@ -549,13 +575,6 @@ declare module '@tanstack/react-router' {
       path: '/pricing'
       fullPath: '/estates/$estateId/pricing'
       preLoaderRoute: typeof EstatesEstateIdPricingRouteImport
-      parentRoute: typeof EstatesEstateIdRoute
-    }
-    '/estates/$estateId/obituary': {
-      id: '/estates/$estateId/obituary'
-      path: '/obituary'
-      fullPath: '/estates/$estateId/obituary'
-      preLoaderRoute: typeof EstatesEstateIdObituaryRouteImport
       parentRoute: typeof EstatesEstateIdRoute
     }
     '/estates/$estateId/notifications': {
@@ -614,13 +633,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EstatesEstateIdEstatesRouteImport
       parentRoute: typeof EstatesEstateIdRoute
     }
-    '/estates/$estateId/directives': {
-      id: '/estates/$estateId/directives'
-      path: '/directives'
-      fullPath: '/estates/$estateId/directives'
-      preLoaderRoute: typeof EstatesEstateIdDirectivesRouteImport
-      parentRoute: typeof EstatesEstateIdRoute
-    }
     '/estates/$estateId/dashboard': {
       id: '/estates/$estateId/dashboard'
       path: '/dashboard'
@@ -657,7 +669,6 @@ interface EstatesEstateIdRouteChildren {
   EstatesEstateIdAttestationRoute: typeof EstatesEstateIdAttestationRoute
   EstatesEstateIdBeneficiariesRoute: typeof EstatesEstateIdBeneficiariesRoute
   EstatesEstateIdDashboardRoute: typeof EstatesEstateIdDashboardRoute
-  EstatesEstateIdDirectivesRoute: typeof EstatesEstateIdDirectivesRoute
   EstatesEstateIdEstatesRoute: typeof EstatesEstateIdEstatesRoute
   EstatesEstateIdEventsRoute: typeof EstatesEstateIdEventsRoute
   EstatesEstateIdFormsRoute: typeof EstatesEstateIdFormsRoute
@@ -666,13 +677,14 @@ interface EstatesEstateIdRouteChildren {
   EstatesEstateIdLockboxRoute: typeof EstatesEstateIdLockboxRoute
   EstatesEstateIdMemoirsRoute: typeof EstatesEstateIdMemoirsRoute
   EstatesEstateIdNotificationsRoute: typeof EstatesEstateIdNotificationsRoute
-  EstatesEstateIdObituaryRoute: typeof EstatesEstateIdObituaryRoute
   EstatesEstateIdPricingRoute: typeof EstatesEstateIdPricingRoute
   EstatesEstateIdProbateRoute: typeof EstatesEstateIdProbateRoute
   EstatesEstateIdSettingsRoute: typeof EstatesEstateIdSettingsRoute
   EstatesEstateIdSoulLogRoute: typeof EstatesEstateIdSoulLogRoute
   EstatesEstateIdTimecapsuleRoute: typeof EstatesEstateIdTimecapsuleRoute
   EstatesEstateIdVaultRoute: typeof EstatesEstateIdVaultRoute
+  EstatesEstateIdDirectivesLazyRoute: typeof EstatesEstateIdDirectivesLazyRoute
+  EstatesEstateIdObituaryLazyRoute: typeof EstatesEstateIdObituaryLazyRoute
   EstatesEstateIdIndexRoute: typeof EstatesEstateIdIndexRoute
 }
 
@@ -681,7 +693,6 @@ const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
   EstatesEstateIdAttestationRoute: EstatesEstateIdAttestationRoute,
   EstatesEstateIdBeneficiariesRoute: EstatesEstateIdBeneficiariesRoute,
   EstatesEstateIdDashboardRoute: EstatesEstateIdDashboardRoute,
-  EstatesEstateIdDirectivesRoute: EstatesEstateIdDirectivesRoute,
   EstatesEstateIdEstatesRoute: EstatesEstateIdEstatesRoute,
   EstatesEstateIdEventsRoute: EstatesEstateIdEventsRoute,
   EstatesEstateIdFormsRoute: EstatesEstateIdFormsRoute,
@@ -690,13 +701,14 @@ const EstatesEstateIdRouteChildren: EstatesEstateIdRouteChildren = {
   EstatesEstateIdLockboxRoute: EstatesEstateIdLockboxRoute,
   EstatesEstateIdMemoirsRoute: EstatesEstateIdMemoirsRoute,
   EstatesEstateIdNotificationsRoute: EstatesEstateIdNotificationsRoute,
-  EstatesEstateIdObituaryRoute: EstatesEstateIdObituaryRoute,
   EstatesEstateIdPricingRoute: EstatesEstateIdPricingRoute,
   EstatesEstateIdProbateRoute: EstatesEstateIdProbateRoute,
   EstatesEstateIdSettingsRoute: EstatesEstateIdSettingsRoute,
   EstatesEstateIdSoulLogRoute: EstatesEstateIdSoulLogRoute,
   EstatesEstateIdTimecapsuleRoute: EstatesEstateIdTimecapsuleRoute,
   EstatesEstateIdVaultRoute: EstatesEstateIdVaultRoute,
+  EstatesEstateIdDirectivesLazyRoute: EstatesEstateIdDirectivesLazyRoute,
+  EstatesEstateIdObituaryLazyRoute: EstatesEstateIdObituaryLazyRoute,
   EstatesEstateIdIndexRoute: EstatesEstateIdIndexRoute,
 }
 

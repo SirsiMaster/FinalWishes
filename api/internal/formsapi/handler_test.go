@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"strings"
 	"testing"
 
@@ -41,9 +42,48 @@ func TestListForms(t *testing.T) {
 	if err := json.Unmarshal(rr.Body.Bytes(), &body); err != nil {
 		t.Fatalf("decode: %v", err)
 	}
-	if len(body.Forms) != 7 {
-		t.Fatalf("expected 7 forms, got %d", len(body.Forms))
+
+	// Assert the *contract* (required forms are wired and served with fields),
+	// not a brittle total count. A bare `len == N` check breaks — and blocks the
+	// deploy — every time a form is added, even though adding one is correct
+	// (per Codex review of the C5 patch). Membership of the known IDs verifies
+	// the real invariant and stays additive-friendly.
+	got := make(map[string]int, len(body.Forms))
+	for _, f := range body.Forms {
+		got[f.FormID] = len(f.Fields)
 	}
+	required := []string{
+		"il_poa_property_2011",
+		"il_small_estate_3606",
+		"il_hcpoa_caringinfo",
+		"il_living_will_caringinfo",
+		"il_mhtpd_2016",
+		"mn_poa_523_23", // C5 multi-state POA
+		"md_poa_17_202", // C5 multi-state POA
+	}
+	for _, id := range required {
+		nFields, ok := got[id]
+		if !ok {
+			t.Errorf("forms list is missing required form %q (got %v)", id, keysOf(got))
+			continue
+		}
+		if nFields == 0 {
+			t.Errorf("form %q is served with zero field schemas", id)
+		}
+	}
+	if len(body.Forms) < len(required) {
+		t.Fatalf("expected at least %d forms, got %d", len(required), len(body.Forms))
+	}
+}
+
+// keysOf returns the keys of a form-id→fieldcount map for diagnostic messages.
+func keysOf(m map[string]int) []string {
+	ks := make([]string, 0, len(m))
+	for k := range m {
+		ks = append(ks, k)
+	}
+	sort.Strings(ks)
+	return ks
 }
 
 func TestFillForm_ReturnsPDF(t *testing.T) {

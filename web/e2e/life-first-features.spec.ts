@@ -11,19 +11,24 @@ import { login, requireTestAccount } from './helpers/auth'
  * E2E_TEST_PASSWORD to run these; otherwise they skip.
  */
 
-/** Expand a collapsible sidebar group */
-async function expandNavGroup(page: Page, groupLabel: string) {
-  const group = page.locator('nav button').filter({ hasText: groupLabel })
-  if (await group.isVisible()) {
-    await group.click()
-    await page.waitForTimeout(200)
-  }
-}
-
-/** Navigate to a nested sidebar item */
+/**
+ * Click a nested sidebar item, ensuring its parent group is expanded first.
+ *
+ * The shipped sidebar (web/src/components/layout/Sidebar.tsx) is grouped and
+ * collapsible: a group's children only render while the group is expanded, and
+ * clicking a group button TOGGLES it. Since the active group auto-expands, we
+ * only click the group button when the target child link is not already
+ * visible — keeping the expansion idempotent across consecutive items in the
+ * same group.
+ */
 async function navigateToNestedItem(page: Page, parentGroup: string, childLabel: string) {
-  await expandNavGroup(page, parentGroup)
-  await page.locator('nav').getByText(childLabel, { exact: true }).click()
+  const child = page.locator('nav').getByText(childLabel, { exact: true })
+  if (!(await child.isVisible().catch(() => false))) {
+    const group = page.locator('nav button').filter({ hasText: parentGroup })
+    await group.click()
+    await child.waitFor({ state: 'visible', timeout: 5000 })
+  }
+  await child.click()
 }
 
 test.describe('Life-First Features — Soul Log', () => {
@@ -166,16 +171,20 @@ test.describe('Life-First Features — Shepherd Integration', () => {
     await login(page)
   })
 
-  test('dashboard Shepherd FAB opens chat panel', async ({ page }) => {
+  test('dashboard surfaces the Shepherd guidance panel', async ({ page }) => {
     // Should be on dashboard by default after login
-    await expect(page.getByText(/Welcome back/i)).toBeVisible({ timeout: 10000 })
+    await expect(page.getByRole('heading', { name: /Welcome back/i })).toBeVisible({ timeout: 10000 })
 
-    // Find and click the Shepherd FAB (bottom-right floating button)
-    const fab = page.locator('button').filter({ hasText: /Shepherd|Compass/i }).first()
-    if (await fab.isVisible()) {
-      await fab.click()
-      // Chat panel should open
-      await expect(page.getByText(/Ask the Shepherd/i).or(page.getByPlaceholder(/Ask.*anything/i))).toBeVisible({ timeout: 5000 })
-    }
+    // The estate layout docks the ShepherdCompanion panel — the dashboard's
+    // interactive Shepherd surface — open by default on desktop. Assert its
+    // real chrome: the "Shepherd" eyebrow + personalized greeting, the "Your
+    // plan" progress section, and the close ("Hide Shepherd") control.
+    await expect(page.getByRole('heading', { name: /Good to see you/i })).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Your plan')).toBeVisible()
+
+    // The panel exposes an interactive control (its close button) and a
+    // completion percentage — it is a live guidance surface, not a static banner.
+    await expect(page.getByRole('button', { name: /Hide Shepherd/i })).toBeVisible()
+    await expect(page.getByText(/^\d+%$/).first()).toBeVisible()
   })
 })

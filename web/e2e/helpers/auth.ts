@@ -62,9 +62,23 @@ export async function login(
   // localStorage. A real owner clicks through it to reach the dashboard; a fresh
   // browser context (every E2E run) has empty localStorage, so dismiss it here —
   // otherwise the welcome screen masks the dashboard chrome the specs assert on.
+  // The welcome screen renders only after the auth profile resolves, which on a
+  // cold production load can lag the /estates/* URL change by several seconds.
+  // Give it a generous window to appear, then click through and confirm it is
+  // gone before returning — otherwise the takeover masks the dashboard chrome
+  // the specs assert on.
+  // NOTE: locator.isVisible() is an immediate, non-retrying check, so it loses
+  // the race when the welcome screen renders only after the auth profile
+  // resolves (a few seconds after the /estates/* URL change). Use waitFor(),
+  // which polls, to actually catch the screen, then click through and confirm
+  // it is gone before returning.
   const welcomeCta = page.getByRole('button', { name: /Start Building Your Legacy/i })
-  if (await welcomeCta.isVisible({ timeout: 3000 }).catch(() => false)) {
+  const appeared = await welcomeCta
+    .waitFor({ state: 'visible', timeout: 12000 })
+    .then(() => true)
+    .catch(() => false)
+  if (appeared) {
     await welcomeCta.click()
-    await page.waitForTimeout(500)
+    await welcomeCta.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {})
   }
 }

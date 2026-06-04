@@ -10,20 +10,25 @@ import { login, requireTestAccount } from './helpers/auth'
  * they skip. Run against production or a local dev server with `E2E_BASE_URL`.
  */
 
-/** Expand a collapsible sidebar group by clicking its label */
-async function expandNavGroup(page: Page, groupLabel: string) {
-  const group = page.locator('nav button').filter({ hasText: groupLabel })
-  if (await group.isVisible()) {
-    await group.click()
-    // Wait for expand animation
-    await page.waitForTimeout(200)
-  }
-}
-
-/** Navigate to a nested sidebar item by expanding its parent group first */
+/**
+ * Click a nested sidebar item, ensuring its parent group is expanded first.
+ *
+ * The shipped sidebar (web/src/components/layout/Sidebar.tsx) is grouped and
+ * collapsible: a group's children only render in the DOM while the group is
+ * expanded, and clicking a group button TOGGLES it. Because the active group
+ * auto-expands, a naive "always click the group" helper would collapse an
+ * already-open group and hide the child. So we only click the group button
+ * when the target child link is not already visible — making the expansion
+ * idempotent and faithful to how a real user reaches the item.
+ */
 async function navigateToNestedItem(page: Page, parentGroup: string, childLabel: string) {
-  await expandNavGroup(page, parentGroup)
-  await page.locator('nav').getByText(childLabel, { exact: true }).click()
+  const child = page.locator('nav').getByText(childLabel, { exact: true })
+  if (!(await child.isVisible().catch(() => false))) {
+    const group = page.locator('nav button').filter({ hasText: parentGroup })
+    await group.click()
+    await child.waitFor({ state: 'visible', timeout: 5000 })
+  }
+  await child.click()
 }
 
 test.describe('FinalWishes Authenticated Flows', () => {
@@ -38,16 +43,17 @@ test.describe('FinalWishes Authenticated Flows', () => {
   // ─── 1. Dashboard loads with Shepherd data ──────────────────────────────
 
   test('dashboard loads with Shepherd data', async ({ page }) => {
-    // "Estate Completion" label
-    await expect(page.getByText('Estate Completion')).toBeVisible({ timeout: 10000 })
+    // SectionHeader greeting ("Welcome back, <name>.")
+    await expect(page.getByRole('heading', { name: /Welcome back/i })).toBeVisible({ timeout: 10000 })
 
-    // Stat card labels
-    await expect(page.getByText('Total Assets')).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText('Stored Documents')).toBeVisible()
-    await expect(page.getByText('Beneficiaries').first()).toBeVisible()
+    // Quick-stat MiniStat labels (grid row at bottom of dashboard)
+    await expect(page.getByText('Assets', { exact: true }).first()).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Documents', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Beneficiaries', { exact: true }).first()).toBeVisible()
+    await expect(page.getByText('Completion', { exact: true }).first()).toBeVisible()
 
-    // Checklist heading
-    await expect(page.getByText('Estate Checklist')).toBeVisible()
+    // Collapsible checklist heading (renders even with empty data)
+    await expect(page.getByText('Estate Health Check')).toBeVisible()
   })
 
   // ─── 2. Navigate to all major pages ─────────────────────────────────────
@@ -95,7 +101,8 @@ test.describe('FinalWishes Authenticated Flows', () => {
     await expect(page.getByText('Settings').first()).toBeVisible({ timeout: 10000 })
 
     await page.locator('nav').getByText('Notifications', { exact: true }).click()
-    await expect(page.getByText(/Notification/i).first()).toBeVisible({ timeout: 10000 })
+    // Notifications route renders an "Activity History" heading
+    await expect(page.getByRole('heading', { name: /Activity History/i })).toBeVisible({ timeout: 10000 })
   })
 
   // ─── 3. Assets page: open Add Asset dialog ─────────────────────────────
@@ -109,7 +116,12 @@ test.describe('FinalWishes Authenticated Flows', () => {
     // Modal with form fields
     await expect(page.getByText('Add New Asset')).toBeVisible({ timeout: 5000 })
     await expect(page.locator('input[name="name"]')).toBeVisible()
-    await expect(page.locator('select[name="type"]')).toBeVisible()
+    // Asset category is now a shadcn Select (combobox), not a native <select>.
+    // The placeholder is a CSS attribute (not in the a11y tree), so assert the
+    // visible "Asset Category" field label and that its combobox trigger exists.
+    const dialog = page.getByRole('dialog', { name: /Add New Asset/i })
+    await expect(dialog.getByText('Asset Category')).toBeVisible()
+    await expect(dialog.getByRole('combobox').first()).toBeVisible()
     await expect(page.locator('input[name="value"]')).toBeVisible()
   })
 
@@ -119,11 +131,17 @@ test.describe('FinalWishes Authenticated Flows', () => {
     await page.locator('nav').getByText('My People', { exact: true }).click()
     await expect(page.getByText(/Family|Heirs/i).first()).toBeVisible({ timeout: 10000 })
 
-    await page.getByRole('button', { name: /Add Family Member/i }).click()
+    await page.getByRole('button', { name: /Add Family Member/i }).first().click()
 
-    await expect(page.getByText('Add family member')).toBeVisible({ timeout: 5000 })
+    // Scope to the dialog heading — "Add Family Member" buttons also match this text.
+    await expect(page.getByRole('heading', { name: 'Add family member' })).toBeVisible({ timeout: 5000 })
     await expect(page.locator('input[name="name"]')).toBeVisible()
-    await expect(page.locator('input[name="relation"]')).toBeVisible()
+    // Relationship is a SelectWithOther: the form value rides a hidden
+    // input[name="relation"]; the visible control is a combobox trigger under
+    // the "Relationship" label (the placeholder is a CSS-only attribute).
+    const dialog = page.getByRole('dialog', { name: /Add family member/i })
+    await expect(dialog.getByText('Relationship', { exact: true })).toBeVisible()
+    await expect(dialog.getByText('Select relationship')).toBeVisible()
     await expect(page.locator('input[name="email"]')).toBeVisible()
   })
 
@@ -154,11 +172,13 @@ test.describe('FinalWishes Authenticated Flows', () => {
 
     await page.getByRole('button', { name: /Create Directive/i }).first().click()
 
-    // 4 directive type options in the dialog
-    await expect(page.getByText('Ethical Will')).toBeVisible({ timeout: 5000 })
-    await expect(page.getByText('Funeral Preferences')).toBeVisible()
-    await expect(page.getByText('Final Message')).toBeVisible()
-    await expect(page.getByText('Care Instructions')).toBeVisible()
+    // 4 directive type options in the dialog. Use exact match — the page
+    // subtitle and empty-state copy also contain phrases like "ethical will".
+    const dialog = page.getByRole('dialog')
+    await expect(dialog.getByText('Ethical Will', { exact: true })).toBeVisible({ timeout: 5000 })
+    await expect(dialog.getByText('Funeral Preferences', { exact: true })).toBeVisible()
+    await expect(dialog.getByText('Final Message', { exact: true })).toBeVisible()
+    await expect(dialog.getByText('Care Instructions', { exact: true })).toBeVisible()
   })
 
   // ─── 7. Settings page: has toggle switches ─────────────────────────────
@@ -167,12 +187,17 @@ test.describe('FinalWishes Authenticated Flows', () => {
     await page.locator('nav').getByText('Settings', { exact: true }).click()
     await expect(page.getByText('Settings').first()).toBeVisible({ timeout: 10000 })
 
-    // Verify setting labels
-    await expect(page.getByText('Two-factor authentication')).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText('Email alerts')).toBeVisible()
+    // Settings are fetched async — wait for the "Loading settings..." gate to
+    // clear before asserting on the toggle labels it renders.
+    await expect(page.getByText('Loading settings...')).toBeHidden({ timeout: 15000 })
 
-    // Toggle buttons (w-12 h-6 rounded-full with inner circle)
-    const toggleButtons = page.locator('button.rounded-full').filter({ has: page.locator('div.rounded-full') })
+    // Verify setting labels (toggle labels in Security + Notifications sections).
+    // Use exact match — section descriptions/headings repeat these words.
+    await expect(page.getByText('Two-factor authentication', { exact: true })).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('Email alerts', { exact: true })).toBeVisible({ timeout: 10000 })
+
+    // Toggles are now shadcn <Switch> components (button[role="switch"]).
+    const toggleButtons = page.getByRole('switch')
     const count = await toggleButtons.count()
     expect(count).toBeGreaterThanOrEqual(2)
   })
@@ -183,14 +208,14 @@ test.describe('FinalWishes Authenticated Flows', () => {
     await page.locator('nav').getByText('Upgrade Plan', { exact: true }).click()
     await expect(page.getByText('Choose Your Plan')).toBeVisible({ timeout: 10000 })
 
-    // Wait for tier cards to load (fetched from API)
+    // Tier cards are fetched from the payments API and rendered into the grid.
+    // The empty grid container has zero height (so it is "not visible") until
+    // at least one card mounts — assert on a real card child, with a generous
+    // timeout to absorb a cold Cloud Run start.
     const tierGrid = page.locator('.grid.grid-cols-1.md\\:grid-cols-3')
-    await expect(tierGrid).toBeVisible({ timeout: 10000 })
-
-    // Should have pricing card children
-    const tierCards = tierGrid.locator('> div')
-    const count = await tierCards.count()
-    expect(count).toBeGreaterThanOrEqual(1)
+    const firstCard = tierGrid.locator('> div').first()
+    await expect(firstCard).toBeVisible({ timeout: 20000 })
+    expect(await tierGrid.locator('> div').count()).toBeGreaterThanOrEqual(1)
   })
 
   // ─── 9. Search bar: typing shows results dropdown ──────────────────────
@@ -243,9 +268,12 @@ test.describe('FinalWishes Authenticated Flows', () => {
     // Click hamburger to open mobile sidebar sheet
     await hamburger.click()
 
-    // Mobile sheet should show navigation items
-    await expect(page.getByText('Dashboard').first()).toBeVisible({ timeout: 5000 })
-    await expect(page.getByText('Soul Log').first()).toBeVisible()
+    // Mobile sheet (a Radix dialog) shows the same grouped nav labels as the
+    // desktop sidebar. Scope to the open sheet so we don't match the hidden
+    // desktop sidebar (which is `hidden md:flex` and not visible at 375px).
+    const sheet = page.getByRole('dialog')
+    await expect(sheet.getByText('Soul Log').first()).toBeVisible({ timeout: 5000 })
+    await expect(sheet.getByText('My Legacy').first()).toBeVisible()
   })
 
   // ─── 12. Skeleton loading states ───────────────────────────────────────

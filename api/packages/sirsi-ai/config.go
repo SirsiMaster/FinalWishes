@@ -15,7 +15,8 @@ type Config struct {
 	GemmaModel string // Model ID (default: gemma-3-27b-it)
 
 	// Gemini fallback (via Google GenAI SDK)
-	GeminiModel  string // Model ID (default: gemini-2.0-flash)
+	GeminiModel  string // Model ID (default: gemini-3.1-flash-lite-preview)
+	GeminiRegion string // Gemini-specific region (default: global — 3.1 Flash Lite is global-only)
 	GeminiAPIKey string // Optional API key for Gemini API (non-Vertex)
 
 	// Routing
@@ -32,6 +33,7 @@ func LoadConfig() Config {
 		ClaudeRegion:    envOr("SIRSI_AI_CLAUDE_REGION", "us-east5"),
 		GemmaModel:      envOr("SIRSI_AI_GEMMA_MODEL", "gemma-4-27b-it"),
 		GeminiModel:     envOr("SIRSI_AI_GEMINI_MODEL", "gemini-3.1-flash-lite-preview"),
+		GeminiRegion:    envOr("SIRSI_AI_GEMINI_REGION", "global"), // 3.1 Flash Lite is global-endpoint only
 		GeminiAPIKey:    os.Getenv("GEMINI_API_KEY"),
 		DefaultMode:     ModelID(envOr("SIRSI_AI_DEFAULT_MODE", string(ModelAuto))),
 		FallbackEnabled: envOr("SIRSI_AI_FALLBACK", "true") == "true",

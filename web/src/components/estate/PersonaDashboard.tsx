@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import {
   Shield, Scale, FileText, Landmark, Users, CalendarDays, KeyRound,
-  ScrollText, Stamp, Calculator, type LucideIcon,
+  ScrollText, Stamp, Calculator, Heart, Mic, Camera, BookOpen, Gem, Clock,
+  type LucideIcon,
 } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import { useDocument, type EstateUser } from '../../lib/firestore'
@@ -122,11 +123,84 @@ function PersonaDashboard({ estateId, role }: { estateId: string; role: PersonaR
   )
 }
 
+/* ─── Heir dashboard (the sacred landing) ─────────────────────────────────────
+ * Per ETHOS, the heir's screen is the most important one we build. Not a
+ * completion score, not an asset list — first the love: the letters, the voice,
+ * the memories left for them. Assets come last and gently. Warm, never clinical.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+const HEIR_SECTION_META: Partial<Record<SectionId, SectionCard>> = {
+  'soul-log': { label: 'Letters & Voice', description: 'Words and recordings left for you', icon: Mic },
+  memoirs: { label: 'Photos & Videos', description: 'Moments you shared together', icon: Camera },
+  'life-chapters': { label: 'Their Story', description: 'The life they lived', icon: BookOpen },
+  heirlooms: { label: 'Heirlooms', description: 'Treasures meant for you', icon: Gem },
+  timecapsule: { label: 'Sealed for You', description: 'Messages that open in time', icon: Clock },
+  directives: { label: 'Their Wishes', description: 'What they wanted you to know', icon: ScrollText },
+  events: { label: 'Gatherings', description: 'Services and remembrances', icon: CalendarDays },
+  obituary: { label: 'Remembrance', description: 'Their final record', icon: Heart },
+  assets: { label: 'What They Left You', description: 'Entrusted to your care', icon: Landmark },
+}
+
+// Love first, mechanics last.
+const HEIR_CARD_ORDER: SectionId[] = [
+  'soul-log', 'memoirs', 'life-chapters', 'heirlooms', 'timecapsule', 'directives', 'events', 'obituary', 'assets',
+]
+
+function HeirDashboard({ estateId }: { estateId: string }) {
+  const cards = HEIR_CARD_ORDER.filter((s) => canAccess('heir', s) && HEIR_SECTION_META[s])
+  return (
+    <div className="max-w-5xl mx-auto py-8 px-2">
+      <div className="text-center mb-12 max-w-2xl mx-auto">
+        <div className="w-16 h-16 bg-[var(--gold)]/10 rounded-[1.75rem] flex items-center justify-center mx-auto mb-6 border border-[var(--gold)]/20">
+          <Heart className="w-8 h-8 text-[var(--gold)]" strokeWidth={1.5} />
+        </div>
+        <h1 className="text-4xl font-[family-name:var(--font-cinzel)] font-black text-royal uppercase tracking-tight mb-3">
+          For You
+        </h1>
+        <p className="text-royal/60 text-[15px] leading-relaxed">
+          Everything here was kept with you in mind — the words, the voice, the moments, the things
+          they wanted you to have. Take your time. There is no rush.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {cards.map((section) => {
+          const meta = HEIR_SECTION_META[section]!
+          const Icon = meta.icon
+          const to: string = `/estates/${estateId}/${section}`
+          return (
+            <Link
+              key={section}
+              to={to}
+              className="group flex flex-col gap-3 p-6 rounded-[1.75rem] bg-white/60 border border-[var(--gold)]/10 hover:border-[var(--gold)]/40 hover:bg-white transition-all"
+            >
+              <div className="w-11 h-11 rounded-2xl bg-[var(--gold)]/[0.06] flex items-center justify-center group-hover:bg-[var(--gold)]/15 transition-colors">
+                <Icon className="w-5 h-5 text-[var(--gold)]" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="font-black text-royal text-[15px] leading-tight">{meta.label}</p>
+                <p className="text-royal/40 text-[12px] mt-1 leading-snug">{meta.description}</p>
+              </div>
+            </Link>
+          )
+        })}
+      </div>
+
+      <div className="mt-10 p-6 rounded-[1.75rem] bg-[var(--gold)]/[0.04] border border-[var(--gold)]/10 text-center">
+        <p className="text-[13px] text-royal/55 leading-relaxed max-w-xl mx-auto">
+          <span className="font-black text-[var(--gold)]">The Shepherd</span> is here to walk with you —
+          gently, and only when you’re ready.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 /**
  * Branches the estate dashboard by persona. Principals/admins get the owner
- * dashboard (passed in to avoid importing the heavy lazy module here); everyone
- * else gets their persona dashboard. Resolves the estate-scoped role and waits
- * for it to be definitive before rendering anything role-specific.
+ * dashboard (passed in to avoid importing the heavy lazy module here); heirs get
+ * the sacred HeirDashboard; everyone else gets their persona dashboard. Resolves
+ * the estate-scoped role and waits for it to be definitive before rendering.
  */
 export function DashboardRouter({
   estateId,
@@ -151,6 +225,9 @@ export function DashboardRouter({
 
   if (role === 'principal' || role === 'admin') {
     return <>{ownerDashboard}</>
+  }
+  if (role === 'heir') {
+    return <HeirDashboard estateId={estateId} />
   }
   return <PersonaDashboard estateId={estateId} role={role} />
 }

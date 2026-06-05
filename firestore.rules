@@ -249,9 +249,12 @@ service cloud.firestore {
         allow read: if canAccessEstate(estateId);
         // Estate notifications are system-generated
         allow create: if isAdmin();
+        // Mark-as-read: the client writes { read: true, readAt } (markNotificationRead /
+        // markAllNotificationsRead). The rule previously allowed only ['readAt','status'],
+        // so any real mark-read was DENIED. Allow the `read` flag too.
         allow update: if canAccessEstate(estateId)
           && request.resource.data.diff(resource.data).affectedKeys()
-              .hasOnly(['readAt', 'status']);
+              .hasOnly(['read', 'readAt', 'status']);
         allow delete: if false;
       }
 
@@ -327,12 +330,32 @@ service cloud.firestore {
       }
 
       // ── 3m. Time Capsules (Scheduled Messages) ──
+      // Two valid create shapes share this subcollection:
+      //  (a) a standard scheduled time capsule (title/message/recipient/deliveryType), and
+      //  (b) a SEALED Soul Log delivery sidewrite created when a sealed Soul Log entry is
+      //      saved (estates.$estateId.soul-log.lazy.tsx). The sealed-diary shape has no
+      //      recipient/deliveryType — it delivers on a trigger (e.g. on_passing) — so it was
+      //      being DENIED by the standard-capsule rule, which made sealed audio/video/text
+      //      Soul Log saves fail ("starts but never finishes"). Allow both shapes.
+      //      TODO(followup): move sealed Soul Log deliveries to a dedicated subcollection so
+      //      the two incompatible schemas don't share `capsules`.
       match /capsules/{capsuleId} {
         allow read: if canAccessEstate(estateId);
         allow create: if canWriteEstate(estateId)
-          && request.resource.data.keys().hasAll(['title', 'message', 'recipientName', 'recipientEmail', 'deliveryType', 'status', 'createdAt'])
-          && request.resource.data.deliveryType in ['scheduled_date', 'on_death', 'on_settlement', 'anniversary']
-          && request.resource.data.status == 'pending';
+          && (
+            (
+              request.resource.data.keys().hasAll(['title', 'message', 'recipientName', 'recipientEmail', 'deliveryType', 'status', 'createdAt'])
+              && request.resource.data.deliveryType in ['scheduled_date', 'on_death', 'on_settlement', 'anniversary']
+              && request.resource.data.status == 'pending'
+            )
+            ||
+            (
+              request.resource.data.keys().hasAll(['type', 'sourceEntryId', 'title', 'visibility', 'taggedPeople', 'sealedDelivery', 'status', 'createdBy', 'createdAt'])
+              && request.resource.data.type == 'soul-log'
+              && request.resource.data.visibility == 'sealed'
+              && request.resource.data.status == 'pending'
+            )
+          );
         allow update: if canWriteEstate(estateId);
         // Delivered capsules are immutable
         allow delete: if canWriteEstate(estateId)

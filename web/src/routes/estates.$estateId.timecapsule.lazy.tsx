@@ -2,7 +2,7 @@
 import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { useTimeCapsules, type TimeCapsule } from '../lib/firestore'
-import { addTimeCapsule, cancelTimeCapsule } from '../lib/estate-actions'
+import { addTimeCapsule, cancelTimeCapsule, updateTimeCapsule } from '../lib/estate-actions'
 import { estateClient } from '../lib/client'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -228,9 +228,11 @@ function VoiceMemoCard({ url }: { url: string }) {
 function CapsuleCard({
   capsule,
   onCancel,
+  onEdit,
 }: {
   capsule: TimeCapsule
   onCancel: (capsule: TimeCapsule) => void
+  onEdit: (capsule: TimeCapsule) => void
 }) {
   const isSealed = capsule.status === 'pending'
   const messagePreview = useMemo(() => stripHtml(capsule.message), [capsule.message])
@@ -286,16 +288,26 @@ function CapsuleCard({
       </CardContent>
 
       {/* Card Footer */}
-      <CardFooter className="px-8 py-4 border-t border-[var(--gold)]/10 bg-[var(--gold-dim)]/80 flex items-center justify-end rounded-b-[2rem]">
+      <CardFooter className="px-8 py-4 border-t border-[var(--gold)]/10 bg-[var(--gold-dim)]/80 flex items-center justify-end gap-2 rounded-b-[2rem]">
         {capsule.status === 'pending' && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onCancel(capsule)}
-            className="text-[11px] font-bold text-red-400 hover:text-red-600 uppercase tracking-wider"
-          >
-            Cancel
-          </Button>
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onEdit(capsule)}
+              className="text-[11px] font-bold text-[var(--royal)]/60 hover:text-[var(--royal)] uppercase tracking-wider"
+            >
+              Edit
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onCancel(capsule)}
+              className="text-[11px] font-bold text-red-400 hover:text-red-600 uppercase tracking-wider"
+            >
+              Cancel
+            </Button>
+          </>
         )}
       </CardFooter>
     </Card>
@@ -1126,6 +1138,7 @@ function TimeCapsulePage() {
 
   const [modalOpen, setModalOpen] = useState(false)
   const [cancelTarget, setCancelTarget] = useState<TimeCapsule | null>(null)
+  const [editTarget, setEditTarget] = useState<TimeCapsule | null>(null)
 
   const pendingCount = capsules.filter((c) => c.status === 'pending').length
   const deliveredCount = capsules.filter((c) => c.status === 'delivered').length
@@ -1195,6 +1208,7 @@ function TimeCapsulePage() {
               key={capsule.id}
               capsule={capsule}
               onCancel={setCancelTarget}
+              onEdit={setEditTarget}
             />
           ))}
         </div>
@@ -1232,7 +1246,96 @@ function TimeCapsulePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit Letter */}
+      <EditCapsuleDialog
+        capsule={editTarget}
+        estateId={estateId}
+        onClose={() => setEditTarget(null)}
+      />
     </div>
+  )
+}
+
+// ─── Edit Letter Dialog ──────────────────────────────────────────────────────
+// Always mounted (so useEditor is unconditional). Edits the letter's title and
+// message only — delivery type, recipient, and date are intentionally NOT
+// editable here (changing them would alter when/to-whom a sealed letter is
+// delivered). Cancel-and-rewrite covers that case.
+function EditCapsuleDialog({
+  capsule,
+  estateId,
+  onClose,
+}: {
+  capsule: TimeCapsule | null
+  estateId: string
+  onClose: () => void
+}) {
+  const [title, setTitle] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm max-w-none min-h-[180px] px-5 py-4 focus:outline-none text-slate-900/80 leading-relaxed',
+      },
+    },
+  })
+
+  useEffect(() => {
+    if (!capsule) return
+    setTitle(capsule.title || '')
+    editor?.commands.setContent(capsule.message || '')
+  }, [capsule, editor])
+
+  const handleSave = useCallback(async () => {
+    if (!capsule) return
+    if (!title.trim()) { toast.error('A title is required'); return }
+    setSaving(true)
+    const result = await updateTimeCapsule(estateId, capsule.id, {
+      title: title.trim(),
+      message: editor?.getHTML() ?? capsule.message,
+    })
+    setSaving(false)
+    if (result.success) { toast.success('Letter updated'); onClose() }
+    else toast.error(result.error || 'Could not update the letter. Please try again.')
+  }, [capsule, title, editor, estateId, onClose])
+
+  return (
+    <Dialog open={!!capsule} onOpenChange={(open) => { if (!open && !saving) onClose() }}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-[2rem]">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Edit Letter</DialogTitle>
+          <DialogDescription className="text-slate-500 text-sm">
+            Update the title and message. Delivery timing and recipient stay as sealed.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Title</Label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="A letter for…"
+              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Message</Label>
+            <div className="rounded-2xl border border-slate-200 overflow-hidden">
+              <LetterToolbar editor={editor} />
+              <EditorContent editor={editor} />
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <Button variant="outline" onClick={onClose} disabled={saving} className="flex-1">Cancel</Button>
+          <Button onClick={handleSave} disabled={saving} className="flex-1 bg-[var(--gold)] hover:bg-[var(--gold)] text-white">{saving ? 'Saving…' : 'Save Changes'}</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 

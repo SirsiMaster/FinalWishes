@@ -87,6 +87,7 @@ func main() {
 			"https://finalwishes-prod.web.app",
 			"https://finalwishes-prod.firebaseapp.com",
 			"https://finalwishes.app",
+			"https://www.finalwishes.app",
 		}
 	}
 	r.Use(cors.Handler(cors.Options{

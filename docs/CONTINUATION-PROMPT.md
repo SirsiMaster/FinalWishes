@@ -3,6 +3,29 @@
 
 ---
 
+## Session Progress — June 5 (persona-safe push, claude-finalwishes)
+
+**Persona safety mission: structurally COMPLETE + verified + pushed.**
+- Source of truth: `web/src/lib/persona.ts` (PERSONA_ACCESS, resolveEffectiveRole, canAccess, requiresItemScope, personaLanding) + audit `docs/PERSONA_ACCESS_MATRIX.md`. Tests: `persona.test.ts`.
+- Layer 1 (nav): Codex — Sidebar via `canAccess` + estate-scoped `effectiveRole`.
+- Root-cause leak (estate role vs global): FIXED (`estates.$estateId.tsx` `resolveEffectiveRole`).
+- Layer 2 (route enforcement): `web/src/components/guards/RoleGuard.tsx` + `RoleGuard.test.ts` (wraps Outlet, blocks direct-URL, warm blocked state, gates on profileResolved+estateUser load).
+- IdentityGate: now uses estate-scoped role for `isFiduciary` (converged w/ Codex).
+- Layer 3 dashboards: `web/src/components/estate/PersonaDashboard.tsx` — `DashboardRouter` branches: owner (unchanged) / fiduciary+advisor persona dashboards / **HeirDashboard (sacred landing — love first)**. `dashboard` is now persona-aware; heir gained it safely; `personaLanding` uniform.
+- Seed recipe for browser proof: `scripts/seed-persona-qa.js` (NOT run; Codex owns the walk).
+
+**Commits this session (pushed):** 99b7899, 508ec89, f5810d0, c70d3a7, c5b7372, 32136db, c939b05, c93fa72 (+ IdentityGate fix absorbed into Codex's tree).
+
+**Phase 4 (CRUD completeness) — IN PROGRESS (split with Codex, item 20260605-192631):**
+- DONE: Soul Log DELETE (`c93fa72`).
+- CLAUDE half (open): soul-log UPDATE + memoirs UPDATE (make the media composer edit-aware).
+- CODEX half (open): lockbox UPDATE (`updateLockboxItem` est-actions:401), timecapsule UPDATE (`updateTimeCapsule` :498), estate rename (`updateEstate` :86), settings persistence, notifications mark-read, obituary DELETE.
+- Full CRUD already works for: assets, beneficiaries/team, vault, directives, heirlooms, life-chapters, events.
+
+**Remaining:** Phase 4 (above) + Phase 5 (Shepherd-everywhere) + the seeded per-persona browser walk (Codex). All routes for Phase 4 gaps are currently clean (no collision).
+
+---
+
 ## Mission
 
 Continue FinalWishes with one non-negotiable outcome: every persona sees only the flows, data, calls to action, and emotional experience meant for that persona, while the product remains end-to-end usable for the Tuesday demo.

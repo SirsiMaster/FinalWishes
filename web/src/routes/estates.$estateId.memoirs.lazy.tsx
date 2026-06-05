@@ -6,7 +6,7 @@ import { useDropzone } from 'react-dropzone'
 import { useCollection } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
-import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { toast } from 'sonner'
@@ -83,7 +83,37 @@ function MemoirsPage() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectedMemoir, setSelectedMemoir] = useState<Memoir | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Memoir | null>(null)
+  const [editTarget, setEditTarget] = useState<Memoir | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editVisibility, setEditVisibility] = useState('private')
+  const [savingEdit, setSavingEdit] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const openEdit = useCallback((m: Memoir) => {
+    setEditTitle(m.title)
+    setEditVisibility(m.visibility || 'private')
+    setEditTarget(m)
+    setSelectedMemoir(null)
+  }, [])
+
+  const handleSaveEdit = useCallback(async () => {
+    if (!editTarget) return
+    setSavingEdit(true)
+    try {
+      await updateDoc(doc(db, `estates/${estateId}/memoirs/${editTarget.id}`), {
+        title: editTitle.trim() || 'Untitled',
+        visibility: editVisibility,
+        updatedAt: serverTimestamp(),
+      })
+      toast.success('Memory updated')
+      setEditTarget(null)
+    } catch (e) {
+      console.error('Update memoir failed:', e)
+      toast.error('Could not update the memory. Please try again.')
+    } finally {
+      setSavingEdit(false)
+    }
+  }, [editTarget, editTitle, editVisibility, estateId])
 
   // ─── Map Firestore to local shape ─────────────────────────────────────
 
@@ -306,6 +336,7 @@ function MemoirsPage() {
         open={!!selectedMemoir}
         onOpenChange={(open) => { if (!open) setSelectedMemoir(null) }}
         onDelete={() => { if (selectedMemoir) setDeleteTarget(selectedMemoir) }}
+        onEdit={() => { if (selectedMemoir) openEdit(selectedMemoir) }}
       />
 
       <SectionHeader
@@ -459,6 +490,56 @@ function MemoirsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit Memory */}
+      <Dialog open={!!editTarget} onOpenChange={(open) => { if (!open && !savingEdit) setEditTarget(null) }}>
+        <DialogContent className="max-w-md rounded-[2rem] p-8">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-slate-900">Edit Memory</DialogTitle>
+            <DialogDescription className="text-[13px] text-[var(--royal)]/50">
+              Update the title and who can see this memory.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-5 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="memoir-edit-title" className="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Title</Label>
+              <Input
+                id="memoir-edit-title"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Untitled"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Visibility</Label>
+              <Select value={editVisibility} onValueChange={setEditVisibility}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="private">Private</SelectItem>
+                  <SelectItem value="shared">Shared</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setEditTarget(null)}
+              disabled={savingEdit}
+              className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px] h-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveEdit}
+              disabled={savingEdit}
+              className="flex-1 py-3 rounded-xl bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white font-bold text-[13px] h-auto"
+            >
+              {savingEdit ? 'Saving…' : 'Save'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
@@ -470,11 +551,13 @@ function CinemaViewer({
   open,
   onOpenChange,
   onDelete,
+  onEdit,
 }: {
   memoir: Memoir | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onDelete: () => void
+  onEdit: () => void
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -514,6 +597,13 @@ function CinemaViewer({
                 </div>
               </div>
               <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={onEdit}
+                  className="px-6 py-3 rounded-xl border-[var(--royal)]/15 text-[var(--royal)] font-bold text-[12px] hover:bg-[var(--royal)]/5 h-auto"
+                >
+                  Edit
+                </Button>
                 <Button
                   variant="outline"
                   onClick={onDelete}

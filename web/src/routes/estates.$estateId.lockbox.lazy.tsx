@@ -2,7 +2,8 @@
 import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useLockboxItems, type LockboxItem } from '../lib/firestore'
-import { addLockboxItem, archiveLockboxItem } from '../lib/estate-actions'
+import { addLockboxItem, archiveLockboxItem, updateLockboxItem } from '../lib/estate-actions'
+import { toast } from 'sonner'
 import { getAuth } from 'firebase/auth'
 import {
   Plus,
@@ -13,6 +14,7 @@ import {
   Key,
   ShieldCheck,
   Trash2,
+  Pencil,
   Landmark,
   TrendingUp,
   Shield,
@@ -248,6 +250,7 @@ function LockboxPage() {
 function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }) {
   const cat = getCategoryConfig(item.category)
   const [confirming, setConfirming] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
   const [revealing, setRevealing] = useState(false)
   const [credentials, setCredentials] = useState<DecryptedCredentials | null>(null)
   const [revealError, setRevealError] = useState<string | null>(null)
@@ -468,18 +471,123 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
               </Button>
             </div>
           ) : (
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => setConfirming(true)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <Trash2 className="w-4 h-4 text-slate-400 hover:text-[#DC2626]" />
-            </Button>
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setEditOpen(true)}
+                aria-label="Edit item"
+              >
+                <Pencil className="w-4 h-4 text-slate-400 hover:text-[var(--royal)]" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setConfirming(true)}
+                aria-label="Archive item"
+              >
+                <Trash2 className="w-4 h-4 text-slate-400 hover:text-[#DC2626]" />
+              </Button>
+            </div>
           )}
         </div>
+        <EditLockboxModal item={item} estateId={estateId} open={editOpen} onOpenChange={setEditOpen} />
       </CardContent>
     </Card>
+  )
+}
+
+// ─── Edit Modal ─────────────────────────────────────────────────────────────
+// Edits the account METADATA only (name, category, institution, identifier,
+// instructions, notes). Secure credentials are managed separately via the
+// encrypted PII-Vault path, so they are intentionally not editable here.
+function EditLockboxModal({
+  item,
+  estateId,
+  open,
+  onOpenChange,
+}: {
+  item: LockboxItem
+  estateId: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  const initial = useCallback(() => ({
+    accountName: item.accountName || '',
+    category: (item.category || 'banking') as CategoryValue,
+    institution: item.institution || '',
+    accountIdentifier: item.accountIdentifier || '',
+    transitionInstructions: item.transitionInstructions || '',
+    notes: item.notes || '',
+  }), [item])
+  const [form, setForm] = useState(initial)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => { if (open) setForm(initial()) }, [open, initial])
+
+  const handleSave = useCallback(async () => {
+    if (!form.accountName.trim()) { toast.error('Account name is required'); return }
+    setSaving(true)
+    const result = await updateLockboxItem(estateId, item.id, {
+      accountName: form.accountName.trim(),
+      category: form.category,
+      institution: form.institution,
+      accountIdentifier: form.accountIdentifier,
+      transitionInstructions: form.transitionInstructions,
+      notes: form.notes,
+    })
+    setSaving(false)
+    if (result.success) { toast.success('Account updated'); onOpenChange(false) }
+    else toast.error(result.error || 'Could not update the account. Please try again.')
+  }, [form, estateId, item.id, onOpenChange])
+
+  const labelCls = 'text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest'
+  const fieldCls = 'px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900'
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto rounded-[2rem]">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-slate-900 font-[family-name:var(--font-cinzel)]">Edit Account</DialogTitle>
+          <DialogDescription className="text-slate-500 text-sm">Update this account's details. Secure credentials are managed separately.</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
+            <Label className={labelCls}>Account Name *</Label>
+            <Input value={form.accountName} onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))} className={fieldCls} />
+          </div>
+          <div className="space-y-2">
+            <Label className={labelCls}>Category</Label>
+            <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
+              <SelectTrigger className={`w-full ${fieldCls}`}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {CATEGORIES.map((c) => (<SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label className={labelCls}>Institution</Label>
+            <Input value={form.institution} onChange={(e) => setForm((f) => ({ ...f, institution: e.target.value }))} className={fieldCls} />
+          </div>
+          <div className="space-y-2">
+            <Label className={labelCls}>Account Identifier</Label>
+            <Input value={form.accountIdentifier} onChange={(e) => setForm((f) => ({ ...f, accountIdentifier: e.target.value }))} className={fieldCls} />
+          </div>
+          <div className="space-y-2">
+            <Label className={labelCls}>Transition Instructions</Label>
+            <Textarea rows={3} value={form.transitionInstructions} onChange={(e) => setForm((f) => ({ ...f, transitionInstructions: e.target.value }))} className={`${fieldCls} resize-none`} />
+          </div>
+          <div className="space-y-2">
+            <Label className={labelCls}>Notes</Label>
+            <Textarea rows={2} value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} className={`${fieldCls} resize-none`} />
+          </div>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={saving} className="flex-1">Cancel</Button>
+          <Button onClick={handleSave} disabled={saving} className="flex-1 bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white">{saving ? 'Saving…' : 'Save Changes'}</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 

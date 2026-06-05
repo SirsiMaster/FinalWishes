@@ -32,13 +32,19 @@ describe('resolveEffectiveRole — estate-scoped role wins', () => {
 })
 
 describe('heir — the sacred-moment boundary (ETHOS)', () => {
-  it('never reaches the owner dashboard or owner-admin surfaces', () => {
+  it('never reaches owner-admin or settlement surfaces', () => {
     const forbidden: SectionId[] = [
-      'dashboard', 'vault', 'lockbox', 'forms', 'beneficiaries', 'probate', 'pricing', 'settings',
+      'vault', 'lockbox', 'forms', 'beneficiaries', 'probate', 'pricing', 'settings',
     ]
     for (const s of forbidden) {
       expect(canAccess('heir', s), `heir must NOT access ${s}`).toBe(false)
     }
+  })
+
+  it('has a persona-aware dashboard (heir-shaped sacred landing, not the owner timeline)', () => {
+    // The route is allowed; DashboardRouter renders HeirDashboard, never the
+    // owner completion timeline — that separation is what keeps it ETHOS-safe.
+    expect(canAccess('heir', 'dashboard')).toBe(true)
   })
 
   it('reaches the memories and directives meant for them', () => {
@@ -50,9 +56,8 @@ describe('heir — the sacred-moment boundary (ETHOS)', () => {
     }
   })
 
-  it('lands on shared memories, never the owner dashboard', () => {
-    expect(personaLanding('heir')).toBe('memoirs')
-    expect(personaLanding('heir')).not.toBe('dashboard')
+  it('lands on the persona-aware dashboard (heir-shaped via DashboardRouter)', () => {
+    expect(personaLanding('heir')).toBe('dashboard')
   })
 
   it('sees its memory/asset sections only as item-scoped (assigned/shared)', () => {

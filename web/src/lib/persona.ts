@@ -92,12 +92,13 @@ export const PERSONA_ACCESS: Record<PersonaRole, ReadonlySet<SectionId>> = {
     'probate', 'notifications', 'attestation', 'estates', 'index',
   ]),
 
-  // Heir: sacred-moment first. NO owner dashboard, vault, lockbox, forms,
-  // beneficiaries, probate, pricing, settings. Memory/asset sections are
-  // assigned/shared only (see SCOPED_SECTIONS).
+  // Heir: sacred-moment first. `dashboard` is allowed but is the HEIR-shaped
+  // landing (DashboardRouter renders HeirDashboard, never the owner completion
+  // timeline). NO vault, lockbox, forms, beneficiaries, probate, pricing,
+  // settings. Memory/asset sections are assigned/shared only (SCOPED_SECTIONS).
   heir: new Set<SectionId>([
-    'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets', 'directives',
-    'timecapsule', 'events', 'obituary', 'notifications', 'attestation', 'index',
+    'dashboard', 'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets',
+    'directives', 'timecapsule', 'events', 'obituary', 'notifications', 'attestation', 'index',
   ]),
 
   legal: new Set<SectionId>([
@@ -156,10 +157,11 @@ export function personaLabel(role: PersonaRole): string {
 
 /**
  * The section a persona should land on / be redirected to when they hit a
- * forbidden route. Heirs land on shared memories (the closest existing
- * sacred-moment surface) until a dedicated heir landing route is built in
- * Phase 3 (persona dashboards).
+ * forbidden route. Everyone lands on `dashboard`, which is persona-aware:
+ * DashboardRouter renders the owner timeline for principals/admins, a
+ * settlement/workspace dashboard for fiduciaries/advisors, and the sacred
+ * HeirDashboard for heirs.
  */
 export function personaLanding(role: PersonaRole): SectionId {
-  return role === 'heir' ? 'memoirs' : 'dashboard';
+  return 'dashboard';
 }

@@ -25,10 +25,18 @@ func newGeminiProvider(ctx context.Context, cfg Config) (*GeminiProvider, error)
 			Backend: genai.BackendGeminiAPI,
 		}
 	} else if cfg.ProjectID != "" {
-		// Vertex AI auth (preferred, uses ADC)
+		// Vertex AI auth (preferred, uses ADC).
+		// Gemini 3.1 Flash Lite is served from the GLOBAL endpoint, not a regional
+		// one — using cfg.Region (us-central1) here makes the model 404
+		// ("Publisher Model ... was not found"). Use the Gemini-specific region
+		// (defaults to "global"), matching the working Assiduous configuration.
+		region := cfg.GeminiRegion
+		if region == "" {
+			region = "global"
+		}
 		clientCfg = genai.ClientConfig{
 			Project:  cfg.ProjectID,
-			Location: cfg.Region,
+			Location: region,
 			Backend:  genai.BackendVertexAI,
 		}
 	} else {
@@ -42,7 +50,7 @@ func newGeminiProvider(ctx context.Context, cfg Config) (*GeminiProvider, error)
 
 	model := cfg.GeminiModel
 	if model == "" {
-		model = "gemini-2.0-flash"
+		model = "gemini-3.1-flash-lite-preview"
 	}
 
 	return &GeminiProvider{client: client, model: model}, nil

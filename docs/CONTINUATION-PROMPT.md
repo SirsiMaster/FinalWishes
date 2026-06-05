@@ -1,315 +1,126 @@
-# FinalWishes - Continuation Prompt
-**Version:** 22.0 - **Date:** June 5, 2026 - **Target:** Tuesday, June 9, 2026 persona-safe feature completion
+# FinalWishes — Continuation Prompt
+**Version:** 21.0 — **Date:** May 19, 2026 — **Session:** C3 Sprint (Documentation, Tests, Gantt, Quorum, GCP Eval)
 
 ---
 
-## Mission
+## Current State
 
-Continue FinalWishes with one non-negotiable outcome: every persona sees only the flows, data, calls to action, and emotional experience meant for that persona, while the product remains end-to-end usable for the Tuesday demo.
-
-This is not just a navigation cleanup. Persona safety has three layers that must agree:
-
-1. **Navigation visibility:** the sidebar, quick actions, empty states, and Shepherd prompts only show allowed flows.
-2. **Route enforcement:** a user typing a forbidden URL must be redirected or shown a role-appropriate blocked state.
-3. **Persona experience:** each role gets its own first screen and workflow, not the owner dashboard with a few links hidden.
-
-The Shepherd must stay central to all actions. A user should never wonder what to do next, why a section is hidden, or how to complete their role-specific journey.
+FinalWishes is **demoable and deployed** at `https://finalwishes-prod.web.app`. Demo mode works end-to-end at `/login?demo=true`. Go API on Cloud Run rev 33. 168 vitest + 19 Go probate + 24 Cloud Function tests pass. 0 TS errors.
 
 ---
 
-## Canon Re-Ingested
+## What Was Done (May 19 Session — C3 Sprint)
 
-Read these before changing code:
+### 1. Developer READMEs (10 new, 25 total)
+Created per Rule 30 for: guards (AuthGuard, IdentityGate, OwnerWelcome, HeirWelcome), landing (ProductShowcase, ScrollVideoCanvas), layout (AdminHeader, Sidebar, NotificationBell), search (SearchResults), skeletons (5 lazy-route loading states), styles (Royal Neo-Deco design tokens), gen (protobuf types), functions (4 Cloud Functions), shared (TypeScript types), api (top-level Go API).
 
-- `ETHOS.md`: FinalWishes is "the place where your life lives." Life first, death second. The heir's first moment is sacred: first the face, voice, and letter; then assets and legal mechanics.
-- `AGENTS.md`: FinalWishes is the Estate Operating System; web-first TypeScript/React with Go backend; Royal Neo-Deco; secure enclave; router etiquette; changelog/documentation requirements.
-- `docs/CANONICAL_DEVELOPMENT_PLAN.md`: active build is Tier 1 Living Legacy, web-first. Mobile, full probate engines, and direct Plaid-style financial discovery are deferred unless already implemented through existing surfaces.
-- `docs/PROJECT_SCOPE.md`: mission spans Principal and Executor journeys, with launch focus on Maryland, Illinois, and Minnesota.
-- `docs/REQUIREMENTS_SPECIFICATION.md`: current implemented surface includes registration, roles, identity gates, assets, vault, beneficiaries, Shepherd, Soul Log, time capsules, heirlooms, life chapters, memorials, events, lockbox, directives, OpenSign, and per-person directive visibility.
-- `docs/USER_STORIES.md`: core personas are Principal, Executor, Heir, and Admin; current implementation also has Legal, CPA, Trustee, and the "beneficiary" label for heir.
-- `docs/DATA_MODEL.md`: estate data must remain estate-scoped; PII and account numbers belong in protected enclaves/API paths, not public state.
-- `docs/API_SPECIFICATION.md`: ConnectRPC serves core estate CRUD; REST serves vault, lockbox, guidance, media, guardian, capsules, and signing.
-- `docs/SECURITY_COMPLIANCE.md`: least privilege, MFA/attestation for fiduciaries, auditability, and no cross-estate leakage.
-- `docs/TEST_PLAN.md`: route guards, identity, Firestore rules, invitation flow, vault, and E2E journeys are priority test targets.
+### 2. User Guides (3 new, 25 total)
+- `soul-log.md` — video/audio/text recording, visibility, sealed delivery, Shepherd prompts
+- `estate-settlement.md` — IL probate phases, death cert review, executor activation, checklists, court forms
+- `events-broadcasting.md` — funeral/memorial/repast event creation, RSVP tracking, sharing
 
----
+### 3. Cloud Function Tests (24 tests, Jest)
+`functions/index.test.js` — mocked Firestore, Gmail API, Secret Manager. Covers:
+- `autoMatchInvitation`: skip empty, skip no email, match + batch commit, email normalization
+- `sendMail`: skip processed, error on missing fields, send + mark SUCCESS, multiple recipients, template resolution, error handling
+- `sendSMS`: skip processed, validate E.164, validate body length, queue with PENDING_PROVIDER
+- `guardianInactivityCheck`: calls Go API, handles error/network failure gracefully
 
-## User Directive
+### 4. Settlement Gantt Timeline (recharts)
+`web/src/components/estate/SettlementGantt.tsx` — horizontal stacked bar chart using invisible start offset + visible duration bar. Color-coded: red (overdue), amber (≤14d), blue (≤60d), green (>60d). ReferenceLine at "Today." Integrated into probate page between deadlines and checklist.
 
-The user wants Claude and Codex to meet in the middle on:
+### 5. Multi-Executor Quorum (2-of-3)
+**Go API** (`api/internal/probate/quorum.go`):
+- `QuorumConfig`: enabled, requiredVotes, totalExecutors, executorUIDs
+- `QuorumAction`: propose → vote → resolve (early rejection when approval impossible)
+- 4 handlers: GetConfig, ListActions, ProposeAction, VoteAction
+- Email notification to co-executors on new proposals
 
-- Add and make interactive CRUD for users, estates, memories, diary entries, voice notes, photos, bank accounts, all accounts, jewelry/heirlooms, real estate, lawyer/legal accounts, trustees, executors, wills, POAs, and related estate records.
-- Make viewable CRUD interactive, not static or decorative.
-- Make sure Shepherd works.
-- Make Shepherd central to all actions so the user never gets lost.
-- Focus the next continuation on persona-based access: each persona sees only their own flows.
-- Deliver full end-to-end feature completeness for Tuesday, June 9, 2026.
+**Frontend** (`web/src/components/estate/QuorumPanel.tsx`):
+- Lists pending/resolved actions with vote indicators
+- Approve/reject buttons with optional rejection reason
+- Propose dialog for new actions (phase transition, asset distribution, document signing)
+- Integrated into probate page
 
-Better framing: do not interpret this as "add random more pages." Interpret it as "the existing rich product surface must become persona-safe, complete, interactive, and guided."
+**TypeScript** (`web/src/lib/probate.ts`): 4 API client functions + QuorumConfig, QuorumAction, QuorumVote types
 
----
+### 6. Cloud Storage Retention & Legal Holds
+**Go API** (`api/internal/service/estate/retention.go` + `retention_handler.go`):
+- `ApplyEstateHolds(estateID)` — places event-based holds on all vault docs (prevents deletion during probate)
+- `ReleaseEstateHolds(estateID)` — releases holds when estate is closing
+- `SetDocumentHold(estateID, objectPath, hold)` — per-document hold control
+- `GetDocumentRetention(estateID, objectPath)` — retention metadata
+- 2 HTTP routes: `POST /api/v1/vault/holds/{apply,release}`
 
-## Personas And Boundaries
-
-### Principal / Estate Owner
-
-Purpose: build the living legacy and estate plan.
-
-Allowed primary flows:
-
-- Create/manage estate profile.
-- Add/manage assets: financial, real estate, vehicles, digital, personal property.
-- Add/manage lockbox accounts and credentials.
-- Add/manage vault documents including wills, trusts, deeds, insurance, POAs, directives, legal documents.
-- Add/manage beneficiaries, executors, trustees, legal counsel, and CPA advisors.
-- Add/manage Soul Log diary entries, voice notes, videos, photos, memoirs, life chapters, heirlooms/jewelry, time capsules, directives, events, obituary/final record, settings, pricing.
-- Use Shepherd as the companion and next-action guide.
-
-Must not feel like: a death checklist. It should feel like wrapping a gift.
-
-### Executor
-
-Purpose: verify, administer, and settle after authority is active.
-
-Allowed primary flows:
-
-- Fiduciary verification: MFA plus attestation.
-- Estate dashboard in executor mode, not owner completion mode.
-- Authorized assets, vault documents, directives, lockbox, beneficiaries, events, probate/guardian, notifications, quorum/settlement actions.
-- Report death/status, confirm role, follow probate/settlement steps.
-
-Must not see:
-
-- Owner-only creation flows such as Soul Log creation, owner pricing/settings that affect private owner setup, or private owner diary controls.
-- Owner's private living-legacy prompts unless explicitly shared/authorized.
-
-### Trustee
-
-Purpose: administer trust-related assets and distributions.
-
-Allowed primary flows:
-
-- Fiduciary verification: MFA plus attestation.
-- Authorized assets, trust/estate documents, directives, beneficiaries, vault, lockbox, probate/settlement context where trust administration is relevant.
-
-Current status:
-
-- Trustee support has been locally added across invitations, Firestore rules, auth role type, IdentityGate, sidebar, attestation, beneficiaries UI, email templates, and tests.
-- Verify backend write authorization and role-specific route enforcement before calling it complete.
-
-### Heir / Beneficiary
-
-Purpose: receive love first, then understand inheritance and required actions.
-
-Allowed primary flows:
-
-- Sacred first moment: face, voice, letter, memory, or time capsule intended for them.
-- Shared/tagged memories, Soul Log entries, directives, events, obituary/final record, assigned assets/heirlooms, notifications.
-- Identity verification where required.
-
-Must not see:
-
-- Owner dashboard completion score as their first experience.
-- Full estate setup/admin/edit controls.
-- Private memories, private lockbox, unassigned assets, owner-only settings, or settlement controls.
-
-### Legal Counsel
-
-Purpose: advise on estate documents and directives.
-
-Allowed primary flows:
-
-- Authorized vault documents, directives, assets needed for counsel, notifications.
-- Read/comment/review where supported.
-
-Must not see:
-
-- Owner private diaries/memories, non-legal lockbox details, pricing, owner settings, unrelated heir content.
-
-### CPA Advisor
-
-Purpose: advise on financial/tax/accounting estate matters.
-
-Allowed primary flows:
-
-- Authorized financial assets, relevant vault documents, lockbox/account metadata where explicitly authorized, notifications.
-
-Must not see:
-
-- Owner private diaries/memories, legal-only documents without authorization, heir-only content, owner settings.
-
-### Admin
-
-Purpose: internal support and operations.
-
-Allowed flows:
-
-- Internal diagnostics/support surfaces only.
-- Admin should not be conflated with a normal estate persona in user-facing flows.
+### 7. GCP Native Services Evaluation
+`docs/GCP-NATIVE-SERVICES-EVALUATION.md`:
+- **E-Signatures**: Keep OpenSign (GCP has no e-sign API)
+- **Form Builders**: Keep current React + probate engine
+- **Vault Storage**: Augment with retention policies + legal holds (free, done)
+- **Appointment Booking**: Defer, embed Calendar booking pages later
 
 ---
 
-## Current Findings
+## Architecture Decisions
 
-1. The app already has broad feature surfaces: estate creation, assets, beneficiaries/heirs/executors/legal/CPA, trustee additions in progress, lockbox accounts, heirlooms/jewelry, memoirs/photos/videos, Soul Log diary/audio/video/text, directives, forms/wills/POAs, vault documents, events, time capsules, probate/guardian, notifications, Shepherd chat/nudges.
-2. `web/src/components/layout/Sidebar.tsx` has role-filtered navigation (`ROLE_PERMISSIONS`), but this is not sufficient for persona safety.
-3. `web/src/routes/estates.$estateId.tsx` fetches the estate-specific role from `estate_users/{uid}_{estateId}`, but currently renders `userRole` from `profile?.role`. This can leak the wrong persona experience when a user is principal globally but heir/executor/trustee on another estate.
-4. `IdentityGate` enforces verification but does not by itself enforce every route's persona permission.
-5. `HeirWelcome` and `OwnerWelcome` exist, but every downstream route still needs persona-appropriate content and hard guards.
-6. Settings currently treats fiduciary roles as `heir`, `executor`, `legal`, `cpa`; add `trustee` if the trustee role remains supported.
-7. Go ConnectRPC write authorization currently allows principal, executor, admin for write operations; decide whether trustee writes are allowed for any trust-admin actions, and keep heir/legal/CPA read-only unless canon explicitly changes.
-8. Firestore rules include trustee in several role lists after Codex local pass; verify every affected collection and tests.
+- **Quorum model**: Propose → Vote → Resolve (not consensus). Early rejection when approval is mathematically impossible (2 rejections in 2-of-3 = auto-reject). Decoupled from executor activation.
+- **Gantt chart**: Recharts stacked bar hack (invisible offset bar + visible duration bar). No dedicated Gantt library needed.
+- **Retention**: Event-based holds (not time-based retention). Applied per-estate on all vault objects. Released on estate close.
+- **Cloud Function tests**: Jest (not vitest) since functions are Node.js CommonJS. Tests run via `cd functions && npm test`.
 
 ---
 
-## Codex Local Work Already In Progress
+## Test Results
 
-Uncommitted local changes currently include:
-
-- `web/src/components/estate/ShepherdCompanion.tsx`: route-aware Shepherd guidance and action shortcuts expanded across assets, beneficiaries, vault, lockbox/accounts, heirlooms, memoirs, Soul Log diary/voice notes, directives, forms, and time capsules.
-- Trustee role support across:
-  - `web/src/lib/invitations.ts`
-  - `web/src/routes/estates.$estateId.beneficiaries.tsx`
-  - `firestore.rules`
-  - `web/src/lib/auth.tsx`
-  - `web/src/lib/firestore.ts`
-  - `web/src/components/guards/IdentityGate.tsx`
-  - `web/src/routes/estates.$estateId.tsx`
-  - `web/src/components/layout/Sidebar.tsx`
-  - `web/src/lib/email-templates.ts`
-  - `web/src/components/estate/InviteTeamMember.tsx`
-  - `web/src/components/identity/AttestationForm.tsx`
-  - `web/src/components/estate/README.md`
-  - `web/src/lib/invitations.test.ts`
-
-Prior verification for this pass:
-
-- `cd web && npm run typecheck`: PASS
-- `cd web && npx vitest run src/lib/invitations.test.ts src/components/estate/ShepherdNudge.test.tsx`: PASS, 28 tests
-- `cd web && npm run build`: PASS with existing chunk/font warnings
-
-Router coordination:
-
-- Sent to Claude: `20260605-175125-codex-finalwishes-claude-finalwishes-shared-finalwishes-persona-safe-tuesday-acceptance-bar`
-- Current Codex inbox was clear when checked.
-
-Do not overwrite Claude's changes if they arrive. Pull/read router items before committing.
+| Suite | Tests | Status |
+|-------|-------|--------|
+| Vitest (web) | 168 | All pass (run from `web/` directory) |
+| Go probate | 19 | All pass |
+| Cloud Functions (Jest) | 24 | All pass |
+| TypeScript | 0 errors | Clean |
+| Go build | 0 errors | Clean |
 
 ---
 
-## Tuesday Completion Plan
+## Remaining Items
 
-### Phase 1 - Persona Source Of Truth
+### C4 TODO
+1. Deploy C3 changes to production (Cloud Run + Firebase Hosting)
+2. Enable bucket-level retention policy on `finalwishes-vault` (`gsutil retention set 7y gs://finalwishes-vault`)
+3. Wire `ApplyEstateHolds` call into probate phase transition (when death_reported)
+4. Vitest root-level config to exclude `functions/` (currently must run from `web/`)
+5. Update README.md badges / version
 
-- Create or centralize a persona/role access map shared by sidebar, route guards, quick actions, Shepherd actions, and tests.
-- Normalize role naming:
-  - canonical data role: `heir`
-  - display label: `Beneficiary`
-  - accepted legacy alias: `beneficiary` only as a label/compat alias, not a new data role unless already persisted.
-- Use estate-specific role first: `estateUser?.role ?? profile?.role ?? 'principal'`.
-- Ensure `principal` on Estate A can be `heir`, `executor`, `trustee`, `legal`, or `cpa` on Estate B.
-
-### Phase 2 - Hard Route Guards
-
-- Add a route-level role guard around estate child routes.
-- Sidebar hiding is not enough.
-- Forbidden route behavior:
-  - show a warm Shepherd-guided "This area is not part of your role" state, or redirect to that persona's dashboard.
-  - never expose private data during the loading or blocked state.
-- Add tests for direct URL attempts by heir/executor/legal/CPA/trustee.
-
-### Phase 3 - Persona Dashboards
-
-- Principal dashboard: living legacy completion, creation actions, Shepherd next steps.
-- Heir dashboard: sacred first moment, shared letter/voice/memory first, then assigned assets/events/documents.
-- Executor dashboard: verification, death/status reporting, probate/guardian, settlement checklist, quorum, authorized evidence.
-- Trustee dashboard: trust assets/documents/distribution guidance.
-- Legal dashboard: document/directive review workspace.
-- CPA dashboard: financial/accounting workspace.
-- Admin dashboard: internal support only.
-
-Do the smallest practical implementation for Tuesday: persona-specific panels and action sets can share components, but the visible content must be meaningfully different.
-
-### Phase 4 - Feature Completeness Pass
-
-For every major object, verify Create, Read, Update, Delete or explain why Delete is disabled:
-
-- Users/profile
-- Estates
-- Assets including financial, bank, all accounts, real estate, vehicles, digital, personal property
-- Lockbox credentials/accounts
-- Beneficiaries/heirs
-- Executors
-- Trustees
-- Legal counsel/lawyer accounts
-- CPA advisors
-- Vault documents: wills, trusts, POAs, deeds, insurance, financial, medical, other
-- Directives
-- Soul Log diary entries: text, audio/voice note, video
-- Memoirs/photos/videos
-- Heirlooms/jewelry
-- Life chapters
-- Time capsules
-- Events/RSVP
-- Obituary/final record
-- Notifications
-
-If a CRUD action is intentionally unavailable for security or legal reasons, surface the reason in UI and tests.
-
-### Phase 5 - Shepherd Everywhere
-
-- Shepherd must know the user's persona and current route.
-- Shepherd prompts must only suggest allowed actions for that persona.
-- Shepherd should explain hidden/blocked flows without shame or confusion.
-- Shepherd should provide next actions after every create/update/delete.
-- For heirs, Shepherd tone should honor the sacred moment, not administrative productivity.
-- For principals, Shepherd tone should be life-first.
-- For fiduciaries, Shepherd tone should be calm, precise, and task-oriented.
+### Owner-Only Items
+1. Custom domain `finalwishes.app` → Firebase Hosting DNS
+2. Gemini billing credits (depleted)
+3. Stripe Customer Portal toggle
+4. OpenSign templates (4 directives)
+5. Brand video (Runway/Kling)
 
 ---
 
-## Verification Required Before Tuesday Demo
+## Key Files (C3 additions)
 
-Run and capture evidence:
-
-- `cd web && npm run typecheck`
-- `cd web && npx vitest run`
-- Add focused tests for persona access map and direct route guard behavior.
-- `cd web && npm run build`
-- Run browser verification on local app:
-  - principal sees owner build flows and Shepherd create actions
-  - heir sees sacred first moment and cannot direct-URL owner-only routes
-  - executor sees settlement/probate and cannot direct-URL private owner diary creation
-  - trustee sees trustee-appropriate authorized trust/asset flows
-  - legal sees document/directive review only
-  - cpa sees financial/accounting surfaces only
-- Check DevTools for zero runtime errors.
-- Check Firestore rules coverage if rules changed.
+| File | Purpose |
+|------|---------|
+| `web/src/components/estate/SettlementGantt.tsx` | Recharts Gantt timeline |
+| `web/src/components/estate/QuorumPanel.tsx` | Multi-executor approval UI |
+| `api/internal/probate/quorum.go` | Quorum API (propose/vote/list/config) |
+| `api/internal/service/estate/retention.go` | Cloud Storage holds |
+| `api/internal/service/estate/retention_handler.go` | Hold HTTP handlers |
+| `functions/index.test.js` | 24 Cloud Function unit tests |
+| `docs/GCP-NATIVE-SERVICES-EVALUATION.md` | GCP services evaluation |
 
 ---
 
-## Guardrails
-
-- Do not resurrect mobile, desktop, full state probate engines, direct Plaid, Lob, or other deferred scope for Tuesday.
-- Do not expose raw PII, account numbers, URLs with sensitive slugs, or private owner media to unauthorized personas.
-- Do not rely on sidebar filtering as authorization.
-- Do not make the heir experience a generic dashboard.
-- Do not make Shepherd suggest forbidden actions.
-- Do not commit without updating `CHANGELOG.md` and relevant docs if code changes are included.
-- Do not push until Claude/Codex router coordination is reconciled.
-
----
-
-## Start Commands
+## Start Next Session
 
 ```bash
-cd /Users/thekryptodragon/Development/FinalWishes
-git status --short
-sirsi router pull codex-finalwishes
-cd web && npm run typecheck
+cd ~/Development/FinalWishes
+# App: finalwishes-prod.web.app
+# Demo: /login?demo=true
+# Tests: cd web && npx vitest run
+# Go: cd api && go test ./...
+# CF: cd functions && npm test
 ```
-
-Current active collaboration thread:
-
-- `thr-3edb6c3ce0806019`
-

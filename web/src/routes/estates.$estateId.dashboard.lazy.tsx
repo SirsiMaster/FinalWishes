@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createLazyFileRoute, useParams, Link } from '@tanstack/react-router'
+import { DashboardRouter } from '../components/estate/PersonaDashboard'
 import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react'
 import { useAuth } from '../lib/auth'
 import {
@@ -38,8 +39,15 @@ import { ShepherdWelcome } from '@/components/estate/ShepherdWelcome'
 import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem, PageTransition } from '@/lib/animations'
 
 export const Route = createLazyFileRoute('/estates/$estateId/dashboard')({
-  component: DashboardIndex,
+  component: DashboardComponent,
 })
+
+// Branch the dashboard by persona: principals/admins get the owner "My Legacy"
+// dashboard (DashboardIndex); fiduciaries/advisors get their persona dashboard.
+function DashboardComponent() {
+  const { estateId } = useParams({ from: '/estates/$estateId/dashboard' })
+  return <DashboardRouter estateId={estateId} ownerDashboard={<DashboardIndex />} />
+}
 
 // ─── Shepherd Types ──────────────────────────────────────────────────────
 

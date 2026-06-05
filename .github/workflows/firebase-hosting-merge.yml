@@ -273,14 +273,18 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Deploy Firestore Rules & Indexes
-        # MUST include firestore:indexes — without it, firestore.indexes.json never
-        # reaches production, so any query needing a composite index throws
-        # FAILED_PRECONDITION ("The query requires an index") and the feature hangs.
-        # This was the root cause of vault upload / notifications / life-chapters
-        # silently failing in the live demo while working in the emulator (which
-        # auto-builds indexes). Index builds are async on Firestore's side.
-        run: firebase deploy --only firestore:rules,firestore:indexes --project finalwishes-prod
+      # NOTE: deploys firestore:rules ONLY (not :indexes). The CI Firebase deploy
+      # SA lacks datastore.indexAdmin, so `firebase deploy --only ...,firestore:indexes`
+      # 403s and aborts the WHOLE deploy (it took the rules deploy down with it).
+      # Firestore INDEXES (firestore.indexes.json) are therefore deployed out-of-band
+      # via gcloud by an admin SA (claude-agent@finalwishes-prod, which has index
+      # perms). Missing indexes cause FAILED_PRECONDITION in prod (the emulator
+      # auto-builds them, so it only bites in production) — this was the cause of
+      # vault upload / notifications / life-chapters silently hanging in the demo.
+      # FOLLOW-UP (owner/IAM): grant the Firebase deploy SA roles/datastore.indexAdmin,
+      # then fold indexes back in: `firebase deploy --only firestore:rules,firestore:indexes`.
+      - name: Deploy Firestore Rules
+        run: firebase deploy --only firestore:rules --project finalwishes-prod
 
       # Storage rules are DEFENSE-IN-DEPTH only: all uploads use V4 signed URLs
       # from the Go API which bypass these rules entirely (see storage.rules

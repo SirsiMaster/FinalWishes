@@ -14,7 +14,7 @@ import { useCollection, type Heir } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
-import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc, deleteDoc } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { toast } from 'sonner'
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -70,6 +70,7 @@ import {
   Redo2,
   Sparkles,
   Trash2,
+  Pencil,
   ChevronDown,
   ChevronUp,
   Calendar,
@@ -263,6 +264,33 @@ function SoulLogPage() {
     }
   }, [deletingEntry, estateId])
 
+  const [editingEntry, setEditingEntry] = useState<SoulLogEntry | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [savingEdit, setSavingEdit] = useState(false)
+
+  const openEdit = useCallback((entry: SoulLogEntry) => {
+    setEditTitle(entry.title || '')
+    setEditingEntry(entry)
+  }, [])
+
+  const handleSaveEdit = useCallback(async () => {
+    if (!editingEntry) return
+    setSavingEdit(true)
+    try {
+      await updateDoc(doc(db, `estates/${estateId}/soul-log/${editingEntry.id}`), {
+        title: editTitle.trim() || 'Untitled Entry',
+        updatedAt: serverTimestamp(),
+      })
+      toast.success('Entry updated')
+      setEditingEntry(null)
+    } catch (e) {
+      console.error('Update soul-log entry failed:', e)
+      toast.error('Could not update the entry. Please try again.')
+    } finally {
+      setSavingEdit(false)
+    }
+  }, [editingEntry, editTitle, estateId])
+
   // Shepherd prompt — date-seeded daily rotation from 20-prompt pool
   const dailyPrompt = useMemo(() => getDailySoulLogPrompt(), [])
 
@@ -415,6 +443,7 @@ function SoulLogPage() {
               onToggle={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
               onViewVideo={() => setViewerEntry(entry)}
               onDelete={() => setDeletingEntry(entry)}
+              onEdit={() => openEdit(entry)}
             />
           ))}
         </div>
@@ -459,6 +488,42 @@ function SoulLogPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Edit entry (title) */}
+      <Dialog open={!!editingEntry} onOpenChange={(open) => { if (!open && !savingEdit) setEditingEntry(null) }}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit entry</DialogTitle>
+            <DialogDescription>Update the title of this Soul Log entry.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2 py-2">
+            <Label htmlFor="soul-edit-title" className="text-xs font-semibold uppercase tracking-wide text-slate-900/60">Title</Label>
+            <Input
+              id="soul-edit-title"
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              placeholder="Untitled Entry"
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setEditingEntry(null)}
+              disabled={savingEdit}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveEdit}
+              disabled={savingEdit}
+              className="flex-1 bg-[var(--royal)] hover:bg-[var(--royal)] text-white"
+            >
+              {savingEdit ? 'Saving…' : 'Save'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
@@ -559,12 +624,14 @@ function EntryCard({
   onToggle,
   onViewVideo,
   onDelete,
+  onEdit,
 }: {
   entry: SoulLogEntry
   expanded: boolean
   onToggle: () => void
   onViewVideo: () => void
   onDelete: () => void
+  onEdit: () => void
 }) {
   const typeConfig = getTypeConfig(entry.type)
   const visConfig = getVisibilityConfig(entry.visibility)
@@ -629,6 +696,14 @@ function EntryCard({
                 <VisIcon className="w-3 h-3 mr-1" />
                 {visConfig.label}
               </Badge>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onEdit() }}
+                className="p-1.5 rounded-lg text-slate-900/25 hover:text-[var(--royal)] hover:bg-[var(--royal)]/5 transition-colors"
+                aria-label="Edit entry"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); onDelete() }}

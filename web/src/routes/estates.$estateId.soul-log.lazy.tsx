@@ -14,7 +14,7 @@ import { useCollection, type Heir } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
-import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc, deleteDoc } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { toast } from 'sonner'
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -29,6 +29,16 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -59,6 +69,7 @@ import {
   Undo2,
   Redo2,
   Sparkles,
+  Trash2,
   ChevronDown,
   ChevronUp,
   Calendar,
@@ -234,6 +245,23 @@ function SoulLogPage() {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null)
   const [viewerEntry, setViewerEntry] = useState<SoulLogEntry | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [deletingEntry, setDeletingEntry] = useState<SoulLogEntry | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDeleteEntry = useCallback(async () => {
+    if (!deletingEntry) return
+    setIsDeleting(true)
+    try {
+      await deleteDoc(doc(db, `estates/${estateId}/soul-log/${deletingEntry.id}`))
+      toast.success('Entry deleted')
+      setDeletingEntry(null)
+    } catch (e) {
+      console.error('Delete soul-log entry failed:', e)
+      toast.error('Could not delete the entry. Please try again.')
+    } finally {
+      setIsDeleting(false)
+    }
+  }, [deletingEntry, estateId])
 
   // Shepherd prompt — date-seeded daily rotation from 20-prompt pool
   const dailyPrompt = useMemo(() => getDailySoulLogPrompt(), [])
@@ -386,6 +414,7 @@ function SoulLogPage() {
               expanded={expandedEntry === entry.id}
               onToggle={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
               onViewVideo={() => setViewerEntry(entry)}
+              onDelete={() => setDeletingEntry(entry)}
             />
           ))}
         </div>
@@ -407,6 +436,29 @@ function SoulLogPage() {
         open={!!viewerEntry}
         onOpenChange={(open) => { if (!open) setViewerEntry(null) }}
       />
+
+      {/* Delete confirmation */}
+      <AlertDialog open={!!deletingEntry} onOpenChange={(open) => { if (!open && !isDeleting) setDeletingEntry(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this entry?</AlertDialogTitle>
+            <AlertDialogDescription>
+              “{deletingEntry?.title || 'Untitled Entry'}” will be permanently removed from your Soul Log.
+              This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Keep it</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => { e.preventDefault(); handleDeleteEntry() }}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? 'Deleting…' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
@@ -506,11 +558,13 @@ function EntryCard({
   expanded,
   onToggle,
   onViewVideo,
+  onDelete,
 }: {
   entry: SoulLogEntry
   expanded: boolean
   onToggle: () => void
   onViewVideo: () => void
+  onDelete: () => void
 }) {
   const typeConfig = getTypeConfig(entry.type)
   const visConfig = getVisibilityConfig(entry.visibility)
@@ -575,6 +629,14 @@ function EntryCard({
                 <VisIcon className="w-3 h-3 mr-1" />
                 {visConfig.label}
               </Badge>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onDelete() }}
+                className="p-1.5 rounded-lg text-slate-900/25 hover:text-red-600 hover:bg-red-50 transition-colors"
+                aria-label="Delete entry"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
               {expanded ? (
                 <ChevronUp className="w-4 h-4 text-slate-900/30" />
               ) : (

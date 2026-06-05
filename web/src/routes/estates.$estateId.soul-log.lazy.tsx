@@ -265,31 +265,6 @@ function SoulLogPage() {
   }, [deletingEntry, estateId])
 
   const [editingEntry, setEditingEntry] = useState<SoulLogEntry | null>(null)
-  const [editTitle, setEditTitle] = useState('')
-  const [savingEdit, setSavingEdit] = useState(false)
-
-  const openEdit = useCallback((entry: SoulLogEntry) => {
-    setEditTitle(entry.title || '')
-    setEditingEntry(entry)
-  }, [])
-
-  const handleSaveEdit = useCallback(async () => {
-    if (!editingEntry) return
-    setSavingEdit(true)
-    try {
-      await updateDoc(doc(db, `estates/${estateId}/soul-log/${editingEntry.id}`), {
-        title: editTitle.trim() || 'Untitled Entry',
-        updatedAt: serverTimestamp(),
-      })
-      toast.success('Entry updated')
-      setEditingEntry(null)
-    } catch (e) {
-      console.error('Update soul-log entry failed:', e)
-      toast.error('Could not update the entry. Please try again.')
-    } finally {
-      setSavingEdit(false)
-    }
-  }, [editingEntry, editTitle, estateId])
 
   // Shepherd prompt — date-seeded daily rotation from 20-prompt pool
   const dailyPrompt = useMemo(() => getDailySoulLogPrompt(), [])
@@ -443,7 +418,7 @@ function SoulLogPage() {
               onToggle={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
               onViewVideo={() => setViewerEntry(entry)}
               onDelete={() => setDeletingEntry(entry)}
-              onEdit={() => openEdit(entry)}
+              onEdit={() => setEditingEntry(entry)}
             />
           ))}
         </div>
@@ -489,42 +464,109 @@ function SoulLogPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit entry (title) */}
-      <Dialog open={!!editingEntry} onOpenChange={(open) => { if (!open && !savingEdit) setEditingEntry(null) }}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit entry</DialogTitle>
-            <DialogDescription>Update the title of this Soul Log entry.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-2 py-2">
+      {/* Edit entry */}
+      <EditEntryDialog
+        entry={editingEntry}
+        estateId={estateId}
+        onClose={() => setEditingEntry(null)}
+      />
+    </div>
+  )
+}
+
+// ─── Edit Entry Dialog ───────────────────────────────────────────────────────
+// Always mounted (so useEditor is called unconditionally). Edits the title for
+// every entry type, and the rich text content for text entries via TipTap.
+function EditEntryDialog({
+  entry,
+  estateId,
+  onClose,
+}: {
+  entry: SoulLogEntry | null
+  estateId: string
+  onClose: () => void
+}) {
+  const [title, setTitle] = useState('')
+  const [saving, setSaving] = useState(false)
+  const isText = entry?.type === 'text'
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm max-w-none min-h-[160px] px-4 py-3 focus:outline-none text-slate-900/80 leading-relaxed',
+      },
+    },
+  })
+
+  useEffect(() => {
+    if (!entry) return
+    setTitle(entry.title || '')
+    if (entry.type === 'text') editor?.commands.setContent(entry.content || '')
+  }, [entry, editor])
+
+  const handleSave = useCallback(async () => {
+    if (!entry) return
+    setSaving(true)
+    try {
+      const patch: Record<string, unknown> = {
+        title: title.trim() || 'Untitled Entry',
+        updatedAt: serverTimestamp(),
+      }
+      if (entry.type === 'text' && editor) patch.content = editor.getHTML()
+      await updateDoc(doc(db, `estates/${estateId}/soul-log/${entry.id}`), patch)
+      toast.success('Entry updated')
+      onClose()
+    } catch (e) {
+      console.error('Update soul-log entry failed:', e)
+      toast.error('Could not update the entry. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }, [entry, title, editor, estateId, onClose])
+
+  return (
+    <Dialog open={!!entry} onOpenChange={(open) => { if (!open && !saving) onClose() }}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Edit entry</DialogTitle>
+          <DialogDescription>
+            {isText ? 'Update the title and text of this entry.' : 'Update the title of this entry.'}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-2">
+          <div className="space-y-2">
             <Label htmlFor="soul-edit-title" className="text-xs font-semibold uppercase tracking-wide text-slate-900/60">Title</Label>
             <Input
               id="soul-edit-title"
-              value={editTitle}
-              onChange={(e) => setEditTitle(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Untitled Entry"
             />
           </div>
-          <div className="flex gap-3 pt-2">
-            <Button
-              variant="outline"
-              onClick={() => setEditingEntry(null)}
-              disabled={savingEdit}
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSaveEdit}
-              disabled={savingEdit}
-              className="flex-1 bg-[var(--royal)] hover:bg-[var(--royal)] text-white"
-            >
-              {savingEdit ? 'Saving…' : 'Save'}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+          {isText && (
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-slate-900/60">Reflection</Label>
+              <div className="rounded-xl border border-[var(--royal)]/10 overflow-hidden">
+                <div className="flex items-center gap-1 border-b border-[var(--royal)]/5 px-2 py-1.5">
+                  <button type="button" onClick={() => editor?.chain().focus().toggleBold().run()} className="p-1.5 rounded hover:bg-slate-100" aria-label="Bold"><Bold className="w-4 h-4 text-slate-700" /></button>
+                  <button type="button" onClick={() => editor?.chain().focus().toggleItalic().run()} className="p-1.5 rounded hover:bg-slate-100" aria-label="Italic"><Italic className="w-4 h-4 text-slate-700" /></button>
+                  <button type="button" onClick={() => editor?.chain().focus().toggleBulletList().run()} className="p-1.5 rounded hover:bg-slate-100" aria-label="Bullet list"><List className="w-4 h-4 text-slate-700" /></button>
+                </div>
+                <EditorContent editor={editor} />
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex gap-3 pt-2">
+          <Button variant="outline" onClick={onClose} disabled={saving} className="flex-1">Cancel</Button>
+          <Button onClick={handleSave} disabled={saving} className="flex-1 bg-[var(--royal)] hover:bg-[var(--royal)] text-white">
+            {saving ? 'Saving…' : 'Save'}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 

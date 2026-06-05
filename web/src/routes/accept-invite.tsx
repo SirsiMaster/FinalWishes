@@ -6,7 +6,6 @@ import {
   doc,
   getDoc,
   updateDoc,
-  setDoc,
   serverTimestamp,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
@@ -82,38 +81,52 @@ function AcceptInvitePage() {
         return
       }
 
-      // 2. Accept: update invitation
-      await updateDoc(invRef, {
-        status: 'accepted',
-        userId: user.uid,
-        invitationAcceptedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      })
+      // 2. Wait for the SERVER-SIDE access grant.
+      // Estate access is granted by the autoMatch Cloud Functions (admin SDK,
+      // functions/index.js): autoMatchOnInvitation links existing accounts the moment
+      // the invite is created, and autoMatchInvitation links the account on signup —
+      // both create the estates_users junction (accessGranted) and flip the invitation
+      // to 'accepted'. The client MUST NOT (and per security rules CANNOT) grant itself
+      // estate access — doing so here previously made every accept fail with
+      // "Missing or insufficient permissions" even though the server had already
+      // granted access. So we simply wait for the server grant to land.
+      const euRef = doc(db, 'estate_users', `${user.uid}_${inv.estateId}`)
+      let granted = false
+      for (let i = 0; i < 12; i++) {
+        const euSnap = await getDoc(euRef)
+        if (euSnap.exists() && euSnap.data()?.accessGranted) {
+          granted = true
+          break
+        }
+        await new Promise((r) => setTimeout(r, 1000))
+      }
 
-      // 3. Create estate_users junction record
-      const euDocId = `${user.uid}_${inv.estateId}`
-      await setDoc(doc(db, 'estate_users', euDocId), {
-        estateId: inv.estateId,
-        userId: user.uid,
-        role: inv.role || 'heir',
-        accessGranted: true,
-        accessGrantedAt: serverTimestamp(),
-        invitationId,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      })
+      if (!granted) {
+        // The async trigger hasn't landed yet — do NOT hard-fail; the user will get
+        // access shortly. Guide them rather than showing a dead end.
+        setStatus('error')
+        setErrorMsg(
+          "You're almost in — we're finalizing your access to this estate. Please refresh in a moment, or sign in again and you'll be taken straight to it.",
+        )
+        return
+      }
 
-      // 4. Set primaryEstateId if user doesn't have one yet
+      // 3. Point the invitee's OWN profile at this estate (allowed by rules: own doc)
+      // so a future login lands them here. Non-fatal.
       if (!profile?.primaryEstateId) {
-        await updateDoc(doc(db, 'users', user.uid), {
-          primaryEstateId: inv.estateId,
-          updatedAt: serverTimestamp(),
-        })
+        try {
+          await updateDoc(doc(db, 'users', user.uid), {
+            primaryEstateId: inv.estateId,
+            updatedAt: serverTimestamp(),
+          })
+        } catch (e) {
+          console.warn('[accept-invite] primaryEstateId update skipped (non-fatal):', e)
+        }
       }
 
       setStatus('success')
 
-      // 5. Redirect to estate dashboard
+      // 4. Redirect to estate dashboard
       setTimeout(() => {
         navigate({
           to: '/estates/$estateId/dashboard',

@@ -1,7 +1,7 @@
 /**
  * InviteTeamMember — Estate team invitation form + member list
  * 
- * Allows estate principals to invite heirs, executors, legal counsel, and CPAs.
+ * Allows estate principals to invite heirs, executors, trustees, legal counsel, and CPAs.
  * Shows pending/accepted invitations with revoke capability.
  * 
  * @version 1.0.0
@@ -21,6 +21,7 @@ interface InviteTeamMemberProps {
 const ROLE_OPTIONS = [
   { value: 'heir', label: 'Beneficiary / Heir', description: 'Can view estate. Read-only access.' },
   { value: 'executor', label: 'Executor', description: 'Can view and manage estate assets and documents.' },
+  { value: 'trustee', label: 'Trustee', description: 'Can view estate and coordinate trust asset administration.' },
   { value: 'legal', label: 'Legal Counsel', description: 'Can view estate. Read-only advisory access.' },
   { value: 'cpa', label: 'CPA / Tax Advisor', description: 'Can view estate. Read-only advisory access.' },
 ];
@@ -38,7 +39,7 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'executor' | 'heir' | 'legal' | 'cpa'>('heir');
+  const [role, setRole] = useState<'executor' | 'heir' | 'trustee' | 'legal' | 'cpa'>('heir');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');

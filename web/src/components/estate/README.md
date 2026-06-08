@@ -90,7 +90,7 @@ Each section has a unique hand-drawn SVG illustration:
   estateId: string;
   email: string;
   fullName: string;
-  role: 'executor' | 'heir' | 'legal' | 'cpa';
+  role: 'executor' | 'heir' | 'trustee' | 'legal' | 'cpa';
   invitedBy: string;       // UID of inviting principal
   status: 'pending' | 'accepted' | 'declined' | 'revoked';
   accessGranted: boolean;

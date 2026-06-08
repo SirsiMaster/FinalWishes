@@ -1,7 +1,7 @@
 /**
  * AttestationForm — Identity Attestation for Fiduciary Roles (ADR-035)
  * 
- * Legal declaration + signature capture for heir/executor/legal/CPA roles.
+ * Legal declaration + signature capture for heir/executor/trustee/legal/CPA roles.
  * Users must sign an attestation confirming their identity and role
  * before accessing estate documents.
  * 
@@ -22,6 +22,7 @@ interface AttestationFormProps {
 const ROLE_LABELS: Record<string, string> = {
   heir: 'Designated Heir',
   executor: 'Appointed Executor',
+  trustee: 'Named Trustee',
   legal: 'Legal Counsel',
   cpa: 'Certified Public Accountant',
 };

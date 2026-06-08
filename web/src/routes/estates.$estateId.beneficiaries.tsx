@@ -31,6 +31,7 @@ export const Route = createFileRoute('/estates/$estateId/beneficiaries')({
 const ROLE_DESCRIPTIONS: Record<string, string> = {
   heir: 'A person who will receive assets from your estate. You can specify their share percentage.',
   executor: 'The person legally responsible for carrying out your will. They handle probate, pay debts, and distribute assets to heirs.',
+  trustee: 'The person or institution responsible for managing trust assets and distributions under your instructions.',
   legal: 'Legal counsel with read-only advisory access to help administer the estate.',
   cpa: 'A CPA or tax advisor with read-only advisory access for tax and financial matters.',
 }
@@ -73,7 +74,7 @@ function BeneficiariesPage() {
       estateId,
       fullName: vars.name,
       email: vars.email,
-      role: roleValue as 'executor' | 'heir' | 'legal' | 'cpa',
+      role: roleValue as 'executor' | 'heir' | 'trustee' | 'legal' | 'cpa',
       relationship: vars.relation,
       invitedBy: user.uid,
       ...(vars.phone ? { phone: vars.phone } : {}),
@@ -286,6 +287,7 @@ function AddBeneficiaryDialog({
                 <SelectContent>
                   <SelectItem value="heir">Primary Heir</SelectItem>
                   <SelectItem value="executor">Legal Executor</SelectItem>
+                  <SelectItem value="trustee">Trustee</SelectItem>
                   <SelectItem value="legal">Legal Counsel</SelectItem>
                   <SelectItem value="cpa">CPA / Tax Advisor</SelectItem>
                 </SelectContent>

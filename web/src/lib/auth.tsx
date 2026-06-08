@@ -48,7 +48,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   displayName: string;
-  role: 'principal' | 'executor' | 'heir' | 'legal' | 'cpa' | 'admin';
+  role: 'principal' | 'executor' | 'heir' | 'trustee' | 'legal' | 'cpa' | 'admin';
   phone?: string;
   status: 'active' | 'suspended' | 'deleted';
   profilePhotoUrl?: string;

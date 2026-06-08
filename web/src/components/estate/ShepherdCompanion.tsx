@@ -10,28 +10,174 @@
  * Design intent: restrained and premium — Cinzel serif heading, royal + a single
  * gold accent, slate neutrals, generous spacing. No rainbow accents.
  */
-import { useCallback } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useCallback, useMemo, useState, type FormEvent } from 'react'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Compass, ChevronRight, X, Check } from 'lucide-react'
+import { Compass, ChevronRight, X, Check, Loader2, MessageCircle, Send } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 import { useGuidanceScore, type ShepherdStep } from '../../lib/useGuidanceScore'
 import { useResumables } from '../../lib/useResumables'
+import { askShepherd, SHEPHERD_OPENERS, type ShepherdMessage } from '../../lib/shepherd'
+import { canAccess, type PersonaRole, type SectionId } from '../../lib/persona'
+
+interface SectionGuide {
+  title: string
+  prompt: string
+  actionLabel: string
+  actionRoute: string
+}
+
+const SECTION_IDS: SectionId[] = [
+  'dashboard',
+  'life-chapters',
+  'soul-log',
+  'memoirs',
+  'heirlooms',
+  'assets',
+  'vault',
+  'forms',
+  'lockbox',
+  'directives',
+  'timecapsule',
+  'beneficiaries',
+  'events',
+  'obituary',
+  'probate',
+  'notifications',
+  'pricing',
+  'settings',
+  'attestation',
+  'estates',
+  'index',
+]
+
+const SECTION_SET = new Set<SectionId>(SECTION_IDS)
+
+const SECTION_GUIDES: Partial<Record<SectionId, SectionGuide>> = {
+  assets: {
+    title: 'Inventory what your family must find',
+    prompt: 'Help me add assets in the right order: bank accounts, real estate, investments, insurance, vehicles, and valuables.',
+    actionLabel: 'Add an asset',
+    actionRoute: 'assets',
+  },
+  beneficiaries: {
+    title: 'Name every person with a role',
+    prompt: 'Help me decide who should be a beneficiary, executor, trustee, legal advisor, or tax advisor.',
+    actionLabel: 'Add a person',
+    actionRoute: 'beneficiaries',
+  },
+  vault: {
+    title: 'Upload the documents that prove authority',
+    prompt: 'Help me organize wills, POAs, trusts, deeds, IDs, insurance documents, and account statements.',
+    actionLabel: 'Upload a document',
+    actionRoute: 'vault',
+  },
+  lockbox: {
+    title: 'Preserve access instructions safely',
+    prompt: 'Help me add bank accounts, online accounts, lawyer portals, passwords, PINs, recovery codes, and transfer instructions.',
+    actionLabel: 'Add an account',
+    actionRoute: 'lockbox',
+  },
+  heirlooms: {
+    title: 'Capture the story behind valuables',
+    prompt: 'Help me document jewelry, watches, art, collections, vehicles, real estate keepsakes, and who should receive them.',
+    actionLabel: 'Add an heirloom',
+    actionRoute: 'heirlooms',
+  },
+  memoirs: {
+    title: 'Save photos and videos with context',
+    prompt: 'Help me choose what photos and videos to preserve first, and what titles or notes my family will understand later.',
+    actionLabel: 'Add media',
+    actionRoute: 'memoirs',
+  },
+  'soul-log': {
+    title: 'Keep diary entries and voice notes',
+    prompt: 'Help me write or record a diary entry, voice note, private memory, or sealed message for later.',
+    actionLabel: 'Add a memory',
+    actionRoute: 'soul-log',
+  },
+  directives: {
+    title: 'Write wishes no one else can write',
+    prompt: 'Help me add funeral wishes, care instructions, ethical will notes, final messages, and account transition directions.',
+    actionLabel: 'Write a directive',
+    actionRoute: 'directives',
+  },
+  forms: {
+    title: 'Generate legal forms carefully',
+    prompt: 'Help me understand which will, POA, or statutory form to prepare and what still needs attorney review.',
+    actionLabel: 'Open forms',
+    actionRoute: 'forms',
+  },
+  timecapsule: {
+    title: 'Schedule messages for the right moment',
+    prompt: 'Help me create a message, voice note, photo bundle, or letter for a loved one.',
+    actionLabel: 'Create a capsule',
+    actionRoute: 'timecapsule',
+  },
+}
+
+function sectionFromRoute(route: string): SectionId {
+  const cleanRoute = route.split('?')[0]?.split('#')[0] ?? ''
+  const parts = cleanRoute.split('/').filter(Boolean)
+  const candidate = parts[0] === 'estates' ? parts[2] : parts[0]
+  return SECTION_SET.has(candidate as SectionId) ? (candidate as SectionId) : 'dashboard'
+}
+
+function guideForPath(pathname: string, role: PersonaRole): SectionGuide | null {
+  const section = sectionFromRoute(pathname)
+  if (!canAccess(role, section)) return null
+  return SECTION_GUIDES[section] ?? {
+    title: 'I can guide your next action',
+    prompt: 'Help me understand what to add next so my family never gets lost.',
+    actionLabel: 'Go to dashboard',
+    actionRoute: 'dashboard',
+  }
+}
 
 /** Controlled: the estate layout owns open state so content can reserve space. */
 export function ShepherdCompanion({
   estateId,
   open,
   onToggle,
+  effectiveRole,
 }: {
   estateId: string
   open: boolean
   onToggle: () => void
+  effectiveRole: PersonaRole
 }) {
   const { profile } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { score, loading } = useGuidanceScore(estateId)
   const resumables = useResumables(estateId)
+  const [messages, setMessages] = useState<ShepherdMessage[]>([])
+  const [draft, setDraft] = useState('')
+  const [asking, setAsking] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const firstName = profile?.firstName?.trim() || profile?.displayName?.split(' ')[0] || 'there'
+  const percent = score?.completionPercent ?? 0
+  const next = score?.nextAction ?? null
+  const done = !loading && score != null && next == null
+  const currentGuide = useMemo(() => guideForPath(location.pathname, effectiveRole), [location.pathname, effectiveRole])
+  const visibleSteps = useMemo(
+    () =>
+      score?.steps.filter(
+        (step) =>
+          !step.complete &&
+          !step.optional &&
+          canAccess(effectiveRole, sectionFromRoute(step.route)),
+      ) ?? [],
+    [effectiveRole, score],
+  )
+  const visibleNext = useMemo(() => {
+    if (next && canAccess(effectiveRole, sectionFromRoute(next.route))) return next
+    return visibleSteps[0] ?? null
+  }, [effectiveRole, next, visibleSteps])
+  const visibleResumables = useMemo(
+    () => resumables.filter((item) => canAccess(effectiveRole, sectionFromRoute(item.route))),
+    [effectiveRole, resumables],
+  )
 
   const goTo = useCallback(
     (route: string) => {
@@ -44,10 +190,35 @@ export function ShepherdCompanion({
     [estateId, navigate],
   )
 
-  const firstName = profile?.firstName?.trim() || profile?.displayName?.split(' ')[0] || 'there'
-  const percent = score?.completionPercent ?? 0
-  const next = score?.nextAction ?? null
-  const done = !loading && score != null && next == null
+  const ask = useCallback(
+    async (message: string) => {
+      const trimmed = message.trim()
+      if (!trimmed || asking) return
+      const history = messages.slice(-6)
+      const userMessage: ShepherdMessage = { role: 'user', content: trimmed }
+      setMessages((prev) => [...prev, userMessage])
+      setDraft('')
+      setAsking(true)
+      setError(null)
+      try {
+        const reply = await askShepherd(estateId, trimmed, history)
+        setMessages((prev) => [...prev, { role: 'assistant', content: reply.reply }])
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Shepherd could not respond right now.')
+      } finally {
+        setAsking(false)
+      }
+    },
+    [asking, estateId, messages],
+  )
+
+  const handleAsk = useCallback(
+    (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault()
+      void ask(draft)
+    },
+    [ask, draft],
+  )
 
   return (
     <>
@@ -144,21 +315,21 @@ export function ShepherdCompanion({
                     {score?.insight || 'Revisit any section any time to refine your plan.'}
                   </p>
                 </div>
-              ) : next ? (
+              ) : visibleNext ? (
                 <>
                   <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                     Your next step
                   </p>
                   <button
                     type="button"
-                    onClick={() => goTo(next.route)}
+                    onClick={() => goTo(visibleNext.route)}
                     className="group w-full rounded-2xl border border-slate-200 bg-white p-6 text-left transition-all hover:border-[var(--royal)]/40 hover:shadow-sm"
                   >
                     <h3 className="font-[family-name:var(--font-cinzel)] text-lg font-bold leading-snug text-slate-900">
-                      {next.label}
+                      {visibleNext.label}
                     </h3>
                     <p className="mt-2 text-[13px] leading-relaxed text-slate-500">
-                      {next.description}
+                      {visibleNext.description}
                     </p>
                     <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--royal)]">
                       Continue
@@ -167,14 +338,14 @@ export function ShepherdCompanion({
                   </button>
 
                   {/* Remaining steps, quietly listed for orientation */}
-                  {score && score.steps.filter((s) => !s.complete && !s.optional && s.id !== next.id).length > 0 && (
+                  {visibleSteps.filter((s) => s.id !== visibleNext.id).length > 0 && (
                     <div className="mt-7">
                       <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                         Also ahead
                       </p>
                       <ul className="space-y-1">
-                        {score.steps
-                          .filter((s) => !s.complete && !s.optional && s.id !== next.id)
+                        {visibleSteps
+                          .filter((s) => s.id !== visibleNext.id)
                           .slice(0, 4)
                           .map((s: ShepherdStep) => (
                             <li key={s.id}>
@@ -198,15 +369,43 @@ export function ShepherdCompanion({
                 </p>
               )}
 
+              {/* Route-aware guidance keeps Shepherd next to every CRUD action. */}
+              {!loading && currentGuide && (
+                <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    Shepherd on this page
+                  </p>
+                  <h3 className="font-[family-name:var(--font-cinzel)] text-base font-bold text-slate-900">
+                    {currentGuide.title}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => ask(currentGuide.prompt)}
+                    className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--royal)]"
+                  >
+                    Ask for guidance
+                    <MessageCircle className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goTo(currentGuide.actionRoute)}
+                    className="ml-4 mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-500 hover:text-slate-800"
+                  >
+                    {currentGuide.actionLabel}
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+
               {/* Continue where you left off — in-progress work the user can resume.
                   Rendered only when something is genuinely unfinished. */}
-              {!loading && resumables.length > 0 && (
+              {!loading && visibleResumables.length > 0 && (
                 <div className="mt-7 border-t border-slate-100 pt-6">
                   <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
                     Continue where you left off
                   </p>
                   <ul className="space-y-1">
-                    {resumables.map((r) => (
+                    {visibleResumables.map((r) => (
                       <li key={r.id}>
                         <button
                           type="button"
@@ -223,6 +422,63 @@ export function ShepherdCompanion({
                   </ul>
                 </div>
               )}
+
+              {/* Central chat: available from every estate route, not just the dashboard. */}
+              <div className="mt-7 border-t border-slate-100 pt-6">
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  Ask Shepherd
+                </p>
+                {messages.length === 0 ? (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {SHEPHERD_OPENERS.slice(0, 3).map((opener) => (
+                      <button
+                        key={opener.label}
+                        type="button"
+                        onClick={() => ask(opener.prompt)}
+                        className="rounded-full border border-slate-200 px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-[var(--royal)]/30 hover:text-[var(--royal)]"
+                      >
+                        {opener.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mb-3 max-h-64 space-y-3 overflow-y-auto rounded-2xl bg-slate-50 p-3">
+                    {messages.slice(-6).map((message, index) => (
+                      <div
+                        key={`${message.role}-${index}`}
+                        className={`rounded-2xl px-3 py-2 text-[12px] leading-relaxed ${
+                          message.role === 'user'
+                            ? 'ml-8 bg-[var(--royal)] text-white'
+                            : 'mr-8 border border-slate-200 bg-white text-slate-700'
+                        }`}
+                      >
+                        {message.content}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {error && (
+                  <p className="mb-2 rounded-xl bg-red-50 px-3 py-2 text-[12px] font-medium text-red-700">
+                    {error}
+                  </p>
+                )}
+                <form onSubmit={handleAsk} className="flex gap-2">
+                  <input
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                    placeholder="Ask what to do next..."
+                    className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-[var(--royal)]"
+                  />
+                  <button
+                    type="submit"
+                    disabled={asking || !draft.trim()}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--royal)] text-white transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
+                    aria-label="Send message to Shepherd"
+                  >
+                    {asking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  </button>
+                </form>
+              </div>
             </div>
           </motion.aside>
         )}

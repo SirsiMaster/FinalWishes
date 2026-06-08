@@ -42,7 +42,7 @@ service cloud.firestore {
       // Registration: user creates own profile with required fields
       allow create: if isOwner(userId)
         && request.resource.data.keys().hasAll(['email', 'role', 'createdAt'])
-        && request.resource.data.role in ['principal', 'executor', 'heir', 'legal', 'cpa'];
+        && request.resource.data.role in ['principal', 'executor', 'heir', 'trustee', 'legal', 'cpa'];
       
       // Self-update: cannot change role or createdAt
       allow update: if (isOwner(userId)
@@ -104,7 +104,7 @@ service cloud.firestore {
             'uid', 'estateId', 'role', 'fullLegalName',
             'attestationText', 'signatureData', 'status'
            ])
-        && request.resource.data.role in ['heir', 'executor', 'legal', 'cpa']
+        && request.resource.data.role in ['heir', 'executor', 'trustee', 'legal', 'cpa']
         && request.resource.data.status == 'verified';
       
       // Only admins or estate principals can update (e.g., revoke)
@@ -454,7 +454,7 @@ service cloud.firestore {
       allow create: if isAuthenticated()
         && (isEstatePrincipal(request.resource.data.estateId) || isAdmin())
         && request.resource.data.keys().hasAll(['estateId', 'userId', 'role', 'createdAt'])
-        && request.resource.data.role in ['principal', 'executor', 'heir', 'legal', 'cpa'];
+        && request.resource.data.role in ['principal', 'executor', 'heir', 'trustee', 'legal', 'cpa'];
       
       allow update: if isAuthenticated()
         && (isEstatePrincipal(resource.data.estateId) || isAdmin())
@@ -485,7 +485,7 @@ service cloud.firestore {
       allow create: if isAuthenticated()
         && (isEstatePrincipal(request.resource.data.estateId) || isAdmin())
         && request.resource.data.keys().hasAll(['estateId', 'email', 'fullName', 'role', 'status', 'invitedBy'])
-        && request.resource.data.role in ['executor', 'heir', 'legal', 'cpa']
+        && request.resource.data.role in ['executor', 'heir', 'trustee', 'legal', 'cpa']
         && request.resource.data.status == 'pending';
       
       // Principal or admin can update (accept/revoke)

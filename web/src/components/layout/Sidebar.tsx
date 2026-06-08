@@ -10,6 +10,12 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { VisuallyHidden } from "radix-ui";
 import {
+  canAccess,
+  personaLabel,
+  type PersonaRole,
+  type SectionId,
+} from "../../lib/persona";
+import {
   Mic,
   Sparkles,
   Camera,
@@ -22,25 +28,6 @@ import {
   Star,
   Settings,
 } from "lucide-react";
-
-/* ─── Role-Based Permission Matrix ─── */
-const ROLE_PERMISSIONS: Record<string, string[]> = {
-  principal: ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events', 'probate'],
-  admin:     ['dashboard', 'life-chapters', 'estates', 'assets', 'heirlooms', 'memoirs', 'obituary', 'vault', 'lockbox', 'directives', 'timecapsule', 'beneficiaries', 'notifications', 'pricing', 'settings', 'soul-log', 'events', 'probate'],
-  executor:  ['dashboard', 'life-chapters', 'assets', 'heirlooms', 'beneficiaries', 'obituary', 'vault', 'lockbox', 'directives', 'notifications', 'events', 'probate'],
-  heir:      ['dashboard', 'life-chapters', 'assets', 'memoirs', 'obituary', 'directives', 'notifications'],
-  legal:     ['dashboard', 'assets', 'vault', 'directives', 'notifications'],
-  cpa:       ['dashboard', 'assets', 'vault', 'notifications'],
-};
-
-const ROLE_LABELS: Record<string, string> = {
-  principal: 'Estate Owner',
-  admin: 'Administrator',
-  executor: 'Legal Executor',
-  heir: 'Beneficiary',
-  legal: 'Legal Counsel',
-  cpa: 'CPA Advisor',
-};
 
 /* ─── Navigation Group Types ─── */
 interface NavChild {
@@ -155,25 +142,25 @@ function isGroupActive(pathname: string, group: NavGroup): boolean {
   return isRouteActive(pathname, group.route);
 }
 
-/** Filter nav groups by role permissions — hide groups with no visible children */
-function filterGroupsByRole(groups: NavGroup[], allowedIds: string[]): NavGroup[] {
+/** Filter nav groups by persona permissions — hide groups with no visible children */
+function filterGroupsByRole(groups: NavGroup[], role: PersonaRole): NavGroup[] {
   return groups
     .map((group) => {
       if (!group.children) {
         // Soul Log -> 'soul-log', My People -> 'beneficiaries', My Legacy -> 'dashboard'
         const checkId = group.id === 'people' ? 'beneficiaries' : group.id;
-        if (!allowedIds.includes(checkId)) return null;
+        if (!canAccess(role, checkId as SectionId)) return null;
         return group;
       }
-      const visibleChildren = group.children.filter((child) => allowedIds.includes(child.id));
+      const visibleChildren = group.children.filter((child) => canAccess(role, child.id as SectionId));
       if (visibleChildren.length === 0) return null;
       return { ...group, children: visibleChildren, route: visibleChildren[0].route };
     })
     .filter(Boolean) as NavGroup[];
 }
 
-function filterUtilityByRole(items: UtilityItem[], allowedIds: string[]): UtilityItem[] {
-  return items.filter((item) => allowedIds.includes(item.id));
+function filterUtilityByRole(items: UtilityItem[], role: PersonaRole): UtilityItem[] {
+  return items.filter((item) => canAccess(role, item.id as SectionId));
 }
 
 /* ─── Shared Nav Content ─── */
@@ -352,17 +339,24 @@ function SidebarNavContent({
 }
 
 /** Shared hook to compute filtered nav groups and utility items */
-function useFilteredNav(userRole: string) {
+function useFilteredNav(userRole: PersonaRole) {
   return useMemo(() => {
-    const allowedIds = ROLE_PERMISSIONS[userRole] || ROLE_PERMISSIONS.principal;
-    const groups = filterGroupsByRole(NAV_GROUPS, allowedIds);
-    const utilityItems = filterUtilityByRole(UTILITY_ITEMS, allowedIds);
+    const groups = filterGroupsByRole(NAV_GROUPS, userRole);
+    const utilityItems = filterUtilityByRole(UTILITY_ITEMS, userRole);
     return { groups, utilityItems };
   }, [userRole]);
 }
 
 /** Mobile sidebar sheet — controlled externally via open/onOpenChange */
-export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+export function MobileSidebar({
+  open,
+  onOpenChange,
+  effectiveRole,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  effectiveRole?: PersonaRole;
+}) {
   const location = useLocation();
   const params = useParams({ strict: false }) as { estateId?: string };
   const estateId = params.estateId || "";
@@ -381,7 +375,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
     primaryEstateName: 'My Estate',
   };
 
-  const userRole = user.role || 'principal';
+  const userRole = effectiveRole || user.role || 'principal';
   const { groups, utilityItems } = useFilteredNav(userRole);
 
   const getInitials = (name: string) => {
@@ -427,7 +421,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
         <div className="px-4 py-4">
           <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Active Estate</label>
           <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.primaryEstateName || "My Estate"}</div>
-          <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
+          <div className="text-slate-400 text-[10px] font-medium mt-0.5">{personaLabel(userRole)}</div>
         </div>
 
         <Separator className="bg-[var(--royal)]/10" />
@@ -455,7 +449,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
             </Avatar>
             <div className="min-w-0">
               <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
-              <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
+              <div className="text-slate-400 text-[10px] font-medium">{personaLabel(userRole)}</div>
             </div>
           </div>
           <Button
@@ -472,7 +466,7 @@ export function MobileSidebar({ open, onOpenChange }: { open: boolean; onOpenCha
   );
 }
 
-export function Sidebar() {
+export function Sidebar({ effectiveRole }: { effectiveRole?: PersonaRole }) {
   const location = useLocation();
   const navigate = useNavigate();
   const params = useParams({ strict: false }) as { estateId?: string };
@@ -493,7 +487,7 @@ export function Sidebar() {
     primaryEstateName: 'My Estate',
   };
 
-  const userRole = user.role || 'principal';
+  const userRole = effectiveRole || user.role || 'principal';
   const { groups, utilityItems } = useFilteredNav(userRole);
 
   const getInitials = (name: string) => {
@@ -566,7 +560,7 @@ export function Sidebar() {
           >
             <div className="flex-1 truncate text-left">
               <div className="text-slate-900 text-[0.8rem] font-bold truncate group-hover/button:text-[var(--royal)] transition-colors">{user?.primaryEstateName || "My Estate"}</div>
-              <div className="text-slate-400 text-[10px] font-medium mt-0.5">{ROLE_LABELS[userRole] || 'Member'}</div>
+              <div className="text-slate-400 text-[10px] font-medium mt-0.5">{personaLabel(userRole)}</div>
             </div>
             <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[var(--royal)] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
           </Button>
@@ -604,7 +598,7 @@ export function Sidebar() {
           </Avatar>
           <div className="min-w-0">
             <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
-            <div className="text-slate-400 text-[10px] font-medium">{ROLE_LABELS[userRole] || 'Member'}</div>
+            <div className="text-slate-400 text-[10px] font-medium">{personaLabel(userRole)}</div>
           </div>
         </div>
         <Button

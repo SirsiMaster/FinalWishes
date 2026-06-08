@@ -144,6 +144,7 @@ function escapeHtml(str: string): string {
 const ROLE_LABELS: Record<string, string> = {
   executor: 'Executor',
   heir: 'Beneficiary',
+  trustee: 'Trustee',
   legal: 'Legal Counsel',
   cpa: 'CPA Advisor',
   admin: 'Administrator',

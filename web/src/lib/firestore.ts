@@ -160,7 +160,7 @@ export interface EstateUser {
   id: string;
   estateId: string;
   userId: string;
-  role: 'principal' | 'executor' | 'heir' | 'legal' | 'cpa';
+  role: 'principal' | 'executor' | 'heir' | 'trustee' | 'legal' | 'cpa';
   accessGranted: boolean;
   createdAt: Timestamp;
   updatedAt: Timestamp;

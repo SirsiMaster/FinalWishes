@@ -82,13 +82,18 @@ export const PERSONA_ACCESS: Record<PersonaRole, ReadonlySet<SectionId>> = {
   principal: new Set(ALL_SECTIONS.filter((s) => s !== 'attestation')),
   admin: new Set(ALL_SECTIONS),
 
+  // NOTE: `lockbox` is intentionally NOT granted to executor/trustee/cpa. The
+  // Firestore lockbox rule is principal+admin-only by canon ("the most sensitive
+  // collection" — credentials). Granting the route here would only route these
+  // personas to a permission-denied read. Widening lockbox to fiduciaries
+  // (metadata-only) is a future security decision that must change the rule first.
   executor: new Set<SectionId>([
-    'dashboard', 'assets', 'vault', 'lockbox', 'directives', 'beneficiaries',
+    'dashboard', 'assets', 'vault', 'directives', 'beneficiaries',
     'events', 'obituary', 'probate', 'notifications', 'attestation', 'estates', 'index',
   ]),
 
   trustee: new Set<SectionId>([
-    'dashboard', 'assets', 'vault', 'lockbox', 'directives', 'beneficiaries',
+    'dashboard', 'assets', 'vault', 'directives', 'beneficiaries',
     'probate', 'notifications', 'attestation', 'estates', 'index',
   ]),
 
@@ -107,7 +112,7 @@ export const PERSONA_ACCESS: Record<PersonaRole, ReadonlySet<SectionId>> = {
   ]),
 
   cpa: new Set<SectionId>([
-    'dashboard', 'assets', 'vault', 'lockbox', 'notifications', 'attestation',
+    'dashboard', 'assets', 'vault', 'notifications', 'attestation',
     'estates', 'index',
   ]),
 };
@@ -118,13 +123,13 @@ export const PERSONA_ACCESS: Record<PersonaRole, ReadonlySet<SectionId>> = {
  * sufficient — the view layer and backend must scope the data.
  */
 export const SCOPED_SECTIONS: Partial<Record<PersonaRole, ReadonlySet<SectionId>>> = {
-  executor: new Set<SectionId>(['assets', 'vault', 'lockbox', 'beneficiaries']),
-  trustee: new Set<SectionId>(['assets', 'vault', 'lockbox', 'beneficiaries', 'probate']),
+  executor: new Set<SectionId>(['assets', 'vault', 'beneficiaries']),
+  trustee: new Set<SectionId>(['assets', 'vault', 'beneficiaries', 'probate']),
   heir: new Set<SectionId>([
     'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets', 'directives', 'timecapsule',
   ]),
   legal: new Set<SectionId>(['assets', 'vault', 'forms']),
-  cpa: new Set<SectionId>(['assets', 'vault', 'lockbox']),
+  cpa: new Set<SectionId>(['assets', 'vault']),
 };
 
 /**

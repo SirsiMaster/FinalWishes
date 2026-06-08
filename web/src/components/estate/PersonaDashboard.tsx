@@ -213,7 +213,7 @@ export function DashboardRouter({
   const estateUserPath = profile?.uid ? `estate_users/${profile.uid}_${estateId}` : null
   const { data: estateUser, loading: estateUserLoading } = useDocument<EstateUser>(estateUserPath)
 
-  if (!profileResolved || (estateUserPath !== null && estateUserLoading)) {
+  if (!profileResolved || !profile || (estateUserPath !== null && estateUserLoading)) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="w-10 h-10 border-2 border-royal/20 border-t-royal rounded-full animate-spin" />

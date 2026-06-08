@@ -116,12 +116,14 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
     checkAttestation();
   }, [user, isFiduciary, estateId]);
 
-  // For principals (non-fiduciary), skip attestation loading
+  // For principals (non-fiduciary), skip attestation loading — but only once the
+  // estate role is definitive (else isFiduciary is transiently false while
+  // estateUser loads and we'd clear loading prematurely).
   React.useEffect(() => {
-    if (!isFiduciary) {
+    if (!isFiduciary && !estateUserLoading) {
       setLoading(false);
     }
-  }, [isFiduciary]);
+  }, [isFiduciary, estateUserLoading]);
 
   if (!profileResolved || (estateUserPath !== null && estateUserLoading) || loading) {
     return (

@@ -75,13 +75,19 @@ describe('fiduciaries — settlement only, no living-legacy creation', () => {
   })
 
   it('executor reaches settlement + authorized evidence', () => {
-    for (const s of ['probate', 'vault', 'assets', 'lockbox', 'directives', 'beneficiaries', 'events', 'obituary'] as SectionId[]) {
+    for (const s of ['probate', 'vault', 'assets', 'directives', 'beneficiaries', 'events', 'obituary'] as SectionId[]) {
       expect(canAccess('executor', s), `executor SHOULD access ${s}`).toBe(true)
     }
   })
 
+  it('lockbox is principal-only (canon Firestore boundary) — fiduciaries cannot reach it', () => {
+    for (const r of ['executor', 'trustee', 'cpa'] as PersonaRole[]) {
+      expect(canAccess(r, 'lockbox'), `${r} must NOT access lockbox`).toBe(false)
+    }
+  })
+
   it('executor/trustee authorized-data sections are item-scoped', () => {
-    for (const s of ['assets', 'vault', 'lockbox', 'beneficiaries'] as SectionId[]) {
+    for (const s of ['assets', 'vault', 'beneficiaries'] as SectionId[]) {
       expect(requiresItemScope('executor', s)).toBe(true)
       expect(requiresItemScope('trustee', s)).toBe(true)
     }
@@ -107,7 +113,7 @@ describe('advisors — narrow professional surfaces', () => {
   it('cpa sees financial surfaces only', () => {
     expect(canAccess('cpa', 'assets')).toBe(true)
     expect(canAccess('cpa', 'vault')).toBe(true)
-    expect(canAccess('cpa', 'lockbox')).toBe(true)
+    expect(canAccess('cpa', 'lockbox')).toBe(false)
     expect(canAccess('cpa', 'directives')).toBe(false)
     expect(canAccess('cpa', 'forms')).toBe(false)
     expect(canAccess('cpa', 'soul-log')).toBe(false)

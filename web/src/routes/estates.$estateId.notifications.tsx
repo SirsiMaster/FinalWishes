@@ -1,7 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams } from '@tanstack/react-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useEstateNotifications } from '../lib/firestore'
+import { markNotificationRead, markAllNotificationsRead } from '../lib/estate-actions'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -28,6 +30,8 @@ function NotificationsPage() {
     );
   }
 
+  const [marking, setMarking] = useState(false);
+
   const notifications = rawNotifications.map(n => ({
     id: n.id,
     title: n.title || 'Activity',
@@ -36,7 +40,23 @@ function NotificationsPage() {
       : '',
     type: n.type || 'activity',
     desc: n.message || '',
+    read: (n as { read?: boolean }).read ?? false,
   }));
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const handleMarkRead = async (id: string) => {
+    const res = await markNotificationRead(estateId, id);
+    if (!res.success) toast.error('Could not mark as read');
+  };
+
+  const handleMarkAllRead = async () => {
+    setMarking(true);
+    const res = await markAllNotificationsRead(estateId);
+    setMarking(false);
+    if (res.success) toast.success('All notifications marked as read');
+    else toast.error('Could not mark all as read');
+  };
 
   return (
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
@@ -45,6 +65,16 @@ function NotificationsPage() {
           <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Activity History</h2>
           <p className="text-lg text-slate-500 font-medium">A record of everything that has happened with your estate plan.</p>
         </div>
+        {unreadCount > 0 && (
+          <Button
+            variant="outline"
+            onClick={handleMarkAllRead}
+            disabled={marking}
+            className="rounded-xl border-[var(--royal)]/15 text-[var(--royal)] font-bold text-[13px]"
+          >
+            {marking ? 'Marking…' : `Mark all read (${unreadCount})`}
+          </Button>
+        )}
       </div>
       <Separator />
 
@@ -64,7 +94,16 @@ function NotificationsPage() {
         <Card className="rounded-[2.5rem] border-slate-100 shadow-sm">
           <CardContent className="p-10 space-y-0">
             {notifications.map((n, i) => (
-              <NotificationItem key={n.id} title={n.title} time={n.time} type={n.type} desc={n.desc} isLast={i === notifications.length - 1} />
+              <NotificationItem
+                key={n.id}
+                title={n.title}
+                time={n.time}
+                type={n.type}
+                desc={n.desc}
+                read={n.read}
+                isLast={i === notifications.length - 1}
+                onMarkRead={() => handleMarkRead(n.id)}
+              />
             ))}
           </CardContent>
         </Card>
@@ -85,15 +124,15 @@ const dotStyles: Record<string, string> = {
   success: 'bg-green-500',
 };
 
-function NotificationItem({ title, time, type, desc, isLast }: { title: string; time: string; type: string; desc: string; isLast: boolean }) {
+function NotificationItem({ title, time, type, desc, read, isLast, onMarkRead }: { title: string; time: string; type: string; desc: string; read: boolean; isLast: boolean; onMarkRead: () => void }) {
   const badgeClass = badgeStyles[type] || badgeStyles.activity;
   const dotClass = dotStyles[type] || dotStyles.activity;
 
   return (
-    <div className={`flex gap-8 group py-8 ${!isLast ? 'border-b border-slate-100' : ''}`}>
-      {/* Timeline dot */}
+    <div className={`flex gap-8 group py-8 ${!isLast ? 'border-b border-slate-100' : ''} ${read ? 'opacity-60' : ''}`}>
+      {/* Timeline dot — solid + ring when unread */}
       <div className="flex flex-col items-center pt-1">
-        <div className={`w-3 h-3 rounded-full ${dotClass} shadow-sm`} />
+        <div className={`w-3 h-3 rounded-full ${dotClass} shadow-sm ${!read ? 'ring-4 ring-[var(--royal)]/10' : ''}`} />
         {!isLast && <div className="w-px flex-1 bg-slate-100 mt-2" />}
       </div>
 
@@ -105,17 +144,28 @@ function NotificationItem({ title, time, type, desc, isLast }: { title: string; 
               <Badge variant="outline" className={`text-[10px] font-bold capitalize ${badgeClass}`}>
                 {type}
               </Badge>
+              {!read && (
+                <Badge variant="outline" className="text-[10px] font-bold bg-[var(--gold)]/10 text-[var(--gold)] border-[var(--gold)]/30">
+                  New
+                </Badge>
+              )}
             </div>
             <span className="text-[13px] font-medium text-slate-500">{time}</span>
           </div>
         </div>
         <p className="text-[15px] text-slate-500 leading-relaxed">{desc}</p>
-        <div className="mt-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <Button variant="link" className="text-[12px] font-bold text-[var(--royal)] p-0 h-auto gap-1.5">
-            View Details
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-          </Button>
-        </div>
+        {!read && (
+          <div className="mt-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <Button
+              variant="link"
+              onClick={onMarkRead}
+              className="text-[12px] font-bold text-[var(--royal)] p-0 h-auto gap-1.5"
+            >
+              Mark as read
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 13l4 4L19 7"/></svg>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

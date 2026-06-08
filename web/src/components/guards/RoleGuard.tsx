@@ -110,8 +110,11 @@ export function RoleGuard({ estateId, children }: { estateId: string; children: 
   const estateUserPath = profile?.uid ? `estate_users/${profile.uid}_${estateId}` : null
   const { data: estateUser, loading: estateUserLoading } = useDocument<EstateUser>(estateUserPath)
 
-  // Gate 1 — role is not yet DEFINITIVE. Render nothing that reveals data.
-  if (authLoading || !profileResolved || (estateUserPath !== null && estateUserLoading)) {
+  // Gate 1 — role is not yet DEFINITIVE, or the user is not authenticated.
+  // Render nothing that reveals data (an upstream AuthGuard handles redirect;
+  // resolveEffectiveRole defaults to 'principal' when profile is null, so we
+  // must not reach canAccess without a real profile).
+  if (authLoading || !profileResolved || !profile || (estateUserPath !== null && estateUserLoading)) {
     return <PendingState />
   }
 

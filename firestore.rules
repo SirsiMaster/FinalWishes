@@ -386,7 +386,10 @@ service cloud.firestore {
         // RSVP can increment the attendee tally without write access to the event.
         allow update: if canWriteEstate(estateId)
           || (canAccessEstate(estateId)
-              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvpCount']));
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvpCount'])
+              && request.resource.data.rsvpCount is int
+              && request.resource.data.rsvpCount >= 0
+              && request.resource.data.rsvpCount <= 100000);
         allow delete: if isEstatePrincipal(estateId) || isAdmin();
 
         // ── 3o-i. RSVPs (Event Subcollection) ──

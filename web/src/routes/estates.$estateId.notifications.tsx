@@ -18,6 +18,7 @@ function NotificationsPage() {
   const estateId = routeId;
 
   const { data: rawNotifications, loading: isLoading } = useEstateNotifications(estateId);
+  const [marking, setMarking] = useState(false);
 
   if (isLoading) {
     return (
@@ -29,8 +30,6 @@ function NotificationsPage() {
       </div>
     );
   }
-
-  const [marking, setMarking] = useState(false);
 
   const notifications = rawNotifications.map(n => ({
     id: n.id,

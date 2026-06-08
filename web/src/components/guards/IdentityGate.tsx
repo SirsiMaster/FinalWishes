@@ -7,7 +7,7 @@
  *   - During grace period: shows a persistent banner suggesting MFA, but allows access.
  *   - After grace period: blocks access until MFA is enrolled.
  *
- * Tier 2 (Heir, Executor, Legal, CPA): Must complete:
+ * Tier 2 (Heir, Executor, Trustee, Legal, CPA): Must complete:
  *   Step 1: Enable MFA (TOTP authentication)
  *   Step 2: Sign identity attestation
  *
@@ -17,12 +17,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../lib/auth';
 import { getMFAStatus } from '../../lib/mfa';
-import { useDocument } from '../../lib/firestore';
+import { useDocument, type EstateUser } from '../../lib/firestore';
+import { personaLabel, resolveEffectiveRole } from '../../lib/persona';
 import { collection, query, where, getDocs, type Timestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { Button } from '@/components/ui/button';
 
-const FIDUCIARY_ROLES = ['heir', 'executor', 'legal', 'cpa'] as const;
+const FIDUCIARY_ROLES = ['heir', 'executor', 'trustee', 'legal', 'cpa'] as const;
 
 /** Grace period: 24 hours in milliseconds */
 const GRACE_PERIOD_MS = 24 * 60 * 60 * 1000;
@@ -40,23 +41,32 @@ interface UserFirestoreProfile {
 }
 
 export function IdentityGate({ estateId, children }: IdentityGateProps) {
-  const { user, profile, emailVerified, resendVerification } = useAuth();
+  const { user, profile, profileResolved, emailVerified, resendVerification } = useAuth();
 
-  return <IdentityGateInner estateId={estateId} user={user} profile={profile} emailVerified={emailVerified} resendVerification={resendVerification}>{children}</IdentityGateInner>;
+  return <IdentityGateInner estateId={estateId} user={user} profile={profile} profileResolved={profileResolved} emailVerified={emailVerified} resendVerification={resendVerification}>{children}</IdentityGateInner>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function IdentityGateInner({ estateId, children, user, profile, emailVerified, resendVerification }: IdentityGateProps & { user: any; profile: any; emailVerified: boolean; resendVerification: any }) {
+function IdentityGateInner({ estateId, children, user, profile, profileResolved, emailVerified, resendVerification }: IdentityGateProps & { user: any; profile: any; profileResolved: boolean; emailVerified: boolean; resendVerification: any }) {
   const [attestationVerified, setAttestationVerified] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(true);
 
-  const isFiduciary = profile?.role && (FIDUCIARY_ROLES as readonly string[]).includes(profile.role);
   const mfaStatus = getMFAStatus(user as any);
 
   // Fetch user's Firestore profile for createdAt and loginCount
   const { data: userFsProfile } = useDocument<UserFirestoreProfile>(
     user ? `users/${user.uid}` : null
   );
+
+  // Estate-scoped role: a user who is principal on their own estate may be a
+  // fiduciary on THIS one. Fiduciary determination must use the estate role
+  // (consistent with RoleGuard/Sidebar), NOT the global profile.role — else a
+  // principal-on-their-own-estate would skip fiduciary MFA + attestation here.
+  const estateUserPath = user ? `estate_users/${user.uid}_${estateId}` : null;
+  const { data: estateUser, loading: estateUserLoading } = useDocument<EstateUser>(estateUserPath);
+  const effectiveRole = resolveEffectiveRole(estateUser?.role ?? null, profile?.role ?? null);
+  const effectiveRoleLabel = personaLabel(effectiveRole);
+  const isFiduciary = (FIDUCIARY_ROLES as readonly string[]).includes(effectiveRole);
 
   // Determine if principal is within the grace period (computed in effect to avoid impure render)
   const [principalGracePeriodActive, setPrincipalGracePeriodActive] = React.useState(true);
@@ -113,7 +123,7 @@ function IdentityGateInner({ estateId, children, user, profile, emailVerified, r
     }
   }, [isFiduciary]);
 
-  if (loading) {
+  if (!profileResolved || (estateUserPath !== null && estateUserLoading) || loading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
         <div className="flex flex-col items-center gap-4">
@@ -207,7 +217,7 @@ function IdentityGateInner({ estateId, children, user, profile, emailVerified, r
           Identity Verification Required
         </h2>
         <p className="text-royal/40 font-bold text-[13px] uppercase tracking-widest max-w-md mx-auto leading-relaxed">
-          As a designated <span className="text-[var(--gold)]">{profile?.role}</span> for this estate, you must complete identity verification before accessing estate documents.
+          As a designated <span className="text-[var(--gold)]">{effectiveRoleLabel}</span> for this estate, you must complete identity verification before accessing estate documents.
         </p>
       </div>
 

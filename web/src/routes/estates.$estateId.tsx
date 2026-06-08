@@ -6,6 +6,7 @@ import { Sidebar, MobileSidebar } from '../components/layout/Sidebar'
 import { AdminHeader } from '../components/layout/AdminHeader'
 import { AuthGuard } from '../components/guards/AuthGuard'
 import { IdentityGate } from '../components/guards/IdentityGate'
+import { RoleGuard } from '../components/guards/RoleGuard'
 import { HeirWelcome, shouldShowHeirWelcome, markWelcomeSeen } from '../components/guards/HeirWelcome'
 import { OwnerWelcome, shouldShowOwnerWelcome, markOwnerWelcomeSeen } from '../components/guards/OwnerWelcome'
 import { ShepherdCompanion } from '../components/estate/ShepherdCompanion'
@@ -15,17 +16,7 @@ import { useAuth } from '../lib/auth'
 import { useEstate, useDocument, type EstateUser } from '../lib/firestore'
 import { useEffect, useRef } from 'react'
 import { auth as firebaseAuth } from '../lib/firebase'
-
-const ROLE_LABELS: Record<string, string> = {
-  owner: 'Estate Owner',
-  principal: 'Estate Owner',
-  admin: 'Administrator',
-  beneficiary: 'Beneficiary',
-  heir: 'Beneficiary',
-  executor: 'Legal Executor',
-  legal: 'Legal Counsel',
-  cpa: 'CPA Advisor',
-};
+import { personaLabel, resolveEffectiveRole } from '../lib/persona'
 
 export const Route = createFileRoute('/estates/$estateId')({
   component: EstateLayout,
@@ -42,6 +33,7 @@ function EstateLayout() {
   // but they may be an 'heir' or 'executor' on THIS estate.
   const estateUserPath = profile?.uid ? `estate_users/${profile.uid}_${estateId}` : null;
   const { data: estateUser } = useDocument<EstateUser>(estateUserPath);
+  const effectiveRole = resolveEffectiveRole(estateUser?.role, profile?.role);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const [ownerWelcomeDismissed, setOwnerWelcomeDismissed] = useState(false);
@@ -66,7 +58,7 @@ function EstateLayout() {
   const checkedIn = useRef(false);
   useEffect(() => {
     if (checkedIn.current) return;
-    const isPrincipalOrAdmin = profile?.role === 'principal' || profile?.role === 'admin';
+    const isPrincipalOrAdmin = effectiveRole === 'principal' || effectiveRole === 'admin';
     if (!isPrincipalOrAdmin || !estateId) return;
     checkedIn.current = true;
     const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
@@ -86,7 +78,7 @@ function EstateLayout() {
         // Non-blocking — check-in failure is silent
       }
     })();
-  }, [profile?.role, estateId]);
+  }, [effectiveRole, estateId]);
 
   const handleWelcomeContinue = useCallback(() => {
     if (profile?.uid) {
@@ -103,7 +95,7 @@ function EstateLayout() {
     setOwnerWelcomeDismissed(true);
   }, [estateId, profile]);
 
-  const showOwnerWelcome = !ownerWelcomeDismissed && shouldShowOwnerWelcome(profile?.role, estateId, profile?.uid);
+  const showOwnerWelcome = !ownerWelcomeDismissed && shouldShowOwnerWelcome(effectiveRole, estateId, profile?.uid);
 
   if (showOwnerWelcome) {
     return (
@@ -128,18 +120,18 @@ function EstateLayout() {
     );
   }
 
-  const userRole = profile?.role || 'principal';
+  const userRole = effectiveRole;
   const estateName = profile?.primaryEstateName || 'My Estate';
 
   const displayEstateName = estateName;
 
-  const roleLabel = ROLE_LABELS[userRole] || 'Member';
+  const roleLabel = personaLabel(userRole);
 
   return (
     <AuthGuard>
       <div className="dashboard-shell dashboard-theme themed-layout-bg min-h-screen">
-        <Sidebar />
-        <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} />
+        <Sidebar effectiveRole={effectiveRole} />
+        <MobileSidebar open={mobileMenuOpen} onOpenChange={setMobileMenuOpen} effectiveRole={effectiveRole} />
         <div
           className={`transition-all duration-300 min-h-screen flex flex-col md:ml-[var(--sidebar-width)] ${shepherdOpen ? 'lg:pr-[360px]' : ''}`}
         >
@@ -152,17 +144,19 @@ function EstateLayout() {
           <main className="flex-1 p-4 md:p-8 overflow-hidden">
             <ErrorBoundary>
               <IdentityGate estateId={estateId}>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={location.pathname}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-                  >
-                    <Outlet />
-                  </motion.div>
-                </AnimatePresence>
+                <RoleGuard estateId={estateId}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={location.pathname}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                    >
+                      <Outlet />
+                    </motion.div>
+                  </AnimatePresence>
+                </RoleGuard>
               </IdentityGate>
             </ErrorBoundary>
           </main>
@@ -171,6 +165,7 @@ function EstateLayout() {
           estateId={estateId}
           open={shepherdOpen}
           onToggle={() => setShepherdOpen((v) => !v)}
+          effectiveRole={effectiveRole}
         />
       </div>
     </AuthGuard>

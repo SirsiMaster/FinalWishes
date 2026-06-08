@@ -262,6 +262,7 @@ describe('ROLE_LABELS', () => {
   it('has labels for all roles', () => {
     expect(ROLE_LABELS.executor).toBe('Executor')
     expect(ROLE_LABELS.heir).toBe('Beneficiary')
+    expect(ROLE_LABELS.trustee).toBe('Trustee')
     expect(ROLE_LABELS.legal).toBe('Legal Counsel')
     expect(ROLE_LABELS.cpa).toBe('CPA Advisor')
     expect(ROLE_LABELS.principal).toBe('Estate Owner')

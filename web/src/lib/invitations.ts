@@ -33,7 +33,7 @@ export interface InvitationParams {
   email: string;
   phone?: string; // Optional phone number for SMS notification
   fullName: string;
-  role: 'executor' | 'heir' | 'legal' | 'cpa';
+  role: 'executor' | 'heir' | 'trustee' | 'legal' | 'cpa';
   relationship?: string;
   invitedBy: string; // UID of the principal
   inviterName?: string; // Display name of the principal (for email)
@@ -104,7 +104,7 @@ export async function sendEstateInvitation(params: InvitationParams): Promise<In
         updatedAt: serverTimestamp(),
       });
     } else {
-      // heir, legal, cpa — all go to heirs subcollection
+      // heir, trustee, legal, cpa — all go to heirs subcollection
       await addDoc(collection(db, `estates/${estateId}/heirs`), {
         estateId,
         fullName,
@@ -227,6 +227,7 @@ export async function hasExistingInvitation(estateId: string, email: string): Pr
 export const ROLE_LABELS: Record<string, string> = {
   executor: 'Executor',
   heir: 'Beneficiary',
+  trustee: 'Trustee',
   legal: 'Legal Counsel',
   cpa: 'CPA Advisor',
   principal: 'Estate Owner',

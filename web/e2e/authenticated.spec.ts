@@ -111,7 +111,9 @@ test.describe('FinalWishes Authenticated Flows', () => {
     await navigateToNestedItem(page, 'The Vault', 'Assets')
     await expect(page.getByText('My Assets')).toBeVisible({ timeout: 10000 })
 
-    await page.getByRole('button', { name: /Add Asset/i }).click()
+    // Exact match: the empty-estate state also renders an "Add Assets …" CTA card,
+    // so /Add Asset/i is ambiguous (strict-mode). Target the header button exactly.
+    await page.getByRole('button', { name: 'Add Asset', exact: true }).click()
 
     // Modal with form fields
     await expect(page.getByText('Add New Asset')).toBeVisible({ timeout: 5000 })

@@ -381,7 +381,12 @@ service cloud.firestore {
           && request.resource.data.keys().hasAll(['type', 'title', 'date', 'location', 'status', 'createdAt'])
           && request.resource.data.type in ['funeral', 'memorial_service', 'celebration_of_life', 'repast', 'graveside', 'other']
           && request.resource.data.status == 'upcoming';
-        allow update: if canWriteEstate(estateId);
+        // Writers may update freely. Any estate accessor (e.g. an heir RSVPing)
+        // may update ONLY the denormalized rsvpCount — nothing else — so their
+        // RSVP can increment the attendee tally without write access to the event.
+        allow update: if canWriteEstate(estateId)
+          || (canAccessEstate(estateId)
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rsvpCount']));
         allow delete: if isEstatePrincipal(estateId) || isAdmin();
 
         // ── 3o-i. RSVPs (Event Subcollection) ──

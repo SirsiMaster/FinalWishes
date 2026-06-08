@@ -94,13 +94,20 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
         createdAt: serverTimestamp(),
       })
 
-      // Update rsvpCount on the event document
-      // Only count "attending" and "maybe" guests toward the total
+      // Update rsvpCount on the event document (denormalized tally).
+      // Best-effort and non-fatal: the RSVP itself is already saved above, so a
+      // failure to bump the count must NOT surface as an RSVP error. The narrow
+      // firestore rule lets estate accessors update rsvpCount-only; if that ever
+      // regresses, the RSVP still succeeds and the count can be recomputed.
       if (form.response !== 'not_attending') {
         const guestCount = Math.max(1, form.guests)
-        await updateDoc(doc(db, `estates/${estateId}/events`, eventId), {
-          rsvpCount: increment(guestCount),
-        })
+        try {
+          await updateDoc(doc(db, `estates/${estateId}/events`, eventId), {
+            rsvpCount: increment(guestCount),
+          })
+        } catch (countErr) {
+          console.warn('[RSVP] rsvpCount bump failed (RSVP still saved):', countErr)
+        }
       }
 
       setSubmitted(true)

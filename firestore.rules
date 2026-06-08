@@ -364,8 +364,13 @@ service cloud.firestore {
 
       // ── 3n2. Soul Log (Personal Diary Entries) ──
       match /soul-log/{entryId} {
-        // Owner/admin: full access; heirs: see shared entries tagged for them
-        allow read: if canAccessEstate(estateId);
+        // Owner/admin: full access (their own diary). Other estate members may
+        // read ONLY `shared` entries — never `private` or `sealed`. The client
+        // query is constrained to where('visibility','==','shared') so a
+        // non-owner list read is allowed; an unconstrained read is denied.
+        // (Sealed delivery to heirs is handled by the time-capsule flow.)
+        allow read: if isEstatePrincipal(estateId) || isAdmin()
+          || (canAccessEstate(estateId) && resource.data.visibility == 'shared');
         allow create: if canWriteEstate(estateId)
           && request.resource.data.keys().hasAll(['title', 'type', 'visibility', 'createdBy', 'createdAt'])
           && request.resource.data.type in ['video', 'audio', 'text']

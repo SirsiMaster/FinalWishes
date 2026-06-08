@@ -22,7 +22,13 @@ if ! npm run typecheck 2>/dev/null; then
     exit 1
 fi
 
-# 3. Build check
+# 3. Web unit tests (vitest) — matches CI 'Web - Test (Vitest)'
+if ! ( cd web && npx vitest run ) 2>/dev/null; then
+    echo "  ❌ web vitest failed — fix failing tests before pushing"
+    exit 1
+fi
+
+# 4. Build check
 if ! npm run build 2>/dev/null; then
     echo "  ❌ npm run build failed"
     exit 1

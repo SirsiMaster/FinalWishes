@@ -10,11 +10,12 @@
  */
 import { createLazyFileRoute, useParams, Link } from '@tanstack/react-router'
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react'
-import { useCollection, type Heir } from '../lib/firestore'
+import { useCollection, useDocument, type Heir, type EstateUser } from '../lib/firestore'
 import { estateClient } from '../lib/client'
 import { useAuth } from '../lib/auth'
+import { resolveEffectiveRole } from '../lib/persona'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
-import { collection, addDoc, serverTimestamp, orderBy, type Timestamp, doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp, orderBy, where, type Timestamp, doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { toast } from 'sonner'
 import { useEditor, EditorContent } from '@tiptap/react'
@@ -226,16 +227,33 @@ async function requestTranscription(
 
 function SoulLogPage() {
   const { estateId: routeId } = useParams({ from: '/estates/$estateId/soul-log' })
-  const { user, profile } = useAuth()
+  const { user, profile, profileResolved } = useAuth()
   const estateId = routeId
   const { usage: tierUsage } = useTierGating(estateId)
 
-  // Firestore real-time feed
-  const constraints = useMemo(() => [orderBy('createdAt', 'desc')], [])
-  const { data: rawEntries, loading } = useCollection<SoulLogEntry>(
-    `estates/${estateId}/soul-log`,
+  // Estate-scoped role decides what this viewer may QUERY. The owner's private
+  // diary must never reach a non-owner — the Firestore rule enforces this, and
+  // the query is constrained to match so the read isn't denied. Owner/admin read
+  // everything; everyone else reads only `shared` entries.
+  const estateUserPath = profile?.uid ? `estate_users/${profile.uid}_${estateId}` : null
+  const { data: estateUser, loading: estateUserLoading } = useDocument<EstateUser>(estateUserPath)
+  const effectiveRole = resolveEffectiveRole(estateUser?.role ?? null, profile?.role ?? null)
+  const isOwnerView = effectiveRole === 'principal' || effectiveRole === 'admin'
+  const roleResolved = profileResolved && (estateUserPath === null || !estateUserLoading)
+
+  // Firestore real-time feed (gated until the role is definitive so a non-owner
+  // never issues an unconstrained — and denied — read).
+  const constraints = useMemo(
+    () => (isOwnerView
+      ? [orderBy('createdAt', 'desc')]
+      : [where('visibility', '==', 'shared'), orderBy('createdAt', 'desc')]),
+    [isOwnerView],
+  )
+  const { data: rawEntries, loading: feedLoading } = useCollection<SoulLogEntry>(
+    roleResolved ? `estates/${estateId}/soul-log` : null,
     constraints,
   )
+  const loading = feedLoading || !roleResolved
 
   // Beneficiaries for tagging
   const { data: heirs } = useCollection<Heir>(
@@ -296,10 +314,11 @@ function SoulLogPage() {
     !loading && rawEntries.length > 0 && daysSinceLastEntry > 7,
   )
 
-  const userRole = profile?.role || 'principal'
-  const isOwner = userRole === 'principal' || userRole === 'admin'
-
-  // Normalize entries and apply visibility filtering
+  // Normalize entries and apply visibility filtering. The QUERY already restricts
+  // non-owners to `shared` entries (rule-enforced), so this is UI narrowing only:
+  // show the viewer the shared entries tagged for them. (taggedPeople still stores
+  // display names — a UID migration for true per-recipient enforcement is tracked
+  // for Codex; the critical private-entry exposure is now closed at the DB layer.)
   const entries = useMemo(() => {
     const normalized = rawEntries.map((e) => ({
       ...e,
@@ -307,18 +326,16 @@ function SoulLogPage() {
     }))
 
     // Owner/admin sees everything
-    if (isOwner) return normalized
+    if (isOwnerView) return normalized
 
-    // Other roles: see entries they created OR shared entries where they are tagged
+    // Non-owners: of the shared entries returned, show those tagged for them.
     const userName = profile?.displayName || user?.displayName || ''
     return normalized.filter((entry) => {
-      // Always see your own entries
       if (entry.createdBy === user?.uid) return true
-      // See shared entries where you are tagged
       if (entry.visibility === 'shared' && entry.taggedPeople.includes(userName)) return true
       return false
     })
-  }, [rawEntries, isOwner, profile?.displayName, user?.displayName, user?.uid])
+  }, [rawEntries, isOwnerView, profile?.displayName, user?.displayName, user?.uid])
 
   // Search filtering (client-side across title, content, transcript)
   const filteredEntries = useMemo(() => {

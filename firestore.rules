@@ -622,21 +622,28 @@ service cloud.firestore {
       allow read: if isAuthenticated()
         && resource.data.createdBy == request.auth.uid;
       
-      // Authenticated users can create email requests
-      // The extension handles the rest (send, update status)
-      allow create: if isAuthenticated();
-      
+      // Create requires self-attribution: the doc's createdBy MUST be the caller.
+      // Was `if isAuthenticated()` alone, which let any user forge a mail doc with
+      // an arbitrary createdBy and recipient — an open relay from the sirsi.ai domain
+      // (the sendMail function sends verbatim via domain-wide delegation). Pinning
+      // createdBy to the caller makes every send traceable + non-spoofable; the MIME
+      // builder strips CR/LF so one doc can't fan out to many recipients. (Full relay
+      // closure — server-side recipient validation — tracked as a follow-up.)
+      allow create: if isAuthenticated()
+        && request.resource.data.createdBy == request.auth.uid;
+
       // Only the extension (which runs as admin) updates delivery status
       // Client-side updates are not allowed
       allow update, delete: if false;
     }
-    
+
     // SMS queue: authenticated users create SMS requests,
     // Cloud Function processes and sends via Google Cloud SMS API.
     match /sms_queue/{smsId} {
       allow read: if isAuthenticated()
         && resource.data.createdBy == request.auth.uid;
-      allow create: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && request.resource.data.createdBy == request.auth.uid;
       allow update, delete: if false;
     }
 

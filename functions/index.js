@@ -68,12 +68,17 @@ async function getGmailClient() {
  * Build a MIME email message.
  */
 function buildMimeMessage({ to, subject, html, text, replyTo }) {
+    // Strip CR/LF from any value interpolated into a header — otherwise a `to`/
+    // `subject`/`replyTo` containing "\r\n" injects arbitrary MIME headers (Bcc
+    // fan-out to many recipients from one doc, spoofed Reply-To, etc.). This is the
+    // multiplier that turns the mail collection into a phishing relay.
+    const hdr = (v) => String(Array.isArray(v) ? v.join(', ') : (v ?? '')).replace(/[\r\n]+/g, ' ').trim();
     const boundary = `boundary_${Date.now()}`;
     const lines = [
         `From: ${SENDER_NAME} <${SENDER_EMAIL}>`,
-        `To: ${to}`,
-        `Subject: ${subject}`,
-        replyTo ? `Reply-To: ${replyTo}` : null,
+        `To: ${hdr(to)}`,
+        `Subject: ${hdr(subject)}`,
+        replyTo ? `Reply-To: ${hdr(replyTo)}` : null,
         'MIME-Version: 1.0',
         `Content-Type: multipart/alternative; boundary="${boundary}"`,
         '',

@@ -364,18 +364,21 @@ service cloud.firestore {
 
       // ── 3n2. Soul Log (Personal Diary Entries) ──
       match /soul-log/{entryId} {
-        // Owner/admin: full access (their own diary). Other estate members may
-        // read ONLY `shared` entries — never `private` or `sealed`. The client
-        // query is constrained to where('visibility','==','shared') so a
-        // non-owner list read is allowed; an unconstrained read is denied.
-        // (Sealed delivery to heirs is handled by the time-capsule flow.)
+        // The Soul Log is the OWNER's diary (ADR-046).
+        // READ: owner/admin read everything; the only NON-owner who may read is the
+        //   HEIR, and ONLY `shared` entries (never private/sealed). Not executor/
+        //   trustee/legal/cpa — they have no Soul Log access in the persona matrix.
+        //   The client query is constrained to where('visibility','==','shared').
+        // WRITE: only the owner/admin may create/update entries — a writer-role
+        //   (e.g. executor) must NOT be able to flip a private entry to shared and
+        //   then read it. (Follow-ups #1 canAccessEstate-scope + #2 visibility-write.)
         allow read: if isEstatePrincipal(estateId) || isAdmin()
-          || (canAccessEstate(estateId) && resource.data.visibility == 'shared');
-        allow create: if canWriteEstate(estateId)
+          || (isEstateHeir(estateId) && resource.data.visibility == 'shared');
+        allow create: if (isEstatePrincipal(estateId) || isAdmin())
           && request.resource.data.keys().hasAll(['title', 'type', 'visibility', 'createdBy', 'createdAt'])
           && request.resource.data.type in ['video', 'audio', 'text']
           && request.resource.data.visibility in ['private', 'shared', 'sealed'];
-        allow update: if canWriteEstate(estateId);
+        allow update: if isEstatePrincipal(estateId) || isAdmin();
         allow delete: if isEstatePrincipal(estateId);
       }
 
@@ -711,6 +714,17 @@ service cloud.firestore {
     function isEstateRole(estateId) {
       return exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId));
     }
+
+    // isEstateRoleValue — the caller's estate_users role equals a specific value.
+    // exists() first so the get() never runs on a missing junction. Used to scope
+    // a section to ONE non-owner role (e.g. Soul Log shared-reads are heir-only,
+    // not any estate member — ADR-046 follow-up).
+    function isEstateRoleValue(estateId, role) {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId))
+        && get(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId)).data.role == role;
+    }
+    function isEstateHeir(estateId) { return isEstateRoleValue(estateId, 'heir'); }
     
     // Access: anyone with a role in the estate (read)
     function canAccessEstate(estateId) {

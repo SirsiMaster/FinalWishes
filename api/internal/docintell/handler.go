@@ -127,6 +127,17 @@ func (h *Handler) HandleAnalyze(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// The estate_users check authorizes EstateID, but StorageKey is a SEPARATE
+	// client-supplied value — without binding it to EstateID, a member of estate A
+	// could pass storageKey=estates/B/vault/<file> and exfiltrate estate B's vault
+	// document into their own estate's analysis (cross-tenant IDOR). Require the key
+	// to live under this estate's prefix (same guard as estate/download.go + mail).
+	if !strings.HasPrefix(req.StorageKey, "estates/"+req.EstateID+"/") {
+		log.Warn().Str("user_id", userID).Str("estate_id", req.EstateID).Str("storage_key", req.StorageKey).Msg("DocIntell denied — storageKey outside estate")
+		writeError(w, http.StatusForbidden, "storageKey does not belong to this estate")
+		return
+	}
+
 	// Mark document as processing
 	docRef := h.fs.Collection("estates").Doc(req.EstateID).Collection("documents").Doc(req.DocumentID)
 	if _, err := docRef.Update(ctx, []firestore.Update{

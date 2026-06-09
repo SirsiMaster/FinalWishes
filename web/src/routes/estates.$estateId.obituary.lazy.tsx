@@ -198,9 +198,11 @@ function ObituaryPage() {
     if (!obit?.content) return;
     setShareLoading(true);
     try {
-      // Create a mail document in Firestore — triggers SendGrid via Firebase Extension
+      // Create a mail document in Firestore — triggers the sendMail function.
+      // createdBy MUST be the caller (the mail create rule pins it to request.auth.uid).
       await addDoc(collection(db, 'mail'), {
         to: profile?.email || '',
+        createdBy: user?.uid,
         message: {
           subject: `Obituary: ${userName || 'Estate Record'}`,
           html: `

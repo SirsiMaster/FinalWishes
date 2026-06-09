@@ -17,6 +17,7 @@
  */
 
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import DOMPurify from 'dompurify'
 import { useAuth, type UserProfile } from '@/lib/auth'
 import {
   useEstate,
@@ -219,10 +220,12 @@ function VideoMessage({ url, title }: { url: string; title: string }) {
  * which is trusted first-party data — same pattern as obituary and soul-log display.
  */
 function sanitizeHtml(html: string): string {
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/on\w+\s*=\s*"[^"]*"/gi, '')
-    .replace(/on\w+\s*=\s*'[^']*'/gi, '')
+  // DOMPurify — the hand-rolled regex (strip <script> + quoted on*= only) missed
+  // unquoted handlers, javascript: URIs, <svg onload>, <img src=x onerror=...>, etc.
+  // This content is owner/writer-authored Soul Log / time-capsule text rendered into
+  // the HEIR's authenticated session (a cross-user trust boundary), so a weak filter
+  // is a stored-XSS → session-hijack vector. Same tool as the memorial path.
+  return DOMPurify.sanitize(html)
 }
 
 // ─── Main Component ──────────────────────────────────────────────────────────

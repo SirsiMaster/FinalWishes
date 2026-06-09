@@ -95,6 +95,23 @@ func (h *Handler) HandleTranscribe(w http.ResponseWriter, r *http.Request) {
 		gsURI = "gs://" + path
 	}
 
+	// Bind the storage object to EstateID. The estate_users check above authorizes
+	// EstateID, but StorageURI is a SEPARATE client value — without this, a member of
+	// estate A could pass another estate's Soul Log audio URI and steal its transcript
+	// (cross-tenant IDOR). The object key (after gs://BUCKET/) must live under this
+	// estate's prefix.
+	objectKey := ""
+	if rest := strings.TrimPrefix(gsURI, "gs://"); rest != gsURI {
+		if s := strings.IndexByte(rest, '/'); s >= 0 {
+			objectKey = rest[s+1:]
+		}
+	}
+	if !strings.HasPrefix(objectKey, "estates/"+req.EstateID+"/") {
+		log.Warn().Str("user_id", userID).Str("estate_id", req.EstateID).Str("storage_uri", req.StorageURI).Msg("Transcription denied — storageUri outside estate")
+		writeError(w, http.StatusForbidden, "storageUri does not belong to this estate")
+		return
+	}
+
 	// Call Google Cloud Speech-to-Text v2 REST API
 	transcript, err := h.callSpeechToText(ctx, gsURI, req.MimeType)
 	if err != nil {

@@ -363,8 +363,13 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
               <AlertDialogAction
                 className="bg-red-600 hover:bg-red-700 rounded-xl"
                 onClick={async () => {
-                  await updateDoc(doc(db, `estates/${estateId}/events`, event.id), { status: 'cancelled', updatedAt: serverTimestamp() })
-                  toast.success('Event cancelled')
+                  try {
+                    await updateDoc(doc(db, `estates/${estateId}/events`, event.id), { status: 'cancelled', updatedAt: serverTimestamp() })
+                    toast.success('Event cancelled')
+                    setCancelOpen(false)
+                  } catch {
+                    toast.error('Could not cancel the event. Please try again.')
+                  }
                 }}
               >
                 Cancel Event
@@ -387,8 +392,13 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
               <AlertDialogAction
                 className="bg-red-600 hover:bg-red-700 rounded-xl"
                 onClick={async () => {
-                  await deleteDoc(doc(db, `estates/${estateId}/events`, event.id))
-                  toast.success('Event deleted')
+                  try {
+                    await deleteDoc(doc(db, `estates/${estateId}/events`, event.id))
+                    toast.success('Event deleted')
+                    setDeleteOpen(false)
+                  } catch {
+                    toast.error('Could not delete the event. Please try again.')
+                  }
                 }}
               >
                 Delete

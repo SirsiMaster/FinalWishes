@@ -189,7 +189,7 @@ func main() {
 						log.Error().Err(err).Msg("Vault migrations failed")
 					} else {
 						log.Info().Msg("PII Vault initialized — Cloud SQL + Cloud KMS active")
-						vaultHandler = vault.NewHandler(vaultRepo)
+						vaultHandler = vault.NewHandler(vaultRepo, fs)
 					}
 				}
 			} else {

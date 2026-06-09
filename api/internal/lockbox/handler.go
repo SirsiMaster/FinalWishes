@@ -359,44 +359,34 @@ func (h *Handler) HandleRetrieveCredentials(w http.ResponseWriter, r *http.Reque
 
 // --- Access Control ---
 
-// verifyEstateAccess checks that the user has principal or admin role on the estate.
-// The estate document has a "members" map where keys are Firebase UIDs and values
-// contain a "role" field. The estate owner always has access.
+// verifyEstateAccess confirms the caller may access the estate's Digital Lockbox —
+// the most-sensitive surface, restricted to principal+admin only (matches the
+// persona matrix + the frontend RoleGuard). It uses the REAL data model: the estate
+// owner is estates/<id>.principalId; any other authorized party carries an
+// estate_users/<uid>_<estateID> junction whose role is principal/admin. (The prior
+// implementation read an "ownerId" field + "members" map that this app never
+// writes — estates use principalId + the estate_users junction — so every real
+// principal was denied and the feature was 100% broken.)
 func (h *Handler) verifyEstateAccess(ctx context.Context, userID, estateID string) (bool, error) {
 	doc, err := h.fs.Collection("estates").Doc(estateID).Get(ctx)
 	if err != nil {
 		return false, fmt.Errorf("failed to fetch estate: %w", err)
 	}
 
-	// Check if user is the estate owner
-	ownerID, _ := doc.DataAt("ownerId")
-	if ownerStr, ok := ownerID.(string); ok && ownerStr == userID {
-		return true, nil
+	// The estate owner (principal) always has access.
+	if pid, derr := doc.DataAt("principalId"); derr == nil {
+		if pidStr, ok := pid.(string); ok && pidStr == userID {
+			return true, nil
+		}
 	}
 
-	// Check the members map for principal or admin role
-	members, err := doc.DataAt("members")
-	if err != nil {
-		// No members field — only the owner has access
+	// Otherwise require an estate_users junction with a principal/admin role.
+	eu, err := h.fs.Collection("estate_users").Doc(userID + "_" + estateID).Get(ctx)
+	if err != nil || eu == nil || !eu.Exists() {
 		return false, nil
 	}
-
-	membersMap, ok := members.(map[string]interface{})
-	if !ok {
-		return false, nil
-	}
-
-	memberData, exists := membersMap[userID]
-	if !exists {
-		return false, nil
-	}
-
-	memberMap, ok := memberData.(map[string]interface{})
-	if !ok {
-		return false, nil
-	}
-
-	role, _ := memberMap["role"].(string)
+	roleVal, _ := eu.DataAt("role")
+	role, _ := roleVal.(string)
 	return role == "principal" || role == "admin", nil
 }
 

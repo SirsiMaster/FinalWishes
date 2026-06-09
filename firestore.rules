@@ -365,19 +365,21 @@ service cloud.firestore {
       // ── 3n2. Soul Log (Personal Diary Entries) ──
       match /soul-log/{entryId} {
         // The Soul Log is the OWNER's diary (ADR-046).
-        // READ: owner/admin read everything; non-owners read ONLY `shared` entries
-        //   (never private/sealed). The client query is constrained to
+        // READ: owner/admin read everything; estate members read ONLY `shared`
+        //   entries (never private/sealed). The client query is constrained to
         //   where('visibility','==','shared') so the non-owner list read is allowed.
+        //   The member branch uses isEstateRole (pure exists()) — NOT canAccessEstate,
+        //   whose nested get() calls inside this resource.data-constrained branch make
+        //   Firestore's LIST/query analyzer reject the non-owner feed read (owner/admin
+        //   still read via the standalone branches above). Verified: with canAccessEstate
+        //   the heir's shared feed was permission-denied; with isEstateRole it loads.
         //   NOTE: rule-level heir-ONLY narrowing (so executor/trustee/legal/cpa can't
-        //   SDK-read shared entries) cannot use get().data.role here — get() is denied
-        //   in LIST/query rules. The matrix narrowing is enforced at the route layer
-        //   (RoleGuard blocks non-heir non-owners from /soul-log); full rule-level
-        //   per-recipient enforcement lands with the taggedPeople→UID + array-contains
-        //   redesign (ADR-046 residual / follow-up #1).
+        //   SDK-read shared entries) folds into the taggedPeople→UID + array-contains
+        //   redesign (ADR-046 #1); the route layer (RoleGuard) enforces it meanwhile.
         // WRITE: only the owner/admin may create/update — a writer-role (e.g. executor)
         //   must NOT be able to flip a private entry to shared then read it (#2).
         allow read: if isEstatePrincipal(estateId) || isAdmin()
-          || (canAccessEstate(estateId) && resource.data.visibility == 'shared');
+          || (isEstateRole(estateId) && resource.data.visibility == 'shared');
         allow create: if (isEstatePrincipal(estateId) || isAdmin())
           && request.resource.data.keys().hasAll(['title', 'type', 'visibility', 'createdBy', 'createdAt'])
           && request.resource.data.type in ['video', 'audio', 'text']

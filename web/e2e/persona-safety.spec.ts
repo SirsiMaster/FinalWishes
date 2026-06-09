@@ -31,12 +31,15 @@ import { login } from './helpers/auth'
  * valid one-time code. So provision-personas seeds the attestation half of the
  * gate but cannot seed the MFA half.
  *
- * Per the constraint "skip, never fake-pass; do NOT loosen security to pass a
- * test", every test whose subject lives BEHIND the fiduciary MFA gate is
- * test.skip()'d via requireMfaCapableFiduciary() with a clear reason. The
- * principal-side tests (no MFA gate — createdAt=NOW grace) run today.
+ * GAP CLOSED (path A below): scripts/e2e-enroll-mfa.js enrolls a REAL TOTP factor
+ * for each fiduciary via the Firebase CLIENT SDK (no Admin-SDK TOTP API needed, no
+ * production change) and captures the base32 secret as E2E_{HEIR,EXECUTOR}_TOTP_SECRET.
+ * The login helper (e2e/helpers/auth.ts) computes a live code with otplib at the
+ * IdentityGate/login MFA challenge, so the fiduciary clears the gate exactly like a
+ * real user. requireMfaCapableFiduciary(secret) now RUNS these tests when the secret
+ * is present and SKIPS (never fake-passes) when it is absent — security is unchanged.
  *
- * Recommendation to close the gap is documented at the bottom of this file.
+ * Path A is documented in full at the bottom of this file.
  *
  * ── RUN (serial, sparingly — Go API rate-limits 100 req/60s, 10-min ban) ────
  *   1) Provision once (resets principal MFA-grace window):
@@ -64,22 +67,31 @@ function requirePersonaFixtures(): void {
   )
 }
 
+/** Per-account TOTP secrets, populated by scripts/e2e-enroll-mfa.js. */
+const HEIR_TOTP_SECRET = process.env.E2E_HEIR_TOTP_SECRET ?? ''
+const EXECUTOR_TOTP_SECRET = process.env.E2E_EXECUTOR_TOTP_SECRET ?? ''
+
 /**
- * Gate every test that lives BEHIND the fiduciary MFA wall.
+ * Gate the tests that live BEHIND the fiduciary MFA wall on a REAL enrolled factor.
  *
- * EMPIRICALLY (2026-06-08, LIVE prod): IdentityGate stops a fiduciary at the MFA
- * step before RoleGuard or the persona dashboard render, and TOTP MFA cannot be
- * seeded via the Admin SDK. Until the harness can present an enrolled fiduciary
- * (see "Closing the MFA gap" at the bottom of this file), these tests SKIP rather
- * than fake-pass — loosening IdentityGate to get past it is explicitly forbidden.
+ * IdentityGate stops a fiduciary at the TOTP step before RoleGuard/persona dashboard
+ * render. Closed via path (A) of "Closing the MFA gap" below: scripts/e2e-enroll-mfa.js
+ * enrolls a genuine TOTP factor (client SDK, no production change, no security
+ * loosening) and captures the base32 secret as E2E_{HEIR,EXECUTOR}_TOTP_SECRET; the
+ * login helper computes a live code at the challenge via otplib.
+ *
+ * When the relevant secret is PRESENT these tests RUN (the harness presents a real
+ * MFA-enrolled fiduciary, exactly like a real user). When ABSENT they SKIP with a
+ * clear reason — never fake-pass. Pass the per-account secret so heir/executor gate
+ * independently.
  */
-function requireMfaCapableFiduciary(): void {
+function requireMfaCapableFiduciary(totpSecret: string): void {
   test.skip(
-    true,
-    'MFA-gated: IdentityGate stops fiduciaries at the TOTP step before RoleGuard/persona dashboard ' +
-      '(empirically confirmed on LIVE prod 2026-06-08). The Admin SDK cannot seed TOTP enrollment, so ' +
-      'the harness cannot present an MFA-enrolled heir/executor without enrolling a real TOTP factor + ' +
-      'computing a live code at login. See "Closing the MFA gap" in this file. Skipping, not fake-passing.',
+    !totpSecret,
+    'MFA-gated: set the per-account TOTP secret (E2E_HEIR_TOTP_SECRET / ' +
+      'E2E_EXECUTOR_TOTP_SECRET) by running scripts/e2e-enroll-mfa.js and sourcing ' +
+      'scripts/.e2e-mfa-secrets.env. Absent => skip (not fake-pass): a fiduciary cannot ' +
+      'clear IdentityGate without a real enrolled TOTP factor + a live code at login.',
   )
 }
 
@@ -134,74 +146,61 @@ test.describe('Persona safety — principal (runs today, no MFA gate)', () => {
 })
 
 test.describe('Persona safety — heir (MFA-gated, skipped honestly)', () => {
-  test.setTimeout(60000)
+  test.setTimeout(120000)
 
   test.beforeEach(() => {
     requirePersonaFixtures()
-    requireMfaCapableFiduciary()
+    requireMfaCapableFiduciary(HEIR_TOTP_SECRET)
   })
 
-  // Heir is NOT granted 'vault' (PERSONA_ACCESS.heir). Once past IdentityGate,
-  // RoleGuard must show the warm "This isn't part of your role" blocked state.
-  test('heir blocked from /vault (RoleGuard "not part of your role")', async ({ page }) => {
+  // ONE login per persona — TOTP MFA codes are single-use within a 30s window, so
+  // re-logging-in per assertion hits Firebase's anti-replay. We log in once and
+  // walk every persona-safety assertion in a single session (Firebase Auth persists
+  // via indexedDB, which Playwright storageState can't capture — hence one test).
+  test('heir: blocked from owner-only routes, lands on the sacred dashboard, soul-log scoped', async ({ page }) => {
     await login(page, { email: HEIR_EMAIL, password: PERSONA_PASSWORD })
+
+    // NOT granted 'vault' → RoleGuard warm block + a way back.
     await page.goto(`/estates/${ESTATE_ID}/vault`)
     await expect(page.getByRole('heading', { name: /isn't part of your role/i })).toBeVisible({ timeout: 15000 })
-    // The blocked state offers a way back to the persona landing.
     await expect(page.getByRole('link', { name: /Return to your space/i })).toBeVisible()
-  })
 
-  // Heir is NOT granted 'lockbox' (most-sensitive; principal+admin only).
-  test('heir blocked from /lockbox (RoleGuard "not part of your role")', async ({ page }) => {
-    await login(page, { email: HEIR_EMAIL, password: PERSONA_PASSWORD })
+    // NOT granted 'lockbox' (principal+admin only) → blocked.
     await page.goto(`/estates/${ESTATE_ID}/lockbox`)
     await expect(page.getByRole('heading', { name: /isn't part of your role/i })).toBeVisible({ timeout: 15000 })
-  })
 
-  // Heir /dashboard is the sacred HeirDashboard ("For You"), NOT the owner timeline
-  // ("Welcome back") and NEVER a completion score.
-  test('heir /dashboard renders the sacred HeirDashboard ("For You")', async ({ page }) => {
-    await login(page, { email: HEIR_EMAIL, password: PERSONA_PASSWORD })
+    // /dashboard = sacred HeirDashboard ("For You"), never the owner timeline.
     await page.goto(`/estates/${ESTATE_ID}/dashboard`)
     await expect(page.getByRole('heading', { name: /^For You$/i })).toBeVisible({ timeout: 15000 })
     await expect(page.getByRole('heading', { name: /Welcome back/i })).toHaveCount(0)
-  })
 
-  // Heir Soul Log is item-scoped (SCOPED_SECTIONS.heir includes 'soul-log'):
-  // only entries shared with the heir, never the principal's private diary.
-  test('heir /soul-log shows only shared entries (item-scoped)', async ({ page }) => {
-    await login(page, { email: HEIR_EMAIL, password: PERSONA_PASSWORD })
+    // Soul Log reachable (heir is allow-listed) and not RoleGuard-blocked; the
+    // shared estate is seeded empty so the heir sees the empty/shared-only state,
+    // never another member's private diary. (Strengthen with a seeded private-vs-
+    // shared pair when feasible.)
     await page.goto(`/estates/${ESTATE_ID}/soul-log`)
-    // Reachable (heir is allow-listed for soul-log) — not RoleGuard-blocked...
     await expect(page.getByRole('heading', { name: /isn't part of your role/i })).toHaveCount(0)
-    // ...and scoped: the heir must NOT see private/owner-only entries. With the
-    // shared estate seeded empty of soul-log entries, the heir sees the empty/
-    // shared-only state, never another member's private diary. (Strengthen this
-    // with a seeded private-vs-shared entry pair once MFA enrollment is automatable.)
     await expect(page.getByRole('heading', { name: /Soul Log/i }).first()).toBeVisible({ timeout: 15000 })
   })
 })
 
 test.describe('Persona safety — executor (MFA-gated, skipped honestly)', () => {
-  test.setTimeout(60000)
+  test.setTimeout(120000)
 
   test.beforeEach(() => {
     requirePersonaFixtures()
-    requireMfaCapableFiduciary()
+    requireMfaCapableFiduciary(EXECUTOR_TOTP_SECRET)
   })
 
-  // Executor is NOT granted 'lockbox' (PERSONA_ACCESS.executor) — the lockbox is
-  // principal+admin-only by canon. RoleGuard must block.
-  test('executor blocked from /lockbox (RoleGuard "not part of your role")', async ({ page }) => {
+  // ONE login (see heir note on TOTP anti-replay).
+  test('executor: blocked from lockbox, lands on the Settlement dashboard', async ({ page }) => {
     await login(page, { email: EXECUTOR_EMAIL, password: PERSONA_PASSWORD })
+
+    // NOT granted 'lockbox' (principal+admin only by canon) → RoleGuard block.
     await page.goto(`/estates/${ESTATE_ID}/lockbox`)
     await expect(page.getByRole('heading', { name: /isn't part of your role/i })).toBeVisible({ timeout: 15000 })
-  })
 
-  // Executor /dashboard is the fiduciary "Settlement" PersonaDashboard, NOT the
-  // owner timeline and NOT the heir "For You".
-  test('executor /dashboard renders the Settlement persona dashboard', async ({ page }) => {
-    await login(page, { email: EXECUTOR_EMAIL, password: PERSONA_PASSWORD })
+    // /dashboard = fiduciary "Settlement" PersonaDashboard, not owner timeline nor heir "For You".
     await page.goto(`/estates/${ESTATE_ID}/dashboard`)
     await expect(page.getByRole('heading', { name: /Settlement/i })).toBeVisible({ timeout: 15000 })
     await expect(page.getByRole('heading', { name: /Welcome back/i })).toHaveCount(0)

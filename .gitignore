@@ -37,6 +37,9 @@ api/bin/
 *-key.json
 service-account*.json
 
+# === E2E TOTP secrets (captured by scripts/e2e-enroll-mfa.js) ===
+scripts/.e2e-mfa-secrets.env
+
 # === Playwright ===
 /test-results/
 web/test-results/
@@ -52,3 +55,4 @@ __pycache__/
 .turbo/
 .agents/
 
+scripts/.e2e-persona-pw

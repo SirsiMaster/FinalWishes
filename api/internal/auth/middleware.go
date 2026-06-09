@@ -46,6 +46,19 @@ func Middleware(authClient *firebaseAuth.Client) func(http.Handler) http.Handler
 				return
 			}
 
+			// Require a VERIFIED email. Estate access is granted by the estate_users
+			// junction, which invitation auto-match writes on a bare email-string match
+			// (functions/index.js) — so an attacker could register an invited-but-
+			// unclaimed address and seize an executor/heir role. They can register an
+			// address they don't control but can never VERIFY it, so gating every
+			// protected API route on email_verified closes the seizure server-side
+			// (the client IdentityGate alone is bypassable). The mirror gate lives in
+			// firestore.rules (isEstateRole) for the SDK path.
+			if v, _ := token.Claims["email_verified"].(bool); !v {
+				http.Error(w, `{"error":{"code":"EMAIL_NOT_VERIFIED","message":"Email verification required"}}`, http.StatusForbidden)
+				return
+			}
+
 			// Inject user ID and token into context
 			ctx := context.WithValue(r.Context(), userIDKey, token.UID)
 			ctx = context.WithValue(ctx, tokenKey, token)

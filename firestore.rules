@@ -718,7 +718,14 @@ service cloud.firestore {
     // isHeirOf — REMOVED: replaced by isEstateRole() via estate_users junction table
     
     function isEstateRole(estateId) {
-      return exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId));
+      // email_verified gate: the estate_users junction is written by invitation
+      // auto-match on a bare email-string match (functions/index.js), so an attacker
+      // could register an invited-but-unclaimed address and seize an executor/heir
+      // role. They can never VERIFY an address they don't control, so requiring a
+      // verified email here makes the junction unusable until the real invitee
+      // verifies. Mirror of the Go auth middleware gate.
+      return request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId));
     }
     // NOTE: a role-VALUE check (get().data.role == X) is intentionally NOT defined —
     // get() is denied inside LIST/query rules, so it cannot gate the Soul Log feed

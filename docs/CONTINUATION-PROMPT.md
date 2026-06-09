@@ -1,5 +1,12 @@
 # FinalWishes — Continuation Prompt
-**Version:** 23.0 — **Date:** June 9, 2026 — **Session:** Non-mobile GA hardening + E2E + persona-safety (claude-finalwishes, codex OOO)
+**Version:** 24.0 — **Date:** June 9, 2026 — **Session:** RC-blocker audits + security fixes (claude-finalwishes, codex OOO ~till 06-10)
+
+> **2026-06-09b headline (HEAD `7269017`):** Two RC-blocker subagent audits found **THREE CRITICAL security holes** — all fixed, deployed, and verified live:
+> 1. **Cross-tenant PII breach** (`af15887`) — vault asset/heir PII handlers had NO estate authz; any user could decrypt another estate's account#/SSN/DOB (Cloud SQL, no Firestore backstop). Added fail-closed `estate_users` gate to all 4 + wired `fs` into the vault handler.
+> 2. **Digital Lockbox 100% broken** (`af15887`) — `verifyEstateAccess` read `ownerId`/`members` fields the app never writes → every principal got 403. Re-pointed at `principalId` + `estate_users`.
+> 3. **Invitation account-seizure** (`7269017`) — `autoMatchInvitation` grants the junction on a bare email-string match, no verification; attacker registers an invited-but-unclaimed email → seizes executor/heir. Fixed by requiring `email_verified` at BOTH the Go auth middleware AND the `isEstateRole` Firestore rule (attacker can't verify an address they don't control).
+> Plus: **otplib persona-E2E unblock SHIPPED** (fiduciary tests run live, persona 4/4 green); **heir Soul Log read fixed** (missing `(visibility,createdAt)` index built + reconciled all 19 — **CI deploys rules-only, not indexes** — and `canAccessEstate`→`isEstateRole` rule); **Soul Log write owner-only** (`a8c8a71`); event-toast + obituary-authz fixes.
+> Full detail in the thoth memory `project_finalwishes.md` "SESSION 2026-06-09b". **Owner actions queued:** grant CI deploy SA `datastore.indexAdmin` + fold `firestore:indexes` into the deploy; codex-finalwishes BINDING security sign-off on the 3 CRITICALs + soul-log rules on return. **§3 below (otplib uncommitted) is now DONE — ignore it.**
 
 > Read this first on resume. It is the self-contained state. Be rooted in `~/Development/FinalWishes`.
 > Resume name: **"FinalWishes"**. Router identity: **claude-finalwishes** (re-register on resume — see §6).

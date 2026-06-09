@@ -14,10 +14,13 @@
 package vault
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 
+	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog/log"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
@@ -34,11 +37,31 @@ func clientIP(r *http.Request) string {
 // Handler wraps the vault repository with HTTP handlers.
 type Handler struct {
 	repo *Repository
+	fs   *firestore.Client
 }
 
-// NewHandler creates a new vault HTTP handler.
-func NewHandler(repo *Repository) *Handler {
-	return &Handler{repo: repo}
+// NewHandler creates a new vault HTTP handler. fs is the Firestore client used to
+// enforce estate membership (the asset/heir PII lives in Cloud SQL, which has NO
+// Firestore-rules backstop — this authz check is the ONLY tenant-isolation gate).
+func NewHandler(repo *Repository, fs *firestore.Client) *Handler {
+	return &Handler{repo: repo, fs: fs}
+}
+
+// verifyEstateAccess confirms the caller is a member of the estate via the
+// estate_users junction (docID = "<uid>_<estateID>"), the same gate used by
+// capsules/guardian/probate. Fails CLOSED: any error, missing doc, or nil client
+// denies. Without this, an authenticated user could pass any estate_id/asset_id
+// and decrypt another tenant's account numbers / SSNs (the AAD binds to estateID
+// only, so decryption otherwise succeeds for anyone).
+func (h *Handler) verifyEstateAccess(ctx context.Context, userID, estateID string) error {
+	if h.fs == nil {
+		return fmt.Errorf("estate access cannot be verified")
+	}
+	snap, err := h.fs.Collection("estate_users").Doc(userID + "_" + estateID).Get(ctx)
+	if err != nil || snap == nil || !snap.Exists() {
+		return fmt.Errorf("no access to estate %s", estateID)
+	}
+	return nil
 }
 
 // --- Request/Response Types ---
@@ -219,6 +242,11 @@ func (h *Handler) HandleStoreAssetPII(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := h.verifyEstateAccess(ctx, userID, req.EstateID); err != nil {
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
+
 	if req.AccountNumber == "" && req.RoutingNumber == "" && req.VIN == "" {
 		writeError(w, http.StatusBadRequest, "At least one PII field is required")
 		return
@@ -257,6 +285,11 @@ func (h *Handler) HandleRetrieveAssetPII(w http.ResponseWriter, r *http.Request)
 	assetID := r.URL.Query().Get("asset_id")
 	if estateID == "" || assetID == "" {
 		writeError(w, http.StatusBadRequest, "estate_id and asset_id query parameters are required")
+		return
+	}
+
+	if err := h.verifyEstateAccess(ctx, userID, estateID); err != nil {
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
 		return
 	}
 
@@ -325,6 +358,11 @@ func (h *Handler) HandleStoreHeirPII(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err := h.verifyEstateAccess(ctx, userID, req.EstateID); err != nil {
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
+
 	if req.SSN == "" && req.DateOfBirth == "" {
 		writeError(w, http.StatusBadRequest, "At least one PII field is required")
 		return
@@ -362,6 +400,11 @@ func (h *Handler) HandleRetrieveHeirPII(w http.ResponseWriter, r *http.Request) 
 	heirID := r.URL.Query().Get("heir_id")
 	if estateID == "" || heirID == "" {
 		writeError(w, http.StatusBadRequest, "estate_id and heir_id query parameters are required")
+		return
+	}
+
+	if err := h.verifyEstateAccess(ctx, userID, estateID); err != nil {
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
 		return
 	}
 

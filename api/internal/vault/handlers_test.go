@@ -208,7 +208,13 @@ func TestStoreAssetPII_MissingIDs(t *testing.T) {
 	}
 }
 
-func TestStoreAssetPII_NoPIIFields(t *testing.T) {
+// C1 regression: the asset-PII store MUST deny a caller whose estate membership
+// cannot be verified (here, a nil Firestore client = fail-closed). This authz gate
+// runs BEFORE body-completeness validation, so a well-formed request with valid
+// ids but no proven estate access is rejected 403 — never processed. Without the
+// gate this returned 400 (PII required), meaning the handler was evaluating
+// unauthorized callers' payloads against arbitrary estate_ids.
+func TestStoreAssetPII_DeniesWithoutEstateAccess(t *testing.T) {
 	ts := httptest.NewServer(setupRouter(&Handler{repo: nil}))
 	defer ts.Close()
 
@@ -217,8 +223,8 @@ func TestStoreAssetPII_NoPIIFields(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer resp.Body.Close()
-	assertStatus(t, resp, http.StatusBadRequest)
-	assertBodyContains(t, resp, "At least one PII field")
+	assertStatus(t, resp, http.StatusForbidden)
+	assertBodyContains(t, resp, "do not have access")
 }
 
 func TestRetrieveAssetPII_AuthFailure(t *testing.T) {
@@ -299,7 +305,8 @@ func TestStoreHeirPII_MissingIDs(t *testing.T) {
 	}
 }
 
-func TestStoreHeirPII_NoPIIFields(t *testing.T) {
+// C1 regression (heir PII / SSN+DOB): same fail-closed authz gate as the asset path.
+func TestStoreHeirPII_DeniesWithoutEstateAccess(t *testing.T) {
 	ts := httptest.NewServer(setupRouter(&Handler{repo: nil}))
 	defer ts.Close()
 
@@ -308,8 +315,8 @@ func TestStoreHeirPII_NoPIIFields(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer resp.Body.Close()
-	assertStatus(t, resp, http.StatusBadRequest)
-	assertBodyContains(t, resp, "At least one PII field")
+	assertStatus(t, resp, http.StatusForbidden)
+	assertBodyContains(t, resp, "do not have access")
 }
 
 func TestRetrieveHeirPII_AuthFailure(t *testing.T) {

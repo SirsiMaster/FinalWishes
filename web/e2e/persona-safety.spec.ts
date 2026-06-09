@@ -174,13 +174,16 @@ test.describe('Persona safety — heir (MFA-gated, skipped honestly)', () => {
     await expect(page.getByRole('heading', { name: /^For You$/i })).toBeVisible({ timeout: 15000 })
     await expect(page.getByRole('heading', { name: /Welcome back/i })).toHaveCount(0)
 
-    // Soul Log reachable (heir is allow-listed) and not RoleGuard-blocked; the
-    // shared estate is seeded empty so the heir sees the empty/shared-only state,
-    // never another member's private diary. (Strengthen with a seeded private-vs-
-    // shared pair when feasible.)
+    // Soul Log reachable (heir is allow-listed) and not RoleGuard-blocked.
     await page.goto(`/estates/${ESTATE_ID}/soul-log`)
     await expect(page.getByRole('heading', { name: /isn't part of your role/i })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: /Soul Log/i }).first()).toBeVisible({ timeout: 15000 })
+    // Read-privacy proof (entries seeded by scripts/e2e-seed-soullog.js; ADR-046):
+    // the heir SEES the owner's `shared` entry (member shared-read works via the
+    // isEstateRole rule + the visibility/createdAt index) but NEVER the owner's
+    // `private` diary (private/sealed are DB-blocked for non-owners).
+    await expect(page.getByText('E2E Shared Letter')).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText('E2E Private Diary')).toHaveCount(0)
   })
 })
 

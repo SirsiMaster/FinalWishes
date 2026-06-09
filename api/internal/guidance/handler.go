@@ -527,20 +527,35 @@ func (h *Handler) HandleAssistObituary(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID, err := auth.RequireUserID(r.Context())
+	if err != nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+
 	var req struct {
-		Prompt string `json:"prompt"`
+		EstateID string `json:"estateId"`
+		Prompt   string `json:"prompt"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
-	if req.Prompt == "" {
-		writeError(w, http.StatusBadRequest, "prompt is required")
+	if req.Prompt == "" || req.EstateID == "" {
+		writeError(w, http.StatusBadRequest, "estate_id and prompt are required")
 		return
 	}
 
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
+
+	// Bind to the estate — without this, any authenticated user could drive the
+	// LLM with arbitrary prompts (unmetered cost + prompt-injection surface).
+	euSnap, err := h.fs.Collection("estate_users").Doc(userID + "_" + req.EstateID).Get(ctx)
+	if err != nil || !euSnap.Exists() {
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
 
 	text := h.advisor.GenerateObituary(ctx, req.Prompt)
 	if text == "" {

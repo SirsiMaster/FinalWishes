@@ -365,15 +365,19 @@ service cloud.firestore {
       // ── 3n2. Soul Log (Personal Diary Entries) ──
       match /soul-log/{entryId} {
         // The Soul Log is the OWNER's diary (ADR-046).
-        // READ: owner/admin read everything; the only NON-owner who may read is the
-        //   HEIR, and ONLY `shared` entries (never private/sealed). Not executor/
-        //   trustee/legal/cpa — they have no Soul Log access in the persona matrix.
-        //   The client query is constrained to where('visibility','==','shared').
-        // WRITE: only the owner/admin may create/update entries — a writer-role
-        //   (e.g. executor) must NOT be able to flip a private entry to shared and
-        //   then read it. (Follow-ups #1 canAccessEstate-scope + #2 visibility-write.)
+        // READ: owner/admin read everything; non-owners read ONLY `shared` entries
+        //   (never private/sealed). The client query is constrained to
+        //   where('visibility','==','shared') so the non-owner list read is allowed.
+        //   NOTE: rule-level heir-ONLY narrowing (so executor/trustee/legal/cpa can't
+        //   SDK-read shared entries) cannot use get().data.role here — get() is denied
+        //   in LIST/query rules. The matrix narrowing is enforced at the route layer
+        //   (RoleGuard blocks non-heir non-owners from /soul-log); full rule-level
+        //   per-recipient enforcement lands with the taggedPeople→UID + array-contains
+        //   redesign (ADR-046 residual / follow-up #1).
+        // WRITE: only the owner/admin may create/update — a writer-role (e.g. executor)
+        //   must NOT be able to flip a private entry to shared then read it (#2).
         allow read: if isEstatePrincipal(estateId) || isAdmin()
-          || (isEstateHeir(estateId) && resource.data.visibility == 'shared');
+          || (canAccessEstate(estateId) && resource.data.visibility == 'shared');
         allow create: if (isEstatePrincipal(estateId) || isAdmin())
           && request.resource.data.keys().hasAll(['title', 'type', 'visibility', 'createdBy', 'createdAt'])
           && request.resource.data.type in ['video', 'audio', 'text']
@@ -714,17 +718,10 @@ service cloud.firestore {
     function isEstateRole(estateId) {
       return exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId));
     }
-
-    // isEstateRoleValue — the caller's estate_users role equals a specific value.
-    // exists() first so the get() never runs on a missing junction. Used to scope
-    // a section to ONE non-owner role (e.g. Soul Log shared-reads are heir-only,
-    // not any estate member — ADR-046 follow-up).
-    function isEstateRoleValue(estateId, role) {
-      return isAuthenticated()
-        && exists(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId))
-        && get(/databases/$(database)/documents/estate_users/$(request.auth.uid + '_' + estateId)).data.role == role;
-    }
-    function isEstateHeir(estateId) { return isEstateRoleValue(estateId, 'heir'); }
+    // NOTE: a role-VALUE check (get().data.role == X) is intentionally NOT defined —
+    // get() is denied inside LIST/query rules, so it cannot gate the Soul Log feed
+    // read. Per-recipient narrowing uses resource.data (taggedPeople array-contains)
+    // instead, which IS query-constrainable. See the soul-log match block.
     
     // Access: anyone with a role in the estate (read)
     function canAccessEstate(estateId) {

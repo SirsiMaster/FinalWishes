@@ -286,6 +286,11 @@ jobs:
       - name: Deploy Firestore Rules
         run: firebase deploy --only firestore:rules --project finalwishes-prod
 
+      # Requires the CI deploy SA to have roles/datastore.indexAdmin; continue-on-error until that IAM is granted.
+      - name: Deploy Firestore Indexes
+        continue-on-error: true
+        run: firebase deploy --only firestore:indexes --project finalwishes-prod
+
       # Storage rules are DEFENSE-IN-DEPTH only: all uploads use V4 signed URLs
       # from the Go API which bypass these rules entirely (see storage.rules
       # header), and the resize extension uses the Admin SDK. The deploy fails

@@ -2,6 +2,8 @@ module github.com/sirsi-technologies/finalwishes-api
 
 go 1.26.3
 
+toolchain go1.26.4
+
 require (
 	cloud.google.com/go/cloudtasks v1.15.0
 	cloud.google.com/go/firestore v1.21.0

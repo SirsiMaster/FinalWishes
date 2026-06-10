@@ -335,10 +335,10 @@ func main() {
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Use(authMiddleware)
 		r.Route("/opensign", func(r chi.Router) {
-			r.Post("/create-envelope", opensign.CreateEnvelopeHandler)
+			oh := opensign.NewWebhookHandler(fs)
+			r.Post("/create-envelope", oh.HandleCreateEnvelope)
 			if fs != nil {
-				webhookHandler := opensign.NewWebhookHandler(fs)
-				r.Get("/status", webhookHandler.HandleCheckSigningStatus)
+				r.Get("/status", oh.HandleCheckSigningStatus)
 			}
 		})
 	})
@@ -350,7 +350,7 @@ func main() {
 
 	r.Group(func(r chi.Router) {
 		r.Use(authMiddleware)
-		r.Post("/api/envelopes", opensign.CreateEnvelopeHandler)
+		r.Post("/api/envelopes", opensign.NewWebhookHandler(fs).HandleCreateEnvelope)
 	})
 
 	// Guidance routes (The Shepherd v3 — Claude Opus via sirsi-ai, Genkit fallback)

@@ -22,6 +22,8 @@ import (
 	"github.com/stripe/stripe-go/v81/webhook"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Handler holds dependencies for payment endpoints.
@@ -403,6 +405,29 @@ func (h *Handler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		log.Warn().Msg("Stripe webhook signature verification DISABLED (local dev only)")
+	}
+
+	// Idempotency — Stripe delivers webhooks at-least-once and retries on any non-2xx,
+	// so the same event.ID can arrive multiple times. Claim it with a Create (fails
+	// AlreadyExists if seen) before processing; otherwise duplicate `payments` ledger
+	// records accumulate on every retry. (The tier Set/MergeAll is already idempotent,
+	// so this is ledger integrity, not a double-charge.)
+	if h.fs != nil && event.ID != "" {
+		ictx, icancel := newCtx()
+		_, err := h.fs.Collection("stripe_events").Doc(event.ID).Create(ictx, map[string]interface{}{
+			"type":        string(event.Type),
+			"processedAt": time.Now(),
+		})
+		icancel()
+		if err != nil {
+			if status.Code(err) == codes.AlreadyExists {
+				log.Info().Str("event_id", event.ID).Str("type", string(event.Type)).Msg("Stripe event already processed — skipping (idempotent)")
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+			// Marker write failed for another reason — log and proceed rather than drop the event.
+			log.Warn().Err(err).Str("event_id", event.ID).Msg("Failed to write stripe_events idempotency marker")
+		}
 	}
 
 	switch event.Type {

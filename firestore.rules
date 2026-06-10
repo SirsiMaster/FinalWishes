@@ -668,6 +668,12 @@ service cloud.firestore {
       allow create, update, delete: if false;
     }
 
+    // Stripe webhook idempotency markers — written ONLY by the Go API (Admin SDK,
+    // which bypasses rules). No client access whatsoever.
+    match /stripe_events/{eventId} {
+      allow read, write: if false;
+    }
+
     // =============================================
     // 11. PUBLIC MEMORIALS — Shareable Without Account
     // =============================================

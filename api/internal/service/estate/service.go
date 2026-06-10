@@ -187,8 +187,16 @@ func (s *Server) ListEstates(ctx context.Context, req *connect.Request[estatev1.
 		return connect.NewResponse(&estatev1.ListEstatesResponse{Estates: estates}), nil
 	}
 
+	// Derive the UID from the verified token, NOT req.Msg.UserId — trusting the
+	// client-supplied user_id let any authenticated user enumerate ANOTHER user's
+	// estate IDs (the keystone for reading their obituary/metadata/notifications by ID).
+	userID := auth.UserIDFromContext(ctx)
+	if userID == "" {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("authentication required"))
+	}
+
 	var estates []*estatev1.EstateSummary
-	iter := s.fs.Collection("estates").Where("user_id", "==", req.Msg.UserId).Documents(ctx)
+	iter := s.fs.Collection("estates").Where("user_id", "==", userID).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -238,6 +246,11 @@ func (s *Server) RegisterEstate(ctx context.Context, req *connect.Request[estate
 }
 
 func (s *Server) GetEstateMetadata(ctx context.Context, req *connect.Request[estatev1.GetEstateMetadataRequest]) (*connect.Response[estatev1.GetEstateMetadataResponse], error) {
+	// Ungated reads of estates/{id} leaked tier + MFA status + last-login for any
+	// estate (targeting recon). Gate on estate membership.
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
+		return nil, err
+	}
 	if s.fs == nil {
 		name := "Lockhart Estate"
 		completion := int32(100)
@@ -461,6 +474,11 @@ func (s *Server) UploadMemoir(ctx context.Context, req *connect.Request[estatev1
 }
 
 func (s *Server) GetObituary(ctx context.Context, req *connect.Request[estatev1.GetObituaryRequest]) (*connect.Response[estatev1.GetObituaryResponse], error) {
+	// SaveObituary gated writes but this READ did not — any user could read any
+	// estate's obituary (the deceased's life narrative) by ID. Gate it.
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
+		return nil, err
+	}
 	if s.fs == nil {
 		content := "Marcus Aurelius was a philosopher-king."
 		status := "Draft"
@@ -564,6 +582,10 @@ func (s *Server) GetGovernanceSettings(ctx context.Context, req *connect.Request
 }
 
 func (s *Server) ListNotifications(ctx context.Context, req *connect.Request[estatev1.ListNotificationsRequest]) (*connect.Response[estatev1.ListNotificationsResponse], error) {
+	// Ungated reads leaked another estate's settlement/Guardian/security notifications.
+	if err := s.checkEstateAccess(ctx, req.Msg.EstateId, false); err != nil {
+		return nil, err
+	}
 	if s.fs == nil {
 		notifications := []*estatev1.Notification{
 			{Title: "Security Active", Time: "10 mins ago", Type: "success", Desc: "Protocols verified."},

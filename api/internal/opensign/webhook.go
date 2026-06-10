@@ -42,8 +42,20 @@ func (h *WebhookHandler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verify webhook signature if configured
-	if h.webhookSecret != "" {
+	// Verify webhook signature. FAIL CLOSED in production — this endpoint writes
+	// signingVerified:true + signerIP + certificateId onto a legal directive straight
+	// from the body, so skipping HMAC verification lets an UNAUTHENTICATED caller forge
+	// a "server-verified" signed advance-directive/POA. Was: verify only if the secret
+	// happened to be set (fail-open). Now an unset secret in prod is rejected (mirrors
+	// payments.HandleWebhook).
+	if h.webhookSecret == "" {
+		if os.Getenv("GOOGLE_CLOUD_PROJECT") != "" {
+			log.Error().Msg("OPENSIGN_WEBHOOK_SECRET not configured in production — rejecting webhook")
+			http.Error(w, "Webhook not configured", http.StatusServiceUnavailable)
+			return
+		}
+		log.Warn().Msg("OpenSign webhook signature verification DISABLED (local dev only)")
+	} else {
 		sig := r.Header.Get("X-OpenSign-Signature")
 		if sig == "" {
 			log.Warn().Msg("OpenSign webhook missing signature header")
@@ -157,7 +169,7 @@ func (h *WebhookHandler) handleSigningDeclined(ctx context.Context, event Webhoo
 //
 // GET /api/v1/opensign/status?envelopeId=xxx
 func (h *WebhookHandler) HandleCheckSigningStatus(w http.ResponseWriter, r *http.Request) {
-	_, err := auth.RequireUserID(r.Context())
+	userID, err := auth.RequireUserID(r.Context())
 	if err != nil {
 		http.Error(w, `{"error":"Authentication required"}`, http.StatusUnauthorized)
 		return
@@ -184,6 +196,21 @@ func (h *WebhookHandler) HandleCheckSigningStatus(w http.ResponseWriter, r *http
 			"status":   "pending",
 			"verified": false,
 		})
+		return
+	}
+
+	// Cross-estate IDOR guard: the directive was matched only by the caller-supplied
+	// envelopeId across ALL estates. Confirm the caller is a member of the estate that
+	// owns this directive (estates/{estateId}/directives/{id} → walk to the estate doc)
+	// before disclosing its signing state.
+	estateRef := doc.Ref.Parent.Parent
+	if estateRef == nil {
+		http.Error(w, `{"error":"not found"}`, http.StatusNotFound)
+		return
+	}
+	euSnap, euErr := h.fs.Collection("estate_users").Doc(userID + "_" + estateRef.ID).Get(ctx)
+	if euErr != nil || !euSnap.Exists() {
+		http.Error(w, `{"error":"You do not have access to this estate"}`, http.StatusForbidden)
 		return
 	}
 

@@ -564,6 +564,11 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          // estateId + directiveId bind the ceremony server-side (the API verifies
+          // estate-write access and records the envelope→directive mapping so the
+          // webhook stamps the verified result onto THIS directive only).
+          estateId,
+          directiveId: directive.id,
           templateId: `directive-${directive.type}`,
           signerName: profile.displayName || profile.firstName || 'Estate Owner',
           signerEmail: profile.email || user.email || '',

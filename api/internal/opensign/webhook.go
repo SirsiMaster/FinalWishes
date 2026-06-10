@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -107,19 +108,31 @@ func (h *WebhookHandler) HandleWebhook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
-// handleSigningCompleted marks the matching directive as signed with server-verified proof.
-func (h *WebhookHandler) handleSigningCompleted(ctx context.Context, event WebhookEvent) error {
-	// Find the directive with this envelope ID across all estates
-	iter := h.fs.CollectionGroup("directives").Where("signingEnvelopeId", "==", event.EnvelopeID).Documents(ctx)
-	defer iter.Stop()
+// directiveRefForEnvelope resolves the directive bound to an envelope via the
+// server-written signing_envelopes/{envelopeId} mapping (recorded at creation by an
+// authorized estate writer). This replaces a blind CollectionGroup match on a
+// client-writable directive field — so the verified signing result can never be
+// redirected onto another estate's directive.
+func (h *WebhookHandler) directiveRefForEnvelope(ctx context.Context, envelopeID string) (*firestore.DocumentRef, string, error) {
+	snap, err := h.fs.Collection("signing_envelopes").Doc(envelopeID).Get(ctx)
+	if err != nil || snap == nil || !snap.Exists() {
+		return nil, "", fmt.Errorf("no signing_envelopes mapping for envelope %s", envelopeID)
+	}
+	estateID, _ := snap.Data()["estateId"].(string)
+	directiveID, _ := snap.Data()["directiveId"].(string)
+	if estateID == "" || directiveID == "" {
+		return nil, "", fmt.Errorf("incomplete signing_envelopes mapping for %s", envelopeID)
+	}
+	return h.fs.Collection("estates").Doc(estateID).Collection("directives").Doc(directiveID), estateID, nil
+}
 
-	doc, err := iter.Next()
+// handleSigningCompleted marks the bound directive as signed with server-verified proof.
+func (h *WebhookHandler) handleSigningCompleted(ctx context.Context, event WebhookEvent) error {
+	ref, _, err := h.directiveRefForEnvelope(ctx, event.EnvelopeID)
 	if err != nil {
 		return err
 	}
-
-	// Update with server-verified signing proof
-	_, err = doc.Ref.Update(ctx, []firestore.Update{
+	if _, err := ref.Update(ctx, []firestore.Update{
 		{Path: "signedAt", Value: time.Now().UTC().Format(time.RFC3339)},
 		{Path: "signingStatus", Value: "completed"},
 		{Path: "signingVerified", Value: true},
@@ -127,40 +140,29 @@ func (h *WebhookHandler) handleSigningCompleted(ctx context.Context, event Webho
 		{Path: "signedDocumentUrl", Value: event.DocumentURL},
 		{Path: "signerIP", Value: event.SignerIP},
 		{Path: "signatureCertificateId", Value: event.CertificateID},
-	})
-	if err != nil {
+	}); err != nil {
 		return err
 	}
-
-	log.Info().
-		Str("envelope_id", event.EnvelopeID).
-		Str("directive_path", doc.Ref.Path).
-		Msg("Directive marked as signed (server-verified)")
+	_, _ = h.fs.Collection("signing_envelopes").Doc(event.EnvelopeID).Update(ctx, []firestore.Update{{Path: "status", Value: "completed"}})
+	log.Info().Str("envelope_id", event.EnvelopeID).Str("directive_path", ref.Path).Msg("Directive marked as signed (server-verified)")
 	return nil
 }
 
-// handleSigningDeclined marks the directive signing as declined.
+// handleSigningDeclined marks the bound directive signing as declined.
 func (h *WebhookHandler) handleSigningDeclined(ctx context.Context, event WebhookEvent) error {
-	iter := h.fs.CollectionGroup("directives").Where("signingEnvelopeId", "==", event.EnvelopeID).Documents(ctx)
-	defer iter.Stop()
-
-	doc, err := iter.Next()
+	ref, _, err := h.directiveRefForEnvelope(ctx, event.EnvelopeID)
 	if err != nil {
 		return err
 	}
-
-	_, err = doc.Ref.Update(ctx, []firestore.Update{
+	if _, err := ref.Update(ctx, []firestore.Update{
 		{Path: "signingStatus", Value: "declined"},
 		{Path: "signingDeclinedAt", Value: firestore.ServerTimestamp},
 		{Path: "signingDeclineReason", Value: event.DeclineReason},
-	})
-	if err != nil {
+	}); err != nil {
 		return err
 	}
-
-	log.Info().
-		Str("envelope_id", event.EnvelopeID).
-		Msg("Directive signing declined")
+	_, _ = h.fs.Collection("signing_envelopes").Doc(event.EnvelopeID).Update(ctx, []firestore.Update{{Path: "status", Value: "declined"}})
+	log.Info().Str("envelope_id", event.EnvelopeID).Msg("Directive signing declined")
 	return nil
 }
 
@@ -184,12 +186,10 @@ func (h *WebhookHandler) HandleCheckSigningStatus(w http.ResponseWriter, r *http
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 
-	// Find the directive by envelope ID
-	iter := h.fs.CollectionGroup("directives").Where("signingEnvelopeId", "==", envelopeID).Documents(ctx)
-	defer iter.Stop()
-
-	doc, err := iter.Next()
-	if err != nil {
+	// Resolve the bound directive via the server-side signing_envelopes mapping (not a
+	// blind cross-estate match on a client-writable field).
+	ref, estateID, rerr := h.directiveRefForEnvelope(ctx, envelopeID)
+	if rerr != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
@@ -199,18 +199,18 @@ func (h *WebhookHandler) HandleCheckSigningStatus(w http.ResponseWriter, r *http
 		return
 	}
 
-	// Cross-estate IDOR guard: the directive was matched only by the caller-supplied
-	// envelopeId across ALL estates. Confirm the caller is a member of the estate that
-	// owns this directive (estates/{estateId}/directives/{id} → walk to the estate doc)
-	// before disclosing its signing state.
-	estateRef := doc.Ref.Parent.Parent
-	if estateRef == nil {
-		http.Error(w, `{"error":"not found"}`, http.StatusNotFound)
-		return
-	}
-	euSnap, euErr := h.fs.Collection("estate_users").Doc(userID + "_" + estateRef.ID).Get(ctx)
+	// IDOR guard: only an estate member may poll the signing state of its directive.
+	euSnap, euErr := h.fs.Collection("estate_users").Doc(userID + "_" + estateID).Get(ctx)
 	if euErr != nil || !euSnap.Exists() {
 		http.Error(w, `{"error":"You do not have access to this estate"}`, http.StatusForbidden)
+		return
+	}
+
+	doc, err := ref.Get(ctx)
+	if err != nil || !doc.Exists() {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(map[string]interface{}{"status": "pending", "verified": false})
 		return
 	}
 

@@ -110,6 +110,13 @@ func UserIDFromContext(ctx context.Context) string {
 	return uid
 }
 
+// ContextWithUserID returns a context carrying the given UID, as the middleware
+// would inject it after verifying a token. Intended for tests that exercise
+// handlers behind the auth middleware.
+func ContextWithUserID(ctx context.Context, uid string) context.Context {
+	return context.WithValue(ctx, userIDKey, uid)
+}
+
 // TokenFromContext extracts the verified Firebase token from the request context.
 // Returns nil if not authenticated.
 func TokenFromContext(ctx context.Context) *firebaseAuth.Token {

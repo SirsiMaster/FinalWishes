@@ -8,10 +8,15 @@ import (
 	"net/http"
 	"os"
 
+	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog/log"
+
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
 type CreateEnvelopeRequest struct {
+	EstateID    string `json:"estateId"`
+	DirectiveID string `json:"directiveId"`
 	TemplateID  string `json:"templateId"`
 	SignerName  string `json:"signerName"`
 	SignerEmail string `json:"signerEmail"`
@@ -23,15 +28,47 @@ type CreateEnvelopeResponse struct {
 	SigningURL string `json:"signingUrl"`
 }
 
-func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. Parse Request
+// HandleCreateEnvelope initiates an OpenSign signing ceremony BOUND to a specific
+// estate directive. The caller must be an estate writer (principal/executor/admin);
+// the envelope→(estate,directive) mapping is recorded SERVER-SIDE so the webhook can
+// stamp the verified result onto exactly that directive — not a blind cross-estate
+// match keyed on a client-written field. Mirrors the proven Assiduous opensign
+// pattern (record the envelope at creation, update the recorded resource by id).
+func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	userID, err := auth.RequireUserID(ctx)
+	if err != nil {
+		http.Error(w, "Authentication required", http.StatusUnauthorized)
+		return
+	}
+
 	var req CreateEnvelopeRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+	if req.EstateID == "" || req.DirectiveID == "" {
+		http.Error(w, "estateId and directiveId are required", http.StatusBadRequest)
+		return
+	}
 
-	// 2. Get Config
+	// Writer-role gate — a signing ceremony writes to the estate's legal record, so
+	// only principal/executor/admin may initiate it (not any authenticated user).
+	if h.fs != nil {
+		eu, euErr := h.fs.Collection("estate_users").Doc(userID + "_" + req.EstateID).Get(ctx)
+		if euErr != nil || !eu.Exists() {
+			http.Error(w, "You do not have access to this estate", http.StatusForbidden)
+			return
+		}
+		role, _ := eu.Data()["role"].(string)
+		if role != "principal" && role != "executor" && role != "admin" {
+			http.Error(w, "You do not have permission to initiate signing for this estate", http.StatusForbidden)
+			return
+		}
+	}
+
+	// --- OpenSign config + proxy (unchanged behavior) ---
 	apiKey := os.Getenv("OPENSIGN_API_KEY")
 	apiURL := os.Getenv("OPENSIGN_API_URL")
 	createEnvelopeURL := os.Getenv("OPENSIGN_CREATE_ENVELOPE_URL")
@@ -55,8 +92,6 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 3. Construct Upstream Payload
-	// ... (unchanged)
 	upstreamPayload := map[string]interface{}{
 		"template_id": req.TemplateID,
 		"signers": []map[string]string{
@@ -75,14 +110,12 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 4. Call OpenSign API
 	client := &http.Client{}
-	upstreamReq, err := http.NewRequest("POST", targetURL, bytes.NewBuffer(payloadBytes))
+	upstreamReq, err := http.NewRequestWithContext(ctx, "POST", targetURL, bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		http.Error(w, "Failed to create upstream request", http.StatusInternalServerError)
 		return
 	}
-
 	upstreamReq.Header.Set("Content-Type", "application/json")
 	if apiKey != "" {
 		upstreamReq.Header.Set("Authorization", "Bearer "+apiKey)
@@ -96,7 +129,6 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	// 5. Handle Response
 	if resp.StatusCode >= 400 {
 		body, _ := io.ReadAll(resp.Body)
 		log.Error().Int("status", resp.StatusCode).Str("body", string(body)).Msg("OpenSign API error")
@@ -110,16 +142,38 @@ func CreateEnvelopeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 6. Return Result
-	// Extract fields safely
 	envelopeID, _ := upstreamResp["id"].(string)
-	signingURL, _ := upstreamResp["url"].(string) // Assuming 'url' is the signing link field
-
+	signingURL, _ := upstreamResp["url"].(string)
 	if signingURL == "" {
-		// Fallback for some APIs that return it in a nested object
-		// This is defensive coding since we don't have the exact spec
 		if data, ok := upstreamResp["data"].(map[string]interface{}); ok {
 			signingURL, _ = data["url"].(string)
+		}
+	}
+
+	// Record the envelope→(estate,directive) binding SERVER-SIDE and stamp the
+	// directive. The webhook resolves the verified result against THIS record, so the
+	// signing evidence chain can never be redirected to another estate's directive by
+	// a client-written signingEnvelopeId. signing_envelopes is server-only (rules).
+	if h.fs != nil && envelopeID != "" {
+		// Top-level signing_envelopes/{envelopeId} (envelope IDs are globally unique),
+		// so the webhook resolves the binding with a direct GET — no collection-group
+		// index needed. Server-only (firestore.rules).
+		if _, e := h.fs.Collection("signing_envelopes").Doc(envelopeID).Set(ctx, map[string]interface{}{
+			"envelopeId":  envelopeID,
+			"estateId":    req.EstateID,
+			"directiveId": req.DirectiveID,
+			"createdBy":   userID,
+			"status":      "sent",
+			"createdAt":   firestore.ServerTimestamp,
+		}); e != nil {
+			log.Error().Err(e).Str("envelope_id", envelopeID).Msg("Failed to record signing_envelopes mapping")
+		}
+		if _, e := h.fs.Collection("estates").Doc(req.EstateID).
+			Collection("directives").Doc(req.DirectiveID).Update(ctx, []firestore.Update{
+			{Path: "signingEnvelopeId", Value: envelopeID},
+			{Path: "signingStatus", Value: "sent"},
+		}); e != nil {
+			log.Warn().Err(e).Str("directive_id", req.DirectiveID).Msg("Failed to stamp directive signingEnvelopeId")
 		}
 	}
 

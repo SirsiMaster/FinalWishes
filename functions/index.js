@@ -301,6 +301,93 @@ exports.autoMatchOnInvitation = onDocumentCreated(
 //   replyTo: "support@sirsi.ai" (optional)
 // }
 
+// ─── Open-relay defense: validate recipients before sending ──────────────
+//
+// The Firestore `mail` create rule pins `createdBy == request.auth.uid`
+// (attribution), but any authenticated user could still queue a mail doc to an
+// ARBITRARY recipient — and sendMail would relay it SPF/DKIM-signed from
+// admin@sirsi.ai, turning the mail collection into a phishing/relay multiplier.
+//
+// FAIL CLOSED. A recipient is authorized only if ONE of these holds for the
+// createdBy user:
+//   (a) the recipient matches a pending estate_invitations doc whose estate
+//       the createdBy user belongs to (estate_invitations + estate_users);
+//   (b) the recipient is the createdBy user's OWN account email
+//       (self-sends, e.g. obituary-to-self);
+//   (c) the recipient is an estate member's email (heirs/executors
+//       subcollection) for an estate the createdBy user belongs to.
+//
+// Returns true if the recipient is authorized for this createdBy.
+async function isRecipientAuthorized(recipient, createdBy) {
+    const target = String(recipient || '').toLowerCase().trim();
+    if (!target || !createdBy) return false;
+
+    // (b) Self-send: recipient is the createdBy user's own account email.
+    try {
+        const userRecord = await admin.auth().getUser(createdBy);
+        const authEmail = (userRecord.email || '').toLowerCase().trim();
+        if (authEmail && authEmail === target) return true;
+    } catch (e) {
+        // Fall through to the users/{createdBy} profile doc lookup.
+        console.warn(`[sendMail] admin.auth().getUser(${createdBy}) failed: ${e.message || e}`);
+    }
+    try {
+        const userDoc = await db.collection('users').doc(createdBy).get();
+        if (userDoc.exists) {
+            const profileEmail = (userDoc.data().email || '').toLowerCase().trim();
+            if (profileEmail && profileEmail === target) return true;
+        }
+    } catch (e) {
+        console.warn(`[sendMail] users/${createdBy} lookup failed: ${e.message || e}`);
+    }
+
+    // Estates the createdBy user belongs to (junction collection).
+    let estateIds = [];
+    try {
+        const euSnap = await db.collection('estate_users')
+            .where('userId', '==', createdBy)
+            .get();
+        estateIds = euSnap.docs
+            .map((d) => d.data().estateId)
+            .filter((id) => !!id);
+    } catch (e) {
+        console.warn(`[sendMail] estate_users lookup for ${createdBy} failed: ${e.message || e}`);
+    }
+    if (estateIds.length === 0) return false;
+
+    const estateSet = new Set(estateIds);
+
+    // (a) Recipient matches a pending invitation whose estate createdBy belongs to.
+    try {
+        const invSnap = await db.collection('estate_invitations')
+            .where('email', '==', target)
+            .get();
+        for (const invDoc of invSnap.docs) {
+            const inv = invDoc.data();
+            if (estateSet.has(inv.estateId)) return true;
+        }
+    } catch (e) {
+        console.warn(`[sendMail] estate_invitations lookup for ${target} failed: ${e.message || e}`);
+    }
+
+    // (c) Recipient is a member email (heirs/executors) of one of those estates.
+    for (const estateId of estateSet) {
+        for (const roleCol of ['heirs', 'executors']) {
+            try {
+                const memberSnap = await db.collection(`estates/${estateId}/${roleCol}`)
+                    .where('email', '==', target)
+                    .limit(1)
+                    .get();
+                if (!memberSnap.empty) return true;
+            } catch (e) {
+                console.warn(`[sendMail] ${roleCol} lookup for ${target} in ${estateId} failed: ${e.message || e}`);
+            }
+        }
+    }
+
+    return false;
+}
+
 exports.sendMail = onDocumentCreated(
     {
         document: 'mail/{mailId}',
@@ -351,7 +438,37 @@ exports.sendMail = onDocumentCreated(
             }
 
             // Resolve recipients
-            const recipients = Array.isArray(mailData.to) ? mailData.to : [mailData.to];
+            const recipients = (Array.isArray(mailData.to) ? mailData.to : [mailData.to])
+                .filter((r) => !!r);
+
+            // Open-relay defense: every recipient must be authorized for the
+            // createdBy user. FAIL CLOSED if attribution is missing or any
+            // recipient cannot be validated — do not relay from admin@sirsi.ai.
+            const createdBy = mailData.createdBy;
+            if (!createdBy) {
+                console.warn(`[sendMail] Rejected mail ${mailRef.id}: missing createdBy attribution`);
+                await mailRef.update({
+                    'delivery.state': 'ERROR',
+                    'delivery.error': 'recipient not authorized',
+                    'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
+                    status: 'rejected',
+                });
+                return;
+            }
+
+            for (const recipient of recipients) {
+                const ok = await isRecipientAuthorized(recipient, createdBy);
+                if (!ok) {
+                    console.warn(`[sendMail] Rejected mail ${mailRef.id}: recipient "${recipient}" not authorized for createdBy ${createdBy}`);
+                    await mailRef.update({
+                        'delivery.state': 'ERROR',
+                        'delivery.error': 'recipient not authorized',
+                        'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
+                        status: 'rejected',
+                    });
+                    return;
+                }
+            }
 
             // Send via Gmail API
             const gmail = await getGmailClient();

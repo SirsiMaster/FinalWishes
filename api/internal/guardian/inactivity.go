@@ -31,17 +31,25 @@ const (
 //   - Day threshold+7: Send notification to executor.      → escalationLevel = "executor_notified"
 //   - Beyond:          Manual only — executor must report via report-status.
 func (h *Handler) HandleRunInactivityCheck(w http.ResponseWriter, r *http.Request) {
-	userID, err := auth.RequireUserID(r.Context())
-	if err != nil {
-		// Also allow Cloud Scheduler OIDC-authenticated requests (no Firebase user)
-		// In production, this would be secured by IAM. For now, require admin.
+	if _, err := auth.RequireUserID(r.Context()); err != nil {
 		writeError(w, http.StatusUnauthorized, "Authentication required")
 		return
 	}
 
-	// For now, any authenticated user can trigger this (admin-only enforcement
-	// is at the route registration level or via Cloud Scheduler IAM).
-	_ = userID
+	// ADMIN ONLY. This scans EVERY estate, mutates escalationLevel fleet-wide, and
+	// sends owner-reminder + executor-notification emails — so it must not be callable
+	// by an ordinary authenticated user (who could spam every owner/executor and
+	// corrupt the Guardian state machine). The legitimate caller is Cloud Scheduler,
+	// which mints a custom token carrying role:admin (functions/index.js). Enforce it.
+	tok := auth.TokenFromContext(r.Context())
+	if tok == nil {
+		writeError(w, http.StatusUnauthorized, "Authentication required")
+		return
+	}
+	if role, _ := tok.Claims["role"].(string); role != "admin" {
+		writeError(w, http.StatusForbidden, "Admin access required")
+		return
+	}
 
 	ctx, cancel := context.WithTimeout(r.Context(), 2*time.Minute)
 	defer cancel()

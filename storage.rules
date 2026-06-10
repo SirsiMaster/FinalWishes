@@ -27,11 +27,23 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
+    // Estate membership: the principal (estates.principalId) OR anyone with an
+    // estate_users junction. Was `request.auth != null` on every path, which let any
+    // authenticated user read ANY estate's files by guessing the path. (The app reads
+    // via Go-API signed URLs that bypass these rules, so this is defense-in-depth —
+    // but the rule must still be estate-scoped, not merely authenticated.)
+    function isEstateMember(estateId) {
+      return request.auth != null && (
+        firestore.exists(/databases/(default)/documents/estate_users/$(request.auth.uid + '_' + estateId))
+        || firestore.get(/databases/(default)/documents/estates/$(estateId)).data.principalId == request.auth.uid
+      );
+    }
+
     // ── Estate Document Vault ──
     // Path: estates/{estateId}/vault/{fileName}
     match /estates/{estateId}/vault/{fileName} {
       // Authenticated users can read (download) their estate's files
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       // No client-side writes — uploads use signed URLs from Go API
       allow write: if false;
     }
@@ -39,49 +51,49 @@ service firebase.storage {
     // ── Estate Memoirs (Photos/Videos) ──
     // Path: estates/{estateId}/memoirs/{fileName}
     match /estates/{estateId}/memoirs/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 
     // ── Estate Memoir Thumbnails (Resize Extension Output) ──
     // Path: estates/{estateId}/memoirs/thumbs/{fileName}
     match /estates/{estateId}/memoirs/thumbs/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 
     // ── Soul Log Media (Audio/Video) ──
     // Path: estates/{estateId}/soul-log/{fileName}
     match /estates/{estateId}/soul-log/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 
     // ── Heirloom Photos ──
     // Path: estates/{estateId}/heirlooms/{fileName}
     match /estates/{estateId}/heirlooms/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 
     // ── Life Chapter Cover Images ──
     // Path: estates/{estateId}/chapters/{fileName}
     match /estates/{estateId}/chapters/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 
     // ── Time Capsule Attachments ──
     // Path: estates/{estateId}/capsules/{fileName}
     match /estates/{estateId}/capsules/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 
     // ── Obituary Portrait Photos ──
     // Path: estates/{estateId}/obituary/{fileName}
     match /estates/{estateId}/obituary/{fileName} {
-      allow read: if request.auth != null;
+      allow read: if isEstateMember(estateId);
       allow write: if false;
     }
 

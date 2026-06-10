@@ -194,34 +194,7 @@ func (h *Handler) HandleVoteQuorumAction(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Read the action
-	actionRef := h.fs.Collection("estates").Doc(req.EstateID).Collection("quorum_actions").Doc(req.ActionID)
-	actionSnap, err := actionRef.Get(ctx)
-	if err != nil {
-		writeError(w, http.StatusNotFound, "Quorum action not found")
-		return
-	}
-
-	var action QuorumAction
-	if err := actionSnap.DataTo(&action); err != nil {
-		writeError(w, http.StatusInternalServerError, "Failed to read quorum action")
-		return
-	}
-
-	if action.Status != "pending" {
-		writeError(w, http.StatusBadRequest, fmt.Sprintf("This action has already been %s", action.Status))
-		return
-	}
-
-	// Check if already voted
-	for _, v := range action.Votes {
-		if v.ExecutorUID == userID {
-			writeError(w, http.StatusConflict, "You have already voted on this action")
-			return
-		}
-	}
-
-	// Get voter name
+	// Voter name + quorum config — stable reads, fine outside the transaction.
 	euDocID := userID + "_" + req.EstateID
 	euSnap, _ := h.fs.Collection("estate_users").Doc(euDocID).Get(ctx)
 	voterName := "Executor"
@@ -230,51 +203,76 @@ func (h *Handler) HandleVoteQuorumAction(w http.ResponseWriter, r *http.Request)
 			voterName = name
 		}
 	}
-
-	now := time.Now()
-	vote := QuorumVote{
-		ExecutorUID:  userID,
-		ExecutorName: voterName,
-		Decision:     req.Decision,
-		Reason:       req.Reason,
-		VotedAt:      now,
-	}
-
-	action.Votes = append(action.Votes, vote)
-
-	// Tally votes
-	approveCount := 0
-	rejectCount := 0
-	for _, v := range action.Votes {
-		if v.Decision == "approve" {
-			approveCount++
-		} else {
-			rejectCount++
-		}
-	}
-
-	// Check if quorum is reached
 	config, _ := h.getQuorumConfig(ctx, req.EstateID)
 	totalExecutors := 3
 	if config != nil {
 		totalExecutors = config.TotalExecutors
 	}
-	requiredVotes := action.RequiredVotes
 
-	if approveCount >= requiredVotes {
-		action.Status = "approved"
-		action.ResolvedAt = &now
-	} else if rejectCount > (totalExecutors - requiredVotes) {
-		// Enough rejections that approval is impossible
-		action.Status = "rejected"
-		action.ResolvedAt = &now
-	}
+	actionRef := h.fs.Collection("estates").Doc(req.EstateID).Collection("quorum_actions").Doc(req.ActionID)
+	now := time.Now()
+	var action QuorumAction
+	var approveCount, rejectCount int
+	var respCode int
+	var respMsg string
 
-	// Write back
-	_, err = actionRef.Set(ctx, action)
-	if err != nil {
-		log.Error().Err(err).Str("action_id", req.ActionID).Msg("Failed to update quorum action")
-		writeError(w, http.StatusInternalServerError, "Failed to record vote")
+	// Atomic read-modify-write. Two executors voting concurrently must NOT clobber
+	// each other — a plain read→Set is last-write-wins, which would silently drop a
+	// vote and miscompute a legally-significant 2-of-3 quorum. The duplicate-vote +
+	// status checks run INSIDE the transaction against the fresh read, and on commit
+	// contention Firestore re-runs the closure against the latest state.
+	txErr := h.fs.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		snap, err := tx.Get(actionRef)
+		if err != nil {
+			respCode, respMsg = http.StatusNotFound, "Quorum action not found"
+			return err
+		}
+		if err := snap.DataTo(&action); err != nil {
+			respCode, respMsg = http.StatusInternalServerError, "Failed to read quorum action"
+			return err
+		}
+		if action.Status != "pending" {
+			respCode, respMsg = http.StatusBadRequest, fmt.Sprintf("This action has already been %s", action.Status)
+			return fmt.Errorf("already resolved")
+		}
+		for _, v := range action.Votes {
+			if v.ExecutorUID == userID {
+				respCode, respMsg = http.StatusConflict, "You have already voted on this action"
+				return fmt.Errorf("already voted")
+			}
+		}
+
+		action.Votes = append(action.Votes, QuorumVote{
+			ExecutorUID:  userID,
+			ExecutorName: voterName,
+			Decision:     req.Decision,
+			Reason:       req.Reason,
+			VotedAt:      now,
+		})
+
+		approveCount, rejectCount = 0, 0
+		for _, v := range action.Votes {
+			if v.Decision == "approve" {
+				approveCount++
+			} else {
+				rejectCount++
+			}
+		}
+		if approveCount >= action.RequiredVotes {
+			action.Status = "approved"
+			action.ResolvedAt = &now
+		} else if rejectCount > (totalExecutors - action.RequiredVotes) {
+			action.Status = "rejected"
+			action.ResolvedAt = &now
+		}
+		return tx.Set(actionRef, action)
+	})
+	if txErr != nil {
+		if respCode == 0 {
+			respCode, respMsg = http.StatusInternalServerError, "Failed to record vote"
+			log.Error().Err(txErr).Str("action_id", req.ActionID).Msg("Failed to update quorum action")
+		}
+		writeError(w, respCode, respMsg)
 		return
 	}
 
@@ -294,7 +292,7 @@ func (h *Handler) HandleVoteQuorumAction(w http.ResponseWriter, r *http.Request)
 		_, _, _ = h.fs.Collection("estates").Doc(req.EstateID).Collection("notifications").Add(ctx, map[string]interface{}{
 			"type":      "probate",
 			"title":     fmt.Sprintf("Quorum action %s", action.Status),
-			"message":   fmt.Sprintf("The action \"%s\" has been %s by executor quorum (%d/%d votes).", action.Description, action.Status, approveCount, requiredVotes),
+			"message":   fmt.Sprintf("The action \"%s\" has been %s by executor quorum (%d/%d votes).", action.Description, action.Status, approveCount, action.RequiredVotes),
 			"createdAt": now,
 			"createdBy": "system",
 		})

@@ -469,6 +469,8 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
         xhr.addEventListener('error', () => reject(new Error('Network error')))
         xhr.open('PUT', uploadUrl)
         xhr.setRequestHeader('Content-Type', file.type || 'image/jpeg')
+        // Matches the server-signed X-Goog-Content-Length-Range constraint (100 MB cap)
+        xhr.setRequestHeader('X-Goog-Content-Length-Range', '0,104857600')
         xhr.send(file)
       })
 

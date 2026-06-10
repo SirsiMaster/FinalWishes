@@ -10,12 +10,14 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	cloudtasks "cloud.google.com/go/cloudtasks/apiv2"
 	cloudtaskspb "cloud.google.com/go/cloudtasks/apiv2/cloudtaskspb"
 	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog/log"
+	"google.golang.org/api/idtoken"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
@@ -218,11 +220,28 @@ func (h *Handler) HandleScheduleCapsule(w http.ResponseWriter, r *http.Request) 
 // HandleDeliverCapsule is the Cloud Tasks callback. It reads the capsule,
 // composes the email, and writes to the Firestore `mail` collection.
 func (h *Handler) HandleDeliverCapsule(w http.ResponseWriter, r *http.Request) {
-	// Verify request originates from Cloud Tasks
-	taskName := r.Header.Get("X-CloudTasks-TaskName")
-	queueHeader := r.Header.Get("X-CloudTasks-QueueName")
-	if taskName == "" || queueHeader == "" {
-		log.Warn().Msg("Deliver endpoint called without Cloud Tasks headers")
+	// Verify request authenticity by validating the OIDC bearer token Cloud Tasks
+	// attaches (createDeliveryTask mints one for the finalwishes-api SA with the
+	// deliver URL as audience). The X-CloudTasks-* headers are trivially spoofable —
+	// an external caller could otherwise POST a valid estateId/capsuleId and force
+	// premature delivery. idtoken.Validate checks the Google signature + audience;
+	// we additionally pin the issuer SA email.
+	authz := r.Header.Get("Authorization")
+	bearer := strings.TrimPrefix(authz, "Bearer ")
+	if bearer == "" || bearer == authz {
+		log.Warn().Msg("Deliver endpoint called without an OIDC bearer token")
+		writeError(w, http.StatusForbidden, "This endpoint accepts only Cloud Tasks requests")
+		return
+	}
+	tokPayload, err := idtoken.Validate(r.Context(), bearer, deliverURL)
+	if err != nil {
+		log.Warn().Err(err).Msg("Deliver endpoint OIDC token validation failed")
+		writeError(w, http.StatusForbidden, "This endpoint accepts only Cloud Tasks requests")
+		return
+	}
+	expectedSA := fmt.Sprintf("finalwishes-api@%s.iam.gserviceaccount.com", h.projectID)
+	if email, _ := tokPayload.Claims["email"].(string); email != expectedSA {
+		log.Warn().Str("token_email", fmt.Sprintf("%v", tokPayload.Claims["email"])).Msg("Deliver endpoint token from unexpected service account")
 		writeError(w, http.StatusForbidden, "This endpoint accepts only Cloud Tasks requests")
 		return
 	}
@@ -243,7 +262,7 @@ func (h *Handler) HandleDeliverCapsule(w http.ResponseWriter, r *http.Request) {
 	logger := log.With().
 		Str("estate_id", payload.EstateID).
 		Str("capsule_id", payload.CapsuleID).
-		Str("task", taskName).
+		Str("task", r.Header.Get("X-CloudTasks-TaskName")).
 		Logger()
 
 	// Read capsule

@@ -59,9 +59,12 @@ func TestHandleDeliverCapsule_MissingQueueHeader(t *testing.T) {
 	}
 }
 
-// TestHandleDeliverCapsule_InvalidPayload verifies that malformed JSON returns 400
-// when Cloud Tasks headers are present.
-func TestHandleDeliverCapsule_InvalidPayload(t *testing.T) {
+// TestHandleDeliverCapsule_RejectsSpoofedHeaders verifies the deliver endpoint now
+// requires a VALID OIDC bearer token (minted by Cloud Tasks for the finalwishes-api
+// SA) and rejects a request that merely sets the spoofable X-CloudTasks-* headers.
+// Auth runs BEFORE payload parsing, so this fires regardless of body validity —
+// closing the premature-delivery vector (an external caller forging the headers).
+func TestHandleDeliverCapsule_RejectsSpoofedHeaders(t *testing.T) {
 	h := &Handler{}
 
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/capsules/deliver", strings.NewReader("{bad json"))
@@ -70,31 +73,26 @@ func TestHandleDeliverCapsule_InvalidPayload(t *testing.T) {
 	rr := httptest.NewRecorder()
 	h.HandleDeliverCapsule(rr, req)
 
-	if rr.Code != http.StatusBadRequest {
-		t.Errorf("expected 400, got %d", rr.Code)
+	if rr.Code != http.StatusForbidden {
+		t.Errorf("expected 403 (no OIDC token), got %d", rr.Code)
 	}
-	if !strings.Contains(rr.Body.String(), "Invalid task payload") {
-		t.Errorf("expected 'Invalid task payload', got %q", rr.Body.String())
+	if !strings.Contains(rr.Body.String(), "only Cloud Tasks requests") {
+		t.Errorf("expected Cloud Tasks rejection, got %q", rr.Body.String())
 	}
 }
 
-// TestHandleDeliverCapsule_MissingPayloadFields verifies that empty estateId/capsuleId
-// in the payload returns 400.
-func TestHandleDeliverCapsule_MissingPayloadFields(t *testing.T) {
+// TestHandleDeliverCapsule_RejectsNoBearer verifies a request with no Authorization
+// bearer token is denied even with a well-formed payload.
+func TestHandleDeliverCapsule_RejectsNoBearer(t *testing.T) {
 	h := &Handler{}
 
-	body := `{"estateId":"","capsuleId":""}`
+	body := `{"estateId":"e1","capsuleId":"c1"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/capsules/deliver", strings.NewReader(body))
-	req.Header.Set("X-CloudTasks-TaskName", "task-789")
-	req.Header.Set("X-CloudTasks-QueueName", "capsule-delivery")
 	rr := httptest.NewRecorder()
 	h.HandleDeliverCapsule(rr, req)
 
-	if rr.Code != http.StatusBadRequest {
-		t.Errorf("expected 400, got %d", rr.Code)
-	}
-	if !strings.Contains(rr.Body.String(), "Missing estateId or capsuleId") {
-		t.Errorf("expected missing fields error, got %q", rr.Body.String())
+	if rr.Code != http.StatusForbidden {
+		t.Errorf("expected 403 (no OIDC token), got %d", rr.Code)
 	}
 }
 

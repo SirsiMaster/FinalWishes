@@ -201,6 +201,13 @@ func (h *Handler) authorize(w http.ResponseWriter, r *http.Request) (string, str
 		writeError(w, http.StatusForbidden, "You do not have access to this estate")
 		return "", "", false
 	}
+	// Importing photos WRITES heirlooms — gate on a writer role (principal/executor/
+	// admin, mirroring canWriteEstate). A read-only heir is a member but must not
+	// write to the estate.
+	if role, _ := snap.Data()["role"].(string); role != "principal" && role != "executor" && role != "admin" {
+		writeError(w, http.StatusForbidden, "You do not have permission to import to this estate")
+		return "", "", false
+	}
 	return userID, estateID, true
 }
 

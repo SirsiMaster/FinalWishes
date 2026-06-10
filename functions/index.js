@@ -179,11 +179,23 @@ exports.autoMatchInvitation = onDocumentCreated(
                 const personName = roleSnap.docs.length ? (roleSnap.docs[0].data().fullName || '') : '';
                 if (personName) {
                     try {
-                        const slSnap = await db.collection(`estates/${estateId}/soul-log`)
-                            .where('taggedPeople', 'array-contains', personName).get();
-                        slSnap.forEach((sd) => batch.update(sd.ref, {
-                            sharedWith: admin.firestore.FieldValue.arrayUnion(uid),
-                        }));
+                        // AMBIGUITY GUARD: if more than one heir in this estate shares
+                        // this display name, we cannot tell which entries were meant for
+                        // THIS heir — skip the name-keyed backfill rather than risk
+                        // granting them access to another same-named heir's entries
+                        // (claude-home PR #3 review). New entries already carry sharedWith
+                        // by UID, so this only affects legacy name-only sharing.
+                        const sameName = await db.collection(`estates/${estateId}/heirs`)
+                            .where('fullName', '==', personName).get();
+                        if (sameName.size > 1) {
+                            console.warn(`[autoMatch] sharedWith backfill skipped for ${estateId}: "${personName}" is shared by ${sameName.size} heirs (ambiguous)`);
+                        } else {
+                            const slSnap = await db.collection(`estates/${estateId}/soul-log`)
+                                .where('taggedPeople', 'array-contains', personName).get();
+                            slSnap.forEach((sd) => batch.update(sd.ref, {
+                                sharedWith: admin.firestore.FieldValue.arrayUnion(uid),
+                            }));
+                        }
                     } catch (e) {
                         console.warn(`[autoMatch] sharedWith backfill failed for ${estateId}: ${e.message}`);
                     }

@@ -37,12 +37,15 @@ const sameSet = (a, b) => a.length === b.length && a.every((x) => b.includes(x))
   for (const estate of estates.docs) {
     const estateId = estate.id;
 
-    // name → userId for heirs that have registered
+    // name → SET of registered-heir UIDs. A name that maps to MORE THAN ONE heir is
+    // AMBIGUOUS (two heirs share a display name) — we must NOT guess which one the
+    // entry was shared with, or we'd mis-share. Such names are skipped + logged for
+    // manual resolution (claude-home PR #3 review).
     const heirs = await db.collection(`estates/${estateId}/heirs`).get();
-    const nameToUid = {};
+    const nameToUids = {};
     for (const h of heirs.docs) {
       const d = h.data();
-      if (d.fullName && d.userId) nameToUid[d.fullName] = d.userId;
+      if (d.fullName && d.userId) (nameToUids[d.fullName] = nameToUids[d.fullName] || new Set()).add(d.userId);
     }
 
     const entries = await db.collection(`estates/${estateId}/soul-log`)
@@ -51,12 +54,22 @@ const sameSet = (a, b) => a.length === b.length && a.every((x) => b.includes(x))
       scanned++;
       const data = e.data();
       const tagged = Array.isArray(data.taggedPeople) ? data.taggedPeople : [];
-      const want = Array.from(new Set(tagged.map((n) => nameToUid[n]).filter(Boolean)));
+      const want = [];
+      for (const n of tagged) {
+        const uids = nameToUids[n];
+        if (!uids) continue;
+        if (uids.size > 1) {
+          console.warn(`SKIP ambiguous name "${n}" in ${estateId}/${e.id}: maps to ${uids.size} registered heirs — resolve manually`);
+          continue;
+        }
+        want.push([...uids][0]);
+      }
+      const wantSet = Array.from(new Set(want));
       const have = Array.isArray(data.sharedWith) ? data.sharedWith : [];
-      if (!sameSet(want, have)) {
+      if (!sameSet(wantSet, have)) {
         changed++;
-        console.log(`${APPLY ? 'WRITE' : 'DRY '} ${estateId}/${e.id}: sharedWith ${JSON.stringify(have)} -> ${JSON.stringify(want)}`);
-        if (APPLY) await e.ref.update({ sharedWith: want });
+        console.log(`${APPLY ? 'WRITE' : 'DRY '} ${estateId}/${e.id}: sharedWith ${JSON.stringify(have)} -> ${JSON.stringify(wantSet)}`);
+        if (APPLY) await e.ref.update({ sharedWith: wantSet });
       }
     }
   }

@@ -53,8 +53,14 @@ func Middleware(authClient *firebaseAuth.Client) func(http.Handler) http.Handler
 			// address they don't control but can never VERIFY it, so gating every
 			// protected API route on email_verified closes the seizure server-side
 			// (the client IdentityGate alone is bypassable). The mirror gate lives in
-			// firestore.rules (isEstateRole) for the SDK path.
-			if v, _ := token.Claims["email_verified"].(bool); !v {
+			// firestore.rules (isEstateRole) for the SDK path. Admin SERVICE tokens
+			// (e.g. the Cloud Scheduler custom token minted for 'guardian-scheduler'
+			// with role:admin) have no email and thus no email_verified claim — exempt
+			// them, since they carry no estate_users junction and are gated separately
+			// by the admin role on the handlers they reach.
+			emailVerified, _ := token.Claims["email_verified"].(bool)
+			isAdminToken, _ := token.Claims["role"].(string)
+			if !emailVerified && isAdminToken != "admin" {
 				http.Error(w, `{"error":{"code":"EMAIL_NOT_VERIFIED","message":"Email verification required"}}`, http.StatusForbidden)
 				return
 			}

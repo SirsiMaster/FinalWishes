@@ -117,6 +117,12 @@ func ContextWithUserID(ctx context.Context, uid string) context.Context {
 	return context.WithValue(ctx, userIDKey, uid)
 }
 
+// ContextWithToken returns a context carrying the given verified token (as the
+// middleware would). Intended for tests that exercise handlers reading token claims.
+func ContextWithToken(ctx context.Context, token *firebaseAuth.Token) context.Context {
+	return context.WithValue(ctx, tokenKey, token)
+}
+
 // TokenFromContext extracts the verified Firebase token from the request context.
 // Returns nil if not authenticated.
 func TokenFromContext(ctx context.Context) *firebaseAuth.Token {

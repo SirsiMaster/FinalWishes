@@ -8,15 +8,23 @@ import (
 	"strings"
 	"testing"
 
+	firebaseAuth "firebase.google.com/go/v4/auth"
+
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
-// withAuth injects an authenticated user context (as the middleware would) so these
-// tests exercise HandleCreateEnvelope past its auth gate. A nil-fs WebhookHandler skips
-// the estate_users check + the binding write, leaving the OpenSign proxy behavior under
-// test. Bodies include estateId/directiveId (now required).
+// withAuth injects an authenticated user context + token (as the middleware would) so
+// these tests exercise HandleCreateEnvelope past its auth gate and the token-derived
+// signer identity. A nil-fs WebhookHandler skips the estate_users check + the binding
+// write, leaving the OpenSign proxy behavior under test. Bodies include
+// estateId/directiveId (now required).
 func withAuth(req *http.Request) *http.Request {
-	return req.WithContext(auth.ContextWithUserID(req.Context(), "u1"))
+	ctx := auth.ContextWithUserID(req.Context(), "u1")
+	ctx = auth.ContextWithToken(ctx, &firebaseAuth.Token{Claims: map[string]interface{}{
+		"email": "u1@example.com",
+		"name":  "U One",
+	}})
+	return req.WithContext(ctx)
 }
 
 func openSignTestHandler() *WebhookHandler { return &WebhookHandler{} }

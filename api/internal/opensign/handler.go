@@ -92,12 +92,31 @@ func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	// Force the signer identity to the AUTHENTICATED caller — never the body's
+	// signerEmail. Otherwise an estate writer could name an ARBITRARY signer (send the
+	// signing link to anyone / forge "X signed this directive"). The verified email
+	// claim is the only trustworthy signer identity. (claude-home PR #4 review.)
+	signerEmail := ""
+	signerName := req.SignerName
+	if tok := auth.TokenFromContext(ctx); tok != nil {
+		if e, _ := tok.Claims["email"].(string); e != "" {
+			signerEmail = e
+		}
+		if n, _ := tok.Claims["name"].(string); n != "" {
+			signerName = n
+		}
+	}
+	if signerEmail == "" {
+		http.Error(w, "Signer email could not be determined from your account", http.StatusBadRequest)
+		return
+	}
+
 	upstreamPayload := map[string]interface{}{
 		"template_id": req.TemplateID,
 		"signers": []map[string]string{
 			{
-				"name":  req.SignerName,
-				"email": req.SignerEmail,
+				"name":  signerName,
+				"email": signerEmail,
 				"role":  "Signer",
 			},
 		},

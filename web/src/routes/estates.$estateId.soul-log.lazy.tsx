@@ -1158,7 +1158,10 @@ function ComposerDialog({
   const [title, setTitle] = useState('')
   const [visibility, setVisibility] = useState<Visibility>('private')
   const [mood, setMood] = useState<string>('')
-  const [taggedPeople, setTaggedPeople] = useState<string[]>([])
+  // taggedIds = the unique heir doc-ids the owner tagged (the source of truth).
+  // taggedPeople (names) + sharedWith (UIDs) are DERIVED from these at save, so a
+  // shared entry is never mis-routed by an ambiguous display name.
+  const [taggedIds, setTaggedIds] = useState<string[]>([])
   const [sealedTrigger, setSealedTrigger] = useState<'date' | 'on_passing'>('on_passing')
   const [sealedDate, setSealedDate] = useState('')
   const [saving, setSaving] = useState(false)
@@ -1211,7 +1214,7 @@ function ComposerDialog({
       setTitle('')
       setVisibility('private')
       setMood('')
-      setTaggedPeople([])
+      setTaggedIds([])
       setTextContent('')
       setSealedTrigger('on_passing')
       setSealedDate('')
@@ -1340,16 +1343,18 @@ function ComposerDialog({
 
       setSaveStep('saving')
 
-      // sharedWith = the Firebase UIDs of the tagged heirs who have a registered
-      // account. The Firestore rule + the non-owner query gate on this (array-contains)
-      // so a heir reads only entries shared WITH THEM — not every 'shared' entry
-      // (ADR-046 #1). taggedPeople (names) is kept for display + as the key the
-      // autoMatchInvitation backfill uses to add a heir's UID once they accept (so
-      // sharing with a not-yet-registered heir still resolves on acceptance).
+      // Derive both fields from the tagged heir IDs (unique) — never by display name.
+      // sharedWith (UIDs) is the security field the rule + non-owner query gate on
+      // (array-contains) so a heir reads only entries shared WITH THEM (ADR-046 #1);
+      // a registered heir's UID is read directly off its doc, so two same-named heirs
+      // can never be conflated. taggedPeople (names) is kept for display + as the key
+      // the autoMatchInvitation backfill uses for a heir who hasn't registered yet.
+      const taggedHeirs = taggedIds
+        .map((id) => heirs.find((h) => h.id === id))
+        .filter((h): h is Heir => Boolean(h))
+      const taggedPeople = Array.from(new Set(taggedHeirs.map((h) => h.fullName).filter(Boolean)))
       const sharedWith = Array.from(new Set(
-        taggedPeople
-          .map((name) => heirs.find((h) => h.fullName === name)?.userId)
-          .filter((uid): uid is string => Boolean(uid)),
+        taggedHeirs.map((h) => h.userId).filter((uid): uid is string => Boolean(uid)),
       ))
 
       // Build the document
@@ -1424,7 +1429,7 @@ function ComposerDialog({
     }
   }, [
     saving, entryType, recordedBlob, tierUsage, estateId, title,
-    visibility, mood, taggedPeople, userId, recordDuration, textContent,
+    visibility, mood, taggedIds, heirs, userId, recordDuration, textContent,
     sealedTrigger, sealedDate, onOpenChange,
   ])
 
@@ -1625,15 +1630,18 @@ function ComposerDialog({
                 </Label>
                 <div className="flex flex-wrap gap-2">
                   {heirs.map((heir) => {
-                    const tagged = taggedPeople.includes(heir.fullName)
+                    // Key the toggle on the unique heir.id, NOT the display name —
+                    // two heirs can share a fullName, and resolving sharedWith by name
+                    // would mis-share (claude-home PR #3 review).
+                    const tagged = taggedIds.includes(heir.id)
                     return (
                       <button
                         key={heir.id}
                         onClick={() => {
-                          setTaggedPeople(
+                          setTaggedIds(
                             tagged
-                              ? taggedPeople.filter((n) => n !== heir.fullName)
-                              : [...taggedPeople, heir.fullName],
+                              ? taggedIds.filter((id) => id !== heir.id)
+                              : [...taggedIds, heir.id],
                           )
                         }}
                         className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${

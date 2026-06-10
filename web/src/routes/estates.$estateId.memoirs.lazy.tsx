@@ -157,6 +157,8 @@ function MemoirsPage() {
             const xhr = new XMLHttpRequest()
             xhr.open('PUT', uploadUrl)
             xhr.setRequestHeader('Content-Type', file.type)
+            // Matches the server-signed X-Goog-Content-Length-Range constraint (100 MB cap)
+            xhr.setRequestHeader('X-Goog-Content-Length-Range', '0,104857600')
 
             xhr.upload.addEventListener('progress', (e) => {
               if (e.lengthComputable) {

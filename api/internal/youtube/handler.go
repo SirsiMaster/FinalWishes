@@ -200,9 +200,9 @@ func (h *Handler) HandleUploadVideo(w http.ResponseWriter, r *http.Request) {
 }
 
 // HandleGetVideoStatus checks the processing status of a YouTube video.
-// Query params: video_id (required)
+// Query params: video_id (required), estateId (required)
 func (h *Handler) HandleGetVideoStatus(w http.ResponseWriter, r *http.Request) {
-	_, err := auth.RequireUserID(r.Context())
+	userID, err := auth.RequireUserID(r.Context())
 	if err != nil {
 		writeError(w, http.StatusUnauthorized, "Authentication required")
 		return
@@ -214,8 +214,23 @@ func (h *Handler) HandleGetVideoStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	estateID := r.URL.Query().Get("estateId")
+	if estateID == "" {
+		writeError(w, http.StatusBadRequest, "estateId is required")
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
+
+	// Verify estate access via estate_users junction before exposing YouTube
+	// status or mutating any memoir document.
+	euSnap, err := h.fs.Collection("estate_users").Doc(userID + "_" + estateID).Get(ctx)
+	if err != nil || !euSnap.Exists() {
+		log.Warn().Str("user_id", userID).Str("estate_id", estateID).Msg("YouTube status denied — no estate access")
+		writeError(w, http.StatusForbidden, "You do not have access to this estate")
+		return
+	}
 
 	call := h.yt.Videos.List([]string{"status", "processingDetails"})
 	call.Id(videoID)

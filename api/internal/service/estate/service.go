@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -76,11 +77,23 @@ func (s *Server) GenerateUploadUrl(ctx context.Context, req *connect.Request[est
 
 	objectName := fmt.Sprintf("estates/%s/vault/%d-%s", req.Msg.EstateId, time.Now().UnixMilli(), filepath.Base(req.Msg.FileName))
 
+	// Enforce a server-side upload byte cap. The signed URL constrains the PUT to
+	// 0..maxUploadBytes via X-Goog-Content-Length-Range; the client MUST send the
+	// matching header or GCS rejects the upload. Default 100 MB, overridable via env.
+	maxUploadBytes := int64(104857600) // 100 MB
+	if v := os.Getenv("MAX_UPLOAD_BYTES"); v != "" {
+		if parsed, perr := strconv.ParseInt(v, 10, 64); perr == nil && parsed > 0 {
+			maxUploadBytes = parsed
+		}
+	}
+	contentLengthRange := fmt.Sprintf("X-Goog-Content-Length-Range:0,%d", maxUploadBytes)
+
 	uploadURL, err := s.sc.Bucket(bucketName).SignedURL(objectName, &storage.SignedURLOptions{
 		Scheme:      storage.SigningSchemeV4,
 		Method:      "PUT",
 		Expires:     time.Now().Add(15 * time.Minute),
 		ContentType: req.Msg.ContentType,
+		Headers:     []string{contentLengthRange},
 	})
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to generate signed upload URL: %w", err))

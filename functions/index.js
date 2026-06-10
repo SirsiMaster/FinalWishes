@@ -171,6 +171,24 @@ exports.autoMatchInvitation = onDocumentCreated(
                     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 }));
 
+                // Backfill Soul Log sharing (ADR-046 #1): entries were tagged with this
+                // person's display NAME before they had an account; now that they've
+                // registered, add their UID to sharedWith so the per-recipient read rule
+                // (request.auth.uid in resource.data.sharedWith) resolves. Without this,
+                // sharing with a not-yet-registered heir would never grant them access.
+                const personName = roleSnap.docs.length ? (roleSnap.docs[0].data().fullName || '') : '';
+                if (personName) {
+                    try {
+                        const slSnap = await db.collection(`estates/${estateId}/soul-log`)
+                            .where('taggedPeople', 'array-contains', personName).get();
+                        slSnap.forEach((sd) => batch.update(sd.ref, {
+                            sharedWith: admin.firestore.FieldValue.arrayUnion(uid),
+                        }));
+                    } catch (e) {
+                        console.warn(`[autoMatch] sharedWith backfill failed for ${estateId}: ${e.message}`);
+                    }
+                }
+
                 const auditRef = db.collection('audit_logs').doc();
                 batch.set(auditRef, {
                     action: 'invitation_auto_matched',

@@ -246,8 +246,15 @@ function SoulLogPage() {
   const constraints = useMemo(
     () => (isOwnerView
       ? [orderBy('createdAt', 'desc')]
-      : [where('visibility', '==', 'shared'), orderBy('createdAt', 'desc')]),
-    [isOwnerView],
+      // Non-owners read only `shared` entries TAGGED TO THEM (array-contains their
+      // uid) — matches the Firestore rule (ADR-046 #1). Was shared-only, which let a
+      // heir read every shared entry incl. other heirs'.
+      : [
+          where('visibility', '==', 'shared'),
+          where('sharedWith', 'array-contains', user?.uid ?? '__none__'),
+          orderBy('createdAt', 'desc'),
+        ]),
+    [isOwnerView, user?.uid],
   )
   const { data: rawEntries, loading: feedLoading } = useCollection<SoulLogEntry>(
     roleResolved ? `estates/${estateId}/soul-log` : null,
@@ -314,11 +321,10 @@ function SoulLogPage() {
     !loading && rawEntries.length > 0 && daysSinceLastEntry > 7,
   )
 
-  // Normalize entries and apply visibility filtering. The QUERY already restricts
-  // non-owners to `shared` entries (rule-enforced), so this is UI narrowing only:
-  // show the viewer the shared entries tagged for them. (taggedPeople still stores
-  // display names — a UID migration for true per-recipient enforcement is tracked
-  // for Codex; the critical private-entry exposure is now closed at the DB layer.)
+  // Normalize entries. The non-owner QUERY is now constrained to
+  // where('sharedWith','array-contains', uid) and the Firestore rule enforces the same
+  // (ADR-046 #1), so any `shared` entry returned to a non-owner is genuinely shared
+  // WITH THEM — no brittle client-side displayName matching needed.
   const entries = useMemo(() => {
     const normalized = rawEntries.map((e) => ({
       ...e,
@@ -328,14 +334,12 @@ function SoulLogPage() {
     // Owner/admin sees everything
     if (isOwnerView) return normalized
 
-    // Non-owners: of the shared entries returned, show those tagged for them.
-    const userName = profile?.displayName || user?.displayName || ''
     return normalized.filter((entry) => {
       if (entry.createdBy === user?.uid) return true
-      if (entry.visibility === 'shared' && entry.taggedPeople.includes(userName)) return true
+      if (entry.visibility === 'shared') return true // query already gated on sharedWith
       return false
     })
-  }, [rawEntries, isOwnerView, profile?.displayName, user?.displayName, user?.uid])
+  }, [rawEntries, isOwnerView, user?.uid])
 
   // Search filtering (client-side across title, content, transcript)
   const filteredEntries = useMemo(() => {
@@ -1336,6 +1340,18 @@ function ComposerDialog({
 
       setSaveStep('saving')
 
+      // sharedWith = the Firebase UIDs of the tagged heirs who have a registered
+      // account. The Firestore rule + the non-owner query gate on this (array-contains)
+      // so a heir reads only entries shared WITH THEM — not every 'shared' entry
+      // (ADR-046 #1). taggedPeople (names) is kept for display + as the key the
+      // autoMatchInvitation backfill uses to add a heir's UID once they accept (so
+      // sharing with a not-yet-registered heir still resolves on acceptance).
+      const sharedWith = Array.from(new Set(
+        taggedPeople
+          .map((name) => heirs.find((h) => h.fullName === name)?.userId)
+          .filter((uid): uid is string => Boolean(uid)),
+      ))
+
       // Build the document
       const entryDoc: Record<string, unknown> = {
         title: title || generateTitle(),
@@ -1343,6 +1359,7 @@ function ComposerDialog({
         visibility,
         mood: mood || null,
         taggedPeople,
+        sharedWith,
         createdBy: userId,
         createdAt: serverTimestamp(),
         duration: recordDuration || null,

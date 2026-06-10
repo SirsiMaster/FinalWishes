@@ -29,6 +29,10 @@ const FV = admin.firestore.FieldValue;
 
 (async () => {
   const owner = await auth.getUserByEmail(OWNER_EMAIL);
+  // The heir's UID — the shared entry must list it in `sharedWith` so the per-recipient
+  // read rule + array-contains query (ADR-046 #1) grant the heir access.
+  const HEIR_EMAIL = process.env.E2E_PERSONA_HEIR_EMAIL || 'e2e-persona-heir@finalwishes.app';
+  const heir = await auth.getUserByEmail(HEIR_EMAIL);
   const col = db.collection(`estates/${ESTATE}/soul-log`);
 
   // Clear prior E2E-seeded entries (idempotent).
@@ -44,7 +48,8 @@ const FV = admin.firestore.FieldValue;
   });
   await col.doc('e2e_shared').set({
     title: 'E2E Shared Letter', type: 'text', visibility: 'shared',
-    createdBy: owner.uid, content: '<p>for the heir</p>', taggedPeople: [HEIR_NAME],
+    createdBy: owner.uid, content: '<p>for the heir</p>',
+    taggedPeople: [HEIR_NAME], sharedWith: [heir.uid],
     createdAt: FV.serverTimestamp(),
   });
 

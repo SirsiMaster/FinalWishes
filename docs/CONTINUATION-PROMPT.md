@@ -1,5 +1,5 @@
 # FinalWishes — Continuation Prompt
-**Version:** 25.0 — **Date:** June 11, 2026 — **Session:** RC-blocker security sweep (6 audits) + redesigns + full provisioning + shared-services model (claude-finalwishes; codex-finalwishes back & reviewing)
+**Version:** 26.0 — **Date:** June 11, 2026 — **Session:** RC-blocker security sweep (6 audits) + redesigns + full provisioning + shared-services model (claude-finalwishes; **review path consolidated to claude-home — terminal reviewer; no codex-* routing**)
 
 > Read this first on resume. Self-contained state. Root in `~/Development/FinalWishes`. Resume name **"FinalWishes"**. Router identity **claude-finalwishes** (heartbeat your existing thread; do NOT mint a new one).
 
@@ -9,7 +9,9 @@
 
 **HEAD `da2182f` on main, API healthy (200), all PRs merged.** Non-mobile Tier-1 is engineering-complete and **security-swept end-to-end**. The app went from "far from RC" to having its entire exploitable surface closed.
 
-**This session's headline = 12 CRITICAL + 1 HIGH + ~12 MEDIUM/LOW security holes closed** across **6 subagent RC-blocker audit rounds**, plus 3 feature redesigns merged + the shared-services architecture. **codex-finalwishes is back and rendering binding review** (it pushed PR #6 itself).
+**This session's headline = 12 CRITICAL + 1 HIGH + ~12 MEDIUM/LOW security holes closed** across **6 subagent RC-blocker audit rounds**, plus 3 feature redesigns merged + the shared-services architecture. (PR #6 — RegisterEstate UID-from-token — was pushed by codex before the review path was consolidated.)
+
+> **⚠️ ROUTING (owner directive 2026-06-11, supersedes earlier codex-conduit protocol):** **claude-home is the DEFINITIVE / terminal reviewer.** Route ALL review requests, verdicts, hand-offs, and questions to **claude-home** — never to any `codex-*` surface (anything sent there is reclaimed). For heavy plan/summarize/draft/analyze legwork, route to the local **gemma** surface (zero API tokens; never binding verdicts or tool actions). See memory `feedback_claude_home_sole_codex_conduit`.
 
 ---
 
@@ -34,7 +36,7 @@ The owner re-authed locally + granted my SA `roles/resourcemanager.projectIamAdm
 
 ## 4. NEXT (priority)
 
-1. **Fold codex-finalwishes binding-review findings** as they land (it's back; pull `claude-finalwishes` inbox each turn — it returns verdicts in YOUR item's Result + closes it, and pushes its own PRs e.g. #6).
+1. **Pull `claude-finalwishes` inbox each turn** (from the pantheon router root — `cd ~/Development/sirsi-pantheon && sirsi router pull claude-finalwishes`). Send any review request to **claude-home** (terminal reviewer); it returns verdicts in YOUR item's Result + closes it. Do NOT address `codex-*`.
 2. **OpenSign integration goes live when owner distributes the shared secret** to `finalwishes-prod` Secret Manager (`SIRSI_SIGN_API_KEY` / `SIRSI_SIGN_HMAC_SECRET` — owned by the `sirsi-opensign` org, not cross-project readable). Until then both apps run the dissociated fallback; webhook stays fail-closed/secure.
 3. **Google Photos OAuth client** — the ONE genuine console action (Google has no OAuth-client-creation API): create a Web client (origins `finalwishes-prod.web.app` + `finalwishes.app`) + add `photospicker.mediaitems.readonly` to consent; then I set `VITE_GOOGLE_OAUTH_CLIENT_ID`.
 4. **CR-10 corpus** — owner sources verified IL/MD/MN statute text into a manifest (`docs/legal-corpus/manifest.md` schema); then `go run ./cmd/corpus-ingest`.
@@ -49,12 +51,13 @@ The owner re-authed locally + granted my SA `roles/resourcemanager.projectIamAdm
 - E2E: `cd web` → export `E2E_PERSONA_PASSWORD`/`E2E_TEST_PASSWORD` + `source ../scripts/.e2e-mfa-secrets.env` → `npx playwright test ... --workers=1` (paced; Go API rate-limits 100/60s).
 
 ## 6. Router / the dance
-- Identity **claude-finalwishes**; codex-finalwishes is the binding reviewer (back). claude-home = supervisor (standin wound down). claude-assiduous tasked with ADR-047 mirror.
+- Identity **claude-finalwishes**. **claude-home = the definitive/terminal reviewer** (route all reviews there; no codex-* — owner directive 2026-06-11). **gemma** = local zero-token surface for plan/summarize/draft/analyze legwork. claude-assiduous tasked with the ADR-047 mirror.
+- Router lives in the **pantheon** repo: run `sirsi router …` from `~/Development/sirsi-pantheon` (the `.agents/idea-router/` root), not from FinalWishes.
 - **CI can't deploy Firestore INDEXES historically** — now fixed (CI SA has indexAdmin). If a new composite index is added, CI builds it; else build via the SA: `gcloud firestore indexes composite create ...`.
 
 ## 7. Start commands
 ```bash
 cd ~/Development/FinalWishes && git status -sb && git log --oneline -6
-/Users/thekryptodragon/.local/bin/sirsi router pull claude-finalwishes   # codex verdicts land here
+cd ~/Development/sirsi-pantheon && /Users/thekryptodragon/.local/bin/sirsi router pull claude-finalwishes   # reviews ↔ claude-home land here
 cd api && GOTOOLCHAIN=auto go build ./... && go test ./internal/... | tail
 ```

@@ -171,6 +171,36 @@ exports.autoMatchInvitation = onDocumentCreated(
                     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                 }));
 
+                // Backfill Soul Log sharing (ADR-046 #1): entries were tagged with this
+                // person's display NAME before they had an account; now that they've
+                // registered, add their UID to sharedWith so the per-recipient read rule
+                // (request.auth.uid in resource.data.sharedWith) resolves. Without this,
+                // sharing with a not-yet-registered heir would never grant them access.
+                const personName = roleSnap.docs.length ? (roleSnap.docs[0].data().fullName || '') : '';
+                if (personName) {
+                    try {
+                        // AMBIGUITY GUARD: if more than one heir in this estate shares
+                        // this display name, we cannot tell which entries were meant for
+                        // THIS heir — skip the name-keyed backfill rather than risk
+                        // granting them access to another same-named heir's entries
+                        // (claude-home PR #3 review). New entries already carry sharedWith
+                        // by UID, so this only affects legacy name-only sharing.
+                        const sameName = await db.collection(`estates/${estateId}/heirs`)
+                            .where('fullName', '==', personName).get();
+                        if (sameName.size > 1) {
+                            console.warn(`[autoMatch] sharedWith backfill skipped for ${estateId}: "${personName}" is shared by ${sameName.size} heirs (ambiguous)`);
+                        } else {
+                            const slSnap = await db.collection(`estates/${estateId}/soul-log`)
+                                .where('taggedPeople', 'array-contains', personName).get();
+                            slSnap.forEach((sd) => batch.update(sd.ref, {
+                                sharedWith: admin.firestore.FieldValue.arrayUnion(uid),
+                            }));
+                        }
+                    } catch (e) {
+                        console.warn(`[autoMatch] sharedWith backfill failed for ${estateId}: ${e.message}`);
+                    }
+                }
+
                 const auditRef = db.collection('audit_logs').doc();
                 batch.set(auditRef, {
                     action: 'invitation_auto_matched',

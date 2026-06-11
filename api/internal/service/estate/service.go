@@ -235,8 +235,17 @@ func (s *Server) RegisterEstate(ctx context.Context, req *connect.Request[estate
 		return nil, connect.NewError(connect.CodeUnimplemented, fmt.Errorf("firestore not initialized"))
 	}
 
+	// Derive the UID from the verified token, NOT req.Msg.UserId — persisting a
+	// client-supplied user_id lets an authenticated caller create an estate OWNED
+	// BY ANOTHER USER (planting an estate into someone else's ListEstates, or
+	// orphaning it under a fabricated id). Same trust boundary as ListEstates.
+	userID := auth.UserIDFromContext(ctx)
+	if userID == "" {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("authentication required"))
+	}
+
 	docRef, _, err := s.fs.Collection("estates").Add(ctx, map[string]interface{}{
-		"user_id":               req.Msg.UserId,
+		"user_id":               userID,
 		"name":                  req.Msg.Name,
 		"type":                  req.Msg.Type,
 		"role":                  "Owner", // Default for creator

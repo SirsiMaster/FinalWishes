@@ -56,11 +56,13 @@ func TestCreateEnvelope_MissingConfig(t *testing.T) {
 	rr := httptest.NewRecorder()
 	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
-	if rr.Code != http.StatusInternalServerError {
-		t.Errorf("expected 500, got %d", rr.Code)
+	// With no Sirsi credential and no dissociated fallback configured, the resilient
+	// provider reports the signing service unavailable (ADR-047).
+	if rr.Code != http.StatusServiceUnavailable {
+		t.Errorf("expected 503, got %d", rr.Code)
 	}
-	if !strings.Contains(rr.Body.String(), "Server configuration error") {
-		t.Errorf("expected 'Server configuration error', got %q", rr.Body.String())
+	if !strings.Contains(rr.Body.String(), "temporarily unavailable") {
+		t.Errorf("expected 'temporarily unavailable', got %q", rr.Body.String())
 	}
 }
 
@@ -85,8 +87,9 @@ func TestCreateEnvelope_UpstreamError(t *testing.T) {
 	if rr.Code != http.StatusBadGateway {
 		t.Errorf("expected 502, got %d", rr.Code)
 	}
-	if !strings.Contains(rr.Body.String(), "Signing provider error") {
-		t.Errorf("expected 'Signing provider error', got %q", rr.Body.String())
+	// A 4xx from the provider is a business rejection — surfaced as 502, never re-routed.
+	if !strings.Contains(rr.Body.String(), "could not accept this request") {
+		t.Errorf("expected business-rejection message, got %q", rr.Body.String())
 	}
 }
 
@@ -225,11 +228,13 @@ func TestCreateEnvelope_UpstreamBadJSON(t *testing.T) {
 	rr := httptest.NewRecorder()
 	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
-	if rr.Code != http.StatusBadGateway {
-		t.Errorf("expected 502, got %d", rr.Code)
+	// A 200 with an unparseable body yields no envelope id — the provider didn't
+	// fulfil the request, so the resilient wrapper reports it unavailable (ADR-047).
+	if rr.Code != http.StatusServiceUnavailable {
+		t.Errorf("expected 503, got %d", rr.Code)
 	}
-	if !strings.Contains(rr.Body.String(), "Failed to parse upstream response") {
-		t.Errorf("expected parse error message, got %q", rr.Body.String())
+	if !strings.Contains(rr.Body.String(), "temporarily unavailable") {
+		t.Errorf("expected unavailable message, got %q", rr.Body.String())
 	}
 }
 

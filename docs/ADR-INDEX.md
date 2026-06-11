@@ -54,6 +54,7 @@ Each ADR follows this structure:
 | [ADR-044](ADR-044-LEGAL-RAG-CORPUS.md) | Legal RAG Corpus for Shepherd Guidance | Accepted | 2026-05-20 | — |
 | [ADR-045](ADR-045-GOOGLE-PHOTOS-IMPORT.md) | Google Photos Import — Picker API, minimal scope, PII-clean | Accepted | 2026-06-02 | — |
 | [ADR-046](ADR-046-PERSONA-ACCESS-CONTROL.md) | Persona-Based Estate Access Control — single source of truth, estate-scoped role, 3-layer + Firestore boundary, Soul Log read-privacy | Accepted | 2026-06-08 | claude-finalwishes |
+| [ADR-047](ADR-047-SHARED-SERVICES-CONSUMPTION.md) | Shared-Services Consumption with Dissociated Fallback — consume Sirsi services first, self-host only on Sirsi-org availability failure (portfolio-wide; signing reference impl) | Accepted | 2026-06-11 | — |
 
 > **Note on scope:** ADRs 004, 005, 008, 010–016, 018 were created in the context of Sirsi Sign (sign.sirsi.ai), not FinalWishes. They remain in the index for portfolio-level traceability but do not apply to FinalWishes deployment.
 

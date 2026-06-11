@@ -18,16 +18,20 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
-// WebhookHandler handles OpenSign webhook callbacks and signing status checks.
+// WebhookHandler handles OpenSign webhook callbacks, signing status checks, and
+// envelope creation (via the shared-services provider).
 type WebhookHandler struct {
 	fs            *firestore.Client
 	webhookSecret string
+	provider      SigningProvider
 }
 
-// NewWebhookHandler creates a webhook handler for OpenSign signing events.
+// NewWebhookHandler creates a webhook handler for OpenSign signing events. It builds
+// the shared-services signing provider (Sirsi-first, dissociated fallback — ADR-047).
 func NewWebhookHandler(fs *firestore.Client) *WebhookHandler {
 	return &WebhookHandler{
 		fs:            fs,
+		provider:      NewSigningProvider(),
 		webhookSecret: os.Getenv("OPENSIGN_WEBHOOK_SECRET"),
 	}
 }

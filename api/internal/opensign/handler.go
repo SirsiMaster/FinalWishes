@@ -1,12 +1,9 @@
 package opensign
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
-	"io"
+	"errors"
 	"net/http"
-	"os"
 
 	"cloud.google.com/go/firestore"
 	"github.com/rs/zerolog/log"
@@ -36,6 +33,9 @@ type CreateEnvelopeResponse struct {
 // pattern (record the envelope at creation, update the recorded resource by id).
 func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	if h.provider == nil {
+		h.provider = NewSigningProvider()
+	}
 
 	userID, err := auth.RequireUserID(ctx)
 	if err != nil {
@@ -68,30 +68,6 @@ func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Req
 		}
 	}
 
-	// --- OpenSign config + proxy (unchanged behavior) ---
-	apiKey := os.Getenv("OPENSIGN_API_KEY")
-	apiURL := os.Getenv("OPENSIGN_API_URL")
-	createEnvelopeURL := os.Getenv("OPENSIGN_CREATE_ENVELOPE_URL")
-
-	if apiKey == "" {
-		log.Warn().Msg("OpenSign API key missing (OPENSIGN_API_KEY)")
-		if os.Getenv("GOOGLE_CLOUD_PROJECT") != "" {
-			http.Error(w, "Signing service unavailable", http.StatusInternalServerError)
-			return
-		}
-	}
-
-	targetURL := ""
-	if createEnvelopeURL != "" {
-		targetURL = createEnvelopeURL
-	} else if apiURL != "" {
-		targetURL = apiURL + "/v1/envelopes"
-	} else {
-		log.Error().Msg("OpenSign configuration missing (OPENSIGN_API_URL or OPENSIGN_CREATE_ENVELOPE_URL)")
-		http.Error(w, "Server configuration error", http.StatusInternalServerError)
-		return
-	}
-
 	// Force the signer identity to the AUTHENTICATED caller — never the body's
 	// signerEmail. Otherwise an estate writer could name an ARBITRARY signer (send the
 	// signing link to anyone / forge "X signed this directive"). The verified email
@@ -111,63 +87,30 @@ func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	upstreamPayload := map[string]interface{}{
-		"template_id": req.TemplateID,
-		"signers": []map[string]string{
-			{
-				"name":  signerName,
-				"email": signerEmail,
-				"role":  "Signer",
-			},
-		},
-		"redirect_url": req.RedirectURL,
-	}
-
-	payloadBytes, err := json.Marshal(upstreamPayload)
+	// Create the envelope via the shared-services provider: CONSUME THE SIRSI SIGN
+	// SERVICE FIRST, fall back to dissociated infra only on a Sirsi-org availability
+	// failure (ADR-047). A clean business rejection is surfaced, never re-routed.
+	result, err := h.provider.CreateEnvelope(ctx, EnvelopeRequest{
+		TemplateID:  req.TemplateID,
+		SignerName:  signerName,
+		SignerEmail: signerEmail,
+		RedirectURL: req.RedirectURL,
+	})
 	if err != nil {
-		http.Error(w, "Failed to marshal payload", http.StatusInternalServerError)
-		return
-	}
-
-	client := &http.Client{}
-	upstreamReq, err := http.NewRequestWithContext(ctx, "POST", targetURL, bytes.NewBuffer(payloadBytes))
-	if err != nil {
-		http.Error(w, "Failed to create upstream request", http.StatusInternalServerError)
-		return
-	}
-	upstreamReq.Header.Set("Content-Type", "application/json")
-	if apiKey != "" {
-		upstreamReq.Header.Set("Authorization", "Bearer "+apiKey)
-	}
-
-	resp, err := client.Do(upstreamReq)
-	if err != nil {
-		log.Error().Err(err).Msg("Failed to call OpenSign API")
-		http.Error(w, "Failed to communicate with signing provider", http.StatusBadGateway)
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode >= 400 {
-		body, _ := io.ReadAll(resp.Body)
-		log.Error().Int("status", resp.StatusCode).Str("body", string(body)).Msg("OpenSign API error")
-		http.Error(w, fmt.Sprintf("Signing provider error: %s", string(body)), http.StatusBadGateway)
-		return
-	}
-
-	var upstreamResp map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&upstreamResp); err != nil {
-		http.Error(w, "Failed to parse upstream response", http.StatusBadGateway)
-		return
-	}
-
-	envelopeID, _ := upstreamResp["id"].(string)
-	signingURL, _ := upstreamResp["url"].(string)
-	if signingURL == "" {
-		if data, ok := upstreamResp["data"].(map[string]interface{}); ok {
-			signingURL, _ = data["url"].(string)
+		var br *errBusinessRejection
+		if errors.As(err, &br) {
+			log.Warn().Err(err).Msg("Signing provider rejected the request")
+			http.Error(w, "The signing provider could not accept this request", http.StatusBadGateway)
+		} else {
+			log.Error().Err(err).Msg("All signing providers unavailable")
+			http.Error(w, "Signing service is temporarily unavailable", http.StatusServiceUnavailable)
 		}
+		return
 	}
+	envelopeID := result.EnvelopeID
+	signingURL := result.SigningURL
+	log.Info().Str("served_by", result.ServedBy).Str("envelope_id", envelopeID).
+		Str("estate_id", req.EstateID).Msg("Signing envelope created")
 
 	// Record the envelope→(estate,directive) binding SERVER-SIDE and stamp the
 	// directive. The webhook resolves the verified result against THIS record, so the

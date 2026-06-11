@@ -108,13 +108,24 @@ func NewVertexEmbedder(ctx context.Context, projectID, location string) (*Vertex
 }
 
 func (e *VertexEmbedder) EmbedQuery(ctx context.Context, text string) ([]float32, error) {
+	return e.embed(ctx, text, "RETRIEVAL_QUERY")
+}
+
+// EmbedDocument embeds corpus text for INGESTION. gemini-embedding-001 is asymmetric
+// — documents must use RETRIEVAL_DOCUMENT (queries use RETRIEVAL_QUERY) for the cosine
+// retrieval to match, so the corpus-ingest pipeline calls this, not EmbedQuery.
+func (e *VertexEmbedder) EmbedDocument(ctx context.Context, text string) ([]float32, error) {
+	return e.embed(ctx, text, "RETRIEVAL_DOCUMENT")
+}
+
+func (e *VertexEmbedder) embed(ctx context.Context, text, taskType string) ([]float32, error) {
 	dimensions := int32(e.dimensions)
 	resp, err := e.client.Models.EmbedContent(
 		ctx,
 		e.model,
 		genai.Text(text),
 		&genai.EmbedContentConfig{
-			TaskType:             "RETRIEVAL_QUERY",
+			TaskType:             taskType,
 			OutputDimensionality: &dimensions,
 			AutoTruncate:         true,
 		},

@@ -84,6 +84,8 @@ export interface Heir {
   estateId: string;
   fullName: string;
   email?: string;
+  /** Set by autoMatchInvitation when the heir accepts + registers — their Firebase UID. */
+  userId?: string;
   relationship?: string;
   isMinor: boolean;
   isResiduary: boolean;

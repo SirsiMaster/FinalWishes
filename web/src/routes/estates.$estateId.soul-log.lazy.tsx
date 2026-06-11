@@ -246,8 +246,15 @@ function SoulLogPage() {
   const constraints = useMemo(
     () => (isOwnerView
       ? [orderBy('createdAt', 'desc')]
-      : [where('visibility', '==', 'shared'), orderBy('createdAt', 'desc')]),
-    [isOwnerView],
+      // Non-owners read only `shared` entries TAGGED TO THEM (array-contains their
+      // uid) — matches the Firestore rule (ADR-046 #1). Was shared-only, which let a
+      // heir read every shared entry incl. other heirs'.
+      : [
+          where('visibility', '==', 'shared'),
+          where('sharedWith', 'array-contains', user?.uid ?? '__none__'),
+          orderBy('createdAt', 'desc'),
+        ]),
+    [isOwnerView, user?.uid],
   )
   const { data: rawEntries, loading: feedLoading } = useCollection<SoulLogEntry>(
     roleResolved ? `estates/${estateId}/soul-log` : null,
@@ -314,11 +321,10 @@ function SoulLogPage() {
     !loading && rawEntries.length > 0 && daysSinceLastEntry > 7,
   )
 
-  // Normalize entries and apply visibility filtering. The QUERY already restricts
-  // non-owners to `shared` entries (rule-enforced), so this is UI narrowing only:
-  // show the viewer the shared entries tagged for them. (taggedPeople still stores
-  // display names — a UID migration for true per-recipient enforcement is tracked
-  // for Codex; the critical private-entry exposure is now closed at the DB layer.)
+  // Normalize entries. The non-owner QUERY is now constrained to
+  // where('sharedWith','array-contains', uid) and the Firestore rule enforces the same
+  // (ADR-046 #1), so any `shared` entry returned to a non-owner is genuinely shared
+  // WITH THEM — no brittle client-side displayName matching needed.
   const entries = useMemo(() => {
     const normalized = rawEntries.map((e) => ({
       ...e,
@@ -328,14 +334,12 @@ function SoulLogPage() {
     // Owner/admin sees everything
     if (isOwnerView) return normalized
 
-    // Non-owners: of the shared entries returned, show those tagged for them.
-    const userName = profile?.displayName || user?.displayName || ''
     return normalized.filter((entry) => {
       if (entry.createdBy === user?.uid) return true
-      if (entry.visibility === 'shared' && entry.taggedPeople.includes(userName)) return true
+      if (entry.visibility === 'shared') return true // query already gated on sharedWith
       return false
     })
-  }, [rawEntries, isOwnerView, profile?.displayName, user?.displayName, user?.uid])
+  }, [rawEntries, isOwnerView, user?.uid])
 
   // Search filtering (client-side across title, content, transcript)
   const filteredEntries = useMemo(() => {
@@ -1154,7 +1158,10 @@ function ComposerDialog({
   const [title, setTitle] = useState('')
   const [visibility, setVisibility] = useState<Visibility>('private')
   const [mood, setMood] = useState<string>('')
-  const [taggedPeople, setTaggedPeople] = useState<string[]>([])
+  // taggedIds = the unique heir doc-ids the owner tagged (the source of truth).
+  // taggedPeople (names) + sharedWith (UIDs) are DERIVED from these at save, so a
+  // shared entry is never mis-routed by an ambiguous display name.
+  const [taggedIds, setTaggedIds] = useState<string[]>([])
   const [sealedTrigger, setSealedTrigger] = useState<'date' | 'on_passing'>('on_passing')
   const [sealedDate, setSealedDate] = useState('')
   const [saving, setSaving] = useState(false)
@@ -1207,7 +1214,7 @@ function ComposerDialog({
       setTitle('')
       setVisibility('private')
       setMood('')
-      setTaggedPeople([])
+      setTaggedIds([])
       setTextContent('')
       setSealedTrigger('on_passing')
       setSealedDate('')
@@ -1336,6 +1343,20 @@ function ComposerDialog({
 
       setSaveStep('saving')
 
+      // Derive both fields from the tagged heir IDs (unique) — never by display name.
+      // sharedWith (UIDs) is the security field the rule + non-owner query gate on
+      // (array-contains) so a heir reads only entries shared WITH THEM (ADR-046 #1);
+      // a registered heir's UID is read directly off its doc, so two same-named heirs
+      // can never be conflated. taggedPeople (names) is kept for display + as the key
+      // the autoMatchInvitation backfill uses for a heir who hasn't registered yet.
+      const taggedHeirs = taggedIds
+        .map((id) => heirs.find((h) => h.id === id))
+        .filter((h): h is Heir => Boolean(h))
+      const taggedPeople = Array.from(new Set(taggedHeirs.map((h) => h.fullName).filter(Boolean)))
+      const sharedWith = Array.from(new Set(
+        taggedHeirs.map((h) => h.userId).filter((uid): uid is string => Boolean(uid)),
+      ))
+
       // Build the document
       const entryDoc: Record<string, unknown> = {
         title: title || generateTitle(),
@@ -1343,6 +1364,7 @@ function ComposerDialog({
         visibility,
         mood: mood || null,
         taggedPeople,
+        sharedWith,
         createdBy: userId,
         createdAt: serverTimestamp(),
         duration: recordDuration || null,
@@ -1407,7 +1429,7 @@ function ComposerDialog({
     }
   }, [
     saving, entryType, recordedBlob, tierUsage, estateId, title,
-    visibility, mood, taggedPeople, userId, recordDuration, textContent,
+    visibility, mood, taggedIds, heirs, userId, recordDuration, textContent,
     sealedTrigger, sealedDate, onOpenChange,
   ])
 
@@ -1608,15 +1630,18 @@ function ComposerDialog({
                 </Label>
                 <div className="flex flex-wrap gap-2">
                   {heirs.map((heir) => {
-                    const tagged = taggedPeople.includes(heir.fullName)
+                    // Key the toggle on the unique heir.id, NOT the display name —
+                    // two heirs can share a fullName, and resolving sharedWith by name
+                    // would mis-share (claude-home PR #3 review).
+                    const tagged = taggedIds.includes(heir.id)
                     return (
                       <button
                         key={heir.id}
                         onClick={() => {
-                          setTaggedPeople(
+                          setTaggedIds(
                             tagged
-                              ? taggedPeople.filter((n) => n !== heir.fullName)
-                              : [...taggedPeople, heir.fullName],
+                              ? taggedIds.filter((id) => id !== heir.id)
+                              : [...taggedIds, heir.id],
                           )
                         }}
                         className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${

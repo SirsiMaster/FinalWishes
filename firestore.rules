@@ -674,6 +674,13 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // OpenSign envelope→(estate,directive) bindings — written ONLY by the Go API at
+    // ceremony creation (Admin SDK, bypasses rules); the webhook reads them to stamp
+    // the verified signing result onto the correct directive. No client access.
+    match /signing_envelopes/{envelopeId} {
+      allow read, write: if false;
+    }
+
     // =============================================
     // 11. PUBLIC MEMORIALS — Shareable Without Account
     // =============================================

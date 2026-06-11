@@ -7,13 +7,33 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	firebaseAuth "firebase.google.com/go/v4/auth"
+
+	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
+
+// withAuth injects an authenticated user context + token (as the middleware would) so
+// these tests exercise HandleCreateEnvelope past its auth gate and the token-derived
+// signer identity. A nil-fs WebhookHandler skips the estate_users check + the binding
+// write, leaving the OpenSign proxy behavior under test. Bodies include
+// estateId/directiveId (now required).
+func withAuth(req *http.Request) *http.Request {
+	ctx := auth.ContextWithUserID(req.Context(), "u1")
+	ctx = auth.ContextWithToken(ctx, &firebaseAuth.Token{Claims: map[string]interface{}{
+		"email": "u1@example.com",
+		"name":  "U One",
+	}})
+	return req.WithContext(ctx)
+}
+
+func openSignTestHandler() *WebhookHandler { return &WebhookHandler{} }
 
 // TestCreateEnvelope_InvalidJSON verifies that malformed request bodies are rejected.
 func TestCreateEnvelope_InvalidJSON(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader("{bad json"))
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusBadRequest {
 		t.Errorf("expected 400, got %d", rr.Code)
@@ -30,11 +50,11 @@ func TestCreateEnvelope_MissingConfig(t *testing.T) {
 	t.Setenv("OPENSIGN_API_KEY", "")
 	t.Setenv("OPENSIGN_CREATE_ENVELOPE_URL", "")
 
-	body := `{"templateId":"t1","signerName":"Test User","signerEmail":"test@example.com","redirectUrl":"https://example.com"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Test User","signerEmail":"test@example.com","redirectUrl":"https://example.com"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusInternalServerError {
 		t.Errorf("expected 500, got %d", rr.Code)
@@ -56,11 +76,11 @@ func TestCreateEnvelope_UpstreamError(t *testing.T) {
 	t.Setenv("OPENSIGN_API_KEY", "test-key")
 	t.Setenv("OPENSIGN_API_URL", "")
 
-	body := `{"templateId":"t1","signerName":"Test User","signerEmail":"test@example.com","redirectUrl":"https://example.com"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Test User","signerEmail":"test@example.com","redirectUrl":"https://example.com"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusBadGateway {
 		t.Errorf("expected 502, got %d", rr.Code)
@@ -103,11 +123,11 @@ func TestCreateEnvelope_HappyPath(t *testing.T) {
 	t.Setenv("OPENSIGN_API_KEY", "test-key-123")
 	t.Setenv("OPENSIGN_API_URL", "")
 
-	body := `{"templateId":"t1","signerName":"Cylton Collymore","signerEmail":"cylton@sirsi.ai","redirectUrl":"https://finalwishes.app/done"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Cylton Collymore","signerEmail":"cylton@sirsi.ai","redirectUrl":"https://finalwishes.app/done"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("expected 200, got %d", rr.Code)
@@ -138,11 +158,11 @@ func TestCreateEnvelope_NestedURLFallback(t *testing.T) {
 	t.Setenv("OPENSIGN_API_KEY", "key")
 	t.Setenv("OPENSIGN_API_URL", "")
 
-	body := `{"templateId":"t1","signerName":"Test","signerEmail":"test@test.com","redirectUrl":"https://example.com"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Test","signerEmail":"test@test.com","redirectUrl":"https://example.com"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("expected 200, got %d", rr.Code)
@@ -172,11 +192,11 @@ func TestCreateEnvelope_APIURLFallback(t *testing.T) {
 	t.Setenv("OPENSIGN_API_URL", upstream.URL)
 	t.Setenv("OPENSIGN_API_KEY", "key")
 
-	body := `{"templateId":"t1","signerName":"Test","signerEmail":"test@test.com","redirectUrl":"https://example.com"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Test","signerEmail":"test@test.com","redirectUrl":"https://example.com"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("expected 200, got %d", rr.Code)
@@ -199,11 +219,11 @@ func TestCreateEnvelope_UpstreamBadJSON(t *testing.T) {
 	t.Setenv("OPENSIGN_API_KEY", "key")
 	t.Setenv("OPENSIGN_API_URL", "")
 
-	body := `{"templateId":"t1","signerName":"Test","signerEmail":"test@test.com","redirectUrl":"https://example.com"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Test","signerEmail":"test@test.com","redirectUrl":"https://example.com"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusBadGateway {
 		t.Errorf("expected 502, got %d", rr.Code)
@@ -217,7 +237,7 @@ func TestCreateEnvelope_UpstreamBadJSON(t *testing.T) {
 func TestCreateEnvelope_EmptyBody(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", nil)
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusBadRequest {
 		t.Errorf("expected 400, got %d", rr.Code)
@@ -239,11 +259,11 @@ func TestCreateEnvelope_NoAPIKeyStillSends(t *testing.T) {
 	t.Setenv("OPENSIGN_API_KEY", "")
 	t.Setenv("OPENSIGN_API_URL", "")
 
-	body := `{"templateId":"t1","signerName":"Test","signerEmail":"t@t.com","redirectUrl":"https://x.com"}`
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Test","signerEmail":"t@t.com","redirectUrl":"https://x.com"}`
 	req := httptest.NewRequest(http.MethodPost, "/api/v1/opensign/create-envelope", strings.NewReader(body))
 	req.Header.Set("Content-Type", "application/json")
 	rr := httptest.NewRecorder()
-	CreateEnvelopeHandler(rr, req)
+	openSignTestHandler().HandleCreateEnvelope(rr, withAuth(req))
 
 	if rr.Code != http.StatusOK {
 		t.Errorf("expected 200, got %d", rr.Code)

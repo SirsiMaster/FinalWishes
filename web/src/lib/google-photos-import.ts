@@ -54,7 +54,12 @@ function loadGis(): Promise<void> {
     s.async = true
     s.defer = true
     s.onload = () => resolve()
-    s.onerror = () => reject(new Error('Failed to load Google sign-in'))
+    s.onerror = () => {
+      // Reset so a later call retries rather than returning this permanently-rejected
+      // Promise for the rest of the page session (claude-home PR #5 review obs 1).
+      gisLoading = null
+      reject(new Error('Failed to load Google sign-in'))
+    }
     document.head.appendChild(s)
   })
   return gisLoading
@@ -71,10 +76,18 @@ async function getPickerAccessToken(): Promise<string> {
   if (!oauth2) throw new Error('Google sign-in failed to initialize')
 
   return new Promise<string>((resolve, reject) => {
+    // GIS does not reliably fire its callback if the user dismisses the popup via the
+    // window-X (no grant/deny) — bound the wait so the Promise can't hang forever
+    // (claude-home PR #5 review obs 2).
+    const timeoutId = setTimeout(
+      () => reject(new Error('Google sign-in timed out — please try again')),
+      90_000,
+    )
     const client = oauth2.initTokenClient({
       client_id: clientId,
       scope: PICKER_SCOPE,
       callback: (resp) => {
+        clearTimeout(timeoutId)
         if (resp.error || !resp.access_token) {
           reject(new Error('Google Photos access was not granted'))
           return

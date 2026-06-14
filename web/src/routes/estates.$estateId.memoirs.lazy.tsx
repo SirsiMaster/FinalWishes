@@ -369,7 +369,7 @@ function MemoirsPage() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-slate-900">
+            <p className="text-sm font-bold text-ink">
               {!tierUsage.canUploadMedia
                 ? tierUpgradeMessage(tierUsage, 'media')
                 : tierUpgradeMessage(tierUsage, 'video')}
@@ -466,17 +466,17 @@ function MemoirsPage() {
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
               </svg>
             </AlertDialogMedia>
-            <AlertDialogTitle className="text-xl font-bold text-slate-900 text-center">
+            <AlertDialogTitle className="text-xl font-bold text-royal text-center">
               Delete Memory
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[14px] text-[var(--royal)]/50 text-center">
-              <strong className="text-slate-900">{deleteTarget?.title}</strong> will be permanently removed.
+              <strong className="text-ink">{deleteTarget?.title}</strong> will be permanently removed.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3 sm:flex-row">
             <AlertDialogCancel
               variant="outline"
-              className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px]"
+              className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-ink font-bold text-[13px]"
             >
               Cancel
             </AlertDialogCancel>
@@ -495,14 +495,14 @@ function MemoirsPage() {
       <Dialog open={!!editTarget} onOpenChange={(open) => { if (!open && !savingEdit) setEditTarget(null) }}>
         <DialogContent className="max-w-md rounded-[2rem] p-8">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-slate-900">Edit Memory</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-royal">Edit Memory</DialogTitle>
             <DialogDescription className="text-[13px] text-[var(--royal)]/50">
               Update the title and who can see this memory.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-5 py-2">
             <div className="space-y-2">
-              <Label htmlFor="memoir-edit-title" className="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Title</Label>
+              <Label htmlFor="memoir-edit-title" className="text-[12px] font-bold text-ink uppercase tracking-wide">Title</Label>
               <Input
                 id="memoir-edit-title"
                 value={editTitle}
@@ -511,7 +511,7 @@ function MemoirsPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Visibility</Label>
+              <Label className="text-[12px] font-bold text-ink uppercase tracking-wide">Visibility</Label>
               <Select value={editVisibility} onValueChange={setEditVisibility}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -526,7 +526,7 @@ function MemoirsPage() {
               variant="outline"
               onClick={() => setEditTarget(null)}
               disabled={savingEdit}
-              className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px] h-auto"
+              className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-ink font-bold text-[13px] h-auto"
             >
               Cancel
             </Button>
@@ -578,7 +578,7 @@ function CinemaViewer({
               <Button
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
-                className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900"
+                className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-ink"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" />
@@ -587,7 +587,7 @@ function CinemaViewer({
             </div>
             <div className="p-12 bg-white flex justify-between items-center">
               <div className="space-y-2">
-                <h3 className="text-3xl font-bold text-slate-900 tracking-tight">{memoir.title}</h3>
+                <h3 className="text-3xl font-bold text-royal tracking-tight">{memoir.title}</h3>
                 <div className="flex items-center gap-4 text-[var(--royal)]/40 font-medium">
                   <Badge className="text-[11px] font-bold uppercase tracking-widest bg-[var(--royal)]/10 text-[var(--royal)] border-none">
                     {memoir.type === 'youtube' ? 'YouTube' : memoir.type}
@@ -614,7 +614,7 @@ function CinemaViewer({
                 <Button
                   variant="outline"
                   onClick={() => onOpenChange(false)}
-                  className="px-8 py-3 bg-slate-50 hover:bg-[var(--royal)]/5 rounded-xl text-slate-900 font-bold text-[13px] border-[var(--royal)]/10 h-auto"
+                  className="px-8 py-3 bg-neutral-faint hover:bg-[var(--royal)]/5 rounded-xl text-ink font-bold text-[13px] border-[var(--royal)]/10 h-auto"
                 >
                   Close
                 </Button>
@@ -688,7 +688,7 @@ function UploadModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl sm:max-w-xl rounded-[3rem] p-12 border-[var(--royal)]/10">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-bold text-slate-900 tracking-tight">
+          <DialogTitle className="text-3xl font-bold text-royal tracking-tight">
             Add New Memory
           </DialogTitle>
           <DialogDescription className="text-[var(--royal)]/40 font-medium text-sm">
@@ -702,7 +702,7 @@ function UploadModal({
           onValueChange={(val) => onModeChange(val as 'file' | 'youtube')}
           className="mt-2"
         >
-          <TabsList className="w-full bg-slate-50 p-1.5 rounded-2xl h-auto">
+          <TabsList className="w-full bg-neutral-faint p-1.5 rounded-2xl h-auto">
             <TabsTrigger
               value="file"
               className="flex-1 py-3 rounded-xl text-[12px] font-bold data-active:bg-[var(--royal)] data-active:text-white data-active:shadow-md text-[var(--royal)]/50 hover:text-[var(--royal)]"
@@ -760,7 +760,7 @@ function UploadModal({
               <Input
                 name="title"
                 required
-                className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-neutral-faint focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-ink placeholder:text-[var(--royal)]/20"
                 placeholder="e.g. Family Reunion 2025"
               />
             </div>
@@ -772,7 +772,7 @@ function UploadModal({
               <Input
                 value={youtubeUrl}
                 onChange={(e) => setYoutubeUrl(e.target.value)}
-                className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-neutral-faint focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-ink placeholder:text-[var(--royal)]/20"
                 placeholder="https://www.youtube.com/watch?v=..."
               />
               {youtubeUrl && extractYouTubeId(youtubeUrl) && (
@@ -792,7 +792,7 @@ function UploadModal({
                   Media Type
                 </Label>
                 <Select value={mediaType} onValueChange={setMediaType}>
-                  <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 font-bold text-slate-900">
+                  <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-neutral-faint font-bold text-ink">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -810,7 +810,7 @@ function UploadModal({
                   className={`w-full h-36 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center transition-all cursor-pointer group ${
                     isDragActive
                       ? 'border-[var(--royal)] bg-[var(--royal)]/5'
-                      : 'border-[var(--royal)]/15 bg-slate-50 hover:bg-white hover:border-[var(--royal)]/30'
+                      : 'border-[var(--royal)]/15 bg-neutral-faint hover:bg-white hover:border-[var(--royal)]/30'
                   }`}
                 >
                   <input {...getInputProps()} />
@@ -855,13 +855,13 @@ function UploadModal({
                       className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                         uploadDest === 'cloud'
                           ? 'border-[var(--royal)] bg-[var(--royal)]/5'
-                          : 'border-[var(--royal)]/10 bg-slate-50 hover:border-[var(--royal)]/20'
+                          : 'border-[var(--royal)]/10 bg-neutral-faint hover:border-[var(--royal)]/20'
                       }`}
                     >
                       <svg viewBox="0 0 24 24" className="w-6 h-6 text-[var(--royal)]/60" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
                       </svg>
-                      <span className="text-[11px] font-bold text-slate-900 uppercase tracking-wider">Cloud Storage</span>
+                      <span className="text-[11px] font-bold text-ink uppercase tracking-wider">Cloud Storage</span>
                       <span className="text-[10px] text-[var(--royal)]/40 font-medium">Max 50MB</span>
                     </button>
                     <button
@@ -870,14 +870,14 @@ function UploadModal({
                       className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
                         uploadDest === 'youtube'
                           ? 'border-red-500 bg-red-50'
-                          : 'border-[var(--royal)]/10 bg-slate-50 hover:border-red-300'
+                          : 'border-[var(--royal)]/10 bg-neutral-faint hover:border-red-300'
                       }`}
                     >
                       <svg viewBox="0 0 24 24" className="w-6 h-6 text-red-500" fill="currentColor">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z" />
                         <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="white" />
                       </svg>
-                      <span className="text-[11px] font-bold text-slate-900 uppercase tracking-wider">YouTube</span>
+                      <span className="text-[11px] font-bold text-ink uppercase tracking-wider">YouTube</span>
                       <span className="text-[10px] text-[var(--royal)]/40 font-medium">Max 256MB &middot; Unlisted</span>
                     </button>
                   </div>
@@ -893,7 +893,7 @@ function UploadModal({
                   <Input
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                    className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-neutral-faint focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-[var(--royal)]/5 font-bold text-ink placeholder:text-[var(--royal)]/20"
                     placeholder="A brief description for this video"
                   />
                 </div>
@@ -914,7 +914,7 @@ function UploadModal({
                 Visibility
               </Label>
               <Select value={visibility} onValueChange={setVisibility}>
-                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-slate-50 font-bold text-slate-900">
+                <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--royal)]/10 bg-neutral-faint font-bold text-ink">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1002,7 +1002,7 @@ function VideoCard({
         type="button"
         onClick={onClick}
         aria-label={`Play ${memoir.title}`}
-        className="block w-full aspect-video bg-slate-900 relative overflow-hidden cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)] focus-visible:ring-offset-2"
+        className="block w-full aspect-video bg-royal relative overflow-hidden cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)] focus-visible:ring-offset-2"
       >
         {isYouTube && memoir.youtubeUrl ? (
           <YouTubeThumbnail url={memoir.youtubeUrl} />
@@ -1037,7 +1037,7 @@ function VideoCard({
         )}
       </button>
       <CardContent className="p-8 space-y-3">
-        <h4 className="font-bold text-slate-900 text-lg tracking-tight group-hover:text-[var(--royal)] transition-colors">
+        <h4 className="font-bold text-royal text-lg tracking-tight group-hover:text-[var(--royal)] transition-colors">
           {memoir.title}
         </h4>
         <div className="flex justify-between items-center">
@@ -1077,7 +1077,7 @@ function PhotoCard({
         type="button"
         onClick={onClick}
         aria-label={`View ${memoir.title}`}
-        className="block w-full aspect-square bg-slate-50 relative overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)] focus-visible:ring-offset-2"
+        className="block w-full aspect-square bg-neutral-faint relative overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)] focus-visible:ring-offset-2"
       >
         {memoir.url ? (
           <img
@@ -1097,7 +1097,7 @@ function PhotoCard({
       </button>
       <CardContent className="p-6 border-t border-[var(--royal)]/5 flex items-center justify-between">
         <div className="min-w-0">
-          <h4 className="font-bold text-slate-900 text-sm truncate group-hover:text-[var(--royal)] transition-colors">
+          <h4 className="font-bold text-royal text-sm truncate group-hover:text-[var(--royal)] transition-colors">
             {memoir.title}
           </h4>
           <p className="text-[10px] font-bold text-[var(--royal)]/20 uppercase tracking-widest mt-0.5">{memoir.dateAdded}</p>

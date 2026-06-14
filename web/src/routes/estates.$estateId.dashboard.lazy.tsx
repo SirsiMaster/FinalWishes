@@ -21,6 +21,7 @@ import {
 } from '../lib/firestore'
 import { orderBy, type Timestamp, doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
+import { API_BASE } from '../lib/client'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -70,8 +71,6 @@ interface ShepherdScore {
   nextAction: ShepherdStep | null
   insight: string
 }
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 // ─── Shepherd Persistence ────────────────────────────────────────────────────
 

@@ -27,8 +27,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { auth } from '../../lib/firebase'
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+import { API_BASE } from '../../lib/client'
 
 interface SettlementPanelProps {
   estateId: string

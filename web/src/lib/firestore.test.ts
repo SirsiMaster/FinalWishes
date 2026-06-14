@@ -193,6 +193,41 @@ describe('useCollection', () => {
 
     expect(result.current.error).toBe('Quota exceeded')
   })
+
+  // Regression: the dependency key must capture constraint VALUES, not just the
+  // constraint type. A query whose field path is fixed but whose value changes
+  // (e.g. `where('userId','==', X)` as X updates) must re-subscribe; keying on
+  // type alone served a stale list.
+  it('re-subscribes when a constraint value changes on a fixed field path', async () => {
+    const { rerender } = renderHook(
+      ({ value }: { value: string }) =>
+        useCollection('estates/e1/assets', [mockWhere('userId', '==', value) as any]),
+      { initialProps: { value: 'user-a' } }
+    )
+
+    await waitFor(() => expect(mockOnSnapshot).toHaveBeenCalledTimes(1))
+
+    rerender({ value: 'user-b' })
+
+    // New value → new key → new subscription (old one torn down).
+    await waitFor(() => expect(mockOnSnapshot).toHaveBeenCalledTimes(2))
+  })
+
+  it('does not re-subscribe when the constraint value is unchanged', async () => {
+    const { rerender } = renderHook(
+      ({ value }: { value: string }) =>
+        useCollection('estates/e1/assets', [mockWhere('userId', '==', value) as any]),
+      { initialProps: { value: 'user-a' } }
+    )
+
+    await waitFor(() => expect(mockOnSnapshot).toHaveBeenCalledTimes(1))
+
+    rerender({ value: 'user-a' })
+    rerender({ value: 'user-a' })
+
+    // Same value → same key → no extra subscription churn.
+    expect(mockOnSnapshot).toHaveBeenCalledTimes(1)
+  })
 })
 
 // ─── Domain Hooks ────────────────────────────────────────────────────────────

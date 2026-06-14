@@ -7,10 +7,12 @@ package payments
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -365,6 +367,16 @@ func (h *Handler) HandleCreatePortalSession(w http.ResponseWriter, r *http.Reque
 	sess, err := portalsession.New(params)
 	if err != nil {
 		log.Error().Err(err).Str("customer_id", customerIDStr).Str("estate_id", req.EstateID).Msg("Stripe portal session creation failed")
+		// The most common cause of a portal-session failure on a live account is the
+		// one-time Customer Portal configuration not yet being saved in the Stripe
+		// Dashboard (Settings > Billing > Customer Portal). Stripe surfaces this as an
+		// invalid_request_error mentioning "configuration". Give the user an actionable
+		// message in that case instead of a bare 500.
+		if isStripePortalNotConfigured(err) {
+			writeError(w, http.StatusServiceUnavailable,
+				"Subscription management isn't available yet. Please contact support and we'll help you update your plan.")
+			return
+		}
 		writeError(w, http.StatusInternalServerError, "Failed to create subscription management session")
 		return
 	}
@@ -374,6 +386,24 @@ func (h *Handler) HandleCreatePortalSession(w http.ResponseWriter, r *http.Reque
 	writeJSON(w, http.StatusOK, map[string]string{
 		"url": sess.URL,
 	})
+}
+
+// isStripePortalNotConfigured reports whether a portal-session error is the
+// "Customer Portal not configured in the Dashboard" case. Stripe returns this as an
+// invalid_request_error whose message mentions a missing/default configuration
+// (e.g. "No configuration provided and your test mode default configuration has not
+// been created"). We match defensively on both the structured Stripe error and its
+// message so a Dashboard-config gap reads as a clear "unavailable" rather than a 500.
+func isStripePortalNotConfigured(err error) bool {
+	var serr *stripe.Error
+	if !errors.As(err, &serr) {
+		return false
+	}
+	if serr.Type != stripe.ErrorTypeInvalidRequest {
+		return false
+	}
+	msg := strings.ToLower(serr.Msg)
+	return strings.Contains(msg, "configuration") || strings.Contains(msg, "customer portal")
 }
 
 // HandleWebhook processes Stripe webhook events.

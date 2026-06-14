@@ -14,6 +14,7 @@ import { EmailVerificationBanner } from '../components/identity/EmailVerificatio
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { useAuth } from '../lib/auth'
 import { useEstate, useDocument, type EstateUser } from '../lib/firestore'
+import { API_BASE } from '../lib/client'
 import { useEffect, useRef } from 'react'
 import { auth as firebaseAuth } from '../lib/firebase'
 import { personaLabel, resolveEffectiveRole } from '../lib/persona'
@@ -61,7 +62,6 @@ function EstateLayout() {
     const isPrincipalOrAdmin = effectiveRole === 'principal' || effectiveRole === 'admin';
     if (!isPrincipalOrAdmin || !estateId) return;
     checkedIn.current = true;
-    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
     (async () => {
       try {
         const token = await firebaseAuth.currentUser?.getIdToken();

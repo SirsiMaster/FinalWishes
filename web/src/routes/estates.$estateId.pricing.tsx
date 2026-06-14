@@ -5,6 +5,7 @@ import { useAuth } from '../lib/auth'
 import { toast } from 'sonner'
 import { trackCheckoutStarted } from '../lib/analytics'
 import { useEstate } from '../lib/firestore'
+import { API_BASE } from '../lib/client'
 import {
   Crown,
   Shield,
@@ -46,8 +47,6 @@ const TIER_COLORS: Record<string, string> = {
 }
 
 // ─── API Client ─────────────────────────────────────────────────────────────
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 async function fetchTiers(): Promise<{ tiers: Tier[]; publishableKey: string }> {
   const res = await fetch(`${API_BASE}/api/v1/payments/tiers`)

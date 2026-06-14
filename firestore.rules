@@ -39,15 +39,23 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isOwner(userId);
       
-      // Registration: user creates own profile with required fields
+      // Registration: user creates own profile with required fields.
+      // Defense-in-depth (invitation-seizure): the profile email MUST equal the
+      // verified token email. The Cloud Function now resolves identity via
+      // admin.auth().getUser, but pinning the email here too prevents a user from
+      // ever persisting a profile email they don't actually own — closing every
+      // downstream code path that still reads users/{uid}.email.
       allow create: if isOwner(userId)
         && request.resource.data.keys().hasAll(['email', 'role', 'createdAt'])
+        && request.resource.data.email == request.auth.token.email
         && request.resource.data.role in ['principal', 'executor', 'heir', 'trustee', 'legal', 'cpa'];
-      
-      // Self-update: cannot change role or createdAt
+
+      // Self-update: cannot change role, createdAt, or email. Email is identity —
+      // it is set once at registration to the verified token email and is never
+      // client-mutable thereafter (an executor/heir role-seizure vector).
       allow update: if (isOwner(userId)
         && !request.resource.data.diff(resource.data).affectedKeys()
-            .hasAny(['role', 'createdAt']))
+            .hasAny(['role', 'createdAt', 'email']))
         || isAdmin();
       
       // Only admins can delete users

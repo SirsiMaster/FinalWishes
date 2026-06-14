@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
@@ -14,11 +15,22 @@ export default tseslint.config(
       globals: globals.browser,
     },
     plugins: {
+      "jsx-a11y": jsxA11y,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
     },
     rules: {
+      ...jsxA11y.flatConfigs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      // Accessibility (eslint-plugin-jsx-a11y) — surfaces the clickable-div,
+      // missing-label, and unlabeled-icon-button patterns automatically so the
+      // per-component a11y fixes done elsewhere don't silently regress. These
+      // are the root-cause guards; keep them as errors.
+      "jsx-a11y/click-events-have-key-events": "error",
+      "jsx-a11y/no-static-element-interactions": "error",
+      "jsx-a11y/anchor-has-content": "error",
+      "jsx-a11y/control-has-associated-label": "error",
+      "jsx-a11y/label-has-associated-control": "error",
       // Downgrade pre-existing react-hooks issues to warnings
       // TODO: Fix these properly in a code quality sprint
       "react-hooks/rules-of-hooks": "warn",

@@ -28,6 +28,24 @@
   --ink: #142848;           /* Primary ink — deep royal-tinted near-black */
   --ink-muted: #4A5C7A;     /* Muted ink — royal-tinted secondary text */
 
+  /* On-brand neutrals — replace generic slate/grey for borders & faint fills.
+     Royal-tinted so panels read as part of the Royal Neo-Deco system (Rule 27). */
+  --neutral-border: #DCE3EE;   /* hairline borders / axis lines */
+  --neutral-faint: #F4F6FB;    /* faint panel / track fills */
+
+  /* ── Glass Card System (root defaults) ──
+     The luminous glass tokens live per-context in .royal-theme / .dashboard-theme,
+     but we anchor sensible light-mode defaults at :root so .glass-card and the
+     ui/card variant (owned by the design-cards-heirlooms bucket) resolve even
+     outside a themed surface. Themed contexts override these. */
+  --card-bg: #FFFFFF;
+  --card-border: var(--neutral-border);
+  --card-shadow: 0 1px 3px rgba(19, 51, 120, 0.06);
+  --card-shadow-hover: 0 12px 40px rgba(19, 51, 120, 0.12), 0 0 28px rgba(200, 169, 81, 0.22);
+  --card-backdrop: none;
+  /* Reusable gold halo — the Royal Neo-Deco hover/focus glow. */
+  --gold-glow: 0 0 28px rgba(200, 169, 81, 0.30);
+
   /* Semantic */
   --success: #10B981;
   --warning: #F59E0B;
@@ -360,6 +378,18 @@ input::-webkit-contacts-auto-fill-button {
   box-shadow: var(--card-shadow-hover);
 }
 
+/* ── Gold Glow — reusable Royal Neo-Deco halo (cards/heirlooms flagship) ── */
+.gold-glow {
+  box-shadow: var(--gold-glow);
+}
+.gold-glow-hover {
+  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease;
+}
+.gold-glow-hover:hover {
+  border-color: rgba(200, 169, 81, 0.6);
+  box-shadow: var(--gold-glow);
+}
+
 /* ── Glass Panel ── */
 .glass-panel {
   background: var(--bg-secondary);
@@ -421,18 +451,18 @@ input::-webkit-contacts-auto-fill-button {
   50% { transform: translateY(-20px) translateX(-10px); }
 }
 
-/* ── Status Pulse ── */
+/* ── Status Pulse — Gold accent (Royal Neo-Deco firewall: never emerald/green) ── */
 @keyframes pulse-status {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(200, 169, 81, 0.4); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(200, 169, 81, 0); }
 }
 .status-dot {
   width: 6px;
   height: 6px;
-  background: var(--success);
+  background: var(--gold);
   border-radius: 50%;
   animation: pulse-status 2s ease-in-out infinite;
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 8px rgba(200, 169, 81, 0.4);
 }
 
 /* ── Reveal Animations ── */
@@ -481,108 +511,6 @@ input::-webkit-contacts-auto-fill-button {
 /* ── Dashboard Shell ── */
 .dashboard-shell {
   color: var(--text-primary);
-}
-
-/* ── Industrial Light Panel — Sharp Edge Commercial Utility ── */
-.sirsi-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 0;
-  padding: 1.25rem;
-  box-shadow: none;
-}
-.sirsi-card:hover {
-  border-color: #CBD5E1;
-}
-
-.sirsi-metric-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 1rem;
-  background: #FFFFFF;
-  border-left: 3px solid var(--royal);
-}
-.sirsi-metric-title {
-  font-family: var(--font-inter);
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #64748B;
-  margin-bottom: 0.5rem;
-}
-.sirsi-metric-value {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0F172A;
-  line-height: 1;
-}
-.sirsi-metric-unit {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #94A3B8;
-  margin-left: 0.5rem;
-  text-transform: uppercase;
-}
-.sirsi-metric-trend {
-  font-family: ui-monospace, monospace;
-  font-size: 0.65rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-top: 0.75rem;
-  color: #94A3B8;
-}
-
-.sirsi-status-led {
-  width: 6px;
-  height: 6px;
-  border-radius: 0;
-  display: inline-block;
-}
-.sirsi-status-led-emerald { background: #10b981; }
-.sirsi-status-led-amber { background: #f59e0b; }
-.sirsi-status-led-red { background: #ef4444; }
-
-.sirsi-progress-track {
-  height: 6px;
-  width: 100%;
-  background: #F1F5F9;
-  border: 1px solid #E2E8F0;
-  border-radius: 0;
-  overflow: hidden;
-}
-.sirsi-progress-fill {
-  height: 100%;
-  border-radius: 0;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sirsi-table-header {
-  font-family: var(--font-inter);
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #64748B;
-  background: #F8FAFC;
-  border-bottom: 1px solid #E2E8F0;
-  padding: 0.5rem 0.75rem;
-  text-align: left;
-}
-.sirsi-table-row {
-  border-bottom: 1px solid #F1F5F9;
-}
-.sirsi-table-row:hover {
-  background: #F8FAFC;
-}
-.sirsi-table-cell {
-  padding: 0.6rem 0.75rem;
-  font-size: 0.8rem;
-  color: #334155;
 }
 
 .dark {

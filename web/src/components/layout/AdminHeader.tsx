@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from '../../lib/auth'
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { useEstateSearch, type SearchResult } from '@/lib/search'
-import { SearchResults } from '@/components/search/SearchResults'
+import { SearchResults, SEARCH_LISTBOX_ID, searchOptionId } from '@/components/search/SearchResults'
 import { NotificationBell } from '@/components/layout/NotificationBell'
 import {
   DropdownMenu,
@@ -13,6 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { VisuallyHidden } from 'radix-ui'
 
 export function AdminHeader({
   title,
@@ -107,32 +109,24 @@ export function AdminHeader({
       className="sticky top-0 z-50 flex items-center justify-between h-[var(--header-height)] px-4 md:px-8 border-b border-royal/10 relative"
       style={{ background: 'var(--header-bg)' }}
     >
-      {/* Photo Modal */}
-      {showPhotoModal && user?.profilePhotoUrl && (
-        <div
-          className="fixed inset-0 z-[500] flex items-center justify-center bg-royal/10 backdrop-blur-xl p-8 animate-in fade-in duration-500 pointer-events-auto"
-          onClick={() => setShowPhotoModal(false)}
+      {/* Photo Modal — accessible Dialog (focus trap, Escape, focus restoration) */}
+      <Dialog open={showPhotoModal && !!user?.profilePhotoUrl} onOpenChange={setShowPhotoModal}>
+        <DialogContent
+          showCloseButton={true}
+          className="max-w-[90vw] max-h-[90vh] sm:max-w-[90vw] p-0 bg-white border border-royal/20 shadow-2xl overflow-hidden"
         >
-          <div
-            className="relative bg-white overflow-hidden border border-royal/20 shadow-2xl animate-in zoom-in duration-500 max-w-[90vw] max-h-[90vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <VisuallyHidden.Root>
+            <DialogTitle>Profile Photo</DialogTitle>
+          </VisuallyHidden.Root>
+          {user?.profilePhotoUrl && (
             <img
               src={user.profilePhotoUrl}
               className="max-w-full max-h-[80vh] object-contain block mx-auto"
               alt="Full Fidelity Portrait"
             />
-            <div className="absolute top-8 right-8">
-              <button
-                onClick={(e) => { e.stopPropagation(); setShowPhotoModal(false); }}
-                className="w-10 h-10 bg-white border border-royal/20 flex items-center justify-center text-royal hover:bg-royal/5 transition-all shadow-lg"
-              >
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          )}
+        </DialogContent>
+      </Dialog>
 
       <div className="relative z-10 flex items-center justify-between w-full h-full gap-3 md:gap-0">
         {/* Mobile Hamburger */}
@@ -188,11 +182,22 @@ export function AdminHeader({
             value={searchQuery}
             onChange={(e) => updateSearchQuery(e.target.value)}
             onFocus={() => setSearchFocused(true)}
+            aria-label="Search estate"
+            role="combobox"
+            aria-expanded={showDropdown}
+            aria-controls={SEARCH_LISTBOX_ID}
+            aria-autocomplete="list"
+            aria-activedescendant={
+              showDropdown && activeIndex >= 0 && activeIndex < results.length
+                ? searchOptionId(activeIndex)
+                : undefined
+            }
             className="flex-1 bg-transparent border-none outline-none text-[0.8rem] font-bold text-royal placeholder:text-royal/20"
           />
           {searchQuery && (
             <button
               onClick={() => { updateSearchQuery(''); inputRef.current?.focus(); }}
+              aria-label="Clear search"
               className="text-royal/30 hover:text-royal/60 transition-colors"
             >
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -224,10 +229,17 @@ export function AdminHeader({
             <span className="text-[9px] font-black text-royal/70 uppercase tracking-widest leading-none">{mode === 'Owner' ? 'Active Owner' : mode === 'Incapacity' ? 'Incapacity' : 'After Passing'}</span>
           </div>
         </div>
-        <div className="flex items-center gap-1 p-1 bg-white border border-royal/10 rounded-xl">
+        <div
+          role="radiogroup"
+          aria-label="View as authority mode"
+          className="flex items-center gap-1 p-1 bg-white border border-royal/10 rounded-xl"
+        >
           {(['Owner', 'Incapacity', 'Settlement'] as const).map((m) => (
             <button
               key={m}
+              type="button"
+              role="radio"
+              aria-checked={mode === m}
               onClick={() => setMode(m)}
               className={`px-3 py-1.5 rounded-lg text-[9px] font-black transition-all uppercase tracking-widest ${
                 mode === m

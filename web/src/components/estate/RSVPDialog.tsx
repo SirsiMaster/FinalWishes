@@ -53,7 +53,7 @@ interface RSVPDialogProps {
 // ─── Response Pill Button ────────────────────────────────────────────────────
 
 const RESPONSE_OPTIONS: { value: RSVPResponse; label: string; icon: typeof Check; activeClass: string }[] = [
-  { value: 'attending', label: 'Attending', icon: Check, activeClass: 'bg-emerald-600 text-white border-emerald-600' },
+  { value: 'attending', label: 'Attending', icon: Check, activeClass: 'bg-green-600 text-white border-green-600' },
   { value: 'maybe', label: 'Maybe', icon: HelpCircle, activeClass: 'bg-amber-500 text-white border-amber-500' },
   { value: 'not_attending', label: 'Not Attending', icon: X, activeClass: 'bg-slate-500 text-white border-slate-500' },
 ]
@@ -131,10 +131,10 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">
             {submitted ? 'RSVP Confirmed' : 'RSVP'}
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-500 mt-1">
+          <DialogDescription className="text-sm text-[var(--royal)]/60 mt-1">
             {submitted ? `Your response has been recorded for ${eventTitle}.` : `Respond to ${eventTitle}`}
           </DialogDescription>
         </DialogHeader>
@@ -142,10 +142,10 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
         {submitted ? (
           /* ── Confirmation View ── */
           <div className="text-center py-8 space-y-4">
-            <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto">
-              <Check className="w-8 h-8 text-emerald-600" />
+            <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto">
+              <Check className="w-8 h-8 text-green-600" />
             </div>
-            <p className="text-slate-700 text-sm">
+            <p className="text-[var(--royal)]/70 text-sm">
               {form.response === 'attending' && `You're attending with ${form.guests} guest${form.guests !== 1 ? 's' : ''}.`}
               {form.response === 'maybe' && 'You responded as maybe.'}
               {form.response === 'not_attending' && 'You responded as not attending.'}
@@ -175,7 +175,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                         onClick={() => update('response', opt.value)}
                         className={`
                           flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-[13px] font-bold transition-all
-                          ${isActive ? opt.activeClass : 'border-slate-200 text-slate-500 hover:border-slate-300'}
+                          ${isActive ? opt.activeClass : 'border-slate-200 text-[var(--royal)]/60 hover:border-slate-300'}
                         `}
                       >
                         <Icon className="w-4 h-4" />
@@ -221,7 +221,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                     onChange={(e) => update('guests', Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))}
                     className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px] w-24"
                   />
-                  <p className="text-[11px] text-slate-400">Including yourself</p>
+                  <p className="text-[11px] text-[var(--royal)]/40">Including yourself</p>
                 </div>
               )}
 
@@ -242,7 +242,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
               <Button
                 variant="ghost"
                 onClick={() => handleClose(false)}
-                className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
+                className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[var(--royal)]/60"
               >
                 Cancel
               </Button>

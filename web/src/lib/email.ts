@@ -13,6 +13,17 @@
  *
  * @see https://extensions.dev/extensions/firebase/firestore-send-email
  * @see docs/ADR-037, SECURITY_COMPLIANCE.md §12
+ *
+ * SECURITY — fail-closed write attribution:
+ *   The `mail` create rule (firestore.rules) requires
+ *   `request.resource.data.createdBy == request.auth.uid`. Every send MUST
+ *   therefore carry the *authenticated* caller's uid — there is no `'system'`
+ *   actor on the client. `userId` is required on all helpers; passing a falsy
+ *   value throws immediately instead of writing a doc the rule will reject
+ *   (which previously failed silently the moment a helper was wired up).
+ *   Unauthenticated sends (e.g. password-reset, where no user is signed in)
+ *   cannot satisfy the rule client-side and must route through the Go API /
+ *   Admin SDK — see `sendPasswordResetNotification` below.
  */
 
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -67,13 +78,24 @@ interface NotificationEmailData {
  * Sends an email by writing to the Firestore `mail` collection.
  * The Firebase Trigger Email extension handles actual delivery.
  *
+ * @param createdBy - The authenticated caller's uid. REQUIRED: the `mail`
+ *   create rule pins `createdBy` to `request.auth.uid`, so a falsy value
+ *   would be silently rejected by Firestore. We throw eagerly instead.
  * @returns The document ID of the mail record (for tracking)
  */
-async function sendEmail(options: EmailOptions, createdBy?: string): Promise<string> {
+async function sendEmail(options: EmailOptions, createdBy: string): Promise<string> {
+  if (!createdBy) {
+    throw new Error(
+      'sendEmail requires the authenticated user uid (createdBy). ' +
+        'The mail create rule pins createdBy to request.auth.uid; ' +
+        'unauthenticated sends must route through the Go API / Admin SDK.',
+    );
+  }
+
   const mailDoc: Record<string, unknown> = {
     to: Array.isArray(options.to) ? options.to : [options.to],
     createdAt: serverTimestamp(),
-    createdBy: createdBy || 'system',
+    createdBy,
   };
 
   // Use template or direct content
@@ -97,7 +119,7 @@ async function sendEmail(options: EmailOptions, createdBy?: string): Promise<str
  * Send an estate invitation email.
  * Called when a principal invites a team member.
  */
-export async function sendInvitationEmail(data: InvitationEmailData, userId?: string): Promise<string> {
+export async function sendInvitationEmail(data: InvitationEmailData, userId: string): Promise<string> {
   const roleLabel = {
     executor: 'Executor',
     heir: 'Beneficiary',
@@ -125,7 +147,7 @@ export async function sendInvitationEmail(data: InvitationEmailData, userId?: st
 /**
  * Send a welcome email after registration.
  */
-export async function sendWelcomeEmail(data: WelcomeEmailData, userId?: string): Promise<string> {
+export async function sendWelcomeEmail(data: WelcomeEmailData, userId: string): Promise<string> {
   return sendEmail({
     to: data.recipientEmail,
     subject: 'Welcome to FinalWishes — Your Estate Operating System',
@@ -143,7 +165,7 @@ export async function sendWelcomeEmail(data: WelcomeEmailData, userId?: string):
 /**
  * Send an estate notification email (deadline, update, etc.)
  */
-export async function sendNotificationEmail(data: NotificationEmailData, userId?: string): Promise<string> {
+export async function sendNotificationEmail(data: NotificationEmailData, userId: string): Promise<string> {
   return sendEmail({
     to: data.recipientEmail,
     subject: `[${data.estateName}] ${data.notificationType} — FinalWishes`,
@@ -163,46 +185,54 @@ export async function sendNotificationEmail(data: NotificationEmailData, userId?
 
 /**
  * Send a password reset confirmation email.
- * Note: Firebase Auth handles the actual reset email — this is
- * a supplemental notification for audit purposes.
+ *
+ * IMPORTANT — server-only: this fires during the password-reset flow, when
+ * NO user is signed in. The `mail` create rule requires
+ * `createdBy == request.auth.uid`, which an unauthenticated client cannot
+ * satisfy, so this notification CANNOT be sent from the browser. It must be
+ * issued server-side via the Go API / Firebase Admin SDK (which bypasses
+ * security rules), keyed to the audited request.
+ *
+ * Firebase Auth already handles the actual reset email; this supplemental
+ * audit notification is intentionally not wired client-side. Calling it from
+ * the browser throws immediately rather than queuing a doc the rule rejects.
+ *
+ * @throws Always — there is no authenticated client path for this send.
  */
-export async function sendPasswordResetNotification(email: string): Promise<string> {
-  return sendEmail({
-    to: email,
-    subject: 'Password Reset Requested — FinalWishes',
-    html: `
-      <div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: linear-gradient(135deg, #1E3A5F, #2563EB); padding: 24px; border-radius: 12px 12px 0 0;">
-          <h1 style="color: #C8A951; font-family: Cinzel, serif; margin: 0; font-size: 24px;">FinalWishes</h1>
-        </div>
-        <div style="padding: 24px; background: #ffffff; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb;">
-          <p style="color: #1E3A5F; font-size: 16px;">A password reset was requested for your FinalWishes account.</p>
-          <p style="color: #1E3A5F; font-size: 14px;">If you did not request this, please contact support immediately at <a href="mailto:support@finalwishes.app" style="color: #2563EB;">support@finalwishes.app</a>.</p>
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
-          <p style="color: #6B7280; font-size: 12px;">This is an automated security notification from FinalWishes.</p>
-        </div>
-      </div>
-    `,
-    text: 'A password reset was requested for your FinalWishes account. If you did not request this, please contact support@finalwishes.app immediately.',
-  });
+export async function sendPasswordResetNotification(_email: string): Promise<never> {
+  throw new Error(
+    'sendPasswordResetNotification must run server-side (Go API / Admin SDK): ' +
+      'the password-reset flow is unauthenticated and cannot satisfy the ' +
+      'fail-closed mail create rule (createdBy == request.auth.uid).',
+  );
 }
 
 /**
  * React hook wrapper for sending emails with the current user's context.
+ *
+ * Every sender resolves the signed-in user's uid for `createdBy`. If no user
+ * is authenticated the send throws (the `mail` rule would reject it anyway),
+ * so callers should gate UI on auth state. Password-reset notifications are
+ * deliberately absent here — they run unauthenticated and are server-only.
  */
 export function useEmailService() {
   const { user } = useAuth();
 
+  const requireUid = (): string => {
+    if (!user?.uid) {
+      throw new Error('Email sends require an authenticated user.');
+    }
+    return user.uid;
+  };
+
   return {
     sendInvitation: (data: InvitationEmailData) =>
-      sendInvitationEmail(data, user?.uid),
+      sendInvitationEmail(data, requireUid()),
 
     sendWelcome: (data: WelcomeEmailData) =>
-      sendWelcomeEmail(data, user?.uid),
+      sendWelcomeEmail(data, requireUid()),
 
     sendNotification: (data: NotificationEmailData) =>
-      sendNotificationEmail(data, user?.uid),
-
-    sendPasswordResetNotification,
+      sendNotificationEmail(data, requireUid()),
   };
 }

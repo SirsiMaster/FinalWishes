@@ -71,7 +71,7 @@ function ObituaryPage() {
     editable: editing && !isSigned,
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none min-h-[400px] focus:outline-none p-8 text-slate-900 font-[family-name:var(--font-inter)] leading-relaxed',
+        class: 'prose prose-lg max-w-none min-h-[400px] focus:outline-none p-8 text-ink font-[family-name:var(--font-inter)] leading-relaxed',
       },
     },
   });
@@ -294,7 +294,7 @@ function ObituaryPage() {
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading record...</span>
+          <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-[0.2em]">Loading record...</span>
         </div>
       </div>
     );
@@ -313,7 +313,7 @@ function ObituaryPage() {
 
       {/* Photo Modal */}
       <Dialog open={showPhotoModal} onOpenChange={setShowPhotoModal}>
-        <DialogContent className="sm:max-w-[90vw] max-h-[90vh] rounded-[2rem] p-0 overflow-hidden border-slate-200" showCloseButton={false}>
+        <DialogContent className="sm:max-w-[90vw] max-h-[90vh] rounded-[2rem] p-0 overflow-hidden border-neutral-border" showCloseButton={false}>
           {profilePhoto ? (
             <img
               src={profilePhoto}
@@ -325,10 +325,10 @@ function ObituaryPage() {
               <span className="text-8xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]/30">{initials}</span>
             </div>
           )}
-          <div className="w-full p-6 bg-white border-t border-slate-100 flex justify-between items-center">
+          <div className="w-full p-6 bg-white border-t border-neutral-border flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-bold text-slate-900 font-[family-name:var(--font-cinzel)]">Heritage Portrait</h3>
-              <p className="text-[13px] text-slate-500 font-medium">{userName || 'Estate Principal'}</p>
+              <h3 className="text-lg font-bold text-royal font-[family-name:var(--font-cinzel)]">Heritage Portrait</h3>
+              <p className="text-[13px] text-ink-muted font-medium">{userName || 'Estate Principal'}</p>
             </div>
             <Button
               variant="outline"
@@ -343,8 +343,8 @@ function ObituaryPage() {
 
       <div className="flex justify-between items-end pb-8">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Final Record</h2>
-          <p className="text-lg text-slate-500 font-medium">Draft, manage, and distribute the official life story for your estate.</p>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-royal">Final Record</h2>
+          <p className="text-lg text-ink-muted font-medium">Draft, manage, and distribute the official life story for your estate.</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -374,7 +374,7 @@ function ObituaryPage() {
           {obit?.content && (
             <Button
               onClick={handleExportPDF}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-sm active:scale-95"
+              className="bg-neutral-faint hover:bg-[var(--neutral-border)] text-ink px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-sm active:scale-95"
             >
               <Download className="w-4 h-4" />
               Export PDF
@@ -414,7 +414,7 @@ function ObituaryPage() {
         <div className="space-y-6">
           {/* Portrait */}
           <Card
-            className="aspect-[3/4] relative group overflow-hidden shadow-sm cursor-pointer rounded-[2rem] p-0 border-slate-200"
+            className="aspect-[3/4] relative group overflow-hidden shadow-sm cursor-pointer rounded-[2rem] p-0 border-neutral-border"
             onClick={() => setShowPhotoModal(true)}
           >
              {profilePhoto ? (
@@ -425,7 +425,7 @@ function ObituaryPage() {
                </div>
              )}
              <Button
-               className="absolute bottom-4 left-4 right-4 w-[calc(100%-2rem)] py-2.5 bg-white/90 backdrop-blur-md rounded-xl text-slate-900 font-bold text-[12px] translate-y-12 group-hover:translate-y-0 transition-transform shadow-md hover:bg-white/95 h-auto border-none"
+               className="absolute bottom-4 left-4 right-4 w-[calc(100%-2rem)] py-2.5 bg-white/90 backdrop-blur-md rounded-xl text-ink font-bold text-[12px] translate-y-12 group-hover:translate-y-0 transition-transform shadow-md hover:bg-white/95 h-auto border-none"
                onClick={(e) => {
                  e.stopPropagation();
                  fileInputRef.current?.click();
@@ -437,9 +437,9 @@ function ObituaryPage() {
           </Card>
 
           {/* Vital Stats */}
-          <Card className="rounded-[2rem] border-slate-100 shadow-sm">
+          <Card className="rounded-[2rem] border-neutral-border shadow-sm">
             <CardHeader>
-              <CardTitle className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Details</CardTitle>
+              <CardTitle className="text-[11px] font-bold text-ink-muted uppercase tracking-widest">Details</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -453,9 +453,9 @@ function ObituaryPage() {
         </div>
 
         {/* Editor */}
-        <Card className="rounded-[2rem] border-slate-100 shadow-sm flex flex-col min-h-[500px] p-0">
-          <CardHeader className="bg-slate-50 px-6 py-4 flex-row justify-between items-center border-b border-slate-100 rounded-t-[2rem]">
-             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Obituary Draft</span>
+        <Card className="rounded-[2rem] border-neutral-border shadow-sm flex flex-col min-h-[500px] p-0">
+          <CardHeader className="bg-neutral-faint px-6 py-4 flex-row justify-between items-center border-b border-neutral-border rounded-t-[2rem]">
+             <span className="text-[11px] font-bold text-ink-muted uppercase tracking-widest">Obituary Draft</span>
              {!editing && !isSigned && (
                <Button variant="link" onClick={() => setEditing(true)} className="text-[var(--royal)] font-bold text-[12px] p-0 h-auto">Edit</Button>
              )}
@@ -481,23 +481,23 @@ function ObituaryPage() {
 
       {/* Sign Modal */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="sm:max-w-2xl rounded-[3rem] p-12 border-slate-100 shadow-2xl" showCloseButton={false}>
+        <DialogContent className="sm:max-w-2xl rounded-[3rem] p-12 border-neutral-border shadow-2xl" showCloseButton={false}>
           <DialogHeader className="text-center items-center">
             <div className="w-16 h-16 bg-[var(--royal)] text-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
               <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
-            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Review & Sign</DialogTitle>
-            <DialogDescription className="text-slate-500 font-medium max-w-md mx-auto">By signing this document, you are establishing the official record for your estate.</DialogDescription>
+            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-royal">Review & Sign</DialogTitle>
+            <DialogDescription className="text-ink-muted font-medium max-w-md mx-auto">By signing this document, you are establishing the official record for your estate.</DialogDescription>
           </DialogHeader>
 
-          <div className="bg-slate-50 p-6 rounded-2xl mb-4 border border-slate-100 max-h-[200px] overflow-y-auto">
-             <p className="text-slate-500 text-sm italic leading-relaxed">"{obit?.content || 'No content drafted yet...'}"</p>
+          <div className="bg-neutral-faint p-6 rounded-2xl mb-4 border border-neutral-border max-h-[200px] overflow-y-auto">
+             <p className="text-ink-muted text-sm italic leading-relaxed">"{obit?.content || 'No content drafted yet...'}"</p>
           </div>
 
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-4 text-center">
-             <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Signature</label>
-             <div className="h-20 border-b-2 border-slate-900/30 flex items-center justify-center text-slate-300 font-serif italic text-3xl select-none">
-                {isSigned ? <span className="text-slate-900 font-[family-name:var(--font-cinzel)]">{obit?.signature || userName || 'Legal Guardian'}</span> : 'Sign here'}
+          <div className="bg-neutral-faint p-6 rounded-2xl border border-neutral-border mb-4 text-center">
+             <label className="text-[11px] font-bold text-ink-muted uppercase tracking-widest mb-4 block">Signature</label>
+             <div className="h-20 border-b-2 border-royal/30 flex items-center justify-center text-ink-muted font-serif italic text-3xl select-none">
+                {isSigned ? <span className="text-royal font-[family-name:var(--font-cinzel)]">{obit?.signature || userName || 'Legal Guardian'}</span> : 'Sign here'}
              </div>
           </div>
 
@@ -505,7 +505,7 @@ function ObituaryPage() {
             <Button
               variant="outline"
               onClick={() => setModalOpen(false)}
-              className="flex-1 py-4 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 text-sm hover:bg-slate-50 active:scale-95"
+              className="flex-1 py-4 h-auto rounded-2xl border-neutral-border font-bold text-ink-muted text-sm hover:bg-neutral-faint active:scale-95"
             >
               Cancel
             </Button>
@@ -544,12 +544,12 @@ function StatRow({ label, value, color }: { label: string; value?: string; color
   const badgeStyle = color ? colorMap[color] || '' : '';
 
   return (
-    <div className="flex justify-between items-center py-2.5 border-b border-slate-100 last:border-b-0">
-      <span className="text-[13px] text-slate-500 font-medium">{label}</span>
+    <div className="flex justify-between items-center py-2.5 border-b border-neutral-border last:border-b-0">
+      <span className="text-[13px] text-ink-muted font-medium">{label}</span>
       {color ? (
         <Badge variant="outline" className={`text-[11px] font-bold px-2.5 py-1 rounded-lg h-auto ${badgeStyle}`}>{value}</Badge>
       ) : (
-        <span className="text-[13px] font-bold text-slate-900">{value}</span>
+        <span className="text-[13px] font-bold text-ink">{value}</span>
       )}
     </div>
   );

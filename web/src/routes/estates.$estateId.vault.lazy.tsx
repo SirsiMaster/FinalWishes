@@ -528,7 +528,7 @@ function VaultPage() {
         <button
           type="button"
           onClick={() => setChecklistOpen((o) => !o)}
-          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-slate-50/50 transition-colors"
+          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-neutral-faint/50 transition-colors"
         >
           <div className="flex items-center gap-4 min-w-0">
             <div className="w-12 h-12 rounded-2xl bg-[var(--royal)] flex items-center justify-center text-white flex-shrink-0">
@@ -592,13 +592,13 @@ function VaultPage() {
                   <div key={catKey}>
                     {/* Category sub-heading */}
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 rounded-xl bg-slate-50 border border-[var(--royal)]/10 flex items-center justify-center text-[var(--royal)]/60">
+                      <div className="w-8 h-8 rounded-xl bg-neutral-faint border border-[var(--royal)]/10 flex items-center justify-center text-[var(--royal)]/60">
                         {catInfo.icon}
                       </div>
                       <span className="text-[12px] font-bold text-[var(--royal)]/50 uppercase tracking-widest">
                         {catInfo.label}
                       </span>
-                      <Badge className="bg-slate-50 text-[var(--royal)]/40 border border-[var(--royal)]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
+                      <Badge className="bg-neutral-faint text-[var(--royal)]/40 border border-[var(--royal)]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
                         {catUploaded}/{items.length}
                       </Badge>
                     </div>
@@ -617,7 +617,7 @@ function VaultPage() {
                             className={`flex items-start gap-3 p-4 rounded-2xl border text-left transition-all ${
                               isUploaded
                                 ? 'bg-[var(--gold)]/5 border-[var(--gold)]/30'
-                                : 'bg-white border-[var(--royal)]/10 hover:border-[var(--royal)]/25 hover:bg-slate-50 cursor-pointer'
+                                : 'bg-white border-[var(--royal)]/10 hover:border-[var(--royal)]/25 hover:bg-neutral-faint cursor-pointer'
                             }`}
                           >
                             {/* Status indicator */}
@@ -699,7 +699,7 @@ function VaultPage() {
         className={`
           border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all
           ${tierUsage && !tierUsage.canUploadMedia
-            ? 'border-slate-500/20 opacity-50 pointer-events-none'
+            ? 'border-ink-muted/20 opacity-50 pointer-events-none'
             : isDragActive
               ? 'border-[var(--royal)] bg-[var(--royal)]/5 scale-[1.01]'
               : 'border-[var(--royal)]/20 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/[0.02]'
@@ -710,7 +710,7 @@ function VaultPage() {
         <div className="flex flex-col items-center gap-4">
           <div
             className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${
-              isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-slate-50 text-[var(--royal)] border border-[var(--royal)]/10'
+              isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-neutral-faint text-[var(--royal)] border border-[var(--royal)]/10'
             }`}
           >
             <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2">
@@ -798,7 +798,7 @@ function VaultPage() {
               />
             ))}
             {documents.length === 0 && (
-              <div className="text-center py-24 bg-slate-50 rounded-2xl border border-[var(--royal)]/10">
+              <div className="text-center py-24 bg-neutral-faint rounded-2xl border border-[var(--royal)]/10">
                 <p className="text-[var(--royal)]/50 font-medium">
                   {activeCategory
                     ? `No ${CATEGORY_MAP[activeCategory]?.label.toLowerCase() || 'files'} yet.`
@@ -857,7 +857,7 @@ function UploadProgress({ upload }: { upload: UploadState }) {
           ? 'bg-red-50 border-red-200'
           : isDone
             ? 'bg-green-50 border-green-200'
-            : 'bg-slate-50 border-[var(--royal)]/10'
+            : 'bg-neutral-faint border-[var(--royal)]/10'
       }`}
     >
       <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[var(--royal)]/10">
@@ -925,7 +925,7 @@ function VaultFolder({
           className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
             active
               ? 'bg-white/20 text-white'
-              : 'bg-slate-50 border border-[var(--royal)]/10 text-[var(--royal)] group-hover:bg-[var(--royal)] group-hover:text-white'
+              : 'bg-neutral-faint border border-[var(--royal)]/10 text-[var(--royal)] group-hover:bg-[var(--royal)] group-hover:text-white'
           }`}
         >
           <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
@@ -994,14 +994,14 @@ function DocItem({
 
   return (
     <div className="rounded-2xl border border-[var(--royal)]/10 overflow-hidden transition-all group">
-      <div className="flex items-center justify-between p-5 bg-white hover:bg-slate-50 transition-all">
+      <div className="flex items-center justify-between p-5 bg-white hover:bg-neutral-faint transition-all">
         <button
           type="button"
           onClick={isPreviewable ? onPreview : onDownload}
           aria-label={`Open ${doc.displayName || doc.originalName}`}
           className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer text-left bg-transparent border-none p-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)]/40"
         >
-          <div className="w-11 h-11 rounded-xl bg-slate-50 flex items-center justify-center text-[var(--royal)]/30 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 border border-[var(--royal)]/10 flex-shrink-0">
+          <div className="w-11 h-11 rounded-xl bg-neutral-faint flex items-center justify-center text-[var(--royal)]/30 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 border border-[var(--royal)]/10 flex-shrink-0">
             <FileIcon mimeType={doc.mimeType} />
           </div>
           <div className="min-w-0">
@@ -1132,7 +1132,7 @@ function DocItem({
 
       {/* Visibility Picker — collapsible */}
       {visibilityOpen && heirs.length > 0 && (
-        <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-4">
+        <div className="border-t border-[var(--royal)]/10 bg-neutral-faint px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
             {visibleTo.length === 0 ? (
               <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[var(--royal)]/60" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1166,7 +1166,7 @@ function DocItem({
               className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                 visibleTo.length === 0
                   ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                  : 'border-slate-200 text-[var(--royal)]/60 hover:border-slate-300'
+                  : 'border-neutral-border text-[var(--royal)]/60 hover:border-gold/50'
               }`}
             >
               Everyone
@@ -1191,7 +1191,7 @@ function DocItem({
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     selected
                       ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                      : 'border-slate-200 text-[var(--royal)]/60 hover:border-slate-300'
+                      : 'border-neutral-border text-[var(--royal)]/60 hover:border-gold/50'
                   }`}
                 >
                   {heir.fullName}
@@ -1278,7 +1278,7 @@ function PreviewModalContent({
       </DialogHeader>
 
       {/* Content */}
-      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-slate-50">
+      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-neutral-faint">
         {loading ? (
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
         ) : previewUrl ? (
@@ -1324,7 +1324,7 @@ function DeleteModalContent({
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter className="flex gap-3 mt-4 sm:flex-row border-t-0 bg-transparent mx-0 mb-0 p-0 rounded-none">
-        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-[var(--royal)] font-bold text-[13px] hover:bg-slate-50 h-auto">
+        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-[var(--royal)] font-bold text-[13px] hover:bg-neutral-faint h-auto">
           Cancel
         </AlertDialogCancel>
         <AlertDialogAction
@@ -1371,7 +1371,7 @@ function AIInsightsPanel({
   )
 
   return (
-    <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-5 space-y-4">
+    <div className="border-t border-[var(--royal)]/10 bg-neutral-faint px-6 py-5 space-y-4">
       {/* Header */}
       <div className="flex items-center gap-2">
         <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1477,7 +1477,7 @@ function AIInsightsPanel({
             {analysis.assetsMentioned.map((asset, i) => (
               <Badge
                 key={i}
-                className="bg-slate-50 text-[var(--royal)]/60 border border-[var(--royal)]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
+                className="bg-neutral-faint text-[var(--royal)]/60 border border-[var(--royal)]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
               >
                 {asset}
               </Badge>

@@ -147,7 +147,7 @@ function StatusBadge({ status }: { status: TimeCapsule['status'] }) {
   const config = {
     pending: { label: 'Pending', className: 'bg-[var(--royal)]/5 text-[var(--royal)] border-[var(--royal)]/10', Icon: Hourglass },
     delivered: { label: 'Delivered', className: 'bg-green-50 text-green-600 border-green-200', Icon: CheckCircle2 },
-    cancelled: { label: 'Cancelled', className: 'bg-slate-50 text-slate-400 border-slate-200', Icon: XCircle },
+    cancelled: { label: 'Cancelled', className: 'bg-neutral-faint text-ink-muted border-neutral-border', Icon: XCircle },
   }
   const c = config[status]
 
@@ -183,7 +183,7 @@ function DeliveryPreview({ capsule }: { capsule: TimeCapsule }) {
   const previewText = cfg.previewTemplate(capsule.recipientName, dateLabel)
 
   return (
-    <div className="flex items-center gap-2.5 text-[12px] text-slate-500 leading-snug">
+    <div className="flex items-center gap-2.5 text-[12px] text-ink-muted leading-snug">
       <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: cfg.color }} />
       <span className="italic">{previewText}</span>
     </div>
@@ -218,7 +218,7 @@ function VoiceMemoCard({ url }: { url: string }) {
       >
         {playing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
       </Button>
-      <span className="text-[12px] font-medium text-slate-500">Voice message attached</span>
+      <span className="text-[12px] font-medium text-ink-muted">Voice message attached</span>
     </div>
   )
 }
@@ -249,9 +249,9 @@ function CapsuleCard({
       {/* Card Header */}
       <CardHeader className="p-8 pb-0">
         <CardTitle className="text-lg tracking-tight leading-snug">
-          <span className="text-[13px] font-medium text-slate-500">For</span>
+          <span className="text-[13px] font-medium text-ink-muted">For</span>
           <br />
-          <span className="font-bold text-slate-900 group-hover:text-[var(--royal)] transition-colors">
+          <span className="font-bold text-ink group-hover:text-[var(--royal)] transition-colors">
             {capsule.recipientName}
           </span>
         </CardTitle>
@@ -262,10 +262,10 @@ function CapsuleCard({
 
       <CardContent className="px-8 space-y-4">
         {/* Title */}
-        <p className="text-[15px] font-semibold text-slate-900">{capsule.title}</p>
+        <p className="text-[15px] font-semibold text-ink">{capsule.title}</p>
 
         {/* Message preview */}
-        <p className="text-[13px] text-slate-500 leading-relaxed line-clamp-3">
+        <p className="text-[13px] text-ink-muted leading-relaxed line-clamp-3">
           {messagePreview}
         </p>
 
@@ -323,8 +323,8 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         <div className="w-20 h-20 rounded-full bg-[var(--gold)]/10 flex items-center justify-center mb-6">
           <Send className="w-10 h-10 text-[var(--gold)]/40" />
         </div>
-        <h3 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">No letters yet</h3>
-        <p className="text-slate-500 font-medium max-w-lg mb-8 leading-relaxed">
+        <h3 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal mb-3 tracking-tight">No letters yet</h3>
+        <p className="text-ink-muted font-medium max-w-lg mb-8 leading-relaxed">
           A time capsule is a gift — a message sealed today, delivered when it matters most.
           Who would you like to write to?
         </p>
@@ -480,7 +480,7 @@ function VoiceRecorderPanel({
         >
           {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </Button>
-        <span className="text-[13px] font-medium text-slate-500 flex-1">
+        <span className="text-[13px] font-medium text-ink-muted flex-1">
           Voice message {recordedBlob ? 'recorded' : 'attached'}
         </span>
         <Button
@@ -522,7 +522,7 @@ function VoiceRecorderPanel({
       type="button"
       variant="outline"
       onClick={startRecording}
-      className="gap-2 rounded-xl border-[var(--gold)]/20 text-slate-500 hover:border-[var(--gold)]/40 hover:bg-[var(--gold-dim)] h-auto py-3"
+      className="gap-2 rounded-xl border-[var(--gold)]/20 text-ink-muted hover:border-[var(--gold)]/40 hover:bg-[var(--gold-dim)] h-auto py-3"
     >
       <Mic className="w-4 h-4 text-[var(--gold)]" />
       <span className="text-[13px] font-medium">Attach Voice Memo</span>
@@ -585,7 +585,7 @@ function PhotoAttachments({
         type="button"
         variant="outline"
         onClick={() => inputRef.current?.click()}
-        className="gap-2 rounded-xl border-[var(--gold)]/20 text-slate-500 hover:border-[var(--gold)]/40 hover:bg-[var(--gold-dim)] h-auto py-3"
+        className="gap-2 rounded-xl border-[var(--gold)]/20 text-ink-muted hover:border-[var(--gold)]/40 hover:bg-[var(--gold-dim)] h-auto py-3"
       >
         <ImagePlus className="w-4 h-4 text-[var(--gold)]" />
         <span className="text-[13px] font-medium">Attach Photo</span>
@@ -689,7 +689,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-ink-muted hover:bg-[var(--neutral-border)]'}`}
       >
         <Bold className="w-4 h-4" />
       </Button>
@@ -698,7 +698,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-ink-muted hover:bg-[var(--neutral-border)]'}`}
       >
         <Italic className="w-4 h-4" />
       </Button>
@@ -708,7 +708,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-ink-muted hover:bg-[var(--neutral-border)]'}`}
       >
         <Heading2 className="w-4 h-4" />
       </Button>
@@ -717,7 +717,7 @@ function LetterToolbar({ editor }: { editor: ReturnType<typeof useEditor> }) {
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`w-8 h-8 rounded-lg ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
+        className={`w-8 h-8 rounded-lg ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-ink-muted hover:bg-[var(--neutral-border)]'}`}
       >
         <List className="w-4 h-4" />
       </Button>
@@ -786,7 +786,7 @@ function CreateModal({
     content: '',
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none min-h-[200px] focus:outline-none px-6 py-5 text-slate-900 leading-[1.8]',
+        class: 'prose prose-lg max-w-none min-h-[200px] focus:outline-none px-6 py-5 text-ink leading-[1.8]',
       },
     },
   })
@@ -920,10 +920,10 @@ function CreateModal({
           style={{ background: 'var(--gold-dim)' }}
         >
           <DialogHeader>
-            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 tracking-tight">
+            <DialogTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-royal tracking-tight">
               Write a Letter
             </DialogTitle>
-            <DialogDescription className="text-slate-500 font-medium text-sm">
+            <DialogDescription className="text-ink-muted font-medium text-sm">
               A message sealed today, delivered when it matters most.
             </DialogDescription>
           </DialogHeader>
@@ -942,7 +942,7 @@ function CreateModal({
               <Input
                 name="title"
                 required
-                className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-ink placeholder:text-[var(--royal)]/20"
                 placeholder="e.g. A Letter for Your Wedding Day"
               />
             </div>
@@ -956,7 +956,7 @@ function CreateModal({
                 <Input
                   name="recipientName"
                   required
-                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-ink placeholder:text-[var(--royal)]/20"
                   placeholder="Full name"
                 />
               </div>
@@ -968,7 +968,7 @@ function CreateModal({
                   name="recipientEmail"
                   type="email"
                   required
-                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-ink placeholder:text-[var(--royal)]/20"
                   placeholder="email@example.com"
                 />
               </div>
@@ -979,7 +979,7 @@ function CreateModal({
               <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Relationship (optional)</Label>
               <Input
                 name="recipientRelationship"
-                className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900 placeholder:text-[var(--royal)]/20"
+                className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-ink placeholder:text-[var(--royal)]/20"
                 placeholder="e.g. Daughter, Best Friend, Spouse"
               />
             </div>
@@ -1036,11 +1036,11 @@ function CreateModal({
                       <CardContent className="p-4 px-0">
                         <div className="flex items-center gap-3 mb-1.5">
                           <Icon className="w-4 h-4" style={{ color: selected ? 'var(--gold)' : 'var(--ink-muted)' }} />
-                          <span className={`text-[12px] font-bold ${selected ? 'text-[var(--gold)]' : 'text-slate-900'}`}>
+                          <span className={`text-[12px] font-bold ${selected ? 'text-[var(--gold)]' : 'text-ink'}`}>
                             {dt.label}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500 leading-snug">{dt.description}</p>
+                        <p className="text-[11px] text-ink-muted leading-snug">{dt.description}</p>
                       </CardContent>
                     </Card>
                   )
@@ -1056,7 +1056,7 @@ function CreateModal({
                   name="scheduledDate"
                   type="date"
                   min={new Date().toISOString().split('T')[0]}
-                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-slate-900"
+                  className="h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white focus-visible:bg-white focus-visible:border-[var(--gold)] focus-visible:ring-[var(--gold)]/10 font-bold text-ink"
                 />
               </div>
             )}
@@ -1067,7 +1067,7 @@ function CreateModal({
                 <div className="space-y-2">
                   <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Month *</Label>
                   <Select value={anniversaryMonth} onValueChange={setAnniversaryMonth}>
-                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white font-bold text-slate-900">
+                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white font-bold text-ink">
                       <SelectValue placeholder="Select month" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1080,7 +1080,7 @@ function CreateModal({
                 <div className="space-y-2">
                   <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">Day *</Label>
                   <Select value={anniversaryDay} onValueChange={setAnniversaryDay}>
-                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white font-bold text-slate-900">
+                    <SelectTrigger className="w-full h-auto px-6 py-4 rounded-2xl border-[var(--gold)]/15 bg-white font-bold text-ink">
                       <SelectValue placeholder="Select day" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1099,7 +1099,7 @@ function CreateModal({
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="flex-1 py-4 h-auto rounded-2xl border-[var(--gold)]/15 font-bold text-slate-500 text-sm hover:bg-white"
+                className="flex-1 py-4 h-auto rounded-2xl border-[var(--gold)]/15 font-bold text-ink-muted text-sm hover:bg-white"
               >
                 Cancel
               </Button>
@@ -1179,20 +1179,20 @@ function TimeCapsulePage() {
         {/* Stats */}
         {capsules.length > 0 && (
           <div className="flex items-center gap-6">
-            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[var(--gold)]/10 text-slate-900 border-none">
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[var(--gold)]/10 text-ink border-none">
               <Hourglass className="w-4 h-4 text-[var(--gold)]" />
               <span className="text-[13px] font-bold">{pendingCount}</span>
-              <span className="text-[13px] text-slate-500 font-normal">sealed</span>
+              <span className="text-[13px] text-ink-muted font-normal">sealed</span>
             </Badge>
-            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-green-50 text-slate-900 border-none">
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-green-50 text-ink border-none">
               <CheckCircle2 className="w-4 h-4 text-green-500" />
               <span className="text-[13px] font-bold">{deliveredCount}</span>
-              <span className="text-[13px] text-slate-500 font-normal">delivered</span>
+              <span className="text-[13px] text-ink-muted font-normal">delivered</span>
             </Badge>
-            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[var(--gold)]/5 text-slate-900 border-none">
+            <Badge variant="secondary" className="gap-2 h-auto py-1.5 px-3 rounded-lg bg-[var(--gold)]/5 text-ink border-none">
               <Send className="w-4 h-4 text-[var(--gold)]/60" />
               <span className="text-[13px] font-bold">{capsules.length}</span>
-              <span className="text-[13px] text-slate-500 font-normal">total</span>
+              <span className="text-[13px] text-ink-muted font-normal">total</span>
             </Badge>
           </div>
         )}
@@ -1224,17 +1224,17 @@ function TimeCapsulePage() {
             <AlertDialogMedia className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 mx-auto">
               <XCircle className="w-7 h-7" />
             </AlertDialogMedia>
-            <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 text-center">
+            <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-royal text-center">
               Cancel This Letter
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-[14px] text-slate-500 text-center">
-              <strong className="text-slate-900">{cancelTarget?.title}</strong> will be cancelled and the letter will never be delivered to {cancelTarget?.recipientName}.
+            <AlertDialogDescription className="text-[14px] text-ink-muted text-center">
+              <strong className="text-ink">{cancelTarget?.title}</strong> will be cancelled and the letter will never be delivered to {cancelTarget?.recipientName}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-3 sm:flex-row">
             <AlertDialogCancel
               variant="outline"
-              className="flex-1 py-3 h-auto rounded-xl border-[var(--gold)]/15 text-slate-900 font-bold text-[13px] hover:bg-[var(--gold-dim)]"
+              className="flex-1 py-3 h-auto rounded-xl border-[var(--gold)]/15 text-ink font-bold text-[13px] hover:bg-[var(--gold-dim)]"
             >
               Keep It
             </AlertDialogCancel>
@@ -1279,7 +1279,7 @@ function EditCapsuleDialog({
     content: '',
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none min-h-[180px] px-5 py-4 focus:outline-none text-slate-900/80 leading-relaxed',
+        class: 'prose prose-sm max-w-none min-h-[180px] px-5 py-4 focus:outline-none text-ink/80 leading-relaxed',
       },
     },
   })
@@ -1307,8 +1307,8 @@ function EditCapsuleDialog({
     <Dialog open={!!capsule} onOpenChange={(open) => { if (!open && !saving) onClose() }}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-[2rem]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Edit Letter</DialogTitle>
-          <DialogDescription className="text-slate-500 text-sm">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal">Edit Letter</DialogTitle>
+          <DialogDescription className="text-ink-muted text-sm">
             Update the title and message. Delivery timing and recipient stay as sealed.
           </DialogDescription>
         </DialogHeader>
@@ -1319,12 +1319,12 @@ function EditCapsuleDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="A letter for…"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-ink"
             />
           </div>
           <div className="space-y-2">
             <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Message</Label>
-            <div className="rounded-2xl border border-slate-200 overflow-hidden">
+            <div className="rounded-2xl border border-neutral-border overflow-hidden">
               <LetterToolbar editor={editor} />
               <EditorContent editor={editor} />
             </div>

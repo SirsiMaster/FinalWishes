@@ -299,6 +299,52 @@ export function useDocument<T>(path: string | null): FirestoreResult<T> {
 }
 
 /**
+ * Build a stable, value-aware key fragment for a single QueryConstraint.
+ *
+ * The Firebase Web SDK keeps a constraint's field path, operator, value,
+ * direction and limit on non-public underscore-prefixed properties. We read
+ * them defensively: if the SDK shape changes (e.g. heavy minification renames
+ * them), we degrade to the constraint's own JSON / string representation rather
+ * than silently dropping the value — never to the type alone, which is the
+ * latent stale-list bug this normalizer exists to prevent.
+ */
+function normalizeConstraint(c: QueryConstraint): unknown {
+  const anyC = c as unknown as Record<string, unknown>;
+  const field = anyC._field;
+  const fieldPath =
+    field && typeof field === 'object'
+      ? String((field as { toString?: () => string }).toString?.() ?? '')
+      : field;
+
+  const projection: Record<string, unknown> = {
+    type: c.type,
+    field: fieldPath,
+    op: anyC._op,
+    value: anyC._value,
+    direction: anyC._direction,
+    limit: anyC._limit,
+  };
+
+  // If none of the discriminating internals were present (minified/renamed),
+  // fall back to a structural serialization so distinct constraints still key
+  // distinctly. JSON first (captures own enumerable props), then String().
+  const hasInternals =
+    fieldPath !== undefined ||
+    anyC._op !== undefined ||
+    anyC._value !== undefined ||
+    anyC._direction !== undefined ||
+    anyC._limit !== undefined;
+
+  if (hasInternals) return projection;
+
+  try {
+    return { type: c.type, raw: JSON.parse(JSON.stringify(c)) };
+  } catch {
+    return { type: c.type, raw: String(c) };
+  }
+}
+
+/**
  * Subscribe to a Firestore collection or subcollection with optional constraints.
  */
 export function useCollection<T>(
@@ -309,9 +355,17 @@ export function useCollection<T>(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Serialize constraints to a stable key for dependency tracking
+  // Serialize constraints to a stable key for dependency tracking.
+  //
+  // We must key on the FULL constraint — not just `c.type` — otherwise a query
+  // whose field path is fixed but whose value changes (e.g.
+  // `where('userId', '==', userId)` as `userId` updates) would NOT re-subscribe,
+  // serving a stale list. The Firebase SDK does not expose a public serializer,
+  // so we defensively read the well-known internal fields (`_field`, `_op`,
+  // `_value`, `_direction`, `_limit`) and fall back to the constraint's own
+  // JSON / string form when they are absent or minified away.
   const constraintKey = useMemo(
-    () => JSON.stringify(constraints?.map((c) => c.type) || []),
+    () => JSON.stringify((constraints || []).map(normalizeConstraint)),
     [constraints]
   );
 

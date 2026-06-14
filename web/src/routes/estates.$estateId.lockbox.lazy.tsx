@@ -3,6 +3,7 @@ import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useLockboxItems, type LockboxItem } from '../lib/firestore'
 import { addLockboxItem, archiveLockboxItem, updateLockboxItem } from '../lib/estate-actions'
+import { API_BASE } from '../lib/client'
 import { toast } from 'sonner'
 import { getAuth } from 'firebase/auth'
 import {
@@ -38,8 +39,6 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 interface DecryptedCredentials {
   username?: string
@@ -303,8 +302,13 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
   }, [])
 
   const handleArchive = useCallback(async () => {
-    await archiveLockboxItem(estateId, item.id)
-    setConfirming(false)
+    const result = await archiveLockboxItem(estateId, item.id)
+    if (result.success) {
+      setConfirming(false)
+      toast.success('Account removed')
+    } else {
+      toast.error(result.error || 'Could not remove. Please try again.')
+    }
   }, [estateId, item.id])
 
   return (

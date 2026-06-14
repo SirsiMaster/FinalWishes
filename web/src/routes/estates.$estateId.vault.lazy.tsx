@@ -444,6 +444,7 @@ function VaultPage() {
         window.open(downloadUrl, '_blank')
       } catch (err) {
         console.error('Download error:', err)
+        toast.error('Could not download this document. Please try again.')
       }
     },
     [],
@@ -457,6 +458,8 @@ function VaultPage() {
       if (result.success) {
         setDeleteConfirm(null)
         toast.success('Document archived')
+      } else {
+        toast.error(result.error || 'Could not archive document. Please try again.')
       }
     },
     [estateId],
@@ -992,7 +995,12 @@ function DocItem({
   return (
     <div className="rounded-2xl border border-[var(--royal)]/10 overflow-hidden transition-all group">
       <div className="flex items-center justify-between p-5 bg-white hover:bg-slate-50 transition-all">
-        <div className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer" onClick={isPreviewable ? onPreview : onDownload}>
+        <button
+          type="button"
+          onClick={isPreviewable ? onPreview : onDownload}
+          aria-label={`Open ${doc.displayName || doc.originalName}`}
+          className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer text-left bg-transparent border-none p-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)]/40"
+        >
           <div className="w-11 h-11 rounded-xl bg-slate-50 flex items-center justify-center text-[var(--royal)]/30 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 border border-[var(--royal)]/10 flex-shrink-0">
             <FileIcon mimeType={doc.mimeType} />
           </div>
@@ -1051,7 +1059,7 @@ function DocItem({
               )}
             </div>
           </div>
-        </div>
+        </button>
         <div className="flex items-center gap-2 flex-shrink-0 ml-4">
           {heirs.length > 0 && (
             <Button
@@ -1146,9 +1154,14 @@ function DocItem({
           </div>
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => {
+              onClick={async () => {
+                const prev = visibleTo
                 setVisibleTo([])
-                updateVaultDocument(estateId, doc.id, { visibleTo: [] })
+                const result = await updateVaultDocument(estateId, doc.id, { visibleTo: [] })
+                if (!result.success) {
+                  setVisibleTo(prev)
+                  toast.error('Could not update who can see this document')
+                }
               }}
               className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                 visibleTo.length === 0
@@ -1163,12 +1176,17 @@ function DocItem({
               return (
                 <button
                   key={heir.id}
-                  onClick={() => {
+                  onClick={async () => {
+                    const prev = visibleTo
                     const next = selected
                       ? visibleTo.filter((n) => n !== heir.id)
                       : [...visibleTo, heir.id]
                     setVisibleTo(next)
-                    updateVaultDocument(estateId, doc.id, { visibleTo: next })
+                    const result = await updateVaultDocument(estateId, doc.id, { visibleTo: next })
+                    if (!result.success) {
+                      setVisibleTo(prev)
+                      toast.error('Could not update who can see this document')
+                    }
                   }}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     selected

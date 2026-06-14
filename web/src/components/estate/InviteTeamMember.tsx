@@ -100,9 +100,12 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
   };
 
   const handleRevoke = async (invitationId: string) => {
+    setError('');
     const result = await revokeInvitation(invitationId);
     if (result.success) {
       refreshInvitations();
+    } else {
+      setError(result.error || 'Could not revoke this invitation. Please try again.');
     }
   };
 

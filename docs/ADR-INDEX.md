@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADR) Index
 
-This document indexes all Architecture Decision Records for the Sirsi Nexus platform.
+This document indexes all Architecture Decision Records for FinalWishes (The Estate Operating System).
 
 ## What is an ADR?
 
@@ -124,4 +124,4 @@ Each ADR follows this structure:
 
 ---
 
-*Last updated: 2026-04-14*
+*Last updated: 2026-06-14*

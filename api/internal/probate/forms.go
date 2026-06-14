@@ -2,12 +2,13 @@ package probate
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
+	"unicode"
 
 	"cloud.google.com/go/firestore"
-	"github.com/rs/zerolog/log"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
@@ -87,11 +88,19 @@ func (h *Handler) HandleGetFormTemplates(w http.ResponseWriter, r *http.Request)
 		executorAddress, _ = exData["address"].(string)
 	}
 
-	// Compute total asset value for small estate evaluation
-	var totalAssetValue string
+	// Compute total asset values for the inventory and small-estate templates.
+	//
+	// Rule 9: these strings are stamped into legal-form prefill fields, and the
+	// personal-property total gates small-estate qualification. We therefore
+	// derive a REAL dollar figure from the recorded asset values — never a proxy
+	// like a count. If any recorded value cannot be parsed into a number, the
+	// derived total would be misleading, so we leave the field BLANK for the
+	// affiant to complete by hand rather than assert an unverifiable amount.
+	var totalAssetValue, personalPropertyValue string
 	assetSnaps, err := h.fs.Collection("estates").Doc(estateID).Collection("assets").Documents(ctx).GetAll()
 	if err == nil {
-		totalAssetValue = computeTotalAssets(assetSnaps)
+		totalAssetValue = computeTotalAssets(assetSnaps, false)
+		personalPropertyValue = computeTotalAssets(assetSnaps, true)
 	}
 
 	county := countyOfDeath
@@ -149,7 +158,7 @@ func (h *Handler) HandleGetFormTemplates(w http.ResponseWriter, r *http.Request)
 				"dateOfDeath":           dateOfDeath,
 				"affiantName":           executorName,
 				"affiantAddress":        executorAddress,
-				"totalPersonalProperty": totalAssetValue,
+				"totalPersonalProperty": personalPropertyValue,
 				"threshold":             "$150,000",
 				"waitingPeriod":         "30 days after date of death",
 				"vehiclesExcluded":      "Yes — vehicles do not count toward the $150,000 limit",
@@ -186,50 +195,106 @@ func (h *Handler) HandleGetFormTemplates(w http.ResponseWriter, r *http.Request)
 	})
 }
 
-// computeTotalAssets sums all asset values from Firestore snapshots.
-func computeTotalAssets(snaps []*firestore.DocumentSnapshot) string {
-	// For now, return the count — proper valuation requires parsing value strings
-	if len(snaps) == 0 {
+// realEstateTypes are asset `type` values that represent real property, which
+// is excluded from the Illinois small-estate personal-property threshold
+// (755 ILCS 5/25-1). Matching is case-insensitive and substring-based so that
+// "Real Estate", "real property", and "Residential Real Estate" all qualify.
+var realEstateTypes = []string{"real estate", "real property", "realty", "land"}
+
+func isRealProperty(assetType string) bool {
+	t := strings.ToLower(strings.TrimSpace(assetType))
+	for _, re := range realEstateTypes {
+		if strings.Contains(t, re) {
+			return true
+		}
+	}
+	return false
+}
+
+// parseCurrency converts a recorded asset value string (e.g. "$485,000",
+// "124500.50", "1,200") into a numeric dollar amount. It returns ok=false when
+// the string contains no parseable amount, so callers can fail closed (leave a
+// legal-form field blank) rather than assert a fabricated figure (Rule 9).
+func parseCurrency(s string) (float64, bool) {
+	// Strip currency symbols, thousands separators, and any whitespace
+	// (including non-breaking/thin spaces some locales use as group separators).
+	cleaned := strings.Map(func(r rune) rune {
+		if r == '$' || r == ',' || unicode.IsSpace(r) {
+			return -1
+		}
+		return r
+	}, s)
+	if cleaned == "" {
+		return 0, false
+	}
+	v, err := strconv.ParseFloat(cleaned, 64)
+	if err != nil {
+		return 0, false
+	}
+	return v, true
+}
+
+// formatCurrency renders a dollar amount with thousands separators, e.g.
+// 609500 -> "$609,500". Whole amounts drop the cents; fractional amounts keep
+// two decimals.
+func formatCurrency(v float64) string {
+	negative := v < 0
+	if negative {
+		v = -v
+	}
+	whole := int64(v)
+	frac := v - float64(whole)
+
+	digits := strconv.FormatInt(whole, 10)
+	var grouped strings.Builder
+	for i, d := range digits {
+		if i > 0 && (len(digits)-i)%3 == 0 {
+			grouped.WriteByte(',')
+		}
+		grouped.WriteRune(d)
+	}
+
+	out := "$" + grouped.String()
+	if frac > 0.0049 {
+		out += strings.TrimPrefix(strconv.FormatFloat(frac, 'f', 2, 64), "0")
+	}
+	if negative {
+		out = "-" + out
+	}
+	return out
+}
+
+// computeTotalAssets derives a real dollar valuation from recorded asset values.
+//
+// When personalPropertyOnly is true, real-property assets are excluded so the
+// result matches the Illinois small-estate personal-property threshold
+// (755 ILCS 5/25-1). When false, every asset is summed for the general estate
+// inventory.
+//
+// Rule 9: if ANY contributing asset has a value that cannot be parsed into a
+// number, the sum would be unverifiable, so we return "" — the form field is
+// left blank for the affiant to complete rather than stamped with a guess. An
+// estate with zero contributing assets returns "$0" (a fact, not a guess).
+func computeTotalAssets(snaps []*firestore.DocumentSnapshot, personalPropertyOnly bool) string {
+	var total float64
+	var contributing int
+	for _, snap := range snaps {
+		data := snap.Data()
+		assetType, _ := data["type"].(string)
+		if personalPropertyOnly && isRealProperty(assetType) {
+			continue
+		}
+		raw, _ := data["value"].(string)
+		amount, ok := parseCurrency(raw)
+		if !ok {
+			// Unverifiable total — refuse to fabricate a legal figure (Rule 9).
+			return ""
+		}
+		total += amount
+		contributing++
+	}
+	if contributing == 0 {
 		return "$0"
 	}
-	return jsonString(len(snaps)) + " assets recorded"
-}
-
-func jsonString(v int) string {
-	b, _ := json.Marshal(v)
-	return string(b)
-}
-
-// HandleGetFormData returns pre-filled data for a specific form.
-// GET /api/v1/probate/forms/:formId?estate_id=xxx
-func (h *Handler) HandleGetFormData(w http.ResponseWriter, r *http.Request) {
-	userID, err := auth.RequireUserID(r.Context())
-	if err != nil {
-		writeError(w, http.StatusUnauthorized, "Authentication required")
-		return
-	}
-
-	estateID := r.URL.Query().Get("estate_id")
-	formID := r.URL.Query().Get("form_id")
-	if estateID == "" || formID == "" {
-		writeError(w, http.StatusBadRequest, "estate_id and form_id query parameters are required")
-		return
-	}
-
-	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
-	defer cancel()
-
-	if err := h.verifyEstateAccess(ctx, userID, estateID); err != nil {
-		writeError(w, http.StatusForbidden, "You do not have access to this estate")
-		return
-	}
-
-	// For now, reuse HandleGetFormTemplates logic and filter by ID
-	// In a full implementation, this would return richer per-form data
-	log.Debug().Str("estate_id", estateID).Str("form_id", formID).Msg("Form data requested")
-	writeJSON(w, http.StatusOK, map[string]interface{}{
-		"formId":     formID,
-		"disclaimer": formDisclaimer,
-		"message":    "Use the /forms endpoint for pre-filled templates",
-	})
+	return formatCurrency(total)
 }

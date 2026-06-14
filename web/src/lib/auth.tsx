@@ -33,7 +33,9 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   serverTimestamp,
+  increment,
 } from 'firebase/firestore';
 import { type MultiFactorResolver } from 'firebase/auth';
 import { auth, db } from './firebase';
@@ -308,6 +310,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(userProfile);
       setUser(credential.user);
       setProfileResolved(true);
+
+      // Record the successful sign-in. IdentityGate expires the principal MFA
+      // grace period only after 24h AND loginCount >= 3 (ADR-035). Counting here
+      // — on an explicit credential sign-in, NOT on every onAuthStateChanged
+      // token refresh — is what makes that enforcement reachable instead of dead
+      // code. Best-effort: a failed write must never block the user from logging
+      // in, so we swallow and log rather than reject the sign-in.
+      try {
+        await updateDoc(doc(db, 'users', credential.user.uid), {
+          loginCount: increment(1),
+          lastLoginAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error('[auth] loginCount increment failed (non-blocking):', err);
+      }
 
       return { success: true, profile: userProfile };
     } catch (error: unknown) {

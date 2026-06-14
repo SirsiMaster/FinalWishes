@@ -159,10 +159,10 @@ function Home() {
 
         <div className="flex flex-col justify-center px-8 md:px-12 py-10">
           <ScrollReveal direction="right" className="max-w-lg mx-auto">
-            <h2 className="text-3xl md:text-4xl text-slate-900 mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
+            <h2 className="text-3xl md:text-4xl text-royal mb-6 leading-tight font-[family-name:var(--font-cinzel)]">
               The Cost of <span className="text-[var(--gold)]">Not Being Ready</span>
             </h2>
-            <p className="text-base md:text-lg text-slate-600 leading-relaxed mb-6">
+            <p className="text-base md:text-lg text-ink-muted leading-relaxed mb-6">
               When someone passes without a plan, families face frozen accounts, lost passwords, missing documents, and legal battles that can last years. FinalWishes eliminates that chaos — before it starts.
             </p>
             <div className="grid grid-cols-3 gap-3">
@@ -256,10 +256,10 @@ function Home() {
       <section className="py-20 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl text-slate-900 mb-4 font-[family-name:var(--font-cinzel)]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl text-royal mb-4 font-[family-name:var(--font-cinzel)]">
               Three Steps. <span className="text-[var(--gold)]">Fifteen Minutes.</span>
             </h2>
-            <p className="text-slate-500 text-lg max-w-xl mx-auto">That&apos;s all it takes to protect everything you&apos;ve built.</p>
+            <p className="text-ink-muted text-lg max-w-xl mx-auto">That&apos;s all it takes to protect everything you&apos;ve built.</p>
           </ScrollReveal>
 
           <StaggerList className="grid md:grid-cols-3 gap-6">
@@ -316,13 +316,13 @@ function Home() {
         <div className="max-w-6xl mx-auto px-5 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <ScrollReveal direction="left">
             <p className="text-[var(--gold)] text-xs font-bold uppercase tracking-[0.25em] mb-3">AI-Powered Guidance</p>
-            <h2 className="text-3xl md:text-4xl text-slate-900 mb-6 font-[family-name:var(--font-cinzel)]">
+            <h2 className="text-3xl md:text-4xl text-royal mb-6 font-[family-name:var(--font-cinzel)]">
               The Shepherd <span className="text-[var(--gold)]">Guides You</span>
             </h2>
-            <p className="text-slate-600 text-base leading-relaxed mb-6">
+            <p className="text-ink-muted text-base leading-relaxed mb-6">
               Not sure where to start? Our AI engine analyzes your estate and tells you exactly what&apos;s missing, what&apos;s urgent, and what to do next. It&apos;s like having a personal estate advisor — available 24/7.
             </p>
-            <ul className="space-y-3 text-slate-600 text-sm">
+            <ul className="space-y-3 text-ink-muted text-sm">
               <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Personalized completion checklist</li>
               <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Daily prompts to capture your story</li>
               <li className="flex gap-3"><span className="text-[var(--gold)] text-lg">✓</span> Obituary drafting assistance</li>
@@ -378,8 +378,8 @@ function Home() {
               <Card key={item.label} className="bg-white rounded-xl border-0 ring-0 py-0 shadow-[0_4px_20px_rgba(0,0,0,0.1)]">
                 <CardContent className="p-5 text-center">
                   <div className="status-dot mx-auto mb-3" />
-                  <div className="text-slate-900 font-bold text-xs uppercase tracking-widest mb-1">{item.label}</div>
-                  <div className="text-slate-500 text-xs">{item.desc}</div>
+                  <div className="text-ink font-bold text-xs uppercase tracking-widest mb-1">{item.label}</div>
+                  <div className="text-ink-muted text-xs">{item.desc}</div>
                 </CardContent>
               </Card>
             ))}
@@ -391,7 +391,7 @@ function Home() {
       <section className="py-16 relative z-10 section-light">
         <div className="max-w-6xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-slate-900 mb-3 font-[family-name:var(--font-cinzel)]">
+            <h2 className="text-2xl md:text-3xl text-royal mb-3 font-[family-name:var(--font-cinzel)]">
               Built for <span className="text-[var(--gold)]">Real Families</span>
             </h2>
           </ScrollReveal>
@@ -446,17 +446,17 @@ function Home() {
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-slate-400 uppercase">Guardian</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-ink-muted uppercase">Guardian</div>
                 </div>
-                <div className="text-3xl text-slate-900 mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
-                <div className="text-sm text-slate-400 uppercase tracking-widest mb-4">Forever</div>
-                <ul className="space-y-2 text-sm text-slate-600 mb-5 flex-grow">
+                <div className="text-3xl text-royal mb-1 font-[family-name:var(--font-cinzel)]">FREE</div>
+                <div className="text-sm text-ink-muted uppercase tracking-widest mb-4">Forever</div>
+                <ul className="space-y-2 text-sm text-ink-muted mb-5 flex-grow">
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> 1 estate plan</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> 5 document uploads</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Basic asset inventory</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Heir invitations</li>
                 </ul>
-                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-slate-300 bg-transparent text-slate-700 hover:bg-slate-100 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-[var(--neutral-border)] bg-transparent text-ink hover:bg-[var(--neutral-faint)] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   Start Free
                 </Button>
               </CardContent>
@@ -472,9 +472,9 @@ function Home() {
                   </div>
                   <Badge className="bg-gold text-black text-[0.55rem] font-bold uppercase rounded border-none">Popular</Badge>
                 </div>
-                <div className="text-3xl text-slate-900 mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-slate-400">/mo</span></div>
-                <div className="text-sm text-slate-400 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-slate-600 mb-5 flex-grow">
+                <div className="text-3xl text-royal mb-1 font-[family-name:var(--font-cinzel)]">$29<span className="text-lg text-ink-muted">/mo</span></div>
+                <div className="text-sm text-ink-muted uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-ink-muted mb-5 flex-grow">
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Unlimited documents</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> PII encryption vault</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Video &amp; audio memoirs</li>
@@ -492,11 +492,11 @@ function Home() {
               <CardContent className="p-6 flex flex-col h-full">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="status-dot" />
-                  <div className="text-[0.6rem] tracking-[0.15em] text-slate-400 uppercase">White Glove</div>
+                  <div className="text-[0.6rem] tracking-[0.15em] text-ink-muted uppercase">White Glove</div>
                 </div>
-                <div className="text-3xl text-slate-900 mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-slate-400">/mo</span></div>
-                <div className="text-sm text-slate-400 uppercase tracking-widest mb-4">Cancel Anytime</div>
-                <ul className="space-y-2 text-sm text-slate-600 mb-5 flex-grow">
+                <div className="text-3xl text-royal mb-1 font-[family-name:var(--font-cinzel)]">$99<span className="text-lg text-ink-muted">/mo</span></div>
+                <div className="text-sm text-ink-muted uppercase tracking-widest mb-4">Cancel Anytime</div>
+                <ul className="space-y-2 text-sm text-ink-muted mb-5 flex-grow">
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Everything in Concierge</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> AI Shepherd guidance</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Legal document review</li>
@@ -504,7 +504,7 @@ function Home() {
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Probate preparation</li>
                   <li className="flex gap-2"><span className="text-[var(--gold)]">✓</span> Phone support</li>
                 </ul>
-                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-slate-300 bg-transparent text-slate-700 hover:bg-slate-100 text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
+                <Button variant="outline" onClick={openLogin} className="w-full py-3 border-2 border-[var(--neutral-border)] bg-transparent text-ink hover:bg-[var(--neutral-faint)] text-[0.6rem] font-bold uppercase tracking-widest rounded-lg h-auto">
                   Get Started
                 </Button>
               </CardContent>
@@ -517,7 +517,7 @@ function Home() {
       <section id="faq" className="py-16 relative z-10 section-light">
         <div className="max-w-4xl mx-auto px-5">
           <ScrollReveal className="text-center mb-10">
-            <h2 className="text-2xl md:text-3xl text-slate-900 mb-3 font-[family-name:var(--font-cinzel)]">
+            <h2 className="text-2xl md:text-3xl text-royal mb-3 font-[family-name:var(--font-cinzel)]">
               Common <span className="text-[var(--gold)]">Questions</span>
             </h2>
           </ScrollReveal>
@@ -799,7 +799,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
           <h2 aria-hidden="true" className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)] mb-2">
             {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : mode === 'forgot' ? 'Reset Password' : 'Verification Required'}
           </h2>
-          <p className="text-slate-500 text-sm font-medium max-w-[260px] mx-auto leading-relaxed">
+          <p className="text-ink-muted text-sm font-medium max-w-[260px] mx-auto leading-relaxed">
             {mode === 'signin'
               ? 'Secure access to the Estate Operating System'
               : mode === 'signup'
@@ -816,13 +816,13 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
             <form className="space-y-6" onSubmit={handleSignIn}>
               <div className="space-y-2">
                 <Label htmlFor="modal-identifier" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email or Username</Label>
-                <Input id="modal-identifier" type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="username" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                <Input id="modal-identifier" type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="username" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="modal-password" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Password</Label>
                 <div className="relative">
-                  <Input id="modal-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="current-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 pr-14 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
+                  <Input id="modal-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="current-password" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 pr-14 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Button type="button" variant="ghost" size="icon" aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-[var(--royal)] z-10 h-8 w-8">
                     {showPassword ? (
                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (
@@ -836,8 +836,8 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Signing in...</span> : 'Sign In'}
               </Button>
               <div className="flex items-center justify-between text-xs px-1 pt-2">
-                <Button type="button" variant="link" onClick={() => { setMode('forgot'); setError(''); setResetSent(false); setResetEmail(identifier.includes('@') ? identifier : ''); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Forgot password?</Button>
-                <Button type="button" variant="link" onClick={() => { setMode('signup'); setError(''); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Create account</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('forgot'); setError(''); setResetSent(false); setResetEmail(identifier.includes('@') ? identifier : ''); }} className="text-ink-muted hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Forgot password?</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('signup'); setError(''); }} className="text-ink-muted hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">Create account</Button>
               </div>
             </form>
           ) : mode === 'signup' ? (
@@ -845,27 +845,27 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="modal-firstname" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">First Name</Label>
-                  <Input id="modal-firstname" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jane" autoComplete="given-name" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Input id="modal-firstname" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Jane" autoComplete="given-name" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="modal-lastname" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Last Name</Label>
-                  <Input id="modal-lastname" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Doe" autoComplete="family-name" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Input id="modal-lastname" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Doe" autoComplete="family-name" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-4 py-3.5 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                 </div>
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="modal-username" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Username</Label>
-                <Input id="modal-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. janedoe" autoComplete="username" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
-                <p className="text-[10px] text-slate-400 pl-1">Letters, numbers, underscores only. Min 3 characters.</p>
+                <Input id="modal-username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. janedoe" autoComplete="username" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                <p className="text-[10px] text-ink-muted pl-1">Letters, numbers, underscores only. Min 3 characters.</p>
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="modal-email" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email</Label>
-                <Input id="modal-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="email" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                <Input id="modal-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="e.g. jane@example.com" autoComplete="email" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="modal-signup-pw" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Password</Label>
                 <div className="relative">
-                  <Input id="modal-signup-pw" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 pr-14 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
+                  <Input id="modal-signup-pw" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 pr-14 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                  <Button type="button" variant="ghost" size="icon" aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-[var(--royal)] z-10 h-8 w-8">
                     {showPassword ? (
                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (
@@ -878,7 +878,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
               <Button type="submit" disabled={isSubmitting} className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-6">
                 {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Creating account...</span> : 'Create Account'}
               </Button>
-              <div className="text-center text-xs text-slate-500 pt-2">
+              <div className="text-center text-xs text-ink-muted pt-2">
                 <span>Already have an account? </span>
                 <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-[var(--royal)] hover:text-[var(--royal)] font-bold text-xs p-0 h-auto">Sign in</Button>
               </div>
@@ -912,14 +912,14 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 }}>
                   <div className="space-y-2">
                     <Label htmlFor="modal-reset-email" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email Address</Label>
-                    <Input id="modal-reset-email" type="email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" autoFocus required className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                    <Input id="modal-reset-email" type="email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" autoFocus required className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                   </div>
                   {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
                   <Button type="submit" disabled={isSubmitting || !resetEmail.includes('@')} className="w-full bg-[var(--gold)] hover:bg-[var(--gold)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(200,169,81,0.2)] hover:shadow-[0_12px_32px_rgba(200,169,81,0.3)] transition-all active:scale-95">
                     {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Sending...</span> : 'Send Reset Link'}
                   </Button>
                   <div className="text-center text-xs pt-2">
-                    <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
+                    <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); }} className="text-ink-muted hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
                   </div>
                 </form>
               )}
@@ -933,14 +933,14 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
               </div>
               <div className="space-y-2">
                 <Label htmlFor="modal-mfa" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Authenticator Code</Label>
-                <Input id="modal-mfa" type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={totpCode} onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" autoComplete="one-time-code" autoFocus className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-mono font-bold text-[24px] text-center text-slate-900 placeholder:text-slate-200 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm tracking-[0.5em]" />
+                <Input id="modal-mfa" type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={totpCode} onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" autoComplete="one-time-code" autoFocus className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-mono font-bold text-[24px] text-center text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm tracking-[0.5em]" />
               </div>
               {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
               <Button type="submit" disabled={isSubmitting || totpCode.length !== 6} className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8">
                 {isSubmitting ? <span className="flex items-center justify-center gap-2"><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Verifying...</span> : 'Verify'}
               </Button>
               <div className="text-center text-xs pt-2">
-                <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); setTotpCode(''); setMfaResolver(null); }} className="text-slate-500 hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
+                <Button type="button" variant="link" onClick={() => { setMode('signin'); setError(''); setTotpCode(''); setMfaResolver(null); }} className="text-ink-muted hover:text-[var(--royal)] font-medium text-xs p-0 h-auto no-underline hover:no-underline">&larr; Back to sign in</Button>
               </div>
             </form>
           ) : null}
@@ -948,7 +948,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
 
         {/* Footer */}
         <div className="mt-8 mx-10 px-0 pt-0 pb-10">
-          <Separator className="mb-6 bg-slate-100" />
+          <Separator className="mb-6 bg-[var(--neutral-border)]" />
           <div className="flex items-center justify-center gap-6 w-full">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
@@ -1060,8 +1060,8 @@ function ScenarioCard({ emoji, title, description, cta, image, openLogin }: { em
         </div>
       </div>
       <CardContent className="p-6 flex flex-col flex-grow">
-        <h3 className="text-slate-900 font-bold text-base mb-2">{title}</h3>
-        <p className="text-slate-600 text-sm leading-relaxed flex-grow mb-4">{description}</p>
+        <h3 className="text-royal font-bold text-base mb-2">{title}</h3>
+        <p className="text-ink-muted text-sm leading-relaxed flex-grow mb-4">{description}</p>
         <Button variant="ghost" onClick={openLogin} className="text-[var(--gold)] text-xs font-bold uppercase tracking-widest p-0 h-auto hover:text-[var(--gold)] hover:bg-transparent self-start">
           {cta} &rarr;
         </Button>
@@ -1080,10 +1080,10 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
       </div>
       <CardContent className="p-7 flex flex-col flex-grow">
         <div className="text-3xl mb-3">{icon}</div>
-        <h3 className={`font-bold text-xl mb-4 ${accent ? 'text-[var(--gold)]' : 'text-slate-900'}`}>{title}</h3>
+        <h3 className={`font-bold text-xl mb-4 ${accent ? 'text-[var(--gold)]' : 'text-royal'}`}>{title}</h3>
         <ul className="space-y-3 flex-grow">
           {items.map((item) => (
-            <li key={item} className="flex gap-2.5 text-[15px] text-slate-700 leading-snug">
+            <li key={item} className="flex gap-2.5 text-[15px] text-ink leading-snug">
               <span className="text-[var(--gold)] shrink-0 text-lg">✓</span>
               {item}
             </li>
@@ -1126,14 +1126,14 @@ function FaqItem({ q, a }: { q: string; a: string }) {
     <ScrollReveal delay={0}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full text-left bg-slate-50 border border-slate-200 rounded-xl px-6 py-5 transition-all hover:bg-slate-100 cursor-pointer"
+        className="w-full text-left bg-[var(--neutral-faint)] border border-[var(--neutral-border)] rounded-xl px-6 py-5 transition-all hover:bg-[var(--neutral-faint)] cursor-pointer"
       >
         <div className="flex items-center justify-between gap-4">
-          <h3 className="text-slate-900 font-bold text-sm">{q}</h3>
+          <h3 className="text-royal font-bold text-sm">{q}</h3>
           <span className={`text-[var(--gold)] text-lg transition-transform ${open ? 'rotate-45' : ''}`}>+</span>
         </div>
         {open && (
-          <p className="text-slate-600 text-sm leading-relaxed mt-3 pr-8">{a}</p>
+          <p className="text-ink-muted text-sm leading-relaxed mt-3 pr-8">{a}</p>
         )}
       </button>
     </ScrollReveal>

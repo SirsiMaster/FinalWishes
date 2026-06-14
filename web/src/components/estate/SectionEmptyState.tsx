@@ -242,7 +242,7 @@ export function SectionEmptyState({
       </div>
       <h3
         className="text-xl font-bold mb-3 font-[family-name:var(--font-cinzel)]"
-        style={{ color: 'var(--color-slate-900)' }}
+        style={{ color: 'var(--ink)' }}
       >
         {heading || content.heading}
       </h3>

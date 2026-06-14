@@ -13,27 +13,51 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	firebaseAuth "firebase.google.com/go/v4/auth"
 	"github.com/rs/zerolog/log"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
+// userLookup is the narrow slice of the Firebase Auth client that envelope creation
+// needs to resolve the estate principal's verified identity. The real
+// *firebaseAuth.Client satisfies it; tests inject a fake (the concrete client cannot
+// be constructed offline). This is the auth-client test seam.
+type userLookup interface {
+	GetUser(ctx context.Context, uid string) (*firebaseAuth.UserRecord, error)
+}
+
 // WebhookHandler handles OpenSign webhook callbacks, signing status checks, and
 // envelope creation (via the shared-services provider).
 type WebhookHandler struct {
 	fs            *firestore.Client
+	authClient    userLookup
 	webhookSecret string
 	provider      SigningProvider
+
+	// signerResolver lets tests inject a deterministic principal-resolution result
+	// without a live Firestore/Firebase Auth client. nil in production → the handler
+	// uses the default resolver backed by fs + authClient.
+	signerResolver signerResolver
 }
 
 // NewWebhookHandler creates a webhook handler for OpenSign signing events. It builds
 // the shared-services signing provider (Sirsi-first, dissociated fallback — ADR-047).
-func NewWebhookHandler(fs *firestore.Client) *WebhookHandler {
-	return &WebhookHandler{
+// authClient resolves the estate PRINCIPAL's verified identity at envelope creation
+// (the legal signer is the principal, never the caller — claude-home signer=principal
+// decision 2026-06-14). It may be nil in local dev with no Firebase Auth.
+func NewWebhookHandler(fs *firestore.Client, authClient *firebaseAuth.Client) *WebhookHandler {
+	h := &WebhookHandler{
 		fs:            fs,
-		provider:      NewSigningProvider(),
 		webhookSecret: os.Getenv("OPENSIGN_WEBHOOK_SECRET"),
+		provider:      NewSigningProvider(),
 	}
+	// Keep authClient typed-nil safe: only assign when non-nil so the interface field
+	// stays a true nil (a typed-nil *Client would defeat the == nil defensive check).
+	if authClient != nil {
+		h.authClient = authClient
+	}
+	return h
 }
 
 // HandleWebhook processes OpenSign signing completion webhooks.

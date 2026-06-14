@@ -28,7 +28,7 @@ import {
   type TimeCapsule,
   type Heirloom,
 } from '@/lib/firestore'
-import { orderBy, type Timestamp } from 'firebase/firestore'
+import { orderBy, where, type Timestamp } from 'firebase/firestore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -46,6 +46,10 @@ interface SoulLogEntry {
   content?: string
   mediaUrl?: string
   taggedPeople: string[]
+  // sharedWith (UIDs) is the security field the Firestore soul-log read rule and the
+  // non-owner query gate on (array-contains). taggedPeople holds display names for the
+  // UI; sharedWith holds the recipient UIDs — see estates.$estateId.soul-log.lazy.tsx.
+  sharedWith?: string[]
   sealedDelivery?: {
     trigger: 'date' | 'on_passing'
     date?: string
@@ -241,10 +245,30 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
   // Fetch time capsules addressed to this user
   const { data: allCapsules, loading: capsulesLoading } = useTimeCapsules(estateId)
 
-  // Fetch soul log entries (shared ones that tag this user)
-  const soulLogConstraints = useMemo(() => [orderBy('createdAt', 'desc')], [])
+  // Fetch soul log entries shared specifically with this heir/executor.
+  //
+  // HeirWelcome renders ONLY for non-owner roles (heir/executor — see
+  // shouldShowHeirWelcome). The Firestore soul-log read rule permits a non-owner to
+  // read an entry ONLY when visibility=='shared' && request.auth.uid in sharedWith.
+  // An UNconstrained list query by a non-owner cannot satisfy that resource-data
+  // constraint, so Firestore rejects the ENTIRE query with permission-denied. We
+  // therefore mirror the canonical non-owner constraints from
+  // estates.$estateId.soul-log.lazy.tsx (ADR-046 #1): visibility=='shared' +
+  // sharedWith array-contains this uid. The composite index (visibility ASC,
+  // sharedWith CONTAINS, createdAt DESC) already exists in firestore.indexes.json.
+  //
+  // The query is gated on `profile.uid` (null path until the uid is known) so we never
+  // issue the denied unconstrained read while auth is still resolving.
+  const soulLogConstraints = useMemo(
+    () => [
+      where('visibility', '==', 'shared'),
+      where('sharedWith', 'array-contains', profile?.uid ?? '__none__'),
+      orderBy('createdAt', 'desc'),
+    ],
+    [profile?.uid],
+  )
   const { data: allSoulLogEntries, loading: soulLogLoading } = useCollection<SoulLogEntry>(
-    `estates/${estateId}/soul-log`,
+    profile?.uid ? `estates/${estateId}/soul-log` : null,
     soulLogConstraints,
   )
 
@@ -269,22 +293,18 @@ export function HeirWelcome({ estateId, onContinue }: HeirWelcomeProps) {
     })
   }, [profile, allCapsules])
 
-  // ─── Filter soul log entries tagged for this user ──────────────────────
+  // ─── Soul log entries shared with this user ────────────────────────────
 
-  const personalEntries = useMemo(() => {
-    if (!profile || !allSoulLogEntries) return []
-    const uid = profile.uid
-    const name = profile.displayName?.toLowerCase()
-    const firstName = profile.firstName?.toLowerCase()
-    return allSoulLogEntries.filter((entry: SoulLogEntry) => {
-      if (entry.visibility !== 'shared') return false
-      if (!entry.taggedPeople || entry.taggedPeople.length === 0) return false
-      return entry.taggedPeople.some((tag: string) => {
-        const t = tag.toLowerCase()
-        return t === uid || t === name || t === firstName
-      })
-    })
-  }, [profile, allSoulLogEntries])
+  // The Firestore query above already constrains the result set to
+  // visibility=='shared' && sharedWith array-contains this uid — the SAME contract the
+  // security rule enforces. So every returned entry is, by construction, shared with
+  // this heir/executor; no further client-side filtering is needed. (The previous
+  // taggedPeople display-name match was both a schema mismatch with the rule's
+  // sharedWith UID gate and redundant once the query is correctly constrained.)
+  const personalEntries = useMemo(
+    () => allSoulLogEntries ?? [],
+    [allSoulLogEntries],
+  )
 
   // ─── Filter heirlooms for this heir ────────────────────────────────────
 

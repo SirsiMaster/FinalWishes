@@ -32,6 +32,7 @@ import {
   revokeInvitation,
   ROLE_LABELS,
 } from './invitations'
+import type { InvitationParams } from './invitations'
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -269,24 +270,26 @@ describe('ROLE_LABELS', () => {
   })
 })
 
-// ─── Phone Number Support ───────────────────────────────────────────────────
+// ─── Email-only invitation delivery ─────────────────────────────────────────
 
 describe('sendEstateInvitation with phone', () => {
-  it('includes phone in invitation document when provided', async () => {
+  it('does not persist phone until SMS delivery is backed by a live provider', async () => {
     mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
 
-    await sendEstateInvitation({
+    const paramsWithLegacyPhone = {
       estateId: 'estate-1',
       email: 'test@example.com',
       phone: '+1-555-123-4567',
       fullName: 'Phone User',
-      role: 'heir',
+      role: 'heir' as const,
       invitedBy: 'user-1',
-    })
+    } satisfies InvitationParams & { phone: string }
+
+    await sendEstateInvitation(paramsWithLegacyPhone)
 
     // First addDoc call is the invitation record
     const invitationData = mockAddDoc.mock.calls[0][1]
-    expect(invitationData.phone).toBe('+1-555-123-4567')
+    expect(invitationData).not.toHaveProperty('phone')
   })
 
   it('does not include phone field when not provided', async () => {
@@ -304,28 +307,26 @@ describe('sendEstateInvitation with phone', () => {
     expect(invitationData).not.toHaveProperty('phone')
   })
 
-  it('queues SMS notification when phone is provided', async () => {
+  it('does not queue SMS notification when phone is provided', async () => {
     mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
 
-    await sendEstateInvitation({
+    const paramsWithLegacyPhone = {
       estateId: 'estate-1',
       email: 'sms@example.com',
       phone: '  +1-555-999-0000  ',
       fullName: 'SMS User',
-      role: 'executor',
+      role: 'executor' as const,
       invitedBy: 'user-1',
       inviterName: 'Cylton',
       estateName: 'Collymore Estate',
       priority: 1,
-    })
+    } satisfies InvitationParams & { phone: string }
 
-    // Without phone: 3 addDoc calls (invitation + executor subcollection + email)
-    // With phone: 4 addDoc calls (+ sms_queue)
-    expect(mockAddDoc).toHaveBeenCalledTimes(4)
+    await sendEstateInvitation(paramsWithLegacyPhone)
 
-    // The last addDoc call is the sms_queue entry
-    const lastCall = mockAddDoc.mock.calls[3]
-    expect(lastCall[1].to).toBe('+1-555-999-0000')
-    expect(lastCall[1].status).toBe('pending')
+    // Phone is accepted by older callers but delivery remains email-only until
+    // an SMS provider/function exists to drain a queue.
+    expect(mockAddDoc).toHaveBeenCalledTimes(3)
+    expect(mockAddDoc.mock.calls.some(([, data]) => data?.to === '+1-555-999-0000')).toBe(false)
   })
 })

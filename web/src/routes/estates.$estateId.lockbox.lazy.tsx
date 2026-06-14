@@ -3,6 +3,7 @@ import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useLockboxItems, type LockboxItem } from '../lib/firestore'
 import { addLockboxItem, archiveLockboxItem, updateLockboxItem } from '../lib/estate-actions'
+import { API_BASE } from '../lib/client'
 import { toast } from 'sonner'
 import { getAuth } from 'firebase/auth'
 import {
@@ -38,8 +39,6 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 interface DecryptedCredentials {
   username?: string
@@ -169,7 +168,7 @@ function LockboxPage() {
         action={
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-slate-700 hover:bg-slate-800 text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
+            className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-5 h-auto rounded-2xl font-bold text-[14px] shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Add Credential
@@ -184,15 +183,15 @@ function LockboxPage() {
           { label: 'Secured', value: stats.secure, icon: ShieldCheck },
           { label: 'Categories', value: stats.categories, icon: CreditCard },
         ].map((s) => (
-          <Card key={s.label} className="bg-slate-50 rounded-3xl border-slate-100 py-0">
+          <Card key={s.label} className="bg-neutral-faint rounded-3xl border-neutral-border py-0">
             <CardContent className="p-8">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
                   <s.icon className="w-5 h-5 text-[var(--royal)]" />
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-slate-900">{s.value}</p>
-                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
+                  <p className="text-3xl font-bold text-[var(--royal)]">{s.value}</p>
+                  <p className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">{s.label}</p>
                 </div>
               </div>
             </CardContent>
@@ -205,7 +204,7 @@ function LockboxPage() {
         <Button
           variant={filterCategory === 'all' ? 'default' : 'secondary'}
           onClick={() => setFilterCategory('all')}
-          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-neutral-faint text-[var(--royal)]/70 hover:bg-[var(--neutral-border)]'}`}
         >
           All
         </Button>
@@ -214,7 +213,7 @@ function LockboxPage() {
             key={c.value}
             variant={filterCategory === c.value ? 'default' : 'secondary'}
             onClick={() => setFilterCategory(c.value)}
-            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-neutral-faint text-[var(--royal)]/70 hover:bg-[var(--neutral-border)]'}`}
           >
             <c.icon className="w-3.5 h-3.5" />
             {c.label}
@@ -303,12 +302,17 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
   }, [])
 
   const handleArchive = useCallback(async () => {
-    await archiveLockboxItem(estateId, item.id)
-    setConfirming(false)
+    const result = await archiveLockboxItem(estateId, item.id)
+    if (result.success) {
+      setConfirming(false)
+      toast.success('Account removed')
+    } else {
+      toast.error(result.error || 'Could not remove. Please try again.')
+    }
   }, [estateId, item.id])
 
   return (
-    <Card className="rounded-3xl border-slate-100 hover:border-[var(--royal)]/10 transition-all group py-0">
+    <Card className="rounded-3xl border-neutral-border hover:border-[var(--royal)]/10 transition-all group py-0">
       <CardContent className="p-8">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
@@ -316,8 +320,8 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
               <Icon className="w-5 h-5" style={{ color: cat.color }} />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-900">{item.accountName}</h3>
-              {item.institution && <p className="text-[13px] text-slate-500 font-medium">{item.institution}</p>}
+              <h3 className="text-lg font-bold text-[var(--royal)]">{item.accountName}</h3>
+              {item.institution && <p className="text-[13px] text-[var(--royal)]/60 font-medium">{item.institution}</p>}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -336,20 +340,20 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
         </div>
 
         {item.accountIdentifier && (
-          <p className="text-[13px] text-slate-700 mb-3">
-            <span className="text-slate-500">Identifier:</span> {item.accountIdentifier}
+          <p className="text-[13px] text-[var(--royal)]/70 mb-3">
+            <span className="text-[var(--royal)]/60">Identifier:</span> {item.accountIdentifier}
           </p>
         )}
 
         {item.transitionInstructions && (
-          <div className="bg-slate-50 rounded-2xl p-5 mb-4">
+          <div className="bg-neutral-faint rounded-2xl p-5 mb-4">
             <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest mb-2">Transition Instructions</p>
-            <p className="text-[13px] text-slate-700 line-clamp-3">{item.transitionInstructions}</p>
+            <p className="text-[13px] text-[var(--royal)]/70 line-clamp-3">{item.transitionInstructions}</p>
           </div>
         )}
 
         {item.notes && (
-          <p className="text-[13px] text-slate-500 line-clamp-2 mb-4">{item.notes}</p>
+          <p className="text-[13px] text-[var(--royal)]/60 line-clamp-2 mb-4">{item.notes}</p>
         )}
 
         {/* Reveal Credentials Button */}
@@ -388,7 +392,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
                   variant="ghost"
                   size="xs"
                   onClick={handleHideCredentials}
-                  className="text-[11px] text-slate-500 hover:text-[#DC2626] font-bold"
+                  className="text-[11px] text-[var(--royal)]/60 hover:text-[#DC2626] font-bold"
                 >
                   Hide
                 </Button>
@@ -397,27 +401,27 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
             {credentials.username && (
               <div className="flex items-center gap-3">
-                <User className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <User className="w-3.5 h-3.5 text-[var(--royal)]/60 shrink-0" />
                 <div>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Username</p>
-                  <p className="text-[13px] text-slate-900 font-mono">{credentials.username}</p>
+                  <p className="text-[10px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Username</p>
+                  <p className="text-[13px] text-[var(--royal)] font-mono">{credentials.username}</p>
                 </div>
               </div>
             )}
 
             {credentials.password && (
               <div className="flex items-center gap-3">
-                <KeyRound className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <KeyRound className="w-3.5 h-3.5 text-[var(--royal)]/60 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Password</p>
+                  <p className="text-[10px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Password</p>
                   <div className="flex items-center gap-2">
-                    <p className="text-[13px] text-slate-900 font-mono truncate">
+                    <p className="text-[13px] text-[var(--royal)] font-mono truncate">
                       {showPassword ? credentials.password : '\u2022'.repeat(Math.min(credentials.password.length, 20))}
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowPassword((v) => !v)}
-                      className="text-slate-500 hover:text-[var(--royal)] transition-colors shrink-0"
+                      className="text-[var(--royal)]/60 hover:text-[var(--royal)] transition-colors shrink-0"
                     >
                       {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -428,17 +432,17 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
             {credentials.pin && (
               <div className="flex items-center gap-3">
-                <Lock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <Lock className="w-3.5 h-3.5 text-[var(--royal)]/60 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">PIN</p>
+                  <p className="text-[10px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">PIN</p>
                   <div className="flex items-center gap-2">
-                    <p className="text-[13px] text-slate-900 font-mono">
+                    <p className="text-[13px] text-[var(--royal)] font-mono">
                       {showPin ? credentials.pin : '\u2022'.repeat(credentials.pin.length)}
                     </p>
                     <button
                       type="button"
                       onClick={() => setShowPin((v) => !v)}
-                      className="text-slate-500 hover:text-[var(--royal)] transition-colors shrink-0"
+                      className="text-[var(--royal)]/60 hover:text-[var(--royal)] transition-colors shrink-0"
                     >
                       {showPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
@@ -449,24 +453,24 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
 
             {credentials.notes && (
               <div className="flex items-start gap-3">
-                <FileText className="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" />
+                <FileText className="w-3.5 h-3.5 text-[var(--royal)]/60 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Secure Notes</p>
-                  <p className="text-[13px] text-slate-900 font-mono whitespace-pre-wrap">{credentials.notes}</p>
+                  <p className="text-[10px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Secure Notes</p>
+                  <p className="text-[13px] text-[var(--royal)] font-mono whitespace-pre-wrap">{credentials.notes}</p>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        <div className="flex justify-end pt-2 border-t border-slate-50">
+        <div className="flex justify-end pt-2 border-t border-neutral-faint">
           {confirming ? (
             <div className="flex items-center gap-3">
               <span className="text-[12px] text-[#DC2626] font-medium">Archive this item?</span>
               <Button variant="destructive" size="xs" onClick={handleArchive} className="text-[12px] font-bold">
                 Yes
               </Button>
-              <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-slate-500">
+              <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[var(--royal)]/60">
                 No
               </Button>
             </div>
@@ -478,7 +482,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
                 onClick={() => setEditOpen(true)}
                 aria-label="Edit item"
               >
-                <Pencil className="w-4 h-4 text-slate-400 hover:text-[var(--royal)]" />
+                <Pencil className="w-4 h-4 text-[var(--royal)]/40 hover:text-[var(--royal)]" />
               </Button>
               <Button
                 variant="ghost"
@@ -486,7 +490,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
                 onClick={() => setConfirming(true)}
                 aria-label="Archive item"
               >
-                <Trash2 className="w-4 h-4 text-slate-400 hover:text-[#DC2626]" />
+                <Trash2 className="w-4 h-4 text-[var(--royal)]/40 hover:text-[#DC2626]" />
               </Button>
             </div>
           )}
@@ -542,14 +546,14 @@ function EditLockboxModal({
   }, [form, estateId, item.id, onOpenChange])
 
   const labelCls = 'text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest'
-  const fieldCls = 'px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900'
+  const fieldCls = 'px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto rounded-[2rem]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-slate-900 font-[family-name:var(--font-cinzel)]">Edit Account</DialogTitle>
-          <DialogDescription className="text-slate-500 text-sm">Update this account's details. Secure credentials are managed separately.</DialogDescription>
+          <DialogTitle className="text-2xl font-bold text-[var(--royal)] font-[family-name:var(--font-cinzel)]">Edit Account</DialogTitle>
+          <DialogDescription className="text-[var(--royal)]/60 text-sm">Update this account's details. Secure credentials are managed separately.</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
@@ -695,7 +699,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
         className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10"
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">
             Add Credential
           </DialogTitle>
           <DialogDescription>
@@ -713,7 +717,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               value={form.accountName}
               onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
               placeholder="e.g., Chase Checking, Gmail, Bitcoin Wallet"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]"
             />
           </div>
 
@@ -723,7 +727,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               Category
             </Label>
             <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
-              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900">
+              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -745,7 +749,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               value={form.institution}
               onChange={(e) => setForm((f) => ({ ...f, institution: e.target.value }))}
               placeholder="e.g., JPMorgan Chase, Google, Coinbase"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]"
             />
           </div>
 
@@ -758,7 +762,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               value={form.accountIdentifier}
               onChange={(e) => setForm((f) => ({ ...f, accountIdentifier: e.target.value }))}
               placeholder="Last 4 digits, username, or account number hint"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]"
             />
           </div>
 
@@ -772,7 +776,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               onChange={(e) => setForm((f) => ({ ...f, transitionInstructions: e.target.value }))}
               placeholder="What should your heir do with this account? Close it? Transfer it? Keep it active?"
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
+              className="px-5 py-4 rounded-2xl border-neutral-border text-[14px] text-[var(--royal)] resize-none"
             />
           </div>
 
@@ -786,7 +790,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
               placeholder="Any additional details..."
               rows={2}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
+              className="px-5 py-4 rounded-2xl border-neutral-border text-[14px] text-[var(--royal)] resize-none"
             />
           </div>
 
@@ -798,8 +802,8 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               className="data-checked:bg-[var(--gold)]"
             />
             <div>
-              <p className="text-[14px] font-bold text-slate-900">Store Secure Credentials</p>
-              <p className="text-[12px] text-slate-500">Passwords and PINs will be encrypted via the PII Vault (Cloud KMS)</p>
+              <p className="text-[14px] font-bold text-[var(--royal)]">Store Secure Credentials</p>
+              <p className="text-[12px] text-[var(--royal)]/60">Passwords and PINs will be encrypted via the PII Vault (Cloud KMS)</p>
             </div>
           </div>
 
@@ -820,7 +824,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                   value={form.credUsername}
                   onChange={(e) => setForm((f) => ({ ...f, credUsername: e.target.value }))}
                   placeholder="Account username or email"
-                  className="px-5 py-4 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900"
+                  className="px-5 py-4 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-[var(--royal)]"
                 />
               </div>
 
@@ -835,12 +839,12 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                     value={form.credPassword}
                     onChange={(e) => setForm((f) => ({ ...f, credPassword: e.target.value }))}
                     placeholder="Account password"
-                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900 font-mono"
+                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-[var(--royal)] font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[var(--royal)] transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--royal)]/60 hover:text-[var(--royal)] transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -860,12 +864,12 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                     value={form.credPin}
                     onChange={(e) => setForm((f) => ({ ...f, credPin: e.target.value.replace(/[^0-9]/g, '') }))}
                     placeholder="Numeric PIN (up to 10 digits)"
-                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900 font-mono"
+                    className="px-5 py-4 pr-12 h-auto rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-[var(--royal)] font-mono"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPin((v) => !v)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-[var(--royal)] transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--royal)]/60 hover:text-[var(--royal)] transition-colors"
                   >
                     {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -882,7 +886,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
                   onChange={(e) => setForm((f) => ({ ...f, credNotes: e.target.value }))}
                   placeholder="Security questions, recovery codes, or other sensitive information..."
                   rows={3}
-                  className="px-5 py-4 rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-slate-900 resize-none font-mono"
+                  className="px-5 py-4 rounded-2xl border-[var(--gold)]/20 bg-white text-[14px] text-[var(--royal)] resize-none font-mono"
                 />
               </div>
 
@@ -902,11 +906,11 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
         </div>
 
         {/* Actions */}
-        <DialogFooter className="gap-4 pt-8 border-t border-slate-100">
+        <DialogFooter className="gap-4 pt-8 border-t border-neutral-border">
           <Button
             variant="ghost"
             onClick={() => handleOpenChange(false)}
-            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[var(--royal)]/60"
           >
             Cancel
           </Button>

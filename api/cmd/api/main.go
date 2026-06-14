@@ -12,6 +12,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go/v4"
+	firebaseAuth "firebase.google.com/go/v4/auth"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -200,6 +201,12 @@ func main() {
 
 	// Initialize Firebase Admin for auth token verification
 	var authMiddleware func(http.Handler) http.Handler
+	// authClient is also consumed by the OpenSign create-envelope handler to resolve the
+	// estate PRINCIPAL's verified identity (the legal signer is the principal, never the
+	// caller — claude-home signer=principal decision 2026-06-14). Declared at the outer
+	// scope so it is in scope at the NewWebhookHandler call sites below; stays nil in
+	// local dev with no Firebase Auth.
+	var authClient *firebaseAuth.Client
 
 	firebaseApp, err := firebase.NewApp(ctx, nil)
 	if err != nil {
@@ -210,7 +217,7 @@ func main() {
 		log.Warn().Err(err).Msg("Firebase Admin SDK initialization failed — auth middleware disabled (local dev only)")
 		authMiddleware = func(next http.Handler) http.Handler { return next }
 	} else {
-		authClient, err := firebaseApp.Auth(ctx)
+		ac, err := firebaseApp.Auth(ctx)
 		if err != nil {
 			if projectID != "" {
 				log.Fatal().Err(err).Msg("Firebase Auth client initialization failed in production mode")
@@ -218,6 +225,7 @@ func main() {
 			log.Warn().Err(err).Msg("Firebase Auth client initialization failed — auth middleware disabled (local dev only)")
 			authMiddleware = func(next http.Handler) http.Handler { return next }
 		} else {
+			authClient = ac
 			log.Info().Msg("Firebase Admin Auth initialized — token verification active")
 			authMiddleware = auth.Middleware(authClient)
 		}
@@ -335,7 +343,7 @@ func main() {
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Use(authMiddleware)
 		r.Route("/opensign", func(r chi.Router) {
-			oh := opensign.NewWebhookHandler(fs)
+			oh := opensign.NewWebhookHandler(fs, authClient)
 			r.Post("/create-envelope", oh.HandleCreateEnvelope)
 			if fs != nil {
 				r.Get("/status", oh.HandleCheckSigningStatus)
@@ -344,13 +352,13 @@ func main() {
 	})
 	// OpenSign webhook — no auth, uses webhook signature verification
 	if fs != nil {
-		webhookHandler := opensign.NewWebhookHandler(fs)
+		webhookHandler := opensign.NewWebhookHandler(fs, authClient)
 		r.Post("/api/v1/opensign/webhook", webhookHandler.HandleWebhook)
 	}
 
 	r.Group(func(r chi.Router) {
 		r.Use(authMiddleware)
-		r.Post("/api/envelopes", opensign.NewWebhookHandler(fs).HandleCreateEnvelope)
+		r.Post("/api/envelopes", opensign.NewWebhookHandler(fs, authClient).HandleCreateEnvelope)
 	})
 
 	// Guidance routes (The Shepherd v3 — Claude Opus via sirsi-ai, Genkit fallback)
@@ -473,7 +481,6 @@ func main() {
 			r.Post("/death-cert/confirm", probateHandler.HandleConfirmDeathCert)
 			r.Get("/death-cert", probateHandler.HandleGetDeathCertFacts)
 			r.Get("/forms", probateHandler.HandleGetFormTemplates)
-			r.Get("/forms/data", probateHandler.HandleGetFormData)
 			r.Get("/executor/status", probateHandler.HandleGetExecutorStatus)
 			r.Post("/executor/confirm", probateHandler.HandleConfirmExecutorRole)
 			r.Get("/advance-directives", probateHandler.HandleGetAdvanceDirectives)

@@ -822,7 +822,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 <Label htmlFor="modal-password" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Password</Label>
                 <div className="relative">
                   <Input id="modal-password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="current-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 pr-14 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
+                  <Button type="button" variant="ghost" size="icon" aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
                     {showPassword ? (
                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (
@@ -865,7 +865,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 <Label htmlFor="modal-signup-pw" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Password</Label>
                 <div className="relative">
                   <Input id="modal-signup-pw" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" autoComplete="new-password" className="h-auto bg-slate-50 border-slate-200 hover:border-[var(--royal)]/30 rounded-2xl px-6 py-3.5 pr-14 font-semibold text-[14px] text-slate-900 placeholder:text-slate-300 focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
-                  <Button type="button" variant="ghost" size="icon" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
+                  <Button type="button" variant="ghost" size="icon" aria-label={showPassword ? 'Hide password' : 'Show password'} aria-pressed={showPassword} onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 hover:text-[var(--royal)] z-10 h-8 w-8">
                     {showPassword ? (
                       <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                     ) : (

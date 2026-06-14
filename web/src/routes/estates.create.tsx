@@ -281,14 +281,14 @@ function CreateEstatePage() {
                   <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
                   <path d="M12 7v5l3 3" />
                 </svg>
-                <p className="text-sm font-semibold text-slate-900 truncate">
+                <p className="text-sm font-semibold text-[var(--ink)] truncate">
                   We saved your progress on this device. Resume where you left off.
                 </p>
               </div>
               <Button
                 variant="ghost"
                 onClick={handleStartOver}
-                className="flex-shrink-0 h-auto px-3 py-1.5 text-sm font-bold text-slate-500 hover:text-[var(--royal)] hover:bg-transparent"
+                className="flex-shrink-0 h-auto px-3 py-1.5 text-sm font-bold text-[var(--ink-muted)] hover:text-[var(--royal)] hover:bg-transparent"
               >
                 Start over
               </Button>
@@ -304,10 +304,10 @@ function CreateEstatePage() {
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                 </div>
-                <h1 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-6 tracking-tight leading-tight">
+                <h1 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)] mb-6 tracking-tight leading-tight">
                   Welcome{firstName ? `, ${firstName}` : ''}.
                 </h1>
-                <p className="text-xl text-slate-500 font-medium max-w-lg mx-auto leading-relaxed">
+                <p className="text-xl text-[var(--ink-muted)] font-medium max-w-lg mx-auto leading-relaxed">
                   Let's set up your estate plan. This is the first step toward protecting
                   everything you've worked for — and the people who matter most.
                 </p>
@@ -341,7 +341,7 @@ function CreateEstatePage() {
                 Create My Estate Plan
               </Button>
 
-              <p className="text-center mt-8 text-sm text-slate-400 font-medium">
+              <p className="text-center mt-8 text-sm text-[var(--ink-muted)] font-medium">
                 Your data is protected with AES-256 encryption and enterprise-grade security infrastructure.
               </p>
             </div>
@@ -354,7 +354,7 @@ function CreateEstatePage() {
               <Button
                 variant="ghost"
                 onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 text-slate-500 hover:text-[var(--royal)] font-semibold text-sm mb-8 transition-colors px-0 hover:bg-transparent"
+                className="flex items-center gap-2 text-[var(--ink-muted)] hover:text-[var(--royal)] font-semibold text-sm mb-8 transition-colors px-0 hover:bg-transparent"
               >
                 <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M19 12H5m7-7-7 7 7 7" />
@@ -373,7 +373,7 @@ function CreateEstatePage() {
                             ? 'bg-[var(--gold)] text-white'
                             : i + 1 === step
                               ? 'bg-[var(--royal)] text-white shadow-lg shadow-[var(--royal)]/20'
-                              : 'bg-slate-100 text-slate-400'
+                              : 'bg-slate-100 text-[var(--ink-muted)]'
                         }`}
                       >
                         {i + 1 < step ? (
@@ -385,7 +385,7 @@ function CreateEstatePage() {
                         )}
                       </div>
                       <span className={`text-[10px] font-semibold tracking-wide ${
-                        i + 1 === step ? 'text-[var(--royal)]' : 'text-slate-400'
+                        i + 1 === step ? 'text-[var(--royal)]' : 'text-[var(--ink-muted)]'
                       }`}>
                         {label}
                       </span>
@@ -405,10 +405,10 @@ function CreateEstatePage() {
                         Step 1 of 5
                       </Badge>
                     </div>
-                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">
+                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)] mb-3 tracking-tight">
                       What brings you here?
                     </CardTitle>
-                    <CardDescription className="text-lg text-slate-500 font-medium leading-relaxed">
+                    <CardDescription className="text-lg text-[var(--ink-muted)] font-medium leading-relaxed">
                       There's no wrong answer. We'll tailor your experience based on where you are right now.
                     </CardDescription>
                   </CardHeader>
@@ -435,8 +435,8 @@ function CreateEstatePage() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold text-slate-900 mb-1">Planning Ahead</h3>
-                          <p className="text-slate-500 font-medium leading-relaxed">
+                          <h3 className="text-lg font-bold text-[var(--ink)] mb-1">Planning Ahead</h3>
+                          <p className="text-[var(--ink-muted)] font-medium leading-relaxed">
                             I want to organize my estate while I'm able — so my family is protected no matter what.
                           </p>
                         </div>
@@ -473,8 +473,8 @@ function CreateEstatePage() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold text-slate-900 mb-1">After a Loss</h3>
-                          <p className="text-slate-500 font-medium leading-relaxed">
+                          <h3 className="text-lg font-bold text-[var(--ink)] mb-1">After a Loss</h3>
+                          <p className="text-[var(--ink-muted)] font-medium leading-relaxed">
                             I'm settling the estate of someone who has passed. I need help organizing and managing everything.
                           </p>
                         </div>
@@ -516,10 +516,10 @@ function CreateEstatePage() {
                         Step 2 of 5
                       </Badge>
                     </div>
-                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">
+                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)] mb-3 tracking-tight">
                       About You
                     </CardTitle>
-                    <CardDescription className="text-lg text-slate-500 font-medium leading-relaxed">
+                    <CardDescription className="text-lg text-[var(--ink-muted)] font-medium leading-relaxed">
                       A few basics help us personalize your estate plan and ensure it meets your state's requirements.
                     </CardDescription>
                   </CardHeader>
@@ -527,7 +527,7 @@ function CreateEstatePage() {
                   <CardContent className="p-0 space-y-6">
                     {/* Full Name */}
                     <div className="space-y-2">
-                      <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">
+                      <Label className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest pl-2">
                         Full Legal Name
                       </Label>
                       <Input
@@ -535,21 +535,21 @@ function CreateEstatePage() {
                         value={wizardData.fullName}
                         onChange={(e) => update({ fullName: e.target.value })}
                         placeholder="Your full name"
-                        className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-slate-900 text-base transition-all placeholder:text-slate-300 placeholder:font-medium"
+                        className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all placeholder:text-slate-300 placeholder:font-medium"
                         autoFocus
                       />
                     </div>
 
                     {/* State of Residence */}
                     <div className="space-y-2">
-                      <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">
+                      <Label className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest pl-2">
                         State of Residence
                       </Label>
                       <Select
                         value={wizardData.stateOfResidence}
                         onValueChange={(val) => update({ stateOfResidence: val })}
                       >
-                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 font-semibold text-base text-slate-900 [&>span]:text-slate-300 data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
+                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 font-semibold text-base text-[var(--ink)] [&>span]:text-slate-300 data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
                           <SelectValue placeholder="Select your state" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl max-h-72">
@@ -562,7 +562,7 @@ function CreateEstatePage() {
 
                     {/* Marital Status */}
                     <div className="space-y-2">
-                      <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">
+                      <Label className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest pl-2">
                         Marital Status
                       </Label>
                       <Select
@@ -572,7 +572,7 @@ function CreateEstatePage() {
                           update({ maritalStatus: val, hasSpouse })
                         }}
                       >
-                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 font-semibold text-base text-slate-900 [&>span]:text-slate-300 data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
+                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 font-semibold text-base text-[var(--ink)] [&>span]:text-slate-300 data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
                           <SelectValue placeholder="Select marital status" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
@@ -589,7 +589,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(1)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -617,10 +617,10 @@ function CreateEstatePage() {
                         Step 3 of 5
                       </Badge>
                     </div>
-                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">
+                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)] mb-3 tracking-tight">
                       Your Family
                     </CardTitle>
-                    <CardDescription className="text-lg text-slate-500 font-medium leading-relaxed">
+                    <CardDescription className="text-lg text-[var(--ink-muted)] font-medium leading-relaxed">
                       Understanding your family helps us suggest the right protections and designations.
                     </CardDescription>
                   </CardHeader>
@@ -629,8 +629,8 @@ function CreateEstatePage() {
                     {/* Spouse/Partner */}
                     <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100">
                       <div>
-                        <p className="font-bold text-slate-900">Spouse or partner?</p>
-                        <p className="text-sm text-slate-500 mt-0.5">Do you currently have a spouse or domestic partner?</p>
+                        <p className="font-bold text-[var(--ink)]">Spouse or partner?</p>
+                        <p className="text-sm text-[var(--ink-muted)] mt-0.5">Do you currently have a spouse or domestic partner?</p>
                       </div>
                       <Switch
                         checked={wizardData.hasSpouse}
@@ -644,8 +644,8 @@ function CreateEstatePage() {
                     {/* Children */}
                     <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100">
                       <div>
-                        <p className="font-bold text-slate-900">Children?</p>
-                        <p className="text-sm text-slate-500 mt-0.5">Do you have any children or dependents?</p>
+                        <p className="font-bold text-[var(--ink)]">Children?</p>
+                        <p className="text-sm text-[var(--ink-muted)] mt-0.5">Do you have any children or dependents?</p>
                       </div>
                       <Switch
                         checked={wizardData.hasChildren}
@@ -665,7 +665,7 @@ function CreateEstatePage() {
                     {wizardData.hasChildren && (
                       <div className="pl-2 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                         <div className="space-y-2">
-                          <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">
+                          <Label className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest pl-2">
                             How many children?
                           </Label>
                           <Input
@@ -674,15 +674,15 @@ function CreateEstatePage() {
                             max={20}
                             value={wizardData.numberOfChildren}
                             onChange={(e) => update({ numberOfChildren: Math.max(1, parseInt(e.target.value) || 1) })}
-                            className="w-32 px-6 py-3 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-slate-900 text-base transition-all"
+                            className="w-32 px-6 py-3 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all"
                           />
                         </div>
 
                         {/* Minor children */}
                         <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100">
                           <div>
-                            <p className="font-bold text-slate-900">Any minor children?</p>
-                            <p className="text-sm text-slate-500 mt-0.5">Children under 18 may need a guardian designation.</p>
+                            <p className="font-bold text-[var(--ink)]">Any minor children?</p>
+                            <p className="text-sm text-[var(--ink-muted)] mt-0.5">Children under 18 may need a guardian designation.</p>
                           </div>
                           <Switch
                             checked={wizardData.hasMinorChildren}
@@ -698,7 +698,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(2)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -725,10 +725,10 @@ function CreateEstatePage() {
                         Step 4 of 5
                       </Badge>
                     </div>
-                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">
+                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)] mb-3 tracking-tight">
                       Key Assets
                     </CardTitle>
-                    <CardDescription className="text-lg text-slate-500 font-medium leading-relaxed">
+                    <CardDescription className="text-lg text-[var(--ink-muted)] font-medium leading-relaxed">
                       Select any that apply — this helps us set up the right categories in your estate. You can always add more later.
                     </CardDescription>
                   </CardHeader>
@@ -749,13 +749,13 @@ function CreateEstatePage() {
                             }`}
                           >
                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
-                              selected ? 'bg-[var(--royal)] text-white' : 'bg-slate-100 text-slate-400'
+                              selected ? 'bg-[var(--royal)] text-white' : 'bg-slate-100 text-[var(--ink-muted)]'
                             }`}>
                               <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <path d={asset.icon} />
                               </svg>
                             </div>
-                            <span className={`font-semibold transition-colors ${selected ? 'text-slate-900' : 'text-slate-500'}`}>
+                            <span className={`font-semibold transition-colors ${selected ? 'text-[var(--ink)]' : 'text-[var(--ink-muted)]'}`}>
                               {asset.label}
                             </span>
                             {selected && (
@@ -777,7 +777,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(3)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -810,10 +810,10 @@ function CreateEstatePage() {
                         Step 5 of 5
                       </Badge>
                     </div>
-                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-3 tracking-tight">
+                    <CardTitle className="text-3xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)] mb-3 tracking-tight">
                       Name Your Estate
                     </CardTitle>
-                    <CardDescription className="text-lg text-slate-500 font-medium leading-relaxed">
+                    <CardDescription className="text-lg text-[var(--ink-muted)] font-medium leading-relaxed">
                       Almost there. Give your estate a name — you can always change this later.
                     </CardDescription>
                   </CardHeader>
@@ -821,7 +821,7 @@ function CreateEstatePage() {
                   <CardContent className="p-0 space-y-8">
                     {/* Estate Name */}
                     <div className="space-y-2">
-                      <Label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest pl-2">
+                      <Label className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest pl-2">
                         Estate Name
                       </Label>
                       <Input
@@ -829,7 +829,7 @@ function CreateEstatePage() {
                         value={wizardData.estateName}
                         onChange={(e) => update({ estateName: e.target.value })}
                         placeholder={suggestedEstateName}
-                        className="w-full px-8 py-6 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-bold text-slate-900 text-xl transition-all placeholder:text-slate-300 placeholder:font-medium"
+                        className="w-full px-8 py-6 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-bold text-[var(--ink)] text-xl transition-all placeholder:text-slate-300 placeholder:font-medium"
                         autoFocus
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && wizardData.estateName.trim()) handleCreate()
@@ -839,7 +839,7 @@ function CreateEstatePage() {
 
                     {/* Summary */}
                     <div className="rounded-2xl bg-slate-50 border border-slate-100 p-6 space-y-4">
-                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Your Intake Summary</h4>
+                      <h4 className="text-xs font-bold text-[var(--ink-muted)] uppercase tracking-widest">Your Intake Summary</h4>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <SummaryItem
                           label="Situation"
@@ -880,7 +880,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(4)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-slate-500 hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -909,21 +909,21 @@ function CreateEstatePage() {
 
               {/* Security badges */}
               <div className="flex items-center justify-center gap-6 mt-10">
-                <Badge variant="outline" className="text-[13px] text-slate-400 font-medium border-0 bg-transparent gap-2 h-auto">
+                <Badge variant="outline" className="text-[13px] text-[var(--ink-muted)] font-medium border-0 bg-transparent gap-2 h-auto">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   </svg>
                   AES-256 Encrypted
                 </Badge>
                 <div className="w-1 h-1 rounded-full bg-slate-300" />
-                <Badge variant="outline" className="text-[13px] text-slate-400 font-medium border-0 bg-transparent gap-2 h-auto">
+                <Badge variant="outline" className="text-[13px] text-[var(--ink-muted)] font-medium border-0 bg-transparent gap-2 h-auto">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   SOC 2 Architecture
                 </Badge>
                 <div className="w-1 h-1 rounded-full bg-slate-300" />
-                <Badge variant="outline" className="text-[13px] text-slate-400 font-medium border-0 bg-transparent gap-2 h-auto">
+                <Badge variant="outline" className="text-[13px] text-[var(--ink-muted)] font-medium border-0 bg-transparent gap-2 h-auto">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
                   </svg>
@@ -949,8 +949,8 @@ function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: stri
             {icon}
           </svg>
         </div>
-        <h3 className="font-bold text-slate-900 text-lg mb-2 group-hover:text-[var(--royal)] transition-colors">{title}</h3>
-        <p className="text-sm text-slate-500 font-medium leading-relaxed">{desc}</p>
+        <h3 className="font-bold text-[var(--ink)] text-lg mb-2 group-hover:text-[var(--royal)] transition-colors">{title}</h3>
+        <p className="text-sm text-[var(--ink-muted)] font-medium leading-relaxed">{desc}</p>
       </CardContent>
     </Card>
   )
@@ -959,8 +959,8 @@ function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: stri
 function SummaryItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{label}</p>
-      <p className="font-semibold text-slate-900">{value}</p>
+      <p className="text-[10px] font-bold text-[var(--ink-muted)] uppercase tracking-widest mb-1">{label}</p>
+      <p className="font-semibold text-[var(--ink)]">{value}</p>
     </div>
   )
 }

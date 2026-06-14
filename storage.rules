@@ -32,11 +32,21 @@ service firebase.storage {
     // authenticated user read ANY estate's files by guessing the path. (The app reads
     // via Go-API signed URLs that bypass these rules, so this is defense-in-depth —
     // but the rule must still be estate-scoped, not merely authenticated.)
+    //
+    // email_verified gate (mirror of firestore.rules isEstateRole()): the
+    // estate_users junction is written by invitation auto-match keyed off an email
+    // string, so an unverified account on an invited-but-unclaimed address must NOT
+    // be honored. The SAME junction firestore refuses to honor for an unverified
+    // user must not be honored by storage for direct downloads. The principal path
+    // (estates.principalId) is identity the owner already proved, but we require a
+    // verified email there too for consistency — a principal verifies at signup.
     function isEstateMember(estateId) {
-      return request.auth != null && (
-        firestore.exists(/databases/(default)/documents/estate_users/$(request.auth.uid + '_' + estateId))
-        || firestore.get(/databases/(default)/documents/estates/$(estateId)).data.principalId == request.auth.uid
-      );
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && (
+          firestore.exists(/databases/(default)/documents/estate_users/$(request.auth.uid + '_' + estateId))
+          || firestore.get(/databases/(default)/documents/estates/$(estateId)).data.principalId == request.auth.uid
+        );
     }
 
     // ── Estate Document Vault ──

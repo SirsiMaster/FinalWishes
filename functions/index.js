@@ -6,9 +6,17 @@
  * that cannot run on Cloud Run.
  *
  * Functions:
- *   1. autoMatchInvitation — Match pending invitations to new users
- *   2. sendMail — Send transactional email via Gmail API (Google-native)
- *   3. sendSMS — Process SMS queue for invitation notifications
+ *   1. autoMatchInvitation     — Match pending invitations to new users (on signup)
+ *   1b. autoMatchOnInvitation  — Link invitees who already have an account (on invite)
+ *   2. sendMail                — Send transactional email via Gmail API (Google-native)
+ *   3. guardianInactivityCheck — Daily Guardian Protocol inactivity sweep (scheduled)
+ *
+ * NOTE: There is intentionally NO SMS function. Invitation delivery is email-only
+ * (the Gmail rail above). A phone-number/SMS path was deliberately removed rather
+ * than ship a stub that silently never delivers a text — the UI must not promise a
+ * channel that does not exist. When a real SMS provider is adopted (Sirsi Sign
+ * shared rail per ADR-047, or a managed Twilio extension), reintroduce a delivery
+ * function here AND re-expose the phone field in InviteTeamMember.tsx together.
  */
 
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
@@ -538,112 +546,7 @@ exports.sendMail = onDocumentCreated(
     }
 );
 
-// ─── 3. Send SMS — Notification Queue ────────────────────────────────────
-//
-// Watches the 'sms_queue' Firestore collection. When a document is created,
-// processes the SMS request and updates delivery status.
-//
-// Document schema (written by web/src/lib/invitations.ts):
-// {
-//   to: "+15551234567",
-//   body: "You've been invited to an estate on FinalWishes...",
-//   invitationId: "abc123",
-//   estateId: "estate456",
-//   status: "pending",
-//   createdBy: "uid789",
-//   createdAt: Timestamp
-// }
-//
-// TODO: Integrate a real SMS provider. Options (Google-first priority):
-//   1. Google Cloud Communication API (when GA) — preferred, native GCP
-//   2. Firebase Extensions: "Send Messages with Twilio" — managed, low-code
-//   3. Direct Twilio SDK — fallback if Google options unavailable
-//
-// Until a provider is configured, this function validates the request,
-// logs the SMS details for manual review, and updates delivery status.
-
-exports.sendSMS = onDocumentCreated(
-    {
-        document: 'sms_queue/{smsId}',
-        memory: '256MiB',
-        timeoutSeconds: 30,
-    },
-    async (event) => {
-        const snapshot = event.data;
-        if (!snapshot) return;
-
-        const smsData = snapshot.data();
-        const smsRef = snapshot.ref;
-
-        // Skip if already processed
-        if (smsData.delivery?.state === 'SUCCESS' || smsData.delivery?.state === 'ERROR') return;
-
-        try {
-            const { to, body, invitationId, estateId, createdBy } = smsData;
-
-            // Validate required fields
-            if (!to || !body) {
-                await smsRef.update({
-                    'delivery.state': 'ERROR',
-                    'delivery.error': 'Missing required fields: to and body are required',
-                    'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
-                });
-                return;
-            }
-
-            // Validate phone number format (E.164: +[country][number])
-            const e164Regex = /^\+[1-9]\d{6,14}$/;
-            if (!e164Regex.test(to.replace(/[\s\-()]/g, ''))) {
-                await smsRef.update({
-                    'delivery.state': 'ERROR',
-                    'delivery.error': `Invalid phone number format: ${to}. Expected E.164 format (e.g., +15551234567)`,
-                    'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
-                });
-                return;
-            }
-
-            // Validate body length (SMS limit is 160 chars for single segment)
-            if (body.length > 1600) {
-                await smsRef.update({
-                    'delivery.state': 'ERROR',
-                    'delivery.error': `SMS body too long (${body.length} chars). Maximum 1600 characters.`,
-                    'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
-                });
-                return;
-            }
-
-            // TODO: Replace this block with actual SMS provider integration.
-            // For now, log the request for manual processing / audit trail.
-            console.log(`[sendSMS] SMS queued for delivery:`, {
-                to,
-                bodyLength: body.length,
-                invitationId: invitationId || 'none',
-                estateId: estateId || 'none',
-                createdBy: createdBy || 'unknown',
-            });
-
-            // Mark as sent (provider pending — update to real delivery once integrated)
-            await smsRef.update({
-                'delivery.state': 'PENDING_PROVIDER',
-                'delivery.info': 'SMS queued successfully. Awaiting SMS provider integration.',
-                'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
-                'delivery.leaseExpireTime': null,
-            });
-
-            console.log(`[sendSMS] Queued SMS to ${to} (invitation: ${invitationId || 'N/A'})`);
-        } catch (error) {
-            console.error(`[sendSMS] Error:`, error);
-
-            await smsRef.update({
-                'delivery.state': 'ERROR',
-                'delivery.error': error.message || 'Unknown SMS processing error',
-                'delivery.endTime': admin.firestore.FieldValue.serverTimestamp(),
-            });
-        }
-    }
-);
-
-// ─── 4. Guardian Protocol — Daily Inactivity Check ──────────────────────
+// ─── 3. Guardian Protocol — Daily Inactivity Check ──────────────────────
 // Runs every day at 6 AM EST. Calls the Go API's inactivity check endpoint
 // which escalates estates where the owner has gone silent.
 //

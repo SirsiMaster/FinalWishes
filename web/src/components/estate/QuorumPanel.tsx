@@ -80,7 +80,7 @@ export function QuorumPanel({ estateId }: QuorumPanelProps) {
     <Card className="border-[var(--gold)]/20">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-[family-name:var(--font-cinzel)] font-semibold text-slate-900">
+          <CardTitle className="text-lg font-[family-name:var(--font-cinzel)] font-semibold text-royal">
             Executor Quorum
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -99,14 +99,14 @@ export function QuorumPanel({ estateId }: QuorumPanelProps) {
       </CardHeader>
       <CardContent>
         {pendingActions.length === 0 && resolvedActions.length === 0 && (
-          <p className="text-sm text-slate-900/50 text-center py-6">
+          <p className="text-sm text-ink/50 text-center py-6">
             No quorum actions yet. Propose an action that requires multi-executor approval.
           </p>
         )}
 
         {pendingActions.length > 0 && (
           <div className="space-y-3 mb-4">
-            <h4 className="text-xs font-bold text-slate-900/60 uppercase tracking-wider">
+            <h4 className="text-xs font-bold text-ink/60 uppercase tracking-wider">
               Pending Votes
             </h4>
             {pendingActions.map((action) => (
@@ -123,7 +123,7 @@ export function QuorumPanel({ estateId }: QuorumPanelProps) {
 
         {resolvedActions.length > 0 && (
           <div className="space-y-3">
-            <h4 className="text-xs font-bold text-slate-900/60 uppercase tracking-wider">
+            <h4 className="text-xs font-bold text-ink/60 uppercase tracking-wider">
               Resolved
             </h4>
             {resolvedActions.slice(0, 5).map((action) => (
@@ -184,16 +184,16 @@ function ActionCard({
   }
 
   return (
-    <div className={`p-4 rounded-lg border ${STATUS_STYLES[action.status] || 'border-slate-900/10'}`}>
+    <div className={`p-4 rounded-lg border ${STATUS_STYLES[action.status] || 'border-royal/10'}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-sm text-slate-900">{action.description}</span>
+            <span className="font-medium text-sm text-ink">{action.description}</span>
             <Badge variant="outline" className="text-[9px] px-1.5 py-0">
               {ACTION_TYPE_LABELS[action.actionType] || action.actionType}
             </Badge>
           </div>
-          <p className="text-xs text-slate-900/50">
+          <p className="text-xs text-ink/50">
             Proposed by {action.proposedByName} &middot;{' '}
             {new Date(action.proposedAt).toLocaleDateString('en-US', {
               month: 'short',
@@ -284,7 +284,7 @@ function ActionCard({
       )}
 
       {isPending && hasVoted && (
-        <p className="text-xs text-slate-900/40 mt-2 italic">You have already voted on this action</p>
+        <p className="text-xs text-ink/40 mt-2 italic">You have already voted on this action</p>
       )}
     </div>
   )
@@ -328,23 +328,23 @@ function ProposeDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-semibold text-slate-900">
+          <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-semibold text-royal">
             Propose Quorum Action
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-900/50">
+          <DialogDescription className="text-sm text-ink/50">
             This action requires approval from at least 2 executors before it can proceed.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-900/60 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
               Action Type
             </label>
             <select
               value={actionType}
               onChange={(e) => setActionType(e.target.value)}
-              className="w-full rounded-lg border border-slate-900/10 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-royal/10 px-3 py-2 text-sm"
             >
               <option value="phase_transition">Phase Transition</option>
               <option value="asset_distribution">Asset Distribution</option>
@@ -353,7 +353,7 @@ function ProposeDialog({
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-900/60 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
               Description
             </label>
             <Textarea

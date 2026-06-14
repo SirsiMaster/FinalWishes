@@ -32,6 +32,7 @@ import {
   revokeInvitation,
   ROLE_LABELS,
 } from './invitations'
+import type { InvitationParams } from './invitations'
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -275,14 +276,16 @@ describe('sendEstateInvitation with phone', () => {
   it('does not persist phone until SMS delivery is backed by a live provider', async () => {
     mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
 
-    await sendEstateInvitation({
+    const paramsWithLegacyPhone = {
       estateId: 'estate-1',
       email: 'test@example.com',
       phone: '+1-555-123-4567',
       fullName: 'Phone User',
-      role: 'heir',
+      role: 'heir' as const,
       invitedBy: 'user-1',
-    })
+    } satisfies InvitationParams & { phone: string }
+
+    await sendEstateInvitation(paramsWithLegacyPhone)
 
     // First addDoc call is the invitation record
     const invitationData = mockAddDoc.mock.calls[0][1]
@@ -307,17 +310,19 @@ describe('sendEstateInvitation with phone', () => {
   it('does not queue SMS notification when phone is provided', async () => {
     mockGetDocs.mockResolvedValue({ empty: true, docs: [] })
 
-    await sendEstateInvitation({
+    const paramsWithLegacyPhone = {
       estateId: 'estate-1',
       email: 'sms@example.com',
       phone: '  +1-555-999-0000  ',
       fullName: 'SMS User',
-      role: 'executor',
+      role: 'executor' as const,
       invitedBy: 'user-1',
       inviterName: 'Cylton',
       estateName: 'Collymore Estate',
       priority: 1,
-    })
+    } satisfies InvitationParams & { phone: string }
+
+    await sendEstateInvitation(paramsWithLegacyPhone)
 
     // Phone is accepted by older callers but delivery remains email-only until
     // an SMS provider/function exists to drain a queue.

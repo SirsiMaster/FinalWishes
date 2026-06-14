@@ -137,6 +137,11 @@ describe('autoMatchInvitation', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockDb.batch.mockReturnValue(mockBatch);
+    // Default identity: a VERIFIED account whose Firebase Auth email is the one we
+    // match invitations against. The handler no longer trusts the client-writable
+    // users/{uid}.email — it resolves identity via admin.auth().getUser(uid). Tests
+    // override mockGetUser to simulate verified/unverified/seizure fixtures.
+    mockGetUser.mockResolvedValue({ email: 'test@example.com', emailVerified: true });
   });
 
   test('skips when no snapshot data', async () => {
@@ -144,13 +149,60 @@ describe('autoMatchInvitation', () => {
     expect(mockCollection).not.toHaveBeenCalled();
   });
 
-  test('skips when user has no email', async () => {
-    const event = makeEvent({ email: '' }, { uid: 'u1' });
+  test('skips when auth record has no email', async () => {
+    mockGetUser.mockResolvedValue({ email: '', emailVerified: false });
+    const event = makeEvent({ email: 'spoofed@victim.com' }, { uid: 'u1' });
     await handler(event);
     expect(mockCollection).not.toHaveBeenCalled();
   });
 
+  test('skips when admin.auth().getUser throws (no fabricated identity)', async () => {
+    mockGetUser.mockRejectedValueOnce(new Error('user not found'));
+    const event = makeEvent({ email: 'spoofed@victim.com' }, { uid: 'u1' });
+    await handler(event);
+    expect(mockCollection).not.toHaveBeenCalled();
+  });
+
+  // ─── CRITICAL: invitation-seizure defense ────────────────────────────────
+  // An attacker verifies an account they control, then writes
+  // users/{uid}.email = 'victim-invited@...' to seize that invitation's role.
+  // The handler must IGNORE userData.email entirely and gate on the VERIFIED
+  // auth email — so an unverified account grants nothing even with a forged
+  // profile email, and a verified account is only ever matched against its OWN
+  // verified address.
+  test('SEIZURE DEFENSE: ignores client profile email when account is unverified', async () => {
+    // Auth record: attacker controls attacker@evil.com but has NOT verified it.
+    mockGetUser.mockResolvedValue({ email: 'attacker@evil.com', emailVerified: false });
+    const event = makeEvent({ email: 'victim-invited@example.com' }, { uid: 'attacker-uid' });
+    await handler(event);
+    // No invitation query, no junction write — access denied.
+    expect(mockCollection).not.toHaveBeenCalled();
+    expect(mockBatch.commit).not.toHaveBeenCalled();
+  });
+
+  test('SEIZURE DEFENSE: matches the VERIFIED auth email, never the profile email', async () => {
+    // Attacker verified their OWN address but forged the profile email to the
+    // victim's invited address. The handler must query invitations for the
+    // VERIFIED address (attacker@evil.com), NOT the forged victim address.
+    mockGetUser.mockResolvedValue({ email: 'attacker@evil.com', emailVerified: true });
+    mockCollection.mockReturnValue({
+      where: jest.fn().mockReturnThis(),
+      get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [] }),
+    });
+
+    const event = makeEvent({ email: 'victim-invited@example.com' }, { uid: 'attacker-uid' });
+    await handler(event);
+
+    const whereCalls = mockCollection().where.mock.calls;
+    expect(whereCalls[0]).toEqual(['email', '==', 'attacker@evil.com']);
+    // The forged victim email must NEVER appear in any query.
+    for (const call of whereCalls) {
+      expect(call).not.toContain('victim-invited@example.com');
+    }
+  });
+
   test('skips when no pending invitations found', async () => {
+    mockGetUser.mockResolvedValue({ email: 'test@example.com', emailVerified: true });
     mockCollection.mockReturnValue({
       where: jest.fn().mockReturnThis(),
       get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [] }),
@@ -208,13 +260,15 @@ describe('autoMatchInvitation', () => {
     expect(mockBatch.commit).toHaveBeenCalledTimes(1);
   });
 
-  test('normalizes email to lowercase and trims whitespace', async () => {
+  test('normalizes the VERIFIED auth email to lowercase and trims whitespace', async () => {
+    // Normalization applies to the auth-record email, not the client profile.
+    mockGetUser.mockResolvedValue({ email: '  Test@EXAMPLE.com  ', emailVerified: true });
     mockCollection.mockReturnValue({
       where: jest.fn().mockReturnThis(),
       get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [] }),
     });
 
-    const event = makeEvent({ email: '  Test@EXAMPLE.com  ' }, { uid: 'u1' });
+    const event = makeEvent({ email: 'unused-profile@example.com' }, { uid: 'u1' });
     await handler(event);
 
     // The where clause should have been called with lowercase trimmed email

@@ -120,11 +120,37 @@ exports.autoMatchInvitation = onDocumentCreated(
         const snapshot = event.data;
         if (!snapshot) return;
 
-        const userData = snapshot.data();
         const uid = event.params.uid;
-        const email = (userData.email || '').toLowerCase().trim();
 
+        // CRITICAL — verified identity ONLY. The users/{uid} document is
+        // client-writable, so an attacker can verify an account they control and
+        // then write users/{uid}.email = 'victim-invited@...' to seize the
+        // executor/heir role attached to that invitation. We MUST NOT trust
+        // userData.email. Instead resolve the email from the Firebase Auth record
+        // (admin.auth().getUser) — the identity the user actually proved — and
+        // refuse to grant any estate access until that email is verified. This is
+        // the write-side mirror of the firestore.rules isEstateRole() email_verified
+        // gate; without it the junction is written off a bare email-string match.
+        let rec;
+        try {
+            rec = await admin.auth().getUser(uid);
+        } catch (e) {
+            console.warn(`[autoMatch] admin.auth().getUser(${uid}) failed: ${e.message || e}`);
+            return;
+        }
+
+        const email = (rec.email || '').toLowerCase().trim();
         if (!email) return;
+
+        // Defense-in-depth: never grant estate access off an unverified address.
+        // The attacker can never VERIFY an invited address they don't control, so
+        // gating here makes the seizure path unreachable while a legitimate invitee
+        // is matched the moment they verify (this trigger re-runs on profile create,
+        // and the autoMatchOnInvitation path also covers already-verified users).
+        if (!rec.emailVerified) {
+            console.log(`[autoMatch] Skipping ${email} (uid: ${uid}) — email not verified`);
+            return;
+        }
 
         console.log(`[autoMatch] Checking invitations for ${email} (uid: ${uid})`);
 

@@ -11,7 +11,7 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Primary Action Card (hero progress area) */}
-      <div className="bg-slate-50 rounded-[3rem] p-16 flex items-center justify-between border border-slate-100">
+      <div className="bg-[var(--neutral-faint)] rounded-[3rem] p-16 flex items-center justify-between border border-[var(--neutral-border)]">
         <div className="flex-1 space-y-10">
           <div className="space-y-3">
             <Skeleton className="h-3 w-32" />
@@ -26,7 +26,7 @@ export function DashboardSkeleton() {
       {/* Stat Grid — 4 cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white p-10 rounded-[2.5rem] border border-slate-100 space-y-8">
+          <div key={i} className="bg-white p-10 rounded-[2.5rem] border border-[var(--neutral-border)] space-y-8">
             <Skeleton className="h-16 w-16 rounded-2xl" />
             <div className="space-y-2">
               <Skeleton className="h-3 w-24" />
@@ -39,13 +39,13 @@ export function DashboardSkeleton() {
       {/* Checklist + Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1.2fr] gap-16 py-12">
         {/* Checklist */}
-        <div className="bg-white rounded-[3rem] p-16 border border-slate-100 space-y-6">
+        <div className="bg-white rounded-[3rem] p-16 border border-[var(--neutral-border)] space-y-6">
           <div className="flex justify-between items-center mb-4">
             <Skeleton className="h-7 w-40" />
             <Skeleton className="h-6 w-28 rounded-full" />
           </div>
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 px-5 py-4 rounded-2xl bg-slate-50">
+            <div key={i} className="flex items-center gap-4 px-5 py-4 rounded-2xl bg-[var(--neutral-faint)]">
               <Skeleton className="h-6 w-6 rounded-full" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
@@ -57,11 +57,11 @@ export function DashboardSkeleton() {
 
         {/* Quick Actions */}
         <div className="space-y-12">
-          <div className="bg-white rounded-[3rem] p-12 border border-slate-100">
+          <div className="bg-white rounded-[3rem] p-12 border border-[var(--neutral-border)]">
             <Skeleton className="h-6 w-32 mb-10" />
             <div className="grid grid-cols-2 gap-8">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center justify-center gap-6 p-10 bg-slate-50 rounded-3xl border border-slate-100">
+                <div key={i} className="flex flex-col items-center justify-center gap-6 p-10 bg-[var(--neutral-faint)] rounded-3xl border border-[var(--neutral-border)]">
                   <Skeleton className="h-7 w-7 rounded-lg" />
                   <Skeleton className="h-3 w-16" />
                 </div>

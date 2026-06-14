@@ -31,7 +31,7 @@ export const pendingComponent = () => <VaultSkeleton />
 - Match the final layout's spacing and proportions (3rem rounded corners, 12px gaps)
 - Use `role="status"` and `aria-label="Loading..."` for accessibility
 - Follow Royal Neo-Deco dimensions (24px/32px cards, wide padding)
-- No color — neutral grays only (`slate-100`, `slate-200`)
+- No color — royal-tinted neutrals only (`neutral-faint`, `neutral-border`)
 
 ## Route ↔ Skeleton Map
 

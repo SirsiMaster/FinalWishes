@@ -15,6 +15,7 @@
   "scripts": {
     "lint": "echo 'No lint configured'",
     "test": "jest --verbose",
+    "test:ci": "npm ci && jest --ci --verbose",
     "serve": "firebase emulators:start --only functions",
     "deploy": "firebase deploy --only functions"
   },

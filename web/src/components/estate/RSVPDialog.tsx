@@ -55,7 +55,7 @@ interface RSVPDialogProps {
 const RESPONSE_OPTIONS: { value: RSVPResponse; label: string; icon: typeof Check; activeClass: string }[] = [
   { value: 'attending', label: 'Attending', icon: Check, activeClass: 'bg-green-600 text-white border-green-600' },
   { value: 'maybe', label: 'Maybe', icon: HelpCircle, activeClass: 'bg-amber-500 text-white border-amber-500' },
-  { value: 'not_attending', label: 'Not Attending', icon: X, activeClass: 'bg-slate-500 text-white border-slate-500' },
+  { value: 'not_attending', label: 'Not Attending', icon: X, activeClass: 'bg-ink-muted text-white border-ink-muted' },
 ]
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -175,7 +175,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                         onClick={() => update('response', opt.value)}
                         className={`
                           flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-[13px] font-bold transition-all
-                          ${isActive ? opt.activeClass : 'border-slate-200 text-[var(--royal)]/60 hover:border-slate-300'}
+                          ${isActive ? opt.activeClass : 'border-[var(--neutral-border)] text-[var(--royal)]/60 hover:border-gold/50'}
                         `}
                       >
                         <Icon className="w-4 h-4" />
@@ -193,7 +193,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                   value={form.name}
                   onChange={(e) => update('name', e.target.value)}
                   placeholder="Full name"
-                  className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+                  className="h-auto px-5 py-4 rounded-2xl border-[var(--neutral-border)] text-[14px]"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                   value={form.email}
                   onChange={(e) => update('email', e.target.value)}
                   placeholder="your@email.com"
-                  className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+                  className="h-auto px-5 py-4 rounded-2xl border-[var(--neutral-border)] text-[14px]"
                 />
               </div>
 
@@ -219,7 +219,7 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                     max={20}
                     value={form.guests}
                     onChange={(e) => update('guests', Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))}
-                    className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px] w-24"
+                    className="h-auto px-5 py-4 rounded-2xl border-[var(--neutral-border)] text-[14px] w-24"
                   />
                   <p className="text-[11px] text-[var(--royal)]/40">Including yourself</p>
                 </div>
@@ -233,12 +233,12 @@ export function RSVPDialog({ estateId, eventId, eventTitle, open, onOpenChange }
                   onChange={(e) => update('message', e.target.value)}
                   placeholder="Any notes or well wishes..."
                   rows={3}
-                  className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] resize-none"
+                  className="px-5 py-4 rounded-2xl border-[var(--neutral-border)] text-[14px] resize-none"
                 />
               </div>
             </div>
 
-            <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-slate-100">
+            <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-[var(--neutral-border)]">
               <Button
                 variant="ghost"
                 onClick={() => handleClose(false)}

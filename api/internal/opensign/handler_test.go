@@ -1,6 +1,7 @@
 package opensign
 
 import (
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -13,11 +14,13 @@ import (
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
 
-// withAuth injects an authenticated user context + token (as the middleware would) so
-// these tests exercise HandleCreateEnvelope past its auth gate and the token-derived
-// signer identity. A nil-fs WebhookHandler skips the estate_users check + the binding
-// write, leaving the OpenSign proxy behavior under test. Bodies include
-// estateId/directiveId (now required).
+// withAuth injects an authenticated CALLER context (as the middleware would) so these
+// tests exercise HandleCreateEnvelope past its auth gate. NOTE: as of the
+// signer=principal change (claude-home 2026-06-14) the caller's token email is NO
+// LONGER the signer — the signer is resolved from the estate principal via the injected
+// signerResolver. The caller is recorded only as initiatedBy. A nil-fs WebhookHandler
+// skips the estate_users check + the binding write, leaving the OpenSign proxy behavior
+// + principal-resolution under test. Bodies include estateId/directiveId (required).
 func withAuth(req *http.Request) *http.Request {
 	ctx := auth.ContextWithUserID(req.Context(), "u1")
 	ctx = auth.ContextWithToken(ctx, &firebaseAuth.Token{Claims: map[string]interface{}{
@@ -27,7 +30,35 @@ func withAuth(req *http.Request) *http.Request {
 	return req.WithContext(ctx)
 }
 
-func openSignTestHandler() *WebhookHandler { return &WebhookHandler{} }
+// fakeSignerResolver is the test double for the principal-resolution seam, standing in
+// for the Firestore+Firebase-Auth-backed firebaseSignerResolver (neither can be built
+// offline). It returns canned signer identity / rejection.
+type fakeSignerResolver struct {
+	email     string
+	name      string
+	status    int
+	clientMsg string
+}
+
+func (f *fakeSignerResolver) resolveSigner(_ context.Context, _, fallbackName string) (string, string, int, string) {
+	if f.status != 0 {
+		return "", "", f.status, f.clientMsg
+	}
+	name := f.name
+	if name == "" {
+		name = fallbackName
+	}
+	return f.email, name, 0, ""
+}
+
+// openSignTestHandler returns a handler whose principal resolves to a VERIFIED estate
+// principal (principal@example.com) — the common case for the provider-proxy tests,
+// which assert behavior AFTER signer resolution succeeds.
+func openSignTestHandler() *WebhookHandler {
+	return &WebhookHandler{
+		signerResolver: &fakeSignerResolver{email: "principal@example.com", name: "Estate Principal"},
+	}
+}
 
 // TestCreateEnvelope_InvalidJSON verifies that malformed request bodies are rejected.
 func TestCreateEnvelope_InvalidJSON(t *testing.T) {
@@ -114,6 +145,18 @@ func TestCreateEnvelope_HappyPath(t *testing.T) {
 		}
 		if payload["template_id"] != "t1" {
 			t.Errorf("expected template_id t1, got %v", payload["template_id"])
+		}
+		// Signer is the estate PRINCIPAL resolved server-side — NOT the caller token
+		// (u1@example.com) and NOT the body's signerEmail (cylton@sirsi.ai). The
+		// dissociated provider nests the signer under signers[0].
+		gotSigner := ""
+		if signers, ok := payload["signers"].([]interface{}); ok && len(signers) > 0 {
+			if s0, ok := signers[0].(map[string]interface{}); ok {
+				gotSigner, _ = s0["email"].(string)
+			}
+		}
+		if gotSigner != "principal@example.com" {
+			t.Errorf("expected signer to be the estate principal, got %q", gotSigner)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -275,5 +318,104 @@ func TestCreateEnvelope_NoAPIKeyStillSends(t *testing.T) {
 	}
 	if receivedAuthHeader != "" {
 		t.Errorf("expected no auth header when API key is empty, got %q", receivedAuthHeader)
+	}
+}
+
+// TestCreateEnvelope_SignerIsVerifiedPrincipal verifies the resolved signer is the
+// estate principal (verified), not the caller and not the body's signerEmail.
+func TestCreateEnvelope_SignerIsVerifiedPrincipal(t *testing.T) {
+	var gotSignerEmail string
+	upstream := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var payload map[string]interface{}
+		_ = json.NewDecoder(r.Body).Decode(&payload)
+		if signers, ok := payload["signers"].([]interface{}); ok && len(signers) > 0 {
+			if s0, ok := signers[0].(map[string]interface{}); ok {
+				gotSignerEmail, _ = s0["email"].(string)
+			}
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = io.WriteString(w, `{"id":"env-1","url":"https://sign.example.com/env-1"}`)
+	}))
+	defer upstream.Close()
+
+	t.Setenv("OPENSIGN_CREATE_ENVELOPE_URL", upstream.URL)
+	t.Setenv("OPENSIGN_API_KEY", "k")
+	t.Setenv("OPENSIGN_API_URL", "")
+
+	h := &WebhookHandler{
+		signerResolver: &fakeSignerResolver{email: "principal@example.com", name: "Estate Principal"},
+	}
+
+	// Caller token says u1@example.com; body says imposter@evil.com — both must be ignored.
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","signerName":"Imposter","signerEmail":"imposter@evil.com","redirectUrl":"https://x.com"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/envelopes", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+	h.HandleCreateEnvelope(rr, withAuth(req))
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d (%s)", rr.Code, rr.Body.String())
+	}
+	if gotSignerEmail != "principal@example.com" {
+		t.Errorf("signer must be the verified estate principal, got %q", gotSignerEmail)
+	}
+}
+
+// TestCreateEnvelope_PrincipalEmailUnverified verifies the required gate: signing is
+// rejected with 403 when the estate principal's email is not verified.
+func TestCreateEnvelope_PrincipalEmailUnverified(t *testing.T) {
+	h := &WebhookHandler{
+		signerResolver: &fakeSignerResolver{
+			status:    http.StatusForbidden,
+			clientMsg: "The estate principal's email is not verified; signing cannot proceed",
+		},
+	}
+
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","redirectUrl":"https://x.com"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/envelopes", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+	h.HandleCreateEnvelope(rr, withAuth(req))
+
+	if rr.Code != http.StatusForbidden {
+		t.Fatalf("expected 403 for unverified principal, got %d", rr.Code)
+	}
+	if !strings.Contains(rr.Body.String(), "not verified") {
+		t.Errorf("expected unverified-principal message, got %q", rr.Body.String())
+	}
+}
+
+// TestCreateEnvelope_MissingPrincipal verifies a 400 when the estate has no principal
+// on record (e.g. estates/{id}.principalId is empty/missing).
+func TestCreateEnvelope_MissingPrincipal(t *testing.T) {
+	h := &WebhookHandler{
+		signerResolver: &fakeSignerResolver{
+			status:    http.StatusBadRequest,
+			clientMsg: "Estate has no principal on record",
+		},
+	}
+
+	body := `{"estateId":"e1","directiveId":"d1","templateId":"t1","redirectUrl":"https://x.com"}`
+	req := httptest.NewRequest(http.MethodPost, "/api/envelopes", strings.NewReader(body))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+	h.HandleCreateEnvelope(rr, withAuth(req))
+
+	if rr.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400 for missing principal, got %d", rr.Code)
+	}
+	if !strings.Contains(rr.Body.String(), "no principal on record") {
+		t.Errorf("expected missing-principal message, got %q", rr.Body.String())
+	}
+}
+
+// TestFirebaseSignerResolver_UnverifiedAndMissing covers the production resolver's
+// pure-logic branches that don't need a live Firestore client: nil fs / nil auth.
+func TestFirebaseSignerResolver_DefensiveNils(t *testing.T) {
+	r := &firebaseSignerResolver{} // nil fs, nil authClient
+	_, _, status, msg := r.resolveSigner(context.Background(), "e1", "")
+	if status != http.StatusServiceUnavailable {
+		t.Errorf("nil fs should yield 503, got %d (%s)", status, msg)
 	}
 }

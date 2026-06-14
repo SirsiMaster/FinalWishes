@@ -5,23 +5,32 @@ import "github.com/sirsi-technologies/finalwishes-api/internal/forms"
 // SmallEstateAffidavit3606 returns the coordinate map for the Illinois Small
 // Estate Affidavit (SOS/Probate Form 3606, rev. 1/26), 755 ILCS 5/25-1.
 //
-// The blank is flat (no AcroForm), 4 pages, US Letter. This first-pass map
-// covers the core single-value affidavit fields (affiant + decedent identity,
-// dates, addresses, relationship) and flags the execution block on page 4
-// (signature, date, notary) as Execution=true — never stamped, wet-sign +
-// notarization required.
+// The blank is flat (no AcroForm), 4 pages, US Letter. This map covers:
+//   - the core single-value affidavit fields (affiant + decedent identity,
+//     dates, addresses, relationship);
+//   - the single-claimant rows of the variable-length schedules — the first
+//     creditor row (para 6/7), the first heir/legatee row (para 9), the total
+//     personal-property valuation, and the spousal/child award amount — which
+//     cover the common one-creditor / one-heir estate without a repeating-row
+//     renderer;
+//   - the execution block on page 4 (signature, date, notary), flagged
+//     Execution=true — never stamped, wet-sign + notarization required.
 //
-// NOT YET MAPPED (documented limitation — needs a repeating-row renderer, a
-// future engine extension): the variable-length schedules — creditor Classes
-// 1–7 (paras 6–7), heirs/legatees tables (paras 9–10), and the spousal/child
-// award computations. Those rows vary per estate and cannot be expressed as
-// fixed coordinates. Single-claimant common cases can be added as discrete
-// fields later; multi-row support is tracked separately.
+// MULTI-ROW LIMITATION (tracked, not hidden): estates with MORE THAN ONE
+// creditor in any of Classes 1–7 (paras 6–7) or MORE THAN ONE heir/legatee
+// (paras 9–10) need a repeating-row renderer — a future forms-engine extension.
+// Until that lands, multi-claimant estates must complete the extra rows by hand
+// on the printed draft; the prefill stamps only the first row of each schedule.
+// The fill engine's missing-required reporting plus the PREPARATION-ASSISTANCE
+// disclaimer keep this Rule-9 honest: nothing is asserted that was not supplied.
 //
-// Coordinates are derived from positioned-text extraction (pdftotext -bbox) and
-// marked ConfidenceLow: the affidavit uses dotted/underscore leaders, so the
-// exact blank-start on each line is an estimate to be tuned against the proof
-// raster before this form is treated as production-ready.
+// PRODUCTION READINESS: every coordinate below is marked ConfidenceLow. The
+// affidavit uses dotted/underscore leaders, so each blank-start X/Y is an
+// estimate derived from positioned-text extraction (pdftotext -bbox) that MUST
+// be tuned against the proof raster (docs/forms-phase0/proof/) before this form
+// is offered as a final draft. Callers should treat il_small_estate_3606 as a
+// PREVIEW form — surface it behind a preview affordance, not as GA — until a
+// proof-raster pass promotes these coordinates to ConfidenceHigh.
 func SmallEstateAffidavit3606() *forms.CoordinateMap {
 	return &forms.CoordinateMap{
 		FormID:           "il_small_estate_3606",
@@ -77,6 +86,71 @@ func SmallEstateAffidavit3606() *forms.CoordinateMap {
 				X: 320, Y: 473.2, MaxWidth: 215,
 				Confidence: forms.ConfidenceLow,
 				Note:       "After \"before their death was\" (x315), yTop 309.81.",
+			},
+
+			// --- Page 2: personal-property valuation + first creditor row ---
+			//
+			// Single-claimant subset of the variable-length schedules. The first
+			// row of each schedule is mapped here; additional rows require the
+			// repeating-row renderer (documented limitation above) and are
+			// completed by hand on the printed draft.
+			{
+				Key: "total_personal_property", Label: "Total value of decedent's personal estate (para 5)",
+				Kind: forms.FieldText, Page: 2,
+				X: 360, Y: 700.0, MaxWidth: 160,
+				Confidence: forms.ConfidenceLow,
+				Note:       "After \"does not exceed\" / value rule on para 5. Personal property only — real estate excluded per 755 ILCS 5/25-1. ESTIMATE: tune X/Y against proof raster.",
+			},
+			{
+				Key: "creditor1_name", Label: "First creditor — name (Classes 1–7, paras 6–7, row 1)",
+				Kind: forms.FieldText, Page: 2,
+				X: 70, Y: 470.0, MaxWidth: 240,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Row 1 of the creditor schedule. Multi-creditor estates need the repeating-row renderer. ESTIMATE: tune against proof raster.",
+			},
+			{
+				Key: "creditor1_class", Label: "First creditor — statutory class 1–7 (paras 6–7, row 1)",
+				Kind: forms.FieldText, Page: 2,
+				X: 320, Y: 470.0, MaxWidth: 60,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Class column for creditor row 1. ESTIMATE: tune against proof raster.",
+			},
+			{
+				Key: "creditor1_amount", Label: "First creditor — claim amount (paras 6–7, row 1)",
+				Kind: forms.FieldText, Page: 2,
+				X: 400, Y: 470.0, MaxWidth: 120,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Amount column for creditor row 1. ESTIMATE: tune against proof raster.",
+			},
+
+			// --- Page 3: first heir/legatee row + award computation ---
+			{
+				Key: "heir1_name", Label: "First heir/legatee — name (paras 9–10, row 1)",
+				Kind: forms.FieldText, Page: 3,
+				X: 70, Y: 520.0, MaxWidth: 220,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Row 1 of the heirs/legatees schedule. Multi-heir estates need the repeating-row renderer. ESTIMATE: tune against proof raster.",
+			},
+			{
+				Key: "heir1_relationship", Label: "First heir/legatee — relationship to decedent (paras 9–10, row 1)",
+				Kind: forms.FieldText, Page: 3,
+				X: 300, Y: 520.0, MaxWidth: 130,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Relationship column for heir row 1. ESTIMATE: tune against proof raster.",
+			},
+			{
+				Key: "heir1_share", Label: "First heir/legatee — share/interest (paras 9–10, row 1)",
+				Kind: forms.FieldText, Page: 3,
+				X: 440, Y: 520.0, MaxWidth: 90,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Share column for heir row 1 (e.g. \"100%\", \"1/2\"). ESTIMATE: tune against proof raster.",
+			},
+			{
+				Key: "award_amount", Label: "Spousal/child award amount (computed, single-claimant)",
+				Kind: forms.FieldText, Page: 3,
+				X: 360, Y: 300.0, MaxWidth: 140,
+				Confidence: forms.ConfidenceLow,
+				Note:       "Surviving-spouse or child award line. Computation supplied by caller; engine never derives it. ESTIMATE: tune against proof raster.",
 			},
 
 			// --- Page 4: affiant relationship + execution block ---

@@ -473,7 +473,6 @@ func main() {
 			r.Post("/death-cert/confirm", probateHandler.HandleConfirmDeathCert)
 			r.Get("/death-cert", probateHandler.HandleGetDeathCertFacts)
 			r.Get("/forms", probateHandler.HandleGetFormTemplates)
-			r.Get("/forms/data", probateHandler.HandleGetFormData)
 			r.Get("/executor/status", probateHandler.HandleGetExecutorStatus)
 			r.Post("/executor/confirm", probateHandler.HandleConfirmExecutorRole)
 			r.Get("/advance-directives", probateHandler.HandleGetAdvanceDirectives)

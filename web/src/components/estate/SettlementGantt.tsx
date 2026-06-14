@@ -100,7 +100,7 @@ export function SettlementGantt({ deadlines, dateOfDeath }: SettlementGanttProps
           <XAxis
             type="number"
             domain={[0, maxDay]}
-            tick={{ fontSize: 11, fill: 'var(--color-slate-500)' }}
+            tick={{ fontSize: 11, fill: '#4A5C7A' }}
             tickFormatter={(day: number) => {
               if (dateOfDeath) {
                 const d = new Date(dateOfDeath)
@@ -109,14 +109,14 @@ export function SettlementGantt({ deadlines, dateOfDeath }: SettlementGanttProps
               }
               return `Day ${day}`
             }}
-            axisLine={{ stroke: 'var(--color-slate-200)' }}
+            axisLine={{ stroke: '#DCE3EE' }}
             tickLine={false}
           />
           <YAxis
             type="category"
             dataKey="name"
             width={160}
-            tick={{ fontSize: 11, fill: 'var(--color-slate-900)' }}
+            tick={{ fontSize: 11, fill: '#142848' }}
             axisLine={false}
             tickLine={false}
           />
@@ -125,12 +125,12 @@ export function SettlementGantt({ deadlines, dateOfDeath }: SettlementGanttProps
               if (!active || !payload?.length) return null
               const d = payload[0].payload as GanttBar
               return (
-                <div className="bg-white border border-slate-900/10 rounded-xl px-4 py-3 shadow-lg text-sm">
-                  <p className="font-semibold text-slate-900">{d.name}</p>
-                  <p className="text-slate-900/60 text-xs mt-1">
+                <div className="bg-white border border-[#142848]/10 rounded-xl px-4 py-3 shadow-lg text-sm">
+                  <p className="font-semibold text-[#142848]">{d.name}</p>
+                  <p className="text-[#142848]/60 text-xs mt-1">
                     Due: {d.dueDate}
                   </p>
-                  <p className={`text-xs mt-0.5 font-medium ${d.overdue ? 'text-red-600' : 'text-slate-900/50'}`}>
+                  <p className={`text-xs mt-0.5 font-medium ${d.overdue ? 'text-red-600' : 'text-[#142848]/50'}`}>
                     {d.overdue
                       ? `${Math.abs(d.daysFromNow)} days overdue`
                       : `${d.daysFromNow} days remaining`}
@@ -165,7 +165,7 @@ export function SettlementGantt({ deadlines, dateOfDeath }: SettlementGanttProps
       </ResponsiveContainer>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-4 mt-2 text-[10px] font-medium uppercase tracking-wider text-slate-900/50">
+      <div className="flex items-center justify-center gap-4 mt-2 text-[10px] font-medium uppercase tracking-wider text-[#142848]/50">
         <span className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-sm bg-red-500" /> Overdue
         </span>

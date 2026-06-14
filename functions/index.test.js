@@ -36,6 +36,11 @@ jest.mock('firebase-admin', () => ({
   })),
 }));
 
+// admin.auth() handles used by sendMail's open-relay defense (getUser) and the
+// guardian scheduler (createCustomToken). getUser is overridable per-test via
+// mockGetUser so a fixture can simulate the createdBy account's own email.
+const mockGetUser = jest.fn().mockResolvedValue({ email: '' });
+
 // Make FieldValue accessible
 jest.mock('firebase-admin', () => {
   const admin = {
@@ -45,6 +50,7 @@ jest.mock('firebase-admin', () => {
     }),
     auth: jest.fn(() => ({
       createCustomToken: jest.fn().mockResolvedValue('mock-custom-token'),
+      getUser: mockGetUser,
     })),
   };
   return admin;
@@ -131,6 +137,11 @@ describe('autoMatchInvitation', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockDb.batch.mockReturnValue(mockBatch);
+    // Default identity: a VERIFIED account whose Firebase Auth email is the one we
+    // match invitations against. The handler no longer trusts the client-writable
+    // users/{uid}.email — it resolves identity via admin.auth().getUser(uid). Tests
+    // override mockGetUser to simulate verified/unverified/seizure fixtures.
+    mockGetUser.mockResolvedValue({ email: 'test@example.com', emailVerified: true });
   });
 
   test('skips when no snapshot data', async () => {
@@ -138,13 +149,60 @@ describe('autoMatchInvitation', () => {
     expect(mockCollection).not.toHaveBeenCalled();
   });
 
-  test('skips when user has no email', async () => {
-    const event = makeEvent({ email: '' }, { uid: 'u1' });
+  test('skips when auth record has no email', async () => {
+    mockGetUser.mockResolvedValue({ email: '', emailVerified: false });
+    const event = makeEvent({ email: 'spoofed@victim.com' }, { uid: 'u1' });
     await handler(event);
     expect(mockCollection).not.toHaveBeenCalled();
   });
 
+  test('skips when admin.auth().getUser throws (no fabricated identity)', async () => {
+    mockGetUser.mockRejectedValueOnce(new Error('user not found'));
+    const event = makeEvent({ email: 'spoofed@victim.com' }, { uid: 'u1' });
+    await handler(event);
+    expect(mockCollection).not.toHaveBeenCalled();
+  });
+
+  // ─── CRITICAL: invitation-seizure defense ────────────────────────────────
+  // An attacker verifies an account they control, then writes
+  // users/{uid}.email = 'victim-invited@...' to seize that invitation's role.
+  // The handler must IGNORE userData.email entirely and gate on the VERIFIED
+  // auth email — so an unverified account grants nothing even with a forged
+  // profile email, and a verified account is only ever matched against its OWN
+  // verified address.
+  test('SEIZURE DEFENSE: ignores client profile email when account is unverified', async () => {
+    // Auth record: attacker controls attacker@evil.com but has NOT verified it.
+    mockGetUser.mockResolvedValue({ email: 'attacker@evil.com', emailVerified: false });
+    const event = makeEvent({ email: 'victim-invited@example.com' }, { uid: 'attacker-uid' });
+    await handler(event);
+    // No invitation query, no junction write — access denied.
+    expect(mockCollection).not.toHaveBeenCalled();
+    expect(mockBatch.commit).not.toHaveBeenCalled();
+  });
+
+  test('SEIZURE DEFENSE: matches the VERIFIED auth email, never the profile email', async () => {
+    // Attacker verified their OWN address but forged the profile email to the
+    // victim's invited address. The handler must query invitations for the
+    // VERIFIED address (attacker@evil.com), NOT the forged victim address.
+    mockGetUser.mockResolvedValue({ email: 'attacker@evil.com', emailVerified: true });
+    mockCollection.mockReturnValue({
+      where: jest.fn().mockReturnThis(),
+      get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [] }),
+    });
+
+    const event = makeEvent({ email: 'victim-invited@example.com' }, { uid: 'attacker-uid' });
+    await handler(event);
+
+    const whereCalls = mockCollection().where.mock.calls;
+    expect(whereCalls[0]).toEqual(['email', '==', 'attacker@evil.com']);
+    // The forged victim email must NEVER appear in any query.
+    for (const call of whereCalls) {
+      expect(call).not.toContain('victim-invited@example.com');
+    }
+  });
+
   test('skips when no pending invitations found', async () => {
+    mockGetUser.mockResolvedValue({ email: 'test@example.com', emailVerified: true });
     mockCollection.mockReturnValue({
       where: jest.fn().mockReturnThis(),
       get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [] }),
@@ -165,6 +223,16 @@ describe('autoMatchInvitation', () => {
 
     const mockWhere = jest.fn().mockReturnThis();
     const mockGetResult = { empty: false, size: 1, docs: [invDoc] };
+    // An empty role/soul-log query result: the handler issues a SECOND query
+    // against estates/<id>/heirs|executors (to flip the subcollection doc to
+    // 'active') and estates/<id>/soul-log (sharedWith backfill). The mock must
+    // return a chainable .where(...).get() that yields no docs so those queries
+    // resolve cleanly instead of throwing "db.collection(...).where is not a
+    // function" (which the handler's try/catch would silently swallow).
+    const emptyQuery = () => ({
+      where: jest.fn().mockReturnThis(),
+      get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [], forEach: () => {} }),
+    });
     mockCollection.mockImplementation((collName) => {
       if (collName === 'estate_invitations') {
         return { where: mockWhere, get: jest.fn().mockResolvedValue(mockGetResult) };
@@ -174,6 +242,11 @@ describe('autoMatchInvitation', () => {
       }
       if (collName === 'audit_logs') {
         return { doc: jest.fn(() => ({ id: 'audit-ref' })) };
+      }
+      // estates/<id>/heirs, estates/<id>/executors, estates/<id>/soul-log
+      if (typeof collName === 'string' &&
+          (collName.includes('/heirs') || collName.includes('/executors') || collName.includes('/soul-log'))) {
+        return emptyQuery();
       }
       return { doc: mockDoc };
     });
@@ -187,13 +260,15 @@ describe('autoMatchInvitation', () => {
     expect(mockBatch.commit).toHaveBeenCalledTimes(1);
   });
 
-  test('normalizes email to lowercase and trims whitespace', async () => {
+  test('normalizes the VERIFIED auth email to lowercase and trims whitespace', async () => {
+    // Normalization applies to the auth-record email, not the client profile.
+    mockGetUser.mockResolvedValue({ email: '  Test@EXAMPLE.com  ', emailVerified: true });
     mockCollection.mockReturnValue({
       where: jest.fn().mockReturnThis(),
       get: jest.fn().mockResolvedValue({ empty: true, size: 0, docs: [] }),
     });
 
-    const event = makeEvent({ email: '  Test@EXAMPLE.com  ' }, { uid: 'u1' });
+    const event = makeEvent({ email: 'unused-profile@example.com' }, { uid: 'u1' });
     await handler(event);
 
     // The where clause should have been called with lowercase trimmed email
@@ -205,8 +280,47 @@ describe('autoMatchInvitation', () => {
 describe('sendMail', () => {
   const handler = registeredFunctions['mail/{mailId}'];
 
+  // Wire the Firestore mock so the open-relay defense (isRecipientAuthorized)
+  // AUTHORIZES every recipient for `createdBy`, via path (a): the createdBy user
+  // belongs to estate `est-1` (estate_users) and the recipient has a pending
+  // invitation for that same estate (estate_invitations by email). Any test that
+  // expects a successful send must call this first; the production defense is NOT
+  // weakened — the test simply provides the data the defense looks for.
+  function authorizeAllRecipients(estateId = 'est-1') {
+    mockCollection.mockImplementation((collName) => {
+      if (collName === 'estate_users') {
+        return {
+          where: jest.fn().mockReturnThis(),
+          get: jest.fn().mockResolvedValue({
+            docs: [{ data: () => ({ estateId, userId: 'owner-1' }) }],
+          }),
+        };
+      }
+      if (collName === 'estate_invitations') {
+        return {
+          where: jest.fn().mockReturnThis(),
+          get: jest.fn().mockResolvedValue({
+            docs: [{ data: () => ({ estateId, email: 'authorized' }) }],
+          }),
+        };
+      }
+      if (collName === 'email_templates') {
+        return { doc: mockDoc };
+      }
+      // heirs/executors fallback (path c) — not reached when (a) matches first.
+      return {
+        where: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        get: jest.fn().mockResolvedValue({ empty: true, docs: [] }),
+        doc: mockDoc,
+      };
+    });
+  }
+
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGetUser.mockResolvedValue({ email: '' });
+    authorizeAllRecipients();
   });
 
   test('skips when no snapshot data', async () => {
@@ -264,6 +378,7 @@ describe('sendMail', () => {
         data: () => ({
           to: 'recipient@example.com',
           message: { subject: 'Welcome', html: '<h1>Hello</h1>' },
+          createdBy: 'owner-1',
         }),
         ref,
       },
@@ -297,6 +412,7 @@ describe('sendMail', () => {
         data: () => ({
           to: ['a@b.com', 'c@d.com'],
           message: { subject: 'Multi', html: '<p>Hi all</p>' },
+          createdBy: 'owner-1',
         }),
         ref,
       },
@@ -314,6 +430,8 @@ describe('sendMail', () => {
   test('resolves template from email_templates collection', async () => {
     const ref = { update: jest.fn().mockResolvedValue(undefined) };
 
+    // Authorize the recipient AND serve the template doc from the same mock so
+    // the open-relay lookups (estate_users / estate_invitations) still resolve.
     mockCollection.mockImplementation((collName) => {
       if (collName === 'email_templates') {
         return {
@@ -328,13 +446,35 @@ describe('sendMail', () => {
           })),
         };
       }
-      return { doc: mockDoc };
+      if (collName === 'estate_users') {
+        return {
+          where: jest.fn().mockReturnThis(),
+          get: jest.fn().mockResolvedValue({
+            docs: [{ data: () => ({ estateId: 'est-1', userId: 'owner-1' }) }],
+          }),
+        };
+      }
+      if (collName === 'estate_invitations') {
+        return {
+          where: jest.fn().mockReturnThis(),
+          get: jest.fn().mockResolvedValue({
+            docs: [{ data: () => ({ estateId: 'est-1', email: 'heir@test.com' }) }],
+          }),
+        };
+      }
+      return {
+        where: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        get: jest.fn().mockResolvedValue({ empty: true, docs: [] }),
+        doc: mockDoc,
+      };
     });
 
     const event = {
       data: {
         data: () => ({
           to: 'heir@test.com',
+          createdBy: 'owner-1',
           template: {
             name: 'invitation',
             data: { name: 'John', estate: 'Collymore Estate' },
@@ -362,6 +502,7 @@ describe('sendMail', () => {
         data: () => ({
           to: 'a@b.com',
           message: { subject: 'Test', html: '<p>Hi</p>' },
+          createdBy: 'owner-1',
         }),
         ref,
       },
@@ -377,148 +518,92 @@ describe('sendMail', () => {
       })
     );
   });
-});
 
-describe('sendSMS', () => {
-  const handler = registeredFunctions['sms_queue/{smsId}'];
+  // ─── Open-relay defense (locks in the createdBy-attribution hardening) ─────
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test('skips when no snapshot data', async () => {
-    await handler({ data: null, params: { smsId: 's1' } });
-    expect(mockUpdate).not.toHaveBeenCalled();
-  });
-
-  test('skips already processed', async () => {
-    const event = makeEvent({ delivery: { state: 'SUCCESS' } }, { smsId: 's1' });
-    await handler(event);
-    // Should not have called update since delivery was already SUCCESS
-  });
-
-  test('errors on missing required fields (no phone)', async () => {
-    const ref = { update: jest.fn().mockResolvedValue(undefined) };
-    const event = {
-      data: { data: () => ({ body: 'Hello' }), ref },
-      params: { smsId: 's1' },
-    };
-
-    await handler(event);
-
-    expect(ref.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        'delivery.state': 'ERROR',
-        'delivery.error': expect.stringContaining('Missing required fields'),
-      })
-    );
-  });
-
-  test('errors on missing required fields (no body)', async () => {
-    const ref = { update: jest.fn().mockResolvedValue(undefined) };
-    const event = {
-      data: { data: () => ({ to: '+15551234567' }), ref },
-      params: { smsId: 's1' },
-    };
-
-    await handler(event);
-
-    expect(ref.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        'delivery.state': 'ERROR',
-        'delivery.error': expect.stringContaining('Missing required fields'),
-      })
-    );
-  });
-
-  test('errors on invalid phone number format', async () => {
-    const ref = { update: jest.fn().mockResolvedValue(undefined) };
-    const event = {
-      data: {
-        data: () => ({ to: '555-123-4567', body: 'Hello' }),
-        ref,
-      },
-      params: { smsId: 's1' },
-    };
-
-    await handler(event);
-
-    expect(ref.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        'delivery.state': 'ERROR',
-        'delivery.error': expect.stringContaining('Invalid phone number format'),
-      })
-    );
-  });
-
-  test('errors on body exceeding 1600 characters', async () => {
-    const ref = { update: jest.fn().mockResolvedValue(undefined) };
-    const event = {
-      data: {
-        data: () => ({ to: '+15551234567', body: 'A'.repeat(1601) }),
-        ref,
-      },
-      params: { smsId: 's1' },
-    };
-
-    await handler(event);
-
-    expect(ref.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        'delivery.state': 'ERROR',
-        'delivery.error': expect.stringContaining('SMS body too long'),
-      })
-    );
-  });
-
-  test('queues valid SMS with PENDING_PROVIDER status', async () => {
+  test('rejects mail with NO createdBy attribution (open-relay defense)', async () => {
     const ref = { update: jest.fn().mockResolvedValue(undefined) };
     const event = {
       data: {
         data: () => ({
-          to: '+15551234567',
-          body: 'You have been invited to an estate.',
-          invitationId: 'inv-1',
-          estateId: 'est-1',
-          createdBy: 'uid-1',
+          to: 'stranger@example.com',
+          message: { subject: 'Phish', html: '<p>Click me</p>' },
+          // createdBy intentionally absent
         }),
         ref,
       },
-      params: { smsId: 's1' },
+      params: { mailId: 'm1' },
     };
 
     await handler(event);
 
+    // Must FAIL CLOSED — never relay an unattributed mail from admin@sirsi.ai.
+    expect(mockGmailSend).not.toHaveBeenCalled();
     expect(ref.update).toHaveBeenCalledWith(
       expect.objectContaining({
-        'delivery.state': 'PENDING_PROVIDER',
-        'delivery.info': expect.stringContaining('SMS queued successfully'),
+        'delivery.state': 'ERROR',
+        'delivery.error': 'recipient not authorized',
+        status: 'rejected',
       })
     );
   });
 
-  test('accepts E.164 phone with spaces/dashes stripped', async () => {
+  test('rejects mail to a recipient the createdBy user is NOT authorized for', async () => {
+    // createdBy belongs to NO estate and the recipient is not their own email →
+    // every authorization path fails and the mail must be rejected.
+    mockGetUser.mockResolvedValue({ email: 'owner@sirsi.ai' });
+    mockCollection.mockImplementation((collName) => {
+      if (collName === 'estate_users') {
+        return {
+          where: jest.fn().mockReturnThis(),
+          get: jest.fn().mockResolvedValue({ docs: [] }), // belongs to no estate
+        };
+      }
+      if (collName === 'users') {
+        return {
+          doc: jest.fn(() => ({
+            get: jest.fn().mockResolvedValue({ exists: false }),
+          })),
+        };
+      }
+      return {
+        where: jest.fn().mockReturnThis(),
+        limit: jest.fn().mockReturnThis(),
+        get: jest.fn().mockResolvedValue({ empty: true, docs: [] }),
+        doc: mockDoc,
+      };
+    });
+
     const ref = { update: jest.fn().mockResolvedValue(undefined) };
     const event = {
       data: {
         data: () => ({
-          to: '+1 (555) 123-4567',
-          body: 'Test message',
+          to: 'victim@example.com',
+          message: { subject: 'Hi', html: '<p>Hi</p>' },
+          createdBy: 'orphan-uid',
         }),
         ref,
       },
-      params: { smsId: 's1' },
+      params: { mailId: 'm1' },
     };
 
     await handler(event);
 
+    expect(mockGmailSend).not.toHaveBeenCalled();
     expect(ref.update).toHaveBeenCalledWith(
       expect.objectContaining({
-        'delivery.state': 'PENDING_PROVIDER',
+        'delivery.state': 'ERROR',
+        'delivery.error': 'recipient not authorized',
+        status: 'rejected',
       })
     );
   });
 });
+
+// NOTE: There is no sendSMS describe block. Invitation delivery is email-only;
+// the SMS queue + stub delivery function were removed (it never delivered a text
+// while the UI reported success). Reinstate tests here only alongside a live SMS
+// provider integration.
 
 describe('guardianInactivityCheck', () => {
   const handler = registeredFunctions['__schedule__'];

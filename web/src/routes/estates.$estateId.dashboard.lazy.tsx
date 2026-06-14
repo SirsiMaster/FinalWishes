@@ -21,6 +21,7 @@ import {
 } from '../lib/firestore'
 import { orderBy, type Timestamp, doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
+import { API_BASE } from '../lib/client'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -71,8 +72,6 @@ interface ShepherdScore {
   insight: string
 }
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
-
 // ─── Shepherd Persistence ────────────────────────────────────────────────────
 
 /** Fire-and-forget: save a chat message to Firestore for conversation memory */
@@ -112,7 +111,7 @@ interface TimelineEntry {
 function ShepherdTypingIndicator() {
   return (
     <div className="flex items-start gap-2 mb-3">
-      <div className="bg-slate-50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
+      <div className="bg-neutral-faint rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
         <div className="flex gap-1.5 items-center h-5">
           <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:0ms]" />
           <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:150ms]" />
@@ -329,7 +328,7 @@ function ShepherdChat({
                     'rounded-2xl px-4 py-2.5 max-w-[85%] text-sm leading-relaxed',
                     msg.role === 'user'
                       ? 'bg-[var(--royal)] text-white rounded-tr-sm'
-                      : 'bg-slate-50 text-slate-900 rounded-tl-sm border border-slate-100',
+                      : 'bg-neutral-faint text-[var(--royal)] rounded-tl-sm border border-neutral-border',
                   )}
                 >
                   {msg.content}
@@ -358,7 +357,7 @@ function ShepherdChat({
         </div>
 
         {/* Input area */}
-        <div className="border-t border-slate-200 px-4 py-3 bg-white flex-shrink-0">
+        <div className="border-t border-neutral-border px-4 py-3 bg-white flex-shrink-0">
           <div className="flex gap-2">
             <Input
               ref={inputRef}
@@ -809,8 +808,8 @@ function DashboardIndex() {
 
       {/* ── 1. Shepherd Companion Card ── */}
       <Card className={cn(
-        'rounded-3xl border-slate-100 shadow-sm overflow-hidden',
-        totalEntryCount === 0 && 'bg-gradient-to-br from-slate-50 to-slate-100',
+        'rounded-3xl border-neutral-border shadow-sm overflow-hidden',
+        totalEntryCount === 0 && 'bg-gradient-to-br from-neutral-faint to-neutral-faint',
       )}>
         <CardContent className={cn('px-8 py-8', totalEntryCount === 0 && 'py-16')}>
           <div className="flex items-start gap-5">
@@ -822,10 +821,10 @@ function DashboardIndex() {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-slate-900 mb-2 font-[family-name:var(--font-cinzel)]">
+              <h3 className="text-lg font-bold text-[var(--royal)] mb-2 font-[family-name:var(--font-cinzel)]">
                 The Shepherd
               </h3>
-              <p className="text-slate-500 text-base leading-relaxed mb-5">
+              <p className="text-[var(--royal)]/60 text-base leading-relaxed mb-5">
                 {shepherdPrompt}
               </p>
               <div className="flex flex-wrap gap-3">
@@ -874,10 +873,10 @@ function DashboardIndex() {
               <line x1="8" y1="23" x2="16" y2="23" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-slate-900/40 font-[family-name:var(--font-cinzel)]">
+          <h3 className="text-xl font-bold text-[var(--royal)]/40 font-[family-name:var(--font-cinzel)]">
             Your Legacy Timeline
           </h3>
-          <p className="text-slate-500 max-w-md mx-auto leading-relaxed">
+          <p className="text-[var(--royal)]/60 max-w-md mx-auto leading-relaxed">
             Every voice memo, photo, document, and heirloom you add will appear here — a living portrait of the life you're preserving.
           </p>
         </div>
@@ -885,7 +884,7 @@ function DashboardIndex() {
         <div className="space-y-2">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--royal)]/30 uppercase tracking-[0.3em] mb-6">
             <span>Legacy Timeline</span>
-            <Badge variant="secondary" className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+            <Badge variant="secondary" className="text-[10px] font-bold text-[var(--royal)]/40 bg-neutral-faint px-3 py-1 rounded-full border border-neutral-border">
               {totalEntryCount} {totalEntryCount === 1 ? 'moment' : 'moments'}
             </Badge>
           </div>
@@ -901,7 +900,7 @@ function DashboardIndex() {
                   <div className="w-12 flex justify-center relative z-10">
                     <div className="w-3 h-3 rounded-full bg-[var(--royal)]/20 border-2 border-white" />
                   </div>
-                  <span className="text-sm font-bold text-slate-900 font-[family-name:var(--font-cinzel)] tracking-wide">
+                  <span className="text-sm font-bold text-[var(--royal)] font-[family-name:var(--font-cinzel)] tracking-wide">
                     {group.label}
                   </span>
                 </div>
@@ -922,22 +921,22 @@ function DashboardIndex() {
                       <Link
                         // @ts-expect-error — dynamic route from timeline type
                         to={`/estates/${routeId}/${TIMELINE_TYPE_ROUTES[entry.type]}`}
-                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer min-w-0 no-underline"
+                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-neutral-faint transition-colors cursor-pointer min-w-0 no-underline"
                       >
                         <div className="w-8 h-8 rounded-lg bg-[var(--royal)]/5 flex items-center justify-center flex-shrink-0 text-[var(--royal)]/50 group-hover/entry:text-[var(--royal)] group-hover/entry:bg-[var(--royal)]/10 transition-colors">
                           <TimelineIcon type={entry.type} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">
+                          <p className="text-sm font-medium text-[var(--royal)] truncate">
                             {entry.title}
                           </p>
                           {entry.subtitle && (
-                            <p className="text-xs text-slate-500 truncate mt-0.5">
+                            <p className="text-xs text-[var(--royal)]/60 truncate mt-0.5">
                               {entry.subtitle}
                             </p>
                           )}
                         </div>
-                        <span className="text-[11px] text-slate-300 flex-shrink-0 tabular-nums">
+                        <span className="text-[11px] text-[var(--royal)]/30 flex-shrink-0 tabular-nums">
                           {entry.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                         </span>
                       </Link>
@@ -1020,7 +1019,7 @@ function DashboardIndex() {
 
       {/* ── 5. Estate Health Check (Collapsible) ── */}
       <Collapsible open={checklistOpen} onOpenChange={setChecklistOpen}>
-        <Card className="rounded-2xl border-slate-100 shadow-sm">
+        <Card className="rounded-2xl border-neutral-border shadow-sm">
           <CollapsibleTrigger asChild>
             <button className="w-full flex items-center justify-between px-8 py-5 text-left group">
               <div className="flex items-center gap-4">
@@ -1031,8 +1030,8 @@ function DashboardIndex() {
                   </svg>
                 </div>
                 <div>
-                  <span className="text-base font-bold text-slate-900">Estate Health Check</span>
-                  <span className="text-sm text-slate-500 ml-3">
+                  <span className="text-base font-bold text-[var(--royal)]">Estate Health Check</span>
+                  <span className="text-sm text-[var(--royal)]/60 ml-3">
                     {scoreLoading ? '...' : `${percent}% complete`}
                     {score && ` — ${score.completedSteps} of ${score.totalSteps} steps`}
                   </span>
@@ -1041,7 +1040,7 @@ function DashboardIndex() {
               <svg
                 viewBox="0 0 24 24"
                 className={cn(
-                  'w-5 h-5 text-slate-300 transition-transform',
+                  'w-5 h-5 text-[var(--royal)]/30 transition-transform',
                   checklistOpen && 'rotate-180',
                 )}
                 fill="none"
@@ -1056,7 +1055,7 @@ function DashboardIndex() {
             <div className="px-8 pb-8">
               <Progress
                 value={percent}
-                className="w-full h-2 bg-slate-100 mb-8"
+                className="w-full h-2 bg-neutral-faint mb-8"
               />
               {Object.entries(categories).length > 0 ? (
                 <div className="space-y-8">
@@ -1073,12 +1072,12 @@ function DashboardIndex() {
                               'flex items-center gap-3 px-4 py-3 rounded-xl transition-all no-underline group/step',
                               step.complete
                                 ? 'bg-[var(--success)]/5'
-                                : 'bg-slate-50 hover:bg-white hover:shadow-sm',
+                                : 'bg-neutral-faint hover:bg-white hover:shadow-sm',
                             )}
                           >
                             <div className={cn(
                               'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
-                              step.complete ? 'bg-[var(--success)]' : 'border-2 border-slate-200 group-hover/step:border-[var(--royal)]',
+                              step.complete ? 'bg-[var(--success)]' : 'border-2 border-neutral-border group-hover/step:border-[var(--royal)]',
                             )}>
                               {step.complete && (
                                 <svg viewBox="0 0 24 24" className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3">
@@ -1089,14 +1088,14 @@ function DashboardIndex() {
                             <div className="flex-1 min-w-0">
                               <p className={cn(
                                 'text-sm font-semibold transition-colors',
-                                step.complete ? 'text-[var(--success)]' : 'text-slate-900 group-hover/step:text-[var(--royal)]',
+                                step.complete ? 'text-[var(--success)]' : 'text-[var(--royal)] group-hover/step:text-[var(--royal)]',
                               )}>
                                 {step.label}
                               </p>
-                              <p className="text-xs text-slate-500 truncate">{step.description}</p>
+                              <p className="text-xs text-[var(--royal)]/60 truncate">{step.description}</p>
                             </div>
                             {!step.complete && (
-                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/step:text-[var(--royal)] transition-colors" fill="none" stroke="currentColor" strokeWidth="2">
+                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]/30 group-hover/step:text-[var(--royal)] transition-colors" fill="none" stroke="currentColor" strokeWidth="2">
                                 <polyline points="9 18 15 12 9 6" />
                               </svg>
                             )}
@@ -1107,7 +1106,7 @@ function DashboardIndex() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-slate-500">Loading checklist...</p>
+                <p className="text-sm text-[var(--royal)]/60">Loading checklist...</p>
               )}
             </div>
           </CollapsibleContent>
@@ -1131,9 +1130,9 @@ function DashboardIndex() {
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <HoverCard glowColor="rgba(19,51,120,0.1)" tiltDeg={3}>
-      <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 transition-all">
-        <div className="text-2xl font-bold text-slate-900 tabular-nums">{value}</div>
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</div>
+      <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-neutral-faint border border-neutral-border transition-all">
+        <div className="text-2xl font-bold text-[var(--royal)] tabular-nums">{value}</div>
+        <div className="text-xs font-semibold text-[var(--royal)]/40 uppercase tracking-wider">{label}</div>
       </div>
     </HoverCard>
   )
@@ -1154,18 +1153,18 @@ function QuickAction({ label, icon, route, primary }: QuickActionProps) {
         'flex items-center gap-3 px-5 py-4 rounded-xl transition-all no-underline group',
         primary
           ? 'bg-[var(--royal)] text-white hover:bg-[var(--sapphire)] shadow-sm'
-          : 'bg-slate-50 border border-slate-100 text-slate-900 hover:border-[var(--royal)]/20 hover:shadow-sm',
+          : 'bg-neutral-faint border border-neutral-border text-[var(--royal)] hover:border-[var(--royal)]/20 hover:shadow-sm',
       )}
     >
       <div className={cn(
         'transition-colors',
-        primary ? 'text-white/70 group-hover:text-white' : 'text-slate-400 group-hover:text-[var(--royal)]',
+        primary ? 'text-white/70 group-hover:text-white' : 'text-[var(--royal)]/40 group-hover:text-[var(--royal)]',
       )}>
         {icon}
       </div>
       <span className={cn(
         'text-sm font-semibold',
-        primary ? 'text-white' : 'text-slate-900 group-hover:text-[var(--royal)]',
+        primary ? 'text-white' : 'text-[var(--royal)] group-hover:text-[var(--royal)]',
       )}>
         {label}
       </span>

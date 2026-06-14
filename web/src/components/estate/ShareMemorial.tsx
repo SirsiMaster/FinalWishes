@@ -126,10 +126,10 @@ export function ShareMemorial({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-3xl p-8" showCloseButton={false}>
         <DialogHeader className="mb-4">
-          <DialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+          <DialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-royal">
             Share Memorial
           </DialogTitle>
-          <DialogDescription className="text-slate-500 text-sm">
+          <DialogDescription className="text-ink-muted text-sm">
             Create a public memorial page that anyone can view without an account.
           </DialogDescription>
         </DialogHeader>
@@ -137,8 +137,8 @@ export function ShareMemorial({
         {!memorialUrl ? (
           /* Pre-publish state */
           <div className="space-y-4">
-            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-              <p className="text-sm text-slate-700 leading-relaxed">
+            <div className="bg-[var(--neutral-faint)] rounded-2xl p-5 border border-[var(--neutral-border)]">
+              <p className="text-sm text-ink leading-relaxed">
                 This will create a public page for <span className="font-semibold">{personName}</span> with
                 the obituary{serviceDetails ? ', service details,' : ''} and memorial information.
                 Anyone with the link can view it.
@@ -149,7 +149,7 @@ export function ShareMemorial({
               <Button
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
-                className="px-6 py-3 h-auto rounded-xl text-[13px] font-bold text-slate-500"
+                className="px-6 py-3 h-auto rounded-xl text-[13px] font-bold text-ink-muted"
               >
                 Cancel
               </Button>
@@ -174,14 +174,14 @@ export function ShareMemorial({
                 <Input
                   readOnly
                   value={memorialUrl}
-                  className="h-auto px-4 py-3 rounded-xl border-slate-200 text-[13px] text-slate-900 bg-slate-50"
+                  className="h-auto px-4 py-3 rounded-xl border-[var(--neutral-border)] text-[13px] text-ink bg-[var(--neutral-faint)]"
                 />
                 <Button
                   variant="secondary"
                   onClick={copyLink}
-                  className="px-4 py-3 h-auto rounded-xl bg-slate-100 hover:bg-slate-200"
+                  className="px-4 py-3 h-auto rounded-xl bg-[var(--neutral-faint)] hover:bg-[var(--neutral-border)]"
                 >
-                  {copied ? <Check className="w-4 h-4 text-[#059669]" /> : <Copy className="w-4 h-4 text-slate-500" />}
+                  {copied ? <Check className="w-4 h-4 text-[#059669]" /> : <Copy className="w-4 h-4 text-ink-muted" />}
                 </Button>
               </div>
             </div>
@@ -191,7 +191,7 @@ export function ShareMemorial({
               <label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
                 QR Code
               </label>
-              <div className="flex flex-col items-center gap-4 p-6 bg-white rounded-2xl border border-slate-100">
+              <div className="flex flex-col items-center gap-4 p-6 bg-white rounded-2xl border border-[var(--neutral-border)]">
                 <div ref={qrRef}>
                   <QRCodeSVG
                     value={memorialUrl}
@@ -204,7 +204,7 @@ export function ShareMemorial({
                 <Button
                   variant="ghost"
                   onClick={downloadQR}
-                  className="text-[12px] font-bold text-slate-500 hover:text-[var(--royal)] rounded-xl"
+                  className="text-[12px] font-bold text-ink-muted hover:text-[var(--royal)] rounded-xl"
                 >
                   <Download className="w-3.5 h-3.5" />
                   Download QR Code

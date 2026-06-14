@@ -444,6 +444,7 @@ function VaultPage() {
         window.open(downloadUrl, '_blank')
       } catch (err) {
         console.error('Download error:', err)
+        toast.error('Could not download this document. Please try again.')
       }
     },
     [],
@@ -457,6 +458,8 @@ function VaultPage() {
       if (result.success) {
         setDeleteConfirm(null)
         toast.success('Document archived')
+      } else {
+        toast.error(result.error || 'Could not archive document. Please try again.')
       }
     },
     [estateId],
@@ -525,7 +528,7 @@ function VaultPage() {
         <button
           type="button"
           onClick={() => setChecklistOpen((o) => !o)}
-          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-slate-50/50 transition-colors"
+          className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-neutral-faint/50 transition-colors"
         >
           <div className="flex items-center gap-4 min-w-0">
             <div className="w-12 h-12 rounded-2xl bg-[var(--royal)] flex items-center justify-center text-white flex-shrink-0">
@@ -535,7 +538,7 @@ function VaultPage() {
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">
                 Documents Your Estate Needs
               </h3>
               <p className="text-[13px] text-[var(--royal)]/50 font-medium mt-0.5">
@@ -589,13 +592,13 @@ function VaultPage() {
                   <div key={catKey}>
                     {/* Category sub-heading */}
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 rounded-xl bg-slate-50 border border-[var(--royal)]/10 flex items-center justify-center text-[var(--royal)]/60">
+                      <div className="w-8 h-8 rounded-xl bg-neutral-faint border border-[var(--royal)]/10 flex items-center justify-center text-[var(--royal)]/60">
                         {catInfo.icon}
                       </div>
                       <span className="text-[12px] font-bold text-[var(--royal)]/50 uppercase tracking-widest">
                         {catInfo.label}
                       </span>
-                      <Badge className="bg-slate-50 text-[var(--royal)]/40 border border-[var(--royal)]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
+                      <Badge className="bg-neutral-faint text-[var(--royal)]/40 border border-[var(--royal)]/10 text-[11px] font-bold h-auto py-0.5 px-2 rounded-lg">
                         {catUploaded}/{items.length}
                       </Badge>
                     </div>
@@ -614,7 +617,7 @@ function VaultPage() {
                             className={`flex items-start gap-3 p-4 rounded-2xl border text-left transition-all ${
                               isUploaded
                                 ? 'bg-[var(--gold)]/5 border-[var(--gold)]/30'
-                                : 'bg-white border-[var(--royal)]/10 hover:border-[var(--royal)]/25 hover:bg-slate-50 cursor-pointer'
+                                : 'bg-white border-[var(--royal)]/10 hover:border-[var(--royal)]/25 hover:bg-neutral-faint cursor-pointer'
                             }`}
                           >
                             {/* Status indicator */}
@@ -634,7 +637,7 @@ function VaultPage() {
                             <div className="min-w-0">
                               <span
                                 className={`text-[14px] font-bold block ${
-                                  isUploaded ? 'text-[var(--gold)]' : 'text-slate-900'
+                                  isUploaded ? 'text-[var(--gold)]' : 'text-[var(--royal)]'
                                 }`}
                               >
                                 {item.name}
@@ -674,8 +677,8 @@ function VaultPage() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-slate-900">{tierUpgradeMessage(tierUsage, 'media')}</p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-sm font-bold text-[var(--royal)]">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-[var(--royal)]/60 mt-1">
               {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
             </p>
             <Link
@@ -696,7 +699,7 @@ function VaultPage() {
         className={`
           border-2 border-dashed rounded-[2rem] p-12 text-center cursor-pointer transition-all
           ${tierUsage && !tierUsage.canUploadMedia
-            ? 'border-slate-500/20 opacity-50 pointer-events-none'
+            ? 'border-ink-muted/20 opacity-50 pointer-events-none'
             : isDragActive
               ? 'border-[var(--royal)] bg-[var(--royal)]/5 scale-[1.01]'
               : 'border-[var(--royal)]/20 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/[0.02]'
@@ -707,7 +710,7 @@ function VaultPage() {
         <div className="flex flex-col items-center gap-4">
           <div
             className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all ${
-              isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-slate-50 text-[var(--royal)] border border-[var(--royal)]/10'
+              isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-neutral-faint text-[var(--royal)] border border-[var(--royal)]/10'
             }`}
           >
             <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2">
@@ -717,7 +720,7 @@ function VaultPage() {
             </svg>
           </div>
           <div>
-            <p className="text-slate-900 font-bold text-lg">
+            <p className="text-[var(--royal)] font-bold text-lg">
               {isDragActive ? 'Drop files here' : 'Drag & drop files, or click to browse'}
             </p>
             <p className="text-[13px] text-[var(--royal)]/40 mt-1">
@@ -795,7 +798,7 @@ function VaultPage() {
               />
             ))}
             {documents.length === 0 && (
-              <div className="text-center py-24 bg-slate-50 rounded-2xl border border-[var(--royal)]/10">
+              <div className="text-center py-24 bg-neutral-faint rounded-2xl border border-[var(--royal)]/10">
                 <p className="text-[var(--royal)]/50 font-medium">
                   {activeCategory
                     ? `No ${CATEGORY_MAP[activeCategory]?.label.toLowerCase() || 'files'} yet.`
@@ -854,7 +857,7 @@ function UploadProgress({ upload }: { upload: UploadState }) {
           ? 'bg-red-50 border-red-200'
           : isDone
             ? 'bg-green-50 border-green-200'
-            : 'bg-slate-50 border-[var(--royal)]/10'
+            : 'bg-neutral-faint border-[var(--royal)]/10'
       }`}
     >
       <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border border-[var(--royal)]/10">
@@ -873,7 +876,7 @@ function UploadProgress({ upload }: { upload: UploadState }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[13px] font-bold text-slate-900 truncate">{upload.file.name}</span>
+          <span className="text-[13px] font-bold text-[var(--royal)] truncate">{upload.file.name}</span>
           <span
             className={`text-[11px] font-semibold ${
               isError ? 'text-red-600' : isDone ? 'text-green-600' : 'text-[var(--royal)]'
@@ -922,7 +925,7 @@ function VaultFolder({
           className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
             active
               ? 'bg-white/20 text-white'
-              : 'bg-slate-50 border border-[var(--royal)]/10 text-[var(--royal)] group-hover:bg-[var(--royal)] group-hover:text-white'
+              : 'bg-neutral-faint border border-[var(--royal)]/10 text-[var(--royal)] group-hover:bg-[var(--royal)] group-hover:text-white'
           }`}
         >
           <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2">
@@ -931,7 +934,7 @@ function VaultFolder({
         </div>
         <h4
           className={`font-[family-name:var(--font-cinzel)] font-bold text-lg mb-2 transition-colors ${
-            active ? 'text-white' : 'text-slate-900 group-hover:text-[var(--royal)]'
+            active ? 'text-white' : 'text-[var(--royal)] group-hover:text-[var(--royal)]'
           }`}
         >
           {name}
@@ -991,13 +994,18 @@ function DocItem({
 
   return (
     <div className="rounded-2xl border border-[var(--royal)]/10 overflow-hidden transition-all group">
-      <div className="flex items-center justify-between p-5 bg-white hover:bg-slate-50 transition-all">
-        <div className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer" onClick={isPreviewable ? onPreview : onDownload}>
-          <div className="w-11 h-11 rounded-xl bg-slate-50 flex items-center justify-center text-[var(--royal)]/30 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 border border-[var(--royal)]/10 flex-shrink-0">
+      <div className="flex items-center justify-between p-5 bg-white hover:bg-neutral-faint transition-all">
+        <button
+          type="button"
+          onClick={isPreviewable ? onPreview : onDownload}
+          aria-label={`Open ${doc.displayName || doc.originalName}`}
+          className="flex items-center gap-4 min-w-0 flex-1 cursor-pointer text-left bg-transparent border-none p-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)]/40"
+        >
+          <div className="w-11 h-11 rounded-xl bg-neutral-faint flex items-center justify-center text-[var(--royal)]/30 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500 border border-[var(--royal)]/10 flex-shrink-0">
             <FileIcon mimeType={doc.mimeType} />
           </div>
           <div className="min-w-0">
-            <div className="text-slate-900 font-bold text-[15px] mb-0.5 group-hover:text-[var(--royal)] transition-colors truncate">
+            <div className="text-[var(--royal)] font-bold text-[15px] mb-0.5 group-hover:text-[var(--royal)] transition-colors truncate">
               {doc.displayName || doc.originalName}
             </div>
             <div className="flex items-center gap-3 text-[12px] font-medium text-[var(--royal)]/40 flex-wrap">
@@ -1051,7 +1059,7 @@ function DocItem({
               )}
             </div>
           </div>
-        </div>
+        </button>
         <div className="flex items-center gap-2 flex-shrink-0 ml-4">
           {heirs.length > 0 && (
             <Button
@@ -1124,10 +1132,10 @@ function DocItem({
 
       {/* Visibility Picker — collapsible */}
       {visibilityOpen && heirs.length > 0 && (
-        <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-4">
+        <div className="border-t border-[var(--royal)]/10 bg-neutral-faint px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
             {visibleTo.length === 0 ? (
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[var(--royal)]/60" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="2" y1="12" x2="22" y2="12" />
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -1140,20 +1148,25 @@ function DocItem({
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             )}
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+            <span className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => {
+              onClick={async () => {
+                const prev = visibleTo
                 setVisibleTo([])
-                updateVaultDocument(estateId, doc.id, { visibleTo: [] })
+                const result = await updateVaultDocument(estateId, doc.id, { visibleTo: [] })
+                if (!result.success) {
+                  setVisibleTo(prev)
+                  toast.error('Could not update who can see this document')
+                }
               }}
               className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                 visibleTo.length === 0
                   ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                  : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                  : 'border-neutral-border text-[var(--royal)]/60 hover:border-gold/50'
               }`}
             >
               Everyone
@@ -1163,17 +1176,22 @@ function DocItem({
               return (
                 <button
                   key={heir.id}
-                  onClick={() => {
+                  onClick={async () => {
+                    const prev = visibleTo
                     const next = selected
                       ? visibleTo.filter((n) => n !== heir.id)
                       : [...visibleTo, heir.id]
                     setVisibleTo(next)
-                    updateVaultDocument(estateId, doc.id, { visibleTo: next })
+                    const result = await updateVaultDocument(estateId, doc.id, { visibleTo: next })
+                    if (!result.success) {
+                      setVisibleTo(prev)
+                      toast.error('Could not update who can see this document')
+                    }
                   }}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     selected
                       ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                      : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                      : 'border-neutral-border text-[var(--royal)]/60 hover:border-gold/50'
                   }`}
                 >
                   {heir.fullName}
@@ -1242,7 +1260,7 @@ function PreviewModalContent({
       <DialogHeader className="p-6 border-b border-[var(--royal)]/10">
         <div className="flex items-center justify-between">
           <div className="min-w-0 flex-1">
-            <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-bold text-slate-900 truncate">
+            <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)] truncate">
               {doc.displayName || doc.originalName}
             </DialogTitle>
             <DialogDescription className="text-[12px] text-[var(--royal)]/40 font-medium mt-0.5">
@@ -1260,7 +1278,7 @@ function PreviewModalContent({
       </DialogHeader>
 
       {/* Content */}
-      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-slate-50">
+      <div className="p-6 overflow-auto max-h-[70vh] flex items-center justify-center bg-neutral-faint">
         {loading ? (
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
         ) : previewUrl ? (
@@ -1297,16 +1315,16 @@ function DeleteModalContent({
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
         </AlertDialogMedia>
-        <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 text-center">
+        <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)] text-center">
           Archive Document
         </AlertDialogTitle>
         <AlertDialogDescription className="text-[14px] text-[var(--royal)]/50 text-center">
-          <strong className="text-slate-900">{doc.displayName || doc.originalName}</strong> will be archived.
+          <strong className="text-[var(--royal)]">{doc.displayName || doc.originalName}</strong> will be archived.
           It can be restored later if needed.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter className="flex gap-3 mt-4 sm:flex-row border-t-0 bg-transparent mx-0 mb-0 p-0 rounded-none">
-        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px] hover:bg-slate-50 h-auto">
+        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-[var(--royal)] font-bold text-[13px] hover:bg-neutral-faint h-auto">
           Cancel
         </AlertDialogCancel>
         <AlertDialogAction
@@ -1353,7 +1371,7 @@ function AIInsightsPanel({
   )
 
   return (
-    <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-5 space-y-4">
+    <div className="border-t border-[var(--royal)]/10 bg-neutral-faint px-6 py-5 space-y-4">
       {/* Header */}
       <div className="flex items-center gap-2">
         <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1365,7 +1383,7 @@ function AIInsightsPanel({
       </div>
 
       {/* Summary */}
-      <p className="text-[14px] text-slate-900/80 leading-relaxed">
+      <p className="text-[14px] text-[var(--royal)]/80 leading-relaxed">
         {analysis.summary}
       </p>
 
@@ -1374,13 +1392,13 @@ function AIInsightsPanel({
         {analysis.signingDate && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Signed:</span>
-            <span className="text-slate-900 font-semibold">{analysis.signingDate}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.signingDate}</span>
           </div>
         )}
         {analysis.jurisdiction && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Jurisdiction:</span>
-            <span className="text-slate-900 font-semibold">{analysis.jurisdiction}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.jurisdiction}</span>
           </div>
         )}
         {analysis.notarized !== null && (
@@ -1394,7 +1412,7 @@ function AIInsightsPanel({
         {analysis.namedExecutor && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Executor:</span>
-            <span className="text-slate-900 font-semibold">{analysis.namedExecutor}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.namedExecutor}</span>
             {heirNames.has(analysis.namedExecutor.toLowerCase().trim()) ? (
               <svg viewBox="0 0 24 24" className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polyline points="20 6 9 17 4 12" />
@@ -1409,7 +1427,7 @@ function AIInsightsPanel({
         {analysis.namedTrustee && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Trustee:</span>
-            <span className="text-slate-900 font-semibold">{analysis.namedTrustee}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.namedTrustee}</span>
           </div>
         )}
       </div>
@@ -1459,7 +1477,7 @@ function AIInsightsPanel({
             {analysis.assetsMentioned.map((asset, i) => (
               <Badge
                 key={i}
-                className="bg-slate-50 text-[var(--royal)]/60 border border-[var(--royal)]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
+                className="bg-neutral-faint text-[var(--royal)]/60 border border-[var(--royal)]/10 text-[12px] font-medium h-auto py-1 px-3 rounded-xl"
               >
                 {asset}
               </Badge>

@@ -108,16 +108,27 @@ Initial launch supports **3 priority jurisdictions**:
 
 ### 2.4 Verify Phase (FR-400)
 
-#### FR-401: Death Certificate Processing — ⏳ Deferred to Tier 3
+#### FR-401: Death Certificate Processing — ✅ Implemented (IL)
 - System SHALL accept death certificate upload
-- System SHALL perform OCR extraction of death certificate data
-- *Not yet implemented. Post-settlement workflow.*
+- System SHALL extract death certificate facts (decedent name, dates) from the
+  document-intelligence analysis pipeline
+- System SHALL require executor/admin confirmation of the extracted facts
+- **Implementation:** `api/internal/probate/deathcert.go`
+  (`HandleSubmitDeathCertAnalysis` reads the AI analysis already produced by the
+  document-intelligence pipeline; `HandleConfirmDeathCert` records executor
+  confirmation; `HandleGetDeathCertFacts` returns stored facts). Surfaced in the
+  probate route (`web/src/routes/estates.$estateId.probate.tsx` →
+  `getDeathCertFacts` / `confirmDeathCert`).
 
-#### FR-402: Executor Activation — ⏳ Deferred to Tier 3
-- System SHALL send notification to designated Executors upon death verification
-- System SHALL require Executor identity re-verification
-- System SHALL provide cooling-off period before asset access
-- *Full activation workflow not yet implemented. Basic executor role assignment exists.*
+#### FR-402: Executor Activation — ✅ Implemented (IL)
+- System SHALL allow the designated executor to confirm their role after death verification
+- System SHALL notify estate members upon executor activation
+- System SHALL gate activation on executor/admin estate access
+- **Implementation:** `api/internal/probate/executor.go`
+  (`HandleGetExecutorStatus`, `HandleConfirmExecutorRole`, `notifyEstateMembers`).
+  Surfaced in the probate route via `getExecutorStatus` / `confirmExecutorRole`.
+- *Scope note:* identity re-verification and an explicit cooling-off timer remain
+  future hardening; role assignment, confirmation, and member notification ship.
 
 #### FR-403: Beneficiary Notification — ⏳ Deferred to Tier 3
 - System SHALL notify Heirs of their designation (after Executor activation)
@@ -130,9 +141,19 @@ Initial launch supports **3 priority jurisdictions**:
 - System SHALL support institution templates for launch states (IL, MN, MD)
 - *Not yet implemented.*
 
-#### FR-502: Government Notifications — ⏳ Deferred to Tier 3
+#### FR-502: Probate Guidance & Court Forms — ✅ Implemented (IL)
 - System SHALL provide state-specific probate guidance for launch states
-- *Not yet implemented.*
+- System SHALL surface the correct court form references for the estate's value
+  (full probate vs. small-estate affidavit)
+- **Implementation:** `api/internal/probate/forms.go` returns Illinois / Cook
+  County Probate Division form references — petition for letters (**CCP0315**),
+  oath/bond (**CCP0312/CCP0313**), and the Illinois small-estate-affidavit path
+  (**755 ILCS 5/ Art. XXV**, threshold per **IL Probate Act §14-1**) — each with
+  its official court URL. `directives.go` serves Illinois advance directives;
+  `illinois.go` holds the state ruleset. Surfaced in the probate route alongside
+  `SettlementGantt` and `QuorumPanel`.
+- *Scope note:* generated institution/government notification *letters* (FR-501)
+  remain deferred; this requirement covers guidance + form references, which ship.
 
 #### FR-503: Account Freeze Requests — ⏳ Deferred to Tier 3
 - *Not yet implemented.*
@@ -243,10 +264,16 @@ Initial launch supports **3 priority jurisdictions**:
 - System SHALL create a sacred, emotional moment for the heir
 - **Implementation:** Heir Welcome screen with Owner's legacy content
 
-#### FR-913: SMS Invitation Queue — ✅ Implemented
-- System SHALL support phone number collection for heir invitations
-- System SHALL queue SMS notifications for delivery
-- **Implementation:** SMS invitation queue with phone number input
+#### FR-913: SMS Invitation Notifications — 🔮 Future (email-only at GA)
+- System SHALL notify invitees of estate invitations
+- **Implementation:** Invitation delivery is **email-only** (Gmail API via the
+  `sendMail` Cloud Function). The phone-number/SMS path was **removed** rather
+  than shipped: no SMS provider is wired, so a queued text would never be
+  delivered while the UI reported success. The phone input and `sms_queue` write
+  have been deleted from the invite flow. SMS delivery is deferred until a real
+  provider is adopted (Sirsi Sign shared SMS/MFA rail per ADR-047, or a managed
+  Twilio extension), at which point the delivery function and phone field will be
+  reintroduced together.
 
 ---
 
@@ -397,9 +424,9 @@ Initial launch supports **3 priority jurisdictions**:
 - [x] User can sign documents electronically (OpenSign integration)
 - [x] User can share memorial pages publicly (QR code sharing)
 - [x] AI Shepherd provides guidance, scoring, and obituary drafting
-- [ ] Executor can activate estate after death verification (Tier 3)
-- [ ] System generates notification letters for institutions (Tier 3)
-- [ ] System provides state-specific probate guidance (IL, MN, MD) (Tier 3)
+- [x] Executor can activate estate after death verification (probate engine — IL; FR-401/402)
+- [ ] System generates notification letters for institutions (Tier 3 — FR-501 deferred)
+- [x] System provides state-specific probate guidance + court forms (IL shipped; MN, MD deferred) (FR-502)
 
 ---
 
@@ -417,11 +444,11 @@ Initial launch supports **3 priority jurisdictions**:
 | FR-301 | Document Intelligence | ✅ Implemented |
 | FR-302 | Asset Discovery | ⏳ Deferred (Tier 2) |
 | FR-303 | Contact Import | ⏳ Deferred |
-| FR-401 | Death Certificate Processing | ⏳ Deferred (Tier 3) |
-| FR-402 | Executor Activation | ⏳ Deferred (Tier 3) |
+| FR-401 | Death Certificate Processing | ✅ Implemented (IL) |
+| FR-402 | Executor Activation | ✅ Implemented (IL) |
 | FR-403 | Beneficiary Notification | ⏳ Deferred (Tier 3) |
 | FR-501 | Institution Notification | ⏳ Deferred (Tier 3) |
-| FR-502 | Government Notifications | ⏳ Deferred (Tier 3) |
+| FR-502 | Probate Guidance & Court Forms | ✅ Implemented (IL) |
 | FR-503 | Account Freeze Requests | ⏳ Deferred (Tier 3) |
 | FR-601 | Asset Transfer | ⏳ Deferred (Tier 3) |
 | FR-602 | Final Accounting | 🔮 Future |
@@ -443,7 +470,7 @@ Initial launch supports **3 priority jurisdictions**:
 | FR-910 | Per-Person Content Visibility | ✅ Implemented |
 | FR-911 | Owner Welcome Experience | ✅ Implemented |
 | FR-912 | Heir Welcome Sacred Moment | ✅ Implemented |
-| FR-913 | SMS Invitation Queue | ✅ Implemented |
+| FR-913 | SMS Invitation Notifications | 🔮 Future (email-only at GA — no provider wired) |
 
 ---
 
@@ -454,3 +481,4 @@ Initial launch supports **3 priority jurisdictions**:
 | 1.0.0 | 2025-11-26 | FinalWishes Team | Initial draft |
 | 1.1.0 | 2025-11-26 | Claude | 6-state MVP scope, Firebase/GCP constraints, 4-month timeline |
 | 2.0.0 | 2026-04-17 | Claude | Complete status audit: 8 FRs implemented, 13 deferred/future, 13 new Life Companion requirements (FR-901 through FR-913) added. Integration table updated to reflect actual GCP stack. Geographic scope narrowed to 3 states (IL, MN, MD). Tech constraints updated to reflect Go + React 19 + Vite 8 stack. |
+| 2.1.0 | 2026-06-14 | Claude | Status reconciliation. FR-913 re-statused ✅→🔮 (SMS path removed — email-only delivery; no provider wired). FR-401 (death-cert facts + confirm), FR-402 (executor activation + member notify), FR-502 (IL probate guidance + Cook County court forms) re-statused ⏳ Deferred→✅ Implemented (IL) to match the shipped `api/internal/probate` engine. §6.1 acceptance + Appendix A matrix updated accordingly. |

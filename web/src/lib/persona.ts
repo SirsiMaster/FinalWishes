@@ -87,32 +87,40 @@ export const PERSONA_ACCESS: Record<PersonaRole, ReadonlySet<SectionId>> = {
   // collection" — credentials). Granting the route here would only route these
   // personas to a permission-denied read. Widening lockbox to fiduciaries
   // (metadata-only) is a future security decision that must change the rule first.
+  // `settings` is granted to every estate persona: the settings page is the ONLY
+  // surface that renders MFAEnrollment, and IdentityGate hard-blocks fiduciaries
+  // until MFA is enrolled. Without settings access an invited heir/executor would
+  // be permanently locked out of the estate they were invited to. The page itself
+  // is internally role-gated (isPrincipalOrAdmin) so fiduciaries see only their
+  // own profile + security (MFA) cards, never estate-preference sections.
   executor: new Set<SectionId>([
     'dashboard', 'assets', 'vault', 'directives', 'beneficiaries',
-    'events', 'obituary', 'probate', 'notifications', 'attestation', 'estates', 'index',
+    'events', 'obituary', 'probate', 'notifications', 'settings', 'attestation', 'estates', 'index',
   ]),
 
   trustee: new Set<SectionId>([
     'dashboard', 'assets', 'vault', 'directives', 'beneficiaries',
-    'probate', 'notifications', 'attestation', 'estates', 'index',
+    'probate', 'notifications', 'settings', 'attestation', 'estates', 'index',
   ]),
 
   // Heir: sacred-moment first. `dashboard` is allowed but is the HEIR-shaped
   // landing (DashboardRouter renders HeirDashboard, never the owner completion
-  // timeline). NO vault, lockbox, forms, beneficiaries, probate, pricing,
-  // settings. Memory/asset sections are assigned/shared only (SCOPED_SECTIONS).
+  // timeline). NO vault, lockbox, forms, beneficiaries, probate, pricing.
+  // `settings` IS granted so heirs can enroll MFA (the IdentityGate requirement)
+  // and manage their own profile/security. Memory/asset sections are
+  // assigned/shared only (SCOPED_SECTIONS).
   heir: new Set<SectionId>([
     'dashboard', 'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets',
-    'directives', 'timecapsule', 'events', 'obituary', 'notifications', 'attestation', 'index',
+    'directives', 'timecapsule', 'events', 'obituary', 'notifications', 'settings', 'attestation', 'index',
   ]),
 
   legal: new Set<SectionId>([
     'dashboard', 'assets', 'vault', 'forms', 'directives', 'notifications',
-    'attestation', 'estates', 'index',
+    'settings', 'attestation', 'estates', 'index',
   ]),
 
   cpa: new Set<SectionId>([
-    'dashboard', 'assets', 'vault', 'notifications', 'attestation',
+    'dashboard', 'assets', 'vault', 'notifications', 'settings', 'attestation',
     'estates', 'index',
   ]),
 };

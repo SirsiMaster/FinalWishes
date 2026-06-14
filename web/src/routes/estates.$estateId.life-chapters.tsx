@@ -186,8 +186,12 @@ function LifeChaptersPage() {
     const chapter = chapters.find((c) => c.id === chapterId)
     if (!chapter) return
     const updatedRefs = (chapter.entryRefs || []).filter((e) => e.docId !== docId)
-    await updateLifeChapter(estateId, chapterId, { entryRefs: updatedRefs })
-    toast.success('Entry removed')
+    const result = await updateLifeChapter(estateId, chapterId, { entryRefs: updatedRefs })
+    if (result.success) {
+      toast.success('Entry removed')
+    } else {
+      toast.error(result.error || 'Could not remove entry.')
+    }
   }, [estateId, chapters])
 
   // Available entries not yet assigned to the expanded chapter
@@ -234,7 +238,7 @@ function LifeChaptersPage() {
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading chapters...</span>
+          <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-[0.2em]">Loading chapters...</span>
         </div>
       </div>
     )
@@ -283,7 +287,7 @@ function LifeChaptersPage() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open) setDeleteTarget(null) }}>
-        <AlertDialogContent className="rounded-3xl border-slate-100">
+        <AlertDialogContent className="rounded-3xl border-neutral-border">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-[family-name:var(--font-cinzel)]">Archive Chapter</AlertDialogTitle>
             <AlertDialogDescription>
@@ -306,10 +310,10 @@ function LifeChaptersPage() {
             <div className="w-24 h-24 bg-[var(--gold)]/5 rounded-3xl flex items-center justify-center mx-auto mb-8">
               <BookOpen className="w-12 h-12 text-[var(--gold)]/30" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-3 font-[family-name:var(--font-cinzel)]">
+            <h3 className="text-xl font-bold text-royal mb-3 font-[family-name:var(--font-cinzel)]">
               Your Story Begins Here
             </h3>
-            <p className="text-slate-500 max-w-md mx-auto mb-8 leading-relaxed">
+            <p className="text-ink-muted max-w-md mx-auto mb-8 leading-relaxed">
               Organize your life into meaningful chapters — childhood memories, career milestones, parenthood, adventures.
               Each chapter becomes a curated story for the people you love.
             </p>
@@ -334,7 +338,7 @@ function LifeChaptersPage() {
             return (
               <Card
                 key={chapter.id}
-                className="rounded-3xl border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                className="rounded-3xl border-neutral-border shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
                 {/* Cover Image */}
                 {chapter.coverImageUrl && (
@@ -351,7 +355,7 @@ function LifeChaptersPage() {
                 <button
                   type="button"
                   onClick={() => setExpandedId(isExpanded ? null : chapter.id)}
-                  className="w-full text-left p-6 md:p-8 hover:bg-slate-50/50 transition-colors cursor-pointer"
+                  className="w-full text-left p-6 md:p-8 hover:bg-neutral-faint/50 transition-colors cursor-pointer"
                 >
                   <div className="flex items-start gap-5">
                     {/* Chapter number */}
@@ -363,7 +367,7 @@ function LifeChaptersPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1.5">
-                        <h3 className="text-xl font-bold text-slate-900 font-[family-name:var(--font-cinzel)] tracking-tight">
+                        <h3 className="text-xl font-bold text-royal font-[family-name:var(--font-cinzel)] tracking-tight">
                           {chapter.title}
                         </h3>
                         {dateRange && (
@@ -373,9 +377,9 @@ function LifeChaptersPage() {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-slate-500 line-clamp-2">{chapter.description}</p>
+                      <p className="text-sm text-ink-muted line-clamp-2">{chapter.description}</p>
                       <div className="flex items-center gap-4 mt-3">
-                        <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                        <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-wider">
                           {entryCount} {entryCount === 1 ? 'entry' : 'entries'}
                         </span>
                       </div>
@@ -388,7 +392,7 @@ function LifeChaptersPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-slate-500 hover:text-[var(--royal)] hover:bg-[var(--royal)]/5 rounded-xl"
+                            className="h-8 w-8 text-ink-muted hover:text-[var(--royal)] hover:bg-[var(--royal)]/5 rounded-xl"
                             onClick={(e) => { e.stopPropagation(); setEditingChapter(chapter) }}
                           >
                             <Pencil className="w-4 h-4" />
@@ -396,21 +400,21 @@ function LifeChaptersPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-xl"
+                            className="h-8 w-8 text-ink-muted hover:text-red-500 hover:bg-red-50 rounded-xl"
                             onClick={(e) => { e.stopPropagation(); setDeleteTarget(chapter) }}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </>
                       )}
-                      <ChevronRight className={`w-5 h-5 text-slate-500/40 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      <ChevronRight className={`w-5 h-5 text-ink-muted/40 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
                     </div>
                   </div>
                 </button>
 
                 {/* Expanded: entries + add */}
                 {isExpanded && (
-                  <div className="border-t border-slate-50 bg-slate-50/50">
+                  <div className="border-t border-neutral-faint bg-neutral-faint/50">
                     {/* Existing entries */}
                     {entryCount > 0 && (
                       <div className="px-6 md:px-8 py-4 space-y-2">
@@ -421,19 +425,19 @@ function LifeChaptersPage() {
                               key={`${ref.collection}:${ref.docId}`}
                               className="flex items-center gap-3 py-2.5 px-4 rounded-xl hover:bg-white transition-colors group"
                             >
-                              <GripVertical className="w-4 h-4 text-slate-200 group-hover:text-slate-400" />
+                              <GripVertical className="w-4 h-4 text-white/70 group-hover:text-ink-muted" />
                               <div className="w-8 h-8 rounded-lg bg-[var(--gold)]/5 flex items-center justify-center">
                                 <Icon className="w-4 h-4 text-[var(--gold)]/60" />
                               </div>
-                              <span className="flex-1 text-sm text-slate-900 font-medium truncate">{ref.title}</span>
-                              <Badge variant="outline" className="text-[10px] text-slate-500 border-slate-200 rounded-md">
+                              <span className="flex-1 text-sm text-ink font-medium truncate">{ref.title}</span>
+                              <Badge variant="outline" className="text-[10px] text-ink-muted border-neutral-border rounded-md">
                                 {ref.collection.replace('-', ' ')}
                               </Badge>
                               {canEdit && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="h-7 w-7 text-slate-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  className="h-7 w-7 text-ink-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                                   onClick={() => handleRemoveEntry(chapter.id, ref.docId)}
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
@@ -446,12 +450,12 @@ function LifeChaptersPage() {
                     )}
 
                     {/* Add entries section — only for editors */}
-                    {canEdit && <div className="px-6 md:px-8 py-4 border-t border-slate-50">
-                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] mb-3">
+                    {canEdit && <div className="px-6 md:px-8 py-4 border-t border-neutral-faint">
+                      <p className="text-[11px] font-bold text-ink-muted uppercase tracking-[0.15em] mb-3">
                         Add entries to this chapter
                       </p>
                       {availableEntries.length === 0 ? (
-                        <p className="text-sm text-slate-400 py-2">
+                        <p className="text-sm text-ink-muted py-2">
                           No unassigned entries available. Create new entries in Soul Log or Memories first.
                         </p>
                       ) : (
@@ -471,7 +475,7 @@ function LifeChaptersPage() {
                                 className="flex items-center gap-3 py-2.5 px-3 rounded-xl border border-dashed border-[var(--royal)]/15 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/5 transition-all text-left cursor-pointer"
                               >
                                 <Icon className="w-4 h-4 text-[var(--gold)]/40" />
-                                <span className="flex-1 text-sm text-slate-500 truncate">{entry.label}</span>
+                                <span className="flex-1 text-sm text-ink-muted truncate">{entry.label}</span>
                                 <Plus className="w-4 h-4 text-[var(--gold)]/30" />
                               </button>
                             )
@@ -606,7 +610,7 @@ function ChapterFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} key={resetKey}>
-      <DialogContent className="rounded-3xl border-slate-100 max-w-lg">
+      <DialogContent className="rounded-3xl border-neutral-border max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-[family-name:var(--font-cinzel)]">
             {chapter ? 'Edit Chapter' : 'New Life Chapter'}
@@ -621,7 +625,7 @@ function ChapterFormDialog({
         <div className="space-y-5 py-2">
           {/* Cover Image */}
           <div className="space-y-2">
-            <Label className="text-sm font-semibold text-slate-900">
+            <Label className="text-sm font-semibold text-ink">
               Cover Image (optional)
             </Label>
             <input
@@ -632,7 +636,7 @@ function ChapterFormDialog({
               className="hidden"
             />
             {coverPreview ? (
-              <div className="relative h-32 rounded-xl overflow-hidden border border-slate-200">
+              <div className="relative h-32 rounded-xl overflow-hidden border border-neutral-border">
                 <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
                 <Button
                   variant="ghost"
@@ -647,7 +651,7 @@ function ChapterFormDialog({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full h-24 rounded-xl border-2 border-dashed border-[var(--royal)]/15 hover:border-[var(--royal)]/30 bg-slate-50/50 flex items-center justify-center gap-2 text-sm text-[var(--royal)]/50 hover:text-[var(--royal)]/80 transition-colors cursor-pointer"
+                className="w-full h-24 rounded-xl border-2 border-dashed border-[var(--royal)]/15 hover:border-[var(--royal)]/30 bg-neutral-faint/50 flex items-center justify-center gap-2 text-sm text-[var(--royal)]/50 hover:text-[var(--royal)]/80 transition-colors cursor-pointer"
               >
                 <ImagePlus className="w-5 h-5" />
                 Choose a cover photo
@@ -656,7 +660,7 @@ function ChapterFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="chapter-title" className="text-sm font-semibold text-slate-900">
+            <Label htmlFor="chapter-title" className="text-sm font-semibold text-ink">
               Chapter Title
             </Label>
             <Input
@@ -664,12 +668,12 @@ function ChapterFormDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Growing Up in Chicago"
-              className="rounded-xl border-slate-200"
+              className="rounded-xl border-neutral-border"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="chapter-desc" className="text-sm font-semibold text-slate-900">
+            <Label htmlFor="chapter-desc" className="text-sm font-semibold text-ink">
               Description
             </Label>
             <Textarea
@@ -677,13 +681,13 @@ function ChapterFormDialog({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="What does this chapter of your life mean to you?"
-              className="rounded-xl border-slate-200 min-h-[80px]"
+              className="rounded-xl border-neutral-border min-h-[80px]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="date-from" className="text-sm font-semibold text-slate-900">
+              <Label htmlFor="date-from" className="text-sm font-semibold text-ink">
                 From
               </Label>
               <Input
@@ -691,11 +695,11 @@ function ChapterFormDialog({
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="rounded-xl border-slate-200"
+                className="rounded-xl border-neutral-border"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="date-to" className="text-sm font-semibold text-slate-900">
+              <Label htmlFor="date-to" className="text-sm font-semibold text-ink">
                 To
               </Label>
               <Input
@@ -703,7 +707,7 @@ function ChapterFormDialog({
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="rounded-xl border-slate-200"
+                className="rounded-xl border-neutral-border"
               />
             </div>
           </div>

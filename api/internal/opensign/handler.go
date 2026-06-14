@@ -68,22 +68,21 @@ func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Req
 		}
 	}
 
-	// Force the signer identity to the AUTHENTICATED caller — never the body's
-	// signerEmail. Otherwise an estate writer could name an ARBITRARY signer (send the
-	// signing link to anyone / forge "X signed this directive"). The verified email
-	// claim is the only trustworthy signer identity. (claude-home PR #4 review.)
-	signerEmail := ""
-	signerName := req.SignerName
-	if tok := auth.TokenFromContext(ctx); tok != nil {
-		if e, _ := tok.Claims["email"].(string); e != "" {
-			signerEmail = e
-		}
-		if n, _ := tok.Claims["name"].(string); n != "" {
-			signerName = n
-		}
+	// Resolve the signer as the estate PRINCIPAL — NOT the authenticated caller.
+	// A legal directive / POA must be signed BY the principal whose estate it governs;
+	// an executor or admin merely INITIATES the ceremony on the principal's behalf. So
+	// the OpenSign signer identity is resolved server-side from estates/{id}.principalId
+	// → Firebase Auth (verified email/name), and the principal's email MUST be verified
+	// before signing can proceed. The caller is recorded only as initiatedBy in the
+	// audit record below. This supersedes the prior "signer = authenticated caller"
+	// behavior. (claude-home signer=principal decision 2026-06-14; Refs ADR-047.)
+	resolver := h.signerResolver
+	if resolver == nil {
+		resolver = &firebaseSignerResolver{fs: h.fs, authClient: h.authClient}
 	}
-	if signerEmail == "" {
-		http.Error(w, "Signer email could not be determined from your account", http.StatusBadRequest)
+	signerEmail, signerName, status, clientMsg := resolver.resolveSigner(ctx, req.EstateID, req.SignerName)
+	if status != 0 {
+		http.Error(w, clientMsg, status)
 		return
 	}
 
@@ -124,7 +123,12 @@ func (h *WebhookHandler) HandleCreateEnvelope(w http.ResponseWriter, r *http.Req
 			"envelopeId":  envelopeID,
 			"estateId":    req.EstateID,
 			"directiveId": req.DirectiveID,
+			// createdBy kept for back-compat; initiatedBy is the authoritative audit
+			// field — the caller INITIATED the ceremony while the estate PRINCIPAL is
+			// the signer (claude-home signer=principal decision 2026-06-14).
 			"createdBy":   userID,
+			"initiatedBy": userID,
+			"signerEmail": signerEmail,
 			"status":      "sent",
 			"createdAt":   firestore.ServerTimestamp,
 		}); e != nil {

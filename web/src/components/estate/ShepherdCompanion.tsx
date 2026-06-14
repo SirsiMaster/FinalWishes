@@ -253,10 +253,10 @@ export function ShepherdCompanion({
                   <Compass className="h-5 w-5" strokeWidth={1.75} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--royal)]/40">
                     Shepherd
                   </p>
-                  <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-bold leading-tight text-slate-900">
+                  <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-bold leading-tight text-[var(--royal)]">
                     Good to see you, {firstName}
                   </h2>
                 </div>
@@ -265,7 +265,7 @@ export function ShepherdCompanion({
                 type="button"
                 onClick={onToggle}
                 aria-label="Hide Shepherd"
-                className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                className="rounded-lg p-1.5 text-[var(--royal)]/40 transition-colors hover:bg-slate-100 hover:text-[var(--royal)]/70"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -274,13 +274,13 @@ export function ShepherdCompanion({
             {/* Progress */}
             <div className="px-7 py-6">
               <div className="mb-2 flex items-baseline justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--royal)]/60">
                   Your plan
                 </span>
-                <span className="text-[13px] font-semibold text-slate-900">
+                <span className="text-[13px] font-semibold text-[var(--royal)]">
                   {percent}%
                   {score ? (
-                    <span className="ml-1.5 font-normal text-slate-400">
+                    <span className="ml-1.5 font-normal text-[var(--royal)]/40">
                       {score.completedSteps}/{score.totalSteps}
                     </span>
                   ) : null}
@@ -308,16 +308,16 @@ export function ShepherdCompanion({
                   <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--gold)]/15 text-[var(--gold)]">
                     <Check className="h-5 w-5" strokeWidth={2.25} />
                   </div>
-                  <p className="font-[family-name:var(--font-cinzel)] text-base font-bold text-slate-900">
+                  <p className="font-[family-name:var(--font-cinzel)] text-base font-bold text-[var(--royal)]">
                     Your essentials are in place
                   </p>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--royal)]/60">
                     {score?.insight || 'Revisit any section any time to refine your plan.'}
                   </p>
                 </div>
               ) : visibleNext ? (
                 <>
-                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--royal)]/40">
                     Your next step
                   </p>
                   <button
@@ -325,10 +325,10 @@ export function ShepherdCompanion({
                     onClick={() => goTo(visibleNext.route)}
                     className="group w-full rounded-2xl border border-slate-200 bg-white p-6 text-left transition-all hover:border-[var(--royal)]/40 hover:shadow-sm"
                   >
-                    <h3 className="font-[family-name:var(--font-cinzel)] text-lg font-bold leading-snug text-slate-900">
+                    <h3 className="font-[family-name:var(--font-cinzel)] text-lg font-bold leading-snug text-[var(--royal)]">
                       {visibleNext.label}
                     </h3>
-                    <p className="mt-2 text-[13px] leading-relaxed text-slate-500">
+                    <p className="mt-2 text-[13px] leading-relaxed text-[var(--royal)]/60">
                       {visibleNext.description}
                     </p>
                     <span className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--royal)]">
@@ -340,7 +340,7 @@ export function ShepherdCompanion({
                   {/* Remaining steps, quietly listed for orientation */}
                   {visibleSteps.filter((s) => s.id !== visibleNext.id).length > 0 && (
                     <div className="mt-7">
-                      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--royal)]/40">
                         Also ahead
                       </p>
                       <ul className="space-y-1">
@@ -352,10 +352,10 @@ export function ShepherdCompanion({
                               <button
                                 type="button"
                                 onClick={() => goTo(s.route)}
-                                className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[13px] text-slate-600 transition-colors hover:bg-slate-50"
+                                className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[13px] text-[var(--royal)]/60 transition-colors hover:bg-slate-50"
                               >
                                 <span>{s.label}</span>
-                                <ChevronRight className="h-3.5 w-3.5 text-slate-300" />
+                                <ChevronRight className="h-3.5 w-3.5 text-[var(--royal)]/30" />
                               </button>
                             </li>
                           ))}
@@ -364,7 +364,7 @@ export function ShepherdCompanion({
                   )}
                 </>
               ) : (
-                <p className="text-[13px] leading-relaxed text-slate-500">
+                <p className="text-[13px] leading-relaxed text-[var(--royal)]/60">
                   Your guide will appear here as you build your estate plan.
                 </p>
               )}
@@ -372,10 +372,10 @@ export function ShepherdCompanion({
               {/* Route-aware guidance keeps Shepherd next to every CRUD action. */}
               {!loading && currentGuide && (
                 <div className="mt-7 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--royal)]/40">
                     Shepherd on this page
                   </p>
-                  <h3 className="font-[family-name:var(--font-cinzel)] text-base font-bold text-slate-900">
+                  <h3 className="font-[family-name:var(--font-cinzel)] text-base font-bold text-[var(--royal)]">
                     {currentGuide.title}
                   </h3>
                   <button
@@ -389,7 +389,7 @@ export function ShepherdCompanion({
                   <button
                     type="button"
                     onClick={() => goTo(currentGuide.actionRoute)}
-                    className="ml-4 mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-500 hover:text-slate-800"
+                    className="ml-4 mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--royal)]/60 hover:text-[var(--royal)]"
                   >
                     {currentGuide.actionLabel}
                     <ChevronRight className="h-3.5 w-3.5" />
@@ -401,7 +401,7 @@ export function ShepherdCompanion({
                   Rendered only when something is genuinely unfinished. */}
               {!loading && visibleResumables.length > 0 && (
                 <div className="mt-7 border-t border-slate-100 pt-6">
-                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--royal)]/40">
                     Continue where you left off
                   </p>
                   <ul className="space-y-1">
@@ -410,12 +410,12 @@ export function ShepherdCompanion({
                         <button
                           type="button"
                           onClick={() => goTo(r.route)}
-                          className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[13px] text-slate-600 transition-colors hover:bg-slate-50"
+                          className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-[13px] text-[var(--royal)]/60 transition-colors hover:bg-slate-50"
                         >
-                          <span className="truncate font-[family-name:var(--font-cinzel)] text-slate-700">
+                          <span className="truncate font-[family-name:var(--font-cinzel)] text-[var(--royal)]/70">
                             {r.label}
                           </span>
-                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-300" />
+                          <ChevronRight className="h-3.5 w-3.5 shrink-0 text-[var(--royal)]/30" />
                         </button>
                       </li>
                     ))}
@@ -425,7 +425,7 @@ export function ShepherdCompanion({
 
               {/* Central chat: available from every estate route, not just the dashboard. */}
               <div className="mt-7 border-t border-slate-100 pt-6">
-                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--royal)]/40">
                   Ask Shepherd
                 </p>
                 {messages.length === 0 ? (
@@ -435,7 +435,7 @@ export function ShepherdCompanion({
                         key={opener.label}
                         type="button"
                         onClick={() => ask(opener.prompt)}
-                        className="rounded-full border border-slate-200 px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-[var(--royal)]/30 hover:text-[var(--royal)]"
+                        className="rounded-full border border-slate-200 px-3 py-1.5 text-[11px] font-semibold text-[var(--royal)]/60 transition-colors hover:border-[var(--royal)]/30 hover:text-[var(--royal)]"
                       >
                         {opener.label}
                       </button>
@@ -449,7 +449,7 @@ export function ShepherdCompanion({
                         className={`rounded-2xl px-3 py-2 text-[12px] leading-relaxed ${
                           message.role === 'user'
                             ? 'ml-8 bg-[var(--royal)] text-white'
-                            : 'mr-8 border border-slate-200 bg-white text-slate-700'
+                            : 'mr-8 border border-slate-200 bg-white text-[var(--royal)]/70'
                         }`}
                       >
                         {message.content}
@@ -467,7 +467,7 @@ export function ShepherdCompanion({
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
                     placeholder="Ask what to do next..."
-                    className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-[var(--royal)]"
+                    className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] text-[var(--royal)] outline-none transition-colors placeholder:text-[var(--royal)]/40 focus:border-[var(--royal)]"
                   />
                   <button
                     type="submit"

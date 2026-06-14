@@ -314,7 +314,7 @@ function SettingsPage() {
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading settings...</span>
+          <span className="text-[11px] font-semibold text-[var(--royal)]/60 uppercase tracking-[0.2em]">Loading settings...</span>
         </div>
       </div>
     );
@@ -330,8 +330,8 @@ function SettingsPage() {
       {/* ── Page Header ── */}
       <div className="flex justify-between items-end border-b border-slate-100 pb-10">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Settings</h2>
-          <p className="text-lg text-slate-500 font-medium">Manage your profile, security, and estate preferences.</p>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">Settings</h2>
+          <p className="text-lg text-[var(--royal)]/60 font-medium">Manage your profile, security, and estate preferences.</p>
         </div>
         {isPrincipalOrAdmin && <Button
           onClick={handleSave}
@@ -343,7 +343,7 @@ function SettingsPage() {
               ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
               : hasChanges
                 ? 'bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white border-[var(--royal)]'
-                : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none border-slate-100'
+                : 'bg-slate-100 text-[var(--royal)]/40 cursor-not-allowed shadow-none border-slate-100'
           }`}
         >
           {saving ? (
@@ -414,8 +414,8 @@ function SettingsPage() {
           {/* Info */}
           <div className="flex-1 space-y-4">
             <div>
-              <h3 className="text-2xl font-bold text-slate-900 tracking-tight">{profile?.displayName || 'User'}</h3>
-              <p className="text-slate-500 font-medium text-[15px] mt-0.5">{user?.email || ''}</p>
+              <h3 className="text-2xl font-bold text-[var(--royal)] tracking-tight">{profile?.displayName || 'User'}</h3>
+              <p className="text-[var(--royal)]/60 font-medium text-[15px] mt-0.5">{user?.email || ''}</p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <Badge variant="outline" className="px-4 py-1.5 h-auto bg-[var(--royal)]/5 border-[var(--royal)]/10 rounded-xl text-[11px] font-black text-[var(--royal)] uppercase tracking-[0.15em]">
@@ -472,8 +472,8 @@ function SettingsPage() {
               <>
                 <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-slate-50 transition-all group">
                   <div className="flex flex-col">
-                    <span className="text-slate-900 font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">Days since last activity</span>
-                    <span className="text-[13px] text-slate-500 font-medium mt-1">Based on your last check-in with FinalWishes</span>
+                    <span className="text-[var(--royal)] font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">Days since last activity</span>
+                    <span className="text-[13px] text-[var(--royal)]/60 font-medium mt-1">Based on your last check-in with FinalWishes</span>
                   </div>
                   <Badge
                     variant="secondary"
@@ -591,12 +591,12 @@ function SettingsPage() {
         <CardContent className="px-10 py-8 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <span className="text-slate-900 font-bold text-[15px] leading-tight">Manage Subscription</span>
+              <span className="text-[var(--royal)] font-bold text-[15px] leading-tight">Manage Subscription</span>
               <Badge variant="outline" className="px-3 py-1 h-auto bg-[var(--royal)]/5 border-[var(--royal)]/10 rounded-lg text-[10px] font-black text-[var(--royal)] uppercase tracking-[0.15em]">
                 {estate.tier === 'white_glove' ? 'White Glove' : estate.tier === 'concierge' ? 'Concierge' : estate.tier}
               </Badge>
             </div>
-            <p className="text-[13px] text-slate-500 font-medium mt-1 max-w-md">
+            <p className="text-[13px] text-[var(--royal)]/60 font-medium mt-1 max-w-md">
               Update your payment method, change your plan, or cancel your subscription via Stripe.
             </p>
           </div>
@@ -640,8 +640,8 @@ function SettingsPage() {
         </div>
         <CardContent className="px-10 py-8 flex items-center justify-between">
           <div>
-            <span className="text-slate-900 font-bold text-[15px] leading-tight">Export Estate Data</span>
-            <p className="text-[13px] text-slate-500 font-medium mt-1 max-w-md">
+            <span className="text-[var(--royal)] font-bold text-[15px] leading-tight">Export Estate Data</span>
+            <p className="text-[13px] text-[var(--royal)]/60 font-medium mt-1 max-w-md">
               Download a complete ZIP archive of your estate data for compliance and portability.
             </p>
           </div>
@@ -691,8 +691,8 @@ function SettingsPage() {
         </div>
         <CardContent className="px-10 py-8 flex items-center justify-between gap-6">
           <div>
-            <span className="text-slate-900 font-bold text-[15px] leading-tight">Delete Account</span>
-            <p className="text-[13px] text-slate-500 font-medium mt-1 max-w-md">
+            <span className="text-[var(--royal)] font-bold text-[15px] leading-tight">Delete Account</span>
+            <p className="text-[13px] text-[var(--royal)]/60 font-medium mt-1 max-w-md">
               This will permanently delete your account, all estates you own, and all associated data. This cannot be undone.
             </p>
           </div>
@@ -773,7 +773,7 @@ function SettingsSection({ title, children, first }: { title: string; children: 
   return (
     <div>
       <div className={`bg-slate-50 px-10 py-5 ${first ? '' : ''}border-b border-slate-100`}>
-        <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{title}</h3>
+        <h3 className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">{title}</h3>
       </div>
       <div className="divide-y divide-slate-100">{children}</div>
     </div>
@@ -786,8 +786,8 @@ function SettingsToggle({ label, description, checked, onChange, disabled }: {
   return (
     <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-slate-50 transition-all group">
       <div className="flex flex-col">
-        <span className="text-slate-900 font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">{label}</span>
-        <span className="text-[13px] text-slate-500 font-medium mt-1">{description}</span>
+        <span className="text-[var(--royal)] font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">{label}</span>
+        <span className="text-[13px] text-[var(--royal)]/60 font-medium mt-1">{description}</span>
       </div>
       <Switch
         checked={!!checked}
@@ -803,8 +803,8 @@ function SettingsStatus({ label, description, value }: { label: string; descript
   return (
     <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-slate-50 transition-all group">
       <div className="flex flex-col">
-        <span className="text-slate-900 font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">{label}</span>
-        <span className="text-[13px] text-slate-500 font-medium mt-1">{description}</span>
+        <span className="text-[var(--royal)] font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">{label}</span>
+        <span className="text-[13px] text-[var(--royal)]/60 font-medium mt-1">{description}</span>
       </div>
       <Badge variant="secondary" className="h-auto px-3 py-1.5 bg-green-50 border border-green-200 rounded-lg text-[11px] font-bold text-green-600 flex items-center gap-2">
         <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
@@ -820,8 +820,8 @@ function SettingsSelect({ label, description, value, options, onChange }: {
   return (
     <div className="flex items-center justify-between px-4 py-4 md:px-10 md:py-6 hover:bg-slate-50 transition-all group">
       <div className="flex flex-col">
-        <span className="text-slate-900 font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">{label}</span>
-        <span className="text-[13px] text-slate-500 font-medium mt-1">{description}</span>
+        <span className="text-[var(--royal)] font-bold text-[15px] leading-tight group-hover:text-[var(--royal)] transition-colors">{label}</span>
+        <span className="text-[13px] text-[var(--royal)]/60 font-medium mt-1">{description}</span>
       </div>
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="text-[13px] text-[var(--royal)] font-bold bg-transparent border-slate-200 rounded-lg px-3 py-1.5 h-auto focus:border-[var(--royal)] cursor-pointer">

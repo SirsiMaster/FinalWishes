@@ -68,6 +68,16 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
+// ─── Combobox/listbox identity (shared with AdminHeader) ──────────────────────
+// Stable ids let the search input expose `aria-controls` (the listbox) and
+// `aria-activedescendant` (the highlighted option) so screen readers announce
+// the active result during keyboard navigation.
+
+export const SEARCH_LISTBOX_ID = 'estate-search-listbox';
+
+/** Deterministic option id for a given result index. */
+export const searchOptionId = (index: number) => `estate-search-option-${index}`;
+
 // ─── Props ────────────────────────────────────────────────────────────────────
 
 interface SearchResultsProps {
@@ -129,7 +139,7 @@ export function SearchResults({
   // No results
   if (query.trim().length >= 2 && results.length === 0) {
     return (
-      <DropdownShell>
+      <DropdownShell liveMessage="No results found">
         <div className="px-4 py-8 text-center">
           <p className="text-[11px] font-bold text-royal/30 uppercase tracking-[0.15em]">
             No results found
@@ -156,12 +166,13 @@ export function SearchResults({
   }
 
   return (
-    <DropdownShell>
+    <DropdownShell liveMessage={`${results.length} result${results.length !== 1 ? 's' : ''}`}>
       <ScrollArea className="max-h-[360px]">
         <div ref={listRef} className="py-1">
           {results.map((result, index) => (
             <button
               key={`${result.type}-${result.id}`}
+              id={searchOptionId(index)}
               role="option"
               aria-selected={index === activeIndex}
               data-search-item
@@ -222,10 +233,23 @@ export function SearchResults({
 
 // ─── Shell wrapper ────────────────────────────────────────────────────────────
 
-function DropdownShell({ children }: { children: React.ReactNode }) {
+function DropdownShell({
+  children,
+  liveMessage = '',
+}: {
+  children: React.ReactNode;
+  liveMessage?: string;
+}) {
   return (
-    <div role="listbox" aria-label="Search results" className="absolute top-full left-0 right-0 mt-1 z-[100] bg-white border border-royal/10 shadow-[0_20px_60px_rgba(19,51,120,0.12)] overflow-hidden">
-      <div aria-live="polite" className="sr-only" />
+    <div
+      id={SEARCH_LISTBOX_ID}
+      role="listbox"
+      aria-label="Search results"
+      className="absolute top-full left-0 right-0 mt-1 z-[100] bg-white border border-royal/10 shadow-[0_20px_60px_rgba(19,51,120,0.12)] overflow-hidden"
+    >
+      <div aria-live="polite" role="status" className="sr-only">
+        {liveMessage}
+      </div>
       {children}
     </div>
   );

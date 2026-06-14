@@ -71,11 +71,37 @@ jobs:
         run: npm test
 
   # ===========================================
+  # Functions: Test (Jest)
+  # ===========================================
+  functions-test:
+    name: Functions - Test (Jest)
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./functions
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+  # ===========================================
   # Web: Build & Deploy Preview
   # ===========================================
   build_and_preview:
     name: Web - Build & Preview
-    needs: [api-check, web-test]
+    needs: [api-check, web-test, functions-test]
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:

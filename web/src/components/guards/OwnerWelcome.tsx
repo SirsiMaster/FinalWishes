@@ -34,7 +34,7 @@ export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: Ow
   const firstName = profile?.firstName || profile?.displayName?.split(' ')[0] || 'there'
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-slate-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-white via-[var(--neutral-faint)] to-[var(--neutral-faint)] flex items-center justify-center">
       <div className="max-w-xl mx-auto px-6 py-16 text-center">
 
         {/* Compass icon — The Shepherd's symbol */}
@@ -46,17 +46,17 @@ export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: Ow
         </div>
 
         {/* Welcome headline */}
-        <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 tracking-tight mb-4 leading-tight">
+        <h1 className="text-3xl md:text-4xl font-[family-name:var(--font-cinzel)] font-bold text-royal tracking-tight mb-4 leading-tight">
           Welcome, {firstName}.
         </h1>
 
         {/* The emotional hook — this is NOT a legal tool */}
-        <p className="text-lg text-slate-700 leading-relaxed mb-4 max-w-md mx-auto">
-          You&rsquo;ve just created <span className="font-semibold text-slate-900">{estateName}</span> &mdash;
+        <p className="text-lg text-ink leading-relaxed mb-4 max-w-md mx-auto">
+          You&rsquo;ve just created <span className="font-semibold text-ink">{estateName}</span> &mdash;
           a living record of your life, your wishes, and the people who matter most.
         </p>
 
-        <p className="text-slate-500 leading-relaxed mb-12 max-w-md mx-auto">
+        <p className="text-ink-muted leading-relaxed mb-12 max-w-md mx-auto">
           This isn&rsquo;t a legal form. It&rsquo;s a companion &mdash; a place to
           record your voice, preserve your memories, and organize everything
           the people you love will need someday. At your pace, on your terms.
@@ -113,7 +113,7 @@ export function OwnerWelcome({ estateId: _estateId, estateName, onContinue }: Ow
           Start Building Your Legacy
         </Button>
 
-        <p className="text-xs text-slate-400 mt-6">
+        <p className="text-xs text-ink-muted mt-6">
           The Shepherd is here whenever you need guidance.
         </p>
       </div>
@@ -133,13 +133,13 @@ function WelcomeStep({
   description: string
 }) {
   return (
-    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/60 border border-slate-100">
+    <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/60 border border-[var(--neutral-border)]">
       <div className="w-10 h-10 rounded-xl bg-[var(--royal)]/5 flex items-center justify-center flex-shrink-0 text-[var(--royal)]/50">
         {icon}
       </div>
       <div>
-        <p className="text-sm font-semibold text-slate-900">{title}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{description}</p>
+        <p className="text-sm font-semibold text-ink">{title}</p>
+        <p className="text-xs text-ink-muted mt-0.5">{description}</p>
       </div>
     </div>
   )

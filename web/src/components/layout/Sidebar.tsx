@@ -223,7 +223,7 @@ function SidebarNavContent({
                   className={`w-full flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] ${
                     groupActive
                       ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                      : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
+                      : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
                   }`}
                 >
                   <span
@@ -253,7 +253,7 @@ function SidebarNavContent({
                           className={`flex items-center gap-3 pl-7 pr-5 py-2 text-[0.73rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                             childActive
                               ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                              : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
+                              : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
                           }`}
                         >
                           <span className="text-[0.73rem] font-medium">{child.label}</span>
@@ -288,7 +288,7 @@ function SidebarNavContent({
               className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                 isActive
                   ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                  : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
+                  : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
               }`}
             >
               <span
@@ -329,7 +329,7 @@ function SidebarNavContent({
                 className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                   isActive
                     ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                    : "text-slate-400 border-l-transparent hover:text-slate-900 hover:bg-slate-50"
+                    : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
                 }`}
               >
                 <span
@@ -681,19 +681,31 @@ export function Sidebar({ effectiveRole }: { effectiveRole?: PersonaRole }) {
       <Separator className="bg-slate-100" />
       <div className="p-4 mt-auto bg-slate-50/50">
         <div className="flex items-center gap-3 mb-3">
-          <Avatar
-            className="w-9 h-9 rounded-xl cursor-pointer hover:ring-2 hover:ring-[var(--royal)] transition-all"
-            onClick={() => user?.profilePhotoUrl && setShowPhotoModal(true)}
-          >
-            <AvatarImage
-              src={user?.profilePhotoUrl || undefined}
-              alt="Profile"
-              className="rounded-xl object-cover"
-            />
-            <AvatarFallback className="rounded-xl bg-[var(--royal)] text-white font-bold text-xs">
-              {getInitials(user?.name || 'User')}
-            </AvatarFallback>
-          </Avatar>
+          {user?.profilePhotoUrl ? (
+            <button
+              type="button"
+              aria-label="View profile photo"
+              onClick={() => setShowPhotoModal(true)}
+              className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)]"
+            >
+              <Avatar className="w-9 h-9 rounded-xl cursor-pointer hover:ring-2 hover:ring-[var(--royal)] transition-all">
+                <AvatarImage
+                  src={user.profilePhotoUrl}
+                  alt="Profile"
+                  className="rounded-xl object-cover"
+                />
+                <AvatarFallback className="rounded-xl bg-[var(--royal)] text-white font-bold text-xs">
+                  {getInitials(user?.name || 'User')}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          ) : (
+            <Avatar className="w-9 h-9 rounded-xl">
+              <AvatarFallback className="rounded-xl bg-[var(--royal)] text-white font-bold text-xs">
+                {getInitials(user?.name || 'User')}
+              </AvatarFallback>
+            </Avatar>
+          )}
           <div className="min-w-0">
             <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
             <div className="text-slate-400 text-[10px] font-medium">{personaLabel(userRole)}</div>

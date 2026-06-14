@@ -150,7 +150,9 @@ const EstatesEstateIdProbateRoute = EstatesEstateIdProbateRouteImport.update({
   id: '/probate',
   path: '/probate',
   getParentRoute: () => EstatesEstateIdRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/estates.$estateId.probate.lazy').then((d) => d.Route),
+)
 const EstatesEstateIdPricingRoute = EstatesEstateIdPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',

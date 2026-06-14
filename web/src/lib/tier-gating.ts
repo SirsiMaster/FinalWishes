@@ -10,10 +10,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { auth } from './firebase';
-
-// ─── Constants ───────────────────────────────────────────────────────────────
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { API_BASE } from './client';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

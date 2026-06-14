@@ -62,38 +62,53 @@ function AssetsPage() {
 
   const handleAddAsset = async (vars: { name: string, type: string, value: string }) => {
     setSaving(true);
-    await addAssetAction({
+    const result = await addAssetAction({
       estateId,
       name: vars.name,
       category: vars.type as Asset['category'],
       estimatedValue: parseFloat(vars.value.replace(/[^0-9.]/g, '')) || 0,
     });
     setSaving(false);
-    setModalOpen(false);
-    toast.success(`${vars.name} added to your estate`);
+    if (result.success) {
+      setModalOpen(false);
+      toast.success(`${vars.name} added to your estate`);
+    } else {
+      toast.error(result.error || 'Could not add this asset. Please try again.');
+    }
   };
 
   const handleUpdateAsset = async (data: { name: string; category: string; estimatedValue: string; description: string }) => {
     if (!editingAsset) return;
     setEditSaving(true);
-    await updateAsset(estateId, editingAsset.id, {
+    const result = await updateAsset(estateId, editingAsset.id, {
       name: data.name,
       category: data.category,
       estimatedValue: parseFloat(data.estimatedValue.replace(/[^0-9.]/g, '')) || 0,
       description: data.description,
     });
     setEditSaving(false);
-    setEditingAsset(null);
-    setConfirmArchive(false);
+    if (result.success) {
+      setEditingAsset(null);
+      setConfirmArchive(false);
+      toast.success(`${data.name} updated`);
+    } else {
+      toast.error(result.error || 'Could not save changes. Please try again.');
+    }
   };
 
   const handleArchiveAsset = async () => {
     if (!editingAsset) return;
     setEditSaving(true);
-    await archiveAsset(estateId, editingAsset.id);
+    const archivedName = editingAsset.name;
+    const result = await archiveAsset(estateId, editingAsset.id);
     setEditSaving(false);
-    setEditingAsset(null);
-    setConfirmArchive(false);
+    if (result.success) {
+      setEditingAsset(null);
+      setConfirmArchive(false);
+      toast.success(`${archivedName} archived`);
+    } else {
+      toast.error(result.error || 'Could not archive this asset. Please try again.');
+    }
   };
 
   if (isLoading) {

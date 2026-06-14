@@ -4,14 +4,12 @@ import React, { useState, useRef, useMemo, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 // YouTube embed via native iframe — zero bundle cost (no react-player)
 import { useCollection } from '../lib/firestore'
-import { estateClient } from '../lib/client'
+import { estateClient, API_BASE } from '../lib/client'
 import { useAuth } from '../lib/auth'
 import { collection, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db, auth as firebaseAuth } from '../lib/firebase'
 import { useTierGating, tierUpgradeMessage } from '../lib/tier-gating'
 import { toast } from 'sonner'
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 import { Button } from '@/components/ui/button'
 import { CameraCaptureButton } from '@/components/ui/camera-capture-button'
@@ -258,7 +256,7 @@ function MemoirsPage() {
 
         await new Promise<void>((resolve, reject) => {
           const xhr = new XMLHttpRequest()
-          xhr.open('POST', `${API_BASE}/api/v1/youtube/upload`)
+          xhr.open('POST', `${API_BASE}/api/v1/memoirs/upload-video`)
           xhr.setRequestHeader('Authorization', `Bearer ${token}`)
 
           xhr.upload.addEventListener('progress', (e) => {
@@ -1000,7 +998,12 @@ function VideoCard({
 
   return (
     <Card className="rounded-[2.5rem] border-[var(--royal)]/10 overflow-hidden shadow-sm group hover:border-[var(--royal)]/20 hover:shadow-xl transition-all relative p-0 gap-0">
-      <div className="aspect-video bg-slate-900 relative overflow-hidden cursor-pointer" onClick={onClick}>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`Play ${memoir.title}`}
+        className="block w-full aspect-video bg-slate-900 relative overflow-hidden cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)] focus-visible:ring-offset-2"
+      >
         {isYouTube && memoir.youtubeUrl ? (
           <YouTubeThumbnail url={memoir.youtubeUrl} />
         ) : memoir.url ? (
@@ -1032,9 +1035,9 @@ function VideoCard({
             YouTube
           </Badge>
         )}
-      </div>
+      </button>
       <CardContent className="p-8 space-y-3">
-        <h4 className="font-bold text-slate-900 text-lg tracking-tight group-hover:text-[var(--royal)] transition-colors cursor-pointer" onClick={onClick}>
+        <h4 className="font-bold text-slate-900 text-lg tracking-tight group-hover:text-[var(--royal)] transition-colors">
           {memoir.title}
         </h4>
         <div className="flex justify-between items-center">
@@ -1070,7 +1073,12 @@ function PhotoCard({
 }) {
   return (
     <Card className="rounded-[2rem] border-[var(--royal)]/10 overflow-hidden shadow-sm group hover:border-[var(--royal)]/20 hover:shadow-xl transition-all relative p-0 gap-0">
-      <div className="aspect-square bg-slate-50 relative overflow-hidden cursor-pointer" onClick={onClick}>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`View ${memoir.title}`}
+        className="block w-full aspect-square bg-slate-50 relative overflow-hidden cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--royal)] focus-visible:ring-offset-2"
+      >
         {memoir.url ? (
           <img
             src={memoir.url}
@@ -1086,10 +1094,10 @@ function PhotoCard({
             </svg>
           </div>
         )}
-      </div>
+      </button>
       <CardContent className="p-6 border-t border-[var(--royal)]/5 flex items-center justify-between">
         <div className="min-w-0">
-          <h4 className="font-bold text-slate-900 text-sm truncate group-hover:text-[var(--royal)] transition-colors cursor-pointer" onClick={onClick}>
+          <h4 className="font-bold text-slate-900 text-sm truncate group-hover:text-[var(--royal)] transition-colors">
             {memoir.title}
           </h4>
           <p className="text-[10px] font-bold text-[var(--royal)]/20 uppercase tracking-widest mt-0.5">{memoir.dateAdded}</p>

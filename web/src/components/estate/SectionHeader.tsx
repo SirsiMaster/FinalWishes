@@ -69,59 +69,64 @@ const SECTION_THEMES: Record<SectionId, SectionTheme> = {
     iconBg: 'rgba(19, 51, 120, 0.10)',
   },
   'memories': {
+    // Re-toned off the magenta firewall → gold (heritage warmth, keepsakes).
     label: 'Memories',
     tagline: 'Moments worth keeping.',
     breadcrumb: 'Memories',
-    accentColor: '#9D174D',
-    accentLight: 'rgba(157, 23, 77, 0.06)',
-    gradientFrom: '#FFF1F2',
-    gradientTo: '#FFE4E6',
+    accentColor: '#B8860B',
+    accentLight: 'rgba(184, 134, 11, 0.06)',
+    gradientFrom: '#FFFBEB',
+    gradientTo: '#FEF3C7',
     icon: <Camera className="w-5 h-5" />,
-    iconBg: 'rgba(157, 23, 77, 0.10)',
+    iconBg: 'rgba(184, 134, 11, 0.10)',
   },
   'letters': {
+    // Re-toned off the green firewall → deep royal (composure, permanence).
     label: 'Letters',
     tagline: 'Words that outlast time.',
     breadcrumb: 'Letters & Directives',
-    accentColor: '#4D7C4D',
-    accentLight: 'rgba(77, 124, 77, 0.06)',
-    gradientFrom: '#F0FDF4',
-    gradientTo: '#DCFCE7',
+    accentColor: '#1E3A5F',
+    accentLight: 'rgba(30, 58, 95, 0.06)',
+    gradientFrom: '#EEF2FF',
+    gradientTo: '#E0E7FF',
     icon: <PenLine className="w-5 h-5" />,
-    iconBg: 'rgba(77, 124, 77, 0.10)',
+    iconBg: 'rgba(30, 58, 95, 0.10)',
   },
   'my-people': {
+    // Re-toned off the teal firewall → heritage royal (trust, lineage).
     label: 'My People',
     tagline: 'The ones who matter most.',
     breadcrumb: 'My People',
-    accentColor: '#0F766E',
-    accentLight: 'rgba(15, 118, 110, 0.06)',
-    gradientFrom: '#F0FDFA',
-    gradientTo: '#CCFBF1',
+    accentColor: '#133378',
+    accentLight: 'rgba(19, 51, 120, 0.06)',
+    gradientFrom: '#EEF2FF',
+    gradientTo: '#E0E7FF',
     icon: <Users className="w-5 h-5" />,
-    iconBg: 'rgba(15, 118, 110, 0.10)',
+    iconBg: 'rgba(19, 51, 120, 0.10)',
   },
   'the-vault': {
+    // Re-toned off the slate firewall → deep royal (security, weight).
     label: 'The Vault',
     tagline: 'Protected. Organized. Ready.',
     breadcrumb: 'The Vault',
-    accentColor: '#334155',
-    accentLight: 'rgba(51, 65, 85, 0.05)',
-    gradientFrom: '#F8FAFC',
-    gradientTo: '#F1F5F9',
+    accentColor: '#1E3A5F',
+    accentLight: 'rgba(30, 58, 95, 0.05)',
+    gradientFrom: '#EEF2FF',
+    gradientTo: '#E0E7FF',
     icon: <Shield className="w-5 h-5" />,
-    iconBg: 'rgba(51, 65, 85, 0.10)',
+    iconBg: 'rgba(30, 58, 95, 0.10)',
   },
   'life-chapters': {
+    // Re-toned off the violet firewall → gold (narrative warmth, chapters).
     label: 'Life Chapters',
     tagline: 'Your life, told in chapters.',
     breadcrumb: 'Your Legacy',
-    accentColor: '#7C3AED',
-    accentLight: 'rgba(124, 58, 237, 0.06)',
-    gradientFrom: '#FAF5FF',
-    gradientTo: '#F3E8FF',
+    accentColor: '#C8A951',
+    accentLight: 'rgba(200, 169, 81, 0.06)',
+    gradientFrom: '#FFFBEB',
+    gradientTo: '#FEF3C7',
     icon: <BookOpen className="w-5 h-5" />,
-    iconBg: 'rgba(124, 58, 237, 0.10)',
+    iconBg: 'rgba(200, 169, 81, 0.10)',
   },
   'events': {
     label: 'Events',
@@ -221,7 +226,7 @@ export function SectionHeader({
             <div className="space-y-1.5">
               <h1
                 className="text-[2rem] md:text-[2.5rem] font-[family-name:var(--font-cinzel)] font-bold leading-tight tracking-tight"
-                style={{ color: 'var(--color-slate-900)' }}
+                style={{ color: 'var(--ink)' }}
               >
                 {title || theme.label}
               </h1>

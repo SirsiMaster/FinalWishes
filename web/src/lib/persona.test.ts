@@ -34,7 +34,7 @@ describe('resolveEffectiveRole — estate-scoped role wins', () => {
 describe('heir — the sacred-moment boundary (ETHOS)', () => {
   it('never reaches owner-admin or settlement surfaces', () => {
     const forbidden: SectionId[] = [
-      'vault', 'lockbox', 'forms', 'beneficiaries', 'probate', 'pricing', 'settings',
+      'vault', 'lockbox', 'forms', 'beneficiaries', 'probate', 'pricing',
     ]
     for (const s of forbidden) {
       expect(canAccess('heir', s), `heir must NOT access ${s}`).toBe(false)
@@ -69,8 +69,14 @@ describe('heir — the sacred-moment boundary (ETHOS)', () => {
 
 describe('fiduciaries — settlement only, no living-legacy creation', () => {
   it('executor cannot reach owner living-legacy/creation surfaces', () => {
-    for (const s of ['soul-log', 'life-chapters', 'memoirs', 'heirlooms', 'timecapsule', 'pricing', 'settings', 'forms'] as SectionId[]) {
+    for (const s of ['soul-log', 'life-chapters', 'memoirs', 'heirlooms', 'timecapsule', 'pricing', 'forms'] as SectionId[]) {
       expect(canAccess('executor', s), `executor must NOT access ${s}`).toBe(false)
+    }
+  })
+
+  it('fiduciaries and heirs can reach settings for MFA/profile security only', () => {
+    for (const role of ['executor', 'trustee', 'heir', 'legal', 'cpa'] as PersonaRole[]) {
+      expect(canAccess(role, 'settings'), `${role} needs settings for MFA enrollment`).toBe(true)
     }
   })
 

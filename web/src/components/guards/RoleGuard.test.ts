@@ -42,13 +42,13 @@ describe('direct-URL enforcement — the section a persona must not reach', () =
   it('blocks a heir who direct-URLs owner-only / settlement routes', () => {
     expect(guardBlocks('heir', `/estates/${EST}/vault`)).toBe(true)
     expect(guardBlocks('heir', `/estates/${EST}/lockbox`)).toBe(true)
-    expect(guardBlocks('heir', `/estates/${EST}/settings`)).toBe(true)
     expect(guardBlocks('heir', `/estates/${EST}/probate`)).toBe(true)
     expect(guardBlocks('heir', `/estates/${EST}/forms`)).toBe(true)
   })
 
   it('does NOT block a heir on routes meant for them (incl. their sacred dashboard)', () => {
     expect(guardBlocks('heir', `/estates/${EST}/dashboard`)).toBe(false)
+    expect(guardBlocks('heir', `/estates/${EST}/settings`)).toBe(false)
     expect(guardBlocks('heir', `/estates/${EST}/memoirs`)).toBe(false)
     expect(guardBlocks('heir', `/estates/${EST}/events`)).toBe(false)
     expect(guardBlocks('heir', `/estates/${EST}/obituary`)).toBe(false)

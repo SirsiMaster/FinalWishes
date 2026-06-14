@@ -55,7 +55,7 @@ export function SelectWithOther({
         <SelectTrigger
           className={
             triggerClassName ??
-            'w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base'
+            'w-full px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-ink text-base'
           }
         >
           <SelectValue placeholder={placeholder} />
@@ -76,7 +76,7 @@ export function SelectWithOther({
           onChange={(e) => handleOther(e.target.value)}
           placeholder="Please specify…"
           autoFocus
-          className="px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-slate-900 text-base"
+          className="px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-ink text-base"
         />
       )}
 

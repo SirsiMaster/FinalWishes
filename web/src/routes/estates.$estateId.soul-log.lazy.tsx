@@ -707,7 +707,7 @@ function EntryCard({
         {/* Video Thumbnail */}
         {entry.type === 'video' && entry.mediaUrl && (
           <div
-            className="aspect-video bg-slate-900 relative overflow-hidden cursor-pointer group"
+            className="aspect-video bg-royal relative overflow-hidden cursor-pointer group"
             onClick={onViewVideo}
           >
             <video
@@ -1789,7 +1789,7 @@ function VideoRecorder({
 
   return (
     <div className="space-y-4">
-      <div className="aspect-video rounded-2xl overflow-hidden bg-slate-900 relative">
+      <div className="aspect-video rounded-2xl overflow-hidden bg-royal relative">
         <video
           ref={videoPreviewRef}
           muted

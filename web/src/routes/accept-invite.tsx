@@ -196,10 +196,10 @@ function AcceptInvitePage() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal mb-2">
               Estate Invitation
             </h2>
-            <p className="text-slate-500 text-sm font-medium">
+            <p className="text-ink-muted text-sm font-medium">
               You've been invited to join an estate. Sign in or create an account to continue.
             </p>
           </div>
@@ -213,7 +213,7 @@ function AcceptInvitePage() {
             <Button
               variant="outline"
               onClick={() => navigate({ to: '/login', search: { invite: invitationId } } as any)}
-              className="w-full py-4 h-auto rounded-2xl font-bold border-slate-200"
+              className="w-full py-4 h-auto rounded-2xl font-bold border-[var(--neutral-border)]"
             >
               Create Account
             </Button>
@@ -234,10 +234,10 @@ function AcceptInvitePage() {
             <div className="w-8 h-8 border-2 border-[var(--gold)]/30 border-t-[var(--gold)] rounded-full animate-spin" />
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal mb-2">
               Almost There
             </h2>
-            <p className="text-slate-500 text-sm font-medium">
+            <p className="text-ink-muted text-sm font-medium">
               We're finalizing your access to this estate. This usually takes just a
               moment — we'll take you in automatically the instant it's ready.
             </p>
@@ -252,14 +252,14 @@ function AcceptInvitePage() {
             <Button
               variant="outline"
               onClick={() => window.location.reload()}
-              className="w-full py-4 h-auto rounded-2xl font-bold border-slate-200"
+              className="w-full py-4 h-auto rounded-2xl font-bold border-[var(--neutral-border)]"
             >
               Refresh
             </Button>
             <button
               type="button"
               onClick={() => navigate({ to: '/' })}
-              className="text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors"
+              className="text-xs font-semibold text-ink-muted hover:text-ink transition-colors"
             >
               Go to Home
             </button>
@@ -281,15 +281,15 @@ function AcceptInvitePage() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal mb-2">
               Invitation Error
             </h2>
-            <p className="text-slate-500 text-sm font-medium">{errorMsg}</p>
+            <p className="text-ink-muted text-sm font-medium">{errorMsg}</p>
           </div>
           <Button
             onClick={() => navigate({ to: '/' })}
             variant="outline"
-            className="py-4 h-auto rounded-2xl font-bold border-slate-200"
+            className="py-4 h-auto rounded-2xl font-bold border-[var(--neutral-border)]"
           >
             Go to Home
           </Button>
@@ -308,10 +308,10 @@ function AcceptInvitePage() {
             </svg>
           </div>
           <div>
-            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal mb-2">
               Welcome to the Estate
             </h2>
-            <p className="text-slate-500 text-sm font-medium">
+            <p className="text-ink-muted text-sm font-medium">
               Your invitation has been accepted. Redirecting to your dashboard...
             </p>
           </div>
@@ -325,7 +325,7 @@ function AcceptInvitePage() {
     <InviteCard>
       <div className="text-center space-y-6">
         <div className="w-10 h-10 mx-auto border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
-        <p className="text-slate-500 text-sm font-medium">
+        <p className="text-ink-muted text-sm font-medium">
           {status === 'accepting' ? 'Accepting your invitation...' : 'Loading invitation...'}
         </p>
       </div>
@@ -335,7 +335,7 @@ function AcceptInvitePage() {
 
 function InviteCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[var(--neutral-faint)]">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-[var(--royal)]/[0.03] blur-[120px] rounded-full" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[var(--royal)]/[0.05] blur-[120px] rounded-full" />

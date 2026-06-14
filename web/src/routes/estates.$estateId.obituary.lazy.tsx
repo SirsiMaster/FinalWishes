@@ -12,8 +12,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
-import { Download, QrCode, Bold, Italic, List, ListOrdered, Heading2, Undo2, Redo2 } from 'lucide-react'
+import { Download, QrCode } from 'lucide-react'
 import { ShareMemorial } from '@/components/estate/ShareMemorial'
+import { EditorToolbar } from './estates.$estateId.directives.lazy'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -205,15 +206,18 @@ function ObituaryPage() {
         createdBy: user?.uid,
         message: {
           subject: `Obituary: ${userName || 'Estate Record'}`,
+          // NOTE: This HTML is rendered by the recipient's email client, OUTSIDE the
+          // app's CSS scope, so it cannot resolve `var(--color-slate-*)` design tokens.
+          // Colors MUST be literal hex. Royal Neo-Deco ink (#142848) and muted (#4A5C7A).
           html: `
             <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
-              <h1 style="font-family: 'Cinzel', serif; color: var(--color-slate-900); font-size: 28px; margin-bottom: 8px;">Final Record</h1>
-              <p style="color: var(--color-slate-500); font-size: 14px; margin-bottom: 24px;">Official obituary for the ${userName || 'estate'} record.</p>
-              <div style="background: var(--color-slate-50); border: 1px solid var(--color-slate-200); border-radius: 12px; padding: 24px; white-space: pre-wrap; color: var(--color-slate-900); font-size: 16px; line-height: 1.7;">
+              <h1 style="font-family: 'Cinzel', serif; color: #142848; font-size: 28px; margin-bottom: 8px;">Final Record</h1>
+              <p style="color: #4A5C7A; font-size: 14px; margin-bottom: 24px;">Official obituary for the ${userName || 'estate'} record.</p>
+              <div style="background: #F5F7FA; border: 1px solid #E2E8F0; border-radius: 12px; padding: 24px; white-space: pre-wrap; color: #142848; font-size: 16px; line-height: 1.7;">
                 ${obit.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}
               </div>
               ${isSigned ? `<p style="margin-top: 24px; color: #16a34a; font-weight: bold;">Signed by: ${obit.signature}</p>` : ''}
-              <p style="margin-top: 32px; color: var(--color-slate-400); font-size: 11px;">Sent from FinalWishes Estate Platform</p>
+              <p style="margin-top: 32px; color: #4A5C7A; font-size: 11px;">Sent from FinalWishes Estate Platform</p>
             </div>
           `,
         },
@@ -467,17 +471,7 @@ function ObituaryPage() {
           </CardHeader>
           {/* Toolbar — only visible when editing */}
           {editing && !isSigned && editor && (
-            <div className="flex items-center gap-1 mx-6 mt-4 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBold().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Bold className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleItalic().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Italic className="w-4 h-4" /></Button>
-              <Separator orientation="vertical" className="h-5 mx-1" />
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`w-9 h-9 rounded-xl ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Heading2 className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><List className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('orderedList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><ListOrdered className="w-4 h-4" /></Button>
-              <Separator orientation="vertical" className="h-5 mx-1" />
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().undo().run()} className="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-200"><Undo2 className="w-4 h-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().redo().run()} className="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-200"><Redo2 className="w-4 h-4" /></Button>
-            </div>
+            <EditorToolbar editor={editor} className="mx-6 mt-4" />
           )}
           <CardContent className="flex-1 p-0">
             <EditorContent editor={editor} />

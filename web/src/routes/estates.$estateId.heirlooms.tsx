@@ -144,7 +144,7 @@ function HeirloomsPage() {
                 onClick={handleGooglePhotosImport}
                 disabled={importing || (tierUsage ? !tierUsage.canUploadMedia : false)}
                 variant="secondary"
-                className="px-6 py-3 md:px-8 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] bg-slate-100 text-slate-700 hover:bg-slate-200 w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 md:px-8 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] bg-[var(--royal)]/5 text-[var(--ink-muted)] hover:bg-[var(--royal)]/10 w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {importing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Image className="w-5 h-5" />}
                 Import from Google Photos
@@ -171,8 +171,8 @@ function HeirloomsPage() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-slate-900">{tierUpgradeMessage(tierUsage, 'media')}</p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-sm font-bold text-[var(--ink)]">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-[var(--ink-muted)] mt-1">
               {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
             </p>
           </div>
@@ -186,15 +186,15 @@ function HeirloomsPage() {
           { label: 'Estimated Value', value: formatCurrency(stats.totalValue), icon: DollarSign },
           { label: 'Categories', value: String(stats.categories), icon: Archive },
         ].map((s) => (
-          <Card key={s.label} className="bg-slate-50 rounded-3xl border-slate-100 py-0">
+          <Card key={s.label} variant="glass" className="py-0">
             <CardContent className="p-8">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
                   <s.icon className="w-5 h-5 text-[var(--royal)]" />
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-slate-900">{s.value}</p>
-                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{s.label}</p>
+                  <p className="text-3xl font-bold text-[var(--ink)]">{s.value}</p>
+                  <p className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest">{s.label}</p>
                 </div>
               </div>
             </CardContent>
@@ -207,7 +207,7 @@ function HeirloomsPage() {
         <Button
           variant={filterCategory === 'all' ? 'default' : 'secondary'}
           onClick={() => setFilterCategory('all')}
-          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-[var(--royal)]/5 text-[var(--ink-muted)] hover:bg-[var(--royal)]/10'}`}
         >
           All
         </Button>
@@ -216,7 +216,7 @@ function HeirloomsPage() {
             key={c.value}
             variant={filterCategory === c.value ? 'default' : 'secondary'}
             onClick={() => setFilterCategory(c.value)}
-            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-[var(--royal)]/5 text-[var(--ink-muted)] hover:bg-[var(--royal)]/10'}`}
           >
             <c.icon className="w-3.5 h-3.5" />
             {c.label}
@@ -258,16 +258,35 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
   const activeHeirs = heirs.filter(h => h.status === 'active')
 
   const handleArchive = useCallback(async () => {
-    await archiveHeirloom(estateId, item.id)
+    const result = await archiveHeirloom(estateId, item.id)
     setConfirming(false)
+    if (!result?.success) {
+      toast.error(result?.error || 'Could not archive. Please try again.')
+      return
+    }
     toast.success('Heirloom archived')
   }, [estateId, item.id])
 
+  // Persist a visibility change with optimistic UI + revert-on-failure.
+  // `prev` is the value to roll back to if the write fails (fire-and-forget
+  // previously swallowed errors, leaving the UI out of sync with Firestore).
+  const persistVisibility = useCallback(
+    async (next: string[], prev: string[]) => {
+      setVisibleTo(next)
+      const result = await updateHeirloom(estateId, item.id, { visibleTo: next })
+      if (!result?.success) {
+        setVisibleTo(prev)
+        toast.error(result?.error || 'Could not update visibility. Please try again.')
+      }
+    },
+    [estateId, item.id],
+  )
+
   return (
-    <Card className="rounded-3xl border-slate-100 hover:border-[var(--royal)]/10 transition-all group py-0 overflow-hidden">
+    <Card variant="glass" className="group py-0">
       <CardContent className="p-0">
         {/* Photo / Placeholder */}
-        <div className="relative h-48 bg-slate-50 flex items-center justify-center overflow-hidden">
+        <div className="relative h-48 bg-[var(--royal)]/5 flex items-center justify-center overflow-hidden">
           {hasPhoto ? (
             <img
               src={item.photoUrls[0]}
@@ -293,7 +312,7 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
         <div className="p-8">
           {/* Name & Value */}
           <div className="flex items-start justify-between mb-4">
-            <h3 className="text-lg font-bold text-slate-900">{item.name}</h3>
+            <h3 className="text-lg font-bold text-[var(--ink)]">{item.name}</h3>
             {item.estimatedValue != null && item.estimatedValue > 0 && (
               <Badge className="px-3 py-1.5 h-auto bg-[var(--gold)]/10 text-[var(--gold)] text-[11px] font-bold rounded-lg border-transparent">
                 <DollarSign className="w-3 h-3" />
@@ -304,19 +323,19 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
 
           {/* Description */}
           {item.description && (
-            <p className="text-[13px] text-slate-500 line-clamp-2 mb-4">{item.description}</p>
+            <p className="text-[13px] text-[var(--ink-muted)] line-clamp-2 mb-4">{item.description}</p>
           )}
 
           {/* Meta row */}
           <div className="flex flex-wrap gap-4 mb-4">
             {item.designatedHeir && (
-              <div className="flex items-center gap-1.5 text-[12px] text-slate-700">
+              <div className="flex items-center gap-1.5 text-[12px] text-[var(--ink-muted)]">
                 <User className="w-3.5 h-3.5 text-[var(--royal)]/40" />
                 <span className="font-medium">{item.designatedHeir}</span>
               </div>
             )}
             {item.location && (
-              <div className="flex items-center gap-1.5 text-[12px] text-slate-700">
+              <div className="flex items-center gap-1.5 text-[12px] text-[var(--ink-muted)]">
                 <MapPin className="w-3.5 h-3.5 text-[var(--royal)]/40" />
                 <span className="font-medium">{item.location}</span>
               </div>
@@ -325,9 +344,9 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
 
           {/* Provenance */}
           {item.provenance && (
-            <div className="bg-slate-50 rounded-2xl p-5 mb-4">
+            <div className="bg-[var(--gold)]/8 rounded-2xl p-5 mb-4">
               <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest mb-2">Provenance</p>
-              <p className="text-[13px] text-slate-700 line-clamp-3">{item.provenance}</p>
+              <p className="text-[13px] text-[var(--ink-muted)] line-clamp-3">{item.provenance}</p>
             </div>
           )}
 
@@ -336,11 +355,11 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
             <div className="mb-4 pt-3">
               <div className="flex items-center gap-2 mb-2.5">
                 {visibleTo.length === 0 ? (
-                  <Globe className="w-3.5 h-3.5 text-slate-500" />
+                  <Globe className="w-3.5 h-3.5 text-[var(--ink-muted)]" />
                 ) : (
                   <Users className="w-3.5 h-3.5 text-[var(--royal)]" />
                 )}
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+                <span className="text-[11px] font-bold text-[var(--ink-muted)] uppercase tracking-widest">
                   {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
                 </span>
               </div>
@@ -348,13 +367,12 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    setVisibleTo([])
-                    updateHeirloom(estateId, item.id, { visibleTo: [] })
+                    void persistVisibility([], visibleTo)
                   }}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     visibleTo.length === 0
                       ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                      : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                      : 'border-[var(--royal)]/15 text-[var(--ink-muted)] hover:border-[var(--gold)]/40'
                   }`}
                 >
                   Everyone
@@ -369,13 +387,12 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                         const next = selected
                           ? visibleTo.filter((n) => n !== heir.id)
                           : [...visibleTo, heir.id]
-                        setVisibleTo(next)
-                        updateHeirloom(estateId, item.id, { visibleTo: next })
+                        void persistVisibility(next, visibleTo)
                       }}
                       className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                         selected
                           ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                          : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                          : 'border-[var(--royal)]/15 text-[var(--ink-muted)] hover:border-[var(--gold)]/40'
                       }`}
                     >
                       {heir.fullName}
@@ -386,7 +403,7 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
             </div>
           )}
 
-          <Separator className="bg-slate-50 mb-4" />
+          <Separator className="bg-[var(--royal)]/5 mb-4" />
 
           {/* Archive action */}
           <div className="flex justify-end">
@@ -396,7 +413,7 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                 <Button variant="destructive" size="xs" onClick={handleArchive} className="text-[12px] font-bold">
                   Yes
                 </Button>
-                <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-slate-500">
+                <Button variant="ghost" size="xs" onClick={() => setConfirming(false)} className="text-[12px] font-bold text-[var(--ink-muted)]">
                   No
                 </Button>
               </div>
@@ -407,7 +424,7 @@ function HeirloomCard({ item, estateId, heirs }: { item: Heirloom; estateId: str
                 onClick={() => setConfirming(true)}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Archive className="w-4 h-4 text-slate-400 hover:text-[#DC2626]" />
+                <Archive className="w-4 h-4 text-[var(--ink-muted)]/60 hover:text-[#DC2626]" />
               </Button>
             )}
           </div>
@@ -609,7 +626,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
         className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10"
       >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--ink)]">
             Add Heirloom
           </DialogTitle>
           <DialogDescription>
@@ -627,7 +644,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="e.g., Grandmother's Diamond Ring, Steinway Grand Piano"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+              className="px-5 py-4 h-auto rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)]"
             />
           </div>
 
@@ -637,7 +654,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               Category
             </Label>
             <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
-              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900">
+              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)]">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -660,7 +677,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
               placeholder="Describe the item — materials, condition, distinguishing features..."
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
+              className="px-5 py-4 rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)] resize-none"
             />
           </div>
 
@@ -675,7 +692,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                 value={form.estimatedValue}
                 onChange={(e) => setForm((f) => ({ ...f, estimatedValue: e.target.value }))}
                 placeholder="$0"
-                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+                className="px-5 py-4 h-auto rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)]"
               />
             </div>
             <div className="space-y-2">
@@ -686,7 +703,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                 value={form.designatedHeir}
                 onChange={(e) => setForm((f) => ({ ...f, designatedHeir: e.target.value }))}
                 placeholder="Name of the intended recipient"
-                className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+                className="px-5 py-4 h-auto rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)]"
               />
             </div>
           </div>
@@ -700,7 +717,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               value={form.location}
               onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
               placeholder="Where is the item kept? e.g., Master bedroom safe, Storage unit #42"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-slate-900"
+              className="px-5 py-4 h-auto rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)]"
             />
           </div>
 
@@ -714,7 +731,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               onChange={(e) => setForm((f) => ({ ...f, provenance: e.target.value }))}
               placeholder="The history and story behind this item — where it came from, who owned it, why it matters..."
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-slate-900 resize-none"
+              className="px-5 py-4 rounded-2xl border-[var(--royal)]/15 text-[14px] text-[var(--ink)] resize-none"
             />
           </div>
 
@@ -730,7 +747,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               className={`
                 border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all
                 ${photoUploads.length >= MAX_IMAGES
-                  ? 'border-slate-200 bg-slate-50 cursor-not-allowed opacity-60'
+                  ? 'border-[var(--royal)]/15 bg-[var(--royal)]/5 cursor-not-allowed opacity-60'
                   : isDragActive
                     ? 'border-[var(--royal)] bg-[var(--royal)]/5 scale-[1.01]'
                     : 'border-[var(--royal)]/20 hover:border-[var(--royal)]/40 hover:bg-[var(--royal)]/[0.02]'
@@ -741,13 +758,13 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               <div className="flex flex-col items-center gap-3">
                 <div
                   className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
-                    isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-slate-50 text-[var(--royal)] border border-[var(--royal)]/10'
+                    isDragActive ? 'bg-[var(--royal)] text-white' : 'bg-[var(--royal)]/5 text-[var(--royal)] border border-[var(--royal)]/10'
                   }`}
                 >
                   <Upload className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-slate-900 font-bold text-[14px]">
+                  <p className="text-[var(--ink)] font-bold text-[14px]">
                     {photoUploads.length >= MAX_IMAGES
                       ? 'Maximum photos reached'
                       : isDragActive
@@ -772,7 +789,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
                 {photoUploads.map((upload, i) => (
                   <div key={`${upload.file.name}-${i}`} className="relative group">
-                    <div className="aspect-square rounded-xl overflow-hidden border border-[var(--royal)]/10 bg-slate-50">
+                    <div className="aspect-square rounded-xl overflow-hidden border border-[var(--royal)]/10 bg-[var(--royal)]/5">
                       <img
                         src={upload.previewUrl}
                         alt={upload.file.name}
@@ -810,7 +827,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                     <button
                       type="button"
                       onClick={() => removePhoto(upload.file)}
-                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-slate-900 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-[var(--royal)] text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -820,7 +837,7 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
             )}
 
             {/* Manual URL fallback */}
-            <Separator className="bg-slate-100" />
+            <Separator className="bg-[var(--royal)]/10" />
             <div className="space-y-2">
               <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest">
                 Or paste image URLs directly
@@ -829,19 +846,19 @@ function AddHeirloomModal({ estateId, open, onOpenChange }: { estateId: string; 
                 value={form.manualUrls}
                 onChange={(e) => setForm((f) => ({ ...f, manualUrls: e.target.value }))}
                 placeholder="https://example.com/photo1.jpg, https://example.com/photo2.jpg"
-                className="px-5 py-3 h-auto rounded-2xl border-slate-200 text-[13px] text-slate-900"
+                className="px-5 py-3 h-auto rounded-2xl border-[var(--royal)]/15 text-[13px] text-[var(--ink)]"
               />
-              <p className="text-[11px] text-slate-400">Separate multiple URLs with commas.</p>
+              <p className="text-[11px] text-[var(--ink-muted)]/60">Separate multiple URLs with commas.</p>
             </div>
           </div>
         </div>
 
         {/* Actions */}
-        <DialogFooter className="gap-4 pt-8 border-t border-slate-100">
+        <DialogFooter className="gap-4 pt-8 border-t border-[var(--royal)]/10">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[var(--ink-muted)]"
           >
             Cancel
           </Button>

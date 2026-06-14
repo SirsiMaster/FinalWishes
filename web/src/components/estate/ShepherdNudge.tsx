@@ -61,7 +61,7 @@ export function ShepherdNudge({ message, ctaLabel, ctaRoute, onDismiss }: Shephe
 
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
-          <p className="text-[13px] text-slate-900/80 leading-relaxed font-medium">
+          <p className="text-[13px] text-ink/80 leading-relaxed font-medium">
             {message}
           </p>
           {ctaLabel && ctaRoute && (

@@ -19,7 +19,7 @@ function NotFound() {
         >
           Page Not Found
         </h2>
-        <p className="text-slate-400 text-[15px] leading-relaxed">
+        <p className="text-white/70 text-[15px] leading-relaxed">
           The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <Link

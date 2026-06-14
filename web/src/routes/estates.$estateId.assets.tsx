@@ -137,10 +137,10 @@ function AssetsPage() {
       />
 
       {/* -- Asset Table -- */}
-      <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden overflow-x-auto shadow-sm">
+      <div className="bg-white rounded-[2.5rem] border border-neutral-border overflow-hidden overflow-x-auto shadow-sm">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50 border-b border-slate-100 hover:bg-slate-50">
+            <TableRow className="bg-neutral-faint border-b border-neutral-border hover:bg-neutral-faint">
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-[var(--royal)]/40">Asset Name</TableHead>
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-[var(--royal)]/40">Category</TableHead>
               <TableHead className="px-10 py-6 text-[11px] uppercase tracking-widest font-bold text-[var(--royal)]/40">Estimated Value</TableHead>
@@ -150,10 +150,10 @@ function AssetsPage() {
           </TableHeader>
           <TableBody className="text-[14px] font-medium text-[var(--royal)]/70">
             {assets.map((a) => (
-              <TableRow key={a.id} className="border-b border-slate-50 hover:bg-slate-50 transition-all group">
+              <TableRow key={a.id} className="border-b border-neutral-faint hover:bg-neutral-faint transition-all group">
                 <TableCell className="px-10 py-7 font-bold text-[var(--royal)] text-[15px]">{a.name}</TableCell>
                 <TableCell className="px-10 py-7">
-                  <Badge variant="secondary" className="px-4 py-1.5 bg-slate-100 text-[var(--royal)]/70 font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">
+                  <Badge variant="secondary" className="px-4 py-1.5 bg-neutral-faint text-[var(--royal)]/70 font-bold text-[11px] uppercase tracking-widest rounded-lg border border-neutral-border">
                     {a.category}
                   </Badge>
                 </TableCell>
@@ -174,7 +174,7 @@ function AssetsPage() {
                   </Badge>
                 </TableCell>
                 <TableCell className="px-10 py-7 text-right">
-                  <Button variant="outline" onClick={() => setEditingAsset(a)} className="text-[var(--royal)] font-bold text-[12px] bg-slate-50 hover:bg-[var(--royal)] hover:text-white px-5 py-2.5 rounded-xl border border-slate-100 h-auto">
+                  <Button variant="outline" onClick={() => setEditingAsset(a)} className="text-[var(--royal)] font-bold text-[12px] bg-neutral-faint hover:bg-[var(--royal)] hover:text-white px-5 py-2.5 rounded-xl border border-neutral-border h-auto">
                     View Details
                   </Button>
                 </TableCell>
@@ -194,7 +194,7 @@ function AssetsPage() {
 
       {/* -- Add Asset Dialog -- */}
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-slate-100 shadow-2xl">
+        <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-neutral-border shadow-2xl">
           <DialogHeader className="space-y-3 mb-12">
             <DialogTitle className="text-3xl font-bold text-[var(--royal)] tracking-tight">Add New Asset</DialogTitle>
             <DialogDescription className="text-[var(--royal)]/60 font-medium text-sm">
@@ -216,14 +216,14 @@ function AssetsPage() {
                 id="asset-name"
                 name="name"
                 required
-                className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
+                className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
                 placeholder="e.g. Chase Savings Account"
               />
             </div>
             <div className="space-y-3">
               <Label className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Asset Category</Label>
               <Select value={assetCategory} onValueChange={setAssetCategory}>
-                <SelectTrigger className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] font-bold text-[var(--royal)] text-lg h-auto">
+                <SelectTrigger className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] font-bold text-[var(--royal)] text-lg h-auto">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -244,7 +244,7 @@ function AssetsPage() {
                 id="asset-value"
                 name="value"
                 required
-                className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
+                className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
                 placeholder="e.g. $125,000"
               />
             </div>
@@ -253,7 +253,7 @@ function AssetsPage() {
                 type="button"
                 variant="ghost"
                 onClick={() => setModalOpen(false)}
-                className="flex-1 py-5 rounded-2xl border border-slate-100 font-bold text-[var(--royal)]/40 text-sm hover:bg-slate-50 h-auto"
+                className="flex-1 py-5 rounded-2xl border border-neutral-border font-bold text-[var(--royal)]/40 text-sm hover:bg-neutral-faint h-auto"
               >
                 Cancel
               </Button>
@@ -271,7 +271,7 @@ function AssetsPage() {
 
       {/* -- Edit Asset Dialog -- */}
       <Dialog open={editingAsset !== null} onOpenChange={(open) => { if (!open) { setEditingAsset(null); setConfirmArchive(false); } }}>
-        <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-slate-100 shadow-2xl">
+        <DialogContent className="bg-white rounded-[3rem] p-16 max-w-xl border border-neutral-border shadow-2xl">
           <DialogHeader className="space-y-3 mb-12">
             <DialogTitle className="text-3xl font-bold text-[var(--royal)] tracking-tight font-[family-name:var(--font-cinzel)]">Edit Asset</DialogTitle>
             <DialogDescription className="text-[var(--royal)]/60 font-medium text-sm">
@@ -296,7 +296,7 @@ function AssetsPage() {
                   name="edit-name"
                   required
                   defaultValue={editingAsset.name}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
+                  className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
                 />
               </div>
               <div className="space-y-3">
@@ -305,7 +305,7 @@ function AssetsPage() {
                   id="edit-asset-category"
                   name="edit-category"
                   defaultValue={editingAsset.category}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] font-bold text-[var(--royal)] text-lg h-auto appearance-none"
+                  className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] font-bold text-[var(--royal)] text-lg h-auto appearance-none"
                 >
                   <option value="Real Estate">Real Estate</option>
                   <option value="Cash">Cash / Savings</option>
@@ -324,7 +324,7 @@ function AssetsPage() {
                   name="edit-value"
                   required
                   defaultValue={editingAsset.estimatedValue ? `$${editingAsset.estimatedValue.toLocaleString()}` : ''}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
+                  className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-lg h-auto"
                   placeholder="e.g. $125,000"
                 />
               </div>
@@ -335,7 +335,7 @@ function AssetsPage() {
                   name="edit-description"
                   defaultValue={editingAsset.description || ''}
                   rows={3}
-                  className="w-full px-8 py-5 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-base resize-none"
+                  className="w-full px-8 py-5 rounded-2xl border border-neutral-border bg-neutral-faint/50 focus:bg-white focus:border-[var(--royal)] focus:ring-8 focus:ring-[var(--royal)]/5 outline-none font-bold text-[var(--royal)] placeholder:text-[var(--royal)]/30 text-base resize-none"
                   placeholder="Optional notes about this asset"
                 />
               </div>
@@ -365,7 +365,7 @@ function AssetsPage() {
                   type="button"
                   variant="ghost"
                   onClick={() => { setEditingAsset(null); setConfirmArchive(false); }}
-                  className="py-5 rounded-2xl border border-slate-100 font-bold text-[var(--royal)]/40 text-sm hover:bg-slate-50 h-auto px-6"
+                  className="py-5 rounded-2xl border border-neutral-border font-bold text-[var(--royal)]/40 text-sm hover:bg-neutral-faint h-auto px-6"
                 >
                   Cancel
                 </Button>
@@ -436,7 +436,7 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
             <div
               key={asset.id}
               className={`flex items-center justify-between p-4 rounded-xl border transition-colors ${
-                isComplete ? 'bg-green-50/50 border-green-200/50' : 'bg-white border-slate-100 hover:border-[var(--gold)]/20'
+                isComplete ? 'bg-green-50/50 border-green-200/50' : 'bg-white border-neutral-border hover:border-[var(--gold)]/20'
               }`}
             >
               <div className="flex-1">
@@ -444,7 +444,7 @@ function ProbateAvoidanceSection({ estateId, assets }: { estateId: string; asset
                   <span className={`font-medium text-sm ${isComplete ? 'text-green-700' : 'text-[var(--royal)]'}`}>
                     {asset.name}
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-900/5 text-[var(--royal)]/50">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--royal-subtle)] text-[var(--royal)]/50">
                     {asset.category}
                   </span>
                   {isComplete && (

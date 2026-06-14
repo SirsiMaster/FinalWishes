@@ -186,8 +186,12 @@ function LifeChaptersPage() {
     const chapter = chapters.find((c) => c.id === chapterId)
     if (!chapter) return
     const updatedRefs = (chapter.entryRefs || []).filter((e) => e.docId !== docId)
-    await updateLifeChapter(estateId, chapterId, { entryRefs: updatedRefs })
-    toast.success('Entry removed')
+    const result = await updateLifeChapter(estateId, chapterId, { entryRefs: updatedRefs })
+    if (result.success) {
+      toast.success('Entry removed')
+    } else {
+      toast.error(result.error || 'Could not remove entry.')
+    }
   }, [estateId, chapters])
 
   // Available entries not yet assigned to the expanded chapter

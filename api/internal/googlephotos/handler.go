@@ -14,7 +14,8 @@ import (
 	"cloud.google.com/go/storage"
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"
-	"google.golang.org/api/iterator"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/sirsi-technologies/finalwishes-api/internal/auth"
 )
@@ -28,9 +29,26 @@ type Handler struct {
 	bucket string
 }
 
+// defaultVaultBucket is the dev/default vault bucket name. It MUST stay in sync
+// with the default used by the rest of the vault/storage pipeline (vault,
+// docintell, certmail) so that imported Google Photos heirlooms land in the
+// exact same bucket the signed-URL download path later reads from. If a deploy
+// configures a non-default prod bucket, the caller (cmd/api) must pass it
+// explicitly — falling back to this literal under a non-default prod config
+// would orphan imported photos in a bucket nothing else reads.
+const defaultVaultBucket = "finalwishes-vault"
+
 func NewHandler(fs *firestore.Client, sc *storage.Client, picker *PickerClient, bucket string) *Handler {
 	if bucket == "" {
-		bucket = "finalwishes-vault"
+		// A blank bucket means the vault-bucket env var resolved to empty at
+		// startup. Surface it loudly: a silent literal substitution here is the
+		// exact mechanism by which imports get written to a bucket the download
+		// path never reads. The literal keeps dev working, but the warning makes
+		// a prod misconfiguration visible instead of invisibly orphaning photos.
+		log.Warn().
+			Str("fallback_bucket", defaultVaultBucket).
+			Msg("Google Photos handler received empty vault bucket; falling back to default — verify the vault-bucket env var matches the rest of the vault pipeline in prod")
+		bucket = defaultVaultBucket
 	}
 	return &Handler{fs: fs, sc: sc, picker: picker, bucket: bucket}
 }
@@ -216,10 +234,11 @@ func (h *Handler) hasHash(ctx context.Context, estateID, sha string) (bool, erro
 	if err == nil {
 		return true, nil
 	}
-	if iterator.Done == err {
-		return false, nil
-	}
-	if strings.Contains(err.Error(), "NotFound") || strings.Contains(err.Error(), "not found") {
+	// A Firestore single-doc Get on a missing document returns a gRPC NotFound
+	// status — this is the canonical "no duplicate" signal (the iterator.Done
+	// sentinel only ever comes from iterator.Next(), never Doc().Get()). Match
+	// the repo convention used in payments/handlers.go (status.Code(err)==...).
+	if status.Code(err) == codes.NotFound {
 		return false, nil
 	}
 	// Any other error (transient, permission, config) is NOT "no duplicate" —

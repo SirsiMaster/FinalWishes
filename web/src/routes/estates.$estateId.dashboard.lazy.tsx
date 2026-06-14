@@ -329,7 +329,7 @@ function ShepherdChat({
                     'rounded-2xl px-4 py-2.5 max-w-[85%] text-sm leading-relaxed',
                     msg.role === 'user'
                       ? 'bg-[var(--royal)] text-white rounded-tr-sm'
-                      : 'bg-slate-50 text-slate-900 rounded-tl-sm border border-slate-100',
+                      : 'bg-slate-50 text-[var(--royal)] rounded-tl-sm border border-slate-100',
                   )}
                 >
                   {msg.content}
@@ -822,10 +822,10 @@ function DashboardIndex() {
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-slate-900 mb-2 font-[family-name:var(--font-cinzel)]">
+              <h3 className="text-lg font-bold text-[var(--royal)] mb-2 font-[family-name:var(--font-cinzel)]">
                 The Shepherd
               </h3>
-              <p className="text-slate-500 text-base leading-relaxed mb-5">
+              <p className="text-[var(--royal)]/60 text-base leading-relaxed mb-5">
                 {shepherdPrompt}
               </p>
               <div className="flex flex-wrap gap-3">
@@ -874,10 +874,10 @@ function DashboardIndex() {
               <line x1="8" y1="23" x2="16" y2="23" />
             </svg>
           </div>
-          <h3 className="text-xl font-bold text-slate-900/40 font-[family-name:var(--font-cinzel)]">
+          <h3 className="text-xl font-bold text-[var(--royal)]/40 font-[family-name:var(--font-cinzel)]">
             Your Legacy Timeline
           </h3>
-          <p className="text-slate-500 max-w-md mx-auto leading-relaxed">
+          <p className="text-[var(--royal)]/60 max-w-md mx-auto leading-relaxed">
             Every voice memo, photo, document, and heirloom you add will appear here — a living portrait of the life you're preserving.
           </p>
         </div>
@@ -885,7 +885,7 @@ function DashboardIndex() {
         <div className="space-y-2">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--royal)]/30 uppercase tracking-[0.3em] mb-6">
             <span>Legacy Timeline</span>
-            <Badge variant="secondary" className="text-[10px] font-bold text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+            <Badge variant="secondary" className="text-[10px] font-bold text-[var(--royal)]/40 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
               {totalEntryCount} {totalEntryCount === 1 ? 'moment' : 'moments'}
             </Badge>
           </div>
@@ -901,7 +901,7 @@ function DashboardIndex() {
                   <div className="w-12 flex justify-center relative z-10">
                     <div className="w-3 h-3 rounded-full bg-[var(--royal)]/20 border-2 border-white" />
                   </div>
-                  <span className="text-sm font-bold text-slate-900 font-[family-name:var(--font-cinzel)] tracking-wide">
+                  <span className="text-sm font-bold text-[var(--royal)] font-[family-name:var(--font-cinzel)] tracking-wide">
                     {group.label}
                   </span>
                 </div>
@@ -928,16 +928,16 @@ function DashboardIndex() {
                           <TimelineIcon type={entry.type} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-900 truncate">
+                          <p className="text-sm font-medium text-[var(--royal)] truncate">
                             {entry.title}
                           </p>
                           {entry.subtitle && (
-                            <p className="text-xs text-slate-500 truncate mt-0.5">
+                            <p className="text-xs text-[var(--royal)]/60 truncate mt-0.5">
                               {entry.subtitle}
                             </p>
                           )}
                         </div>
-                        <span className="text-[11px] text-slate-300 flex-shrink-0 tabular-nums">
+                        <span className="text-[11px] text-[var(--royal)]/30 flex-shrink-0 tabular-nums">
                           {entry.date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
                         </span>
                       </Link>
@@ -1031,8 +1031,8 @@ function DashboardIndex() {
                   </svg>
                 </div>
                 <div>
-                  <span className="text-base font-bold text-slate-900">Estate Health Check</span>
-                  <span className="text-sm text-slate-500 ml-3">
+                  <span className="text-base font-bold text-[var(--royal)]">Estate Health Check</span>
+                  <span className="text-sm text-[var(--royal)]/60 ml-3">
                     {scoreLoading ? '...' : `${percent}% complete`}
                     {score && ` — ${score.completedSteps} of ${score.totalSteps} steps`}
                   </span>
@@ -1041,7 +1041,7 @@ function DashboardIndex() {
               <svg
                 viewBox="0 0 24 24"
                 className={cn(
-                  'w-5 h-5 text-slate-300 transition-transform',
+                  'w-5 h-5 text-[var(--royal)]/30 transition-transform',
                   checklistOpen && 'rotate-180',
                 )}
                 fill="none"
@@ -1089,14 +1089,14 @@ function DashboardIndex() {
                             <div className="flex-1 min-w-0">
                               <p className={cn(
                                 'text-sm font-semibold transition-colors',
-                                step.complete ? 'text-[var(--success)]' : 'text-slate-900 group-hover/step:text-[var(--royal)]',
+                                step.complete ? 'text-[var(--success)]' : 'text-[var(--royal)] group-hover/step:text-[var(--royal)]',
                               )}>
                                 {step.label}
                               </p>
-                              <p className="text-xs text-slate-500 truncate">{step.description}</p>
+                              <p className="text-xs text-[var(--royal)]/60 truncate">{step.description}</p>
                             </div>
                             {!step.complete && (
-                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/step:text-[var(--royal)] transition-colors" fill="none" stroke="currentColor" strokeWidth="2">
+                              <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--royal)]/30 group-hover/step:text-[var(--royal)] transition-colors" fill="none" stroke="currentColor" strokeWidth="2">
                                 <polyline points="9 18 15 12 9 6" />
                               </svg>
                             )}
@@ -1107,7 +1107,7 @@ function DashboardIndex() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-slate-500">Loading checklist...</p>
+                <p className="text-sm text-[var(--royal)]/60">Loading checklist...</p>
               )}
             </div>
           </CollapsibleContent>
@@ -1132,8 +1132,8 @@ function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <HoverCard glowColor="rgba(19,51,120,0.1)" tiltDeg={3}>
       <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 transition-all">
-        <div className="text-2xl font-bold text-slate-900 tabular-nums">{value}</div>
-        <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{label}</div>
+        <div className="text-2xl font-bold text-[var(--royal)] tabular-nums">{value}</div>
+        <div className="text-xs font-semibold text-[var(--royal)]/40 uppercase tracking-wider">{label}</div>
       </div>
     </HoverCard>
   )
@@ -1154,18 +1154,18 @@ function QuickAction({ label, icon, route, primary }: QuickActionProps) {
         'flex items-center gap-3 px-5 py-4 rounded-xl transition-all no-underline group',
         primary
           ? 'bg-[var(--royal)] text-white hover:bg-[var(--sapphire)] shadow-sm'
-          : 'bg-slate-50 border border-slate-100 text-slate-900 hover:border-[var(--royal)]/20 hover:shadow-sm',
+          : 'bg-slate-50 border border-slate-100 text-[var(--royal)] hover:border-[var(--royal)]/20 hover:shadow-sm',
       )}
     >
       <div className={cn(
         'transition-colors',
-        primary ? 'text-white/70 group-hover:text-white' : 'text-slate-400 group-hover:text-[var(--royal)]',
+        primary ? 'text-white/70 group-hover:text-white' : 'text-[var(--royal)]/40 group-hover:text-[var(--royal)]',
       )}>
         {icon}
       </div>
       <span className={cn(
         'text-sm font-semibold',
-        primary ? 'text-white' : 'text-slate-900 group-hover:text-[var(--royal)]',
+        primary ? 'text-white' : 'text-[var(--royal)] group-hover:text-[var(--royal)]',
       )}>
         {label}
       </span>

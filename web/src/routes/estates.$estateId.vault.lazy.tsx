@@ -535,7 +535,7 @@ function VaultPage() {
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+              <h3 className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">
                 Documents Your Estate Needs
               </h3>
               <p className="text-[13px] text-[var(--royal)]/50 font-medium mt-0.5">
@@ -634,7 +634,7 @@ function VaultPage() {
                             <div className="min-w-0">
                               <span
                                 className={`text-[14px] font-bold block ${
-                                  isUploaded ? 'text-[var(--gold)]' : 'text-slate-900'
+                                  isUploaded ? 'text-[var(--gold)]' : 'text-[var(--royal)]'
                                 }`}
                               >
                                 {item.name}
@@ -674,8 +674,8 @@ function VaultPage() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-slate-900">{tierUpgradeMessage(tierUsage, 'media')}</p>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-sm font-bold text-[var(--royal)]">{tierUpgradeMessage(tierUsage, 'media')}</p>
+            <p className="text-xs text-[var(--royal)]/60 mt-1">
               {tierUsage.mediaCount} of {tierUsage.limits.maxMedia} uploads used
             </p>
             <Link
@@ -717,7 +717,7 @@ function VaultPage() {
             </svg>
           </div>
           <div>
-            <p className="text-slate-900 font-bold text-lg">
+            <p className="text-[var(--royal)] font-bold text-lg">
               {isDragActive ? 'Drop files here' : 'Drag & drop files, or click to browse'}
             </p>
             <p className="text-[13px] text-[var(--royal)]/40 mt-1">
@@ -873,7 +873,7 @@ function UploadProgress({ upload }: { upload: UploadState }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[13px] font-bold text-slate-900 truncate">{upload.file.name}</span>
+          <span className="text-[13px] font-bold text-[var(--royal)] truncate">{upload.file.name}</span>
           <span
             className={`text-[11px] font-semibold ${
               isError ? 'text-red-600' : isDone ? 'text-green-600' : 'text-[var(--royal)]'
@@ -931,7 +931,7 @@ function VaultFolder({
         </div>
         <h4
           className={`font-[family-name:var(--font-cinzel)] font-bold text-lg mb-2 transition-colors ${
-            active ? 'text-white' : 'text-slate-900 group-hover:text-[var(--royal)]'
+            active ? 'text-white' : 'text-[var(--royal)] group-hover:text-[var(--royal)]'
           }`}
         >
           {name}
@@ -997,7 +997,7 @@ function DocItem({
             <FileIcon mimeType={doc.mimeType} />
           </div>
           <div className="min-w-0">
-            <div className="text-slate-900 font-bold text-[15px] mb-0.5 group-hover:text-[var(--royal)] transition-colors truncate">
+            <div className="text-[var(--royal)] font-bold text-[15px] mb-0.5 group-hover:text-[var(--royal)] transition-colors truncate">
               {doc.displayName || doc.originalName}
             </div>
             <div className="flex items-center gap-3 text-[12px] font-medium text-[var(--royal)]/40 flex-wrap">
@@ -1127,7 +1127,7 @@ function DocItem({
         <div className="border-t border-[var(--royal)]/10 bg-slate-50 px-6 py-4">
           <div className="flex items-center gap-2 mb-3">
             {visibleTo.length === 0 ? (
-              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[var(--royal)]/60" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="2" y1="12" x2="22" y2="12" />
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -1140,7 +1140,7 @@ function DocItem({
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             )}
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+            <span className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
               {visibleTo.length === 0 ? 'Visible to all heirs' : `Visible to ${visibleTo.length} selected`}
             </span>
           </div>
@@ -1153,7 +1153,7 @@ function DocItem({
               className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                 visibleTo.length === 0
                   ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                  : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                  : 'border-slate-200 text-[var(--royal)]/60 hover:border-slate-300'
               }`}
             >
               Everyone
@@ -1173,7 +1173,7 @@ function DocItem({
                   className={`text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
                     selected
                       ? 'border-[var(--royal)] bg-[var(--royal)]/5 text-[var(--royal)]'
-                      : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                      : 'border-slate-200 text-[var(--royal)]/60 hover:border-slate-300'
                   }`}
                 >
                   {heir.fullName}
@@ -1242,7 +1242,7 @@ function PreviewModalContent({
       <DialogHeader className="p-6 border-b border-[var(--royal)]/10">
         <div className="flex items-center justify-between">
           <div className="min-w-0 flex-1">
-            <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-bold text-slate-900 truncate">
+            <DialogTitle className="text-lg font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)] truncate">
               {doc.displayName || doc.originalName}
             </DialogTitle>
             <DialogDescription className="text-[12px] text-[var(--royal)]/40 font-medium mt-0.5">
@@ -1297,16 +1297,16 @@ function DeleteModalContent({
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
           </svg>
         </AlertDialogMedia>
-        <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 text-center">
+        <AlertDialogTitle className="text-xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)] text-center">
           Archive Document
         </AlertDialogTitle>
         <AlertDialogDescription className="text-[14px] text-[var(--royal)]/50 text-center">
-          <strong className="text-slate-900">{doc.displayName || doc.originalName}</strong> will be archived.
+          <strong className="text-[var(--royal)]">{doc.displayName || doc.originalName}</strong> will be archived.
           It can be restored later if needed.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter className="flex gap-3 mt-4 sm:flex-row border-t-0 bg-transparent mx-0 mb-0 p-0 rounded-none">
-        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-slate-900 font-bold text-[13px] hover:bg-slate-50 h-auto">
+        <AlertDialogCancel className="flex-1 py-3 rounded-xl border-[var(--royal)]/10 text-[var(--royal)] font-bold text-[13px] hover:bg-slate-50 h-auto">
           Cancel
         </AlertDialogCancel>
         <AlertDialogAction
@@ -1365,7 +1365,7 @@ function AIInsightsPanel({
       </div>
 
       {/* Summary */}
-      <p className="text-[14px] text-slate-900/80 leading-relaxed">
+      <p className="text-[14px] text-[var(--royal)]/80 leading-relaxed">
         {analysis.summary}
       </p>
 
@@ -1374,13 +1374,13 @@ function AIInsightsPanel({
         {analysis.signingDate && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Signed:</span>
-            <span className="text-slate-900 font-semibold">{analysis.signingDate}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.signingDate}</span>
           </div>
         )}
         {analysis.jurisdiction && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Jurisdiction:</span>
-            <span className="text-slate-900 font-semibold">{analysis.jurisdiction}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.jurisdiction}</span>
           </div>
         )}
         {analysis.notarized !== null && (
@@ -1394,7 +1394,7 @@ function AIInsightsPanel({
         {analysis.namedExecutor && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Executor:</span>
-            <span className="text-slate-900 font-semibold">{analysis.namedExecutor}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.namedExecutor}</span>
             {heirNames.has(analysis.namedExecutor.toLowerCase().trim()) ? (
               <svg viewBox="0 0 24 24" className="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <polyline points="20 6 9 17 4 12" />
@@ -1409,7 +1409,7 @@ function AIInsightsPanel({
         {analysis.namedTrustee && (
           <div className="flex items-center gap-2 text-[13px]">
             <span className="text-[var(--royal)]/40 font-medium">Trustee:</span>
-            <span className="text-slate-900 font-semibold">{analysis.namedTrustee}</span>
+            <span className="text-[var(--royal)] font-semibold">{analysis.namedTrustee}</span>
           </div>
         )}
       </div>

@@ -154,7 +154,7 @@ function EventsPage() {
           {/* Past */}
           {past.length > 0 && (
             <div className="space-y-4">
-              <div className="text-[11px] font-bold text-slate-500/40 uppercase tracking-[0.3em]">Past</div>
+              <div className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-[0.3em]">Past</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {past.map((event) => (
                   <EventCard key={event.id} event={event} estateId={estateId} onEdit={setEditingEvent} />
@@ -231,7 +231,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             >
               {typeLabel}
             </Badge>
-            <h3 className="text-lg font-bold text-slate-900">{event.title}</h3>
+            <h3 className="text-lg font-bold text-[var(--royal)]">{event.title}</h3>
           </div>
           {event.status === 'cancelled' && (
             <Badge variant="secondary" className="bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-lg">
@@ -241,22 +241,22 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
         </div>
 
         <div className="space-y-3 mb-6">
-          <div className="flex items-center gap-3 text-slate-700 text-sm">
+          <div className="flex items-center gap-3 text-[var(--royal)]/70 text-sm">
             <Calendar className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
             <span>{event.date}</span>
           </div>
           {event.time && (
-            <div className="flex items-center gap-3 text-slate-700 text-sm">
+            <div className="flex items-center gap-3 text-[var(--royal)]/70 text-sm">
               <Clock className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
               <span>{event.time}{event.endTime ? ` — ${event.endTime}` : ''}</span>
             </div>
           )}
-          <div className="flex items-center gap-3 text-slate-700 text-sm">
+          <div className="flex items-center gap-3 text-[var(--royal)]/70 text-sm">
             <MapPin className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
             <span>{event.location}</span>
           </div>
           {event.rsvpEnabled && event.rsvpCount !== undefined && (
-            <div className="flex items-center gap-3 text-slate-700 text-sm">
+            <div className="flex items-center gap-3 text-[var(--royal)]/70 text-sm">
               <Users className="w-4 h-4 text-[var(--gold)]/60 flex-shrink-0" />
               <span>{event.rsvpCount} attending</span>
             </div>
@@ -264,7 +264,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
         </div>
 
         {event.description && (
-          <p className="text-sm text-slate-500 mb-6 line-clamp-3">{event.description}</p>
+          <p className="text-sm text-[var(--royal)]/60 mb-6 line-clamp-3">{event.description}</p>
         )}
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -280,7 +280,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
           <Button
             variant="ghost"
             onClick={copyDetails}
-            className="text-[12px] font-bold text-slate-500 hover:text-[var(--royal)] rounded-xl"
+            className="text-[12px] font-bold text-[var(--royal)]/60 hover:text-[var(--royal)] rounded-xl"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[#059669]" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? 'Copied' : 'Copy Details'}
@@ -289,7 +289,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             <Button
               variant="ghost"
               onClick={() => onEdit(event)}
-              className="text-[12px] font-bold text-slate-500 hover:text-[var(--royal)] rounded-xl"
+              className="text-[12px] font-bold text-[var(--royal)]/60 hover:text-[var(--royal)] rounded-xl"
             >
               <Pencil className="w-3.5 h-3.5" /> Edit
             </Button>
@@ -329,7 +329,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
             {rsvpListOpen && (
               <div className="mt-3 space-y-2">
                 {rsvps.length === 0 ? (
-                  <p className="text-[13px] text-slate-400 italic">No RSVPs yet.</p>
+                  <p className="text-[13px] text-[var(--royal)]/40 italic">No RSVPs yet.</p>
                 ) : (
                   rsvps.map((rsvp) => (
                     <RSVPRow key={rsvp.id} rsvp={rsvp} />
@@ -414,9 +414,9 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
 // ─── RSVP Row (compact display for the list) ────────────────────────────────
 
 const RESPONSE_BADGES: Record<RSVPResponse, { label: string; className: string }> = {
-  attending: { label: 'Attending', className: 'bg-emerald-50 text-emerald-700' },
+  attending: { label: 'Attending', className: 'bg-green-50 text-green-700' },
   maybe: { label: 'Maybe', className: 'bg-amber-50 text-amber-700' },
-  not_attending: { label: 'Not Attending', className: 'bg-slate-100 text-slate-600' },
+  not_attending: { label: 'Not Attending', className: 'bg-slate-100 text-[var(--royal)]/60' },
 }
 
 function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
@@ -424,7 +424,7 @@ function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
   return (
     <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
       <div className="flex items-center gap-3 min-w-0">
-        <span className="text-[13px] font-semibold text-slate-900 truncate">{rsvp.name}</span>
+        <span className="text-[13px] font-semibold text-[var(--royal)] truncate">{rsvp.name}</span>
         <Badge
           variant="secondary"
           className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-md ${badge.className}`}
@@ -434,12 +434,12 @@ function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
         {rsvp.response !== 'not_attending' && rsvp.guests > 0 && (
-          <span className="text-[12px] text-slate-500">
+          <span className="text-[12px] text-[var(--royal)]/60">
             <Users className="w-3 h-3 inline mr-1" />{rsvp.guests}
           </span>
         )}
         {rsvp.message && (
-          <span className="text-[11px] text-slate-400 italic max-w-[120px] truncate" title={rsvp.message}>
+          <span className="text-[11px] text-[var(--royal)]/40 italic max-w-[120px] truncate" title={rsvp.message}>
             "{rsvp.message}"
           </span>
         )}
@@ -520,7 +520,7 @@ function CreateEventModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">
             Create Event
           </DialogTitle>
           <DialogDescription className="sr-only">
@@ -635,7 +635,7 @@ function CreateEventModal({
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
-            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500"
+            className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[var(--royal)]/60"
           >
             Cancel
           </Button>
@@ -730,7 +730,7 @@ function EditEventModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-10" showCloseButton={false}>
         <DialogHeader className="mb-6">
-          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">
+          <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-[var(--royal)]">
             Edit Event
           </DialogTitle>
           <DialogDescription className="sr-only">Edit event details</DialogDescription>
@@ -766,7 +766,7 @@ function EditEventModal({
         </div>
 
         <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-slate-100">
-          <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-slate-500">Cancel</Button>
+          <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[var(--royal)]/60">Cancel</Button>
           <Button onClick={handleSave} disabled={saving || !form.title.trim() || !form.date || !form.location.trim()} className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]">
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>

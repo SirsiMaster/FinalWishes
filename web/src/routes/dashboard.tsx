@@ -32,10 +32,10 @@ function DashboardRedirect() {
   }, [navigate, user, profile, profileResolved]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-50">
+    <div className="flex items-center justify-center min-h-screen bg-[var(--neutral-faint)]">
       <div className="flex flex-col items-center gap-4">
         <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
-        <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Redirecting...</span>
+        <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-[0.2em]">Redirecting...</span>
       </div>
     </div>
   );

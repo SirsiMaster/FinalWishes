@@ -1,9 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, useParams, useNavigate } from '@tanstack/react-router'
 import React, { useState } from 'react'
-import { useUserEstates, useEstate } from '../lib/firestore'
+import { useUserEstates, useEstate, type Estate } from '../lib/firestore'
 import { createEstate } from '../lib/estate-actions'
 import { useAuth } from '../lib/auth'
+import { personaLabel, type PersonaRole } from '../lib/persona'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -35,11 +36,13 @@ function EstatesPage() {
     return <CardGridSkeleton />;
   }
 
-  // Map estate_users junction records to estate summaries
+  // Map estate_users junction records to estate summaries. The persona label is
+  // resolved from the real estate-scoped role (never hardcoded 'Owner', which
+  // would mislabel an heir/executor); name + live status resolve in EstateCard.
   const estates = estateUsers.map(eu => ({
     id: eu.estateId,
     name: eu.estateId, // Will be resolved by EstateCard
-    role: eu.role || 'Owner',
+    role: (eu.role || 'principal') as PersonaRole,
   }));
 
   const handleCreateEstate = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -161,14 +164,48 @@ function EstatesPage() {
   )
 }
 
-// ── Estate Card — resolves name from Firestore ──
+// ── Estate status presentation — driven by the real Firestore status field ──
+
+const ESTATE_STATUS_PRESENTATION: Record<
+  Estate['status'],
+  { label: string; dot: string; description: string }
+> = {
+  active: {
+    label: 'Active',
+    dot: 'bg-green-500',
+    description: 'The assets and memories for this estate are actively monitored and secured.',
+  },
+  death_reported: {
+    label: 'Passing Reported',
+    dot: 'bg-[var(--gold)]',
+    description: 'A passing has been reported. The estate is awaiting executor confirmation.',
+  },
+  executor_confirmed: {
+    label: 'Executor Confirmed',
+    dot: 'bg-[var(--gold)]',
+    description: 'The executor has been confirmed. Settlement is being prepared.',
+  },
+  in_settlement: {
+    label: 'In Settlement',
+    dot: 'bg-[var(--royal)]',
+    description: 'This estate is in settlement. Designated members are carrying out final wishes.',
+  },
+  closed: {
+    label: 'Closed',
+    dot: 'bg-slate-300',
+    description: 'This estate has been settled and closed. Records remain securely archived.',
+  },
+};
+
+// ── Estate Card — resolves name + live status from Firestore ──
 
 function EstateCard({ estateId, role, routeId, navigate }: {
-  estateId: string; role: string; routeId: string; navigate: (opts: { to: string }) => void;
+  estateId: string; role: PersonaRole; routeId: string; navigate: (opts: { to: string }) => void;
 }) {
   const { data: estate } = useEstate(estateId);
   const isCurrent = routeId === estateId;
   const displayName = estate?.name || estateId;
+  const status = ESTATE_STATUS_PRESENTATION[estate?.status ?? 'active'] ?? ESTATE_STATUS_PRESENTATION.active;
 
   return (
     <Card className={`p-12 rounded-[2.5rem] ${isCurrent ? 'border-[var(--royal)]/20 shadow-xl' : 'border-slate-100 shadow-sm'} hover:shadow-2xl hover:border-[var(--royal)]/20 transition-all group overflow-hidden relative cursor-pointer ring-0`}>
@@ -180,14 +217,14 @@ function EstateCard({ estateId, role, routeId, navigate }: {
         </div>
         <h3 className="text-slate-900 font-bold text-3xl mb-3 tracking-tight group-hover:text-[var(--royal)] transition-colors">{displayName}</h3>
         <div className="flex items-center gap-4 mb-8">
-          <Badge variant="secondary" className="px-4 py-1.5 h-auto bg-slate-100 text-slate-700 font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">{role}</Badge>
+          <Badge variant="secondary" className="px-4 py-1.5 h-auto bg-slate-100 text-slate-700 font-bold text-[11px] uppercase tracking-widest rounded-lg border border-slate-100">{personaLabel(role)}</Badge>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500" />
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Active</span>
+            <div className={`w-2 h-2 rounded-full ${status.dot}`} />
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{status.label}</span>
           </div>
         </div>
         <p className="text-slate-500 font-medium text-sm leading-relaxed mb-10">
-          The assets and memories for this estate are actively monitored and secured.
+          {status.description}
         </p>
         <div className="flex gap-4">
           <Button

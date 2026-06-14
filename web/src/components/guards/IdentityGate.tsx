@@ -15,6 +15,7 @@
  */
 
 import React, { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import { useAuth } from '../../lib/auth';
 import { getMFAStatus } from '../../lib/mfa';
 import { useDocument, type EstateUser } from '../../lib/firestore';
@@ -152,7 +153,7 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
     if (principalGracePeriodActive) {
       return (
         <>
-          <MFAGraceBanner />
+          <MFAGraceBanner estateId={estateId} />
           {children}
         </>
       );
@@ -184,7 +185,7 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
             completed={false}
             active={true}
             actionLabel="Go to Settings"
-            actionHref="/dashboard/settings"
+            actionTo={`/estates/${estateId}/settings`}
           />
         </div>
 
@@ -232,7 +233,7 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
           completed={mfaStatus.enrolled}
           active={!mfaStatus.enrolled}
           actionLabel="Go to Settings"
-          actionHref="/dashboard/settings"
+          actionTo={`/estates/${estateId}/settings`}
         />
 
         {/* Step 2: Attestation */}
@@ -243,7 +244,7 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
           completed={!!attestationVerified}
           active={mfaStatus.enrolled && !attestationVerified}
           actionLabel="Sign Attestation"
-          actionHref={`/estates/${estateId}/attestation`}
+          actionTo={`/estates/${estateId}/attestation`}
         />
       </div>
 
@@ -259,7 +260,10 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
 
 // ── MFA Grace Banner ──
 
-function MFAGraceBanner() {
+function MFAGraceBanner({ estateId }: { estateId: string }) {
+  // Plain string (not the typed-router union) so the interpolated estate path is
+  // accepted, matching RoleGuard's landingTo pattern.
+  const settingsTo: string = `/estates/${estateId}/settings`;
   return (
     <div className="mb-6 mx-auto max-w-4xl">
       <div className="flex items-center justify-between gap-4 px-6 py-4 bg-[var(--gold)]/10 border border-[var(--gold)]/20 rounded-2xl">
@@ -269,16 +273,16 @@ function MFAGraceBanner() {
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
-          <p className="text-[13px] font-bold text-slate-900">
+          <p className="text-[13px] font-bold text-royal">
             Secure your account with two-factor authentication
           </p>
         </div>
-        <a
-          href="/dashboard/settings"
+        <Link
+          to={settingsTo}
           className="px-5 py-2 rounded-xl bg-[var(--gold)] hover:bg-[var(--gold)] text-white font-bold text-[11px] uppercase tracking-widest shadow-sm transition-all active:scale-[0.98] inline-block no-underline shrink-0"
         >
           Enroll Now
-        </a>
+        </Link>
       </div>
     </div>
   );
@@ -293,7 +297,7 @@ function VerificationStep({
   completed,
   active,
   actionLabel,
-  actionHref,
+  actionTo,
 }: {
   step: number;
   title: string;
@@ -301,7 +305,10 @@ function VerificationStep({
   completed: boolean;
   active: boolean;
   actionLabel: string;
-  actionHref: string;
+  /** In-app SPA destination (interpolated estate route). Uses TanStack <Link>
+   *  so the click stays inside the estate layout instead of a full navigation
+   *  to a non-existent path. */
+  actionTo: string;
 }) {
   return (
     <div className={`bg-white rounded-[2.5rem] border p-8 flex items-center gap-8 transition-all ${
@@ -353,12 +360,12 @@ function VerificationStep({
             Verified
           </span>
         ) : active ? (
-          <a
-            href={actionHref}
+          <Link
+            to={actionTo}
             className="px-6 py-3 rounded-2xl bg-royal hover:bg-sapphire text-white font-black text-[10px] uppercase tracking-widest shadow-lg transition-all active:scale-[0.98] inline-block no-underline border border-white/10"
           >
             {actionLabel} →
-          </a>
+          </Link>
         ) : (
           <span className="text-[9px] font-black text-royal/15 uppercase tracking-widest">
             Complete Step {step - 1} first

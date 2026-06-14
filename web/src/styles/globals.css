@@ -22,6 +22,12 @@
   --gold-bright: #D4AF37;
   --gold-dim: #F0E6D2;
 
+  /* Ink — on-brand body/secondary text (replaces grayscale --muted-foreground).
+     Royal-tinted near-black so default + muted text reads as part of the Royal
+     Neo-Deco system instead of generic slate/grey (Rule 27). */
+  --ink: #142848;           /* Primary ink — deep royal-tinted near-black */
+  --ink-muted: #4A5C7A;     /* Muted ink — royal-tinted secondary text */
+
   /* Semantic */
   --success: #10B981;
   --warning: #F59E0B;
@@ -40,18 +46,22 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Brand-wired primitives: default shadcn components are on-brand by
+     construction. --primary = Royal Blue (not near-black), --ring = Gold so
+     focus halos are the Royal Neo-Deco accent, and muted text is royal-tinted
+     ink instead of grayscale grey (Rule 27). */
+  --primary: var(--royal);
+  --primary-foreground: #FFFFFF;
   --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: var(--royal);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: var(--ink-muted);
   --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent-foreground: var(--royal);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: var(--gold);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -60,12 +70,12 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: var(--royal);
+  --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-accent-foreground: var(--royal);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: var(--gold);
 }
 
 /* ── TailwindCSS v4 Theme Tokens ── */
@@ -76,6 +86,8 @@
   --color-gold: var(--gold);
   --color-gold-bright: var(--gold-bright);
   --color-gold-dim: var(--gold-dim);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
@@ -580,18 +592,20 @@ input::-webkit-contacts-auto-fill-button {
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  /* Dark surfaces keep a luminous brand identity: primary buttons stay Royal
+     Bright (legible on dark) and focus rings stay Gold (Rule 27). */
+  --primary: var(--royal-bright);
+  --primary-foreground: #FFFFFF;
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted-foreground: oklch(0.78 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: var(--gold);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -599,12 +613,12 @@ input::-webkit-contacts-auto-fill-button {
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: var(--royal-bright);
+  --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: var(--gold);
 }
 
 /* ── Directive Template Guidance ── */

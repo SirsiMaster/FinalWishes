@@ -111,7 +111,7 @@ interface TimelineEntry {
 function ShepherdTypingIndicator() {
   return (
     <div className="flex items-start gap-2 mb-3">
-      <div className="bg-slate-50 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
+      <div className="bg-neutral-faint rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%]">
         <div className="flex gap-1.5 items-center h-5">
           <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:0ms]" />
           <span className="w-2 h-2 bg-[var(--gold)] rounded-full animate-bounce [animation-delay:150ms]" />
@@ -328,7 +328,7 @@ function ShepherdChat({
                     'rounded-2xl px-4 py-2.5 max-w-[85%] text-sm leading-relaxed',
                     msg.role === 'user'
                       ? 'bg-[var(--royal)] text-white rounded-tr-sm'
-                      : 'bg-slate-50 text-[var(--royal)] rounded-tl-sm border border-slate-100',
+                      : 'bg-neutral-faint text-[var(--royal)] rounded-tl-sm border border-neutral-border',
                   )}
                 >
                   {msg.content}
@@ -357,7 +357,7 @@ function ShepherdChat({
         </div>
 
         {/* Input area */}
-        <div className="border-t border-slate-200 px-4 py-3 bg-white flex-shrink-0">
+        <div className="border-t border-neutral-border px-4 py-3 bg-white flex-shrink-0">
           <div className="flex gap-2">
             <Input
               ref={inputRef}
@@ -808,8 +808,8 @@ function DashboardIndex() {
 
       {/* ── 1. Shepherd Companion Card ── */}
       <Card className={cn(
-        'rounded-3xl border-slate-100 shadow-sm overflow-hidden',
-        totalEntryCount === 0 && 'bg-gradient-to-br from-slate-50 to-slate-100',
+        'rounded-3xl border-neutral-border shadow-sm overflow-hidden',
+        totalEntryCount === 0 && 'bg-gradient-to-br from-neutral-faint to-neutral-faint',
       )}>
         <CardContent className={cn('px-8 py-8', totalEntryCount === 0 && 'py-16')}>
           <div className="flex items-start gap-5">
@@ -884,7 +884,7 @@ function DashboardIndex() {
         <div className="space-y-2">
           <div className="flex items-center gap-3 text-[11px] font-bold text-[var(--royal)]/30 uppercase tracking-[0.3em] mb-6">
             <span>Legacy Timeline</span>
-            <Badge variant="secondary" className="text-[10px] font-bold text-[var(--royal)]/40 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+            <Badge variant="secondary" className="text-[10px] font-bold text-[var(--royal)]/40 bg-neutral-faint px-3 py-1 rounded-full border border-neutral-border">
               {totalEntryCount} {totalEntryCount === 1 ? 'moment' : 'moments'}
             </Badge>
           </div>
@@ -921,7 +921,7 @@ function DashboardIndex() {
                       <Link
                         // @ts-expect-error — dynamic route from timeline type
                         to={`/estates/${routeId}/${TIMELINE_TYPE_ROUTES[entry.type]}`}
-                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer min-w-0 no-underline"
+                        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-neutral-faint transition-colors cursor-pointer min-w-0 no-underline"
                       >
                         <div className="w-8 h-8 rounded-lg bg-[var(--royal)]/5 flex items-center justify-center flex-shrink-0 text-[var(--royal)]/50 group-hover/entry:text-[var(--royal)] group-hover/entry:bg-[var(--royal)]/10 transition-colors">
                           <TimelineIcon type={entry.type} />
@@ -1019,7 +1019,7 @@ function DashboardIndex() {
 
       {/* ── 5. Estate Health Check (Collapsible) ── */}
       <Collapsible open={checklistOpen} onOpenChange={setChecklistOpen}>
-        <Card className="rounded-2xl border-slate-100 shadow-sm">
+        <Card className="rounded-2xl border-neutral-border shadow-sm">
           <CollapsibleTrigger asChild>
             <button className="w-full flex items-center justify-between px-8 py-5 text-left group">
               <div className="flex items-center gap-4">
@@ -1055,7 +1055,7 @@ function DashboardIndex() {
             <div className="px-8 pb-8">
               <Progress
                 value={percent}
-                className="w-full h-2 bg-slate-100 mb-8"
+                className="w-full h-2 bg-neutral-faint mb-8"
               />
               {Object.entries(categories).length > 0 ? (
                 <div className="space-y-8">
@@ -1072,12 +1072,12 @@ function DashboardIndex() {
                               'flex items-center gap-3 px-4 py-3 rounded-xl transition-all no-underline group/step',
                               step.complete
                                 ? 'bg-[var(--success)]/5'
-                                : 'bg-slate-50 hover:bg-white hover:shadow-sm',
+                                : 'bg-neutral-faint hover:bg-white hover:shadow-sm',
                             )}
                           >
                             <div className={cn(
                               'w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0',
-                              step.complete ? 'bg-[var(--success)]' : 'border-2 border-slate-200 group-hover/step:border-[var(--royal)]',
+                              step.complete ? 'bg-[var(--success)]' : 'border-2 border-neutral-border group-hover/step:border-[var(--royal)]',
                             )}>
                               {step.complete && (
                                 <svg viewBox="0 0 24 24" className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3">
@@ -1130,7 +1130,7 @@ function DashboardIndex() {
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <HoverCard glowColor="rgba(19,51,120,0.1)" tiltDeg={3}>
-      <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 transition-all">
+      <div className="flex items-center gap-3 px-5 py-4 rounded-xl bg-neutral-faint border border-neutral-border transition-all">
         <div className="text-2xl font-bold text-[var(--royal)] tabular-nums">{value}</div>
         <div className="text-xs font-semibold text-[var(--royal)]/40 uppercase tracking-wider">{label}</div>
       </div>
@@ -1153,7 +1153,7 @@ function QuickAction({ label, icon, route, primary }: QuickActionProps) {
         'flex items-center gap-3 px-5 py-4 rounded-xl transition-all no-underline group',
         primary
           ? 'bg-[var(--royal)] text-white hover:bg-[var(--sapphire)] shadow-sm'
-          : 'bg-slate-50 border border-slate-100 text-[var(--royal)] hover:border-[var(--royal)]/20 hover:shadow-sm',
+          : 'bg-neutral-faint border border-neutral-border text-[var(--royal)] hover:border-[var(--royal)]/20 hover:shadow-sm',
       )}
     >
       <div className={cn(

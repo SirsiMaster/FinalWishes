@@ -26,7 +26,7 @@ export function EditorSkeleton() {
           </div>
 
           {/* Editor body */}
-          <div className="border border-slate-100 rounded-2xl p-6 space-y-4">
+          <div className="border border-[var(--neutral-border)] rounded-2xl p-6 space-y-4">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6" />
             <Skeleton className="h-4 w-full" />

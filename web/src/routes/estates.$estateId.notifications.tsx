@@ -25,7 +25,7 @@ function NotificationsPage() {
       <div className="flex items-center justify-center h-[50vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
-          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.2em]">Loading activity...</span>
+          <span className="text-[11px] font-semibold text-ink-muted uppercase tracking-[0.2em]">Loading activity...</span>
         </div>
       </div>
     );
@@ -61,8 +61,8 @@ function NotificationsPage() {
     <div className="max-w-[1240px] mx-auto space-y-10 pb-20 px-4">
       <div className="flex justify-between items-end pb-10">
         <div className="space-y-2">
-          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900">Activity History</h2>
-          <p className="text-lg text-slate-500 font-medium">A record of everything that has happened with your estate plan.</p>
+          <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-royal">Activity History</h2>
+          <p className="text-lg text-ink-muted font-medium">A record of everything that has happened with your estate plan.</p>
         </div>
         {unreadCount > 0 && (
           <Button
@@ -85,12 +85,12 @@ function NotificationsPage() {
                 <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-slate-900 mb-2">No notifications yet</h3>
-            <p className="text-slate-500">Activity in your estate will appear here.</p>
+            <h3 className="text-xl font-bold text-royal mb-2">No notifications yet</h3>
+            <p className="text-ink-muted">Activity in your estate will appear here.</p>
           </CardContent>
         </Card>
       ) : (
-        <Card className="rounded-[2.5rem] border-slate-100 shadow-sm">
+        <Card className="rounded-[2.5rem] border-neutral-border shadow-sm">
           <CardContent className="p-10 space-y-0">
             {notifications.map((n, i) => (
               <NotificationItem
@@ -128,18 +128,18 @@ function NotificationItem({ title, time, type, desc, read, isLast, onMarkRead }:
   const dotClass = dotStyles[type] || dotStyles.activity;
 
   return (
-    <div className={`flex gap-8 group py-8 ${!isLast ? 'border-b border-slate-100' : ''} ${read ? 'opacity-60' : ''}`}>
+    <div className={`flex gap-8 group py-8 ${!isLast ? 'border-b border-neutral-border' : ''} ${read ? 'opacity-60' : ''}`}>
       {/* Timeline dot — solid + ring when unread */}
       <div className="flex flex-col items-center pt-1">
         <div className={`w-3 h-3 rounded-full ${dotClass} shadow-sm ${!read ? 'ring-4 ring-[var(--royal)]/10' : ''}`} />
-        {!isLast && <div className="w-px flex-1 bg-slate-100 mt-2" />}
+        {!isLast && <div className="w-px flex-1 bg-neutral-faint mt-2" />}
       </div>
 
       <div className="flex-1">
         <div className="flex justify-between items-start mb-3">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
-              <h4 className="text-slate-900 font-bold text-lg group-hover:text-[var(--royal)] transition-colors">{title}</h4>
+              <h4 className="text-royal font-bold text-lg group-hover:text-[var(--royal)] transition-colors">{title}</h4>
               <Badge variant="outline" className={`text-[10px] font-bold capitalize ${badgeClass}`}>
                 {type}
               </Badge>
@@ -149,10 +149,10 @@ function NotificationItem({ title, time, type, desc, read, isLast, onMarkRead }:
                 </Badge>
               )}
             </div>
-            <span className="text-[13px] font-medium text-slate-500">{time}</span>
+            <span className="text-[13px] font-medium text-ink-muted">{time}</span>
           </div>
         </div>
-        <p className="text-[15px] text-slate-500 leading-relaxed">{desc}</p>
+        <p className="text-[15px] text-ink-muted leading-relaxed">{desc}</p>
         {!read && (
           <div className="mt-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
             <Button

@@ -206,7 +206,7 @@ function SidebarNavContent({
     <nav className="py-4">
       {/* Main nav groups */}
       <div className="mb-4">
-        <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] px-5 py-2">
+        <div className="text-[10px] font-bold text-ink-muted uppercase tracking-[0.2em] px-5 py-2">
           Your Legacy
         </div>
         {groups.map((group) => {
@@ -223,7 +223,7 @@ function SidebarNavContent({
                   className={`w-full flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] ${
                     groupActive
                       ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                      : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
+                      : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-[var(--neutral-faint)]"
                   }`}
                 >
                   <span
@@ -237,7 +237,7 @@ function SidebarNavContent({
                   <ChevronRight
                     className={`w-3.5 h-3.5 transition-transform duration-200 ${
                       isExpanded ? "rotate-90" : ""
-                    } ${groupActive ? "text-[var(--royal)]" : "text-slate-300"}`}
+                    } ${groupActive ? "text-[var(--royal)]" : "text-ink-muted"}`}
                   />
                 </button>
                 {isExpanded && (
@@ -253,7 +253,7 @@ function SidebarNavContent({
                           className={`flex items-center gap-3 pl-7 pr-5 py-2 text-[0.73rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                             childActive
                               ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                              : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
+                              : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-[var(--neutral-faint)]"
                           }`}
                         >
                           <span className="text-[0.73rem] font-medium">{child.label}</span>
@@ -288,7 +288,7 @@ function SidebarNavContent({
               className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                 isActive
                   ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                  : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
+                  : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-[var(--neutral-faint)]"
               }`}
             >
               <span
@@ -315,7 +315,7 @@ function SidebarNavContent({
       {/* Utility items */}
       {utilityItems.length > 0 && (
         <div>
-          <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] px-5 py-2">
+          <div className="text-[10px] font-bold text-ink-muted uppercase tracking-[0.2em] px-5 py-2">
             Manage
           </div>
           {utilityItems.map((item) => {
@@ -329,7 +329,7 @@ function SidebarNavContent({
                 className={`flex items-center gap-3 px-5 py-2.5 text-[0.8rem] cursor-pointer transition-all border-l-[3px] no-underline ${
                   isActive
                     ? "text-[var(--royal)] bg-[var(--royal)]/5 border-l-[var(--royal)] font-bold"
-                    : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-slate-50"
+                    : "text-[var(--ink-muted)] border-l-transparent hover:text-[var(--royal)] hover:bg-[var(--neutral-faint)]"
                 }`}
               >
                 <span
@@ -375,12 +375,12 @@ function EstateSwitcherItem({
       onClick={() => onSelect(estateUser.estateId)}
       className={`flex items-center gap-3 cursor-pointer ${isCurrent ? 'bg-[var(--royal)]/5' : ''}`}
     >
-      <span className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isCurrent ? 'bg-[var(--royal)] text-white' : 'bg-slate-100 text-[var(--royal)]'}`}>
+      <span className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${isCurrent ? 'bg-[var(--royal)] text-white' : 'bg-[var(--neutral-faint)] text-[var(--royal)]'}`}>
         <Landmark className="w-3.5 h-3.5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[0.8rem] font-bold text-slate-900 truncate">{displayName}</span>
-        <span className="block text-[10px] font-medium text-slate-400">{personaLabel(estateUser.role)}</span>
+        <span className="block text-[0.8rem] font-bold text-ink truncate">{displayName}</span>
+        <span className="block text-[10px] font-medium text-ink-muted">{personaLabel(estateUser.role)}</span>
       </span>
       {isCurrent && <Check className="w-4 h-4 text-[var(--royal)] shrink-0" />}
     </DropdownMenuItem>
@@ -402,22 +402,22 @@ function EstateSwitcher({
 
   return (
     <div className="px-4 py-5 bg-[var(--royal)]/[0.01]">
-      <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Active Estate</label>
+      <label className="text-[11px] font-bold text-ink-muted uppercase tracking-widest mb-2 block">Active Estate</label>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="outline"
-            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 h-auto bg-white border-slate-200 hover:border-[var(--royal)]/30 rounded-xl text-left overflow-hidden group/button"
+            className="w-full flex items-center justify-between gap-2 px-3 py-2.5 h-auto bg-white border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-xl text-left overflow-hidden group/button"
           >
             <div className="flex-1 truncate text-left">
-              <div className="text-slate-900 text-[0.8rem] font-bold truncate group-hover/button:text-[var(--royal)] transition-colors">{estateName}</div>
-              <div className="text-slate-400 text-[10px] font-medium mt-0.5">{personaLabel(role)}</div>
+              <div className="text-ink text-[0.8rem] font-bold truncate group-hover/button:text-[var(--royal)] transition-colors">{estateName}</div>
+              <div className="text-ink-muted text-[10px] font-medium mt-0.5">{personaLabel(role)}</div>
             </div>
-            <svg viewBox="0 0 24 24" className="w-4 h-4 text-slate-300 group-hover/button:text-[var(--royal)] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
+            <svg viewBox="0 0 24 24" className="w-4 h-4 text-ink-muted group-hover/button:text-[var(--royal)] transition-all"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2.5"/></svg>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[15rem]">
-          <DropdownMenuLabel className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+          <DropdownMenuLabel className="text-[10px] font-bold text-ink-muted uppercase tracking-[0.2em]">
             Your Estates
           </DropdownMenuLabel>
           {(estateUsers || []).map((eu) => (
@@ -546,8 +546,8 @@ export function MobileSidebar({
         </ScrollArea>
 
         {/* User Footer */}
-        <Separator className="bg-slate-100" />
-        <div className="p-4 mt-auto bg-slate-50/50">
+        <Separator className="bg-[var(--neutral-faint)]" />
+        <div className="p-4 mt-auto bg-[color-mix(in_srgb,var(--neutral-faint)_50%,transparent)]">
           <div className="flex items-center gap-3 mb-3">
             <Avatar className="w-9 h-9 rounded-xl">
               <AvatarImage src={user?.profilePhotoUrl || undefined} alt="Profile" className="rounded-xl object-cover" />
@@ -556,14 +556,14 @@ export function MobileSidebar({
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
-              <div className="text-slate-400 text-[10px] font-medium">{personaLabel(userRole)}</div>
+              <div className="text-ink text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
+              <div className="text-ink-muted text-[10px] font-medium">{personaLabel(userRole)}</div>
             </div>
           </div>
           <Button
             variant="ghost"
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-[var(--neutral-border)] rounded-xl text-ink-muted hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
           >
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             Sign Out
@@ -678,8 +678,8 @@ export function Sidebar({ effectiveRole }: { effectiveRole?: PersonaRole }) {
       </ScrollArea>
 
       {/* User Footer */}
-      <Separator className="bg-slate-100" />
-      <div className="p-4 mt-auto bg-slate-50/50">
+      <Separator className="bg-[var(--neutral-faint)]" />
+      <div className="p-4 mt-auto bg-[color-mix(in_srgb,var(--neutral-faint)_50%,transparent)]">
         <div className="flex items-center gap-3 mb-3">
           {user?.profilePhotoUrl ? (
             <button
@@ -707,14 +707,14 @@ export function Sidebar({ effectiveRole }: { effectiveRole?: PersonaRole }) {
             </Avatar>
           )}
           <div className="min-w-0">
-            <div className="text-slate-900 text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
-            <div className="text-slate-400 text-[10px] font-medium">{personaLabel(userRole)}</div>
+            <div className="text-ink text-[0.8rem] font-bold truncate">{user?.name || "User"}</div>
+            <div className="text-ink-muted text-[10px] font-medium">{personaLabel(userRole)}</div>
           </div>
         </div>
         <Button
           variant="ghost"
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 h-auto bg-white border border-[var(--neutral-border)] rounded-xl text-ink-muted hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-[11px] font-semibold"
         >
           <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Sign Out

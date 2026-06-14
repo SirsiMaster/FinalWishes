@@ -39,8 +39,8 @@ export class ErrorBoundary extends Component<Props, State> {
               </svg>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900 mb-2">Something went wrong</h2>
-              <p className="text-slate-500 text-[14px]">
+              <h2 className="text-xl font-bold text-royal mb-2">Something went wrong</h2>
+              <p className="text-ink-muted text-[14px]">
                 We encountered an error loading this page. This may be a temporary issue with your connection to our servers.
               </p>
             </div>
@@ -51,13 +51,13 @@ export class ErrorBoundary extends Component<Props, State> {
               >
                 Try Again
               </button>
-              <p className="text-[12px] text-slate-400">
+              <p className="text-[12px] text-ink-muted">
                 If this persists, try refreshing the page or contact support.
               </p>
             </div>
             {this.state.error && (
-              <details className="text-left bg-slate-50 rounded-xl p-4 border border-slate-100">
-                <summary className="text-[11px] font-bold text-slate-500 uppercase tracking-widest cursor-pointer">
+              <details className="text-left bg-[var(--neutral-faint)] rounded-xl p-4 border border-[var(--neutral-border)]">
+                <summary className="text-[11px] font-bold text-ink-muted uppercase tracking-widest cursor-pointer">
                   Technical Details
                 </summary>
                 <pre className="mt-3 text-[11px] text-red-600 whitespace-pre-wrap break-all font-mono">

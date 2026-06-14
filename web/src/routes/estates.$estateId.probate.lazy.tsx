@@ -146,7 +146,7 @@ function ProbatePage() {
         <Card className="border-[var(--gold)]/20">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-slate-900">
+              <CardTitle className="text-lg font-semibold text-royal">
                 Current Phase
               </CardTitle>
               <Badge
@@ -163,20 +163,20 @@ function ProbatePage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
-                <span className="text-slate-900/60">Expected Timeline</span>
-                <p className="font-medium text-slate-900">{status.probableTimeline}</p>
+                <span className="text-ink/60">Expected Timeline</span>
+                <p className="font-medium text-ink">{status.probableTimeline}</p>
               </div>
               <div>
-                <span className="text-slate-900/60">E-Filing</span>
-                <p className="font-medium text-slate-900">
+                <span className="text-ink/60">E-Filing</span>
+                <p className="font-medium text-ink">
                   {status.eFilingAvailable ? 'Available (Cook County eCourt)' : 'Paper filing required'}
                 </p>
               </div>
               <div>
-                <span className="text-slate-900/60">Progress</span>
+                <span className="text-ink/60">Progress</span>
                 <div className="flex items-center gap-2 mt-1">
                   <Progress value={progressPct} className="flex-1 h-2" />
-                  <span className="font-medium text-slate-900">{progressPct}%</span>
+                  <span className="font-medium text-ink">{progressPct}%</span>
                 </div>
               </div>
             </div>
@@ -201,27 +201,27 @@ function ProbatePage() {
       {deathCert && !deathCert.confirmed && (
         <Card className="border-amber-300 bg-amber-50">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-royal">
               Review Death Certificate Analysis
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-slate-900/70 mb-4">
+            <p className="text-sm text-ink/70 mb-4">
               AI analysis has extracted the following facts from the uploaded death certificate.
               Please review and confirm before proceeding.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm mb-4">
               {deathCert.decedentName && (
-                <div><span className="text-slate-900/50">Summary</span><p className="font-medium">{deathCert.decedentName}</p></div>
+                <div><span className="text-ink/50">Summary</span><p className="font-medium">{deathCert.decedentName}</p></div>
               )}
               {deathCert.dateOfDeath && (
-                <div><span className="text-slate-900/50">Date of Death</span><p className="font-medium">{deathCert.dateOfDeath}</p></div>
+                <div><span className="text-ink/50">Date of Death</span><p className="font-medium">{deathCert.dateOfDeath}</p></div>
               )}
               {deathCert.countyOfDeath && (
-                <div><span className="text-slate-900/50">County/Jurisdiction</span><p className="font-medium">{deathCert.countyOfDeath}</p></div>
+                <div><span className="text-ink/50">County/Jurisdiction</span><p className="font-medium">{deathCert.countyOfDeath}</p></div>
               )}
               {deathCert.certificateNumber && (
-                <div><span className="text-slate-900/50">Certificate #</span><p className="font-medium">{deathCert.certificateNumber}</p></div>
+                <div><span className="text-ink/50">Certificate #</span><p className="font-medium">{deathCert.certificateNumber}</p></div>
               )}
             </div>
             <p className="text-xs text-amber-700 mb-3">
@@ -255,7 +255,7 @@ function ProbatePage() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-2">
               <Badge className="bg-green-100 text-green-700">Confirmed</Badge>
-              <span className="text-sm text-slate-900/70">Death certificate verified by executor</span>
+              <span className="text-sm text-ink/70">Death certificate verified by executor</span>
             </div>
           </CardContent>
         </Card>
@@ -265,12 +265,12 @@ function ProbatePage() {
       {status?.currentPhase === 'death_reported' && !executorActivation?.status && (
         <Card className="border-blue-300 bg-blue-50">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-royal">
               Confirm Your Role as Executor
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-slate-900/70 mb-4">
+            <p className="text-sm text-ink/70 mb-4">
               A death has been reported for this estate. As the designated executor, you must confirm your role
               before probate proceedings can begin. By confirming, you accept responsibility for administering
               the estate according to Illinois law.
@@ -302,7 +302,7 @@ function ProbatePage() {
           <CardContent className="pt-6">
             <div className="flex items-center gap-2">
               <Badge className="bg-green-100 text-green-700">Executor Confirmed</Badge>
-              <span className="text-sm text-slate-900/70">
+              <span className="text-sm text-ink/70">
                 {executorActivation.executorName || 'Executor'} confirmed their role
                 {executorActivation.confirmedAt && ` on ${new Date(executorActivation.confirmedAt).toLocaleDateString()}`}
               </span>
@@ -318,7 +318,7 @@ function ProbatePage() {
       {status?.deadlines && status.deadlines.length > 0 && (
         <Card className="border-[var(--gold)]/20">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-royal">
               Active Deadlines
             </CardTitle>
           </CardHeader>
@@ -336,7 +336,7 @@ function ProbatePage() {
       {status?.deadlines && status.deadlines.length > 0 && (
         <Card className="border-[var(--gold)]/20">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-royal">
               Settlement Timeline
             </CardTitle>
           </CardHeader>
@@ -354,10 +354,10 @@ function ProbatePage() {
         <Card className="border-[var(--gold)]/20">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg font-semibold text-slate-900">
+              <CardTitle className="text-lg font-semibold text-royal">
                 Probate Checklist
               </CardTitle>
-              <span className="text-sm text-slate-900/60">
+              <span className="text-sm text-ink/60">
                 {completedCount} of {totalItems} complete
               </span>
             </div>
@@ -372,7 +372,7 @@ function ProbatePage() {
                     className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
                       isComplete
                         ? 'bg-green-50/50 border-green-200/50'
-                        : 'bg-white border-slate-900/10 hover:border-[var(--gold)]/30'
+                        : 'bg-white border-royal/10 hover:border-[var(--gold)]/30'
                     }`}
                   >
                     <div className="pt-0.5">
@@ -383,7 +383,7 @@ function ProbatePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className={`font-medium text-sm ${isComplete ? 'line-through text-slate-900/40' : 'text-slate-900'}`}>
+                        <span className={`font-medium text-sm ${isComplete ? 'line-through text-ink/40' : 'text-ink'}`}>
                           {item.order}. {item.title}
                         </span>
                         {item.required && (
@@ -397,7 +397,7 @@ function ProbatePage() {
                           </Badge>
                         )}
                       </div>
-                      <p className={`text-xs mt-1 ${isComplete ? 'text-slate-900/30' : 'text-slate-900/60'}`}>
+                      <p className={`text-xs mt-1 ${isComplete ? 'text-ink/30' : 'text-ink/60'}`}>
                         {item.description}
                       </p>
                       {item.formUrl && !isComplete && (
@@ -423,7 +423,7 @@ function ProbatePage() {
       {forms.length > 0 && (
         <Card className="border-[var(--gold)]/20">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg font-semibold text-slate-900">
+            <CardTitle className="text-lg font-semibold text-royal">
               Court Form Preparation
             </CardTitle>
           </CardHeader>
@@ -433,19 +433,19 @@ function ProbatePage() {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {forms.map((form) => (
-                <div key={form.id} className="p-4 rounded-lg border border-slate-900/10 hover:border-[var(--gold)]/30 transition-colors">
+                <div key={form.id} className="p-4 rounded-lg border border-royal/10 hover:border-[var(--gold)]/30 transition-colors">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm text-slate-900">{form.name}</span>
+                        <span className="font-medium text-sm text-ink">{form.name}</span>
                         <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-[var(--royal)]/30 text-[var(--royal)]">
                           {form.formNumber}
                         </Badge>
                       </div>
-                      <p className="text-xs text-slate-900/60 mb-2">{form.description}</p>
+                      <p className="text-xs text-ink/60 mb-2">{form.description}</p>
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(form.fields).filter(([, v]) => v).slice(0, 3).map(([k, v]) => (
-                          <span key={k} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-900/5 text-slate-900/50">
+                          <span key={k} className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--royal-subtle)] text-ink/50">
                             {k.replace(/([A-Z])/g, ' $1').trim()}: {v}
                           </span>
                         ))}
@@ -470,7 +470,7 @@ function ProbatePage() {
       )}
 
       {/* ── Legal Disclaimer ── */}
-      <p className="text-xs text-slate-900/40 text-center px-4">
+      <p className="text-xs text-ink/40 text-center px-4">
         This checklist is preparation assistance only and does not constitute legal advice.
         Consult a licensed Illinois attorney for advice specific to your situation.
       </p>
@@ -492,7 +492,7 @@ function NextActionCard({ phase, deathCertConfirmed, executorConfirmed, complete
   const action = getNextAction(phase, deathCertConfirmed, executorConfirmed, completedCount, totalItems, hasDeadlines, overdueCount)
 
   return (
-    <Card className="border-[var(--royal)]/20 bg-gradient-to-r from-slate-50 to-slate-100">
+    <Card className="border-[var(--royal)]/20 bg-gradient-to-r from-neutral-faint to-neutral-faint">
       <CardContent className="pt-6">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 rounded-full bg-[var(--royal)]/10 flex items-center justify-center shrink-0">
@@ -500,7 +500,7 @@ function NextActionCard({ phase, deathCertConfirmed, executorConfirmed, complete
           </div>
           <div>
             <h3 className="font-semibold text-[var(--royal)] text-sm">{action.title}</h3>
-            <p className="text-sm text-slate-900/70 mt-1">{action.description}</p>
+            <p className="text-sm text-ink/70 mt-1">{action.description}</p>
             {action.blockedReason && (
               <p className="text-xs text-amber-700 mt-2 p-2 bg-amber-50 rounded">{action.blockedReason}</p>
             )}
@@ -620,23 +620,23 @@ function DeadlineRow({ deadline }: { deadline: Deadline }) {
         ? 'bg-red-50 border-red-200'
         : isUrgent
           ? 'bg-amber-50 border-amber-200'
-          : 'bg-white border-slate-900/10'
+          : 'bg-white border-royal/10'
     }`}>
       <div className="flex-1">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-sm text-slate-900">{deadline.name}</span>
+          <span className="font-medium text-sm text-ink">{deadline.name}</span>
           {isOverdue && <Badge className="bg-red-100 text-red-700 text-[10px]">Overdue</Badge>}
           {isUrgent && <Badge className="bg-amber-100 text-amber-700 text-[10px]">Urgent</Badge>}
         </div>
-        <p className="text-xs text-slate-900/60 mt-0.5">{deadline.description}</p>
+        <p className="text-xs text-ink/60 mt-0.5">{deadline.description}</p>
       </div>
       <div className="text-right ml-4 shrink-0">
-        <p className={`text-sm font-medium ${isOverdue ? 'text-red-600' : isUrgent ? 'text-amber-600' : 'text-slate-900'}`}>
+        <p className={`text-sm font-medium ${isOverdue ? 'text-red-600' : isUrgent ? 'text-amber-600' : 'text-ink'}`}>
           {isOverdue
             ? `${Math.abs(deadline.daysFromNow)} days overdue`
             : `${deadline.daysFromNow} days`}
         </p>
-        <p className="text-[10px] text-slate-900/40">
+        <p className="text-[10px] text-ink/40">
           {new Date(deadline.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
         </p>
       </div>

@@ -183,7 +183,7 @@ function LockboxPage() {
           { label: 'Secured', value: stats.secure, icon: ShieldCheck },
           { label: 'Categories', value: stats.categories, icon: CreditCard },
         ].map((s) => (
-          <Card key={s.label} className="bg-slate-50 rounded-3xl border-slate-100 py-0">
+          <Card key={s.label} className="bg-neutral-faint rounded-3xl border-neutral-border py-0">
             <CardContent className="p-8">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-[var(--royal)]/5 rounded-2xl flex items-center justify-center">
@@ -204,7 +204,7 @@ function LockboxPage() {
         <Button
           variant={filterCategory === 'all' ? 'default' : 'secondary'}
           onClick={() => setFilterCategory('all')}
-          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-[var(--royal)]/70 hover:bg-slate-200'}`}
+          className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === 'all' ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-neutral-faint text-[var(--royal)]/70 hover:bg-[var(--neutral-border)]'}`}
         >
           All
         </Button>
@@ -213,7 +213,7 @@ function LockboxPage() {
             key={c.value}
             variant={filterCategory === c.value ? 'default' : 'secondary'}
             onClick={() => setFilterCategory(c.value)}
-            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-slate-100 text-[var(--royal)]/70 hover:bg-slate-200'}`}
+            className={`px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider ${filterCategory === c.value ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)]' : 'bg-neutral-faint text-[var(--royal)]/70 hover:bg-[var(--neutral-border)]'}`}
           >
             <c.icon className="w-3.5 h-3.5" />
             {c.label}
@@ -312,7 +312,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
   }, [estateId, item.id])
 
   return (
-    <Card className="rounded-3xl border-slate-100 hover:border-[var(--royal)]/10 transition-all group py-0">
+    <Card className="rounded-3xl border-neutral-border hover:border-[var(--royal)]/10 transition-all group py-0">
       <CardContent className="p-8">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-4">
@@ -346,7 +346,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
         )}
 
         {item.transitionInstructions && (
-          <div className="bg-slate-50 rounded-2xl p-5 mb-4">
+          <div className="bg-neutral-faint rounded-2xl p-5 mb-4">
             <p className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest mb-2">Transition Instructions</p>
             <p className="text-[13px] text-[var(--royal)]/70 line-clamp-3">{item.transitionInstructions}</p>
           </div>
@@ -463,7 +463,7 @@ function LockboxCard({ item, estateId }: { item: LockboxItem; estateId: string }
           </div>
         )}
 
-        <div className="flex justify-end pt-2 border-t border-slate-50">
+        <div className="flex justify-end pt-2 border-t border-neutral-faint">
           {confirming ? (
             <div className="flex items-center gap-3">
               <span className="text-[12px] text-[#DC2626] font-medium">Archive this item?</span>
@@ -546,7 +546,7 @@ function EditLockboxModal({
   }, [form, estateId, item.id, onOpenChange])
 
   const labelCls = 'text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest'
-  const fieldCls = 'px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[var(--royal)]'
+  const fieldCls = 'px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -717,7 +717,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               value={form.accountName}
               onChange={(e) => setForm((f) => ({ ...f, accountName: e.target.value }))}
               placeholder="e.g., Chase Checking, Gmail, Bitcoin Wallet"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[var(--royal)]"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]"
             />
           </div>
 
@@ -727,7 +727,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               Category
             </Label>
             <Select value={form.category} onValueChange={(v) => setForm((f) => ({ ...f, category: v as CategoryValue }))}>
-              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[var(--royal)]">
+              <SelectTrigger className="w-full px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
               <SelectContent>
@@ -749,7 +749,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               value={form.institution}
               onChange={(e) => setForm((f) => ({ ...f, institution: e.target.value }))}
               placeholder="e.g., JPMorgan Chase, Google, Coinbase"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[var(--royal)]"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]"
             />
           </div>
 
@@ -762,7 +762,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               value={form.accountIdentifier}
               onChange={(e) => setForm((f) => ({ ...f, accountIdentifier: e.target.value }))}
               placeholder="Last 4 digits, username, or account number hint"
-              className="px-5 py-4 h-auto rounded-2xl border-slate-200 text-[14px] text-[var(--royal)]"
+              className="px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]"
             />
           </div>
 
@@ -776,7 +776,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               onChange={(e) => setForm((f) => ({ ...f, transitionInstructions: e.target.value }))}
               placeholder="What should your heir do with this account? Close it? Transfer it? Keep it active?"
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[var(--royal)] resize-none"
+              className="px-5 py-4 rounded-2xl border-neutral-border text-[14px] text-[var(--royal)] resize-none"
             />
           </div>
 
@@ -790,7 +790,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
               onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
               placeholder="Any additional details..."
               rows={2}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] text-[var(--royal)] resize-none"
+              className="px-5 py-4 rounded-2xl border-neutral-border text-[14px] text-[var(--royal)] resize-none"
             />
           </div>
 
@@ -906,7 +906,7 @@ function AddLockboxModal({ estateId, open, onOpenChange }: { estateId: string; o
         </div>
 
         {/* Actions */}
-        <DialogFooter className="gap-4 pt-8 border-t border-slate-100">
+        <DialogFooter className="gap-4 pt-8 border-t border-neutral-border">
           <Button
             variant="ghost"
             onClick={() => handleOpenChange(false)}

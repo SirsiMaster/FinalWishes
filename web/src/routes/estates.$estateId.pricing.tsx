@@ -194,10 +194,10 @@ function PricingPage() {
           <span>Estate Protection Plans</span>
           <div className="w-10 h-px bg-[var(--royal)]/20" />
         </div>
-        <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-slate-900 tracking-tight">
+        <h2 className="text-5xl font-[family-name:var(--font-cinzel)] font-bold text-royal tracking-tight">
           Choose Your Plan
         </h2>
-        <p className="text-slate-500 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+        <p className="text-ink-muted text-lg font-medium max-w-2xl mx-auto leading-relaxed">
           Protect your legacy with the right level of coverage. Upgrade or downgrade anytime.
         </p>
       </div>
@@ -226,7 +226,7 @@ function PricingPage() {
                   ? 'border-[var(--royal)] shadow-[0_20px_60px_rgba(19,51,120,0.15)]'
                   : isPopular
                     ? 'border-[var(--gold)]/50 shadow-lg hover:border-[var(--gold)]'
-                    : 'border-slate-100 hover:border-slate-200 hover:shadow-md'
+                    : 'border-neutral-border hover:border-gold/40 hover:shadow-md'
               }`}
             >
               {/* Popular Badge */}
@@ -250,8 +250,8 @@ function PricingPage() {
                     <Icon className="w-6 h-6" style={{ color }} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900">{tier.name}</h3>
-                    <p className="text-[13px] text-slate-500">{tier.description}</p>
+                    <h3 className="text-xl font-bold text-royal">{tier.name}</h3>
+                    <p className="text-[13px] text-ink-muted">{tier.description}</p>
                   </div>
                 </div>
               </CardHeader>
@@ -261,11 +261,11 @@ function PricingPage() {
                 {/* Price */}
                 <div className="mb-8">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-slate-900">
+                    <span className="text-4xl font-bold text-ink">
                       {tier.priceCents === 0 ? 'Free' : `$${(tier.priceCents / 100).toFixed(0)}`}
                     </span>
                     {tier.priceCents > 0 && (
-                      <span className="text-[14px] text-slate-500 font-medium">/{tier.interval}</span>
+                      <span className="text-[14px] text-ink-muted font-medium">/{tier.interval}</span>
                     )}
                   </div>
                 </div>
@@ -275,7 +275,7 @@ function PricingPage() {
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
                       <Check className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color }} />
-                      <span className="text-[14px] text-slate-700">{feature}</span>
+                      <span className="text-[14px] text-ink">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -288,9 +288,9 @@ function PricingPage() {
                   disabled={isCurrent || tier.id === 'free' || isLoading}
                   className={`w-full py-4 h-auto rounded-2xl font-bold text-[14px] transition-all flex items-center justify-center gap-2 border-0 ${
                     isCurrent
-                      ? 'bg-slate-100 text-slate-500 cursor-default hover:bg-slate-100'
+                      ? 'bg-neutral-faint text-ink-muted cursor-default hover:bg-neutral-faint'
                       : tier.id === 'free'
-                        ? 'bg-slate-100 text-slate-500 cursor-default hover:bg-slate-100'
+                        ? 'bg-neutral-faint text-ink-muted cursor-default hover:bg-neutral-faint'
                         : isPopular
                           ? 'bg-[var(--gold)] hover:bg-[var(--gold)] text-white shadow-lg'
                           : 'bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white'
@@ -314,13 +314,13 @@ function PricingPage() {
 
       {/* ── Footer Note ── */}
       <div className="text-center space-y-2">
-        <p className="text-[13px] text-slate-500">
+        <p className="text-[13px] text-ink-muted">
           Payments processed securely by <span className="font-bold">Stripe</span>. Cancel anytime.
         </p>
         <div className="flex items-center justify-center gap-3 mt-3">
-          <Badge variant="outline" className="text-[12px] text-slate-400 font-normal">SOC 2 Compliant</Badge>
-          <Badge variant="outline" className="text-[12px] text-slate-400 font-normal">Cloud KMS Encryption</Badge>
-          <Badge variant="outline" className="text-[12px] text-slate-400 font-normal">99.9% Uptime SLA</Badge>
+          <Badge variant="outline" className="text-[12px] text-ink-muted font-normal">SOC 2 Compliant</Badge>
+          <Badge variant="outline" className="text-[12px] text-ink-muted font-normal">Cloud KMS Encryption</Badge>
+          <Badge variant="outline" className="text-[12px] text-ink-muted font-normal">99.9% Uptime SLA</Badge>
         </div>
       </div>
     </div>

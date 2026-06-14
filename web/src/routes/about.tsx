@@ -17,8 +17,8 @@ function Stat({ value, label }: { value: string; label: string }) {
 function Value({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="bg-white rounded-2xl p-6 shadow-[0_4px_30px_rgba(0,0,0,0.08)]">
-      <h3 className="text-slate-900 font-bold text-base mb-2">{title}</h3>
-      <p className="text-slate-600 text-sm leading-relaxed">{children}</p>
+      <h3 className="text-royal font-bold text-base mb-2">{title}</h3>
+      <p className="text-ink-muted text-sm leading-relaxed">{children}</p>
     </div>
   )
 }
@@ -48,15 +48,15 @@ function AboutPage() {
 
       {/* ── Mission ── */}
       <section className="px-6 py-16 max-w-3xl mx-auto">
-        <h2 className="text-2xl md:text-3xl text-slate-900 font-[family-name:var(--font-cinzel)] mb-5">
+        <h2 className="text-2xl md:text-3xl text-royal font-[family-name:var(--font-cinzel)] mb-5">
           Why We <span className="text-[var(--gold)]">Built This</span>
         </h2>
-        <p className="text-slate-600 leading-relaxed mb-4">
+        <p className="text-ink-muted leading-relaxed mb-4">
           Every year, families lose months to probate, scramble for passwords that no longer exist, and
           argue over wishes that were never written down. More than $72 billion in assets sits unclaimed
           nationwide — not because families don&rsquo;t care, but because no one left a map.
         </p>
-        <p className="text-slate-600 leading-relaxed">
+        <p className="text-ink-muted leading-relaxed">
           FinalWishes exists to end that chaos before it starts. We believe estate planning should feel less
           like a filing cabinet and more like a conversation with the people you love — organized, secure,
           and ready the moment it&rsquo;s needed. Not a substitute for your attorney, but the system that
@@ -76,7 +76,7 @@ function AboutPage() {
 
       {/* ── Values ── */}
       <section className="px-6 py-16 max-w-5xl mx-auto">
-        <h2 className="text-2xl md:text-3xl text-slate-900 font-[family-name:var(--font-cinzel)] text-center mb-10">
+        <h2 className="text-2xl md:text-3xl text-royal font-[family-name:var(--font-cinzel)] text-center mb-10">
           What We <span className="text-[var(--gold)]">Stand For</span>
         </h2>
         <div className="grid md:grid-cols-3 gap-5">
@@ -97,21 +97,21 @@ function AboutPage() {
       </section>
 
       {/* ── Backing ── */}
-      <section className="px-6 py-16 max-w-3xl mx-auto border-t border-slate-100">
-        <h2 className="text-2xl md:text-3xl text-slate-900 font-[family-name:var(--font-cinzel)] mb-5">
+      <section className="px-6 py-16 max-w-3xl mx-auto border-t border-[var(--neutral-border)]">
+        <h2 className="text-2xl md:text-3xl text-royal font-[family-name:var(--font-cinzel)] mb-5">
           Built by <span className="text-[var(--gold)]">Sirsi Technologies</span>
         </h2>
-        <p className="text-slate-600 leading-relaxed mb-4">
+        <p className="text-ink-muted leading-relaxed mb-4">
           FinalWishes is operated by Sirsi Technologies, Inc., a Delaware C-Corporation building sovereign,
           security-first software for regulated industries. FinalWishes is our answer to one of the most
           universal — and most underserved — moments in any family&rsquo;s life.
         </p>
-        <p className="text-slate-600 leading-relaxed">
+        <p className="text-ink-muted leading-relaxed">
           Our initial focus markets are Maryland, Illinois, and Minnesota, where we have invested in deep
           compliance knowledge of state-specific estate law. The platform works in all 50 states — estate
           organization is universal.
         </p>
-        <p className="text-slate-600 leading-relaxed mt-4">
+        <p className="text-ink-muted leading-relaxed mt-4">
           Learn more about the company at{' '}
           <a href="https://sirsi.ai" className="text-[var(--royal)] underline font-semibold">sirsi.ai</a>, or
           reach our team at{' '}

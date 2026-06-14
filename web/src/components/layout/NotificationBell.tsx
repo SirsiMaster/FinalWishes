@@ -71,14 +71,14 @@ function NotificationRow({
       onSelect={handleClick}
     >
       <div className="flex items-center gap-2 w-full">
-        <span className="text-[13px] font-bold text-slate-900 truncate flex-1">
+        <span className="text-[13px] font-bold text-ink truncate flex-1">
           {notification.title || 'Activity'}
         </span>
         <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${colors}`}>
           {notification.type || 'activity'}
         </span>
       </div>
-      <span className="text-[11px] text-slate-500 font-medium">
+      <span className="text-[11px] text-ink-muted font-medium">
         {timeAgo(createdDate)}
       </span>
     </DropdownMenuItem>
@@ -152,13 +152,13 @@ export function NotificationBell({ estateId }: NotificationBellProps) {
 
         {loading && (
           <div className="px-3 py-6 text-center">
-            <span className="text-[12px] text-slate-500 font-medium">Loading...</span>
+            <span className="text-[12px] text-ink-muted font-medium">Loading...</span>
           </div>
         )}
 
         {!loading && unreadCount === 0 && (
           <div className="px-3 py-6 text-center">
-            <span className="text-[12px] text-slate-500 font-medium">No unread notifications</span>
+            <span className="text-[12px] text-ink-muted font-medium">No unread notifications</span>
           </div>
         )}
 

@@ -255,7 +255,7 @@ function CreateEstatePage() {
   if (!profileResolved || profile?.primaryEstateId) {
     return (
       <AuthGuard>
-        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="min-h-screen flex items-center justify-center bg-[var(--neutral-faint)]">
           <div className="w-10 h-10 border-2 border-[var(--royal)]/20 border-t-[var(--royal)] rounded-full animate-spin" />
         </div>
       </AuthGuard>
@@ -264,7 +264,7 @@ function CreateEstatePage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center p-6 font-[family-name:var(--font-inter)]">
+      <div className="min-h-screen bg-gradient-to-br from-neutral-faint via-white to-neutral-faint flex items-center justify-center p-6 font-[family-name:var(--font-inter)]">
         {/* Background decoration */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-[-200px] right-[-200px] w-[600px] h-[600px] rounded-full bg-[var(--royal)]/[0.03] blur-3xl" />
@@ -373,7 +373,7 @@ function CreateEstatePage() {
                             ? 'bg-[var(--gold)] text-white'
                             : i + 1 === step
                               ? 'bg-[var(--royal)] text-white shadow-lg shadow-[var(--royal)]/20'
-                              : 'bg-slate-100 text-[var(--ink-muted)]'
+                              : 'bg-[var(--neutral-faint)] text-[var(--ink-muted)]'
                         }`}
                       >
                         {i + 1 < step ? (
@@ -392,12 +392,12 @@ function CreateEstatePage() {
                     </div>
                   ))}
                 </div>
-                <Progress value={(step / 5) * 100} className="h-1.5 bg-slate-100 [&>[data-slot=progress-indicator]]:bg-[var(--royal)]" />
+                <Progress value={(step / 5) * 100} className="h-1.5 bg-[var(--neutral-faint)] [&>[data-slot=progress-indicator]]:bg-[var(--royal)]" />
               </div>
 
               {/* ─── Step 1: Your Situation ─── */}
               {step === 1 && (
-                <Card className="rounded-[2.5rem] p-12 border-slate-100 shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
+                <Card className="rounded-[2.5rem] p-12 border-[var(--neutral-border)] shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
                   <CardHeader className="p-0 mb-10">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-8 h-px bg-[var(--royal)]/20" />
@@ -421,7 +421,7 @@ function CreateEstatePage() {
                       className={`w-full text-left p-6 rounded-[2rem] border-2 transition-all ${
                         wizardData.situation === 'planning'
                           ? 'border-[var(--royal)] bg-[var(--royal)]/[0.03] shadow-lg shadow-[var(--royal)]/10'
-                          : 'border-slate-200 hover:border-[var(--royal)]/30 hover:bg-slate-50'
+                          : 'border-[var(--neutral-border)] hover:border-[var(--royal)]/30 hover:bg-[var(--neutral-faint)]'
                       }`}
                     >
                       <div className="flex items-start gap-5">
@@ -459,7 +459,7 @@ function CreateEstatePage() {
                       className={`w-full text-left p-6 rounded-[2rem] border-2 transition-all ${
                         wizardData.situation === 'after-loss'
                           ? 'border-[var(--gold)] bg-[var(--gold)]/[0.03] shadow-lg shadow-[var(--gold)]/10'
-                          : 'border-slate-200 hover:border-[var(--gold)]/30 hover:bg-slate-50'
+                          : 'border-[var(--neutral-border)] hover:border-[var(--gold)]/30 hover:bg-[var(--neutral-faint)]'
                       }`}
                     >
                       <div className="flex items-start gap-5">
@@ -508,7 +508,7 @@ function CreateEstatePage() {
 
               {/* ─── Step 2: About You ─── */}
               {step === 2 && (
-                <Card className="rounded-[2.5rem] p-12 border-slate-100 shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
+                <Card className="rounded-[2.5rem] p-12 border-[var(--neutral-border)] shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
                   <CardHeader className="p-0 mb-10">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-8 h-px bg-[var(--royal)]/20" />
@@ -535,7 +535,7 @@ function CreateEstatePage() {
                         value={wizardData.fullName}
                         onChange={(e) => update({ fullName: e.target.value })}
                         placeholder="Your full name"
-                        className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all placeholder:text-slate-300 placeholder:font-medium"
+                        className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all placeholder:text-ink-muted placeholder:font-medium"
                         autoFocus
                       />
                     </div>
@@ -549,7 +549,7 @@ function CreateEstatePage() {
                         value={wizardData.stateOfResidence}
                         onValueChange={(val) => update({ stateOfResidence: val })}
                       >
-                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 font-semibold text-base text-[var(--ink)] [&>span]:text-slate-300 data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
+                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] font-semibold text-base text-[var(--ink)] [&>span]:text-ink-muted data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
                           <SelectValue placeholder="Select your state" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl max-h-72">
@@ -572,7 +572,7 @@ function CreateEstatePage() {
                           update({ maritalStatus: val, hasSpouse })
                         }}
                       >
-                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-slate-200 bg-slate-50 font-semibold text-base text-[var(--ink)] [&>span]:text-slate-300 data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
+                        <SelectTrigger className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] font-semibold text-base text-[var(--ink)] [&>span]:text-ink-muted data-[state=open]:border-[var(--royal)] data-[state=open]:ring-8 data-[state=open]:ring-[var(--royal)]/5">
                           <SelectValue placeholder="Select marital status" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
@@ -589,7 +589,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(1)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-[var(--neutral-border)] font-bold text-[var(--ink-muted)] hover:bg-[var(--neutral-faint)] transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -609,7 +609,7 @@ function CreateEstatePage() {
 
               {/* ─── Step 3: Family ─── */}
               {step === 3 && (
-                <Card className="rounded-[2.5rem] p-12 border-slate-100 shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
+                <Card className="rounded-[2.5rem] p-12 border-[var(--neutral-border)] shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
                   <CardHeader className="p-0 mb-10">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-8 h-px bg-[var(--royal)]/20" />
@@ -627,7 +627,7 @@ function CreateEstatePage() {
 
                   <CardContent className="p-0 space-y-6">
                     {/* Spouse/Partner */}
-                    <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--neutral-faint)] border border-[var(--neutral-border)]">
                       <div>
                         <p className="font-bold text-[var(--ink)]">Spouse or partner?</p>
                         <p className="text-sm text-[var(--ink-muted)] mt-0.5">Do you currently have a spouse or domestic partner?</p>
@@ -639,10 +639,10 @@ function CreateEstatePage() {
                       />
                     </div>
 
-                    <Separator className="bg-slate-100" />
+                    <Separator className="bg-[var(--neutral-faint)]" />
 
                     {/* Children */}
-                    <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--neutral-faint)] border border-[var(--neutral-border)]">
                       <div>
                         <p className="font-bold text-[var(--ink)]">Children?</p>
                         <p className="text-sm text-[var(--ink-muted)] mt-0.5">Do you have any children or dependents?</p>
@@ -674,12 +674,12 @@ function CreateEstatePage() {
                             max={20}
                             value={wizardData.numberOfChildren}
                             onChange={(e) => update({ numberOfChildren: Math.max(1, parseInt(e.target.value) || 1) })}
-                            className="w-32 px-6 py-3 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all"
+                            className="w-32 px-6 py-3 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all"
                           />
                         </div>
 
                         {/* Minor children */}
-                        <div className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100">
+                        <div className="flex items-center justify-between p-5 rounded-2xl bg-[var(--neutral-faint)] border border-[var(--neutral-border)]">
                           <div>
                             <p className="font-bold text-[var(--ink)]">Any minor children?</p>
                             <p className="text-sm text-[var(--ink-muted)] mt-0.5">Children under 18 may need a guardian designation.</p>
@@ -698,7 +698,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(2)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-[var(--neutral-border)] font-bold text-[var(--ink-muted)] hover:bg-[var(--neutral-faint)] transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -717,7 +717,7 @@ function CreateEstatePage() {
 
               {/* ─── Step 4: Key Assets ─── */}
               {step === 4 && (
-                <Card className="rounded-[2.5rem] p-12 border-slate-100 shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
+                <Card className="rounded-[2.5rem] p-12 border-[var(--neutral-border)] shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
                   <CardHeader className="p-0 mb-10">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-8 h-px bg-[var(--royal)]/20" />
@@ -745,11 +745,11 @@ function CreateEstatePage() {
                             className={`flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all ${
                               selected
                                 ? 'border-[var(--royal)] bg-[var(--royal)]/[0.03]'
-                                : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                                : 'border-[var(--neutral-border)] hover:border-gold/40 hover:bg-[var(--neutral-faint)]'
                             }`}
                           >
                             <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
-                              selected ? 'bg-[var(--royal)] text-white' : 'bg-slate-100 text-[var(--ink-muted)]'
+                              selected ? 'bg-[var(--royal)] text-white' : 'bg-[var(--neutral-faint)] text-[var(--ink-muted)]'
                             }`}>
                               <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.5">
                                 <path d={asset.icon} />
@@ -777,7 +777,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(3)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-[var(--neutral-border)] font-bold text-[var(--ink-muted)] hover:bg-[var(--neutral-faint)] transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -802,7 +802,7 @@ function CreateEstatePage() {
 
               {/* ─── Step 5: Name Your Estate ─── */}
               {step === 5 && (
-                <Card className="rounded-[2.5rem] p-12 border-slate-100 shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
+                <Card className="rounded-[2.5rem] p-12 border-[var(--neutral-border)] shadow-[0_20px_80px_rgba(15,23,42,0.04)] bg-white">
                   <CardHeader className="p-0 mb-10">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-8 h-px bg-[var(--royal)]/20" />
@@ -829,7 +829,7 @@ function CreateEstatePage() {
                         value={wizardData.estateName}
                         onChange={(e) => update({ estateName: e.target.value })}
                         placeholder={suggestedEstateName}
-                        className="w-full px-8 py-6 h-auto rounded-2xl border-slate-200 bg-slate-50 focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-bold text-[var(--ink)] text-xl transition-all placeholder:text-slate-300 placeholder:font-medium"
+                        className="w-full px-8 py-6 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-bold text-[var(--ink)] text-xl transition-all placeholder:text-ink-muted placeholder:font-medium"
                         autoFocus
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && wizardData.estateName.trim()) handleCreate()
@@ -838,7 +838,7 @@ function CreateEstatePage() {
                     </div>
 
                     {/* Summary */}
-                    <div className="rounded-2xl bg-slate-50 border border-slate-100 p-6 space-y-4">
+                    <div className="rounded-2xl bg-[var(--neutral-faint)] border border-[var(--neutral-border)] p-6 space-y-4">
                       <h4 className="text-xs font-bold text-[var(--ink-muted)] uppercase tracking-widest">Your Intake Summary</h4>
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <SummaryItem
@@ -880,7 +880,7 @@ function CreateEstatePage() {
                     <Button
                       variant="outline"
                       onClick={() => setStep(4)}
-                      className="flex-1 py-5 h-auto rounded-2xl border-slate-200 font-bold text-[var(--ink-muted)] hover:bg-slate-50 transition-all active:scale-[0.98]"
+                      className="flex-1 py-5 h-auto rounded-2xl border-[var(--neutral-border)] font-bold text-[var(--ink-muted)] hover:bg-[var(--neutral-faint)] transition-all active:scale-[0.98]"
                     >
                       Back
                     </Button>
@@ -915,14 +915,14 @@ function CreateEstatePage() {
                   </svg>
                   AES-256 Encrypted
                 </Badge>
-                <div className="w-1 h-1 rounded-full bg-slate-300" />
+                <div className="w-1 h-1 rounded-full bg-[var(--neutral-border)]" />
                 <Badge variant="outline" className="text-[13px] text-[var(--ink-muted)] font-medium border-0 bg-transparent gap-2 h-auto">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
                   SOC 2 Architecture
                 </Badge>
-                <div className="w-1 h-1 rounded-full bg-slate-300" />
+                <div className="w-1 h-1 rounded-full bg-[var(--neutral-border)]" />
                 <Badge variant="outline" className="text-[13px] text-[var(--ink-muted)] font-medium border-0 bg-transparent gap-2 h-auto">
                   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
@@ -942,9 +942,9 @@ function CreateEstatePage() {
 
 function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <Card className="rounded-[2rem] p-8 border-slate-100 shadow-[0_2px_30px_rgba(15,23,42,0.02)] text-center group hover:border-[var(--royal)]/20 hover:shadow-lg transition-all hover:-translate-y-1 bg-white ring-0">
+    <Card className="rounded-[2rem] p-8 border-[var(--neutral-border)] shadow-[0_2px_30px_rgba(15,23,42,0.02)] text-center group hover:border-[var(--royal)]/20 hover:shadow-lg transition-all hover:-translate-y-1 bg-white ring-0">
       <CardContent className="p-0">
-        <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-[var(--royal)] mb-5 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500">
+        <div className="w-14 h-14 mx-auto rounded-2xl bg-[var(--neutral-faint)] border border-[var(--neutral-border)] flex items-center justify-center text-[var(--royal)] mb-5 group-hover:bg-[var(--royal)] group-hover:text-white transition-all duration-500">
           <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="1.5">
             {icon}
           </svg>

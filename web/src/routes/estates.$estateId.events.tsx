@@ -221,7 +221,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
   }, [event])
 
   return (
-    <Card className="rounded-3xl border-slate-100 p-0 hover:border-[var(--royal)]/20 hover:shadow-lg transition-all">
+    <Card className="rounded-3xl border-neutral-border p-0 hover:border-[var(--royal)]/20 hover:shadow-lg transition-all">
       <CardContent className="p-8">
         <div className="flex items-start justify-between mb-5">
           <div>
@@ -316,7 +316,7 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
 
         {/* View RSVPs — collapsible list (estate owner/executor view) */}
         {event.rsvpEnabled && (
-          <div className="mt-4 pt-4 border-t border-slate-100">
+          <div className="mt-4 pt-4 border-t border-neutral-border">
             <button
               type="button"
               onClick={() => setRsvpListOpen(!rsvpListOpen)}
@@ -416,13 +416,13 @@ function EventCard({ event, estateId, onEdit }: { event: EstateEvent; estateId: 
 const RESPONSE_BADGES: Record<RSVPResponse, { label: string; className: string }> = {
   attending: { label: 'Attending', className: 'bg-green-50 text-green-700' },
   maybe: { label: 'Maybe', className: 'bg-amber-50 text-amber-700' },
-  not_attending: { label: 'Not Attending', className: 'bg-slate-100 text-[var(--royal)]/60' },
+  not_attending: { label: 'Not Attending', className: 'bg-neutral-faint text-[var(--royal)]/60' },
 }
 
 function RSVPRow({ rsvp }: { rsvp: RSVPRecord }) {
   const badge = RESPONSE_BADGES[rsvp.response] || RESPONSE_BADGES.attending
   return (
-    <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-slate-50/50 hover:bg-slate-50 transition-colors">
+    <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-neutral-faint/50 hover:bg-neutral-faint transition-colors">
       <div className="flex items-center gap-3 min-w-0">
         <span className="text-[13px] font-semibold text-[var(--royal)] truncate">{rsvp.name}</span>
         <Badge
@@ -533,7 +533,7 @@ function CreateEventModal({
           <div className="space-y-2">
             <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Event Type</Label>
             <Select value={form.type} onValueChange={(v) => update('type', v)}>
-              <SelectTrigger className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]">
+              <SelectTrigger className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -551,7 +551,7 @@ function CreateEventModal({
               value={form.title}
               onChange={(e) => update('title', e.target.value)}
               placeholder="e.g., Funeral Service for John Smith"
-              className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+              className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
             />
           </div>
 
@@ -563,7 +563,7 @@ function CreateEventModal({
                 type="date"
                 value={form.date}
                 onChange={(e) => update('date', e.target.value)}
-                className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+                className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
               />
             </div>
             <div className="space-y-2">
@@ -572,7 +572,7 @@ function CreateEventModal({
                 type="time"
                 value={form.time}
                 onChange={(e) => update('time', e.target.value)}
-                className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+                className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
               />
             </div>
             <div className="space-y-2">
@@ -581,7 +581,7 @@ function CreateEventModal({
                 type="time"
                 value={form.endTime}
                 onChange={(e) => update('endTime', e.target.value)}
-                className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+                className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
               />
             </div>
           </div>
@@ -593,7 +593,7 @@ function CreateEventModal({
               value={form.location}
               onChange={(e) => update('location', e.target.value)}
               placeholder="e.g., St. Matthew's Church"
-              className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+              className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
             />
           </div>
 
@@ -603,7 +603,7 @@ function CreateEventModal({
               value={form.address}
               onChange={(e) => update('address', e.target.value)}
               placeholder="Full street address"
-              className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+              className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
             />
           </div>
 
@@ -615,7 +615,7 @@ function CreateEventModal({
               onChange={(e) => update('description', e.target.value)}
               placeholder="Details about the service..."
               rows={3}
-              className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] resize-none"
+              className="px-5 py-4 rounded-2xl border-neutral-border text-[14px] resize-none"
             />
           </div>
 
@@ -626,12 +626,12 @@ function CreateEventModal({
               value={form.dressCode}
               onChange={(e) => update('dressCode', e.target.value)}
               placeholder="e.g., Business formal, Celebration colors welcome"
-              className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]"
+              className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]"
             />
           </div>
         </div>
 
-        <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-slate-100">
+        <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-neutral-border">
           <Button
             variant="ghost"
             onClick={() => onOpenChange(false)}
@@ -739,33 +739,33 @@ function EditEventModal({
         <div className="space-y-6">
           <div className="space-y-2">
             <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Title *</Label>
-            <Input value={form.title} onChange={(e) => update('title', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+            <Input value={form.title} onChange={(e) => update('title', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Date *</Label>
-              <Input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+              <Input type="date" value={form.date} onChange={(e) => update('date', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]" />
             </div>
             <div className="space-y-2">
               <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Start Time</Label>
-              <Input type="time" value={form.time} onChange={(e) => update('time', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+              <Input type="time" value={form.time} onChange={(e) => update('time', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]" />
             </div>
             <div className="space-y-2">
               <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">End Time</Label>
-              <Input type="time" value={form.endTime} onChange={(e) => update('endTime', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+              <Input type="time" value={form.endTime} onChange={(e) => update('endTime', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]" />
             </div>
           </div>
           <div className="space-y-2">
             <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Location *</Label>
-            <Input value={form.location} onChange={(e) => update('location', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-slate-200 text-[14px]" />
+            <Input value={form.location} onChange={(e) => update('location', e.target.value)} className="h-auto px-5 py-4 rounded-2xl border-neutral-border text-[14px]" />
           </div>
           <div className="space-y-2">
             <Label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">Description</Label>
-            <Textarea value={form.description} onChange={(e) => update('description', e.target.value)} rows={3} className="px-5 py-4 rounded-2xl border-slate-200 text-[14px] resize-none" />
+            <Textarea value={form.description} onChange={(e) => update('description', e.target.value)} rows={3} className="px-5 py-4 rounded-2xl border-neutral-border text-[14px] resize-none" />
           </div>
         </div>
 
-        <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-slate-100">
+        <DialogFooter className="flex-row justify-end gap-4 mt-8 pt-8 border-t border-neutral-border">
           <Button variant="ghost" onClick={() => onOpenChange(false)} className="px-8 py-4 h-auto rounded-2xl text-[14px] font-bold text-[var(--royal)]/60">Cancel</Button>
           <Button onClick={handleSave} disabled={saving || !form.title.trim() || !form.date || !form.location.trim()} className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-10 py-4 h-auto rounded-2xl font-bold text-[14px]">
             {saving ? 'Saving...' : 'Save Changes'}

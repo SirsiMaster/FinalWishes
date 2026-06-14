@@ -429,7 +429,7 @@ function EmailVerificationGate({
       </div>
 
       <div className="bg-white rounded-[2.5rem] border border-[var(--royal)]/10 p-8 text-center space-y-6">
-        <p className="text-slate-500 text-sm leading-relaxed">
+        <p className="text-ink-muted text-sm leading-relaxed">
           Email verification protects your estate by ensuring only you can access your account.
           Check your spam folder if you don't see the email.
         </p>

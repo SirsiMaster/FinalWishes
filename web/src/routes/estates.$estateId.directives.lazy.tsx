@@ -6,7 +6,7 @@ import { useAuth } from '../lib/auth'
 import { addDirective, updateDirective } from '../lib/estate-actions'
 import { API_BASE } from '../lib/client'
 import { toast } from 'sonner'
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent, type Editor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import {
   Plus,
@@ -120,6 +120,77 @@ const DIRECTIVE_TEMPLATES: Record<DirectiveType, string> = {
 
 function getTypeConfig(value: string) {
   return DIRECTIVE_TYPES.find((t) => t.value === value) || DIRECTIVE_TYPES[0]
+}
+
+// ─── Shared Editor Toolbar ──────────────────────────────────────────────────
+// One accessible toolbar shared by the Directives and Obituary rich-text editors
+// (both editors are identical). Exported so obituary.lazy.tsx can import it.
+//
+// Accessibility:
+//   • Container is a `role="toolbar"` with an aria-label so AT announces it as a
+//     formatting toolbar rather than a bare group of buttons.
+//   • Every icon-only button carries an explicit aria-label (its visible meaning).
+//   • Toggle buttons expose aria-pressed reflecting the live editor state, so the
+//     active/inactive state isn't conveyed by background color alone.
+
+type ToolbarToggle = {
+  kind: 'toggle'
+  label: string
+  icon: typeof Bold
+  isActive: () => boolean
+  run: () => void
+}
+type ToolbarAction = {
+  kind: 'action'
+  label: string
+  icon: typeof Bold
+  run: () => void
+}
+type ToolbarDivider = { kind: 'divider' }
+type ToolbarItem = ToolbarToggle | ToolbarAction | ToolbarDivider
+
+export function EditorToolbar({ editor, className = '' }: { editor: Editor; className?: string }) {
+  const items: ToolbarItem[] = [
+    { kind: 'toggle', label: 'Bold', icon: Bold, isActive: () => editor.isActive('bold'), run: () => editor.chain().focus().toggleBold().run() },
+    { kind: 'toggle', label: 'Italic', icon: Italic, isActive: () => editor.isActive('italic'), run: () => editor.chain().focus().toggleItalic().run() },
+    { kind: 'divider' },
+    { kind: 'toggle', label: 'Heading', icon: Heading2, isActive: () => editor.isActive('heading', { level: 2 }), run: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
+    { kind: 'toggle', label: 'Bullet list', icon: List, isActive: () => editor.isActive('bulletList'), run: () => editor.chain().focus().toggleBulletList().run() },
+    { kind: 'toggle', label: 'Numbered list', icon: ListOrdered, isActive: () => editor.isActive('orderedList'), run: () => editor.chain().focus().toggleOrderedList().run() },
+    { kind: 'divider' },
+    { kind: 'action', label: 'Undo', icon: Undo2, run: () => editor.chain().focus().undo().run() },
+    { kind: 'action', label: 'Redo', icon: Redo2, run: () => editor.chain().focus().redo().run() },
+  ]
+
+  return (
+    <div
+      role="toolbar"
+      aria-label="Text formatting"
+      className={`flex items-center gap-1 p-3 bg-slate-50 rounded-2xl border border-slate-100 ${className}`}
+    >
+      {items.map((item, i) => {
+        if (item.kind === 'divider') {
+          return <Separator key={`sep-${i}`} orientation="vertical" className="h-5 mx-1" />
+        }
+        const Icon = item.icon
+        const active = item.kind === 'toggle' ? item.isActive() : false
+        return (
+          <Button
+            key={item.label}
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={item.label}
+            aria-pressed={item.kind === 'toggle' ? active : undefined}
+            onClick={item.run}
+            className={`w-9 h-9 rounded-xl ${active ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}
+          >
+            <Icon className="w-4 h-4" />
+          </Button>
+        )
+      })}
+    </div>
+  )
 }
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
@@ -710,8 +781,12 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
                 <Button
                   variant="outline"
                   onClick={async () => {
-                    await updateDirective(estateId, directive.id, { signedAt: new Date().toISOString() })
-                    toast.success('Document marked as signed')
+                    const result = await updateDirective(estateId, directive.id, { signedAt: new Date().toISOString() })
+                    if (result.success) {
+                      toast.success('Document marked as signed')
+                    } else {
+                      toast.error(result.error || 'Could not mark as signed. Please try again.')
+                    }
                   }}
                   className="px-5 py-2.5 h-auto rounded-xl text-[12px] font-bold uppercase tracking-wider border-[#059669]/30 text-[#059669] hover:bg-[#059669]/5"
                 >
@@ -817,17 +892,7 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
 
       {/* ── Toolbar ── */}
       {mode === 'edit' && directive.status !== 'finalized' && editor && (
-        <div className="flex items-center gap-1 mb-4 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBold().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bold') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Bold className="w-4 h-4" /></Button>
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleItalic().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('italic') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Italic className="w-4 h-4" /></Button>
-          <Separator orientation="vertical" className="h-5 mx-1" />
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={`w-9 h-9 rounded-xl ${editor.isActive('heading', { level: 2 }) ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><Heading2 className="w-4 h-4" /></Button>
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleBulletList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('bulletList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><List className="w-4 h-4" /></Button>
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={`w-9 h-9 rounded-xl ${editor.isActive('orderedList') ? 'bg-[var(--royal)] text-white hover:bg-[var(--royal)]/90 hover:text-white' : 'text-slate-500 hover:bg-slate-200'}`}><ListOrdered className="w-4 h-4" /></Button>
-          <Separator orientation="vertical" className="h-5 mx-1" />
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().undo().run()} className="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-200"><Undo2 className="w-4 h-4" /></Button>
-          <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().redo().run()} className="w-9 h-9 rounded-xl text-slate-500 hover:bg-slate-200"><Redo2 className="w-4 h-4" /></Button>
-        </div>
+        <EditorToolbar editor={editor} className="mb-4" />
       )}
 
       {/* ── Editor ── */}

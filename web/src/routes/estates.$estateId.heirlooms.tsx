@@ -30,7 +30,7 @@ import {
   Globe,
   Loader2,
 } from 'lucide-react'
-import { importFromGooglePhotos } from '../lib/google-photos-import'
+import { importFromGooglePhotos, isGooglePhotosImportConfigured } from '../lib/google-photos-import'
 
 import { Button } from '@/components/ui/button'
 import { CameraCaptureButton } from '@/components/ui/camera-capture-button'
@@ -88,6 +88,9 @@ function HeirloomsPage() {
   const [modalOpen, setModalOpen] = useState(false)
   const [filterCategory, setFilterCategory] = useState<CategoryValue | 'all'>('all')
   const [importing, setImporting] = useState(false)
+  // Google Photos import is gated on a build-time OAuth client id. When absent the
+  // control is hidden entirely rather than shown-then-erroring on click.
+  const googlePhotosEnabled = isGooglePhotosImportConfigured()
 
   const handleGooglePhotosImport = useCallback(async () => {
     if (importing) return
@@ -136,15 +139,17 @@ function HeirloomsPage() {
         subtitle="Physical assets, family treasures, and sentimental items worth preserving for future generations."
         action={
           <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-            <Button
-              onClick={handleGooglePhotosImport}
-              disabled={importing || (tierUsage ? !tierUsage.canUploadMedia : false)}
-              variant="secondary"
-              className="px-6 py-3 md:px-8 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] bg-slate-100 text-slate-700 hover:bg-slate-200 w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {importing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Image className="w-5 h-5" />}
-              Import from Google Photos
-            </Button>
+            {googlePhotosEnabled && (
+              <Button
+                onClick={handleGooglePhotosImport}
+                disabled={importing || (tierUsage ? !tierUsage.canUploadMedia : false)}
+                variant="secondary"
+                className="px-6 py-3 md:px-8 md:py-5 h-auto rounded-2xl font-bold text-[13px] md:text-[14px] bg-slate-100 text-slate-700 hover:bg-slate-200 w-full md:w-auto justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {importing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Image className="w-5 h-5" />}
+                Import from Google Photos
+              </Button>
+            )}
             <Button
               onClick={() => setModalOpen(true)}
               disabled={tierUsage ? !tierUsage.canUploadMedia : false}

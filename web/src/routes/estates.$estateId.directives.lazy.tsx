@@ -32,6 +32,7 @@ import {
   PenTool,
   Users,
   Globe,
+  Info,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -549,6 +550,11 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
   }, [editor, estateId, directive.id])
 
   const [signingLoading, setSigningLoading] = useState(false)
+  // Set when the signing provider is not yet provisioned (API returns 503). We keep
+  // the directive fully usable (it can still be exported / printed for wet-ink
+  // signing) but replace the call-to-action with a calm "unavailable" notice instead
+  // of letting the owner re-trigger a guaranteed error toast.
+  const [signingUnavailable, setSigningUnavailable] = useState(false)
   const isSigned = !!directive.signedAt
 
   const handleSign = useCallback(async () => {
@@ -575,6 +581,17 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
           redirectUrl,
         }),
       })
+
+      // A 503 means no signing provider credential is configured yet (Sirsi Sign or
+      // the dissociated fallback). Surface a steady "not available yet" state and stop
+      // offering the action rather than treating it as a transient failure.
+      if (res.status === 503) {
+        setSigningUnavailable(true)
+        toast.info('Electronic signing isn’t available yet', {
+          description: 'You can export this directive and sign it by hand. Electronic signing will be enabled soon.',
+        })
+        return
+      }
 
       if (!res.ok) {
         const errText = await res.text()
@@ -671,7 +688,15 @@ function DirectiveEditor({ directive, estateId, onBack }: { directive: Directive
               </Button>
             </>
           )}
-          {directive.status === 'finalized' && !isSigned && (
+          {directive.status === 'finalized' && !isSigned && signingUnavailable && (
+            <span
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[12px] font-bold uppercase tracking-wider bg-[var(--royal)]/5 text-[var(--royal)] border border-[var(--royal)]/15"
+              title="Electronic signing will be enabled soon. Use Export to sign by hand in the meantime."
+            >
+              <Info className="w-3.5 h-3.5" /> E-Signing Coming Soon
+            </span>
+          )}
+          {directive.status === 'finalized' && !isSigned && !signingUnavailable && (
             <>
               <Button
                 onClick={handleSign}

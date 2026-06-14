@@ -42,6 +42,17 @@ interface GisOAuth2 {
 }
 type GisWindow = Window & { google?: { accounts?: { oauth2?: GisOAuth2 } } }
 
+/**
+ * Whether the Google Photos import is provisioned in this build. Import requires a
+ * build-time Web OAuth client id (`VITE_GOOGLE_OAUTH_CLIENT_ID`); without it every
+ * import attempt throws "not configured", so callers should hide/disable the entry
+ * point rather than letting users click into a guaranteed error. (See the OWNER
+ * PREREQUISITES header — the Picker API + consent-screen scope are the other two
+ * steps, but only the client id is observable at build time on the client.)
+ */
+export const isGooglePhotosImportConfigured = (): boolean =>
+  Boolean(import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID)
+
 let gisLoading: Promise<void> | null = null
 
 function loadGis(): Promise<void> {

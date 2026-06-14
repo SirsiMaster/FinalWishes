@@ -1035,7 +1035,7 @@ function CreateModal({
                     >
                       <CardContent className="p-4 px-0">
                         <div className="flex items-center gap-3 mb-1.5">
-                          <Icon className="w-4 h-4" style={{ color: selected ? 'var(--gold)' : 'var(--color-slate-400)' }} />
+                          <Icon className="w-4 h-4" style={{ color: selected ? 'var(--gold)' : 'var(--ink-muted)' }} />
                           <span className={`text-[12px] font-bold ${selected ? 'text-[var(--gold)]' : 'text-slate-900'}`}>
                             {dt.label}
                           </span>

@@ -146,7 +146,13 @@ function WelcomeStep({
 }
 
 // ─── Utility: Should show owner welcome ──────────────────────────────────────
+// NOTE: These helpers live alongside the component because the test suite and
+// the estate route import them from this module's stable public API. Extracting
+// them to a sibling file would require editing out-of-bucket consumers, so the
+// react-refresh/only-export-components warning is intentionally suppressed here
+// (helpers are pure, non-stateful — no Fast Refresh hazard in practice).
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function shouldShowOwnerWelcome(
   role: string | undefined,
   estateId: string,
@@ -163,6 +169,7 @@ export function shouldShowOwnerWelcome(
   return true
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function markOwnerWelcomeSeen(estateId: string, userId: string): void {
   const key = `fw_owner_welcome_seen_${estateId}_${userId}`
   if (typeof window !== 'undefined') {

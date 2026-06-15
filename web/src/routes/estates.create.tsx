@@ -140,11 +140,17 @@ function CreateEstatePage() {
   // the user is genuinely new (resolved + no estate). A returning user is
   // redirected by the guard above before this runs; a failed profile read keeps
   // profileResolved false, so we simply never resurrect a draft.
+  // This loads persisted state from an EXTERNAL system (localStorage via
+  // loadWizardDraft) and can't be a useState lazy initializer: hydration must
+  // wait for the async profile to resolve (profileResolved + no estate), which
+  // isn't known at mount. The synchronous setState restores that loaded draft
+  // exactly once (hydratedRef guard). Genuine external-data load — kept as-is.
   useEffect(() => {
     if (hydratedRef.current || !uid || !profileResolved || profile?.primaryEstateId) return
     hydratedRef.current = true
     const draft = loadWizardDraft(uid)
     if (draft) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setWizardData({ ...EMPTY_WIZARD_DATA, ...draft.data })
       setStep(draft.step)
       setHasDraft(true)

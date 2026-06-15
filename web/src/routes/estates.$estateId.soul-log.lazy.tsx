@@ -706,17 +706,22 @@ function EntryCard({
       <CardContent className="p-0">
         {/* Video Thumbnail */}
         {entry.type === 'video' && entry.mediaUrl && (
-          <div
-            className="aspect-video bg-royal relative overflow-hidden cursor-pointer group"
+          <button
+            type="button"
+            aria-label={`Play video: ${entry.title || 'Untitled Entry'}`}
+            className="block w-full aspect-video bg-royal relative overflow-hidden cursor-pointer group"
             onClick={onViewVideo}
           >
             <video
               src={`${entry.mediaUrl}#t=0.001`}
+              aria-label={`Video thumbnail: ${entry.title || 'Untitled Entry'}`}
               className="w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
               muted
               playsInline
               preload="metadata"
-            />
+            >
+              <track kind="captions" />
+            </video>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-[var(--royal)] transition-all duration-500">
                 <Play className="w-7 h-7 fill-current ml-1" />
@@ -727,7 +732,7 @@ function EntryCard({
                 {formatDuration(entry.duration)}
               </div>
             )}
-          </div>
+          </button>
         )}
 
         {/* Card Body */}
@@ -872,7 +877,11 @@ function ExpandedContent({
   })
 
   return (
-    <div className="pt-2 space-y-4" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="pt-2 space-y-4"
+      role="presentation"
+      onClick={(e) => e.stopPropagation()}
+    >
       {entry.type === 'text' && entry.content && (
         <div className="rounded-2xl bg-white p-4 border border-[var(--royal)]/10">
           <EditorContent editor={textEditor} />
@@ -1056,18 +1065,26 @@ function AudioPlayer({ url }: { url: string }) {
   }, [])
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="flex items-center gap-3 p-3 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10"
+      role="presentation"
+      onClick={(e) => e.stopPropagation()}
+    >
       <audio
         ref={audioRef}
         src={url}
+        aria-label="Memorial audio recording"
         preload="metadata"
         onLoadedMetadata={() => { if (audioRef.current) setDuration(audioRef.current.duration) }}
         onTimeUpdate={() => { if (audioRef.current) setCurrentTime(audioRef.current.currentTime) }}
         onEnded={() => { setPlaying(false); cancelAnimationFrame(animFrameRef.current) }}
-      />
+      >
+        <track kind="captions" />
+      </audio>
       <Button
         variant="ghost"
         size="icon"
+        aria-label={playing ? 'Pause audio' : 'Play audio'}
         onClick={togglePlay}
         className="w-10 h-10 rounded-xl bg-[var(--royal)] text-white hover:bg-[var(--royal-blue)] hover:text-white flex-shrink-0"
       >
@@ -1077,6 +1094,7 @@ function AudioPlayer({ url }: { url: string }) {
         ref={canvasRef}
         width={200}
         height={40}
+        aria-hidden="true"
         className="flex-1 h-10 rounded-lg"
       />
       <span className="text-xs font-mono text-[var(--royal)]/60 flex-shrink-0 tabular-nums">
@@ -1108,12 +1126,16 @@ function VideoViewer({
             <div className="relative aspect-video bg-black flex items-center justify-center">
               <video
                 src={entry.mediaUrl}
+                aria-label={`Memorial video: ${entry.title || 'Untitled Entry'}`}
                 controls
                 autoPlay
                 className="max-w-full max-h-full"
-              />
+              >
+                <track kind="captions" />
+              </video>
               <Button
                 variant="ghost"
+                aria-label="Close video"
                 onClick={() => onOpenChange(false)}
                 className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-[var(--ink)]"
               >
@@ -1773,7 +1795,9 @@ function VideoRecorder({
     return (
       <div className="space-y-3">
         <div className="aspect-video rounded-2xl overflow-hidden bg-black">
-          <video src={recordedUrl} controls className="w-full h-full object-contain" />
+          <video src={recordedUrl} aria-label="Recorded video preview" controls className="w-full h-full object-contain">
+            <track kind="captions" />
+          </video>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--ink)]/40 font-mono">
@@ -1792,10 +1816,13 @@ function VideoRecorder({
       <div className="aspect-video rounded-2xl overflow-hidden bg-royal relative">
         <video
           ref={videoPreviewRef}
+          aria-label="Live camera preview"
           muted
           playsInline
           className={`w-full h-full object-cover ${recording ? 'opacity-100' : 'opacity-0'}`}
-        />
+        >
+          <track kind="captions" />
+        </video>
         {!recording && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center space-y-3">
@@ -1956,7 +1983,9 @@ function AudioRecorder({
     return (
       <div className="space-y-3">
         <div className="p-4 rounded-2xl bg-[var(--royal)]/5 border border-[var(--royal)]/10">
-          <audio src={recordedUrl} controls className="w-full" />
+          <audio src={recordedUrl} aria-label="Recorded audio preview" controls className="w-full">
+            <track kind="captions" />
+          </audio>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--ink)]/40 font-mono">
@@ -1979,6 +2008,7 @@ function AudioRecorder({
               ref={canvasRef}
               width={500}
               height={80}
+              aria-hidden="true"
               className="w-full h-full"
             />
             <div className="absolute top-3 right-3 flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-3 py-1">

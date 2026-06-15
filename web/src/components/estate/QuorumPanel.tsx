@@ -69,7 +69,13 @@ export function QuorumPanel({ estateId }: QuorumPanelProps) {
     }
   }, [estateId])
 
-  useEffect(() => { fetchData() }, [fetchData])
+  useEffect(() => {
+    // Fetch from the Go API (external system) on mount / when estateId changes.
+    // fetchData is async and performs no synchronous setState before its first
+    // await, so this does not cause a cascading render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- async external-data fetch, setState only after await
+    fetchData()
+  }, [fetchData])
 
   if (loading || !config?.enabled) return null
 
@@ -167,7 +173,6 @@ function ActionCard({
   const hasVoted = action.votes.some((v) => v.executorUid === currentUid)
   const isPending = action.status === 'pending'
   const approveCount = action.votes.filter((v) => v.decision === 'approve').length
-  const rejectCount = action.votes.filter((v) => v.decision === 'reject').length
 
   const handleVote = async (decision: 'approve' | 'reject', reason?: string) => {
     setVoting(true)

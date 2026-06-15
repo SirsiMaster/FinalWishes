@@ -634,6 +634,7 @@ function ChapterFormDialog({
               accept="image/*"
               onChange={handleCoverSelect}
               className="hidden"
+              aria-label="Upload cover image"
             />
             {coverPreview ? (
               <div className="relative h-32 rounded-xl overflow-hidden border border-neutral-border">

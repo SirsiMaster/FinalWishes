@@ -16,7 +16,7 @@
 
 import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { useAuth } from '../../lib/auth';
+import { useAuth, type AuthContextValue } from '../../lib/auth';
 import { getMFAStatus } from '../../lib/mfa';
 import { useDocument, type EstateUser } from '../../lib/firestore';
 import { personaLabel, resolveEffectiveRole } from '../../lib/persona';
@@ -47,12 +47,14 @@ export function IdentityGate({ estateId, children }: IdentityGateProps) {
   return <IdentityGateInner estateId={estateId} user={user} profile={profile} profileResolved={profileResolved} emailVerified={emailVerified} resendVerification={resendVerification}>{children}</IdentityGateInner>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function IdentityGateInner({ estateId, children, user, profile, profileResolved, emailVerified, resendVerification }: IdentityGateProps & { user: any; profile: any; profileResolved: boolean; emailVerified: boolean; resendVerification: any }) {
+type IdentityGateInnerProps = IdentityGateProps &
+  Pick<AuthContextValue, 'user' | 'profile' | 'profileResolved' | 'emailVerified' | 'resendVerification'>;
+
+function IdentityGateInner({ estateId, children, user, profile, profileResolved, emailVerified, resendVerification }: IdentityGateInnerProps) {
   const [attestationVerified, setAttestationVerified] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(true);
 
-  const mfaStatus = getMFAStatus(user as any);
+  const mfaStatus = getMFAStatus(user);
 
   // Fetch user's Firestore profile for createdAt and loginCount
   const { data: userFsProfile } = useDocument<UserFirestoreProfile>(
@@ -69,24 +71,34 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
   const effectiveRoleLabel = personaLabel(effectiveRole);
   const isFiduciary = (FIDUCIARY_ROLES as readonly string[]).includes(effectiveRole);
 
-  // Determine if principal is within the grace period (computed in effect to avoid impure render)
+  // Determine if principal is within the grace period. This depends on wall-clock
+  // time (Date.now()) compared against the account's createdAt, so it cannot be a
+  // pure render derivation — it stays in an effect that re-runs when its inputs
+  // change. The initial state is `true` (grace active) so principals are never
+  // momentarily blocked before the profile loads. Behavior is identical to the
+  // original: fiduciaries are never in grace, an unloaded profile is in-grace,
+  // otherwise grace holds while the account is new OR has a low login count.
   const [principalGracePeriodActive, setPrincipalGracePeriodActive] = React.useState(true);
   React.useEffect(() => {
-    if (isFiduciary) { setPrincipalGracePeriodActive(false); return; }
-    if (!userFsProfile) { setPrincipalGracePeriodActive(true); return; }
+    const graceActive = ((): boolean => {
+      if (isFiduciary) return false;
+      if (!userFsProfile) return true;
 
-    const createdAt = userFsProfile.createdAt;
-    const loginCount = userFsProfile.loginCount ?? 0;
+      const createdAt = userFsProfile.createdAt;
+      const loginCount = userFsProfile.loginCount ?? 0;
 
-    let accountAgeMs = Infinity;
-    const now = Date.now();
-    if (createdAt && typeof (createdAt as Timestamp).toDate === 'function') {
-      accountAgeMs = now - (createdAt as Timestamp).toDate().getTime();
-    }
+      let accountAgeMs = Infinity;
+      const now = Date.now();
+      if (createdAt && typeof (createdAt as Timestamp).toDate === 'function') {
+        accountAgeMs = now - (createdAt as Timestamp).toDate().getTime();
+      }
 
-    const isNewAccount = accountAgeMs < GRACE_PERIOD_MS;
-    const hasLowLoginCount = loginCount < MIN_LOGINS_BEFORE_ENFORCE;
-    setPrincipalGracePeriodActive(isNewAccount || hasLowLoginCount);
+      const isNewAccount = accountAgeMs < GRACE_PERIOD_MS;
+      const hasLowLoginCount = loginCount < MIN_LOGINS_BEFORE_ENFORCE;
+      return isNewAccount || hasLowLoginCount;
+    })();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- value depends on Date.now() (wall-clock), not derivable purely during render
+    setPrincipalGracePeriodActive(graceActive);
   }, [isFiduciary, userFsProfile]);
 
   // Check attestation status from Firestore (only for fiduciary roles)
@@ -119,9 +131,13 @@ function IdentityGateInner({ estateId, children, user, profile, profileResolved,
 
   // For principals (non-fiduciary), skip attestation loading — but only once the
   // estate role is definitive (else isFiduciary is transiently false while
-  // estateUser loads and we'd clear loading prematurely).
+  // estateUser loads and we'd clear loading prematurely, flashing the principal
+  // UI before the role resolves). This is genuine async coordination across two
+  // Firestore subscriptions (estateUser + profile), not a derivable value, so it
+  // stays in an effect.
   React.useEffect(() => {
     if (!isFiduciary && !estateUserLoading) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- coordinates loading across two async Firestore subscriptions; must gate on estateUserLoading settling
       setLoading(false);
     }
   }, [isFiduciary, estateUserLoading]);

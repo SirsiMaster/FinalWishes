@@ -36,7 +36,13 @@ const GUARDED_SECTIONS = new Set<SectionId>([
  * estate index / unmodelled segments (RoleGuard does not block those).
  * `/estates/<id>/vault` → 'vault'; `/estates/<id>` → null.
  * `.lazy` suffixes and query strings are already stripped by the router path.
+ *
+ * NOTE: This pure helper is exported from the guard module because the test
+ * suite imports it from this module's stable public API. Extracting it to a
+ * sibling file would require editing out-of-bucket consumers, so the
+ * react-refresh/only-export-components warning is intentionally suppressed.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function sectionFromPath(pathname: string, estateId: string): SectionId | null {
   const parts = pathname.split('?')[0].split('/').filter(Boolean)
   const idx = parts.indexOf(estateId)

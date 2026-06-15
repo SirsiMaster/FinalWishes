@@ -528,6 +528,8 @@ function VaultPage() {
         <button
           type="button"
           onClick={() => setChecklistOpen((o) => !o)}
+          aria-expanded={checklistOpen}
+          aria-label="Toggle documents your estate needs checklist"
           className="w-full flex items-center justify-between p-8 pb-6 text-left hover:bg-neutral-faint/50 transition-colors"
         >
           <div className="flex items-center gap-4 min-w-0">

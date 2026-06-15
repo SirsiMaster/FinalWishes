@@ -34,7 +34,11 @@ CREATE INDEX IF NOT EXISTS idx_legal_corpus_chunks_jurisdiction
 CREATE INDEX IF NOT EXISTS idx_legal_corpus_chunks_reference
   ON legal_corpus_chunks(statute_reference);
 
-CREATE INDEX IF NOT EXISTS idx_legal_corpus_chunks_embedding
-  ON legal_corpus_chunks
-  USING ivfflat (embedding vector_cosine_ops)
-  WITH (lists = 100);
+-- NOTE: no ANN (ivfflat/hnsw) index on `embedding`. pgvector's ivfflat and hnsw
+-- index types cap at 2000 dimensions, but gemini-embedding-001 produces 3072-dim
+-- vectors, so an ANN index cannot be built on the `vector(3072)` column. Retrieval
+-- (rag.go) uses an EXACT cosine scan `ORDER BY embedding <=> $1::vector`, which is
+-- correct and sub-millisecond at corpus scale (tens–thousands of chunks). If the
+-- corpus ever grows large enough to need ANN, switch the column to `halfvec(3072)`
+-- (hnsw supports up to 4000 dims via halfvec_cosine_ops) and cast in both the index
+-- and the query. Until then, the exact scan is the right call.

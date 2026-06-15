@@ -365,7 +365,6 @@ function ProposeDialog({
           </div>
 
           <div className="space-y-1.5">
-            {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Textarea component; association is via htmlFor+id (label-has-associated-control satisfied) */}
             <label htmlFor={descriptionId} className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
               Description
             </label>

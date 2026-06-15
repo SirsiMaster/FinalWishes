@@ -20,22 +20,18 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      // Accessibility (eslint-plugin-jsx-a11y) — INCREMENTAL ADOPTION: surface every
-      // a11y issue (clickable-div, missing-label, unlabeled-icon-button, media captions,
-      // autofocus, …) as a WARNING rather than an error. The plugin was added to guard
-      // against regressions, but the pre-existing codebase has a backlog of a11y debt
-      // that should be burned down in a dedicated sprint — not block the build/deploy in
-      // one shot. Downgrade the whole recommended set to "warn"; promote back to "error"
-      // file-by-file as each area is fixed.
-      ...Object.fromEntries(
-        Object.keys(jsxA11y.flatConfigs.recommended.rules).map((rule) => [rule, "warn"]),
-      ),
+      // Accessibility (eslint-plugin-jsx-a11y) — ENFORCED AS ERRORS. The a11y debt
+      // backlog has been paid down to zero (dedicated a11y sprint), so the recommended
+      // set is promoted back to "error" to guard against regressions. Screen-reader and
+      // keyboard operability is a hard gate: clickable-div, missing-label,
+      // unlabeled-icon-button, media captions, autofocus, … all fail the build.
+      ...jsxA11y.flatConfigs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      "jsx-a11y/click-events-have-key-events": "warn",
-      "jsx-a11y/no-static-element-interactions": "warn",
-      "jsx-a11y/anchor-has-content": "warn",
-      "jsx-a11y/control-has-associated-label": "warn",
-      "jsx-a11y/label-has-associated-control": "warn",
+      "jsx-a11y/click-events-have-key-events": "error",
+      "jsx-a11y/no-static-element-interactions": "error",
+      "jsx-a11y/anchor-has-content": "error",
+      "jsx-a11y/control-has-associated-label": "error",
+      "jsx-a11y/label-has-associated-control": "error",
       // Downgrade pre-existing react-hooks issues to warnings
       // TODO: Fix these properly in a code quality sprint
       "react-hooks/rules-of-hooks": "warn",

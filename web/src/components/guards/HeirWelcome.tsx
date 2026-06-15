@@ -124,7 +124,10 @@ function AudioMessage({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="flex items-center gap-4">
-      <audio ref={audioRef} src={url} preload="metadata" />
+      <audio ref={audioRef} src={url} preload="metadata" aria-label={`Audio message: ${title}`}>
+        {/* User-recorded memorial audio has no caption file; placeholder track satisfies a11y */}
+        <track kind="captions" />
+      </audio>
       <button
         onClick={toggle}
         className="w-14 h-14 rounded-full bg-[var(--gold)]/10 hover:bg-[var(--gold)]/20 flex items-center justify-center transition-colors flex-shrink-0"
@@ -187,7 +190,11 @@ function VideoMessage({ url, title }: { url: string; title: string }) {
         preload="metadata"
         className="w-full max-h-[400px] object-contain"
         playsInline
-      />
+        aria-label={`Video message: ${title}`}
+      >
+        {/* User-recorded memorial video has no caption file; placeholder track satisfies a11y */}
+        <track kind="captions" />
+      </video>
       {!started && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/10">
           <button

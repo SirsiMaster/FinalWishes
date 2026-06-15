@@ -6,7 +6,7 @@
  * submission via a hidden input named `name` carrying the resolved value
  * (the chosen option, or the typed "Other" text).
  */
-import { useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 
@@ -40,6 +40,12 @@ export function SelectWithOther({
 
   const resolved = selected === OTHER ? otherText : selected;
 
+  // Focus the free-text field when "Other" is chosen (replaces autoFocus for a11y).
+  const otherInputId = useId();
+  useEffect(() => {
+    if (selected === OTHER) document.getElementById(otherInputId)?.focus();
+  }, [selected, otherInputId]);
+
   const handleSelect = (v: string) => {
     setSelected(v);
     onChange?.(v === OTHER ? otherText : v);
@@ -72,10 +78,11 @@ export function SelectWithOther({
 
       {selected === OTHER && (
         <Input
+          id={otherInputId}
           value={otherText}
           onChange={(e) => handleOther(e.target.value)}
           placeholder="Please specify…"
-          autoFocus
+          aria-label="Specify other value"
           className="px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus-visible:bg-white focus-visible:border-[var(--royal)] font-semibold text-ink text-base"
         />
       )}

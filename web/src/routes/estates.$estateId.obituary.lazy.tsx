@@ -309,6 +309,7 @@ function ObituaryPage() {
         accept="image/*"
         className="hidden"
         onChange={handleUpdatePhoto}
+        aria-label="Upload profile photo"
       />
 
       {/* Photo Modal */}
@@ -495,7 +496,7 @@ function ObituaryPage() {
           </div>
 
           <div className="bg-neutral-faint p-6 rounded-2xl border border-neutral-border mb-4 text-center">
-             <label className="text-[11px] font-bold text-ink-muted uppercase tracking-widest mb-4 block">Signature</label>
+             <span className="text-[11px] font-bold text-ink-muted uppercase tracking-widest mb-4 block">Signature</span>
              <div className="h-20 border-b-2 border-royal/30 flex items-center justify-center text-ink-muted font-serif italic text-3xl select-none">
                 {isSigned ? <span className="text-royal font-[family-name:var(--font-cinzel)]">{obit?.signature || userName || 'Legal Guardian'}</span> : 'Sign here'}
              </div>

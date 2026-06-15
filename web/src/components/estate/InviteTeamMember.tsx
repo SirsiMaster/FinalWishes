@@ -7,7 +7,7 @@
  * @version 1.0.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { useAuth } from '../../lib/auth';
 import { 
   inviteTeamMember, getEstateInvitations, revokeInvitation,
@@ -44,6 +44,10 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
   const [success, setSuccess] = useState('');
   const [invitations, setInvitations] = useState<EstateInvitation[]>([]);
   const [loadingInvitations, setLoadingInvitations] = useState(true);
+  const fieldId = useId();
+  const fullNameId = `${fieldId}-fullName`;
+  const emailId = `${fieldId}-email`;
+  const roleLabelId = `${fieldId}-role`;
 
   // Only principals can invite
   const isPrincipal = profile?.role === 'principal' || profile?.role === 'admin';
@@ -228,9 +232,10 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
               <button
                 type="button"
                 onClick={() => { setShowForm(false); setError(''); }}
+                aria-label="Close invitation form"
                 className="text-royal/30 hover:text-royal transition-colors"
               >
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               </button>
@@ -238,26 +243,34 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Full Name</label>
-                <input
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Jane Doe"
-                  required
-                  className="w-full bg-white border border-royal/10 rounded-xl px-4 py-3 text-[14px] font-semibold text-royal outline-none focus:border-royal transition-all placeholder:text-royal/20"
-                />
+                <label htmlFor={fullNameId} className="flex flex-col gap-1.5">
+                  <span className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Full Name</span>
+                  <input
+                    id={fullNameId}
+                    aria-label="Full Name"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Jane Doe"
+                    required
+                    className="w-full bg-white border border-royal/10 rounded-xl px-4 py-3 text-[14px] font-semibold text-royal outline-none focus:border-royal transition-all placeholder:text-royal/20"
+                  />
+                </label>
               </div>
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="jane@example.com"
-                  required
-                  className="w-full bg-white border border-royal/10 rounded-xl px-4 py-3 text-[14px] font-semibold text-royal outline-none focus:border-royal transition-all placeholder:text-royal/20"
-                />
+                <label htmlFor={emailId} className="flex flex-col gap-1.5">
+                  <span className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Email Address</span>
+                  <input
+                    id={emailId}
+                    aria-label="Email Address"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="jane@example.com"
+                    required
+                    className="w-full bg-white border border-royal/10 rounded-xl px-4 py-3 text-[14px] font-semibold text-royal outline-none focus:border-royal transition-all placeholder:text-royal/20"
+                  />
+                </label>
               </div>
             </div>
             <p className="text-[10px] font-medium text-royal/25 -mt-2 flex items-center gap-1.5">
@@ -266,12 +279,15 @@ export function InviteTeamMember({ estateId }: InviteTeamMemberProps) {
             </p>
 
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Role</label>
-              <div className="grid grid-cols-2 gap-3">
+              <span id={roleLabelId} className="text-[10px] font-bold text-royal/30 uppercase tracking-widest block">Role</span>
+              <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby={roleLabelId}>
                 {ROLE_OPTIONS.map((opt) => (
                   <button
                     key={opt.value}
                     type="button"
+                    role="radio"
+                    aria-checked={role === opt.value}
+                    aria-label={opt.label}
                     onClick={() => setRole(opt.value as typeof role)}
                     className={`text-left p-3.5 rounded-xl border transition-all ${
                       role === opt.value

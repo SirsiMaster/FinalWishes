@@ -378,6 +378,7 @@ function SettingsPage() {
             accept="image/*"
             className="hidden"
             onChange={handlePhotoUpload}
+            aria-label="Upload profile photo"
           />
           <button
             type="button"

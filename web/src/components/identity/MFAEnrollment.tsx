@@ -26,6 +26,14 @@ export function MFAEnrollment({ user, mfaStatus, isFiduciary }: MFAEnrollmentPro
   const [verifyCode, setVerifyCode] = React.useState('');
   const [error, setError] = React.useState('');
   const [success, setSuccess] = React.useState('');
+  const verifyCodeRef = React.useRef<HTMLInputElement>(null);
+
+  // Focus the verification field when the QR/verify step appears (replaces autoFocus).
+  React.useEffect(() => {
+    if (enrollState === 'verifying') {
+      verifyCodeRef.current?.focus();
+    }
+  }, [enrollState]);
 
   const handleStartEnrollment = async () => {
     if (!user) return;
@@ -167,9 +175,11 @@ export function MFAEnrollment({ user, mfaStatus, isFiduciary }: MFAEnrollmentPro
               </div>
             )}
 
-            <div className="space-y-3">
-              <label className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em] block">Enter 6-Digit Code</label>
+            <label htmlFor="mfa-verify-code" className="block space-y-3">
+              <span className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em] block">Enter 6-Digit Code</span>
               <input
+                id="mfa-verify-code"
+                ref={verifyCodeRef}
                 type="text"
                 inputMode="numeric"
                 pattern="[0-9]*"
@@ -177,10 +187,10 @@ export function MFAEnrollment({ user, mfaStatus, isFiduciary }: MFAEnrollmentPro
                 value={verifyCode}
                 onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 placeholder="000000"
-                autoFocus
+                aria-label="Enter 6-digit verification code"
                 className="w-48 mx-auto block bg-royal/[0.02] border border-royal/10 rounded-2xl px-6 py-4 text-center font-mono font-black text-[24px] text-royal tracking-[0.5em] outline-none focus:border-royal focus:bg-white transition-all placeholder:text-royal/10"
               />
-            </div>
+            </label>
 
             <div className="flex gap-4 justify-center">
               <button

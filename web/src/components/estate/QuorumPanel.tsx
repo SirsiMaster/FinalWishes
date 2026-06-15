@@ -6,7 +6,7 @@
  *
  * @version 1.0.0
  */
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useId } from 'react'
 import { toast } from 'sonner'
 import { useAuth } from '@/lib/auth'
 import { Button } from '@/components/ui/button'
@@ -304,6 +304,9 @@ function ProposeDialog({
   const [actionType, setActionType] = useState('phase_transition')
   const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const fieldId = useId()
+  const actionTypeId = `${fieldId}-actionType`
+  const descriptionId = `${fieldId}-description`
 
   const handleSubmit = async () => {
     if (!description.trim()) {
@@ -338,25 +341,32 @@ function ProposeDialog({
 
         <div className="space-y-4 py-2">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
-              Action Type
+            <label htmlFor={actionTypeId} className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
+                Action Type
+              </span>
+              <select
+                id={actionTypeId}
+                aria-label="Action Type"
+                value={actionType}
+                onChange={(e) => setActionType(e.target.value)}
+                className="w-full rounded-lg border border-royal/10 px-3 py-2 text-sm"
+              >
+                <option value="phase_transition">Phase Transition</option>
+                <option value="asset_distribution">Asset Distribution</option>
+                <option value="document_sign">Document Signing</option>
+              </select>
             </label>
-            <select
-              value={actionType}
-              onChange={(e) => setActionType(e.target.value)}
-              className="w-full rounded-lg border border-royal/10 px-3 py-2 text-sm"
-            >
-              <option value="phase_transition">Phase Transition</option>
-              <option value="asset_distribution">Asset Distribution</option>
-              <option value="document_sign">Document Signing</option>
-            </select>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
+            {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Textarea component; association is via htmlFor+id (label-has-associated-control satisfied) */}
+            <label htmlFor={descriptionId} className="text-xs font-semibold text-ink/60 uppercase tracking-wider">
               Description
             </label>
             <Textarea
+              id={descriptionId}
+              aria-label="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe the action that needs executor approval..."

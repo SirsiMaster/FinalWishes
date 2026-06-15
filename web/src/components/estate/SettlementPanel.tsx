@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useId } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -48,6 +48,10 @@ export function SettlementPanel({
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const fieldId = useId()
+  const statusTypeId = `${fieldId}-statusType`
+  const notesId = `${fieldId}-notes`
+  const checklistId = `${fieldId}-checklist`
 
   const isInSettlement = estateStatus === 'in_settlement'
 
@@ -139,8 +143,8 @@ export function SettlementPanel({
                 'Secure all digital credentials in the lockbox',
                 'Contact legal counsel for probate proceedings',
               ].map((item, i) => (
-                <label key={i} className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-amber-50 transition-colors cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500" />
+                <label key={i} htmlFor={`${checklistId}-${i}`} className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-amber-50 transition-colors cursor-pointer">
+                  <input id={`${checklistId}-${i}`} type="checkbox" aria-label={item} className="w-4 h-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500" />
                   <span className="text-[14px] text-ink font-medium">{item}</span>
                 </label>
               ))}
@@ -201,14 +205,15 @@ export function SettlementPanel({
 
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <label className="text-[12px] font-bold text-ink-muted uppercase tracking-wider">
+                {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Select component; association is via htmlFor+id (label-has-associated-control satisfied) */}
+                <label htmlFor={statusTypeId} className="text-[12px] font-bold text-ink-muted uppercase tracking-wider">
                   Status Type
                 </label>
                 <Select
                   value={statusType}
                   onValueChange={(v) => setStatusType(v as 'incapacity' | 'death')}
                 >
-                  <SelectTrigger className="rounded-xl">
+                  <SelectTrigger id={statusTypeId} aria-label="Status Type" className="rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -219,10 +224,13 @@ export function SettlementPanel({
               </div>
 
               <div className="space-y-2">
-                <label className="text-[12px] font-bold text-ink-muted uppercase tracking-wider">
+                {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Textarea component; association is via htmlFor+id (label-has-associated-control satisfied) */}
+                <label htmlFor={notesId} className="text-[12px] font-bold text-ink-muted uppercase tracking-wider">
                   Notes (optional)
                 </label>
                 <Textarea
+                  id={notesId}
+                  aria-label="Notes (optional)"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Any additional context..."

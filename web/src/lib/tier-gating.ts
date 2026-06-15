@@ -84,6 +84,11 @@ export function useTierGating(estateId: string) {
   }, [estateId]);
 
   useEffect(() => {
+    // Fetch media-usage from the Go API (external system) on mount / estateId
+    // change. fetchUsage intentionally resets loading+error before the request
+    // so a changed estateId shows a fresh loading state; this is the documented
+    // external-data-sync use of an effect, not avoidable derivation.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- external-data fetch; loading/error reset is intentional on estateId change
     fetchUsage();
   }, [fetchUsage]);
 

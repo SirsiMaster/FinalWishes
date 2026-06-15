@@ -205,7 +205,6 @@ export function SettlementPanel({
 
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Select component; association is via htmlFor+id (label-has-associated-control satisfied) */}
                 <label htmlFor={statusTypeId} className="text-[12px] font-bold text-ink-muted uppercase tracking-wider">
                   Status Type
                 </label>
@@ -224,7 +223,6 @@ export function SettlementPanel({
               </div>
 
               <div className="space-y-2">
-                {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Textarea component; association is via htmlFor+id (label-has-associated-control satisfied) */}
                 <label htmlFor={notesId} className="text-[12px] font-bold text-ink-muted uppercase tracking-wider">
                   Notes (optional)
                 </label>

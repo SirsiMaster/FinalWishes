@@ -145,7 +145,6 @@ export function ScrollVideoCanvas({
       window.removeEventListener('scroll', handleScroll)
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loaded, frameCount])
 
   return (

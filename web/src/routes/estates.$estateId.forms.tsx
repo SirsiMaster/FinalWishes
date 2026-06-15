@@ -19,7 +19,7 @@ export const Route = createFileRoute('/estates/$estateId/forms')({
   component: FormsPage,
 });
 
-function FormsPage() {
+export function FormsPage() {
   const [forms, setForms] = useState<FormSchema[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

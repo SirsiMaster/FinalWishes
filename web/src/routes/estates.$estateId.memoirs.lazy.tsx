@@ -571,16 +571,19 @@ function CinemaViewer({
               {memoir.type === 'youtube' && memoir.youtubeUrl ? (
                 <YouTubeEmbed url={memoir.youtubeUrl} autoplay />
               ) : memoir.type === 'video' ? (
-                <video src={memoir.url} controls autoPlay className="max-w-full max-h-full" />
+                <video src={memoir.url} controls autoPlay className="max-w-full max-h-full" aria-label={memoir.title}>
+                  <track kind="captions" />
+                </video>
               ) : (
                 <img src={memoir.url} className="max-w-full max-h-full object-contain" alt={memoir.title} />
               )}
               <Button
                 variant="ghost"
                 onClick={() => onOpenChange(false)}
+                aria-label="Close"
                 className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-ink"
               >
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12" />
                 </svg>
               </Button>
@@ -807,18 +810,20 @@ function UploadModal({
                 </Label>
                 <div
                   {...getRootProps()}
+                  aria-label="Upload a memoir file"
                   className={`w-full h-36 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center transition-all cursor-pointer group ${
                     isDragActive
                       ? 'border-[var(--royal)] bg-[var(--royal)]/5'
                       : 'border-[var(--royal)]/15 bg-neutral-faint hover:bg-white hover:border-[var(--royal)]/30'
                   }`}
                 >
-                  <input {...getInputProps()} />
+                  <input {...getInputProps()} aria-label="Upload a memoir file" />
                   <input
                     ref={fileInputRef}
                     type="file"
                     className="hidden"
                     accept="video/*,image/*"
+                    aria-label="Upload a memoir file"
                     onChange={(e) => {
                       const f = e.target.files?.[0]
                       setSelectedFileName(f?.name || '')
@@ -1014,7 +1019,10 @@ function VideoCard({
               muted
               playsInline
               preload="metadata"
-            />
+              aria-label={`${memoir.title} preview`}
+            >
+              <track kind="captions" />
+            </video>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white group-hover:bg-white group-hover:text-[var(--royal)] transition-all duration-500">
                 <svg viewBox="0 0 24 24" className="w-8 h-8 fill-current ml-1">

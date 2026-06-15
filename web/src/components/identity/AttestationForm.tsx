@@ -226,10 +226,12 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
         {/* Signature Pad */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em]">Digital Signature</label>
+            <span id="attestation-signature-label" className="text-[9px] font-black text-royal/30 uppercase tracking-[0.2em]">Digital Signature</span>
             {hasSigned && (
-              <button 
+              <button
+                type="button"
                 onClick={clearSignature}
+                aria-label="Clear signature"
                 className="text-[10px] font-bold text-royal/30 hover:text-red-500 transition-colors uppercase tracking-widest"
               >
                 Clear
@@ -238,7 +240,10 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
           </div>
           <div className="relative rounded-2xl border-2 border-dashed border-royal/10 bg-white overflow-hidden hover:border-royal/20 transition-all group">
             <canvas
+              id="attestation-signature-pad"
               ref={canvasRef}
+              aria-labelledby="attestation-signature-label"
+              aria-label="Signature pad — draw your signature here"
               className="w-full h-32 cursor-crosshair touch-none"
               onMouseDown={startDraw}
               onMouseMove={draw}
@@ -259,11 +264,13 @@ export function AttestationForm({ estateId, estateName, onComplete }: Attestatio
         </div>
 
         {/* Acknowledgment */}
-        <label className="flex items-start gap-4 mt-8 cursor-pointer group">
+        <label htmlFor="attestation-acknowledge" className="flex items-start gap-4 mt-8 cursor-pointer group">
           <input
+            id="attestation-acknowledge"
             type="checkbox"
             checked={acknowledged}
             onChange={(e) => setAcknowledged(e.target.checked)}
+            aria-label="I confirm this is a legally binding digital signature and I am confirming my identity as stated above"
             className="mt-1 w-5 h-5 rounded border-royal/20 text-royal focus:ring-royal/30 accent-[var(--royal)]"
           />
           <span className="text-[13px] text-royal/60 font-bold leading-relaxed group-hover:text-royal transition-colors">

@@ -168,7 +168,6 @@ export function ShareMemorial({
           <div className="space-y-6">
             {/* Link */}
             <div className="space-y-2">
-              {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Input component; association is via htmlFor+id (label-has-associated-control satisfied) */}
               <label htmlFor={memorialLinkId} className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
                 Memorial Link
               </label>

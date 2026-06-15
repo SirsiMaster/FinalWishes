@@ -157,8 +157,8 @@ export function AdminHeader({
       {/* Center — Search (hidden on mobile) */}
       <div
         ref={searchContainerRef}
+        role="search"
         className="relative hidden md:block flex-1 max-w-[350px] min-w-[150px]"
-        onKeyDown={handleKeyDown}
       >
         <div className="flex items-center gap-2 bg-royal/[0.03] border border-royal/10 py-2 px-4 focus-within:border-royal transition-all">
           <svg
@@ -182,6 +182,7 @@ export function AdminHeader({
             value={searchQuery}
             onChange={(e) => updateSearchQuery(e.target.value)}
             onFocus={() => setSearchFocused(true)}
+            onKeyDown={handleKeyDown}
             aria-label="Search estate"
             role="combobox"
             aria-expanded={showDropdown}
@@ -223,7 +224,7 @@ export function AdminHeader({
       {/* Simulation Engine: Authority Mode — hidden on mobile/tablet */}
       <div className="hidden lg:flex items-center gap-4 px-4 py-2 bg-royal/[0.03] border border-royal/10 mx-8">
         <div className="flex flex-col text-left">
-          <label className="text-[9px] font-bold text-royal/60 uppercase tracking-[0.2em] whitespace-nowrap leading-none mb-1">View As</label>
+          <span className="text-[9px] font-bold text-royal/60 uppercase tracking-[0.2em] whitespace-nowrap leading-none mb-1">View As</span>
           <div className="flex items-center gap-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${mode === 'Owner' ? 'bg-success shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-gold animate-pulse'}`} />
             <span className="text-[9px] font-black text-royal/70 uppercase tracking-widest leading-none">{mode === 'Owner' ? 'Active Owner' : mode === 'Incapacity' ? 'Incapacity' : 'After Passing'}</span>

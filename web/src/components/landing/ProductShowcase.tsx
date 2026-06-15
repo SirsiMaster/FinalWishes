@@ -101,6 +101,7 @@ export function ProductShowcase() {
 
   return (
     <div
+      role="presentation"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >

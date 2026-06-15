@@ -402,7 +402,7 @@ function EstateSwitcher({
 
   return (
     <div className="px-4 py-5 bg-[var(--royal)]/[0.01]">
-      <label className="text-[11px] font-bold text-ink-muted uppercase tracking-widest mb-2 block">Active Estate</label>
+      <span className="text-[11px] font-bold text-ink-muted uppercase tracking-widest mb-2 block">Active Estate</span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

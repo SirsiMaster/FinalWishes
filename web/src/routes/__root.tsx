@@ -3,8 +3,8 @@ import { Toaster } from '@/components/ui/sonner'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { AuthProvider } from '@/lib/auth'
 
-function NotFound() {
-  return (
+export const Route = createRootRoute({
+  notFoundComponent: () => (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[var(--royal)] to-[var(--royal)]">
       <div className="max-w-lg text-center space-y-8 p-12">
         <h1
@@ -31,11 +31,7 @@ function NotFound() {
         </Link>
       </div>
     </div>
-  )
-}
-
-export const Route = createRootRoute({
-  notFoundComponent: NotFound,
+  ),
   component: () => (
     <AuthProvider>
       <ErrorBoundary>

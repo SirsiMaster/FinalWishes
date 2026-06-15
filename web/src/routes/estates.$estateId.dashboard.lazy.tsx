@@ -1021,7 +1021,11 @@ function DashboardIndex() {
       <Collapsible open={checklistOpen} onOpenChange={setChecklistOpen}>
         <Card className="rounded-2xl border-neutral-border shadow-sm">
           <CollapsibleTrigger asChild>
-            <button className="w-full flex items-center justify-between px-8 py-5 text-left group">
+            <button
+              type="button"
+              aria-label="Toggle estate health check"
+              className="w-full flex items-center justify-between px-8 py-5 text-left group"
+            >
               <div className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-[var(--success)]/10 flex items-center justify-center">
                   <svg viewBox="0 0 24 24" className="w-4 h-4 text-[var(--success)]" fill="none" stroke="currentColor" strokeWidth="2">

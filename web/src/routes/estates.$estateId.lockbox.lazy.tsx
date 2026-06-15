@@ -516,18 +516,42 @@ function EditLockboxModal({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const initial = useCallback(() => ({
+  // Remount the form fields each time the modal opens (or the item changes) so
+  // the form's useState initializer re-seeds from the latest item metadata. The
+  // key-reset pattern replaces a setState-in-effect (no cascading render) while
+  // preserving the prior behavior of re-syncing the form on open.
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {open && (
+        <EditLockboxFields
+          key={`${item.id}-open`}
+          item={item}
+          estateId={estateId}
+          onOpenChange={onOpenChange}
+        />
+      )}
+    </Dialog>
+  )
+}
+
+function EditLockboxFields({
+  item,
+  estateId,
+  onOpenChange,
+}: {
+  item: LockboxItem
+  estateId: string
+  onOpenChange: (open: boolean) => void
+}) {
+  const [form, setForm] = useState(() => ({
     accountName: item.accountName || '',
     category: (item.category || 'banking') as CategoryValue,
     institution: item.institution || '',
     accountIdentifier: item.accountIdentifier || '',
     transitionInstructions: item.transitionInstructions || '',
     notes: item.notes || '',
-  }), [item])
-  const [form, setForm] = useState(initial)
+  }))
   const [saving, setSaving] = useState(false)
-
-  useEffect(() => { if (open) setForm(initial()) }, [open, initial])
 
   const handleSave = useCallback(async () => {
     if (!form.accountName.trim()) { toast.error('Account name is required'); return }
@@ -549,8 +573,7 @@ function EditLockboxModal({
   const fieldCls = 'px-5 py-4 h-auto rounded-2xl border-neutral-border text-[14px] text-[var(--royal)]'
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto rounded-[2rem]">
+    <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto rounded-[2rem]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-[var(--royal)] font-[family-name:var(--font-cinzel)]">Edit Account</DialogTitle>
           <DialogDescription className="text-[var(--royal)]/60 text-sm">Update this account's details. Secure credentials are managed separately.</DialogDescription>
@@ -591,7 +614,6 @@ function EditLockboxModal({
           <Button onClick={handleSave} disabled={saving} className="flex-1 bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white">{saving ? 'Saving…' : 'Save Changes'}</Button>
         </div>
       </DialogContent>
-    </Dialog>
   )
 }
 

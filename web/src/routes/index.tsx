@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth, type UserProfile } from '../lib/auth'
 import { resolveTotpChallenge } from '../lib/mfa'
@@ -28,8 +28,13 @@ function Home() {
   const search = Route.useSearch();
   const [loginOpen, setLoginOpen] = useState(search.login === 'true');
 
-  // Sync with search param changes
+  // Sync with search param changes. This reacts to an EXTERNAL change (the URL
+  // ?login=true param arriving/changing) by opening the modal. It can't be
+  // derived during render: once open, the user may close the modal while the
+  // param is still 'true', so re-deriving open from the param every render would
+  // make the modal un-closable. Genuine external-system sync — kept as-is.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (search.login === 'true') setLoginOpen(true);
   }, [search.login]);
 

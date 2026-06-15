@@ -46,6 +46,13 @@ function AcceptInvitePage() {
     if (authLoading) return
 
     if (!user) {
+      // Set the unauthenticated state, then bail. This effect's real job is to
+      // orchestrate the async acceptInvitation() side-effect once auth resolves;
+      // the synchronous status set here is the no-user terminal branch of that
+      // same sequence (it gates whether the async flow runs at all), so it can't
+      // be cleanly lifted to a render-time derivation without splitting the
+      // single auth-gated flow. Kept as a guarded one-shot.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setStatus('unauthenticated')
       return
     }

@@ -9,7 +9,7 @@
  * @version 1.0.0
  */
 import { createFileRoute, useParams, Link } from '@tanstack/react-router'
-import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useCallback, useRef } from 'react'
 import { useLifeChapters, type LifeChapter, type ChapterEntryRef, useCollection } from '../lib/firestore'
 import { addLifeChapter, updateLifeChapter, archiveLifeChapter } from '../lib/estate-actions'
 import { useAuth } from '../lib/auth'
@@ -522,38 +522,47 @@ function ChapterFormDialog({
   estateId: string
   onSubmit: (data: { title: string; description: string; dateFrom: string; dateTo: string; coverImageUrl?: string }) => void
 }) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [dateFrom, setDateFrom] = useState('')
-  const [dateTo, setDateTo] = useState('')
-  const [coverPreview, setCoverPreview] = useState<string>('')
+  // Remount the inner fields on every (re)open and whenever the chapter being
+  // edited changes, so the form's useState initializers re-seed from the current
+  // chapter. The key-reset pattern replaces a setState-in-effect: it guarantees
+  // fresh fields when opening the dialog for a different chapter, switching
+  // create<->edit, or reopening the same chapter after a partial edit — without
+  // cascading renders. Identical observable behavior, no stale fields.
+  const resetKey = `${chapter?.id || 'new'}-${open ? 'open' : 'closed'}`
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {open && (
+        <ChapterFormFields
+          key={resetKey}
+          chapter={chapter}
+          estateId={estateId}
+          onOpenChange={onOpenChange}
+          onSubmit={onSubmit}
+        />
+      )}
+    </Dialog>
+  )
+}
+
+function ChapterFormFields({
+  chapter,
+  estateId,
+  onOpenChange,
+  onSubmit,
+}: {
+  chapter: LifeChapter | null
+  estateId: string
+  onOpenChange: (open: boolean) => void
+  onSubmit: (data: { title: string; description: string; dateFrom: string; dateTo: string; coverImageUrl?: string }) => void
+}) {
+  const [title, setTitle] = useState(chapter?.title ?? '')
+  const [description, setDescription] = useState(chapter?.description ?? '')
+  const [dateFrom, setDateFrom] = useState(chapter?.dateFrom ?? '')
+  const [dateTo, setDateTo] = useState(chapter?.dateTo ?? '')
+  const [coverPreview, setCoverPreview] = useState<string>(chapter?.coverImageUrl ?? '')
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  // Reset form when the chapter being edited changes OR the dialog (re)opens.
-  // This MUST be useEffect: useState(initializer) only ran ONCE at mount, so
-  // opening the dialog for a different chapter (or switching create<->edit, or
-  // reopening the same chapter after a partial edit) showed stale fields.
-  const resetKey = chapter?.id || 'new'
-  useEffect(() => {
-    if (!open) return
-    if (chapter) {
-      setTitle(chapter.title)
-      setDescription(chapter.description)
-      setDateFrom(chapter.dateFrom || '')
-      setDateTo(chapter.dateTo || '')
-      setCoverPreview(chapter.coverImageUrl || '')
-    } else {
-      setTitle('')
-      setDescription('')
-      setDateFrom('')
-      setDateTo('')
-      setCoverPreview('')
-    }
-    setCoverFile(null)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chapter?.id, open])
 
   const handleCoverSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -609,8 +618,7 @@ function ChapterFormDialog({
   }, [title, description, dateFrom, dateTo, coverFile, estateId, onSubmit])
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} key={resetKey}>
-      <DialogContent className="rounded-3xl border-neutral-border max-w-lg">
+    <DialogContent className="rounded-3xl border-neutral-border max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-[family-name:var(--font-cinzel)]">
             {chapter ? 'Edit Chapter' : 'New Life Chapter'}
@@ -732,6 +740,5 @@ function ChapterFormDialog({
           </Button>
         </DialogFooter>
       </DialogContent>
-    </Dialog>
   )
 }

@@ -175,6 +175,6 @@ export function personaLabel(role: PersonaRole): string {
  * settlement/workspace dashboard for fiduciaries/advisors, and the sacred
  * HeirDashboard for heirs.
  */
-export function personaLanding(role: PersonaRole): SectionId {
+export function personaLanding(_role: PersonaRole): SectionId {
   return 'dashboard';
 }

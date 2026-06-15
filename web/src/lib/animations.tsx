@@ -214,6 +214,7 @@ export function HoverCard({
   return (
     <div
       ref={cardRef}
+      role="presentation"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={className}

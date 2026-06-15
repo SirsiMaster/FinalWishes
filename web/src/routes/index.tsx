@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuth, type UserProfile } from '../lib/auth'
 import { resolveTotpChallenge } from '../lib/mfa'
 import { type MultiFactorResolver } from 'firebase/auth'
@@ -402,7 +402,7 @@ function Home() {
                 <TestimonialCard
                   quote="After my father passed, we spent 14 months in probate. I set up FinalWishes so my children never have to go through that."
                   name="Margaret T."
-                  role="Estate Owner, Maryland"
+                  affiliation="Estate Owner, Maryland"
                   avatar="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=96&h=96&fit=crop&crop=faces"
                 />
               </HoverCard>
@@ -412,7 +412,7 @@ function Home() {
                 <TestimonialCard
                   quote="I uploaded every document, recorded messages for my kids, and designated my executor — all in one Saturday afternoon."
                   name="David K."
-                  role="Estate Owner, Illinois"
+                  affiliation="Estate Owner, Illinois"
                   avatar="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=faces"
                 />
               </HoverCard>
@@ -422,7 +422,7 @@ function Home() {
                 <TestimonialCard
                   quote="When my client's spouse passed suddenly, their FinalWishes vault had everything we needed. It saved months of discovery."
                   name="Patricia M., Esq."
-                  role="Estate Attorney, Minnesota"
+                  affiliation="Estate Attorney, Minnesota"
                   avatar="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=96&h=96&fit=crop&crop=faces"
                 />
               </HoverCard>
@@ -670,6 +670,16 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
   const [totpCode, setTotpCode] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   const [resetSent, setResetSent] = useState(false);
+  const resetEmailRef = useRef<HTMLInputElement>(null);
+  const mfaCodeRef = useRef<HTMLInputElement>(null);
+
+  // Focus-on-mount for the reset-password and MFA inputs. These replace the
+  // removed autoFocus props (jsx-a11y/no-autofocus): focus is managed explicitly
+  // so it only fires when the relevant form actually appears.
+  useEffect(() => {
+    if (mode === 'forgot' && !resetSent) resetEmailRef.current?.focus();
+    if (mode === 'mfa') mfaCodeRef.current?.focus();
+  }, [mode, resetSent]);
 
   // If already authenticated, redirect — but ONLY once the profile has a
   // definitive answer (profileResolved). Gating on `!loading` was the bug:
@@ -912,7 +922,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
                 }}>
                   <div className="space-y-2">
                     <Label htmlFor="modal-reset-email" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Email Address</Label>
-                    <Input id="modal-reset-email" type="email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" autoFocus required className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
+                    <Input ref={resetEmailRef} id="modal-reset-email" type="email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} placeholder="you@example.com" autoComplete="email" required className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-semibold text-[14px] text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm" />
                   </div>
                   {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
                   <Button type="submit" disabled={isSubmitting || !resetEmail.includes('@')} className="w-full bg-[var(--gold)] hover:bg-[var(--gold)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(200,169,81,0.2)] hover:shadow-[0_12px_32px_rgba(200,169,81,0.3)] transition-all active:scale-95">
@@ -933,7 +943,7 @@ function LoginModal({ open, onOpenChange, invite }: { open: boolean; onOpenChang
               </div>
               <div className="space-y-2">
                 <Label htmlFor="modal-mfa" className="text-[11px] font-bold text-[var(--royal)]/40 uppercase tracking-widest pl-1">Authenticator Code</Label>
-                <Input id="modal-mfa" type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={totpCode} onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" autoComplete="one-time-code" autoFocus className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-mono font-bold text-[24px] text-center text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm tracking-[0.5em]" />
+                <Input ref={mfaCodeRef} id="modal-mfa" type="text" inputMode="numeric" pattern="[0-9]*" maxLength={6} value={totpCode} onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="000000" autoComplete="one-time-code" className="h-auto bg-[var(--neutral-faint)] border-[var(--neutral-border)] hover:border-[var(--royal)]/30 rounded-2xl px-6 py-4 font-mono font-bold text-[24px] text-center text-ink placeholder:text-ink-muted focus-visible:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-0 focus-visible:shadow-sm tracking-[0.5em]" />
               </div>
               {error && <div className="text-sm text-red-500 font-medium text-center bg-red-50 p-3 rounded-xl border border-red-100">{error}</div>}
               <Button type="submit" disabled={isSubmitting || totpCode.length !== 6} className="w-full bg-[var(--royal)] hover:bg-[var(--royal-blue)] disabled:opacity-60 text-white py-4 h-auto rounded-2xl font-bold text-sm shadow-[0_4px_16px_rgba(19,51,120,0.2)] hover:shadow-[0_12px_32px_rgba(15,82,186,0.3)] transition-all active:scale-95 mt-8">
@@ -1096,7 +1106,7 @@ function CapabilityCard({ icon, title, items, accent, image }: { icon: string; t
 
 /* ─── Testimonial Card ─── */
 
-function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: string; role: string; avatar: string }) {
+function TestimonialCard({ quote, name, affiliation, avatar }: { quote: string; name: string; affiliation: string; avatar: string }) {
   return (
     <Card className="rounded-2xl ring-0 bg-[var(--royal)] border-0 py-0 h-full shadow-[0_8px_40px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_60px_rgba(0,0,0,0.2)] transition-shadow duration-300">
       <CardContent className="p-6 flex flex-col h-full">
@@ -1110,7 +1120,7 @@ function TestimonialCard({ quote, name, role, avatar }: { quote: string; name: s
           />
           <div>
             <div className="text-white font-bold text-sm">{name}</div>
-            <div className="text-gold text-xs">{role}</div>
+            <div className="text-gold text-xs">{affiliation}</div>
           </div>
         </div>
       </CardContent>

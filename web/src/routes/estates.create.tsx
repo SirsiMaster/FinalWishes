@@ -106,6 +106,11 @@ function CreateEstatePage() {
   // re-writing an identical draft on mount) and after a successful create.
   const persistEnabled = useRef(false)
   const hydratedRef = useRef(false)
+  // Focus-on-mount targets for the per-step text inputs. These replace the
+  // removed autoFocus props (jsx-a11y/no-autofocus): focus is managed explicitly
+  // in a step-gated effect so it only fires when that step's input appears.
+  const fullNameRef = useRef<HTMLInputElement>(null)
+  const estateNameRef = useRef<HTMLInputElement>(null)
 
   // GUARD: never show the intake wizard to someone who already has an estate.
   // The post-login redirect can land here transiently before the profile
@@ -159,6 +164,12 @@ function CreateEstatePage() {
     }, 400)
     return () => window.clearTimeout(handle)
   }, [uid, profile?.primaryEstateId, wizardData, step])
+
+  // Move focus to the primary text input when its step becomes active.
+  useEffect(() => {
+    if (step === 2) fullNameRef.current?.focus()
+    if (step === 5) estateNameRef.current?.focus()
+  }, [step])
 
   const update = (patch: Partial<WizardData>) => {
     persistEnabled.current = true
@@ -531,12 +542,12 @@ function CreateEstatePage() {
                         Full Legal Name
                       </Label>
                       <Input
+                        ref={fullNameRef}
                         type="text"
                         value={wizardData.fullName}
                         onChange={(e) => update({ fullName: e.target.value })}
                         placeholder="Your full name"
                         className="w-full px-6 py-4 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-semibold text-[var(--ink)] text-base transition-all placeholder:text-ink-muted placeholder:font-medium"
-                        autoFocus
                       />
                     </div>
 
@@ -825,12 +836,12 @@ function CreateEstatePage() {
                         Estate Name
                       </Label>
                       <Input
+                        ref={estateNameRef}
                         type="text"
                         value={wizardData.estateName}
                         onChange={(e) => update({ estateName: e.target.value })}
                         placeholder={suggestedEstateName}
                         className="w-full px-8 py-6 h-auto rounded-2xl border-[var(--neutral-border)] bg-[var(--neutral-faint)] focus:bg-white focus-visible:border-[var(--royal)] focus-visible:ring-8 focus-visible:ring-[var(--royal)]/5 font-bold text-[var(--ink)] text-xl transition-all placeholder:text-ink-muted placeholder:font-medium"
-                        autoFocus
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' && wizardData.estateName.trim()) handleCreate()
                         }}

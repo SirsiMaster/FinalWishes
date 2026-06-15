@@ -44,6 +44,7 @@ export function CameraCaptureButton({
       <input
         ref={inputRef}
         type="file"
+        aria-label={label}
         accept={accept}
         // `capture` makes mobile open the camera; desktop ignores it.
         capture="environment"

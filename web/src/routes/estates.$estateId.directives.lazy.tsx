@@ -1020,7 +1020,13 @@ function IllinoisAdvanceDirectivesSection({ estateId }: { estateId: string }) {
                       <span className="font-medium">Statute:</span> {d.statute}
                     </div>
                     <Separator />
-                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="flex items-center gap-2"
+                      role="toolbar"
+                      aria-label="Directive actions"
+                      onClick={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    >
                       <a
                         href={d.formUrl}
                         target="_blank"

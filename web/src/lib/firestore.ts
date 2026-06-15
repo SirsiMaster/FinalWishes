@@ -371,13 +371,22 @@ export function useCollection<T>(
 
   useEffect(() => {
     if (!collectionPath) {
-      setData([]);
-      setLoading(false);
+      // Mirror useDocument: defer the cleared-state writes via startTransition so
+      // they don't cascade as a synchronous render. Behavior is unchanged — the
+      // list still clears and loading still settles when the path goes null.
+      startTransition(() => {
+        setData([]);
+        setLoading(false);
+      });
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    // Same deferral as useDocument: mark loading via startTransition so the
+    // subscribe-time state write doesn't cascade synchronously.
+    startTransition(() => {
+      setLoading(true);
+      setError(null);
+    });
 
     const colRef = collection(db, collectionPath);
     const q = constraints?.length ? query(colRef, ...constraints) : query(colRef);

@@ -37,7 +37,7 @@ import { cn } from '@/lib/utils'
 import { getShepherdPrompt, type ShepherdContext } from '../lib/shepherd-prompts'
 import { SectionHeader } from '@/components/estate/SectionHeader'
 import { ShepherdWelcome } from '@/components/estate/ShepherdWelcome'
-import { ScrollReveal, AnimatedCounter, HoverCard, StaggerList, StaggerItem, PageTransition } from '@/lib/animations'
+import { HoverCard, StaggerList, StaggerItem } from '@/lib/animations'
 
 export const Route = createLazyFileRoute('/estates/$estateId/dashboard')({
   component: DashboardComponent,
@@ -139,14 +139,17 @@ function ShepherdChat({
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [historyLoaded, setHistoryLoaded] = useState(false)
+  // Guard so the one-time history load fires at most once. A ref (not state)
+  // because it's only ever read inside the effect — using state here caused a
+  // cascading render (set-state-in-effect). Behavior is identical: load once.
+  const historyLoadedRef = useRef(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Load conversation history from Firestore on first open
   useEffect(() => {
-    if (!open || historyLoaded) return
-    setHistoryLoaded(true)
+    if (!open || historyLoadedRef.current) return
+    historyLoadedRef.current = true
     const loadHistory = async () => {
       try {
         const { getDocs, query, collection: col, orderBy: ob, limit: lim } = await import('firebase/firestore')
@@ -185,7 +188,7 @@ function ShepherdChat({
       }
     }
     loadHistory()
-  }, [open, historyLoaded, estateId, initialInsight])
+  }, [open, estateId, initialInsight])
 
   // Auto-scroll on new messages
   useEffect(() => {

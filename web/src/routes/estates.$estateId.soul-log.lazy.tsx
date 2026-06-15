@@ -507,9 +507,34 @@ function EditEntryDialog({
   estateId: string
   onClose: () => void
 }) {
-  const [title, setTitle] = useState('')
+  // Remount the form per entry so `title` re-seeds from the entry via its
+  // useState initializer (key-reset pattern) instead of a setState-in-effect.
+  // The original mounted the whole dialog only while `entry` is non-null, so the
+  // keyed child preserves that exact mount/unmount behavior and the in-form
+  // `!saving` close guard lives inside the form.
+  if (!entry) return null
+  return (
+    <EditEntryForm
+      key={entry.id}
+      entry={entry}
+      estateId={estateId}
+      onClose={onClose}
+    />
+  )
+}
+
+function EditEntryForm({
+  entry,
+  estateId,
+  onClose,
+}: {
+  entry: SoulLogEntry
+  estateId: string
+  onClose: () => void
+}) {
+  const [title, setTitle] = useState(entry.title || '')
   const [saving, setSaving] = useState(false)
-  const isText = entry?.type === 'text'
+  const isText = entry.type === 'text'
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -521,14 +546,15 @@ function EditEntryDialog({
     },
   })
 
+  // Sync the TipTap editor (an external, non-React system) with the entry's
+  // content once the editor instance is ready. No React setState here, so this
+  // is the sanctioned external-system effect — title is handled at mount via the
+  // useState initializer above.
   useEffect(() => {
-    if (!entry) return
-    setTitle(entry.title || '')
     if (entry.type === 'text') editor?.commands.setContent(entry.content || '')
   }, [entry, editor])
 
   const handleSave = useCallback(async () => {
-    if (!entry) return
     setSaving(true)
     try {
       const patch: Record<string, unknown> = {
@@ -548,7 +574,7 @@ function EditEntryDialog({
   }, [entry, title, editor, estateId, onClose])
 
   return (
-    <Dialog open={!!entry} onOpenChange={(open) => { if (!open && !saving) onClose() }}>
+    <Dialog open onOpenChange={(open) => { if (!open && !saving) onClose() }}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit entry</DialogTitle>
@@ -1229,7 +1255,14 @@ function ComposerDialog({
     setPermissionDenied(false)
   }, [recordedUrl])
 
-  // Cleanup on unmount / close
+  // Cleanup on close: tear down live media (stop tracks/timers via
+  // resetRecordingState — a genuine external-system teardown) AND clear the
+  // composer's form fields so the next open starts blank. The form-field resets
+  // are an intentional side-effect of the dialog closing, entangled with the
+  // media teardown, not a value derivable during render; rewriting to a
+  // key-reset would require relocating the media cleanup to an unmount path and
+  // risk the recording lifecycle. Kept as a guarded close handler.
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!open) {
       resetRecordingState()
@@ -1241,8 +1274,8 @@ function ComposerDialog({
       setSealedTrigger('on_passing')
       setSealedDate('')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   // Start recording
   const startRecording = useCallback(async () => {

@@ -70,6 +70,12 @@ function ProbatePage() {
     }
   }, [estateId])
 
+  // Fetch probate data from the Go API on mount / when the estate changes. This
+  // is a genuine external-system read (the sanctioned use of an effect); the
+  // synchronous setState the rule flags is fetchData's own setLoading(true),
+  // which is required when the same callback is reused to refetch (Retry button,
+  // post-action refreshes) and is a no-op on first mount (loading starts true).
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchData() }, [fetchData])
 
   const handleToggleItem = async (itemId: string, currentValue: boolean) => {

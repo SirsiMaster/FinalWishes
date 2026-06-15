@@ -36,18 +36,32 @@ export default tseslint.config(
       // TODO: Fix these properly in a code quality sprint
       "react-hooks/rules-of-hooks": "warn",
       "react-hooks/exhaustive-deps": "warn",
+      // Cleared to zero in the lint sprint, but several legitimate sites (wall-clock/Date.now
+      // derived state, async Firestore-subscription loading coordination, external-data fetches)
+      // carry justified `eslint-disable react-hooks/set-state-in-effect` directives. Stays
+      // "warn" — promoting to "error" would only harden intentional disables.
       "react-hooks/set-state-in-effect": "warn",
       "react-compiler": "off",
       "react-hooks/immutability": "off",
       "react-hooks/preserve-manual-memoization": "off",
+      // Fast Refresh boundary hygiene. Cleared to zero in the lint sprint, but a set
+      // of route/UI files keep justified `eslint-disable react-refresh/only-export-components`
+      // directives (co-located loaders/helpers/variants that intentionally export non-components).
+      // Because the clean state depends on intentional disables, this stays "warn" — promoting
+      // it to "error" would only harden directives we deliberately keep, not catch new debt.
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true, allowExportNames: ["Route", "loader", "action"] },
       ],
+      // Unused symbols — fully cleared to zero with ZERO intentional disables, so this is
+      // promoted to "error" to guarantee it can't regress. `^_` prefix opts a binding out.
       "@typescript-eslint/no-unused-vars": [
-        "warn",
+        "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" },
       ],
+      // Cleared to zero, but a handful of async-boundary / external-data sites carry justified
+      // `eslint-disable @typescript-eslint/no-explicit-any` directives. Stays "warn" per the
+      // "don't force-error a rule with intentional disables" guardrail.
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },

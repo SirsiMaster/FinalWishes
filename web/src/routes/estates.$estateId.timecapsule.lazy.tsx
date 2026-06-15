@@ -800,7 +800,13 @@ function CreateModal({
     },
   })
 
-  // Reset state when dialog closes
+  // Reset state when the dialog closes: revoke object URLs and clear the TipTap
+  // editor (external-system teardown) alongside clearing the form fields so the
+  // next open starts blank. The field resets are an intentional side-effect of
+  // closing, entangled with the URL-revocation cleanup — not a render-time
+  // derivation — so a key-reset rewrite would split that teardown and risk the
+  // photo/voice lifecycle. Kept as a guarded close handler.
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
   useEffect(() => {
     if (!open) {
       setDeliveryType('scheduled_date')
@@ -813,8 +819,8 @@ function CreateModal({
       setShowSeal(false)
       editor?.commands.setContent('')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   const addPhotos = useCallback((files: File[]) => {
     const newPhotos = files.map((f) => ({
@@ -1280,7 +1286,31 @@ function EditCapsuleDialog({
   estateId: string
   onClose: () => void
 }) {
-  const [title, setTitle] = useState('')
+  // The original mounted the whole dialog only while `capsule` is non-null; the
+  // keyed child preserves that exact mount/unmount behavior while letting the
+  // form's `title` re-seed from the capsule via its useState initializer
+  // (key-reset pattern) instead of a setState-in-effect.
+  if (!capsule) return null
+  return (
+    <EditCapsuleForm
+      key={capsule.id}
+      capsule={capsule}
+      estateId={estateId}
+      onClose={onClose}
+    />
+  )
+}
+
+function EditCapsuleForm({
+  capsule,
+  estateId,
+  onClose,
+}: {
+  capsule: TimeCapsule
+  estateId: string
+  onClose: () => void
+}) {
+  const [title, setTitle] = useState(capsule.title || '')
   const [saving, setSaving] = useState(false)
 
   const editor = useEditor({
@@ -1293,14 +1323,14 @@ function EditCapsuleDialog({
     },
   })
 
+  // Sync the TipTap editor (external, non-React system) with the capsule message
+  // once the editor instance is ready. No React setState here — title is seeded
+  // by the useState initializer above — so this is the sanctioned effect.
   useEffect(() => {
-    if (!capsule) return
-    setTitle(capsule.title || '')
     editor?.commands.setContent(capsule.message || '')
   }, [capsule, editor])
 
   const handleSave = useCallback(async () => {
-    if (!capsule) return
     if (!title.trim()) { toast.error('A title is required'); return }
     setSaving(true)
     const result = await updateTimeCapsule(estateId, capsule.id, {
@@ -1313,7 +1343,7 @@ function EditCapsuleDialog({
   }, [capsule, title, editor, estateId, onClose])
 
   return (
-    <Dialog open={!!capsule} onOpenChange={(open) => { if (!open && !saving) onClose() }}>
+    <Dialog open onOpenChange={(open) => { if (!open && !saving) onClose() }}>
       <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto rounded-[2rem]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-[family-name:var(--font-cinzel)] font-bold text-royal">Edit Letter</DialogTitle>

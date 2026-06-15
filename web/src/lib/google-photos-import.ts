@@ -43,15 +43,25 @@ interface GisOAuth2 {
 type GisWindow = Window & { google?: { accounts?: { oauth2?: GisOAuth2 } } }
 
 /**
- * Whether the Google Photos import is provisioned in this build. Import requires a
- * build-time Web OAuth client id (`VITE_GOOGLE_OAUTH_CLIENT_ID`); without it every
- * import attempt throws "not configured", so callers should hide/disable the entry
- * point rather than letting users click into a guaranteed error. (See the OWNER
- * PREREQUISITES header — the Picker API + consent-screen scope are the other two
- * steps, but only the client id is observable at build time on the client.)
+ * The project's Web OAuth client id for the Google Photos Picker (project
+ * finalwishes-prod, ADR-045 / FR-905). Public by nature — it ships in the browser
+ * bundle exactly like `firebaseConfig.apiKey` — so it is committed here as a default
+ * and remains overridable at build time via `VITE_GOOGLE_OAUTH_CLIENT_ID` (e.g. for a
+ * different project/env). The other two prerequisites (Photos Picker API enabled +
+ * the `photospicker.mediaitems.readonly` consent-screen scope) are owner console steps
+ * not observable at build time.
+ */
+const GOOGLE_OAUTH_CLIENT_ID =
+  (import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID as string | undefined) ||
+  '860699311615-taotoa8rgqg39ldtg4l7ogq9a42d62ro.apps.googleusercontent.com'
+
+/**
+ * Whether the Google Photos import is provisioned in this build. Without a Web OAuth
+ * client id every import attempt throws "not configured", so callers hide/disable the
+ * entry point rather than letting users click into a guaranteed error.
  */
 export const isGooglePhotosImportConfigured = (): boolean =>
-  Boolean(import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID)
+  Boolean(GOOGLE_OAUTH_CLIENT_ID)
 
 let gisLoading: Promise<void> | null = null
 
@@ -78,7 +88,7 @@ function loadGis(): Promise<void> {
 
 /** Get a photospicker-scoped Google OAuth access token via GIS. */
 async function getPickerAccessToken(): Promise<string> {
-  const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID as string | undefined
+  const clientId = GOOGLE_OAUTH_CLIENT_ID
   if (!clientId) {
     throw new Error('Google Photos import is not configured (missing OAuth client id).')
   }

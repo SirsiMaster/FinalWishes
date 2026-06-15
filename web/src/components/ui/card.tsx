@@ -37,14 +37,18 @@ function Card({
       data-variant={variant}
       className={cn(
         // Structure + unified radius scale (32px cards / 24px when sm).
-        "group/card flex flex-col gap-4 overflow-hidden rounded-3xl py-4 text-sm",
+        // `bg-card` is a PLAIN base (not variant-scoped) so a caller's custom
+        // `bg-*` className wins via tailwind-merge dedup. (A variant-prefixed
+        // `data-[variant=default]:bg-card` has higher specificity than a plain
+        // `bg-[var(--royal)]` and silently overrode every custom-background card.)
+        "group/card flex flex-col gap-4 overflow-hidden rounded-3xl py-4 text-sm bg-card",
         "data-[size=sm]:gap-3 data-[size=sm]:rounded-2xl data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0",
         "has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0",
         "*:[img:first-child]:rounded-t-3xl *:[img:last-child]:rounded-b-3xl",
         // Brand hover/transition + gold focus ring (both variants).
         "transition-all duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)]",
         // Default: opaque white surface, royal hairline ring → gold on hover.
-        "data-[variant=default]:bg-card data-[variant=default]:text-card-foreground data-[variant=default]:ring-1 data-[variant=default]:ring-foreground/10 data-[variant=default]:hover:ring-[var(--gold)]/40 data-[variant=default]:hover:shadow-[var(--card-shadow-hover,0_4px_12px_rgba(0,0,0,0.08))]",
+        "data-[variant=default]:text-card-foreground data-[variant=default]:ring-1 data-[variant=default]:ring-foreground/10 data-[variant=default]:hover:ring-[var(--gold)]/40 data-[variant=default]:hover:shadow-[var(--card-shadow-hover,0_4px_12px_rgba(0,0,0,0.08))]",
         // Glass: translucent panel, gold hairline border + gold-glow on hover.
         "data-[variant=glass]:bg-[var(--card-bg,#FFFFFF)] data-[variant=glass]:backdrop-blur-md data-[variant=glass]:border data-[variant=glass]:border-[var(--gold)]/15 data-[variant=glass]:text-card-foreground data-[variant=glass]:hover:border-[var(--gold)]/40 data-[variant=glass]:hover:shadow-[var(--card-shadow-hover,0_12px_48px_rgba(0,0,0,0.12),0_0_30px_rgba(200,169,81,0.18))]",
         className

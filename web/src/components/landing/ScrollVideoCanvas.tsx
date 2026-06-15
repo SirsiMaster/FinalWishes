@@ -160,6 +160,7 @@ export function ScrollVideoCanvas({
           ref={canvasRef}
           className="w-full h-full"
           style={{ display: loaded ? 'block' : 'none' }}
+          aria-hidden="true"
         />
 
         {/* Loading indicator */}

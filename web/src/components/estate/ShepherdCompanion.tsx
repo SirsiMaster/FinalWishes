@@ -466,6 +466,7 @@ export function ShepherdCompanion({
                   <input
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
+                    aria-label="Ask Shepherd what to do next"
                     placeholder="Ask what to do next..."
                     className="min-w-0 flex-1 rounded-xl border border-[var(--neutral-border)] bg-white px-3 py-2 text-[13px] text-[var(--royal)] outline-none transition-colors placeholder:text-[var(--royal)]/40 focus:border-[var(--royal)]"
                   />

@@ -9,7 +9,7 @@
  * @version 1.0.0
  */
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useId } from 'react'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/lib/auth'
@@ -55,6 +55,7 @@ export function ShareMemorial({
   const [memorialUrl, setMemorialUrl] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const qrRef = useRef<HTMLDivElement>(null)
+  const memorialLinkId = useId()
 
   const publish = useCallback(async () => {
     if (!user) return
@@ -167,11 +168,14 @@ export function ShareMemorial({
           <div className="space-y-6">
             {/* Link */}
             <div className="space-y-2">
-              <label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
+              {/* eslint-disable-next-line jsx-a11y/label-has-for -- deprecated rule can't detect custom Input component; association is via htmlFor+id (label-has-associated-control satisfied) */}
+              <label htmlFor={memorialLinkId} className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
                 Memorial Link
               </label>
               <div className="flex gap-2">
                 <Input
+                  id={memorialLinkId}
+                  aria-label="Memorial Link"
                   readOnly
                   value={memorialUrl}
                   className="h-auto px-4 py-3 rounded-xl border-[var(--neutral-border)] text-[13px] text-ink bg-[var(--neutral-faint)]"
@@ -188,9 +192,9 @@ export function ShareMemorial({
 
             {/* QR Code */}
             <div className="space-y-3">
-              <label className="text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
+              <span className="block text-[11px] font-bold text-[var(--royal)]/60 uppercase tracking-widest">
                 QR Code
-              </label>
+              </span>
               <div className="flex flex-col items-center gap-4 p-6 bg-white rounded-2xl border border-[var(--neutral-border)]">
                 <div ref={qrRef}>
                   <QRCodeSVG

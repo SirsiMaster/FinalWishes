@@ -115,7 +115,30 @@ function PrivacyPage() {
         </p>
       </Section>
 
-      <Section title="5. Data Retention">
+      <Section title="5. Google Photos (Heirloom Import)">
+        <p className="text-ink leading-relaxed mb-3">
+          FinalWishes uses the <strong>Google Photos Picker API</strong> so you can import photos into your Heirloom Registry. This integration is designed around least privilege and your explicit choice.
+        </p>
+        <ul className="list-disc pl-6 space-y-2 text-ink leading-relaxed">
+          <li><strong>Only the photos you select.</strong> When you click &ldquo;Import from Google Photos,&rdquo; Google&rsquo;s own picker opens and you choose specific photos. The app accesses <strong>only the specific photos you select</strong> in that picker, on a read-only basis. It does <strong>not</strong> access, browse, or enumerate your whole Google Photos library.</li>
+          <li><strong>How selected photos are used.</strong> The photos you pick are stored as your heirlooms within your estate, so they become part of the legacy you are organizing. They are <strong>not sold, not used for advertising, and not shared</strong> except as needed to provide this feature (for example, transmitting the image you selected from Google to your encrypted estate storage).</li>
+          <li><strong>Tokens.</strong> The Google authorization that lets us read your selected photos is short-lived and is not persisted on our servers. We hold no standing access to your Google account; you can revoke access at any time from your Google account settings.</li>
+        </ul>
+        <p className="text-ink leading-relaxed mt-4">
+          FinalWishes&rsquo;s use and transfer of information received from Google APIs to any other app will adhere to the{' '}
+          <a
+            href="https://developers.google.com/terms/api-services-user-data-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--royal)] underline"
+          >
+            Google API Services User Data Policy
+          </a>
+          , including the Limited Use requirements.
+        </p>
+      </Section>
+
+      <Section title="6. Data Retention">
         <ul className="list-disc pl-6 space-y-2 text-ink leading-relaxed">
           <li><strong>Active Accounts:</strong> Your data is retained for as long as your account is active and your subscription is current.</li>
           <li><strong>Account Deletion:</strong> Upon account deletion, your personal data and uploaded documents are permanently deleted within 30 days. Anonymized analytics data may be retained.</li>
@@ -124,7 +147,7 @@ function PrivacyPage() {
         </ul>
       </Section>
 
-      <Section title="6. Your Rights">
+      <Section title="7. Your Rights">
         <p className="text-ink leading-relaxed mb-3">
           Depending on your jurisdiction, you may have the following rights regarding your personal information:
         </p>
@@ -153,25 +176,25 @@ function PrivacyPage() {
         </p>
       </Section>
 
-      <Section title="7. Cookies &amp; Tracking">
+      <Section title="8. Cookies &amp; Tracking">
         <p className="text-ink leading-relaxed">
           We use essential cookies required for authentication and session management. We do not use third-party advertising cookies or cross-site tracking technologies. Analytics data is collected in aggregate form and does not identify individual users.
         </p>
       </Section>
 
-      <Section title="8. Children&rsquo;s Privacy">
+      <Section title="9. Children&rsquo;s Privacy">
         <p className="text-ink leading-relaxed">
           FinalWishes is not intended for use by individuals under the age of 18. We do not knowingly collect personal information from minors. If we become aware that a minor has provided us with personal information, we will take steps to delete such information.
         </p>
       </Section>
 
-      <Section title="9. Changes to This Policy">
+      <Section title="10. Changes to This Policy">
         <p className="text-ink leading-relaxed">
           We may update this Privacy Policy from time to time. Material changes will be communicated via email or an in-app notification. Your continued use of the Service after changes are posted constitutes acceptance of the updated policy.
         </p>
       </Section>
 
-      <Section title="10. Contact Us">
+      <Section title="11. Contact Us">
         <p className="text-ink leading-relaxed">
           If you have questions about this Privacy Policy or wish to exercise your privacy rights, contact us at:
         </p>

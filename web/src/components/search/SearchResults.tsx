@@ -75,7 +75,16 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export const SEARCH_LISTBOX_ID = 'estate-search-listbox';
 
-/** Deterministic option id for a given result index. */
+/**
+ * Deterministic option id for a given result index.
+ *
+ * Shared with AdminHeader (aria-activedescendant) so it must stay co-located with
+ * SEARCH_LISTBOX_ID and the SearchResults component that owns this combobox/listbox
+ * contract. Extracting it to a sibling module to satisfy Fast Refresh would split a
+ * tightly-coupled a11y contract across files and change two consumers' import paths
+ * for no runtime benefit — so this one helper is intentionally kept here.
+ */
+// eslint-disable-next-line react-refresh/only-export-components -- co-located a11y id helper shared with AdminHeader; extracting splits the listbox contract
 export const searchOptionId = (index: number) => `estate-search-option-${index}`;
 
 // ─── Props ────────────────────────────────────────────────────────────────────

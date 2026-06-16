@@ -2,6 +2,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth, type UserProfile } from '../lib/auth'
+import { showPricing } from '../lib/platform'
 import { resolveTotpChallenge } from '../lib/mfa'
 import { type MultiFactorResolver } from 'firebase/auth'
 import { Button } from '@/components/ui/button'
@@ -27,6 +28,9 @@ export const Route = createFileRoute('/')({
 function Home() {
   const search = Route.useSearch();
   const [loginOpen, setLoginOpen] = useState(search.login === 'true');
+  // Hide pricing surfaces inside the native iOS shell for now (lib/platform.ts).
+  // Inert on web (showPricing() === true there).
+  const pricingVisible = showPricing();
 
   // Sync with search param changes. This reacts to an EXTERNAL change (the URL
   // ?login=true param arriving/changing) by opening the modal. It can't be
@@ -66,7 +70,7 @@ function Home() {
             <a href="#scenarios" className="hover:text-white transition-colors">Who It&apos;s For</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
             <a href="#security" className="hover:text-white transition-colors">Security</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
+            {pricingVisible && <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>}
             <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
           </div>
           <div className="flex items-center gap-4">
@@ -437,6 +441,7 @@ function Home() {
       </section>
 
       {/* ═══════════════════ PRICING ═══════════════════ */}
+      {pricingVisible && (
       <section id="pricing" className="py-16 relative overflow-hidden z-10 bg-[var(--royal)] text-white">
         <div className="max-w-6xl mx-auto px-5 relative z-10">
           <ScrollReveal className="text-center mb-10">
@@ -517,6 +522,7 @@ function Home() {
           </StaggerList>
         </div>
       </section>
+      )}
 
       {/* ═══════════════════ FAQ ═══════════════════ */}
       <section id="faq" className="py-16 relative z-10 section-light">
@@ -610,7 +616,7 @@ function Home() {
               </div>
               <p className="text-white/60 text-xs leading-relaxed">The estate operating system. Organize your assets, preserve your voice, and give your family clarity when it matters most.</p>
             </div>
-            <FooterCol title="Product" links={[{ label: "Who It's For", href: "#scenarios" }, { label: "How It Works", href: "#how-it-works" }, { label: "Security", href: "#security" }, { label: "Pricing", href: "#pricing" }]} />
+            <FooterCol title="Product" links={[{ label: "Who It's For", href: "#scenarios" }, { label: "How It Works", href: "#how-it-works" }, { label: "Security", href: "#security" }, ...(pricingVisible ? [{ label: "Pricing", href: "#pricing" }] : [])]} />
             <FooterCol title="Company" links={[{ label: "About Us", href: "/about" }, { label: "Contact", href: "mailto:support@sirsi.ai" }]} />
             <FooterCol title="Legal" links={[{ label: "Privacy", href: "/privacy" }, { label: "Terms", href: "/terms" }, { label: "FAQ", href: "#faq" }]} />
           </div>

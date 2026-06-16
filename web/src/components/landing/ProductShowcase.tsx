@@ -143,7 +143,7 @@ export function ProductShowcase() {
             </div>
             <div className="flex-1 ml-4">
               <div className="bg-royal rounded-md px-3 py-1 text-[10px] text-white/40 font-mono text-center max-w-xs mx-auto">
-                finalwishes.app/estates/{active.id === 'beneficiaries' ? 'people' : active.id}
+                finalwishes-prod.web.app/estates/{active.id === 'beneficiaries' ? 'people' : active.id}
               </div>
             </div>
           </div>

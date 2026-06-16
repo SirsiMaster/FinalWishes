@@ -189,7 +189,7 @@ function TermsPage() {
         <div className="mt-4 p-4 bg-[var(--neutral-faint)] rounded-lg text-ink leading-relaxed">
           <p className="font-semibold">Sirsi Technologies, Inc.</p>
           <p>Email: <a href="mailto:legal@sirsi.ai" className="text-[var(--royal)] underline">legal@sirsi.ai</a></p>
-          <p>Web: <a href="https://finalwishes.app" className="text-[var(--royal)] underline">finalwishes.app</a></p>
+          <p>Web: <a href="https://finalwishes-prod.web.app" className="text-[var(--royal)] underline">finalwishes-prod.web.app</a></p>
         </div>
       </Section>
     </div>

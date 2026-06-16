@@ -152,5 +152,5 @@ GOOGLE_CLOUD_PROJECT=finalwishes-prod node -e "..."
 |----------|-------|-------|
 | `MAIL_COLLECTION` | Extension config | `mail` |
 | `TEMPLATES_COLLECTION` | Extension config | `email_templates` |
-| `DEFAULT_FROM` | Extension config | `FinalWishes <noreply@finalwishes.app>` |
+| `DEFAULT_FROM` | Extension config | `FinalWishes <noreply@sirsi.ai>` |
 | `SMTP_PASSWORD` | Secret Manager | SendGrid API Key |

@@ -37,4 +37,4 @@ You can enable TOTP MFA in **Settings → Security → Multi-Factor Authenticati
 
 ## Questions?
 
-Contact us at **support@finalwishes.app**.
+Contact us at **support@sirsi.ai**.

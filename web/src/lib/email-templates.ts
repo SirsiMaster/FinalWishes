@@ -274,7 +274,7 @@ export function passwordResetEmail(params: PasswordResetEmailParams): EmailOutpu
     ${paragraph(`Hello ${escapeHtml(userName)},`)}
     ${paragraph(`We received a request to reset your FinalWishes password. Click the button below to create a new password.`)}
     ${ctaButton(resetUrl, 'Reset Password')}
-    ${paragraph(`This link expires in <strong>1 hour</strong>. If you did not request a password reset, please ignore this email or contact support at <a href="mailto:support@finalwishes.app" style="color:#133378;text-decoration:underline;">support@finalwishes.app</a>.`)}
+    ${paragraph(`This link expires in <strong>1 hour</strong>. If you did not request a password reset, please ignore this email or contact support at <a href="mailto:support@sirsi.ai" style="color:#133378;text-decoration:underline;">support@sirsi.ai</a>.`)}
   `);
 
   const text = [
@@ -284,7 +284,7 @@ export function passwordResetEmail(params: PasswordResetEmailParams): EmailOutpu
     ``,
     `Reset your password: ${resetUrl}`,
     ``,
-    `This link expires in 1 hour. If you did not request this, please ignore this email or contact support@finalwishes.app.`,
+    `This link expires in 1 hour. If you did not request this, please ignore this email or contact support@sirsi.ai.`,
     ``,
     `— FinalWishes, The Estate Operating System`,
   ].join('\n');
@@ -306,7 +306,7 @@ export function mfaEnabledEmail(params: MfaEnabledEmailParams): EmailOutput {
     <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:16px 20px;margin:16px 0;">
       <p style="color:#166534;font-size:14px;margin:0;font-family:'Inter',Arial,sans-serif;font-weight:600;">&#10003; Your account is now more secure.</p>
     </div>
-    ${paragraph(`If you did not enable MFA, please contact support immediately at <a href="mailto:support@finalwishes.app" style="color:#133378;text-decoration:underline;">support@finalwishes.app</a>.`)}
+    ${paragraph(`If you did not enable MFA, please contact support immediately at <a href="mailto:support@sirsi.ai" style="color:#133378;text-decoration:underline;">support@sirsi.ai</a>.`)}
   `);
 
   const text = [
@@ -315,7 +315,7 @@ export function mfaEnabledEmail(params: MfaEnabledEmailParams): EmailOutput {
     `Two-factor authentication has been successfully enabled on your FinalWishes account.`,
     `You will now need your authenticator app to sign in.`,
     ``,
-    `If you did not enable MFA, please contact support immediately at support@finalwishes.app.`,
+    `If you did not enable MFA, please contact support immediately at support@sirsi.ai.`,
     ``,
     `— FinalWishes, The Estate Operating System`,
   ].join('\n');

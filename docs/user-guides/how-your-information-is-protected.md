@@ -52,4 +52,4 @@ For the technically curious, here's what's under the hood:
 
 ## Questions?
 
-If you have questions about how your data is protected, contact us at **support@finalwishes.app**.
+If you have questions about how your data is protected, contact us at **support@sirsi.ai**.

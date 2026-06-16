@@ -40,18 +40,18 @@ Publishing status target: **In production**). Set:
 | --- | --- |
 | App name | `FinalWishes` |
 | User support email | `support@sirsi.ai` |
-| App logo | FinalWishes logo (PNG, square, ≤1 MB; must match the brand on finalwishes.app) |
-| Application home page | `https://finalwishes.app` |
-| Application privacy policy link | `https://finalwishes.app/privacy` |
-| Application terms of service link | `https://finalwishes.app/terms` (if published; otherwise omit) |
-| Authorized domains | `finalwishes.app` and `finalwishes-prod.web.app` |
+| App logo | FinalWishes logo (PNG, square, ≤1 MB; must match the brand on finalwishes-prod.web.app) |
+| Application home page | `https://finalwishes-prod.web.app` |
+| Application privacy policy link | `https://finalwishes-prod.web.app/privacy` |
+| Application terms of service link | `https://finalwishes-prod.web.app/terms` (if published; otherwise omit) |
+| Authorized domains | `finalwishes-prod.web.app` and `finalwishes-prod.web.app` |
 | Developer contact email | `support@sirsi.ai` |
 
 Under **Scopes**, ensure exactly one sensitive scope is present and nothing broader:
 `.../auth/photospicker.mediaitems.readonly`. Remove any `photoslibrary.*` scope if present —
 its presence forces the restricted/CASA tier.
 
-> The privacy policy at `https://finalwishes.app/privacy` already carries the dedicated
+> The privacy policy at `https://finalwishes-prod.web.app/privacy` already carries the dedicated
 > **Google Photos** section with the verbatim **Limited Use** affirmation and a link to the
 > Google API Services User Data Policy (added in this change). Google's reviewer will read
 > that page — it must be live in prod before you submit.
@@ -89,11 +89,11 @@ before (or alongside) submission, or verification will be blocked.
 1. Go to **[Google Search Console](https://search.google.com/search-console)** with the same
    Google account that owns the `finalwishes-prod` Cloud project (or an account you'll add as
    an owner).
-2. Add a property for **`finalwishes.app`** (use the **Domain** property type for DNS
-   verification, or **URL prefix** `https://finalwishes.app` for HTML/file verification).
+2. Add a property for **`finalwishes-prod.web.app`** (use the **Domain** property type for DNS
+   verification, or **URL prefix** `https://finalwishes-prod.web.app` for HTML/file verification).
 3. Verify ownership via the offered method:
    - **DNS TXT** (preferred for the Domain property): add the `google-site-verification=…`
-     TXT record at the `finalwishes.app` DNS provider, then click Verify.
+     TXT record at the `finalwishes-prod.web.app` DNS provider, then click Verify.
    - or **HTML file / meta tag** for the URL-prefix property.
 4. Repeat for **`finalwishes-prod.web.app`** if it is listed as an authorized domain. (Firebase
    Hosting domains are typically already associated with the project; confirm it appears as
@@ -111,7 +111,7 @@ the **app name and the exact scope being requested**, (b) the user **granting** 
 (c) the app **actually using** the granted data. Record at desktop resolution, narrate or
 caption each beat, and upload to an unlisted YouTube link in the submission.
 
-**Scene 1 — Entry point (0:00–0:08).** Signed in to `https://finalwishes.app`, open an estate
+**Scene 1 — Entry point (0:00–0:08).** Signed in to `https://finalwishes-prod.web.app`, open an estate
 and navigate to the **Heirloom Registry**. Click **"Import from Google Photos."**
 
 **Scene 2 — Consent screen (0:08–0:22).** The Google OAuth consent screen appears. Pause so
@@ -135,13 +135,13 @@ Keep it continuous and unedited where possible; reviewers want to see the real, 
 
 ## 5. Submission checklist
 
-- [ ] Privacy policy is **live** at `https://finalwishes.app/privacy` and includes the Google
+- [ ] Privacy policy is **live** at `https://finalwishes-prod.web.app/privacy` and includes the Google
       Photos section + verbatim Limited Use affirmation + link to the User Data Policy.
-- [ ] Homepage live at `https://finalwishes.app`.
+- [ ] Homepage live at `https://finalwishes-prod.web.app`.
 - [ ] OAuth consent screen (External) filled with the values in §1; app logo uploaded.
 - [ ] Scopes list contains **only** `photospicker.mediaitems.readonly` (no `photoslibrary.*`).
 - [ ] Scope justification (§2) pasted into the scope-usage field.
-- [ ] Authorized domains `finalwishes.app` + `finalwishes-prod.web.app` added **and verified**
+- [ ] Authorized domains `finalwishes-prod.web.app` + `finalwishes-prod.web.app` added **and verified**
       in Google Search Console (§3).
 - [ ] Demo video recorded per §4 and uploaded (unlisted link added to the submission).
 - [ ] Verification Center tier confirmed as **sensitive** (standard verification), **not**

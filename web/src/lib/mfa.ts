@@ -50,7 +50,7 @@ export async function startTotpEnrollment(user: User): Promise<{
     
     // Generate the otpauth:// URL for QR code
     const qrUrl = totpSecret.generateQrCodeUrl(
-      user.email || 'user@finalwishes.app',
+      user.email || 'user@sirsi.ai',
       'FinalWishes'
     );
 

@@ -120,6 +120,7 @@ Rules, design tokens, and stack decisions from other repositories do NOT apply h
 | **Triggers** | **Firebase Functions (Node.js 22)** | Firestore triggers only: `autoMatchInvitation` + `sendMail`. No HTTP endpoints. |
 
 > **Removed (April 2026):** Mobile (Expo) and Desktop (Tauri) scaffolds deleted — premature. Will rebuild when web is stable.
+> **iOS (June 2026, ADR-048):** Web is now stable in production, so the native target is warranted. iOS ships as a **Capacitor** shell wrapping the existing Vite build (`web/capacitor.config.ts`, `web/ios/`, appId `ai.sirsi.finalwishes`) — NOT the removed Expo path. Pricing surfaces are hidden in the native shell for now (`web/src/lib/platform.ts`). Native payment (StoreKit/IAP) is a future ADR.
 > **Consolidated:** All HTTP API endpoints live in the Go API on Cloud Run. Firebase Functions handle only event-driven Firestore triggers.
 
 ## 4. Design System: "Royal Neo-Deco"

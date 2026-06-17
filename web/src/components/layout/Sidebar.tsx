@@ -1,6 +1,7 @@
 import { type ReactNode, useState, useMemo } from "react";
 import { Link, useLocation, useParams, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../../lib/auth";
+import { showPricing } from "../../lib/platform";
 import { useUserEstates, useEstate, type EstateUser } from "../../lib/firestore";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -171,7 +172,12 @@ function filterGroupsByRole(groups: NavGroup[], role: PersonaRole): NavGroup[] {
 }
 
 function filterUtilityByRole(items: UtilityItem[], role: PersonaRole): UtilityItem[] {
-  return items.filter((item) => canAccess(role, item.id as SectionId));
+  return items.filter((item) => {
+    // Pricing/upgrade is hidden inside the native iOS shell for now
+    // (lib/platform.ts — pricing undecided + Apple Guideline 3.1.1). Web keeps it.
+    if (item.id === 'pricing' && !showPricing()) return false;
+    return canAccess(role, item.id as SectionId);
+  });
 }
 
 /* ─── Shared Nav Content ─── */

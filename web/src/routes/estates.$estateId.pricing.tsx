@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute, useParams, redirect } from '@tanstack/react-router'
+import { isNative } from '../lib/platform'
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useAuth } from '../lib/auth'
 import { toast } from 'sonner'
@@ -20,6 +21,15 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 export const Route = createFileRoute('/estates/$estateId/pricing')({
+  // Pricing/checkout is unavailable inside the native iOS shell for now
+  // (lib/platform.ts — pricing undecided + Apple Guideline 3.1.1). Redirect to
+  // the estate dashboard before the Stripe-checkout component ever mounts. On
+  // web, isNative() is false so this is inert and pricing renders normally.
+  beforeLoad: ({ params }) => {
+    if (isNative()) {
+      throw redirect({ to: '/estates/$estateId/dashboard', params: { estateId: params.estateId } })
+    }
+  },
   component: PricingPage,
 })
 

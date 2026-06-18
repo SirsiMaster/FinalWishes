@@ -122,7 +122,21 @@ jobs:
         working-directory: ./web
         run: npm run build
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Check Firebase preview credentials
+        id: firebase-preview
+        env:
+          FIREBASE_SERVICE_ACCOUNT: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}'
+        run: |
+          if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping Firebase preview deploy because the service-account secret is unavailable for this PR context."
+          fi
+
+      - name: Deploy preview
+        if: ${{ steps.firebase-preview.outputs.available == 'true' }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}'

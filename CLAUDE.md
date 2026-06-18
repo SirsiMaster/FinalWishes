@@ -201,7 +201,7 @@ These documents are the source of truth for this repo:
 *   **CLI Access**: Full CLI access to GitHub and Firebase.
 *   **Push Protocol**: ALWAYS run `git status` -> `git add` -> `git commit` -> `git push`.
 *   **Identity**: `SirsiMaster` account exclusively.
-*   **Browser Profile (Rule 28)**: ALL browser subagent work MUST execute in the **`ccollymo@alumni.chicagobooth.edu`** Chrome profile. No exceptions. Every browser_subagent task prompt MUST include instructions to use this profile. See `.agent/workflows/browser-testing.md` for full protocol.
+*   **Browser Profile (Rule 28)**: ALL FinalWishes browser work (subagents + the claude-in-chrome MCP) MUST execute in the **`Profile 15`** Chrome profile — account **`cylton@sirsi.ai`** (Cylton Collymore), launch flag `--profile-directory="Profile 15"`. No exceptions. This profile is the **dual-locked** FinalWishes development identity (also the Apple Developer / App Store Connect account holder, Team `9D382WV988`); all FinalWishes development browser activity grows from it. The authoritative definition lives in the workspace-root `~/Development/CLAUDE.md` ("Browser Profile Locks"). **This SUPERSEDES the prior `ccollymo@alumni.chicagobooth.edu` designation.** Every browser_subagent task prompt MUST instruct use of this profile. See `.agent/workflows/browser-testing.md` for full protocol.
 
 ## 9. Shared Services Map
 | Service | Provider | Location |

@@ -56,3 +56,8 @@ __pycache__/
 .agents/
 
 scripts/.e2e-persona-pw
+
+# Persona verification matrix evidence (regenerable via scripts/verify-persona-matrix.mjs)
+web/persona-matrix-evidence/
+scripts/persona-matrix-evidence/
+scripts/persona-matrix-results.json

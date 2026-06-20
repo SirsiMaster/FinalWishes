@@ -110,6 +110,12 @@ async function seed() {
   // The QA estate, owned by the principal test account.
   await db.collection('estates').doc(ESTATE_ID).set({
     name: 'Persona QA Estate',
+    // principalId is the CANONICAL owner field — firestore.rules isEstatePrincipal()
+    // (and the lockbox/principal-only rules) gate on estate.principalId == auth.uid.
+    // Without it even persona-principal fails isEstatePrincipal() and the global
+    // lockbox subscription throws permission-denied on every page. (ownerId/ownerUid
+    // kept for any legacy reader.)
+    principalId: principal.uid,
     ownerId: principal.uid,
     ownerUid: principal.uid,
     status: 'active',

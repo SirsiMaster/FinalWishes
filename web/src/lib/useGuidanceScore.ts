@@ -48,25 +48,33 @@ export function useGuidanceScore(estateId: string | null): {
   useEffect(() => {
     if (!user || !estateId) return
     let cancelled = false
+    // Abort the in-flight fetch on unmount/estate-change so navigating away mid-request
+    // doesn't log a console error for a cancelled cross-origin request (the score call
+    // takes ~1.3s; a fast route change would otherwise surface as a spurious network/CORS
+    // error). The endpoint itself returns 200 + CORS — this only suppresses cancel noise.
+    const controller = new AbortController()
     ;(async () => {
       setLoading(true)
       try {
         const token = await user.getIdToken()
         const res = await fetch(`${API_BASE}/api/v1/guidance/score?estate_id=${estateId}`, {
           headers: { Authorization: `Bearer ${token}` },
+          signal: controller.signal,
         })
         if (!cancelled) {
           // Clear stale score on failure so we never show a prior estate's plan.
           setScore(res.ok ? ((await res.json()) as ShepherdScore) : null)
         }
-      } catch {
+      } catch (e) {
         // Non-fatal: companion degrades gracefully when the score is unavailable.
-        if (!cancelled) setScore(null)
+        // An AbortError on unmount is expected — not a failure, leave score as-is.
+        if (!cancelled && (e as Error)?.name !== 'AbortError') setScore(null)
       }
       if (!cancelled) setLoading(false)
     })()
     return () => {
       cancelled = true
+      controller.abort()
     }
   }, [user, estateId, tick])
 

@@ -19,6 +19,7 @@ import {
   useEstateHeirs,
   useEstateDocuments,
   useLockboxItems,
+  useIsEstatePrincipal,
   useDirectives,
   useTimeCapsules,
   useHeirlooms,
@@ -78,7 +79,9 @@ function SettingsPage() {
   const { data: assets } = useEstateAssets(estateId);
   const { data: heirs } = useEstateHeirs(estateId);
   const { data: documents } = useEstateDocuments(estateId);
-  const { data: lockboxItems } = useLockboxItems(estateId);
+  // Lockbox is principal/admin-only — every persona reaches settings (for MFA), so gate
+  // the subscription to avoid permission-denied console errors for fiduciaries.
+  const { data: lockboxItems } = useLockboxItems(estateId, useIsEstatePrincipal(estateId));
   const { data: directives } = useDirectives(estateId);
   const { data: capsules } = useTimeCapsules(estateId);
   const { data: heirlooms } = useHeirlooms(estateId);

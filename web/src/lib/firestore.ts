@@ -24,6 +24,7 @@ import {
   type Timestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { useAuth } from './auth';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -490,13 +491,32 @@ export function useUserEstates(userId: string | null): FirestoreListResult<Estat
 /**
  * Subscribe to lockbox items for an estate (sorted by creation date).
  */
-export function useLockboxItems(estateId: string | null): FirestoreListResult<LockboxItem> {
-  const path = estateId ? `estates/${estateId}/lockbox` : null;
+// Lockbox is the most sensitive collection — firestore.rules gates reads on
+// isEstatePrincipal() (estate.principalId == uid) || isAdmin(). Pass enabled=false
+// from callers where the current persona can't read it, so non-principal personas
+// (heir/executor/trustee/legal/cpa) don't fire `Missing or insufficient permissions`
+// on every page. The lockbox ROUTE is principal-only (RoleGuard) so it omits the arg
+// (enabled defaults true); the always-mounted global search (AdminHeader) and the
+// settings page gate it on estate-principal status. See useIsEstatePrincipal.
+export function useLockboxItems(
+  estateId: string | null,
+  enabled: boolean = true,
+): FirestoreListResult<LockboxItem> {
+  const path = estateId && enabled ? `estates/${estateId}/lockbox` : null;
   const constraints = useMemo(
     () => [orderBy('createdAt', 'desc')],
     []
   );
   return useCollection<LockboxItem>(path, constraints);
+}
+
+// Returns true when the current authenticated user can read the estate's lockbox
+// (estate principal or admin) — mirrors firestore.rules isEstatePrincipal()||isAdmin().
+// Used to gate the lockbox subscription at always-mounted call sites.
+export function useIsEstatePrincipal(estateId: string | null): boolean {
+  const { profile } = useAuth();
+  const { data: estate } = useEstate(estateId);
+  return !!estate && !!profile && (estate.principalId === profile.uid || profile.role === 'admin');
 }
 
 /**

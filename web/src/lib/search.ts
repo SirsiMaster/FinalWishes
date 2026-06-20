@@ -14,6 +14,7 @@ import {
   useEstateExecutors,
   useEstateDocuments,
   useLockboxItems,
+  useIsEstatePrincipal,
   useDirectives,
   useTimeCapsules,
   useHeirlooms,
@@ -114,7 +115,10 @@ export function useEstateSearch(estateId: string, query: string): SearchState {
   const { data: heirs, loading: heirsLoading } = useEstateHeirs(estateId);
   const { data: executors, loading: executorsLoading } = useEstateExecutors(estateId);
   const { data: documents, loading: docsLoading } = useEstateDocuments(estateId);
-  const { data: lockbox, loading: lockboxLoading } = useLockboxItems(estateId);
+  // Lockbox is principal/admin-only — gate so this always-mounted global search doesn't
+  // throw permission-denied for every non-principal persona on every page.
+  const canReadLockbox = useIsEstatePrincipal(estateId);
+  const { data: lockbox, loading: lockboxLoading } = useLockboxItems(estateId, canReadLockbox);
   const { data: directives, loading: directivesLoading } = useDirectives(estateId);
   const { data: capsules, loading: capsulesLoading } = useTimeCapsules(estateId);
   const { data: heirlooms, loading: heirloomsLoading } = useHeirlooms(estateId);

@@ -3,12 +3,14 @@ import {
   type PersonaRole,
   type SectionId,
   PERSONA_ACCESS,
+  ALL_SECTIONS,
   resolveEffectiveRole,
   canAccess,
   requiresItemScope,
   personaLanding,
   personaLabel,
 } from './persona'
+import { GUARDED_SECTIONS } from '../components/guards/RoleGuard'
 
 const ALL_ROLES: PersonaRole[] = ['principal', 'executor', 'trustee', 'heir', 'legal', 'cpa', 'admin']
 
@@ -167,5 +169,25 @@ describe('structural invariants', () => {
 
   it('unknown sections deny by default', () => {
     expect(canAccess('heir', 'totally-unknown' as SectionId)).toBe(false)
+  })
+})
+
+// Invariant: a section RoleGuard does NOT guard (estates/index — universal estate-shell
+// nav, self-scoped to the caller's own data) is reachable by every persona via URL
+// regardless of PERSONA_ACCESS, so canon must grant it to ALL personas. Catches the
+// heir/estates omission class deterministically at CI (no prod crawl) — the live matrix finding.
+describe('persona access ↔ RoleGuard guarding invariant', () => {
+  it('every ungated universal section is granted to EVERY persona', () => {
+    const ungated = ALL_SECTIONS.filter((s) => !GUARDED_SECTIONS.has(s))
+    expect(ungated.length).toBeGreaterThan(0)
+    const personas = Object.keys(PERSONA_ACCESS) as PersonaRole[]
+    for (const s of ungated) {
+      for (const p of personas) {
+        expect(PERSONA_ACCESS[p].has(s), `persona "${p}" must list ungated universal section "${s}"`).toBe(true)
+      }
+    }
+  })
+  it('every guarded section exists in ALL_SECTIONS (no orphan guard)', () => {
+    for (const s of GUARDED_SECTIONS) expect(ALL_SECTIONS, `guarded "${s}" missing from ALL_SECTIONS`).toContain(s)
   })
 })

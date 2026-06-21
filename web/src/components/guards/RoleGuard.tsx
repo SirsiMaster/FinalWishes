@@ -24,7 +24,7 @@ import {
  * ──────────────────────────────────────────────────────────────────────────── */
 
 /** Known section ids that map to a guarded estate route segment. */
-const GUARDED_SECTIONS = new Set<SectionId>([
+export const GUARDED_SECTIONS = new Set<SectionId>([
   'dashboard', 'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets',
   'vault', 'forms', 'lockbox', 'directives', 'timecapsule', 'beneficiaries',
   'events', 'obituary', 'probate', 'notifications', 'pricing', 'settings',

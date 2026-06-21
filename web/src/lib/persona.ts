@@ -62,7 +62,7 @@ export const PERSONA_LABELS: Record<PersonaRole, string> = {
   admin: 'Administrator',
 };
 
-const ALL_SECTIONS: SectionId[] = [
+export const ALL_SECTIONS: SectionId[] = [
   'dashboard', 'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets',
   'vault', 'forms', 'lockbox', 'directives', 'timecapsule', 'beneficiaries',
   'events', 'obituary', 'probate', 'notifications', 'pricing', 'settings',

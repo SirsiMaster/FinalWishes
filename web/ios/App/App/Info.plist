@@ -48,6 +48,11 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
+	<false/>
+	<!-- Light (white) status-bar text — the app chrome behind the status bar is
+	     Royal Blue (#133378, capacitor.config backgroundColor + contentInset:always),
+	     on which the iOS-default black status text is barely legible. -->
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 </dict>
 </plist>

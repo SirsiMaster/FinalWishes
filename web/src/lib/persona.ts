@@ -111,7 +111,12 @@ export const PERSONA_ACCESS: Record<PersonaRole, ReadonlySet<SectionId>> = {
   // assigned/shared only (SCOPED_SECTIONS).
   heir: new Set<SectionId>([
     'dashboard', 'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets',
-    'directives', 'timecapsule', 'events', 'obituary', 'notifications', 'settings', 'attestation', 'index',
+    'directives', 'timecapsule', 'events', 'obituary', 'notifications', 'settings', 'attestation',
+    // `estates` (the own-memberships switcher) + `index` (estate shell) are universal
+    // navigation — ungated in RoleGuard's GUARDED_SECTIONS and self-scoped to the user's
+    // OWN estate_users records (no cross-estate leak). Every other persona lists `estates`;
+    // heir was the lone omission (caught by the per-role live verification matrix).
+    'estates', 'index',
   ]),
 
   legal: new Set<SectionId>([

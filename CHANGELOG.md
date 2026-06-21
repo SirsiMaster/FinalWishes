@@ -6,6 +6,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ---
 
 ## [Unreleased]
+### Fixed
+- **iOS status bar is now light (white) content** (`web/ios/App/App/Info.plist`) — the app chrome behind the status bar is Royal Blue (`#133378`, `capacitor.config` backgroundColor + `contentInset: always`), on which iOS-default black status-bar text is barely legible. Set `UIViewControllerBasedStatusBarAppearance=false` + `UIStatusBarStyle=UIStatusBarStyleLightContent`. Verified in the iPhone 17 Pro simulator: time + WiFi/battery render white/legible.
 
 ### Fixed
 

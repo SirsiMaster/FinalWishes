@@ -568,13 +568,13 @@ Firestore Triggers (Firebase Functions — Node.js 20):
 - [x] Frontend test coverage > 80% (Vitest) — 105 tests (a2c9614)
 - [x] Staging environment operational — Firebase preview channel
 - [x] SOC 2 evidence collected — 9 files
-- [ ] DNS switchover to finalwishes.app
+- [x] Production domain live — **finalwishes-prod.web.app is the SOLE production site** (`finalwishes.app` was never owned; unowned refs scrubbed in #19). No DNS switchover pending.
 - [ ] 99.9% uptime during launch week
 
 ### Deferred (not Tier 1)
-- [ ] iOS and Android apps (requires separate Tier 1 add-on)
+- [x] **iOS app SHIPPED** — Capacitor web-to-native shell (ADR-048, #20/#22), signed under Apple Team `9D382WV988`, TestFlight-ready (`docs/ios/TESTFLIGHT.md`). Android still deferred.
 - [ ] Desktop app (deferred indefinitely)
-- [ ] Google Photos API integration (using direct Cloud Storage uploads instead)
+- [x] **Google Photos import SHIPPED** — Picker API frontend flow (CR-12, ADR-045, #5); runtime consent (scope + test-user) is the only owner-gated step.
 
 ---
 

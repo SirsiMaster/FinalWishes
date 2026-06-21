@@ -23,7 +23,9 @@ import {
  *      way back to their own landing — no private data, no shame.
  * ──────────────────────────────────────────────────────────────────────────── */
 
-/** Known section ids that map to a guarded estate route segment. */
+/** Known section ids that map to a guarded estate route segment. Exported for the
+ *  persona-access invariant test. */
+// eslint-disable-next-line react-refresh/only-export-components
 export const GUARDED_SECTIONS = new Set<SectionId>([
   'dashboard', 'life-chapters', 'soul-log', 'memoirs', 'heirlooms', 'assets',
   'vault', 'forms', 'lockbox', 'directives', 'timecapsule', 'beneficiaries',

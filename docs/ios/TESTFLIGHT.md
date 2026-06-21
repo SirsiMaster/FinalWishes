@@ -38,12 +38,37 @@ npx cap sync ios       # copy dist into the iOS app + update SPM plugins
 cd web && npm run build && npx cap sync ios
 open ios/App/App.xcodeproj
 ```
+
 In Xcode:
+
 1. Select the **App** scheme → destination **Any iOS Device (arm64)**.
 2. **Product → Archive** (first archive prompts to let Xcode create the Developer ID / distribution cert + provisioning profile under Team `9D382WV988` — allow it).
 3. **Organizer → Distribute App → App Store Connect → Upload**.
 4. Bump build number for each upload: edit `CURRENT_PROJECT_VERSION` in `project.pbxproj` (or `agvtool next-version -all`).
 5. After processing (~5–15 min), the build appears in TestFlight → install via the TestFlight app on device.
+
+## ⚠️ MANDATORY pre-submission gate — walk the shell rendering (claude-home bind, Note 1)
+
+**Before the first App Store / TestFlight submission you MUST actually render-walk the Capacitor
+shell — do NOT assume "same bundle as web ⇒ same render."** That assumption is exactly what the
+white-cards regression warned against ([[feedback_verify_in_browser_not_tests]]); WKWebView can
+differ from desktop Chromium on fonts, safe-area insets, scroll, and `capacitor://localhost` SPA
+routing. The web per-role matrix (`docs/verification/PERSONA_MATRIX.md`) verified the _bundle_; this
+gate verifies the _native shell renders that bundle_.
+
+**Already verified (renderer faithfulness):** the landing + Royal-Neo-Deco chrome render correctly in
+the iPhone 17 Pro simulator (fonts, gradients, gold guardian, buttons) and the status bar is light/
+legible (#31). That proves WKWebView renders the bundle faithfully — but is not a full route walk.
+
+**Do this walk (simulator or device), per persona where practical:**
+
+1. `cd web && npm run build && npx cap sync ios && open ios/App/App.xcodeproj` → Run on the simulator/device.
+2. Sign in (the `persona-*@finalwishes.app` QA accounts work, or a real account). Fiduciaries need MFA — `scripts/enroll-persona-mfa.mjs` secrets, or enroll on first login.
+3. Walk: dashboard, soul-log, memoirs, vault, lockbox, directives, settings, **+ a blocked route** (e.g. heir→vault) and confirm the RoleGuard "This isn't part of your role" gate renders.
+4. For each: confirm **real content renders** (no white/blank card, no invisible text, no infinite spinner), **scroll works**, **safe-area insets** look right, and the **Web Inspector console** (Safari → Develop → Simulator) shows **no app errors**.
+5. Any white/blank/crash/console-error → fix before submitting (same bar as the web matrix).
+
+This is a SUBMISSION gate, not a web-deploy gate — the web app is already bound PASS.
 
 ## Deferred (future ADRs — NOT in this runbook)
 
@@ -54,4 +79,4 @@ In Xcode:
 ## Notes
 
 - **No CocoaPods** — Capacitor 8 uses Swift Package Manager. No `pod install`.
-- **Privacy strings** — none added yet, because no native capability (camera/Face ID/location) is used. Add the matching `NS*UsageDescription` to `Info.plist` *only* when a native plugin that needs it is introduced — Apple rejects unused/insincere permission strings.
+- **Privacy strings** — none added yet, because no native capability (camera/Face ID/location) is used. Add the matching `NS*UsageDescription` to `Info.plist` _only_ when a native plugin that needs it is introduced — Apple rejects unused/insincere permission strings.

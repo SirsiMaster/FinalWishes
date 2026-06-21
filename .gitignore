@@ -61,3 +61,4 @@ scripts/.e2e-persona-pw
 web/persona-matrix-evidence/
 scripts/persona-matrix-evidence/
 scripts/persona-matrix-results.json
+scripts/.persona-mfa-secrets.json

@@ -79,9 +79,13 @@ function SettingsPage() {
   const { data: assets } = useEstateAssets(estateId);
   const { data: heirs } = useEstateHeirs(estateId);
   const { data: documents } = useEstateDocuments(estateId);
-  // Lockbox is principal/admin-only — every persona reaches settings (for MFA), so gate
-  // the subscription to avoid permission-denied console errors for fiduciaries.
-  const { data: lockboxItems } = useLockboxItems(estateId, useIsEstatePrincipal(estateId));
+  // Estate-principal status (mirrors the firestore rule estate.principalId==uid). Every persona
+  // reaches settings (for MFA), but several settings surfaces are principal-only — gate them on
+  // this to avoid permission-denied console errors for fiduciaries (lockbox subscription + the
+  // team-invitations fetch in InviteTeamMember). NOT the global profile.role (which the persona-QA
+  // seed sets to principal for all test accounts).
+  const isEstatePrincipal = useIsEstatePrincipal(estateId);
+  const { data: lockboxItems } = useLockboxItems(estateId, isEstatePrincipal);
   const { data: directives } = useDirectives(estateId);
   const { data: capsules } = useTimeCapsules(estateId);
   const { data: heirlooms } = useHeirlooms(estateId);
@@ -445,8 +449,9 @@ function SettingsPage() {
       {/* ── MFA Enrollment (Shared Component) ── */}
       <MFAEnrollment user={user} mfaStatus={mfaStatus} isFiduciary={!!isFiduciary} />
 
-      {/* ── Estate Team Invitations ── */}
-      <InviteTeamMember estateId={estateId} />
+      {/* ── Estate Team Invitations (principal/admin only — it fetches estate_invitations,
+             which firestore.rules restricts to isEstatePrincipal; fiduciaries can't manage the team) ── */}
+      {isEstatePrincipal && <InviteTeamMember estateId={estateId} />}
 
       {/* ── Guardian Protocol (principal/admin only) ── */}
       {isPrincipalOrAdmin && (

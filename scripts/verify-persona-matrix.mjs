@@ -8,7 +8,8 @@
 //   PERSONAS=heir SECTIONS=vault,dashboard node ...    # subset
 //
 // Prereq: scripts/seed-persona-qa.js has seeded estate_persona_qa + persona-* accounts.
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
+const ENGINE = process.env.ENGINE === 'webkit' ? webkit : chromium;
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'fs';
 import { authenticator } from 'otplib';
 
@@ -88,7 +89,19 @@ async function checkCell(ctx, key, section) {
   try {
     const resp = await p.goto(BASE + routeFor(section), { waitUntil: 'domcontentloaded', timeout: 45000 });
     status = resp ? resp.status() : 'no-resp';
-    await p.waitForTimeout(5000); // lazy routes + Firestore data settle
+    // Wait for the app to LEAVE the PendingState spinner ("Preparing...") and settle real
+    // content — poll instead of a fixed timeout. WebKit (the iOS WKWebView engine) resolves
+    // Firebase auth + lazy routes notably slower than Chromium, so a fixed 5s captured cells
+    // mid-load as false "blank"/permission-denied. Engine-agnostic: ~2s on Chromium, more on WebKit.
+    for (let i = 0; i < 16; i++) {
+      await p.waitForTimeout(1000);
+      const ready = await p.evaluate(() => {
+        const txt = (document.body.innerText || '').trim();
+        const pending = /preparing your space/i.test(txt);
+        return !pending && txt.length > 120;
+      }).catch(() => false);
+      if (ready) { await p.waitForTimeout(1200); break; } // small extra settle once content appears
+    }
   } catch (e) { errs.push('NAV: ' + String(e).slice(0, 120)); }
   const info = await p.evaluate(() => {
     const txt = (document.body.innerText || '').replace(/\s+/g, ' ').trim();
@@ -134,7 +147,7 @@ async function checkCell(ctx, key, section) {
            landed: info.landed, status, textLen: info.textLen, heading: info.heading, sample: info.sample, invis: info.invis, errs: errs.length, shot };
 }
 
-const b = await chromium.launch();
+const b = await ENGINE.launch();
 const rows = [];
 for (const key of PERSONAS) {
   const ctx = await b.newContext({ viewport: { width: 1366, height: 900 } });

@@ -6,7 +6,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 ---
 
 ## [Unreleased]
+
 ### Fixed
+
+- **HeirWelcome read the estate owner's `users/<principalId>` doc — `permission-denied` for every heir** (`web/src/components/guards/HeirWelcome.tsx`) — the heir's sacred-moment welcome fetched `users/${estate.principalId}` to show the owner's name/photo/lifespan, but Firestore (correctly) denies a heir any other user's doc, so the read **always** failed: the photo + lifespan never loaded for heirs in prod, only the name fallback showed, and every render logged a `permission-denied` console error (same cross-user-read class as the lockbox bug). Fix: drop the futile read; source the owner's display name from the readable estate doc (`estate.ownerName || estate.name`); photo/lifespan gracefully absent (as they already were). **Caught by the iOS-engine (WebKit) verification matrix** — Chromium masked it (the welcome stayed dismissed via localStorage; WebKit re-showed it), which is exactly the "don't assume same-bundle = same-render" value of claude-home's bind Note 1. Follow-up: denormalize owner photo + lifespan onto the estate doc to restore the full memorial welcome for heirs.
 - **iOS status bar is now light (white) content** (`web/ios/App/App/Info.plist`) — the app chrome behind the status bar is Royal Blue (`#133378`, `capacitor.config` backgroundColor + `contentInset: always`), on which iOS-default black status-bar text is barely legible. Set `UIViewControllerBasedStatusBarAppearance=false` + `UIStatusBarStyle=UIStatusBarStyleLightContent`. Verified in the iPhone 17 Pro simulator: time + WiFi/battery render white/legible.
 
 ### Fixed

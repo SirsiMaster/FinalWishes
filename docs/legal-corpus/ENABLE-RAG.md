@@ -1,10 +1,12 @@
 # Enabling the Legal RAG Corpus (CR-10) in Production
 
-**Status as of 2026-06-14:** The corpus is **LOADED** into Cloud SQL but the Shepherd RAG is
-**DISABLED** in production (the API logs `Legal RAG corpus disabled` because `RAG_DATABASE_URL`
-is unset on the Cloud Run service). Loading is therefore **inert** — no legal text reaches users
-until you complete the steps below. This is intentional: it puts a human gate between "data
-loaded" and "AI cites it to families."
+**Status as of 2026-06-15: ✅ ENABLED / LIVE in production.** `RAG_DATABASE_URL` is set on the
+`finalwishes-api` Cloud Run service (confirmed in the live service env), the startup log shows
+`Legal RAG corpus retriever initialized`, and the Shepherd grounds legal Q&A in the 64-chunk
+corpus (cites the corpus id per claim, refuses out-of-corpus legal questions, and always states
+"informational guidance, not legal advice — consult a licensed attorney"). Both gates below were
+cleared (Gate 1 owner-accepted 2026-06-15 — "we go on the legal"; Gate 2 applied). This doc is
+kept as the enablement record + re-ingest/maintenance runbook; the steps below are **already done**.
 
 ## What is already done
 
@@ -18,9 +20,9 @@ loaded" and "AI cites it to families."
   nearest-neighbour retrieval correct (IL statutes cluster, cosine 0.83–0.85).
 - Source of the text: `docs/legal-corpus/launch-states.json` (verbatim from official `.gov`
   publishers, per-chunk citations). Re-ingest is idempotent (`go run ./api/cmd/corpus-ingest
-  -manifest docs/legal-corpus/launch-states.json`).
+-manifest docs/legal-corpus/launch-states.json`).
 
-## Gate 1 — Legal review (owner / counsel) BEFORE enabling
+## Gate 1 — Legal review (owner / counsel) — ✅ CLEARED 2026-06-15
 
 The corpus text was **machine-captured** (deterministic HTML→text extraction, no LLM in the
 text path) and is **verbatim** from official sources, but `verified_at` is a machine-capture
@@ -28,7 +30,7 @@ stamp, **not** a human legal sign-off. Before the Shepherd cites this to grievin
 counsel should spot-check the captured text against the cited `source_url`s. Nothing below
 should run until this gate is cleared.
 
-## Gate 2 — Enable RAG on the Cloud Run service (one command)
+## Gate 2 — Enable RAG on the Cloud Run service — ✅ APPLIED (env set, live)
 
 The Cloud Run service `finalwishes-api` is already attached to the Cloud SQL instance (it uses
 the same instance for the vault). Enabling RAG is just two env vars (`GOOGLE_CLOUD_PROJECT` is

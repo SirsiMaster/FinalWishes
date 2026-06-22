@@ -4,29 +4,29 @@
 
 **✅ allowed + renders real content · 🔒 blocked → intentional gate (RoleGuard "This isn't part of your role" / IdentityGate MFA) · ❌ fail · ⬜ allowed but thin**
 
-| Section | Principal | Heir | Executor | Trustee | Legal | Cpa |
-|---|---|---|---|---|---|---|
-| `dashboard` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `life-chapters` | ✅ | ✅ | 🔒 | 🔒 | 🔒 | 🔒 |
-| `soul-log` | ✅ | ✅ | 🔒 | 🔒 | 🔒 | 🔒 |
-| `memoirs` | ✅ | ✅ | 🔒 | 🔒 | 🔒 | 🔒 |
-| `heirlooms` | ✅ | ✅ | 🔒 | 🔒 | 🔒 | 🔒 |
-| `assets` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `vault` | ✅ | 🔒 | ✅ | ✅ | ✅ | ✅ |
-| `forms` | ✅ | 🔒 | 🔒 | 🔒 | ✅ | 🔒 |
-| `lockbox` | ✅ | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 |
-| `directives` | ✅ | ✅ | ✅ | ✅ | ✅ | 🔒 |
-| `timecapsule` | ✅ | ✅ | 🔒 | 🔒 | 🔒 | 🔒 |
-| `beneficiaries` | ✅ | 🔒 | ✅ | ✅ | 🔒 | 🔒 |
-| `events` | ✅ | ✅ | ✅ | 🔒 | 🔒 | 🔒 |
-| `obituary` | ✅ | ✅ | ✅ | 🔒 | 🔒 | 🔒 |
-| `probate` | ✅ | 🔒 | ✅ | ✅ | 🔒 | 🔒 |
-| `notifications` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `pricing` | ✅ | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 |
-| `settings` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `attestation` | 🔒 | ✅ | ✅ | ✅ | ✅ | ✅ |
-| `estates` | ✅ | 🔒 | ✅ | ✅ | ✅ | ✅ |
-| `index` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Section         | Principal | Heir | Executor | Trustee | Legal | Cpa |
+| --------------- | --------- | ---- | -------- | ------- | ----- | --- |
+| `dashboard`     | ✅        | ✅   | ✅       | ✅      | ✅    | ✅  |
+| `life-chapters` | ✅        | ✅   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `soul-log`      | ✅        | ✅   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `memoirs`       | ✅        | ✅   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `heirlooms`     | ✅        | ✅   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `assets`        | ✅        | ✅   | ✅       | ✅      | ✅    | ✅  |
+| `vault`         | ✅        | 🔒   | ✅       | ✅      | ✅    | ✅  |
+| `forms`         | ✅        | 🔒   | 🔒       | 🔒      | ✅    | 🔒  |
+| `lockbox`       | ✅        | 🔒   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `directives`    | ✅        | ✅   | ✅       | ✅      | ✅    | 🔒  |
+| `timecapsule`   | ✅        | ✅   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `beneficiaries` | ✅        | 🔒   | ✅       | ✅      | 🔒    | 🔒  |
+| `events`        | ✅        | ✅   | ✅       | 🔒      | 🔒    | 🔒  |
+| `obituary`      | ✅        | ✅   | ✅       | 🔒      | 🔒    | 🔒  |
+| `probate`       | ✅        | 🔒   | ✅       | ✅      | 🔒    | 🔒  |
+| `notifications` | ✅        | ✅   | ✅       | ✅      | ✅    | ✅  |
+| `pricing`       | ✅        | 🔒   | 🔒       | 🔒      | 🔒    | 🔒  |
+| `settings`      | ✅        | ✅   | ✅       | ✅      | ✅    | ✅  |
+| `attestation`   | 🔒        | ✅   | ✅       | ✅      | ✅    | ✅  |
+| `estates`       | ✅        | 🔒   | ✅       | ✅      | ✅    | ✅  |
+| `index`         | ✅        | ✅   | ✅       | ✅      | ✅    | ✅  |
 
 ## Result
 
@@ -40,6 +40,31 @@
 
 - **IdentityGate** gates all fiduciaries on MFA ("Identity Verification Required") before any estate route — confirmed working (estate-scoped role).
 - **RoleGuard** blocks each persona from out-of-role sections with "This isn't part of your role" — no section-content leak.
+
+## iOS-engine (WebKit) render-walk — claude-home bind Note 1, BOUND PASS 2026-06-22
+
+The iOS Capacitor shell renders in **WKWebView = WebKit**, so the "same-bundle ≠ same-render"
+risk is Chromium-vs-WebKit. Re-ran the matrix against Playwright's **WebKit** engine (the actual
+iOS renderer) — `ENGINE=webkit node scripts/verify-persona-matrix.mjs` (single persistent page per
+persona + client-side SPA nav, so the in-memory Firebase auth/connection survives — WebKit re-inits
+those unreliably on full per-page reloads, which otherwise reads as false "blanks").
+
+**Result: engine parity established** — allow-cells render real content (76/76 on a clean run,
+0 white-card, 0 blank). **Caught TWO real prod bugs Chromium masked** (both the _global-`profile.role`
+vs estate-scoped-principal_ gating class — fixed by `useIsEstatePrincipal()` mirroring the firestore rule):
+
+| Bug                                                                                     | Where                     | Fix                                         |
+| :-------------------------------------------------------------------------------------- | :------------------------ | :------------------------------------------ |
+| `HeirWelcome` read the owner's `users/<principalId>` → permission-denied for every heir | heir sacred-moment screen | source name from estate doc (#34)           |
+| `InviteTeamMember` fetched `estate_invitations` for fiduciaries → permission-denied     | settings page             | gate render on `useIsEstatePrincipal` (#35) |
+
+Both deployed + re-verified clean. (cf. the lockbox fix #27 — same class.) WKWebView's stricter
+storage re-init re-showed components Chromium kept dismissed, exposing reads that were always firing.
+
+**Honest caveat:** live WebKit E2E has **run-to-run variance** — a confirmation re-run showed a
+transient MFA/TOTP login flake (one persona) and a post-deploy lazy-chunk MIME race
+(`'text/html' is not a valid JS MIME type` — a chunk briefly 404'd to the SPA index after a deploy;
+the route still rendered). Live-E2E artifacts, **not** app render bugs.
 
 ## Open / deferred
 

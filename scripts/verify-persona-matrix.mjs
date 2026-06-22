@@ -41,9 +41,16 @@ const email = k => `persona-${k}@finalwishes.app`;
 // 'index' = the estate root; others are /estates/<id>/<section>
 const routeFor = s => s === 'index' ? `/estates/${ESTATE}` : `/estates/${ESTATE}/${s}`;
 
+// Log in and return a PERSISTENT page (kept open). Section navigation is then client-side
+// (SPA, no full reload) so the in-memory Firebase auth + Firestore connection survive — WebKit
+// (the iOS WKWebView engine) re-inits those unreliably on a full per-page reload, which makes a
+// new-page-per-cell crawl flap between PendingState/permission-denied. errs is shared + cleared
+// per cell by checkCell.
 async function login(ctx, key) {
   const p = await ctx.newPage();
-  // /login auto-opens the sign-in modal (redirects to landing with the dialog open).
+  const errs = [];
+  p.on('console', m => m.type() === 'error' && errs.push(m.text().slice(0, 160)));
+  p.on('pageerror', e => errs.push('PAGEERR: ' + String(e).slice(0, 160)));
   await p.goto(BASE + '/login', { waitUntil: 'domcontentloaded', timeout: 45000 });
   await p.waitForTimeout(2500);
   if (!(await p.locator('#modal-identifier').count())) {
@@ -55,7 +62,6 @@ async function login(ctx, key) {
   await p.fill('#modal-password', pw(key));
   await p.locator('#modal-password').press('Enter');
   await p.waitForTimeout(3500);
-  // MFA challenge for enrolled fiduciary personas: compute the live TOTP code.
   if (MFA_SECRETS[key] && (await p.locator('#modal-mfa').count())) {
     await p.fill('#modal-mfa', authenticator.generate(MFA_SECRETS[key]));
     await p.locator('#modal-mfa').press('Enter').catch(() => {});
@@ -63,36 +69,37 @@ async function login(ctx, key) {
   } else {
     await p.waitForTimeout(1500);
   }
-  const loggedIn = await p.evaluate(() => !document.querySelector('#modal-identifier') && !document.querySelector('#modal-mfa'));
-  // Dismiss the first-run welcome interstitial ONCE (persists to localStorage in this context),
-  // else it intercepts every section route. OwnerWelcome="Start Building Your Legacy",
-  // HeirWelcome="View Estate Details".
-  if (loggedIn) {
+  const ok = await p.evaluate(() => !document.querySelector('#modal-identifier') && !document.querySelector('#modal-mfa'));
+  if (ok) {
     await p.goto(BASE + `/estates/${ESTATE}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-    await p.waitForTimeout(3000);
-    for (const label of ['Start Building Your Legacy', 'View Estate Details']) {
-      const btn = p.locator(`button:has-text("${label}")`).first();
-      if (await btn.count()) { await btn.click().catch(() => {}); await p.waitForTimeout(1500); break; }
+    await p.waitForTimeout(2500);
+    // Read the Firebase auth uid from IndexedDB, then inject BOTH welcome-seen keys so the
+    // OwnerWelcome/HeirWelcome first-run interstitial never intercepts the walk (the click-
+    // dismiss doesn't persist reliably in WebKit). A reload applies them.
+    const uid = await p.evaluate(() => new Promise((res) => {
+      const r = indexedDB.open('firebaseLocalStorageDb');
+      r.onsuccess = () => { try { const s = r.result.transaction('firebaseLocalStorage', 'readonly').objectStore('firebaseLocalStorage').getAll(); s.onsuccess = () => res(s.result.map(x => x.value).find(v => v && v.uid)?.uid || null); s.onerror = () => res(null); } catch { res(null); } };
+      r.onerror = () => res(null);
+    })).catch(() => null);
+    if (uid) {
+      await p.evaluate(({ e, uid }) => { const t = new Date().toISOString(); localStorage.setItem(`fw_owner_welcome_seen_${e}_${uid}`, t); localStorage.setItem(`fw_welcome_seen_${e}_${uid}`, t); }, { e: ESTATE, uid });
+      await p.reload({ waitUntil: 'domcontentloaded' }).catch(() => {});
+      await p.waitForTimeout(2500);
     }
   }
-  await p.close();
-  return loggedIn;
+  return { page: p, ok, errs };
 }
 
-async function checkCell(ctx, key, section) {
+async function checkCell(p, key, section, errs) {
   const allow = ACCESS[key]?.includes(section);
-  const errs = [];
-  const p = await ctx.newPage();
-  p.on('console', m => m.type() === 'error' && errs.push(m.text().slice(0, 160)));
-  p.on('pageerror', e => errs.push('PAGEERR: ' + String(e).slice(0, 160)));
-  let status = '?';
+  errs.length = 0; // per-cell console capture (handler attached once on the persistent page)
+  let status = 'csnav';
   try {
-    const resp = await p.goto(BASE + routeFor(section), { waitUntil: 'domcontentloaded', timeout: 45000 });
-    status = resp ? resp.status() : 'no-resp';
-    // Wait for the app to LEAVE the PendingState spinner ("Preparing...") and settle real
-    // content — poll instead of a fixed timeout. WebKit (the iOS WKWebView engine) resolves
-    // Firebase auth + lazy routes notably slower than Chromium, so a fixed 5s captured cells
-    // mid-load as false "blank"/permission-denied. Engine-agnostic: ~2s on Chromium, more on WebKit.
+    // CLIENT-SIDE SPA navigation (no full reload) — preserves the in-memory Firebase auth +
+    // Firestore connection. A full per-page goto makes WebKit re-init Firebase unreliably →
+    // PendingState/permission-denied flakiness that is NOT an iOS render bug.
+    await p.evaluate((path) => { window.history.pushState({}, '', path); window.dispatchEvent(new PopStateEvent('popstate')); }, routeFor(section));
+    // Wait for the app to LEAVE the PendingState spinner and settle real content.
     for (let i = 0; i < 16; i++) {
       await p.waitForTimeout(1000);
       const ready = await p.evaluate(() => {
@@ -100,7 +107,7 @@ async function checkCell(ctx, key, section) {
         const pending = /preparing your space/i.test(txt);
         return !pending && txt.length > 120;
       }).catch(() => false);
-      if (ready) { await p.waitForTimeout(1200); break; } // small extra settle once content appears
+      if (ready) { await p.waitForTimeout(1000); break; }
     }
   } catch (e) { errs.push('NAV: ' + String(e).slice(0, 120)); }
   const info = await p.evaluate(() => {
@@ -118,7 +125,6 @@ async function checkCell(ctx, key, section) {
   });
   const shot = `${EVID}/${key}__${section}.png`;
   await p.screenshot({ path: shot }).catch(() => {});
-  await p.close();
 
   // classify
   const stuckSpinner = info.spinners > 0 && info.textLen < 80;
@@ -151,11 +157,11 @@ const b = await ENGINE.launch();
 const rows = [];
 for (const key of PERSONAS) {
   const ctx = await b.newContext({ viewport: { width: 1366, height: 900 } });
-  const ok = await login(ctx, key);
+  const { page, ok, errs } = await login(ctx, key);
   console.log(`\n=== ${key} === login: ${ok ? 'OK' : 'FAILED'}`);
   if (!ok) { rows.push({ persona: key, section: '(login)', verdict: 'FAIL', note: 'login failed', expect: '-', landed: '-', status: '-', textLen: 0, invis: 0, errs: 0 }); await ctx.close(); continue; }
   for (const s of SECTIONS) {
-    const r = await checkCell(ctx, key, s);
+    const r = await checkCell(page, key, s, errs);
     rows.push(r);
     console.log(`  ${r.verdict.padEnd(5)} ${s.padEnd(14)} expect=${r.expect.padEnd(5)} landed=${(r.landed||'').padEnd(34)} txt=${String(r.textLen).padEnd(5)} err=${r.errs} ${r.note}`);
   }

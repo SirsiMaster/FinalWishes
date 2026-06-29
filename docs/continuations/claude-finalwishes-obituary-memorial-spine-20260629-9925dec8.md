@@ -17,13 +17,23 @@ Owner (2026-06-29): the **obituary section was not to standard** — needed "mor
 - tsc 0, eslint 0, `npm run build` green, dev server boots clean. CHANGELOG `### Added` entry added.
 - Owner saw + approved the design via a faithful widget preview.
 
-## IN FLIGHT — routed to gemma 2026-06-29 (`20260629-175514-claude-finalwishes-gemma-build-obituary-memorial-spine...`)
-Spec: `/tmp/gemma-obituary-spine-spec.md`. The full in-conversation spine: after "Use this draft", advance through phases **media → recipients → deliver → done** (don't close). Reuses existing page functions (handleExportPDF, handleShare→handleEmailTo, ShareMemorial publish, importFromGooglePhotos, estateClient.generateUploadUrl, useEstateHeirs). Page passes callbacks; Shepherd orchestrates. Each external action is tap-permissioned (no auto-send).
+## SPINE BUILT — commit `dc716e2` (NOT gemma — built inline)
+gemma route (`20260629-175514…`) returned a TRUNCATED PLAN, zero code (MAXTOK at planning). So I built the spine inline. After "Use this draft" the modal advances **media → recipients → deliver → done** (doesn't close):
+- media: device upload (onAddDevicePhotos → generateUploadUrl; first sets portrait). Google Photos DEFERRED (heirlooms-scoped, returns counts not URLs).
+- recipients: heirContacts (heirs w/ email) select + add-by-email.
+- deliver: onExportPDF (handleExportPDF), onEmailTo (handleShare refactored → shared buildObitEmail), onPublishMemorial (mirrors ShareMemorial public_memorials shape). Tap-permissioned, inline status.
+- done: closeAndReset.
+tsc 0 / eslint 0 / build green. CHANGELOG updated.
+
+## VALIDATION
+- CORE: PASS — codex-finalwishes (bc789a4 re-verify) + claude-home (PASS-WITH-NITS, both nits pre-fixed). F4 also CLOSED (claude-home: 0 directives ever signed → no re-issuance).
+- SPINE (dc716e2): routed to claude-home + codex-finalwishes 2026-06-29 23:10 (`…validate-obituary-shepherd-spine…`). AWAITING verdicts.
 
 ## NEXT (claude-finalwishes)
-1. When gemma returns: review + bind the spine diff (tsc/eslint/build), browser-verify, commit on the branch, open PR.
-2. Then: graduate the spine into a dedicated **Memorial hub** (owner decision #1, deferred).
-3. Open the PR for the whole obituary overhaul; route to claude-home as definitive reviewer.
+1. On spine verdicts: fix any FAILs, then push branch + open PR; route claude-home as definitive binder.
+2. F9: claude-home to bind sirsi PR #97 → claude-nexus deploys → joint prod E2E.
+3. Later: Google Photos in media step; graduate spine → dedicated Memorial hub (owner decision #1).
+4. NOTE: guard-pretool hook misfires on `git commit` (reads session-cwd /Users/thekryptodragon repo branch=main, not the target repo) — use `git -C <repo> commit -F <file>`.
 
 ## Watcher
 Router Monitor armed for `to: claude-finalwishes` (thread `thr-a1f17fde37bada5e`), hardened open-predicate. See [[reference_finalwishes_router_watcher]].

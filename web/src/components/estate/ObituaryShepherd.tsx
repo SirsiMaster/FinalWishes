@@ -11,9 +11,9 @@
  * restrained motion, no clinical form-feel. Scripted empathy for the questions
  * (never wanders, never asks something insensitive); AI only for composition.
  */
-import { useCallback, useMemo, useRef, useState, useEffect } from 'react'
+import { useCallback, useMemo, useRef, useState, useEffect, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Compass, ArrowLeft, ArrowRight, Loader2, Sparkles, Check, RefreshCw } from 'lucide-react'
+import { Compass, ArrowLeft, ArrowRight, Loader2, Sparkles, Check, RefreshCw, Upload, Image as ImageIcon, Mail, Printer, Share2, Copy, Heart, AlertCircle } from 'lucide-react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { auth } from '../../lib/firebase'
@@ -145,7 +145,12 @@ function their(s: Subject): string {
   return s === 'self' ? 'your' : 'their'
 }
 
-type Phase = 'intro' | 'interview' | 'composing' | 'review'
+type Phase = 'intro' | 'interview' | 'composing' | 'review' | 'media' | 'recipients' | 'deliver' | 'done'
+
+export interface Recipient {
+  name?: string
+  email: string
+}
 
 export interface ServiceSeed {
   type?: string
@@ -162,8 +167,15 @@ export function ObituaryShepherd({
   subjectName,
   subject = 'self',
   heirNames = [],
+  heirContacts = [],
   service,
   onDraftReady,
+  onAddDevicePhotos,
+  onImportGooglePhotos,
+  photosConfigured = false,
+  onExportPDF,
+  onEmailTo,
+  onPublishMemorial,
 }: {
   estateId: string
   open: boolean
@@ -172,9 +184,23 @@ export function ObituaryShepherd({
   /** 'self' = principal writing their own; 'other' = settling a loss. */
   subject?: Subject
   heirNames?: string[]
+  /** Heirs with emails, for the recipients step. */
+  heirContacts?: Recipient[]
   service?: ServiceSeed
   /** Called with the finished draft (plain text). Parent drops it into the editor. */
   onDraftReady: (text: string) => void
+  /** Media: upload device files → returns the added image URLs (for thumbnails). */
+  onAddDevicePhotos?: (files: FileList) => Promise<string[]>
+  /** Media: import from Google Photos → returns added image URLs. */
+  onImportGooglePhotos?: () => Promise<string[]>
+  /** Whether the Google Photos picker is configured (else that option is hidden). */
+  photosConfigured?: boolean
+  /** Deliver: print / download the obituary PDF. */
+  onExportPDF?: () => Promise<void> | void
+  /** Deliver: email the obituary to the chosen recipients. */
+  onEmailTo?: (recipients: Recipient[]) => Promise<void>
+  /** Deliver: publish the public memorial → returns its shareable URL. */
+  onPublishMemorial?: () => Promise<{ url: string }>
 }) {
   const [phase, setPhase] = useState<Phase>('intro')
   const [stepIndex, setStepIndex] = useState(0)
@@ -184,6 +210,18 @@ export function ObituaryShepherd({
   const [error, setError] = useState<string | null>(null)
   const [refining, setRefining] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const photoInputRef = useRef<HTMLInputElement>(null)
+
+  // Memorial-spine state (media → recipients → deliver).
+  const [photos, setPhotos] = useState<string[]>([])
+  const [photoBusy, setPhotoBusy] = useState(false)
+  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set())
+  const [extraRecipients, setExtraRecipients] = useState<Recipient[]>([])
+  const [addEmail, setAddEmail] = useState('')
+  const [addName, setAddName] = useState('')
+  // deliver action → 'idle' | 'busy' | 'done' | 'error'
+  const [deliver, setDeliver] = useState<Record<string, 'idle' | 'busy' | 'done' | 'error'>>({})
+  const [publishedUrl, setPublishedUrl] = useState<string | null>(null)
 
   // Questions that actually apply (drop the empty "passed" step for self-planning).
   const steps = useMemo(
@@ -314,6 +352,14 @@ export function ObituaryShepherd({
     setCurrent('')
     setDraft('')
     setError(null)
+    setPhotos([])
+    setPhotoBusy(false)
+    setSelectedEmails(new Set())
+    setExtraRecipients([])
+    setAddEmail('')
+    setAddName('')
+    setDeliver({})
+    setPublishedUrl(null)
   }, [])
 
   // Single close path: the modal stays mounted (parent owns `open`), so its state
@@ -329,10 +375,87 @@ export function ObituaryShepherd({
     else onOpenChange(true)
   }, [closeAndReset, onOpenChange])
 
+  // "Use this draft" now persists the draft into the editor AND continues the
+  // conversation into the memorial spine (media → recipients → deliver), instead
+  // of closing. The grieving family stays held the whole way through.
   const useThisDraft = useCallback(() => {
     onDraftReady(draft)
-    closeAndReset()
-  }, [draft, onDraftReady, closeAndReset])
+    setPhase('media')
+  }, [draft, onDraftReady])
+
+  // ---- Media ----
+  const handleDeviceFiles = useCallback(async (files: FileList | null) => {
+    if (!files || files.length === 0 || !onAddDevicePhotos) return
+    setPhotoBusy(true)
+    setError(null)
+    try {
+      const urls = await onAddDevicePhotos(files)
+      setPhotos((prev) => [...prev, ...urls])
+    } catch {
+      setError('Those photos could not be added. You can try again or continue.')
+    } finally {
+      setPhotoBusy(false)
+      if (photoInputRef.current) photoInputRef.current.value = ''
+    }
+  }, [onAddDevicePhotos])
+
+  const handleImportPhotos = useCallback(async () => {
+    if (!onImportGooglePhotos) return
+    setPhotoBusy(true)
+    setError(null)
+    try {
+      const urls = await onImportGooglePhotos()
+      setPhotos((prev) => [...prev, ...urls])
+    } catch {
+      setError('Google Photos could not be reached. You can upload from your device instead.')
+    } finally {
+      setPhotoBusy(false)
+    }
+  }, [onImportGooglePhotos])
+
+  // ---- Recipients ----
+  const toggleEmail = useCallback((email: string) => {
+    setSelectedEmails((prev) => {
+      const next = new Set(prev)
+      if (next.has(email)) next.delete(email)
+      else next.add(email)
+      return next
+    })
+  }, [])
+
+  const addRecipient = useCallback(() => {
+    const email = addEmail.trim()
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return
+    setExtraRecipients((prev) => prev.some((r) => r.email === email) ? prev : [...prev, { name: addName.trim() || undefined, email }])
+    setSelectedEmails((prev) => new Set(prev).add(email))
+    setAddEmail('')
+    setAddName('')
+  }, [addEmail, addName])
+
+  const chosenRecipients = useMemo<Recipient[]>(() => {
+    const fromHeirs = heirContacts.filter((h) => h.email && selectedEmails.has(h.email))
+    const fromExtra = extraRecipients.filter((r) => selectedEmails.has(r.email))
+    const seen = new Set<string>()
+    return [...fromHeirs, ...fromExtra].filter((r) => (seen.has(r.email) ? false : (seen.add(r.email), true)))
+  }, [heirContacts, extraRecipients, selectedEmails])
+
+  // ---- Deliver ----
+  const runDeliver = useCallback(async (key: string, fn: () => Promise<unknown>) => {
+    setDeliver((d) => ({ ...d, [key]: 'busy' }))
+    try {
+      await fn()
+      setDeliver((d) => ({ ...d, [key]: 'done' }))
+    } catch {
+      setDeliver((d) => ({ ...d, [key]: 'error' }))
+    }
+  }, [])
+
+  const doExport = useCallback(() => runDeliver('pdf', async () => { await onExportPDF?.() }), [runDeliver, onExportPDF])
+  const doEmail = useCallback(() => runDeliver('email', async () => { await onEmailTo?.(chosenRecipients) }), [runDeliver, onEmailTo, chosenRecipients])
+  const doPublish = useCallback(() => runDeliver('publish', async () => {
+    const r = await onPublishMemorial?.()
+    if (r?.url) setPublishedUrl(r.url)
+  }), [runDeliver, onPublishMemorial])
 
   const canContinue = step ? step.optional || current.trim().length > 0 : false
   const progressPct = total > 0 ? Math.round(((stepIndex + 1) / total) * 100) : 0
@@ -547,6 +670,100 @@ export function ObituaryShepherd({
                 )}
               </motion.div>
             )}
+
+            {/* MEDIA */}
+            {phase === 'media' && (
+              <motion.div key="media" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+                <SpineHeader step={1} label="Photos" title="Add a portrait and a few photos?" help="These appear on the memorial and the printed record. Add as many as feels right — or skip this for now." />
+                {error && <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-[13px] font-medium text-red-700">{error}</p>}
+                <input ref={photoInputRef} type="file" accept="image/*" multiple className="hidden" aria-label="Upload photos from this device" onChange={(e) => handleDeviceFiles(e.target.files)} />
+                <div className="flex flex-wrap gap-3">
+                  {onAddDevicePhotos && (
+                    <button type="button" disabled={photoBusy} onClick={() => photoInputRef.current?.click()} className="inline-flex items-center gap-2 rounded-2xl border border-[var(--neutral-border)] px-5 py-3 text-[13px] font-semibold text-[var(--royal)] transition-colors hover:border-[var(--royal)]/40 disabled:opacity-50">
+                      <Upload className="h-4 w-4" /> Upload from this device
+                    </button>
+                  )}
+                  {photosConfigured && onImportGooglePhotos && (
+                    <button type="button" disabled={photoBusy} onClick={handleImportPhotos} className="inline-flex items-center gap-2 rounded-2xl border border-[var(--neutral-border)] px-5 py-3 text-[13px] font-semibold text-[var(--royal)] transition-colors hover:border-[var(--royal)]/40 disabled:opacity-50">
+                      <ImageIcon className="h-4 w-4" /> Choose from Google Photos
+                    </button>
+                  )}
+                  {photoBusy && <span className="inline-flex items-center gap-2 text-[13px] text-ink-muted"><Loader2 className="h-4 w-4 animate-spin" /> Adding…</span>}
+                </div>
+                {photos.length > 0 && (
+                  <div className="mt-5 grid grid-cols-4 gap-2.5 sm:grid-cols-6">
+                    {photos.map((url, i) => (
+                      <img key={`${url}-${i}`} src={url} alt={`In memory of ${firstWord(principalName)}, ${i + 1}`} className="aspect-square w-full rounded-xl object-cover border border-[var(--neutral-border)]" />
+                    ))}
+                  </div>
+                )}
+                <SpineFooter onClose={closeAndReset} onContinue={() => { setError(null); setPhase('recipients') }} continueLabel={photos.length ? 'Continue' : 'Skip for now'} />
+              </motion.div>
+            )}
+
+            {/* RECIPIENTS */}
+            {phase === 'recipients' && (
+              <motion.div key="recipients" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+                <SpineHeader step={2} label="Recipients" title="Who should receive this?" help="We’ll send them the obituary. Choose from family below, or add anyone by email." />
+                {heirContacts.filter((h) => h.email).length > 0 && (
+                  <div className="space-y-1.5">
+                    {heirContacts.filter((h) => h.email).map((h) => (
+                      <button key={h.email} type="button" onClick={() => toggleEmail(h.email)} className="flex w-full items-center justify-between rounded-xl border border-[var(--neutral-border)] px-4 py-3 text-left transition-colors hover:border-[var(--royal)]/30">
+                        <span>
+                          <span className="block text-[14px] font-semibold text-ink">{h.name || h.email}</span>
+                          {h.name && <span className="block text-[12px] text-ink-muted">{h.email}</span>}
+                        </span>
+                        <span className={`flex h-5 w-5 items-center justify-center rounded-md border ${selectedEmails.has(h.email) ? 'border-[var(--royal)] bg-[var(--royal)] text-white' : 'border-[var(--neutral-border)]'}`}>
+                          {selectedEmails.has(h.email) && <Check className="h-3.5 w-3.5" />}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {extraRecipients.filter((r) => !heirContacts.some((h) => h.email === r.email)).map((r) => (
+                  <div key={r.email} className="mt-1.5 flex items-center justify-between rounded-xl border border-[var(--royal)]/30 bg-[var(--royal)]/5 px-4 py-3">
+                    <span className="text-[14px] font-semibold text-ink">{r.name || r.email}</span>
+                    <Check className="h-4 w-4 text-[var(--royal)]" />
+                  </div>
+                ))}
+                <div className="mt-4 flex flex-wrap items-end gap-2">
+                  <input value={addName} onChange={(e) => setAddName(e.target.value)} placeholder="Name (optional)" aria-label="Recipient name" className="min-w-0 flex-1 rounded-xl border border-[var(--neutral-border)] bg-white px-3.5 py-2.5 text-[14px] text-ink outline-none focus:border-[var(--royal)]" />
+                  <input value={addEmail} onChange={(e) => setAddEmail(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addRecipient() } }} placeholder="name@example.com" aria-label="Recipient email" className="min-w-0 flex-[2] rounded-xl border border-[var(--neutral-border)] bg-white px-3.5 py-2.5 text-[14px] text-ink outline-none focus:border-[var(--royal)]" />
+                  <Button onClick={addRecipient} variant="outline" className="rounded-xl px-5 py-2.5 h-auto font-semibold text-[13px]">Add</Button>
+                </div>
+                <p className="mt-3 text-[12px] text-ink-muted">{chosenRecipients.length} recipient{chosenRecipients.length === 1 ? '' : 's'} selected.</p>
+                <SpineFooter onBack={() => setPhase('media')} onContinue={() => setPhase('deliver')} continueLabel="Continue" />
+              </motion.div>
+            )}
+
+            {/* DELIVER */}
+            {phase === 'deliver' && (
+              <motion.div key="deliver" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+                <SpineHeader step={3} label="Share" title="How would you like to share it?" help="Each is yours to choose — nothing is sent until you tap it." />
+                <div className="space-y-2.5">
+                  <DeliverRow icon={<Printer className="h-4 w-4" />} label="Print or download a PDF" status={deliver.pdf} onClick={doExport} disabled={!onExportPDF} doneLabel="PDF ready" />
+                  <DeliverRow icon={<Mail className="h-4 w-4" />} label={chosenRecipients.length ? `Email to ${chosenRecipients.length} recipient${chosenRecipients.length === 1 ? '' : 's'}` : 'Email a copy to yourself'} status={deliver.email} onClick={doEmail} disabled={!onEmailTo} doneLabel="Sent" />
+                  <DeliverRow icon={<Share2 className="h-4 w-4" />} label="Create a public memorial (share to social)" status={deliver.publish} onClick={doPublish} disabled={!onPublishMemorial} doneLabel="Published" />
+                </div>
+                {publishedUrl && (
+                  <div className="mt-3 flex items-center gap-2 rounded-xl border border-[var(--neutral-border)] bg-[var(--neutral-faint)] px-4 py-3">
+                    <span className="min-w-0 flex-1 truncate text-[13px] text-[var(--royal)]">{publishedUrl}</span>
+                    <button type="button" aria-label="Copy memorial link" onClick={() => navigator.clipboard?.writeText(publishedUrl)} className="inline-flex items-center gap-1 text-[12px] font-semibold text-[var(--royal)]"><Copy className="h-3.5 w-3.5" /> Copy</button>
+                  </div>
+                )}
+                <SpineFooter onBack={() => setPhase('recipients')} onContinue={() => setPhase('done')} continueLabel="Finish" />
+              </motion.div>
+            )}
+
+            {/* DONE */}
+            {phase === 'done' && (
+              <motion.div key="done" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center py-10 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--gold)]/15 text-[var(--gold)]"><Heart className="h-6 w-6" /></div>
+                <p className="mt-5 font-[family-name:var(--font-cinzel)] text-xl font-bold text-[var(--royal)]">It’s ready.</p>
+                <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-ink-muted">You’ve done a beautiful thing — {firstWord(principalName)}’s story is saved, and ready to share whenever your family is.</p>
+                <Button onClick={closeAndReset} className="mt-7 bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-8 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95">Close</Button>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </DialogContent>
@@ -556,6 +773,59 @@ export function ObituaryShepherd({
 
 function cap(s: string): string {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s
+}
+
+// ---- Memorial-spine sub-components (shared chrome for media/recipients/deliver) ----
+
+function SpineHeader({ step, label, title, help }: { step: number; label: string; title: string; help: string }) {
+  return (
+    <div className="mb-6">
+      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--royal)]/45">
+        Step {step} of 3 · {label}
+      </p>
+      <h3 className="font-[family-name:var(--font-cinzel)] text-2xl font-bold leading-snug text-[var(--royal)]">{title}</h3>
+      <p className="mt-2 text-[13.5px] leading-relaxed text-ink-muted">{help}</p>
+    </div>
+  )
+}
+
+function SpineFooter({ onBack, onClose, onContinue, continueLabel }: { onBack?: () => void; onClose?: () => void; onContinue: () => void; continueLabel: string }) {
+  return (
+    <div className="mt-7 flex items-center justify-between">
+      {onBack ? (
+        <Button variant="ghost" onClick={onBack} className="text-ink-muted hover:text-[var(--royal)] px-3 py-2 h-auto rounded-xl font-semibold text-[13px]">
+          <ArrowLeft className="mr-1 h-4 w-4" /> Back
+        </Button>
+      ) : (
+        <button type="button" onClick={onClose} className="text-[13px] font-semibold text-ink-muted hover:text-[var(--royal)]">Done for now</button>
+      )}
+      <Button onClick={onContinue} className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-7 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95">
+        {continueLabel}
+        <ArrowRight className="ml-1 h-4 w-4" />
+      </Button>
+    </div>
+  )
+}
+
+function DeliverRow({ icon, label, status = 'idle', onClick, disabled, doneLabel }: { icon: ReactNode; label: string; status?: 'idle' | 'busy' | 'done' | 'error'; onClick: () => void; disabled?: boolean; doneLabel: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled || status === 'busy'}
+      className="flex w-full items-center justify-between rounded-2xl border border-[var(--neutral-border)] px-5 py-4 text-left transition-colors hover:border-[var(--royal)]/40 disabled:opacity-50"
+    >
+      <span className="flex items-center gap-3">
+        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--royal)]/8 text-[var(--royal)]">{icon}</span>
+        <span className="text-[14px] font-semibold text-ink">{label}</span>
+      </span>
+      <span className="text-[12.5px] font-semibold">
+        {status === 'busy' && <Loader2 className="h-4 w-4 animate-spin text-[var(--royal)]" />}
+        {status === 'done' && <span className="inline-flex items-center gap-1 text-green-600"><Check className="h-4 w-4" /> {doneLabel}</span>}
+        {status === 'error' && <span className="inline-flex items-center gap-1 text-red-600"><AlertCircle className="h-4 w-4" /> Try again</span>}
+      </span>
+    </button>
+  )
 }
 
 // Assemble the structured interview answers into a rich, faithful prompt. The

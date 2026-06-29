@@ -14,11 +14,10 @@ import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
 import { Download, QrCode } from 'lucide-react'
 import { ShareMemorial } from '@/components/estate/ShareMemorial'
+import { ObituaryShepherd } from '@/components/estate/ObituaryShepherd'
 import { EditorToolbar } from './estates.$estateId.directives.lazy'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export const Route = createLazyFileRoute('/estates/$estateId/obituary')({
   component: ObituaryPage,
@@ -37,10 +36,10 @@ function ObituaryPage() {
   const [editing, setEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [shareMemorialOpen, setShareMemorialOpen] = useState(false);
+  const [shepherdOpen, setShepherdOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const estateId = routeId;
   const { user, profile } = useAuth();
@@ -54,6 +53,12 @@ function ObituaryPage() {
     []
   );
   const serviceEvent = events.find(e => e.type === 'funeral' || e.type === 'memorial_service');
+
+  // Planning mode drives the Shepherd's voice: 'after_loss' = settling a loss
+  // (speak in third person about "them"); otherwise the principal plans ahead.
+  const { data: intake } = useDocument<{ planningMode?: string }>(`estates/${estateId}/metadata/intake`);
+  const shepherdSubject: 'self' | 'other' = intake?.planningMode === 'after_loss' ? 'other' : 'self';
+  const heirNames = useMemo(() => (heirs?.map((h) => h.fullName).filter(Boolean) as string[]) || [], [heirs]);
 
   const isSigned = !!obit?.signature;
 
@@ -155,45 +160,23 @@ function ObituaryPage() {
     }
   };
 
-  const handleAIDraft = async () => {
-    setAiLoading(true);
-    try {
-      const survivorNames = heirs?.map((h) => h.fullName).filter(Boolean) || [];
-      const prompt = `Write a respectful obituary draft for ${userName || 'the estate principal'}. Survivors include: ${survivorNames.length > 0 ? survivorNames.join(', ') : 'family members (not yet specified)'}. Keep the tone dignified and warm.`;
-
-      const token = user ? await user.getIdToken() : null;
-      const res = await fetch(`${API_BASE}/api/v1/guidance/assist-obituary`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ prompt, estateId }),
-      });
-
-      if (!res.ok) throw new Error(`AI request failed: ${res.status}`);
-      const data = await res.json();
-      const draft = data.content || data.text || data.response || '';
-
-      // Populate the editor — switch to editing mode if not already
-      if (!editing) setEditing(true);
-      // Use a short delay so the editor updates after editing state changes
-      setTimeout(() => {
-        if (editor) {
-          // Wrap plaintext AI draft in paragraphs if needed
-          const htmlDraft = draft.trimStart().startsWith('<')
-            ? draft
-            : draft.split('\n').filter(Boolean).map((line: string) => `<p>${line}</p>`).join('');
-          editor.commands.setContent(htmlDraft);
-        }
-      }, 100);
-    } catch (err) {
-      console.error('[AIDraft] Error:', err);
-      toast.error('Failed to generate AI draft. Please try again.');
-    } finally {
-      setAiLoading(false);
-    }
-  };
+  // Receive the finished draft from the guided Shepherd: drop it into the editor,
+  // switch to editing so the family can refine, and persist it as a draft.
+  const handleShepherdDraft = useCallback((text: string) => {
+    const htmlDraft = text.trimStart().startsWith('<')
+      ? text
+      : text.split('\n').filter(Boolean).map((line) => `<p>${line}</p>`).join('');
+    setEditing(true);
+    setTimeout(() => editor?.commands.setContent(htmlDraft), 100);
+    void setDoc(doc(db, `estates/${estateId}/governance`, 'obituary'), {
+      content: htmlDraft,
+      status: 'Draft',
+      last_updated: serverTimestamp(),
+    }, { merge: true }).catch((err) => {
+      console.error('[ShepherdDraft] Save error:', err);
+      toast.error('Draft is in the editor but could not be saved yet — press Save Draft.');
+    });
+  }, [editor, estateId]);
 
   const handleShare = async () => {
     if (!obit?.content) return;
@@ -349,21 +332,12 @@ function ObituaryPage() {
         </div>
         <div className="flex gap-3">
           <Button
-            onClick={handleAIDraft}
-            disabled={aiLoading || isSigned}
+            onClick={() => setShepherdOpen(true)}
+            disabled={isSigned}
             className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
           >
-            {aiLoading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Drafting...
-              </>
-            ) : (
-              <>
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                AI Draft
-              </>
-            )}
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+            {obit?.content ? 'Rewrite with Shepherd' : 'Write with Shepherd'}
           </Button>
           <Button
             onClick={() => setModalOpen(true)}
@@ -520,6 +494,17 @@ function ObituaryPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ObituaryShepherd
+        estateId={estateId}
+        open={shepherdOpen}
+        onOpenChange={setShepherdOpen}
+        subjectName={userName}
+        subject={shepherdSubject}
+        heirNames={heirNames}
+        service={serviceEvent ? { type: serviceEvent.type, date: serviceEvent.date, time: serviceEvent.time, location: serviceEvent.location, address: serviceEvent.address } : undefined}
+        onDraftReady={handleShepherdDraft}
+      />
 
       <ShareMemorial
         estateId={estateId}

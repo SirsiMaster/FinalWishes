@@ -316,18 +316,29 @@ export function ObituaryShepherd({
     setError(null)
   }, [])
 
+  // Single close path: the modal stays mounted (parent owns `open`), so its state
+  // would otherwise survive a close. Reset after the close animation so reopening
+  // always starts clean — covers the X, outside-dismiss, and "Use this draft".
+  const closeAndReset = useCallback(() => {
+    onOpenChange(false)
+    setTimeout(restart, 300)
+  }, [onOpenChange, restart])
+
+  const handleOpenChange = useCallback((next: boolean) => {
+    if (!next) closeAndReset()
+    else onOpenChange(true)
+  }, [closeAndReset, onOpenChange])
+
   const useThisDraft = useCallback(() => {
     onDraftReady(draft)
-    onOpenChange(false)
-    // Reset for next time after the dialog closes.
-    setTimeout(restart, 300)
-  }, [draft, onDraftReady, onOpenChange, restart])
+    closeAndReset()
+  }, [draft, onDraftReady, closeAndReset])
 
   const canContinue = step ? step.optional || current.trim().length > 0 : false
   const progressPct = total > 0 ? Math.round(((stepIndex + 1) / total) * 100) : 0
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className="sm:max-w-2xl rounded-[2.5rem] p-0 overflow-hidden border-neutral-border shadow-2xl"
         showCloseButton

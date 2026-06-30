@@ -1,3 +1,6 @@
+// Recover from stale-deploy lazy-chunk MIME failures — must register before any
+// lazy import() can fire (see lib/chunk-reload.ts).
+import './lib/chunk-reload'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'

@@ -1,7 +1,7 @@
 # Deploy preview channels on PRs to finalwishes-prod
 name: Deploy to Firebase Hosting on PR (FinalWishes)
 
-'on': pull_request
+"on": pull_request
 
 permissions:
   checks: write
@@ -9,8 +9,8 @@ permissions:
   pull-requests: write
 
 env:
-  NODE_VERSION: '22.x'
-  GO_VERSION: '1.26'
+  NODE_VERSION: "22.x"
+  GO_VERSION: "1.26"
 
 jobs:
   # ===========================================
@@ -61,7 +61,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
 
       - name: Install dependencies
@@ -87,7 +87,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: functions/package-lock.json
 
       - name: Install dependencies
@@ -111,7 +111,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
 
       - name: Install dependencies
@@ -125,7 +125,7 @@ jobs:
       - name: Check Firebase preview credentials
         id: firebase-preview
         env:
-          FIREBASE_SERVICE_ACCOUNT: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}'
+          FIREBASE_SERVICE_ACCOUNT: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}"
         run: |
           if [ -n "$FIREBASE_SERVICE_ACCOUNT" ]; then
             echo "available=true" >> "$GITHUB_OUTPUT"
@@ -135,9 +135,15 @@ jobs:
           fi
 
       - name: Deploy preview
+        # The preview channel is a convenience, NOT a correctness gate (build/lint/
+        # test above are the real gates). action-hosting-deploy hard-fails with
+        # Firebase 400 FAILED_PRECONDITION ("supplied version is the current active
+        # version") when a re-run/identical build re-releases to the channel, which
+        # red-X'd every PR. Don't let that block the job.
+        continue-on-error: true
         if: ${{ steps.firebase-preview.outputs.available == 'true' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FINALWISHES_PROD }}"
           projectId: finalwishes-prod

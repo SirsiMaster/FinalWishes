@@ -2,7 +2,7 @@
 import { createLazyFileRoute, useParams } from '@tanstack/react-router'
 import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react'
 import { useDocument, useEstateHeirs, useCollection } from '../lib/firestore'
-import { doc, setDoc, addDoc, collection, serverTimestamp, type Timestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, addDoc, collection, serverTimestamp, type Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../lib/auth'
 import { estateClient } from '../lib/client'
@@ -14,11 +14,10 @@ import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
 import { Download, QrCode } from 'lucide-react'
 import { ShareMemorial } from '@/components/estate/ShareMemorial'
+import { ObituaryShepherd } from '@/components/estate/ObituaryShepherd'
 import { EditorToolbar } from './estates.$estateId.directives.lazy'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export const Route = createLazyFileRoute('/estates/$estateId/obituary')({
   component: ObituaryPage,
@@ -37,10 +36,14 @@ function ObituaryPage() {
   const [editing, setEditing] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [shareMemorialOpen, setShareMemorialOpen] = useState(false);
+  const [shepherdOpen, setShepherdOpen] = useState(false);
+  // The freshest accepted obituary HTML, set synchronously by the Shepherd handoff
+  // and by editor saves — so delivery (PDF/email/publish) never races the async
+  // Firestore write of obit.content. Falls back to obit.content when unset.
+  const [liveContent, setLiveContent] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const estateId = routeId;
   const { user, profile } = useAuth();
@@ -54,6 +57,12 @@ function ObituaryPage() {
     []
   );
   const serviceEvent = events.find(e => e.type === 'funeral' || e.type === 'memorial_service');
+
+  // Planning mode drives the Shepherd's voice: 'after_loss' = settling a loss
+  // (speak in third person about "them"); otherwise the principal plans ahead.
+  const { data: intake } = useDocument<{ planningMode?: string }>(`estates/${estateId}/metadata/intake`);
+  const shepherdSubject: 'self' | 'other' = intake?.planningMode === 'after_loss' ? 'other' : 'self';
+  const heirNames = useMemo(() => (heirs?.map((h) => h.fullName).filter(Boolean) as string[]) || [], [heirs]);
 
   const isSigned = !!obit?.signature;
 
@@ -124,6 +133,7 @@ function ObituaryPage() {
   const handleSave = async () => {
     if (!editor) return;
     const content = editor.getHTML();
+    setLiveContent(content);
     setSaving(true);
     try {
       await setDoc(doc(db, `estates/${estateId}/governance`, 'obituary'), {
@@ -155,75 +165,70 @@ function ObituaryPage() {
     }
   };
 
-  const handleAIDraft = async () => {
-    setAiLoading(true);
-    try {
-      const survivorNames = heirs?.map((h) => h.fullName).filter(Boolean) || [];
-      const prompt = `Write a respectful obituary draft for ${userName || 'the estate principal'}. Survivors include: ${survivorNames.length > 0 ? survivorNames.join(', ') : 'family members (not yet specified)'}. Keep the tone dignified and warm.`;
+  // Receive the finished draft from the guided Shepherd: drop it into the editor,
+  // switch to editing so the family can refine, and persist it as a draft.
+  const handleShepherdDraft = useCallback((text: string) => {
+    const htmlDraft = text.trimStart().startsWith('<')
+      ? text
+      : text.split('\n').filter(Boolean).map((line) => `<p>${line}</p>`).join('');
+    setLiveContent(htmlDraft);
+    setEditing(true);
+    setTimeout(() => editor?.commands.setContent(htmlDraft), 100);
+    void setDoc(doc(db, `estates/${estateId}/governance`, 'obituary'), {
+      content: htmlDraft,
+      status: 'Draft',
+      last_updated: serverTimestamp(),
+    }, { merge: true }).catch((err) => {
+      console.error('[ShepherdDraft] Save error:', err);
+      toast.error('Draft is in the editor but could not be saved yet — press Save Draft.');
+    });
+  }, [editor, estateId]);
 
-      const token = user ? await user.getIdToken() : null;
-      const res = await fetch(`${API_BASE}/api/v1/guidance/assist-obituary`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ prompt, estateId }),
+  // Freshest accepted obituary content — prefers the synchronously-set draft/edit
+  // over the async Firestore hook, so delivery right after "Use this draft" is never
+  // stale or blank (codex-finalwishes spine validation).
+  const resolveContent = useCallback(() => liveContent ?? obit?.content ?? '', [liveContent, obit?.content]);
+
+  // Shared obituary email body. Rendered by the recipient's email client OUTSIDE
+  // the app's CSS scope, so colors MUST be literal hex (Royal Neo-Deco ink/muted).
+  const buildObitEmail = useCallback(() => ({
+    subject: `Obituary: ${userName || 'Estate Record'}`,
+    html: `
+            <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
+              <h1 style="font-family: 'Cinzel', serif; color: #142848; font-size: 28px; margin-bottom: 8px;">Final Record</h1>
+              <p style="color: #4A5C7A; font-size: 14px; margin-bottom: 24px;">Official obituary for the ${userName || 'estate'} record.</p>
+              <div style="background: #F5F7FA; border: 1px solid #E2E8F0; border-radius: 12px; padding: 24px; white-space: pre-wrap; color: #142848; font-size: 16px; line-height: 1.7;">
+                ${resolveContent().replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}
+              </div>
+              ${isSigned ? `<p style="margin-top: 24px; color: #16a34a; font-weight: bold;">Signed by: ${obit?.signature}</p>` : ''}
+              <p style="margin-top: 32px; color: #4A5C7A; font-size: 11px;">Sent from FinalWishes Estate Platform</p>
+            </div>
+          `,
+  }), [userName, resolveContent, obit?.signature, isSigned]);
+
+  // Email the obituary to a list of recipients (one mail doc each → sendMail trigger).
+  // createdBy MUST be the caller (the mail create rule pins it to request.auth.uid).
+  const handleEmailTo = useCallback(async (recipients: { name?: string; email: string }[]) => {
+    if (!resolveContent()) throw new Error('No obituary to send');
+    const list = recipients.length ? recipients : (profile?.email ? [{ email: profile.email }] : []);
+    if (!list.length) throw new Error('No recipient email available');
+    const { subject, html } = buildObitEmail();
+    for (const r of list) {
+      await addDoc(collection(db, 'mail'), {
+        to: r.email,
+        createdBy: user?.uid,
+        message: { subject, html },
+        estateId,
+        createdAt: serverTimestamp(),
       });
-
-      if (!res.ok) throw new Error(`AI request failed: ${res.status}`);
-      const data = await res.json();
-      const draft = data.content || data.text || data.response || '';
-
-      // Populate the editor — switch to editing mode if not already
-      if (!editing) setEditing(true);
-      // Use a short delay so the editor updates after editing state changes
-      setTimeout(() => {
-        if (editor) {
-          // Wrap plaintext AI draft in paragraphs if needed
-          const htmlDraft = draft.trimStart().startsWith('<')
-            ? draft
-            : draft.split('\n').filter(Boolean).map((line: string) => `<p>${line}</p>`).join('');
-          editor.commands.setContent(htmlDraft);
-        }
-      }, 100);
-    } catch (err) {
-      console.error('[AIDraft] Error:', err);
-      toast.error('Failed to generate AI draft. Please try again.');
-    } finally {
-      setAiLoading(false);
     }
-  };
+  }, [resolveContent, profile?.email, buildObitEmail, user?.uid, estateId]);
 
   const handleShare = async () => {
     if (!obit?.content) return;
     setShareLoading(true);
     try {
-      // Create a mail document in Firestore — triggers the sendMail function.
-      // createdBy MUST be the caller (the mail create rule pins it to request.auth.uid).
-      await addDoc(collection(db, 'mail'), {
-        to: profile?.email || '',
-        createdBy: user?.uid,
-        message: {
-          subject: `Obituary: ${userName || 'Estate Record'}`,
-          // NOTE: This HTML is rendered by the recipient's email client, OUTSIDE the
-          // app's CSS scope, so it cannot resolve `var(--color-slate-*)` design tokens.
-          // Colors MUST be literal hex. Royal Neo-Deco ink (#142848) and muted (#4A5C7A).
-          html: `
-            <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 32px;">
-              <h1 style="font-family: 'Cinzel', serif; color: #142848; font-size: 28px; margin-bottom: 8px;">Final Record</h1>
-              <p style="color: #4A5C7A; font-size: 14px; margin-bottom: 24px;">Official obituary for the ${userName || 'estate'} record.</p>
-              <div style="background: #F5F7FA; border: 1px solid #E2E8F0; border-radius: 12px; padding: 24px; white-space: pre-wrap; color: #142848; font-size: 16px; line-height: 1.7;">
-                ${obit.content.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}
-              </div>
-              ${isSigned ? `<p style="margin-top: 24px; color: #16a34a; font-weight: bold;">Signed by: ${obit.signature}</p>` : ''}
-              <p style="margin-top: 32px; color: #4A5C7A; font-size: 11px;">Sent from FinalWishes Estate Platform</p>
-            </div>
-          `,
-        },
-        estateId,
-        createdAt: serverTimestamp(),
-      });
+      await handleEmailTo(profile?.email ? [{ email: profile.email }] : []);
       toast.success('Obituary shared via email.');
     } catch (err) {
       console.error('[ShareObituary] Error:', err);
@@ -232,6 +237,50 @@ function ObituaryPage() {
       setShareLoading(false);
     }
   };
+
+  // Shepherd media step: upload device photos, return their URLs (for thumbnails).
+  // The first becomes the memorial portrait if none is set yet.
+  const handleAddDevicePhotos = useCallback(async (files: FileList): Promise<string[]> => {
+    const urls: string[] = [];
+    for (const file of Array.from(files)) {
+      const { uploadUrl, finalUrl } = await estateClient.generateUploadUrl({
+        estateId, fileName: file.name, contentType: file.type || 'image/jpeg',
+      });
+      await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.type || 'image/jpeg' }, body: file });
+      urls.push(finalUrl);
+    }
+    if (urls.length && user && !profilePhoto) {
+      await setDoc(doc(db, 'users', user.uid), { profilePhotoUrl: urls[0], updatedAt: serverTimestamp() }, { merge: true });
+    }
+    return urls;
+  }, [estateId, user, profilePhoto]);
+
+  // Shepherd deliver step: publish the public memorial (mirrors ShareMemorial's
+  // public_memorials shape), return its shareable URL.
+  const handlePublishMemorial = useCallback(async (): Promise<{ url: string }> => {
+    const memorialId = estateId;
+    const ref = doc(db, 'public_memorials', memorialId);
+    const isUpdate = (await getDoc(ref)).exists();
+    await setDoc(ref, {
+      estateId,
+      personName: userName || 'Memorial',
+      obituaryContent: resolveContent(),
+      profilePhotoUrl: profilePhoto || null,
+      birthDate: profile?.birthDate || null,
+      deathDate: profile?.deathDate || null,
+      serviceDetails: serviceEvent ? { type: serviceEvent.type, date: serviceEvent.date, time: serviceEvent.time, location: serviceEvent.location, address: serviceEvent.address, notes: serviceEvent.notes } : null,
+      publishedBy: user?.uid,
+      ...(isUpdate ? { updatedAt: serverTimestamp() } : { createdAt: serverTimestamp(), updatedAt: serverTimestamp() }),
+    });
+    return { url: `${window.location.origin}/memorial/${memorialId}` };
+  }, [estateId, userName, resolveContent, profilePhoto, profile?.birthDate, profile?.deathDate, serviceEvent, user?.uid]);
+
+  const heirContacts = useMemo(
+    () => (heirs || [])
+      .map((h) => ({ name: h.fullName, email: h.email }))
+      .filter((h): h is { name: string; email: string } => !!h.email),
+    [heirs],
+  );
 
   const handleUpdatePhoto = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -269,7 +318,7 @@ function ObituaryPage() {
   }, [estateId, user]);
 
   const handleExportPDF = useCallback(async () => {
-    const content = obit?.content;
+    const content = resolveContent();
     if (!content) return;
     const { pdf } = await import('@react-pdf/renderer');
     const { ObituaryPDF } = await import('@/components/pdf/ObituaryPDF');
@@ -287,7 +336,7 @@ function ObituaryPage() {
     a.download = `${(userName || 'Obituary').replace(/[^a-zA-Z0-9]/g, '_')}_Obituary.pdf`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [obit?.content, userName, profilePhoto]);
+  }, [resolveContent, userName, profilePhoto]);
 
   if (isLoading) {
     return (
@@ -349,21 +398,12 @@ function ObituaryPage() {
         </div>
         <div className="flex gap-3">
           <Button
-            onClick={handleAIDraft}
-            disabled={aiLoading || isSigned}
+            onClick={() => setShepherdOpen(true)}
+            disabled={isSigned}
             className="bg-[var(--royal)] hover:bg-[var(--royal-blue)] text-white px-6 py-3 h-auto rounded-2xl font-bold text-[13px] shadow-lg active:scale-95 disabled:opacity-50"
           >
-            {aiLoading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Drafting...
-              </>
-            ) : (
-              <>
-                <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                AI Draft
-              </>
-            )}
+            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+            {obit?.content ? 'Rewrite with Shepherd' : 'Write with Shepherd'}
           </Button>
           <Button
             onClick={() => setModalOpen(true)}
@@ -520,6 +560,22 @@ function ObituaryPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ObituaryShepherd
+        estateId={estateId}
+        open={shepherdOpen}
+        onOpenChange={setShepherdOpen}
+        subjectName={userName}
+        subject={shepherdSubject}
+        heirNames={heirNames}
+        heirContacts={heirContacts}
+        service={serviceEvent ? { type: serviceEvent.type, date: serviceEvent.date, time: serviceEvent.time, location: serviceEvent.location, address: serviceEvent.address } : undefined}
+        onDraftReady={handleShepherdDraft}
+        onAddDevicePhotos={handleAddDevicePhotos}
+        onExportPDF={handleExportPDF}
+        onEmailTo={handleEmailTo}
+        onPublishMemorial={handlePublishMemorial}
+      />
 
       <ShareMemorial
         estateId={estateId}

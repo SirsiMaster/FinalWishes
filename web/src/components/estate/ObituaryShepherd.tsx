@@ -13,7 +13,7 @@
  */
 import { useCallback, useMemo, useRef, useState, useEffect, type ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Compass, ArrowLeft, ArrowRight, Loader2, Sparkles, Check, RefreshCw, Upload, Image as ImageIcon, Mail, Printer, Share2, Copy, Heart, AlertCircle } from 'lucide-react'
+import { Compass, ArrowLeft, ArrowRight, Loader2, Sparkles, Check, RefreshCw, Upload, Mail, Printer, Share2, Copy, Heart, AlertCircle, X } from 'lucide-react'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { auth } from '../../lib/firebase'
@@ -171,8 +171,6 @@ export function ObituaryShepherd({
   service,
   onDraftReady,
   onAddDevicePhotos,
-  onImportGooglePhotos,
-  photosConfigured = false,
   onExportPDF,
   onEmailTo,
   onPublishMemorial,
@@ -191,10 +189,6 @@ export function ObituaryShepherd({
   onDraftReady: (text: string) => void
   /** Media: upload device files → returns the added image URLs (for thumbnails). */
   onAddDevicePhotos?: (files: FileList) => Promise<string[]>
-  /** Media: import from Google Photos → returns added image URLs. */
-  onImportGooglePhotos?: () => Promise<string[]>
-  /** Whether the Google Photos picker is configured (else that option is hidden). */
-  photosConfigured?: boolean
   /** Deliver: print / download the obituary PDF. */
   onExportPDF?: () => Promise<void> | void
   /** Deliver: email the obituary to the chosen recipients. */
@@ -399,19 +393,9 @@ export function ObituaryShepherd({
     }
   }, [onAddDevicePhotos])
 
-  const handleImportPhotos = useCallback(async () => {
-    if (!onImportGooglePhotos) return
-    setPhotoBusy(true)
-    setError(null)
-    try {
-      const urls = await onImportGooglePhotos()
-      setPhotos((prev) => [...prev, ...urls])
-    } catch {
-      setError('Google Photos could not be reached. You can upload from your device instead.')
-    } finally {
-      setPhotoBusy(false)
-    }
-  }, [onImportGooglePhotos])
+  const removePhoto = useCallback((index: number) => {
+    setPhotos((prev) => prev.filter((_, i) => i !== index))
+  }, [])
 
   // ---- Recipients ----
   const toggleEmail = useCallback((email: string) => {
@@ -683,17 +667,17 @@ export function ObituaryShepherd({
                       <Upload className="h-4 w-4" /> Upload from this device
                     </button>
                   )}
-                  {photosConfigured && onImportGooglePhotos && (
-                    <button type="button" disabled={photoBusy} onClick={handleImportPhotos} className="inline-flex items-center gap-2 rounded-2xl border border-[var(--neutral-border)] px-5 py-3 text-[13px] font-semibold text-[var(--royal)] transition-colors hover:border-[var(--royal)]/40 disabled:opacity-50">
-                      <ImageIcon className="h-4 w-4" /> Choose from Google Photos
-                    </button>
-                  )}
                   {photoBusy && <span className="inline-flex items-center gap-2 text-[13px] text-ink-muted"><Loader2 className="h-4 w-4 animate-spin" /> Adding…</span>}
                 </div>
                 {photos.length > 0 && (
                   <div className="mt-5 grid grid-cols-4 gap-2.5 sm:grid-cols-6">
                     {photos.map((url, i) => (
-                      <img key={`${url}-${i}`} src={url} alt={`In memory of ${firstWord(principalName)}, ${i + 1}`} className="aspect-square w-full rounded-xl object-cover border border-[var(--neutral-border)]" />
+                      <div key={`${url}-${i}`} className="group relative">
+                        <img src={url} alt={`In memory of ${firstWord(principalName)}, ${i + 1}`} className="aspect-square w-full rounded-xl object-cover border border-[var(--neutral-border)]" />
+                        <button type="button" aria-label={`Remove this one (${i + 1})`} onClick={() => removePhoto(i)} className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--royal)] text-white opacity-0 shadow transition-opacity group-hover:opacity-100 focus:opacity-100">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
                     ))}
                   </div>
                 )}

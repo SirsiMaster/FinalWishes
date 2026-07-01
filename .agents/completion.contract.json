@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "repo_name": "FinalWishes",
+  "repo_path": "/Users/thekryptodragon/Development/FinalWishes",
+  "release_target": "estate-planning and estate-settlement SaaS, live at finalwishes-prod.web.app",
+  "classification": "commercial-product",
+  "canon_documents": [
+    { "path": "CLAUDE.md", "role": "agent-law" },
+    { "path": "docs/COMMERCIALIZATION_GATE.md", "role": "commercialization-gate" },
+    { "path": "docs/PROJECT_SCOPE.md", "role": "requirements" },
+    { "path": "docs/ARCHITECTURE_DESIGN.md", "role": "architecture" },
+    { "path": "CHANGELOG.md", "role": "changelog" }
+  ],
+  "done_definition": [
+    {
+      "category": "product",
+      "criteria": [
+        "The work names a buyer/user role (principal, heir, executor, trustee, legal, cpa) and the estate-planning or estate-settlement workflow it serves.",
+        "Change traces to a priced or retention-driving workflow (estate creation, vault/lockbox, directives/obituary, e-sign, settlement/probate, billing)."
+      ]
+    },
+    {
+      "category": "design",
+      "criteria": [
+        "The first screen, empty state, failure state, and primary action are coherent for EVERY affected role.",
+        "UX changes are verified per-role in the browser (persona x surface matrix), not just by a passing build."
+      ]
+    },
+    {
+      "category": "technical",
+      "criteria": [
+        "Auth (Firebase + MFA), estate-scoped Firestore/Storage rules, KMS encryption for PII/Vault, error handling, logging, and the deploy path are addressed or declared out of scope.",
+        "No literal credentials/secrets committed (gitleaks clean); web/api/functions tests and build pass."
+      ]
+    },
+    {
+      "category": "operational",
+      "criteria": [
+        "Support/admin path, rollback/recovery, and graceful degradation when Sirsi Sign / guidance / Photos fail are addressed.",
+        "Deploy target recorded and live health confirmed (web + API) when the change ships."
+      ]
+    },
+    {
+      "category": "narrative",
+      "criteria": [
+        "A stranger can understand what changed, why it matters to a grieving or planning family, and how to evaluate it (docs / CHANGELOG / verification evidence)."
+      ]
+    }
+  ],
+  "required_verification_commands": [
+    { "name": "git status", "command": "git status --short" },
+    { "name": "web typecheck", "command": "cd web && npx tsc --noEmit" },
+    { "name": "web lint", "command": "cd web && npm run lint" },
+    { "name": "web build", "command": "cd web && npm run build" },
+    { "name": "api test", "command": "cd api && go test ./..." },
+    { "name": "secrets scan", "command": "gitleaks detect --no-banner --redact" },
+    { "name": "completion gate", "command": "python3 /Users/thekryptodragon/Development/tools/agent_completion_gate.py validate --repo . --proof <proof>" }
+  ]
+}

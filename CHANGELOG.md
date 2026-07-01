@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+### Added
+
+- **Completion Law / Commercialization Gate scaffolding** (`docs/COMMERCIALIZATION_GATE.md`, `.agents/completion.contract.json`) — the two mandatory gate artifacts were missing, so FinalWishes had no machine-validatable release gate (a release-readiness gap in itself). Added the repo-local commercialization profile (classification `commercial-product`; buyer/user roles, primary workflows, willingness-to-pay tiers, trust boundary, done-evidence) and the completion contract (canon docs, 5-closure done-definition, required verification commands). `agent_completion_gate.py check-contract` PASSES; `validate` now enforces per-closure evidence before "done". Refs: ~/Development/AGENTS.md Completion Law + Commercialization Gate.
+
 ### Security
 
 - **Armed a gitleaks committed-secrets gate (pre-push + CI)** (`.gitleaks.toml`, `.githooks/pre-push`, `.github/workflows/firebase-hosting-pull-request.yml`) — mechanical backstop that scans every push/PR for committed secrets, so the class of leak behind the 2026-07-01 P0 (hardcoded prod passwords) can't recur silently regardless of author. Pre-push scans the pushed commit range (skips gracefully if `gitleaks` isn't installed locally; CI still gates); CI adds a required-quality `Security - Secrets Scan` job (`gitleaks/gitleaks-action@v2`, `fetch-depth: 0`). `.gitleaks.toml` allowlists ONLY findings verified clean in the 2026-07-01 audit — the two public Firebase Web apiKeys (public client config by Google's model, allowlisted by exact value so any _other_ key still flags), PDF form-field `Key:` names in `api/internal/forms/maps/*.go`, `$STRIPE_SECRET_KEY` env-var curl references, and the gitignored `.e2e-mfa-secrets.env`. Verified: full git-history + working-tree scans both report **0 leaks**; the exhaustive scan surfaced 26 findings, all confirmed public-config/placeholder/gitignored, **zero real committed secrets**. Mirrors SirsiNexusApp #111. Refs: AGENTS.md Credential & Secret Safety Law.

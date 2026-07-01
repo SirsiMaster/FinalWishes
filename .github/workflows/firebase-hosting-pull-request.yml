@@ -14,6 +14,29 @@ env:
 
 jobs:
   # ===========================================
+  # Security: Committed-Secrets Scan (gitleaks)
+  # ===========================================
+  # AGENTS.md Credential & Secret Safety Law (est. 2026-06-30). Mechanical backstop
+  # that fires on every PR regardless of author — added after hardcoded prod
+  # test-account passwords were found committed in this repo (2026-07-01 P0 + history
+  # purge). fetch-depth 0 gives gitleaks-action the full history to diff-scope against.
+  secrets-scan:
+    name: Security - Secrets Scan
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks — scan for committed secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ===========================================
   # API: Build & Test
   # ===========================================
   api-check:

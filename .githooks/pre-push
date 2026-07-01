@@ -34,5 +34,30 @@ if ! npm run build 2>/dev/null; then
     exit 1
 fi
 
+# 5. Committed-secrets scan (gitleaks) — Credential & Secret Safety Law (2026-06-30).
+# Scans only the commit range being pushed. Skips gracefully if gitleaks is not
+# installed locally; CI ("Security - Secrets Scan") still gates every PR regardless.
+if command -v gitleaks >/dev/null 2>&1; then
+    echo "  → scanning for committed secrets (gitleaks)..."
+    ZERO="0000000000000000000000000000000000000000"
+    RANGE=""
+    while read -r local_ref local_sha remote_ref remote_sha; do
+        [ "$local_sha" = "$ZERO" ] && continue
+        if [ "$remote_sha" = "$ZERO" ]; then
+            RANGE="$local_sha"          # new branch: scan its whole log once
+        else
+            RANGE="${RANGE:+$RANGE }${remote_sha}..${local_sha}"
+        fi
+    done
+    if [ -n "$RANGE" ]; then
+        for r in $RANGE; do
+            gitleaks detect --log-opts="$r" --no-banner --redact \
+                || { echo "  ❌ gitleaks found a committed secret in $r — fix before pushing. Do NOT --no-verify past this."; exit 1; }
+        done
+    fi
+else
+    echo "  ⚠ gitleaks not installed — secret scan SKIPPED (brew install gitleaks). CI still gates this."
+fi
+
 echo "  ✅ Ma'at: the feather weighs true — pushing FinalWishes"
 echo ""

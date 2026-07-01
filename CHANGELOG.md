@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Sem
 
 ## [Unreleased]
 
+### Added
+
+- **Completion Law / Commercialization Gate scaffolding** (`docs/COMMERCIALIZATION_GATE.md`, `.agents/completion.contract.json`) — the two mandatory gate artifacts were missing, so FinalWishes had no machine-validatable release gate (a release-readiness gap in itself). Added the repo-local commercialization profile (classification `commercial-product`; buyer/user roles, primary workflows, willingness-to-pay tiers, trust boundary, done-evidence) and the completion contract (canon docs, 5-closure done-definition, required verification commands). `agent_completion_gate.py check-contract` PASSES; `validate` now enforces per-closure evidence before "done". Refs: ~/Development/AGENTS.md Completion Law + Commercialization Gate.
+
 ### Security
 
 - **P0 — removed hardcoded prod test-account passwords + disabled the exposed accounts** (`scripts/create-test-accounts.js`) — the script committed literal passwords (one `Legacy<Role>2025!`-pattern password per role) for four **real, enabled `finalwishes-prod` Auth accounts** (`admin@`/`principal@`/`executor@`/`heir@finalwishes.app`, `admin@` = admin role), so anyone reading the repo had valid production credentials (confirmed via Identity Toolkit lookup: all four existed, enabled, `principal@` recently used). **Contained** by disabling all four accounts (reversible), then rewrote the script to generate a strong random password per newly-created account at runtime and print it once — no credentials in the file (Credential & Secret Safety Law, 2026-06-30). The `IMPERSONATE_USER`/`SENDER_EMAIL = admin@sirsi.ai` constant in `functions/index.js` was triaged as a **false positive** — legitimate Gmail domain-wide-delegation sender identity (auth is a SA key from Secret Manager), not a credential or bypass. Note: old passwords remain in git history but are now inert (accounts disabled); rotate + re-enable individually if any account is still needed.

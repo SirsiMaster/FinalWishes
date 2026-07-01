@@ -1,0 +1,51 @@
+# Gitleaks config — FinalWishes
+#
+# Added 2026-07-01 alongside the pre-push + CI secrets-scan gate (AGENTS.md Credential &
+# Secret Safety Law, est. 2026-06-30, after hardcoded prod test-account passwords were found
+# committed in this repo — see the P0 remediation + git-history purge of 2026-07-01). A
+# behavioral rule is not enough; this is the mechanical backstop that fires on every push/PR.
+#
+# The CI gitleaks-action + the pre-push hook both scope to NEW commits, so this file is not
+# needed to avoid re-flagging old history on every gated run. It exists for defense-in-depth
+# (a manual full-repo `gitleaks detect`) and to allowlist the specific findings VERIFIED CLEAN
+# in the 2026-07-01 audit (every value was inspected — real secrets were not assumed clean;
+# the exhaustive git-mode scan surfaced 26 findings, ALL confirmed public-config / placeholder
+# / gitignored, ZERO real committed secrets).
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Verified-clean findings from the 2026-07-01 FinalWishes audit"
+
+regexes = [
+  # Firebase Web SDK apiKeys — PUBLIC client config by Google's own security model. Access is
+  # enforced by Firestore/Storage rules + Firebase Auth + App Check, never by keeping this
+  # string private. Allowlisted by EXACT value so any OTHER Google API key still flags. Two
+  # projects appear: finalwishes-prod, and sirsi-nexus-live (in a cross-referenced audit doc).
+  '''AIzaSyBTJSKV2jDAriiu4zbgw-Zmvz3J5rgZpLA''',
+  '''AIzaSyDFd4RAvVZWy3G1geLudrq4KgDDsGr-jb8''',
+  # curl examples in docs referencing an ENVIRONMENT VARIABLE, never a literal secret value.
+  '''\$STRIPE_SECRET_KEY''',
+]
+
+paths = [
+  # PDF form-field coordinate maps — the `Key:` struct field is a form-field NAME (e.g.
+  # "heir1_relationship"), matched by the generic-api-key rule. No secrets, only field layout.
+  '''^api/internal/forms/maps/.*\.go$''',
+  # Local-only E2E MFA TOTP secrets — gitignored (.env.*), NEVER committed. Allowlisted so a
+  # manual working-tree `gitleaks detect --no-git` on a dev machine stays clean.
+  '''(^|/)\.e2e-mfa-secrets\.env$''',
+
+  # Files that carry the PUBLIC Firebase Web config (apiKey field) in HISTORY. The live app is
+  # React/Vite under web/; the `public/*.html` + root `index.html` + `improvements/` files are
+  # a LEGACY static site (dead code — separate cleanup candidate) that embedded the same public
+  # Firebase config. Allowlisted by path so a full-history `gitleaks detect` is clean; these
+  # hold only Firebase public config, no secrets.
+  '''^web/src/lib/firebase\.ts$''',
+  '''(^|/)firebase-init\.js$''',
+  '''^improvements/''',
+  '''^public/.*\.html$''',
+  '''^index\.html$''',
+  '''^docs/sign-sirsi-ai-security-audit\.md$''',
+]

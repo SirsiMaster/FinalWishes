@@ -77,7 +77,7 @@ Server-level health is confirmed (200s, API auth-enforcing, latest bundle live).
 interactive click-through below verifies the new persona-safe + CRUD work end-to-end.
 Use the `ccollymo@alumni.chicagobooth.edu` Chrome profile (Rule 28).
 
-**As principal** (`principal@finalwishes.app` / `LegacyPrincipal2025!` if grace-period active, else your real account):
+**As principal** (`principal@finalwishes.app` / password from Secret Manager if grace-period active, else your real account):
 1. Open your estate dashboard — confirm the owner "My Legacy" timeline renders (no white screen). ← verifies RoleGuard doesn't break principal routes.
 2. Soul Log → create a text entry → **edit it** (pencil → change title + text → Save) → **delete it** (trash → confirm). Both should toast success.
 3. Memories → open a photo → **Edit** → change title/visibility → Save.
